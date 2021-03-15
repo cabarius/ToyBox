@@ -1,0 +1,10 @@
+﻿{
+    "Id": "ToyBox",
+    "DisplayName": "Toy Box",
+    "Author": "Narria",
+    "Version": "1.0.0",
+    "ManagerVersion": "0.23.0",
+    "Requirements": [],
+    "AssemblyName": "ToyBox.dll",
+    "EntryMethod": "ToyBox.Main.Load"
+}
