@@ -30,17 +30,23 @@ using Kingmaker.Utility;
 
 namespace ToyBox
 {
- #if DEBUG
+#if DEBUG
     [EnableReloading]
- #endif
+#endif
     static class Main
     {
 
         public static Settings Settings;
         public static bool Enabled;
         public static BlueprintScriptableObject[] blueprints = null;
+        public static BlueprintScriptableObject[] filteredBPs = null;
+        public static String[] filteredBPNames = null;
+        public static int matchCount = 0;
         public static String searchText = "";
         public static String parameter = "";
+        static Vector2 scrollPosition;
+        static int selectedBlueprint = -1;
+
         static bool Load(UnityModManager.ModEntry modEntry)
         {
             modEntry.OnUnload = Unload;
@@ -64,32 +70,63 @@ namespace ToyBox
             Enabled = value;
             return true;
         }
+        static void UpdateSearchResults()
+        {
+            if (blueprints == null)
+            {
+                blueprints = GetBlueprints();
+            }
+            selectedBlueprint = -1;
+            if (searchText.Trim().Length == 0)
+            {
+                filteredBPs = null;
+                filteredBPNames = null;
+            }
+            String[] terms = searchText.Split(' ').Select(s => s.ToLower()).ToArray();
+            IOrderedEnumerable<BlueprintScriptableObject> matchingBP = blueprints
+                    .Where(bp => terms.All(term => bp.name.ToLower().Contains(term)))
+                    .OrderBy(bp => bp.name);
+            matchCount = matchingBP.Count();
+            filteredBPs = matchingBP
+                    .Take(Settings.searchLimit).ToArray();
+            filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
+        }
 
         static void OnGUI(UnityModManager.ModEntry modEntry)
         {
+            Event e = Event.current;
+            bool userHasHitReturn = false;
+            if (e.keyCode == KeyCode.Return) userHasHitReturn = true;
+
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+
             GUILayout.Label("Combat");
-            if (GUILayout.Button("FullBuffPlease", GUILayout.Width(300f))) {
-                CheatsCombat.FullBuffPlease(parameter);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Full Buff Please", GUILayout.Width(300f))) {
+                CheatsCombat.FullBuffPlease("");
             }
-            if (GUILayout.Button("KillAll", GUILayout.Width(300f))) {
+            if (GUILayout.Button("Kill All Enemies", GUILayout.Width(300f))) {
                 CheatsCombat.KillAll();
             }
             if (GUILayout.Button("Summon Zoo", GUILayout.Width(300f))) {
-                CheatsCombat.SpawnInspectedEnemiesUnderCursor(parameter);
+                CheatsCombat.SpawnInspectedEnemiesUnderCursor("");
             }
+            GUILayout.EndHorizontal();
+
             GUILayout.Space(10);
             GUILayout.Label("Unlocks");
 
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Add Feature", GUILayout.Width(300f))) {
-                CheatsUnlock.CheatAddFeature(parameter);
+                CheatsUnlock.CheatAddFeature("- " + parameter);
             }
             if (GUILayout.Button("Give Item", GUILayout.Width(300f))) {
-                CheatsUnlock.CreateItem(parameter);
+                CheatsUnlock.CreateItem("- " + parameter);
             }
-            
             if (GUILayout.Button("Give All Items", GUILayout.Width(300f))) {
                 CheatsUnlock.CreateAllItems("");
             }
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Parameter", GUILayout.ExpandWidth(false));
@@ -100,47 +137,52 @@ namespace ToyBox
 
             GUILayout.Label("Picker");
 
+            bool searchChanged = false;
+
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Search", GUILayout.ExpandWidth(false));
-            GUILayout.Space(10);
             searchText = GUILayout.TextField(searchText, GUILayout.Width(500f));
             GUILayout.Space(50);
             GUILayout.Label("Limit", GUILayout.ExpandWidth(false));
-
-            String searchLimitString = GUILayout.TextField($"{Settings.searchLimit}");
+            String searchLimitString = GUILayout.TextField($"{Settings.searchLimit}", GUILayout.Width(500f));
             Int32.TryParse(searchLimitString, out Settings.searchLimit);
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+
+            if (userHasHitReturn || GUILayout.Button("Search", GUILayout.ExpandWidth(false)))
+            {
+                UpdateSearchResults();
+            }
+            GUILayout.Space(50);
+            GUILayout.Label("" + (matchCount > 0 ? 
+                                        $"Matches: {matchCount}" + (
+                                                        matchCount > Settings.searchLimit ? $" -> {Settings.searchLimit}" : ""
+                                                   )
+                                        : ""), GUILayout.ExpandWidth(false));
+            GUILayout.EndHorizontal();
+
             GUILayout.Space(10);
 
-
-            if (searchText.Length > 0)
+            if (filteredBPs != null)
             {
-                if (blueprints == null)
+                GUILayout.BeginVertical("Box");
+                selectedBlueprint = GUILayout.SelectionGrid(selectedBlueprint, filteredBPNames, 4);
+                if (selectedBlueprint >= 0)
                 {
-                    blueprints = GetBlueprints();
+                    parameter = filteredBPNames[selectedBlueprint];
                 }
-                BlueprintScriptableObject[] matchingBP = blueprints
-                        .Where(bp => bp.name.ToLower().Contains(searchText.ToLower()))
+                GUILayout.EndVertical();
+            }
+            GUILayout.EndScrollView();
+
+            /* 
+                     blueprints
+                    .Where(bp => bp.name.ToLower().Contains(searchText.ToLower()))
                         .OrderBy(bp => bp.name)
                         .Take(Settings.searchLimit).ToArray();
 
-                if (matchingBP.Length > 0)
-                {
-                    int selectedBlueprint = 0;
-                    string[] blueprintNames = matchingBP.Select(b => b.name).ToArray();
-                    GUILayout.BeginVertical("Box");
-                    selectedBlueprint = GUILayout.SelectionGrid(selectedBlueprint, blueprintNames, 1);
-                    if (GUILayout.Button("Start"))
-                    {
-                        Debug.Log($"You chose {blueprintNames[selectedBlueprint]}");
-
-                    }
-                    GUILayout.EndVertical();
-                }
-
-            }
-
-            /* GUILayout.Space(10);
+            
+            GUILayout.Space(10);
                         GUILayout.Label("MyFloatOption", GUILayout.ExpandWidth(false));
                         GUILayout.Space(10);
                         Settings.MyFloatOption = GUILayout.HorizontalSlider(Settings.MyFloatOption, 1f, 10f, GUILayout.Width(300f));
