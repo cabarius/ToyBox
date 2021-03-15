@@ -83,12 +83,23 @@ namespace ToyBox
                 filteredBPNames = null;
             }
             String[] terms = searchText.Split(' ').Select(s => s.ToLower()).ToArray();
-            IOrderedEnumerable<BlueprintScriptableObject> matchingBP = blueprints
+#if false
+            List<BlueprintScriptableObject> filtered = new List<BlueprintScriptableObject>();
+            foreach (BlueprintScriptableObject blueprint in blueprints)
+            {
+                String name = blueprint.name.ToLower();
+                if (terms.All(term => name.Contains(term))) {
+                    filtered.AddItem(blueprint);
+                }
+            }
+#else
+            IOrderedEnumerable<BlueprintScriptableObject> filtered = blueprints
                     .Where(bp => terms.All(term => bp.name.ToLower().Contains(term)))
                     .OrderBy(bp => bp.name);
-            matchCount = matchingBP.Count();
-            filteredBPs = matchingBP
-                    .Take(Settings.searchLimit).ToArray();
+#endif
+            matchCount = filtered.Count();
+            filteredBPs = filtered
+                    .Take(Settings.searchLimit).OrderBy(bp => bp.name).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
         }
 
