@@ -3,13 +3,16 @@ using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
 using HarmonyLib;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.Blueprints.Quests;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers.Rest;
@@ -28,6 +31,8 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 
+using GL = UnityEngine.GUILayout;
+
 namespace ToyBox
 {
 #if DEBUG
@@ -35,7 +40,6 @@ namespace ToyBox
 #endif
     static class Main
     {
-
         public static Settings Settings;
         public static bool Enabled;
         public static BlueprintScriptableObject[] blueprints = null;
@@ -45,7 +49,8 @@ namespace ToyBox
         public static String searchText = "";
         public static String parameter = "";
         static Vector2 scrollPosition;
-        static int selectedBlueprint = -1;
+        static int selectedBlueprintIndex = -1;
+        static BlueprintScriptableObject selectedBlueprint = null;
 
         static bool Load(UnityModManager.ModEntry modEntry)
         {
@@ -74,9 +79,10 @@ namespace ToyBox
         {
             if (blueprints == null)
             {
-                blueprints = GetBlueprints();
+                blueprints = GetBlueprints().Where(bp => !BlueprintActions.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
             }
-            selectedBlueprint = -1;
+            selectedBlueprint = null;
+            selectedBlueprintIndex = -1;
             if (searchText.Trim().Length == 0)
             {
                 filteredBPs = null;
@@ -103,111 +109,151 @@ namespace ToyBox
             Event e = Event.current;
             bool userHasHitReturn = false;
             if (e.keyCode == KeyCode.Return) userHasHitReturn = true;
-            GUILayout.BeginVertical("box");
+            GL.BeginVertical("box");
 
-//            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+//            scrollPosition = GL.BeginScrollView(scrollPosition, GL.ExpandWidth(true), GL.ExpandHeight(true));
 
-            GUILayout.Label("Combat");
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Full Buff Please", GUILayout.Width(300f))) {
+            GL.Label("Combat");
+            GL.BeginHorizontal();
+            if (GL.Button("Full Buff Please", GL.Width(300f))) {
                 CheatsCombat.FullBuffPlease("");
             }
-            if (GUILayout.Button("Kill All Enemies", GUILayout.Width(300f))) {
+            if (GL.Button("Kill All Enemies", GL.Width(300f))) {
                 CheatsCombat.KillAll();
             }
-            if (GUILayout.Button("Summon Zoo", GUILayout.Width(300f))) {
+            if (GL.Button("Summon Zoo", GL.Width(300f))) {
                 CheatsCombat.SpawnInspectedEnemiesUnderCursor("");
             }
-            GUILayout.EndHorizontal();
+            GL.EndHorizontal();
 
-            GUILayout.Space(10);
-            GUILayout.Label("Unlocks");
+            GL.Space(10);
+            GL.Label("Unlocks");
 
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Add Feature", GUILayout.Width(300f))) {
-                CheatsUnlock.CheatAddFeature("- " + parameter);
+            GL.BeginHorizontal();
+            if (GL.Button("Add Feature", GL.Width(300f))) {
+                BlueprintActions.addFact(selectedBlueprint);
             }
-            if (GUILayout.Button("Give Item", GUILayout.Width(300f))) {
-                CheatsUnlock.CreateItem("- " + parameter);
+            if (GL.Button("Remove Feature", GL.Width(300f)))
+            {
+                BlueprintActions.removeFact(selectedBlueprint);
             }
-            if (GUILayout.Button("Give All Items", GUILayout.Width(300f))) {
+            if (GL.Button("Give Item", GL.Width(300f))) {
+                BlueprintActions.addItem(selectedBlueprint);
+//                CheatsUnlock.CreateItem("- " + parameter);
+            }
+            if (GL.Button("Give All Items", GL.Width(300f))) {
                 CheatsUnlock.CreateAllItems("");
             }
-            GUILayout.EndHorizontal();
+            GL.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Parameter", GUILayout.ExpandWidth(false));
-            GUILayout.Space(10);
-            parameter = GUILayout.TextField(parameter, GUILayout.Width(500f));
-            GUILayout.EndHorizontal();
-            GUILayout.Space(10);
+            GL.BeginHorizontal();
+            GL.Label("Parameter", GL.ExpandWidth(false));
+            GL.Space(10);
+            parameter = GL.TextField(parameter, GL.Width(500f));
+            if (selectedBlueprint != null)
+            {
+                GL.Space(50);
+                GL.Label($"{selectedBlueprint.GetType().Name}", GL.ExpandWidth(false));
+            }
 
-            GUILayout.Label("Picker");
+            GL.EndHorizontal();
+            GL.Space(10);
+
+            GL.Label("Picker");
 
             bool searchChanged = false;
 
-            GUILayout.BeginHorizontal();
-            searchText = GUILayout.TextField(searchText, GUILayout.Width(500f));
-            GUILayout.Space(50);
-            GUILayout.Label("Limit", GUILayout.ExpandWidth(false));
-            String searchLimitString = GUILayout.TextField($"{Settings.searchLimit}", GUILayout.Width(500f));
+            GL.BeginHorizontal();
+            searchText = GL.TextField(searchText, GL.Width(500f));
+            GL.Space(50);
+            GL.Label("Limit", GL.ExpandWidth(false));
+            String searchLimitString = GL.TextField($"{Settings.searchLimit}", GL.Width(500f));
             Int32.TryParse(searchLimitString, out Settings.searchLimit);
-            GUILayout.EndHorizontal();
+            GL.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
+            GL.BeginHorizontal();
 
-            if (userHasHitReturn || GUILayout.Button("Search", GUILayout.ExpandWidth(false)))
+            if (userHasHitReturn || GL.Button("Search", GL.ExpandWidth(false)))
             {
                 UpdateSearchResults();
             }
-            GUILayout.Space(50);
-            GUILayout.Label("" + (matchCount > 0 ? 
+            GL.Space(50);
+            GL.Label("" + (matchCount > 0 ? 
                                         $"Matches: {matchCount}" + (
                                                         matchCount > Settings.searchLimit ? $" -> {Settings.searchLimit}" : ""
                                                    )
-                                        : ""), GUILayout.ExpandWidth(false));
-            GUILayout.EndHorizontal();
+                                        : ""), GL.ExpandWidth(false));
+            GL.EndHorizontal();
 
-            GUILayout.Space(10);
+            GL.Space(10);
 
             if (filteredBPs != null)
             {
-//                GUILayout.BeginVertical("Box");
-                selectedBlueprint = GUILayout.SelectionGrid(selectedBlueprint, filteredBPNames, 4);
-                if (selectedBlueprint >= 0)
+                int index = 0;
+                foreach (BlueprintScriptableObject blueprint in filteredBPs)
                 {
-                    parameter = filteredBPNames[selectedBlueprint];
+                    Action add = null;
+                    Action remove = null;
+                    GL.BeginHorizontal();
+                    if (GL.Button(blueprint.name, GL.Width(500f)))
+                    {
+                        selectedBlueprintIndex = index;
+                        selectedBlueprint = blueprint;
+                    }
+                    GL.Space(50);
+                    GL.Label($"{blueprint.GetType().Name}", GL.Width(500f));
+                    NamedAction[] actions = BlueprintActions.ActionsForBlueprint(blueprint);
+                    if (actions != null)
+                    {
+                        GL.Space(40);
+                        foreach (NamedAction action in actions)
+                        {
+                            GL.Space(10);
+                            if (GL.Button(action.name, GL.ExpandWidth(false))) { action.action(blueprint); };
+                        }
+                    }
+                    GL.EndHorizontal();
+
+                    index++;
                 }
-//                GUILayout.EndVertical();
+
+
             }
-//            GUILayout.EndScrollView();
-            GUILayout.EndVertical();
+            GL.EndVertical();
 
             /* 
-                     blueprints
-                    .Where(bp => bp.name.ToLower().Contains(searchText.ToLower()))
+
+                //selectedBlueprintIndex = GL.SelectionGrid(selectedBlueprintIndex, filteredBPNames, 4);
+
+                if (selectedBlueprintIndex  >= 0)
+                {
+                    parameter = filteredBPNames[selectedBlueprintIndex];
+                    selectedBlueprint = filteredBPs[selectedBlueprintIndex];
+                }                     blueprints
+            
+            .Where(bp => bp.name.ToLower().Contains(searchText.ToLower()))
                         .OrderBy(bp => bp.name)
                         .Take(Settings.searchLimit).ToArray();
 
             
-            GUILayout.Space(10);
-                        GUILayout.Label("MyFloatOption", GUILayout.ExpandWidth(false));
-                        GUILayout.Space(10);
-                        Settings.MyFloatOption = GUILayout.HorizontalSlider(Settings.MyFloatOption, 1f, 10f, GUILayout.Width(300f));
-                        GUILayout.Label($" {Settings.MyFloatOption:p0}", GUILayout.ExpandWidth(false));
-                        GUILayout.EndHorizontal();
+            GL.Space(10);
+                        GL.Label("MyFloatOption", GL.ExpandWidth(false));
+                        GL.Space(10);
+                        Settings.MyFloatOption = GL.HorizontalSlider(Settings.MyFloatOption, 1f, 10f, GL.Width(300f));
+                        GL.Label($" {Settings.MyFloatOption:p0}", GL.ExpandWidth(false));
+                        GL.EndHorizontal();
 
-                        GUILayout.BeginHorizontal();
-                        GUILayout.Label("MyBoolOption", GUILayout.ExpandWidth(false));
-                        GUILayout.Space(10);
-                        Settings.MyBoolOption = GUILayout.Toggle(Settings.MyBoolOption, $" {Settings.MyBoolOption}", GUILayout.ExpandWidth(false));
-                        GUILayout.EndHorizontal();
+                        GL.BeginHorizontal();
+                        GL.Label("MyBoolOption", GL.ExpandWidth(false));
+                        GL.Space(10);
+                        Settings.MyBoolOption = GL.Toggle(Settings.MyBoolOption, $" {Settings.MyBoolOption}", GL.ExpandWidth(false));
+                        GL.EndHorizontal();
 
-                        GUILayout.BeginHorizontal();
-                        GUILayout.Label("MyTextOption", GUILayout.ExpandWidth(false));
-                        GUILayout.Space(10);
-                        Settings.MyTextOption = GUILayout.TextField(Settings.MyTextOption, GUILayout.Width(300f));
-                        GUILayout.EndHorizontal();
+                        GL.BeginHorizontal();
+                        GL.Label("MyTextOption", GL.ExpandWidth(false));
+                        GL.Space(10);
+                        Settings.MyTextOption = GL.TextField(Settings.MyTextOption, GL.Width(300f));
+                        GL.EndHorizontal();
                         */
         }
 
