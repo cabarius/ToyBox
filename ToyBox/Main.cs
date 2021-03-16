@@ -83,33 +83,29 @@ namespace ToyBox
                 filteredBPNames = null;
             }
             String[] terms = searchText.Split(' ').Select(s => s.ToLower()).ToArray();
-#if false
             List<BlueprintScriptableObject> filtered = new List<BlueprintScriptableObject>();
             foreach (BlueprintScriptableObject blueprint in blueprints)
             {
                 String name = blueprint.name.ToLower();
-                if (terms.All(term => name.Contains(term))) {
-                    filtered.AddItem(blueprint);
+                if (terms.All(term => name.Contains(term)))
+                {
+                    filtered.Add(blueprint);
                 }
             }
-#else
-            IOrderedEnumerable<BlueprintScriptableObject> filtered = blueprints
-                    .Where(bp => terms.All(term => bp.name.ToLower().Contains(term)))
-                    .OrderBy(bp => bp.name);
-#endif
             matchCount = filtered.Count();
             filteredBPs = filtered
+                    .OrderBy(bp => bp.name)
                     .Take(Settings.searchLimit).OrderBy(bp => bp.name).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
         }
-
         static void OnGUI(UnityModManager.ModEntry modEntry)
         {
             Event e = Event.current;
             bool userHasHitReturn = false;
             if (e.keyCode == KeyCode.Return) userHasHitReturn = true;
+            GUILayout.BeginVertical("box");
 
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+//            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
             GUILayout.Label("Combat");
             GUILayout.BeginHorizontal();
@@ -176,15 +172,16 @@ namespace ToyBox
 
             if (filteredBPs != null)
             {
-                GUILayout.BeginVertical("Box");
+//                GUILayout.BeginVertical("Box");
                 selectedBlueprint = GUILayout.SelectionGrid(selectedBlueprint, filteredBPNames, 4);
                 if (selectedBlueprint >= 0)
                 {
                     parameter = filteredBPNames[selectedBlueprint];
                 }
-                GUILayout.EndVertical();
+//                GUILayout.EndVertical();
             }
-            GUILayout.EndScrollView();
+//            GUILayout.EndScrollView();
+            GUILayout.EndVertical();
 
             /* 
                      blueprints
