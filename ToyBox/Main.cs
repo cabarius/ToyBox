@@ -130,36 +130,37 @@ namespace ToyBox
             GL.Label("Unlocks");
 
             GL.BeginHorizontal();
-            if (GL.Button("Add Feature", GL.Width(300f))) {
-                BlueprintActions.addFact(selectedBlueprint);
-            }
-            if (GL.Button("Remove Feature", GL.Width(300f)))
-            {
-                BlueprintActions.removeFact(selectedBlueprint);
-            }
-            if (GL.Button("Give Item", GL.Width(300f))) {
-                BlueprintActions.addItem(selectedBlueprint);
-//                CheatsUnlock.CreateItem("- " + parameter);
-            }
+            //if (GL.Button("Add Feature", GL.Width(300f))) {
+            //    BlueprintActions.addFact(selectedBlueprint);
+            //}
+            //if (GL.Button("Remove Feature", GL.Width(300f)))
+            //{
+            //    BlueprintActions.removeFact(selectedBlueprint);
+            //}
+//            if (GL.Button("Give Item", GL.Width(300f))) {
+//                BlueprintActions.addItem(selectedBlueprint);
+////                CheatsUnlock.CreateItem("- " + parameter);
+//            }
             if (GL.Button("Give All Items", GL.Width(300f))) {
                 CheatsUnlock.CreateAllItems("");
             }
             GL.EndHorizontal();
 
-            GL.BeginHorizontal();
-            GL.Label("Parameter", GL.ExpandWidth(false));
+            GL.Label("Picker");
             GL.Space(10);
-            parameter = GL.TextField(parameter, GL.Width(500f));
+            GL.BeginHorizontal();
+            GL.Label("Selected:", GL.ExpandWidth(false));
+            GL.Space(10);
+            GL.Label($"{ parameter }", GL.ExpandWidth(false));
+            GL.Space(30);
             if (selectedBlueprint != null)
             {
-                GL.Space(50);
+                GL.Space(30);
                 GL.Label($"{selectedBlueprint.GetType().Name}", GL.ExpandWidth(false));
             }
 
             GL.EndHorizontal();
             GL.Space(10);
-
-            GL.Label("Picker");
 
             bool searchChanged = false;
 
@@ -199,9 +200,8 @@ namespace ToyBox
                     {
                         selectedBlueprintIndex = index;
                         selectedBlueprint = blueprint;
+                        parameter = blueprint.name;
                     }
-                    GL.Space(50);
-                    GL.Label($"{blueprint.GetType().Name}", GL.Width(500f));
                     NamedAction[] actions = BlueprintActions.ActionsForBlueprint(blueprint);
                     if (actions != null)
                     {
@@ -212,6 +212,8 @@ namespace ToyBox
                             if (GL.Button(action.name, GL.ExpandWidth(false))) { action.action(blueprint); };
                         }
                     }
+                    GL.Space(50);
+                    GL.Label($"{blueprint.GetType().Name}", GL.Width(500f));
                     GL.EndHorizontal();
 
                     index++;
