@@ -58,14 +58,10 @@ using Kingmaker.Visual.Sound;
 
 namespace ToyBox
 {
-    public class NamedAction {
-        public String name { get; set; }
-        public Action<BlueprintScriptableObject> action { get; set; }
-        public NamedAction() { }
-    }
-    public class BlueprintActions {
+    public class BlueprintAction : ToyBox.NamedAction<BlueprintScriptableObject>
+    {
 
-    public static HashSet<Type> ignoredBluePrintTypes = new HashSet<Type> {
+        public static HashSet<Type> ignoredBluePrintTypes = new HashSet<Type> {
                 typeof(BlueprintAiCastSpell),
                 typeof(BlueprintAnswer),
                 typeof(BlueprintAnswersList),
@@ -133,26 +129,25 @@ namespace ToyBox
                 typeof(BlueprintSummonPool)
             };
 
-        public static Action<BlueprintScriptableObject> addFact= bp => (Utilities.GetUnitUnderMouse() ?? GameHelper.GetPlayerCharacter()).Descriptor.AddFact((BlueprintUnitFact)bp);
+        public static Action<BlueprintScriptableObject> addFact = bp => (Utilities.GetUnitUnderMouse() ?? GameHelper.GetPlayerCharacter()).Descriptor.AddFact((BlueprintUnitFact)bp);
         public static Action<BlueprintScriptableObject> removeFact = bp => (Utilities.GetUnitUnderMouse() ?? GameHelper.GetPlayerCharacter()).Progression.Features.RemoveFact((BlueprintUnitFact)bp);
 
         public static Action<BlueprintScriptableObject> addItem = bp => GameHelper.GetPlayerCharacter().Inventory.Add((BlueprintItem)bp, 1, null);
 
-
-        static NamedAction[] itemActions = new NamedAction[] { 
-            new NamedAction { name = "Add", action = addItem }
+        static BlueprintAction[] itemActions = new BlueprintAction[] {
+            new  BlueprintAction { name = "Add", action = addItem }
         };
 
-        static NamedAction[] factActions = new NamedAction[] {
-            new NamedAction { name = "Add", action = addFact },
-            new NamedAction { name = "Remove", action = removeFact },
+        static BlueprintAction[] factActions = new BlueprintAction[] {
+            new  BlueprintAction { name = "Add", action = addFact },
+            new  BlueprintAction { name = "Remove", action = removeFact },
         };
 
-        public static NamedAction[] ActionsForBlueprint(BlueprintScriptableObject bp)
+        public static BlueprintAction[] ActionsForBlueprint(BlueprintScriptableObject bp)
         {
             Type type = bp.GetType();
-            if (type.IsSubclassOf(typeof(BlueprintItem))) { return itemActions; }
-            if (type.IsSubclassOf(typeof(BlueprintUnitFact))) { return factActions; }
+            if (type.IsKindOf(typeof(BlueprintItem))) { return itemActions; }
+            if (type.IsKindOf(typeof(BlueprintUnitFact))) { return factActions; }
             return null;
         }
     }

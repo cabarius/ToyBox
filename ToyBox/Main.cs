@@ -11,6 +11,10 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Armors;
+using Kingmaker.Blueprints.Items.Components;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Quests;
 using Kingmaker.Blueprints.Root;
@@ -52,6 +56,17 @@ namespace ToyBox
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
 
+        static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
+            new NamedTypeFilter { name = "All", type = typeof(BlueprintScriptableObject) },
+            new NamedTypeFilter { name = "Facts", type = typeof(BlueprintFact) },
+            new NamedTypeFilter { name = "Features", type = typeof(BlueprintFeature) },
+            new NamedTypeFilter { name = "Weapons", type = typeof(BlueprintItemWeapon) },
+            new NamedTypeFilter { name = "Armor", type = typeof(BlueprintItemArmor) },
+            new NamedTypeFilter { name = "Shields", type = typeof(BlueprintItemShield) },
+            new NamedTypeFilter { name = "Equipment", type = typeof(BlueprintItemEquipment) },
+        };
+        static int selectedBPTypeFilter = 0;
+
         static bool Load(UnityModManager.ModEntry modEntry)
         {
             modEntry.OnUnload = Unload;
@@ -79,7 +94,7 @@ namespace ToyBox
         {
             if (blueprints == null)
             {
-                blueprints = GetBlueprints().Where(bp => !BlueprintActions.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
+                blueprints = GetBlueprints().Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
             }
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
@@ -90,10 +105,12 @@ namespace ToyBox
             }
             String[] terms = searchText.Split(' ').Select(s => s.ToLower()).ToArray();
             List<BlueprintScriptableObject> filtered = new List<BlueprintScriptableObject>();
+            Type selectedType = blueprintTypeFilters[selectedBPTypeFilter].type;
             foreach (BlueprintScriptableObject blueprint in blueprints)
             {
                 String name = blueprint.name.ToLower();
-                if (terms.All(term => name.Contains(term)))
+                Type type = blueprint.GetType();
+                if (terms.All(term => name.Contains(term)) && type.IsKindOf(selectedType))
                 {
                     filtered.Add(blueprint);
                 }
@@ -108,6 +125,7 @@ namespace ToyBox
         {
             Event e = Event.current;
             bool userHasHitReturn = false;
+            bool searchChanged = false;
             if (e.keyCode == KeyCode.Return) userHasHitReturn = true;
             GL.BeginVertical("box");
 
@@ -130,23 +148,22 @@ namespace ToyBox
             GL.Label("Unlocks");
 
             GL.BeginHorizontal();
-            //if (GL.Button("Add Feature", GL.Width(300f))) {
-            //    BlueprintActions.addFact(selectedBlueprint);
-            //}
-            //if (GL.Button("Remove Feature", GL.Width(300f)))
-            //{
-            //    BlueprintActions.removeFact(selectedBlueprint);
-            //}
-//            if (GL.Button("Give Item", GL.Width(300f))) {
-//                BlueprintActions.addItem(selectedBlueprint);
-////                CheatsUnlock.CreateItem("- " + parameter);
-//            }
             if (GL.Button("Give All Items", GL.Width(300f))) {
                 CheatsUnlock.CreateAllItems("");
             }
             GL.EndHorizontal();
 
+            GL.Space(50);
             GL.Label("Picker");
+            int newSelectedBPFilter = GL.Toolbar(
+                selectedBPTypeFilter, 
+                blueprintTypeFilters.Select(tf => tf.name).ToArray()
+                );
+            if (newSelectedBPFilter != selectedBPTypeFilter)
+            {
+                selectedBPTypeFilter = newSelectedBPFilter;
+                searchChanged = true;
+            }
             GL.Space(10);
             GL.BeginHorizontal();
             GL.Label("Selected:", GL.ExpandWidth(false));
@@ -162,8 +179,6 @@ namespace ToyBox
             GL.EndHorizontal();
             GL.Space(10);
 
-            bool searchChanged = false;
-
             GL.BeginHorizontal();
             searchText = GL.TextField(searchText, GL.Width(500f));
             GL.Space(50);
@@ -174,7 +189,7 @@ namespace ToyBox
 
             GL.BeginHorizontal();
 
-            if (userHasHitReturn || GL.Button("Search", GL.ExpandWidth(false)))
+            if (userHasHitReturn || searchChanged || GL.Button("Search", GL.ExpandWidth(false)))
             {
                 UpdateSearchResults();
             }
@@ -202,11 +217,11 @@ namespace ToyBox
                         selectedBlueprint = blueprint;
                         parameter = blueprint.name;
                     }
-                    NamedAction[] actions = BlueprintActions.ActionsForBlueprint(blueprint);
+                    BlueprintAction[] actions = BlueprintAction.ActionsForBlueprint(blueprint);
                     if (actions != null)
                     {
                         GL.Space(40);
-                        foreach (NamedAction action in actions)
+                        foreach (BlueprintAction action in actions)
                         {
                             GL.Space(10);
                             if (GL.Button(action.name, GL.ExpandWidth(false))) { action.action(blueprint); };
@@ -222,41 +237,6 @@ namespace ToyBox
 
             }
             GL.EndVertical();
-
-            /* 
-
-                //selectedBlueprintIndex = GL.SelectionGrid(selectedBlueprintIndex, filteredBPNames, 4);
-
-                if (selectedBlueprintIndex  >= 0)
-                {
-                    parameter = filteredBPNames[selectedBlueprintIndex];
-                    selectedBlueprint = filteredBPs[selectedBlueprintIndex];
-                }                     blueprints
-            
-            .Where(bp => bp.name.ToLower().Contains(searchText.ToLower()))
-                        .OrderBy(bp => bp.name)
-                        .Take(Settings.searchLimit).ToArray();
-
-            
-            GL.Space(10);
-                        GL.Label("MyFloatOption", GL.ExpandWidth(false));
-                        GL.Space(10);
-                        Settings.MyFloatOption = GL.HorizontalSlider(Settings.MyFloatOption, 1f, 10f, GL.Width(300f));
-                        GL.Label($" {Settings.MyFloatOption:p0}", GL.ExpandWidth(false));
-                        GL.EndHorizontal();
-
-                        GL.BeginHorizontal();
-                        GL.Label("MyBoolOption", GL.ExpandWidth(false));
-                        GL.Space(10);
-                        Settings.MyBoolOption = GL.Toggle(Settings.MyBoolOption, $" {Settings.MyBoolOption}", GL.ExpandWidth(false));
-                        GL.EndHorizontal();
-
-                        GL.BeginHorizontal();
-                        GL.Label("MyTextOption", GL.ExpandWidth(false));
-                        GL.Space(10);
-                        Settings.MyTextOption = GL.TextField(Settings.MyTextOption, GL.Width(300f));
-                        GL.EndHorizontal();
-                        */
         }
 
         static void OnSaveGUI(UnityModManager.ModEntry modEntry)
