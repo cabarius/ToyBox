@@ -126,7 +126,9 @@ namespace ToyBox
                 typeof(BlueprintQuestGroups),
                 typeof(Cutscene),
                 typeof(BlueprintEtude),
-                typeof(BlueprintSummonPool)
+                typeof(BlueprintSummonPool),
+                typeof(BlueprintUnit),
+                typeof(BlueprintArea),
             };
 
         public static Action<BlueprintScriptableObject> addFact = bp => (Utilities.GetUnitUnderMouse() ?? GameHelper.GetPlayerCharacter()).Descriptor.AddFact((BlueprintUnitFact)bp);

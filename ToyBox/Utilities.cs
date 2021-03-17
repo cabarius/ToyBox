@@ -73,15 +73,6 @@ namespace ToyBox
         public NamedAction() { }
     }
 
-    public static class MyExtensions
-    {
-        public static int WordCount(this String str)
-        {
-            return str.Split(new char[] { ' ', '.', '?' },
-                             StringSplitOptions.RemoveEmptyEntries).Length;
-        }
-    }
-
     public static class TB
     {
         public static bool IsKindOf(this Type type, Type baseType)
