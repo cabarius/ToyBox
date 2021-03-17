@@ -97,7 +97,23 @@ namespace ToyBox
         {
             if (blueprints == null)
             {
-                blueprints = GetBlueprints().Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
+                List<BlueprintScriptableObject> bps = new List<BlueprintScriptableObject>();
+
+                BlueprintScriptableObject[] allBPs = GetBlueprints();
+                foreach (BlueprintScriptableObject bp in allBPs)
+                {
+                    bool ignoreFound = false;
+                    foreach (Type t in BlueprintAction.ignoredBluePrintTypes)
+                    {
+                        if (bp.GetType().IsKindOf(t)) { ignoreFound = true;  break; }
+                    }
+                    if (!ignoreFound)
+                    {
+                        bps.Add(bp);
+                    }
+                }
+                blueprints = bps.ToArray();
+                //blueprints = GetBlueprints().Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
             }
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
@@ -167,10 +183,9 @@ namespace ToyBox
                 GL.BeginHorizontal();
                 GL.Label("Selected:", GL.ExpandWidth(false));
                 GL.Space(10);
-                GL.Label($"{ parameter.green().bold() }", GL.ExpandWidth(false));
-                GL.Space(30);
                 GL.Label($"{selectedBlueprint.GetType().Name.cyan()}", GL.ExpandWidth(false));
-                GL.Label($"{selectedBlueprint}");
+                GL.Space(30);
+                GL.Label($"{selectedBlueprint}".orange().bold());
                 GL.EndHorizontal();
             }
             GL.Space(20);
