@@ -55,6 +55,9 @@ namespace ToyBox
         static Vector2 scrollPosition;
         static int selectedCharacter = 0;
         static int showStatsBitfield = 0;
+        static int showBuffsBitfield = 0;
+        static int showFactsBitfield = 0;
+        static int showAutoBuffBitfield = 0;
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
         static bool searchChanged = false;
@@ -248,12 +251,25 @@ namespace ToyBox
                 {
                     GL.Label("Max", GL.Width(150));
                 }
-                GL.Space(20);
-                bool showStats = ((1 << chIndex) & showStatsBitfield) != 0;
-                bool newShowStats = GL.Toggle( showStats, "Show Stats", GL.ExpandWidth(false));
-                if (showStats != newShowStats) { showStatsBitfield ^= 1 << chIndex; }
+                GL.Space(25);
+                bool show = ((1 << chIndex) & showStatsBitfield) != 0;
+                bool nShow = GL.Toggle( show, "Show Stats", GL.ExpandWidth(false));
+                if (show != nShow) { showStatsBitfield ^= 1 << chIndex; }
+                GL.Space(25);
+                show = ((1 << chIndex) & showBuffsBitfield) != 0;
+                nShow = GL.Toggle(show, "Show Buffs", GL.ExpandWidth(false));
+                if (show != nShow) { showBuffsBitfield ^= 1 << chIndex; }
+                GL.Space(25);
+                show = ((1 << chIndex) & showFactsBitfield) != 0;
+                nShow = GL.Toggle(show, "Show Facts", GL.ExpandWidth(false));
+                if (show!= nShow) { showStatsBitfield ^= 1 << chIndex; }
+                GL.Space(25);
+                show = ((1 << chIndex) & showAutoBuffBitfield) != 0;
+                nShow = GL.Toggle(show, "Show AutoBuffs", GL.ExpandWidth(false));
+                if (show != nShow) { showAutoBuffBitfield ^= 1 << chIndex; }
+
                 GL.EndHorizontal();
-                if (newShowStats) {
+                if (((1 << chIndex) & showStatsBitfield) != 0) {
                     foreach (object obj in Enum.GetValues(typeof(StatType)))
                     {
                         StatType statType = (StatType)obj;
