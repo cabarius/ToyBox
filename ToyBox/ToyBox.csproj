@@ -94,13 +94,16 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Info.json">
+    <None Include="Resources\Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="zpackages.config" />
+    <None Include="Resources\zpackages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="zNotes.cs" />
+    <Compile Include="Notes\Snippets.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Notes\ReleaseNotes.bbcode" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

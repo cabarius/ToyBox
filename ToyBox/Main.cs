@@ -53,6 +53,8 @@ namespace ToyBox
         public static int matchCount = 0;
         public static String parameter = "";
         static Vector2 scrollPosition;
+        static int selectedCharacter = 0;
+        static int showStatsBitfield = 0;
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
         static bool searchChanged = false;
@@ -105,7 +107,7 @@ namespace ToyBox
                     bool ignoreFound = false;
                     foreach (Type t in BlueprintAction.ignoredBluePrintTypes)
                     {
-                        if (bp.GetType().IsKindOf(t)) { ignoreFound = true;  break; }
+                        if (bp.GetType().IsKindOf(t)) { ignoreFound = true; break; }
                     }
                     if (!ignoreFound)
                     {
@@ -148,34 +150,131 @@ namespace ToyBox
             if (e.keyCode == KeyCode.Return) userHasHitReturn = true;
             GL.BeginVertical("box");
 
-//            scrollPosition = GL.BeginScrollView(scrollPosition, GL.ExpandWidth(true), GL.ExpandHeight(true));
+            //            scrollPosition = GL.BeginScrollView(scrollPosition, GL.ExpandWidth(true), GL.ExpandHeight(true));
 
-            GL.Label("Combat");
+            GL.Space(25);
+            GL.Label("====== Bag of Cheap Tricks ======");
+            GL.Space(25);
             GL.BeginHorizontal();
+            GL.Label("Combat", GL.Width(150f));
+            if (GL.Button("Rest All", GL.Width(300f)))
+            {
+                CheatsCombat.RestAll();
+            }
+            if (GL.Button("Empowered", GL.Width(300f)))
+            {
+                CheatsCombat.Empowered("");
+            }
             if (GL.Button("Full Buff Please", GL.Width(300f)))
             {
                 CheatsCombat.FullBuffPlease("");
             }
-
-            if (GL.Button("Full Buff Please", GL.Width(300f))) {
-                CheatsCombat.FullBuffPlease("");
+            if (GL.Button("Remove Death's Door", GL.Width(300f)))
+            {
+                CheatsCombat.DetachDebuff();
             }
-            if (GL.Button("Kill All Enemies", GL.Width(300f))) {
+            if (GL.Button("Kill All Enemies", GL.Width(300f)))
+            {
                 CheatsCombat.KillAll();
             }
-            if (GL.Button("Summon Zoo", GL.Width(300f))) {
+            if (GL.Button("Summon Zoo", GL.Width(300f)))
+            {
                 CheatsCombat.SpawnInspectedEnemiesUnderCursor("");
             }
             GL.EndHorizontal();
 
             GL.Space(10);
-            GL.Label("Unlocks");
 
             GL.BeginHorizontal();
-            if (GL.Button("Give All Items", GL.Width(300f))) {
+            GL.Label("Common", GL.Width(150f));
+
+            if (GL.Button("Change Weather", GL.Width(300f)))
+            {
+                CheatsCommon.ChangeWeather("");
+            }
+
+            if (GL.Button("Set Perception to 40", GL.Width(300f)))
+            {
+                CheatsCommon.StatPerception();
+            }
+            GL.EndHorizontal();
+
+            GL.Space(10);
+
+            GL.BeginHorizontal();
+            GL.Label("Unlocks", GL.Width(150f));
+            if (GL.Button("Give All Items", GL.Width(300f)))
+            {
                 CheatsUnlock.CreateAllItems("");
             }
             GL.EndHorizontal();
+
+            GL.Space(25);
+            GL.Label("====== Party Editor ======");
+            GL.Space(25);
+            int chIndex = 0;
+            foreach (UnitEntityData ch in Game.Instance.Player.Party)
+            {
+                UnitProgressionData progression = ch.Descriptor.Progression;
+                BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
+                int level = progression.CharacterLevel;
+                int mythicLevel = progression.MythicExperience;
+                GL.BeginHorizontal();
+
+                GL.Label(ch.CharacterName , GL.Width(300f));
+                GL.Label($"level: {level}", GL.Width(125f));
+                // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
+                if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20)
+                {
+                    if (GL.Button(" +1 Level", GL.Width(150)))
+                    {
+                        progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
+                    }
+                }
+                else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20)
+                {
+                    GL.Label("Level Up", GL.Width(150));
+                }
+                GL.Space(30);
+                GL.Label($"mythic: {mythicLevel}", GL.Width(125));
+                if (progression.MythicExperience < 10)
+                {
+                    if (GL.Button(" +1 Mythic", GL.Width(150)))
+                    {
+                        progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
+                    }
+                }
+                else
+                {
+                    GL.Label("Max", GL.Width(150));
+                }
+                GL.Space(20);
+                bool showStats = ((1 << chIndex) & showStatsBitfield) != 0;
+                bool newShowStats = GL.Toggle( showStats, "Show Stats", GL.ExpandWidth(false));
+                if (showStats != newShowStats) { showStatsBitfield ^= 1 << chIndex; }
+                GL.EndHorizontal();
+                if (newShowStats) {
+                    foreach (object obj in Enum.GetValues(typeof(StatType)))
+                    {
+                        StatType statType = (StatType)obj;
+                        ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
+                        if (modifiableValue != null)
+                        {
+                            GL.BeginHorizontal();
+                            GL.Space(70);
+                            GL.Label(statType.ToString(), GL.Width(300f));
+                            GL.Space(25f);
+                            if (GL.Button(" < ", GL.ExpandWidth(false))) { modifiableValue.BaseValue -= 1; }
+                            GL.Space(20f);
+                            GL.Label($"{modifiableValue.BaseValue}", GL.Width(50f));
+                            if (GL.Button(" > ", GL.ExpandWidth(false))) { modifiableValue.BaseValue += 1; }
+                            GL.EndHorizontal();
+                        }
+                    }
+
+                }
+                chIndex += 1;
+            }
 
             GL.Space(20);
             if (selectedBlueprint != null)
@@ -188,10 +287,13 @@ namespace ToyBox
                 GL.Label($"{selectedBlueprint}".orange().bold());
                 GL.EndHorizontal();
             }
-            GL.Space(20);
-            GL.Label("Picker");
+            GL.Space(25);
+            GL.Label("====== Search 'n Pick ======");
+            GL.Space(10);
+            GL.Label("(please note the first search may take a few seconds)");
+            GL.Space(25);
             int newSelectedBPFilter = GL.Toolbar(
-                Settings.selectedBPTypeFilter, 
+                Settings.selectedBPTypeFilter,
                 blueprintTypeFilters.Select(tf => tf.name).ToArray()
                 );
             if (newSelectedBPFilter != Settings.selectedBPTypeFilter)
@@ -256,8 +358,6 @@ namespace ToyBox
 
                     index++;
                 }
-
-
             }
             GL.EndVertical();
         }
