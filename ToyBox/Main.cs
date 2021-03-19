@@ -52,8 +52,6 @@ namespace ToyBox
         public static String[] filteredBPNames = null;
         public static int matchCount = 0;
         public static String parameter = "";
-        static Vector2 scrollPosition;
-        static int selectedCharacter = 0;
         static int showStatsBitfield = 0;
         static int showBuffsBitfield = 0;
         static int showFactsBitfield = 0;
@@ -76,7 +74,9 @@ namespace ToyBox
 
         static bool Load(UnityModManager.ModEntry modEntry)
         {
+#if DEBUG
             modEntry.OnUnload = Unload;
+#endif
             Settings = Settings.Load<Settings>(modEntry);
             modEntry.OnToggle = OnToggle;
             modEntry.OnGUI = OnGUI;
@@ -255,6 +255,7 @@ namespace ToyBox
                 bool show = ((1 << chIndex) & showStatsBitfield) != 0;
                 bool nShow = GL.Toggle( show, "Show Stats", GL.ExpandWidth(false));
                 if (show != nShow) { showStatsBitfield ^= 1 << chIndex; }
+#if false
                 GL.Space(25);
                 show = ((1 << chIndex) & showBuffsBitfield) != 0;
                 nShow = GL.Toggle(show, "Show Buffs", GL.ExpandWidth(false));
@@ -267,7 +268,7 @@ namespace ToyBox
                 show = ((1 << chIndex) & showAutoBuffBitfield) != 0;
                 nShow = GL.Toggle(show, "Show AutoBuffs", GL.ExpandWidth(false));
                 if (show != nShow) { showAutoBuffBitfield ^= 1 << chIndex; }
-
+#endif
                 GL.EndHorizontal();
                 if (((1 << chIndex) & showStatsBitfield) != 0) {
                     foreach (object obj in Enum.GetValues(typeof(StatType)))
@@ -348,8 +349,6 @@ namespace ToyBox
                 int index = 0;
                 foreach (BlueprintScriptableObject blueprint in filteredBPs)
                 {
-                    Action add = null;
-                    Action remove = null;
                     GL.BeginHorizontal();
                     GL.Label($"{blueprint.GetType().Name.cyan()}", GL.Width(400));
                     GL.Space(30);
