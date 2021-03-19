@@ -36,6 +36,7 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using BagOfTricks.Utils;
+using TBLib;
 
 using GL = UnityEngine.GUILayout;
 

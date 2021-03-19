@@ -23,7 +23,7 @@
     <OutputPath>bin\Debug\ToyBox\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>none</ErrorReport>
-    <WarningLevel>0</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.txt" />
+    <Content Include="TBLib.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />

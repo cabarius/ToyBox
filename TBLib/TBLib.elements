@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProductVersion>3.5</ProductVersion>
+    <RootNamespace>TBLib</RootNamespace>
+    <ProjectGuid>{D93DA47D-65A1-44F5-BD71-A44D8DBAD62A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>TBLib</AssemblyName>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <TargetFramework>.NETFramework4.7.2</TargetFramework>
+    <MinFrameworkVersionRequired>4.0</MinFrameworkVersionRequired>
+    <Name>TBLib</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>False</Optimize>
+    <OutputPath>.\Bin\Debug</OutputPath>
+    <ConditionalDefines>DEBUG;TRACE;</ConditionalDefines>
+    <GeneratePDB>True</GeneratePDB>
+    <GenerateMDB>True</GenerateMDB>
+    <EnableAsserts>True</EnableAsserts>
+    <CpuType>anycpu</CpuType>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>.\Bin\Release</OutputPath>
+    <CpuType>anycpu</CpuType>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Swift">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Echoes">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UnityModManager">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityModManager\0Harmony.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Utilities.swift" />
+    <Compile Include="Properties\AssemblyInfo.swift" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
+    <Compile Include="Properties\Resources.Designer.swift">
+      <DependentUpon>Properties\Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.swift">
+      <DependentUpon>Properties\Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets" />
+</Project>

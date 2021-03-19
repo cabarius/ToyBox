@@ -59,13 +59,15 @@ using Kingmaker.Visual.Sound;
 
 namespace ToyBox
 {
+
+#if false
     public class NamedTypeFilter
     {
         public String name { get; set; }
         public Type type { get; set; }
         public NamedTypeFilter() { }
     }
-
+#endif
     public class NamedAction<T>
     {
         public String name { get; set; }
