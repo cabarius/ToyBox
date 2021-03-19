@@ -103,7 +103,7 @@
     <Compile Include="Notes\Snippets.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
+    <Content Include="README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />
