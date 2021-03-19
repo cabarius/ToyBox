@@ -24,11 +24,14 @@ using Kingmaker.Blueprints.Credits;
 using Kingmaker.Blueprints.Encyclopedia;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.Kingdom.Blueprints;
+using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Blueprints.Quests;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
@@ -134,6 +137,14 @@ namespace ToyBox
                 typeof(BlueprintSummonPool),
                 typeof(BlueprintUnit),
                 typeof(BlueprintArea),
+                typeof(BlueprintArmorEnchantment),
+                typeof(BlueprintWeaponEnchantment),
+                typeof(BlueprintEquipmentEnchantment),
+                typeof(BlueprintEncyclopediaPage),
+                typeof(BlueprintAreaPart),
+                typeof(BlueprintLogicConnector),
+                typeof(BlueprintKingdomBuff),
+                typeof(BlueprintSettlementBuilding),
             };
 
         public static Action<BlueprintScriptableObject> addFact = bp => (Utilities.GetUnitUnderMouse() ?? GameHelper.GetPlayerCharacter()).Descriptor.AddFact((BlueprintUnitFact)bp);

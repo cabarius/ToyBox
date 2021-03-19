@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints;
@@ -72,6 +73,8 @@ namespace ToyBox
             new NamedTypeFilter { name = "Usable", type = typeof(BlueprintItemEquipmentUsable) },
         };
 
+        static BackgroundWorker searchWorker = new BackgroundWorker();
+
         static bool Load(UnityModManager.ModEntry modEntry)
         {
 #if DEBUG
@@ -98,12 +101,13 @@ namespace ToyBox
             Enabled = value;
             return true;
         }
-        static void UpdateSearchResults()
+
+        static async void UpdateSearchResults()
         {
             if (blueprints == null)
             {
+#if false
                 List<BlueprintScriptableObject> bps = new List<BlueprintScriptableObject>();
-
                 BlueprintScriptableObject[] allBPs = GetBlueprints();
                 foreach (BlueprintScriptableObject bp in allBPs)
                 {
@@ -118,7 +122,9 @@ namespace ToyBox
                     }
                 }
                 blueprints = bps.ToArray();
-                //blueprints = GetBlueprints().Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
+#endif
+
+                blueprints = GetBlueprints().Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
             }
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
@@ -326,6 +332,7 @@ namespace ToyBox
             GL.Label("Limit", GL.ExpandWidth(false));
             String searchLimitString = GL.TextField($"{Settings.searchLimit}", GL.Width(500f));
             Int32.TryParse(searchLimitString, out Settings.searchLimit);
+            if (Settings.searchLimit > 1000) { Settings.searchLimit = 1000; }
             GL.EndHorizontal();
 
             GL.BeginHorizontal();
@@ -352,12 +359,14 @@ namespace ToyBox
                     GL.BeginHorizontal();
                     GL.Label($"{blueprint.GetType().Name.cyan()}", GL.Width(400));
                     GL.Space(30);
+#if false
                     if (GL.Button("Select", GL.ExpandWidth(false)))
                     {
                         selectedBlueprintIndex = index;
                         selectedBlueprint = blueprint;
                         parameter = blueprint.name;
                     }
+#endif
                     BlueprintAction[] actions = BlueprintAction.ActionsForBlueprint(blueprint);
                     if (actions != null)
                     {
