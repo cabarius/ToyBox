@@ -54,14 +54,12 @@ namespace ToyBox
         public static int matchCount = 0;
         public static String parameter = "";
         static int showStatsBitfield = 0;
-        static int showFactsBitfield = 0;
-        static int showFeaturesBitfield = 0;
-        static int showBuffsBitfield = 0;
-        static int showAutoBuffBitfield = 0;
+        static int showDetailsBitfield = 0;
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
         static bool searchChanged = false;
         static Exception caughtException = null;
+        static String playerDetailsSearch = "";
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter { name = "All", type = typeof(BlueprintScriptableObject) },
@@ -166,6 +164,18 @@ namespace ToyBox
 
                 //            scrollPosition = GL.BeginScrollView(scrollPosition, GL.ExpandWidth(true), GL.ExpandHeight(true));
 
+                UI.Section("Cheap Tricks",
+                    () =>
+                    {
+                        UI.HStack
+                            {
+                        title: "Combat", actions:
+                            {
+                                () => { Quckies { name: "Rest All" actions: () => { CheatsCombat.RestAll(); }
+                        }
+                        }
+                    });
+
                 GL.Space(25);
                 GL.Label("====== Cheap Tricks ======".bold());
                 GL.Space(25);
@@ -267,18 +277,12 @@ namespace ToyBox
                     }
                     GL.Space(25);
                     bool show = ((1 << chIndex) & showStatsBitfield) != 0;
-                    bool nShow = GL.Toggle(show, "Show Stats", GL.ExpandWidth(false));
+                    bool nShow = GL.Toggle(show, "Stats", GL.ExpandWidth(false));
                     if (show != nShow) { showStatsBitfield ^= 1 << chIndex; }
                     GL.Space(25);
-#if false
-                    show = ((1 << chIndex) & showFactsBitfield) != 0;
-                    nShow = GL.Toggle(show, "Show Facts", GL.ExpandWidth(false));
-                    if (show != nShow) { showFactsBitfield ^= 1 << chIndex; }
-                    GL.Space(25);
-#endif
-                    show = ((1 << chIndex) & showFeaturesBitfield) != 0;
-                    nShow = GL.Toggle(show, "Show Features", GL.ExpandWidth(false));
-                    if (show != nShow) { showFeaturesBitfield ^= 1 << chIndex; }
+                    show = ((1 << chIndex) & showDetailsBitfield) != 0;
+                    nShow = GL.Toggle(show, "Details (Facts, etc)", GL.ExpandWidth(false));
+                    if (show != nShow) { showDetailsBitfield ^= 1 << chIndex; }
                     GL.EndHorizontal();
 
                     if (((1 << chIndex) & showStatsBitfield) != 0)
@@ -302,49 +306,23 @@ namespace ToyBox
                         }
 
                     }
-#if false
-                    if (((1 << chIndex) & showFactsBitfield) != 0)
-                    {
-                        EntityFactsManager facts = ch.Descriptor.Facts;
-                        EntityFact factToRemove = null;
-                        foreach (EntityFact fact in facts.m_Facts)
-                        {
-                            String name = fact.Name;
-                            if (name != null && name.Length > 0)
-                            {
-                                GL.BeginHorizontal();
-                                GL.Space(100);
-                                if (name == null) { name = $"{fact.Blueprint.name}"; }
-                                GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
-                                GL.Space(30);
-                                if (GL.Button("Remove", GL.Width(150)))
-                                {
-                                    factToRemove = fact;
-                                }
-                                String description = fact.Description;
-                                if (description != null)
-                                {
-                                    GL.Space(30);
-                                    GL.Label(description.green(), GL.ExpandWidth(false));
-                                }
-                                GL.EndHorizontal();
-                            }
-                        }
-                        if (factToRemove != null) { ch.Descriptor.RemoveFact(factToRemove); }
-                    }
-#endif
+
                     if (((1 << chIndex) & showFeaturesBitfield) != 0)
                     {
+                        GL.BeginHorizontal();
+                        GL.Space(100);
+                        playerDetailsSearch = GL.TextField(playerDetailsSearch, GL.Width(200));
+                        GL.EndHorizontal();
                         FeatureCollection features = ch.Descriptor.Progression.Features;
                         EntityFact featureToRemove = null;
                         foreach (EntityFact fact in features)
                         {
                             String name = fact.Name;
-                            if (name != null && name.Length > 0)
+                            if (name == null) { name = $"{fact.Blueprint.name}"; }
+                            if (name != null && name.Length > 0 && (playerDetailsSearch.Length == 0  || name.Contains(playerDetailsSearch)))
                             {
                                 GL.BeginHorizontal();
                                 GL.Space(100);
-                                if (name == null) { name = $"{fact.Blueprint.name}"; }
                                 GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
                                 GL.Space(30);
                                 if (GL.Button("Remove", GL.Width(150)))

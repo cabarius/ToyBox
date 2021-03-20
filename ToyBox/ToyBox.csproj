@@ -91,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RichTextUtils.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ToyBoxUI.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

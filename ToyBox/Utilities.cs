@@ -68,7 +68,13 @@ namespace ToyBox
         public NamedTypeFilter() { }
     }
 
-    public class NamedAction<T>
+    public class NamedAction
+    {
+        public String name { get; set; }
+        public Action action { get; set; }
+        public NamedAction() { }
+    }
+        public class NamedAction<T>
     {
         public String name { get; set; }
         public Action<T> action { get; set; }
