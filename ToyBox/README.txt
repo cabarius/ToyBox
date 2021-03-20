@@ -10,6 +10,7 @@ Current features include 
 
 * Search and entire blueprint catalog for feats, features, items and more
 * Browse party members, level up, mythic level up, modify stats
+* Browse features by party member
 * Various cheats based on console commands
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.

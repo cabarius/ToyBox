@@ -187,6 +187,9 @@ namespace ToyBox
                 {
                     CheatsCombat.DetachDebuff();
                 }
+                GL.EndHorizontal();
+                GL.BeginHorizontal();
+                GL.Space(153);
                 if (GL.Button("Kill All Enemies", GL.Width(300f)))
                 {
                     CheatsCombat.KillAll();
