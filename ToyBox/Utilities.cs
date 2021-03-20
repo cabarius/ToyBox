@@ -54,8 +54,10 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Customization;
+using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
+using Kingmaker.Assets.UI;
 
 namespace ToyBox
 {
@@ -80,4 +82,17 @@ namespace ToyBox
             return type.IsSubclassOf(baseType) || type == baseType;
         }
     }
+
+    public static class BlueprintScriptableObjectUtils
+    {
+        public static string GetDescription(this BlueprintScriptableObject bpObejct)
+        // borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+        {
+            UnitReference mainChar = Game.Instance.Player.MainCharacter;
+            if (mainChar == null) { return "n/a";  }
+            MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bpObejct, (MechanicsContext)null, (TargetWrapper)null);
+            return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
+        }
+    }
+
 }

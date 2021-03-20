@@ -162,7 +162,7 @@ namespace ToyBox
             //            scrollPosition = GL.BeginScrollView(scrollPosition, GL.ExpandWidth(true), GL.ExpandHeight(true));
 
             GL.Space(25);
-            GL.Label("====== Bag of Cheap Tricks ======");
+            GL.Label("====== Cheap Tricks ======");
             GL.Space(25);
             GL.BeginHorizontal();
             GL.Label("Combat", GL.Width(150f));
@@ -230,8 +230,8 @@ namespace ToyBox
                 int mythicLevel = progression.MythicExperience;
                 GL.BeginHorizontal();
 
-                GL.Label(ch.CharacterName , GL.Width(300f));
-                GL.Label($"level: {level}", GL.Width(125f));
+                GL.Label(ch.CharacterName.orange().bold() , GL.Width(400f));
+                GL.Label("level".green() + $": {level}", GL.Width(125f));
                 // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                 if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20)
                 {
@@ -242,10 +242,10 @@ namespace ToyBox
                 }
                 else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20)
                 {
-                    GL.Label("Level Up", GL.Width(150));
+                    GL.Label("Level Up".cyan().italic(), GL.Width(150));
                 }
                 GL.Space(30);
-                GL.Label($"mythic: {mythicLevel}", GL.Width(125));
+                GL.Label($"mythic".green() + $": {mythicLevel}", GL.Width(125));
                 if (progression.MythicExperience < 10)
                 {
                     if (GL.Button(" +1 Mythic", GL.Width(150)))
@@ -284,12 +284,12 @@ namespace ToyBox
                         if (modifiableValue != null)
                         {
                             GL.BeginHorizontal();
-                            GL.Space(70);
-                            GL.Label(statType.ToString(), GL.Width(300f));
+                            GL.Space(69);   // the best number...
+                            GL.Label(statType.ToString().green().bold(), GL.Width(400f));
                             GL.Space(25f);
                             if (GL.Button(" < ", GL.ExpandWidth(false))) { modifiableValue.BaseValue -= 1; }
                             GL.Space(20f);
-                            GL.Label($"{modifiableValue.BaseValue}", GL.Width(50f));
+                            GL.Label($"{modifiableValue.BaseValue}".orange().bold(), GL.Width(50f));
                             if (GL.Button(" > ", GL.ExpandWidth(false))) { modifiableValue.BaseValue += 1; }
                             GL.EndHorizontal();
                         }
@@ -315,9 +315,11 @@ namespace ToyBox
             GL.Space(10);
             GL.Label("(please note the first search may take a few seconds)");
             GL.Space(25);
-            int newSelectedBPFilter = GL.Toolbar(
+            int newSelectedBPFilter = GL.SelectionGrid(
                 Settings.selectedBPTypeFilter,
-                blueprintTypeFilters.Select(tf => tf.name).ToArray()
+                blueprintTypeFilters.Select(tf => tf.name).ToArray(),
+                5,
+                GL.ExpandWidth(false)
                 );
             if (newSelectedBPFilter != Settings.selectedBPTypeFilter)
             {
@@ -354,11 +356,17 @@ namespace ToyBox
             if (filteredBPs != null)
             {
                 int index = 0;
+                int maxActionCount = 0;
+                foreach (BlueprintScriptableObject blueprint in filteredBPs)
+                {
+                    BlueprintAction[] actions = BlueprintAction.ActionsForBlueprint(blueprint);
+                    int actionCount = actions != null ? actions.Count() : 0;
+                    if (actionCount > maxActionCount) { maxActionCount = actionCount;  }
+                }
                 foreach (BlueprintScriptableObject blueprint in filteredBPs)
                 {
                     GL.BeginHorizontal();
-                    GL.Label($"{blueprint.GetType().Name.cyan()}", GL.Width(400));
-                    GL.Space(30);
+                    GL.Label(blueprint.name.orange().bold(), GL.Width(650));
 #if false
                     if (GL.Button("Select", GL.ExpandWidth(false)))
                     {
@@ -368,18 +376,30 @@ namespace ToyBox
                     }
 #endif
                     BlueprintAction[] actions = BlueprintAction.ActionsForBlueprint(blueprint);
-                    if (actions != null)
+                    int actionCount = actions != null ? actions.Count() : 0;
+                    for (int ii = 0; ii< maxActionCount; ii++) 
                     {
-                        foreach (BlueprintAction action in actions)
+                        if (ii < actionCount)
                         {
+                            BlueprintAction action = actions[ii];
+                            if (GL.Button(action.name, GL.Width(140))) { action.action(blueprint); };
                             GL.Space(10);
-                            if (GL.Button(action.name, GL.ExpandWidth(false))) { action.action(blueprint); };
+                        }
+                        else
+                        {
+                            GL.Space(154);
                         }
                     }
-                    GL.Space(20);
-                    GL.Label(blueprint.name.orange().bold(), GL.ExpandWidth(false));
+                    GL.Space(30);
+                    GL.Label($"{blueprint.GetType().Name.cyan()}", GL.Width(400));
                     GL.EndHorizontal();
-
+                    String description = blueprint.GetDescription();
+                    if (description.Length > 0) {
+                        GL.BeginHorizontal();
+                        GL.Space(684 + maxActionCount * 154);
+                        GL.Label($"{description.green()}");
+                        GL.EndHorizontal();
+                    }
                     index++;
                 }
             }
