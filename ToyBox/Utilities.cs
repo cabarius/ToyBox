@@ -88,10 +88,22 @@ namespace ToyBox
         public static string GetDescription(this BlueprintScriptableObject bpObejct)
         // borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {
-            UnitReference mainChar = Game.Instance.Player.MainCharacter;
-            if (mainChar == null) { return "n/a";  }
-            MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bpObejct, (MechanicsContext)null, (TargetWrapper)null);
-            return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
+            try
+            {
+                UnitReference mainChar = Game.Instance.Player.MainCharacter;
+                if (mainChar == null) { return "n/a"; }
+                MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bpObejct, (MechanicsContext)null, (TargetWrapper)null);
+                return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
+            }
+            catch (Exception e)
+            {
+                Console.Write($"{e}");
+#if DEBUG
+                return "ERROR".red().bold() + $": caught exception {e}";
+#else
+                return "";
+#endif
+            }
         }
     }
 

@@ -41,5 +41,25 @@ GL.Space(10);
             GL.Label("MyTextOption", GL.ExpandWidth(false));
             GL.Space(10);
             Settings.MyTextOption = GL.TextField(Settings.MyTextOption, GL.Width(300f));
-            GL.EndHorizontal();
+            GL.EndHorizontal()
+
             */
+
+#if false
+                List<BlueprintScriptableObject> bps = new List<BlueprintScriptableObject>();
+                BlueprintScriptableObject[] allBPs = GetBlueprints();
+                foreach (BlueprintScriptableObject bp in allBPs)
+                {
+                    bool ignoreFound = false;
+                    foreach (Type t in BlueprintAction.ignoredBluePrintTypes)
+                    {
+                        if (bp.GetType().IsKindOf(t)) { ignoreFound = true; break; }
+                    }
+                    if (!ignoreFound)
+                    {
+                        bps.Add(bp);
+                    }
+                }
+                blueprints = bps.ToArray();
+#endif
+

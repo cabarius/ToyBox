@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BagOfTricks.Utils
+namespace ToyBox
 {
     public static class RichTextUtils
     {
