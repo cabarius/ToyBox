@@ -22,6 +22,7 @@ using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.Designers;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.GameModes;
@@ -53,8 +54,9 @@ namespace ToyBox
         public static int matchCount = 0;
         public static String parameter = "";
         static int showStatsBitfield = 0;
-        static int showBuffsBitfield = 0;
         static int showFactsBitfield = 0;
+        static int showFeaturesBitfield = 0;
+        static int showBuffsBitfield = 0;
         static int showAutoBuffBitfield = 0;
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
@@ -264,21 +266,18 @@ namespace ToyBox
                     bool show = ((1 << chIndex) & showStatsBitfield) != 0;
                     bool nShow = GL.Toggle(show, "Show Stats", GL.ExpandWidth(false));
                     if (show != nShow) { showStatsBitfield ^= 1 << chIndex; }
+                    GL.Space(25);
 #if false
-                GL.Space(25);
-                show = ((1 << chIndex) & showBuffsBitfield) != 0;
-                nShow = GL.Toggle(show, "Show Buffs", GL.ExpandWidth(false));
-                if (show != nShow) { showBuffsBitfield ^= 1 << chIndex; }
-                GL.Space(25);
-                show = ((1 << chIndex) & showFactsBitfield) != 0;
-                nShow = GL.Toggle(show, "Show Facts", GL.ExpandWidth(false));
-                if (show!= nShow) { showStatsBitfield ^= 1 << chIndex; }
-                GL.Space(25);
-                show = ((1 << chIndex) & showAutoBuffBitfield) != 0;
-                nShow = GL.Toggle(show, "Show AutoBuffs", GL.ExpandWidth(false));
-                if (show != nShow) { showAutoBuffBitfield ^= 1 << chIndex; }
+                    show = ((1 << chIndex) & showFactsBitfield) != 0;
+                    nShow = GL.Toggle(show, "Show Facts", GL.ExpandWidth(false));
+                    if (show != nShow) { showFactsBitfield ^= 1 << chIndex; }
+                    GL.Space(25);
 #endif
+                    show = ((1 << chIndex) & showFeaturesBitfield) != 0;
+                    nShow = GL.Toggle(show, "Show Features", GL.ExpandWidth(false));
+                    if (show != nShow) { showFeaturesBitfield ^= 1 << chIndex; }
                     GL.EndHorizontal();
+
                     if (((1 << chIndex) & showStatsBitfield) != 0)
                     {
                         foreach (object obj in Enum.GetValues(typeof(StatType)))
@@ -299,6 +298,69 @@ namespace ToyBox
                             }
                         }
 
+                    }
+#if false
+                    if (((1 << chIndex) & showFactsBitfield) != 0)
+                    {
+                        EntityFactsManager facts = ch.Descriptor.Facts;
+                        EntityFact factToRemove = null;
+                        foreach (EntityFact fact in facts.m_Facts)
+                        {
+                            String name = fact.Name;
+                            if (name != null && name.Length > 0)
+                            {
+                                GL.BeginHorizontal();
+                                GL.Space(100);
+                                if (name == null) { name = $"{fact.Blueprint.name}"; }
+                                GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
+                                GL.Space(30);
+                                if (GL.Button("Remove", GL.Width(150)))
+                                {
+                                    factToRemove = fact;
+                                }
+                                String description = fact.Description;
+                                if (description != null)
+                                {
+                                    GL.Space(30);
+                                    GL.Label(description.green(), GL.ExpandWidth(false));
+                                }
+                                GL.EndHorizontal();
+                            }
+                        }
+                        if (factToRemove != null) { ch.Descriptor.RemoveFact(factToRemove); }
+                    }
+#endif
+                    if (((1 << chIndex) & showFeaturesBitfield) != 0)
+                    {
+                        FeatureCollection features = ch.Descriptor.Progression.Features;
+                        EntityFact featureToRemove = null;
+                        foreach (EntityFact fact in features)
+                        {
+                            String name = fact.Name;
+                            if (name != null && name.Length > 0)
+                            {
+                                GL.BeginHorizontal();
+                                GL.Space(100);
+                                if (name == null) { name = $"{fact.Blueprint.name}"; }
+                                GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
+                                GL.Space(30);
+                                if (GL.Button("Remove", GL.Width(150)))
+                                {
+                                    featureToRemove = fact;
+                                }
+                                String description = fact.Description;
+                                if (description != null)
+                                {
+                                    GL.Space(30);
+                                    GL.Label(description.green(), GL.ExpandWidth(false));
+                                }
+                                GL.EndHorizontal();
+                            }
+                        }
+                        if (featureToRemove != null)
+                        {
+                            ch.Descriptor.Progression.Features.RemoveFact(featureToRemove);
+                        }
                     }
                     chIndex += 1;
                 }
