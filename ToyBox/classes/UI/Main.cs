@@ -119,13 +119,13 @@ namespace ToyBox
             {
                 ResetSearch();
             }
-            String[] terms = Settings.searchText.Split(' ').Select(s => s.ToLower()).ToArray();
-            List<BlueprintScriptableObject> filtered = new List<BlueprintScriptableObject>();
-            Type selectedType = blueprintTypeFilters[Settings.selectedBPTypeFilter].type;
+            var terms = Settings.searchText.Split(' ').Select(s => s.ToLower()).ToArray();
+            var filtered = new List<BlueprintScriptableObject>();
+            var selectedType = blueprintTypeFilters[Settings.selectedBPTypeFilter].type;
             foreach (BlueprintScriptableObject blueprint in blueprints)
             {
-                String name = blueprint.name.ToLower();
-                Type type = blueprint.GetType();
+                var name = blueprint.name.ToLower();
+                var type = blueprint.GetType();
                 if (terms.All(term => name.Contains(term)) && type.IsKindOf(selectedType))
                 {
                     filtered.Add(blueprint);
@@ -162,83 +162,29 @@ namespace ToyBox
 
                 GL.BeginVertical("box");
 
-                //            scrollPosition = GL.BeginScrollView(scrollPosition, GL.ExpandWidth(true), GL.ExpandHeight(true));
-
-                UI.Section("Cheap Tricks",
-                    () =>
-                    {
-                        UI.HStack
-                            {
-                        title: "Combat", actions:
-                            {
-                                () => { Quckies { name: "Rest All" actions: () => { CheatsCombat.RestAll(); }
-                        }
-                        }
-                    });
-
-                GL.Space(25);
-                GL.Label("====== Cheap Tricks ======".bold());
-                GL.Space(25);
-                GL.BeginHorizontal();
-                GL.Label("Combat", GL.Width(150f));
-                if (GL.Button("Rest All", GL.Width(300f)))
+                UI.Section("Cheap Tricks", null, () =>
                 {
-                    CheatsCombat.RestAll();
-                }
-                if (GL.Button("Empowered", GL.Width(300f)))
+                    UI.HStack("Combat", 4,
+                        () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
+                        () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
+                        () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.RestAll(); }); },
+                        () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.Empowered(""); }); },
+                        () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
+                        () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
+                     );
+                    UI.Space(10);
+                    UI.HStack("Common", 4,
+                        () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
+                        () => { UI.ActionButton("Set Perception to 40", () => { CheatsCommon.StatPerception(); }); }
+                     );
+                    UI.Space(10);
+                    UI.HStack("Unlocks", 4,
+                        () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
+                     );
+                });
+                UI.Section("Party Editor", null, () =>
                 {
-                    CheatsCombat.Empowered("");
-                }
-                if (GL.Button("Full Buff Please", GL.Width(300f)))
-                {
-                    CheatsCombat.FullBuffPlease("");
-                }
-                if (GL.Button("Remove Death's Door", GL.Width(300f)))
-                {
-                    CheatsCombat.DetachDebuff();
-                }
-                GL.EndHorizontal();
-                GL.BeginHorizontal();
-                GL.Space(153);
-                if (GL.Button("Kill All Enemies", GL.Width(300f)))
-                {
-                    CheatsCombat.KillAll();
-                }
-                if (GL.Button("Summon Zoo", GL.Width(300f)))
-                {
-                    CheatsCombat.SpawnInspectedEnemiesUnderCursor("");
-                }
-                GL.EndHorizontal();
-
-                GL.Space(10);
-
-                GL.BeginHorizontal();
-                GL.Label("Common", GL.Width(150f));
-
-                if (GL.Button("Change Weather", GL.Width(300f)))
-                {
-                    CheatsCommon.ChangeWeather("");
-                }
-
-                if (GL.Button("Set Perception to 40", GL.Width(300f)))
-                {
-                    CheatsCommon.StatPerception();
-                }
-                GL.EndHorizontal();
-
-                GL.Space(10);
-
-                GL.BeginHorizontal();
-                GL.Label("Unlocks", GL.Width(150f));
-                if (GL.Button("Give All Items", GL.Width(300f)))
-                {
-                    CheatsUnlock.CreateAllItems("");
-                }
-                GL.EndHorizontal();
-
-                GL.Space(25);
-                GL.Label("====== Party Editor ======".bold());
-                GL.Space(25);
+                });
                 int chIndex = 0;
                 foreach (UnitEntityData ch in Game.Instance.Player.Party)
                 {
@@ -307,7 +253,7 @@ namespace ToyBox
 
                     }
 
-                    if (((1 << chIndex) & showFeaturesBitfield) != 0)
+                    if (((1 << chIndex) & showDetailsBitfield) != 0)
                     {
                         GL.BeginHorizontal();
                         GL.Space(100);
@@ -319,7 +265,7 @@ namespace ToyBox
                         {
                             String name = fact.Name;
                             if (name == null) { name = $"{fact.Blueprint.name}"; }
-                            if (name != null && name.Length > 0 && (playerDetailsSearch.Length == 0  || name.Contains(playerDetailsSearch)))
+                            if (name != null && name.Length > 0 && (playerDetailsSearch.Length == 0 || name.Contains(playerDetailsSearch)))
                             {
                                 GL.BeginHorizontal();
                                 GL.Space(100);
