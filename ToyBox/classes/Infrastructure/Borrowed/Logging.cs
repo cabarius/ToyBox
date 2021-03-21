@@ -1,5 +1,5 @@
 ﻿// some stuff borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
-// using System;
+using System;
 using ToyBox;
 using System;
 using System.Collections.Generic;
@@ -112,6 +112,11 @@ namespace ToyBox
             {
                 Logger.modLogger.Log(message.ToString());
             }
+        }
+
+        public static void Error(Exception ex)
+        {
+            Logger.modLogger.Log(ex.ToString() + "\n" + ex.StackTrace);
         }
     }
 

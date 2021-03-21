@@ -93,34 +93,47 @@ namespace ToyBox
             if (GL.Button(title, options)) { action(); }
         }
 
+        static void TogglePrivate(
+            String title,
+            ref bool value,
+            bool disclosureStyle = true,
+            params GUILayoutOption[] options)
+        {
+            if (!disclosureStyle)
+            {
+                if (GL.Button(title + " " + (value ? onMark : offMark), GL.ExpandWidth(false))) { value = !value; }
+            }
+            else
+            {
+                UI.Label(title, GL.ExpandWidth(false));
+                GL.Space(10);
+                if (GL.Button(value ? disclosureArrowOn : disclosureArrowOff, GL.ExpandWidth(false))) { value = !value; }
+            }
+        }
+
         public static void Toggle(
             String title,
             ref bool value,
-            String onMark = onMark,
-            String offMark = offMark,
             params GUILayoutOption[] options)
         {
-            UI.Label(title, GL.ExpandWidth(false));
-            if (GL.Button(value ? onMark : offMark, GL.ExpandWidth(false))) { value = !value; }
+            TogglePrivate(title, ref value, false, options);
         }
 
         public static void BitFieldToggle(
             String title,
             ref int bitfield,
             int offset,
-            String onMark = onMark,
-            String offMark = offMark,
             params GUILayoutOption[] options)
         {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            Toggle(title, ref newBit, onMark, offMark, options);
+            TogglePrivate(title, ref newBit, false, options);
             if (bit != newBit) { bitfield ^= 1 << offset; }
         }
 
         public static void DisclosureToggle(String title, ref bool value, params Action[] actions)
         {
-            UI.Toggle(title, ref value, disclosureArrowOn, disclosureArrowOff, GL.ExpandWidth(false));
+            UI.TogglePrivate(title, ref value, true, GL.ExpandWidth(false));
             UI.If(value, actions);
         }
 
@@ -129,7 +142,7 @@ namespace ToyBox
 
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            Toggle(title, ref newBit, disclosureArrowOn, disclosureArrowOff, GL.ExpandWidth(false));
+            TogglePrivate(title, ref newBit, true, GL.ExpandWidth(false));
             if (bit != newBit) { bitfield ^= (1 << offset); }
             UI.If(newBit, actions);
         }

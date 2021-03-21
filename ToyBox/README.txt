@@ -8,10 +8,18 @@ Toy Box is an experimental mod in the spirit of awesome mods like Bag of Tricks 
 
 Current features include 
 
+ver 1.0
 - Search and entire blueprint catalog for feats, features, items and more
 - Browse party members, level up, mythic level up, modify stats
 - Browse and  remove features by party member (back up before using)
 - Various cheats based on console commands
+
+ver 1.1
+- party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
+- Add/Remove party members
+- Teleport Party To You
+- Run Perception Check
+- ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
 

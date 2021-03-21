@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -46,6 +47,7 @@ namespace ToyBox
 #endif
     static class Main
     {
+        static Harmony HarmonyInstance;
         public static Settings settings;
         public static bool Enabled;
         public static BlueprintScriptableObject[] blueprints = null;
@@ -80,16 +82,15 @@ namespace ToyBox
             modEntry.OnUnload = Unload;
 #endif
             Logger.modLogger = modEntry.Logger;
-
             settings = Settings.Load<Settings>(modEntry);
-
             Logger.modEntryPath = modEntry.Path;
 
-            settings = Settings.Load<Settings>(modEntry);
+            HarmonyInstance = new Harmony(modEntry.Info.Id);
+            HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+
             modEntry.OnToggle = OnToggle;
             modEntry.OnGUI = OnGUI;
             modEntry.OnSaveGUI = OnSaveGUI;
-            //if (Settings.searchText.Length > 0) { searchChanged = true;  }
             return true;
         }
 #if DEBUG
@@ -188,6 +189,9 @@ namespace ToyBox
                     () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
                     );
                 });
+                UI.HStack("Flags", 1,
+                    () => { UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, GL.ExpandWidth(false)); }
+                    );
 
                 var player = Game.Instance.Player;
                 var partyFilterChoices = new List<NamedFunc<List<UnitEntityData>>>()
