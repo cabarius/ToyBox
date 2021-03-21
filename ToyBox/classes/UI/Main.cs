@@ -259,7 +259,7 @@ namespace ToyBox
                         UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex);
                         GL.Space(25);
                         UI.DisclosureBitFieldToggle("Details", ref showDetailsBitfield, chIndex);
-                        GL.Space(100);
+                        GL.Space(80);
                         if (!player.PartyAndPets.Contains(ch))
                         {
                             UI.ActionButton("Add To Party", () => { charToAdd = ch; }, GL.ExpandWidth(false));
@@ -311,11 +311,11 @@ namespace ToyBox
                                     GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
                                     GL.Space(30);
                                     var rank = fact.GetRank();
-                                    if (GL.Button(" < ", GL.ExpandWidth(false))) { fact.AddRank(); }
-                                    GL.Space(20f);
-                                    GL.Label($"{fact.GetRank()}".orange().bold(), GL.Width(50f));
-                                    if (GL.Button(" > ", GL.ExpandWidth(false))) { fact.RemoveRank(); }
-
+                                    if (GL.Button("<", GL.ExpandWidth(false))) { fact.AddRank(); }
+                                    GL.Space(10f);
+                                    GL.Label($"{fact.GetRank()}".orange().bold(), GL.Width(30f));
+                                    if (GL.Button(">", GL.ExpandWidth(false))) { fact.RemoveRank(); }
+                                    GL.Space(30);
                                     if (GL.Button("Remove", GL.Width(150)))
                                     {
                                         featureToRemove = fact;

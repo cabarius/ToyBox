@@ -86,7 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\Infrastructure\Borrowed\Accesors.cs" />
+    <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Logging.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\UnitEntityDetails.cs" />
