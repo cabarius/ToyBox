@@ -130,13 +130,11 @@ namespace ToyBox
             UI.If(newBit, actions);
         }
 
-#if false
-        public static Func<T> TypePicker(String title, Type[] types)
+        public static Func<T> TypePicker<T>(String title, Dictionary<String, List<Func<List<T>>>> extractors)
         {
-            var titles = types.Select(t => t.Name).ToArray();
-
+//            var titles = types.Select(t => t.Name).ToArray();
+            return null;
         }
-#endif
         // UI Builders
 
         public static void If(bool value, params Action[] actions)

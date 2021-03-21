@@ -182,6 +182,19 @@ namespace ToyBox
                         () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
                      );
                 });
+
+                var player = Game.Instance.Player;
+
+                var methods = new List<Func<List<UnitEntityData>>>()
+                {
+                () => Game.Instance.Player.Party,
+                () => Game.Instance.Player.m_PartyAndPets,
+                () => Game.Instance.Player.ActiveCompanions,
+                () => Game.Instance.Player.AllCharacters,
+                PartyUtils.GetCustomCompanions,
+                PartyUtils.GetPets,
+                };
+
                 UI.Section("Party Editor", () =>
                 {
                     int chIndex = 0;
