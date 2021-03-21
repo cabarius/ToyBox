@@ -60,6 +60,7 @@ namespace ToyBox
         static bool searchChanged = false;
         static Exception caughtException = null;
         static String playerDetailsSearch = "";
+        static bool test = false;
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter { name = "All", type = typeof(BlueprintScriptableObject) },
@@ -161,8 +162,7 @@ namespace ToyBox
                 }
 
                 GL.BeginVertical("box");
-
-                UI.Section("Cheap Tricks", null, () =>
+                UI.Section("Cheap Tricks", () =>
                 {
                     UI.HStack("Combat", 4,
                         () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
@@ -182,116 +182,111 @@ namespace ToyBox
                         () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
                      );
                 });
-                UI.Section("Party Editor", null, () =>
+                UI.Section("Party Editor", () =>
                 {
-                });
-                int chIndex = 0;
-                foreach (UnitEntityData ch in Game.Instance.Player.Party)
-                {
-                    UnitProgressionData progression = ch.Descriptor.Progression;
-                    BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
-                    int level = progression.CharacterLevel;
-                    int mythicLevel = progression.MythicExperience;
-                    GL.BeginHorizontal();
-
-                    GL.Label(ch.CharacterName.orange().bold(), GL.Width(400f));
-                    GL.Label("level".green() + $": {level}", GL.Width(125f));
-                    // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
-                    if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20)
+                    int chIndex = 0;
+                    foreach (UnitEntityData ch in Game.Instance.Player.Party)
                     {
-                        if (GL.Button(" +1 Level", GL.Width(150)))
-                        {
-                            progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
-                        }
-                    }
-                    else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20)
-                    {
-                        GL.Label("Level Up".cyan().italic(), GL.Width(150));
-                    }
-                    GL.Space(30);
-                    GL.Label($"mythic".green() + $": {mythicLevel}", GL.Width(125));
-                    if (progression.MythicExperience < 10)
-                    {
-                        if (GL.Button(" +1 Mythic", GL.Width(150)))
-                        {
-                            progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
-                        }
-                    }
-                    else
-                    {
-                        GL.Label("Max", GL.Width(150));
-                    }
-                    GL.Space(25);
-                    bool show = ((1 << chIndex) & showStatsBitfield) != 0;
-                    bool nShow = GL.Toggle(show, "Stats", GL.ExpandWidth(false));
-                    if (show != nShow) { showStatsBitfield ^= 1 << chIndex; }
-                    GL.Space(25);
-                    show = ((1 << chIndex) & showDetailsBitfield) != 0;
-                    nShow = GL.Toggle(show, "Details (Facts, etc)", GL.ExpandWidth(false));
-                    if (show != nShow) { showDetailsBitfield ^= 1 << chIndex; }
-                    GL.EndHorizontal();
-
-                    if (((1 << chIndex) & showStatsBitfield) != 0)
-                    {
-                        foreach (object obj in Enum.GetValues(typeof(StatType)))
-                        {
-                            StatType statType = (StatType)obj;
-                            ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
-                            if (modifiableValue != null)
-                            {
-                                GL.BeginHorizontal();
-                                GL.Space(69);   // the best number...
-                                GL.Label(statType.ToString().green().bold(), GL.Width(400f));
-                                GL.Space(25f);
-                                if (GL.Button(" < ", GL.ExpandWidth(false))) { modifiableValue.BaseValue -= 1; }
-                                GL.Space(20f);
-                                GL.Label($"{modifiableValue.BaseValue}".orange().bold(), GL.Width(50f));
-                                if (GL.Button(" > ", GL.ExpandWidth(false))) { modifiableValue.BaseValue += 1; }
-                                GL.EndHorizontal();
-                            }
-                        }
-
-                    }
-
-                    if (((1 << chIndex) & showDetailsBitfield) != 0)
-                    {
+                        UnitProgressionData progression = ch.Descriptor.Progression;
+                        BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
+                        int level = progression.CharacterLevel;
+                        int mythicLevel = progression.MythicExperience;
                         GL.BeginHorizontal();
-                        GL.Space(100);
-                        playerDetailsSearch = GL.TextField(playerDetailsSearch, GL.Width(200));
-                        GL.EndHorizontal();
-                        FeatureCollection features = ch.Descriptor.Progression.Features;
-                        EntityFact featureToRemove = null;
-                        foreach (EntityFact fact in features)
+
+                        GL.Label(ch.CharacterName.orange().bold(), GL.Width(400f));
+                        GL.Label("level".green() + $": {level}", GL.Width(125f));
+                        // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
+                        if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20)
                         {
-                            String name = fact.Name;
-                            if (name == null) { name = $"{fact.Blueprint.name}"; }
-                            if (name != null && name.Length > 0 && (playerDetailsSearch.Length == 0 || name.Contains(playerDetailsSearch)))
+                            if (GL.Button(" +1 Level", GL.Width(150)))
                             {
-                                GL.BeginHorizontal();
-                                GL.Space(100);
-                                GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
-                                GL.Space(30);
-                                if (GL.Button("Remove", GL.Width(150)))
-                                {
-                                    featureToRemove = fact;
-                                }
-                                String description = fact.Description;
-                                if (description != null)
-                                {
-                                    GL.Space(30);
-                                    GL.Label(description.green(), GL.ExpandWidth(false));
-                                }
-                                GL.EndHorizontal();
+                                progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
                             }
                         }
-                        if (featureToRemove != null)
+                        else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20)
                         {
-                            ch.Descriptor.Progression.Features.RemoveFact(featureToRemove);
+                            GL.Label("Level Up".cyan().italic(), GL.Width(150));
                         }
-                    }
-                    chIndex += 1;
-                }
+                        GL.Space(30);
+                        GL.Label($"mythic".green() + $": {mythicLevel}", GL.Width(125));
+                        if (progression.MythicExperience < 10)
+                        {
+                            if (GL.Button(" +1 Mythic", GL.Width(150)))
+                            {
+                                progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
+                            }
+                        }
+                        else
+                        {
+                            GL.Label("Max", GL.Width(150));
+                        }
+                        GL.Space(25);
+                        UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex);
+                        GL.Space(25);
+                        UI.DisclosureBitFieldToggle("Details", ref showDetailsBitfield, chIndex);
+                        GL.EndHorizontal();
 
+                        if (((1 << chIndex) & showStatsBitfield) != 0)
+                        {
+                            foreach (object obj in Enum.GetValues(typeof(StatType)))
+                            {
+                                StatType statType = (StatType)obj;
+                                ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
+                                if (modifiableValue != null)
+                                {
+                                    GL.BeginHorizontal();
+                                    GL.Space(69);   // the best number...
+                                    GL.Label(statType.ToString().green().bold(), GL.Width(400f));
+                                    GL.Space(25f);
+                                    if (GL.Button(" < ", GL.ExpandWidth(false))) { modifiableValue.BaseValue -= 1; }
+                                    GL.Space(20f);
+                                    GL.Label($"{modifiableValue.BaseValue}".orange().bold(), GL.Width(50f));
+                                    if (GL.Button(" > ", GL.ExpandWidth(false))) { modifiableValue.BaseValue += 1; }
+                                    GL.EndHorizontal();
+                                }
+                            }
+
+                        }
+
+                        if (((1 << chIndex) & showDetailsBitfield) != 0)
+                        {
+                            GL.BeginHorizontal();
+                            GL.Space(100);
+                            playerDetailsSearch = GL.TextField(playerDetailsSearch, GL.Width(200));
+                            GL.EndHorizontal();
+                            FeatureCollection features = ch.Descriptor.Progression.Features;
+                            EntityFact featureToRemove = null;
+                            foreach (EntityFact fact in features)
+                            {
+                                String name = fact.Name;
+                                if (name == null) { name = $"{fact.Blueprint.name}"; }
+                                if (name != null && name.Length > 0 && (playerDetailsSearch.Length == 0 || name.Contains(playerDetailsSearch)))
+                                {
+                                    GL.BeginHorizontal();
+                                    GL.Space(100);
+                                    GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
+                                    GL.Space(30);
+                                    if (GL.Button("Remove", GL.Width(150)))
+                                    {
+                                        featureToRemove = fact;
+                                    }
+                                    String description = fact.Description;
+                                    if (description != null)
+                                    {
+                                        GL.Space(30);
+                                        GL.Label(description.green(), GL.ExpandWidth(false));
+                                    }
+                                    GL.EndHorizontal();
+                                }
+                            }
+                            if (featureToRemove != null)
+                            {
+                                ch.Descriptor.Progression.Features.RemoveFact(featureToRemove);
+                            }
+                        }
+                        chIndex += 1;
+                    }
+                });
                 GL.Space(20);
                 if (selectedBlueprint != null)
                 {

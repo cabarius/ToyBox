@@ -49,49 +49,94 @@ namespace ToyBox
          * Usage - these are intended to be called from any OnGUI render path usedd in your mod
          * 
          * Elements will be defined like this
-         *      Section("Cool Cheats", [
-         *          () => { ActionButton( "
-         *      ]);
+                UI.Section("Cheap Tricks", () =>
+                {
+                    UI.HStack("Combat", 4,
+                        () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
+                        () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
+                        () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.RestAll(); }); },
+                        () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.Empowered(""); }); },
+                        () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
+                        () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
+                     );
+                    UI.Space(10);
+                    UI.HStack("Common", 4,
+                        () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
+                        () => { UI.ActionButton("Set Perception to 40", () => { CheatsCommon.StatPerception(); }); }
+                     );
+                    UI.Space(10);
+                    UI.HStack("Unlocks", 4,
+                        () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
+                     );
+                });
         */
+
 
         // UI Elements
 
-        public static void Space(float size = 150f) { GL.Space(size);  }
+        public static void Space(float size = 150f) { GL.Space(size); }
 
-        public static void Label(String title, String tooltip = null, params GUILayoutOption[] options)
+        public static void Label(String title, params GUILayoutOption[] options)
         {
-            var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
+            // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
-            GL.Label(content, options);
+            GL.Label(title, options);
         }
 
-        public static void ActionButton(String title, Action action, String tooltip = null, params GUILayoutOption[] options)
+        public static void ActionButton(String title, Action action, params GUILayoutOption[] options)
         {
-            var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
-            if (GL.Button(content, options)) { action(); }
+            if (GL.Button(title, options)) { action(); }
         }
 
         public static void Toggle(
-            String title, 
-            ref bool value, 
-            String onMark = "☑", 
-            String offMark = "☐", 
-            String tooltip = null, 
+            String title,
+            ref bool value,
+            String onMark = "☑",
+            String offMark = "☐",
             params GUILayoutOption[] options)
         {
-            title = title + " " + (value ? onMark :  offMark);
-            var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
-            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
-            value = GL.Button(content, options);
+            UI.Label(title, GL.ExpandWidth(false));
+            if (GL.Button(value ? onMark : offMark, GL.ExpandWidth(false))) { value = !value; }
         }
 
-        public static void DisclosureToggle(String title, ref bool value, String tooltip = null, params Action[] actions)
+        public static void BitFieldToggle(
+            String title,
+            ref int bitfield,
+            int offset,
+            String onMark = "☑",
+            String offMark = "☐",
+            params GUILayoutOption[] options)
         {
-            UI.Toggle(title, ref value, "▶", "▲", tooltip);
+            bool bit = ((1 << offset) & bitfield) != 0;
+            bool newBit = bit;
+            Toggle(title, ref newBit, onMark, offMark, options);
+            if (bit != newBit) { bitfield ^= 1 << offset; }
+        }
+
+        public static void DisclosureToggle(String title, ref bool value, params Action[] actions)
+        {
+            UI.Toggle(title, ref value, "▶", "▲", GL.ExpandWidth(false));
             UI.If(value, actions);
         }
 
+        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, params Action[] actions)
+        {
+
+            bool bit = ((1 << offset) & bitfield) != 0;
+            bool newBit = bit;
+            Toggle(title, ref newBit, "▶", "▲", GL.ExpandWidth(false));
+            if (bit != newBit) { bitfield ^= (1 << offset); }
+            UI.If(newBit, actions);
+        }
+
+#if false
+        public static Func<T> TypePicker(String title, Type[] types)
+        {
+            var titles = types.Select(t => t.Name).ToArray();
+
+        }
+#endif
         // UI Builders
 
         public static void If(bool value, params Action[] actions)
@@ -117,15 +162,13 @@ namespace ToyBox
         {
             var length = actions.Length;
             if (stride < 1) { stride = length; }
-            Console.Write($"stride: {stride} len: {length}");
             for (int ii = 0; ii < actions.Length; ii += stride)
             {
                 bool hasTitle = title != null;
-                Console.Write($"stride: {stride} len: {length}");
                 GL.BeginHorizontal();
                 if (hasTitle)
                 {
-                    if (ii == 0) { UI.Label(title, null, GL.Width(150f)); }
+                    if (ii == 0) { UI.Label(title, GL.Width(150f)); }
                     else { UI.Space(153);  }
                 }
                 UI.Group(actions.Skip(ii).Take(stride).ToArray());
@@ -141,10 +184,10 @@ namespace ToyBox
             GL.EndVertical();
         }
 
-        public static void Section(String title, String tooltip = null, params Action[] actions)
+        public static void Section(String title, params Action[] actions)
         {
             Space(25);
-            Label($"====== {title} ======".bold(), tooltip, GL.ExpandWidth(true));
+            Label($"====== {title} ======".bold(), GL.ExpandWidth(true));
             Space(25);
             foreach (Action action in actions) { action(); }
             Space(10);
