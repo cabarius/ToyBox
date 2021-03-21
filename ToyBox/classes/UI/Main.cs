@@ -46,7 +46,7 @@ namespace ToyBox
 #endif
     static class Main
     {
-        public static Settings Settings;
+        public static Settings settings;
         public static bool Enabled;
         public static BlueprintScriptableObject[] blueprints = null;
         public static BlueprintScriptableObject[] filteredBPs = null;
@@ -60,18 +60,16 @@ namespace ToyBox
         static bool searchChanged = false;
         static Exception caughtException = null;
         static String playerDetailsSearch = "";
-        static bool test = false;
-
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
-            new NamedTypeFilter { name = "All", type = typeof(BlueprintScriptableObject) },
-            new NamedTypeFilter { name = "Facts", type = typeof(BlueprintFact) },
-            new NamedTypeFilter { name = "Features", type = typeof(BlueprintFeature) },
-            new NamedTypeFilter { name = "Buffs", type = typeof(BlueprintBuff) },
-            new NamedTypeFilter { name = "Weapons", type = typeof(BlueprintItemWeapon) },
-            new NamedTypeFilter { name = "Armor", type = typeof(BlueprintItemArmor) },
-            new NamedTypeFilter { name = "Shields", type = typeof(BlueprintItemShield) },
-            new NamedTypeFilter { name = "Equipment", type = typeof(BlueprintItemEquipment) },
-            new NamedTypeFilter { name = "Usable", type = typeof(BlueprintItemEquipmentUsable) },
+            new NamedTypeFilter("All", typeof(BlueprintScriptableObject)),
+            new NamedTypeFilter("Facts",typeof(BlueprintFact)),
+            new NamedTypeFilter("Features", typeof(BlueprintFeature)),
+            new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
+            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon)),
+            new NamedTypeFilter("Armor", typeof(BlueprintItemArmor)),
+            new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
+            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
+            new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
         };
 
         static BackgroundWorker searchWorker = new BackgroundWorker();
@@ -81,7 +79,13 @@ namespace ToyBox
 #if DEBUG
             modEntry.OnUnload = Unload;
 #endif
-            Settings = Settings.Load<Settings>(modEntry);
+            Logger.modLogger = modEntry.Logger;
+
+            settings = Settings.Load<Settings>(modEntry);
+
+            Logger.modEntryPath = modEntry.Path;
+
+            settings = Settings.Load<Settings>(modEntry);
             modEntry.OnToggle = OnToggle;
             modEntry.OnGUI = OnGUI;
             modEntry.OnSaveGUI = OnSaveGUI;
@@ -116,13 +120,13 @@ namespace ToyBox
             }
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
-            if (Settings.searchText.Trim().Length == 0)
+            if (settings.searchText.Trim().Length == 0)
             {
                 ResetSearch();
             }
-            var terms = Settings.searchText.Split(' ').Select(s => s.ToLower()).ToArray();
+            var terms = settings.searchText.Split(' ').Select(s => s.ToLower()).ToArray();
             var filtered = new List<BlueprintScriptableObject>();
-            var selectedType = blueprintTypeFilters[Settings.selectedBPTypeFilter].type;
+            var selectedType = blueprintTypeFilters[settings.selectedBPTypeFilter].type;
             foreach (BlueprintScriptableObject blueprint in blueprints)
             {
                 var name = blueprint.name.ToLower();
@@ -135,7 +139,7 @@ namespace ToyBox
             matchCount = filtered.Count();
             filteredBPs = filtered
                     .OrderBy(bp => bp.name)
-                    .Take(Settings.searchLimit).OrderBy(bp => bp.name).ToArray();
+                    .Take(settings.searchLimit).OrderBy(bp => bp.name).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
             searchChanged = false;
         }
@@ -152,9 +156,9 @@ namespace ToyBox
                     GL.Label("ERROR".red().bold() + $": caught exception {caughtException}");
                     if (GL.Button("Reset".orange().bold(), GL.ExpandWidth(false)))
                     {
-                        Settings = Settings.Load<Settings>(modEntry);
-                        Settings.searchText = "";
-                        Settings.searchLimit = 100;
+                        settings = Settings.Load<Settings>(modEntry);
+                        settings.searchText = "";
+                        settings.searchLimit = 100;
                         ResetSearch();
                         caughtException = null;
                     }
@@ -164,41 +168,51 @@ namespace ToyBox
                 GL.BeginVertical("box");
                 UI.Section("Cheap Tricks", () =>
                 {
-                    UI.HStack("Combat", 4,
-                        () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
-                        () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
-                        () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.RestAll(); }); },
-                        () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.Empowered(""); }); },
-                        () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
-                        () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
-                     );
-                    UI.Space(10);
-                    UI.HStack("Common", 4,
-                        () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
-                        () => { UI.ActionButton("Set Perception to 40", () => { CheatsCommon.StatPerception(); }); }
-                     );
-                    UI.Space(10);
-                    UI.HStack("Unlocks", 4,
-                        () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
-                     );
+                UI.HStack("Combat", 4,
+                    () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
+                    () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
+                    () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.RestAll(); }); },
+                    () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.Empowered(""); }); },
+                    () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
+                    () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
+                 );
+                UI.Space(10);
+                UI.HStack("Common", 4,
+                    () => { UI.ActionButton("Teleport Party To You", () => { Actions.TeleportPartyToPlayer(); }); },
+                    () => { UI.ActionButton("Perception Checks", () => { Actions.RunPerceptionTriggers(); }); },
+                    () => { UI.ActionButton("Set Perception to 40", () => { 
+                        CheatsCommon.StatPerception(); 
+                        Actions.RunPerceptionTriggers(); }); 
+                    },
+                    () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
+                    () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
+                    );
                 });
 
                 var player = Game.Instance.Player;
-
-                var methods = new List<Func<List<UnitEntityData>>>()
+                var partyFilterChoices = new List<NamedFunc<List<UnitEntityData>>>()
                 {
-                () => Game.Instance.Player.Party,
-                () => Game.Instance.Player.m_PartyAndPets,
-                () => Game.Instance.Player.ActiveCompanions,
-                () => Game.Instance.Player.AllCharacters,
-                PartyUtils.GetCustomCompanions,
-                PartyUtils.GetPets,
+                    new NamedFunc<List<UnitEntityData>>("Party", () => player.Party),
+                    new NamedFunc<List<UnitEntityData>>("Party & Pets", () => player.m_PartyAndPets),
+                    new NamedFunc<List<UnitEntityData>>("All Characters", () => player.AllCharacters),
+                    new NamedFunc<List<UnitEntityData>>("Active Companions", () => player.ActiveCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Remote Companions", () => player.m_RemoteCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Custom (Mercs)", PartyUtils.GetCustomCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Pets",  PartyUtils.GetPets)
                 };
 
                 UI.Section("Party Editor", () =>
                 {
+                    UnitEntityData charToAdd = null;
+                    UnitEntityData charToRemove = null;
+                    var characters = UI.TypePicker<List<UnitEntityData>>(
+                        null,
+                        ref settings.selectedPartyFilter,
+                        partyFilterChoices
+                        );
+
                     int chIndex = 0;
-                    foreach (UnitEntityData ch in Game.Instance.Player.Party)
+                    foreach (UnitEntityData ch in characters)
                     {
                         UnitProgressionData progression = ch.Descriptor.Progression;
                         BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
@@ -220,6 +234,10 @@ namespace ToyBox
                         {
                             GL.Label("Level Up".cyan().italic(), GL.Width(150));
                         }
+                        else
+                        {
+                            GL.Space(153);
+                        }
                         GL.Space(30);
                         GL.Label($"mythic".green() + $": {mythicLevel}", GL.Width(125));
                         if (progression.MythicExperience < 10)
@@ -237,6 +255,15 @@ namespace ToyBox
                         UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex);
                         GL.Space(25);
                         UI.DisclosureBitFieldToggle("Details", ref showDetailsBitfield, chIndex);
+                        GL.Space(100);
+                        if (!player.PartyAndPets.Contains(ch))
+                        {
+                            UI.ActionButton("Add To Party", () => { charToAdd = ch; }, GL.ExpandWidth(false));
+                        }
+                        else if (player.ActiveCompanions.Contains(ch))
+                        {
+                            UI.ActionButton("Remove From Party", () => { charToRemove = ch; }, GL.ExpandWidth(false));
+                        }
                         GL.EndHorizontal();
 
                         if (((1 << chIndex) & showStatsBitfield) != 0)
@@ -269,7 +296,7 @@ namespace ToyBox
                             GL.EndHorizontal();
                             FeatureCollection features = ch.Descriptor.Progression.Features;
                             EntityFact featureToRemove = null;
-                            foreach (EntityFact fact in features)
+                            foreach (Feature fact in features)
                             {
                                 String name = fact.Name;
                                 if (name == null) { name = $"{fact.Blueprint.name}"; }
@@ -279,6 +306,12 @@ namespace ToyBox
                                     GL.Space(100);
                                     GL.Label($"{fact.Name}".cyan().bold(), GL.Width(400));
                                     GL.Space(30);
+                                    var rank = fact.GetRank();
+                                    if (GL.Button(" < ", GL.ExpandWidth(false))) { fact.AddRank(); }
+                                    GL.Space(20f);
+                                    GL.Label($"{fact.GetRank()}".orange().bold(), GL.Width(50f));
+                                    if (GL.Button(" > ", GL.ExpandWidth(false))) { fact.RemoveRank(); }
+
                                     if (GL.Button("Remove", GL.Width(150)))
                                     {
                                         featureToRemove = fact;
@@ -299,6 +332,8 @@ namespace ToyBox
                         }
                         chIndex += 1;
                     }
+                    if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd);  }
+                    if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove);  }
                 });
                 GL.Space(20);
                 if (selectedBlueprint != null)
@@ -317,25 +352,25 @@ namespace ToyBox
                 GL.Label("(please note the first search may take a few seconds)");
                 GL.Space(25);
                 int newSelectedBPFilter = GL.SelectionGrid(
-                    Settings.selectedBPTypeFilter,
+                    settings.selectedBPTypeFilter,
                     blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                     5,
                     GL.ExpandWidth(false)
                     );
-                if (newSelectedBPFilter != Settings.selectedBPTypeFilter)
+                if (newSelectedBPFilter != settings.selectedBPTypeFilter)
                 {
-                    Settings.selectedBPTypeFilter = newSelectedBPFilter;
+                    settings.selectedBPTypeFilter = newSelectedBPFilter;
                     searchChanged = true;
                 }
                 GL.Space(10);
 
                 GL.BeginHorizontal();
-                Settings.searchText = GL.TextField(Settings.searchText, GL.Width(500f));
+                settings.searchText = GL.TextField(settings.searchText, GL.Width(500f));
                 GL.Space(50);
                 GL.Label("Limit", GL.ExpandWidth(false));
-                String searchLimitString = GL.TextField($"{Settings.searchLimit}", GL.Width(500f));
-                Int32.TryParse(searchLimitString, out Settings.searchLimit);
-                if (Settings.searchLimit > 1000) { Settings.searchLimit = 1000; }
+                String searchLimitString = GL.TextField($"{settings.searchLimit}", GL.Width(500f));
+                Int32.TryParse(searchLimitString, out settings.searchLimit);
+                if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                 GL.EndHorizontal();
 
                 GL.BeginHorizontal();
@@ -346,8 +381,8 @@ namespace ToyBox
                 GL.Space(50);
                 GL.Label((matchCount > 0
                             ? "Matches: ".green().bold() + $"{matchCount}".orange().bold()
-                                + (matchCount > Settings.searchLimit
-                                    ? " => ".cyan() + $"{Settings.searchLimit}".cyan().bold()
+                                + (matchCount > settings.searchLimit
+                                    ? " => ".cyan() + $"{settings.searchLimit}".cyan().bold()
                                     : "")
                             : ""), GL.ExpandWidth(false));
 
@@ -416,7 +451,7 @@ namespace ToyBox
 
         static void OnSaveGUI(UnityModManager.ModEntry modEntry)
         {
-            Settings.Save(modEntry);
+            settings.Save(modEntry);
         }
 
         public static BlueprintScriptableObject[] GetBlueprints()

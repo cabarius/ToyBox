@@ -6,6 +6,8 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 using Kingmaker;
 using Kingmaker.AI.Blueprints;
 using Kingmaker.AI.Blueprints.Considerations;
@@ -61,11 +63,49 @@ using Kingmaker.Assets.UI;
 
 namespace ToyBox
 {
+    public class Utilties
+    {
+        public static string RemoveHtmlTags(string s)
+        {
+            return Regex.Replace(s, "<.*?>", String.Empty);
+        }
+        public static string UnityRichTextToHtml(string s)
+        {
+            s = s.Replace("<color=", "<font color=");
+            s = s.Replace("</color>", "</font>");
+            s = s.Replace("<size=", "<size size=");
+            s = s.Replace("</size>", "</font>");
+            s += "<br/>";
+
+            return s;
+        }
+
+        public static string[] getObjectInfo(object o) {
+
+            string fields = "";
+            foreach (string field in Traverse.Create(o).Fields()) {
+                fields = fields + field + ", ";
+            }
+            string methods = "";
+            foreach (string method in Traverse.Create(o).Methods()) {
+                methods = methods + method + ", ";
+            }
+            string properties = "";
+            foreach (string property in Traverse.Create(o).Properties()) {
+                properties = properties + property + ", ";
+            }
+            return new string[] { fields, methods, properties };
+        }
+
+
+    }
+
     public class NamedTypeFilter
     {
         public String name { get; set; }
         public Type type { get; set; }
         public NamedTypeFilter() { }
+        public NamedTypeFilter(String name, Type type) { this.name = name; this.type = type; }
     }
 
     public class NamedAction
@@ -73,12 +113,22 @@ namespace ToyBox
         public String name { get; set; }
         public Action action { get; set; }
         public NamedAction() { }
+        public NamedAction(String name, Action action) { this.name = name; this.action = action; }
     }
-        public class NamedAction<T>
+    public class NamedAction<T>
     {
         public String name { get; set; }
         public Action<T> action { get; set; }
         public NamedAction() { }
+        public NamedAction(String name, Action<T> action) { this.name = name; this.action = action; }
+    }
+
+    public class NamedFunc<T>
+    {
+        public String name { get; set; }
+        public Func<T> func { get; set; }
+        public NamedFunc() { }
+        public NamedFunc(String name, Func<T> func) { this.name = name; this.func = func; }
     }
 
     public static class TB
@@ -112,5 +162,4 @@ namespace ToyBox
             }
         }
     }
-
 }

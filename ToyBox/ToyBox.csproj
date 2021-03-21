@@ -86,7 +86,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Infrastructure\Logging.cs" />
     <Compile Include="classes\Infrastructure\PartyUtils.cs" />
+    <Compile Include="classes\Infrastructure\UnitEntityDetails.cs" />
     <Compile Include="classes\MonkeyPatchin\ToggleTab.cs" />
     <Compile Include="classes\UI\Actions.cs" />
     <Compile Include="classes\UI\Main.cs" />

@@ -71,6 +71,10 @@ namespace ToyBox
                 });
         */
 
+        public const string onMark = "<color=green><b>✔</b></color>";
+        public const string offMark = "<color=red><b>✖</b></color>";
+        public const string disclosureArrowOn = "<size=14><color=green><b>▶</b></color></size>";
+        public const string disclosureArrowOff = "<<size=14>color=grey><b>▼</b></color></size>";
 
         // UI Elements
 
@@ -92,8 +96,8 @@ namespace ToyBox
         public static void Toggle(
             String title,
             ref bool value,
-            String onMark = "☑",
-            String offMark = "☐",
+            String onMark = onMark,
+            String offMark = offMark,
             params GUILayoutOption[] options)
         {
             UI.Label(title, GL.ExpandWidth(false));
@@ -104,8 +108,8 @@ namespace ToyBox
             String title,
             ref int bitfield,
             int offset,
-            String onMark = "☑",
-            String offMark = "☐",
+            String onMark = onMark,
+            String offMark = offMark,
             params GUILayoutOption[] options)
         {
             bool bit = ((1 << offset) & bitfield) != 0;
@@ -116,7 +120,7 @@ namespace ToyBox
 
         public static void DisclosureToggle(String title, ref bool value, params Action[] actions)
         {
-            UI.Toggle(title, ref value, "▶", "▲", GL.ExpandWidth(false));
+            UI.Toggle(title, ref value, disclosureArrowOn, disclosureArrowOff, GL.ExpandWidth(false));
             UI.If(value, actions);
         }
 
@@ -130,11 +134,14 @@ namespace ToyBox
             UI.If(newBit, actions);
         }
 
-        public static Func<T> TypePicker<T>(String title, Dictionary<String, List<Func<List<T>>>> extractors)
+        public static T TypePicker<T>(String title, ref int selectedIndex, List<NamedFunc<T>> items) where T : class
         {
-//            var titles = types.Select(t => t.Name).ToArray();
-            return null;
+            var titles = items.Select((item) => item.name).ToArray();
+            if  (title?.Length > 0) { Label(title); }
+            selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
+            return items[selectedIndex].func();
         }
+
         // UI Builders
 
         public static void If(bool value, params Action[] actions)

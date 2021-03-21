@@ -38,6 +38,7 @@ using Kingmaker.Cheats;
 using Kingmaker.Blueprints.Console;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.Designers;
+using Kingmaker.Designers.EventConditionActionSystem.Events;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Dungeon.Blueprints;
 using Kingmaker.EntitySystem.Entities;
@@ -61,6 +62,62 @@ using Kingmaker.Visual.Sound;
 
 namespace ToyBox
 {
+    public class Actions
+    {
+        public static void RunPerceptionTriggers()
+        {
+            foreach (BlueprintComponent bc in Game.Instance.State.LoadedAreaState.Blueprint.CollectComponents())
+            {
+                if (bc.name.Contains("PerceptionTrigger"))
+                {
+                    PerceptionTrigger pt = (PerceptionTrigger)bc;
+                    pt.OnSpotted.Run();
+                }
+            }
+        }
+
+        public static void TeleportPartyToPlayer()
+        {
+            GameModeType currentMode = Game.Instance.CurrentMode;
+            var partyMembers = Game.Instance.Player.m_PartyAndPets;
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause)
+            {
+                foreach (var unit in partyMembers)
+                {
+                    if (unit != Game.Instance.Player.MainCharacter.Value)
+                    {
+                        unit.Commands.InterruptMove();
+                        unit.Commands.InterruptMove();
+                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+
+                    }
+
+                }
+            }
+        }
+
+        public static void TeleportEveryoneToPlayer()
+        {
+            GameModeType currentMode = Game.Instance.CurrentMode;
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause)
+            {
+                foreach (var unit in Game.Instance.State.Units)
+                {
+                    if (unit != Game.Instance.Player.MainCharacter.Value)
+                    {
+                        unit.Commands.InterruptMove();
+                        unit.Commands.InterruptMove();
+                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+
+                    }
+
+                }
+
+            }
+        }
+
+    }
+
     public class BlueprintAction : ToyBox.NamedAction<BlueprintScriptableObject>
     {
 
