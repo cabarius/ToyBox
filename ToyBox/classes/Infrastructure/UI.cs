@@ -73,8 +73,8 @@ namespace ToyBox
 
         public const string onMark = "<color=green><b>✔</b></color>";
         public const string offMark = "<color=red><b>✖</b></color>";
-        public const string disclosureArrowOn = "<size=14><color=green><b>▶</b></color></size>";
-        public const string disclosureArrowOff = "<<size=14>color=grey><b>▼</b></color></size>";
+        public const string disclosureArrowOn = "<size=24><color=orange><b>▶</b></color></size>";
+        public const string disclosureArrowOff = "<size=24><color=white><b>▲</b></color></size>";
 
         // UI Elements
 
@@ -129,7 +129,7 @@ namespace ToyBox
 
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            Toggle(title, ref newBit, "▶", "▲", GL.ExpandWidth(false));
+            Toggle(title, ref newBit, disclosureArrowOn, disclosureArrowOff, GL.ExpandWidth(false));
             if (bit != newBit) { bitfield ^= (1 << offset); }
             UI.If(newBit, actions);
         }
