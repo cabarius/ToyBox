@@ -172,8 +172,8 @@ namespace ToyBox
                 UI.HStack("Combat", 4,
                     () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
                     () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
-                    () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.RestAll(); }); },
-                    () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.Empowered(""); }); },
+                    () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.FullBuffPlease(""); }); },
+                    () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.DetachDebuff(); }); },
                     () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
                     () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
                  );

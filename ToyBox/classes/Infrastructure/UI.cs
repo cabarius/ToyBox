@@ -73,8 +73,8 @@ namespace ToyBox
 
         public const string onMark = "<color=green><b>✔</b></color>";
         public const string offMark = "<color=red><b>✖</b></color>";
-        public const string disclosureArrowOn = "<size=24><color=orange><b>▶</b></color></size>";
-        public const string disclosureArrowOff = "<size=24><color=white><b>▲</b></color></size>";
+        public const string disclosureArrowOn = "<color=orange><b>▶</b></color>";
+        public const string disclosureArrowOff = "<color=white><b>▲</b></color>";
 
         // UI Elements
 
