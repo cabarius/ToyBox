@@ -1,24 +1,27 @@
 ﻿
 # Brief Description
-Toy Box is an experimental mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus  .  It provides a powerful and convenient way to search and add Feats, Features, Items, etc. In addition it provides some canned cheats based on the normally disabled console cheat commands.  Please backup your save before using.
+Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus . It provides a powerful and convenient way to edit the party composition, stats, features, search and add Feats, Features, Items, etc. In addition it provides a dozen or so cheats popular in the big Kingmaker mods
 
 # Detailed Description
 
-Toy Box is an experimental mod in the spirit of awesome mods like Bag of Tricks and Cheat Menu but with a little different focus.  It provides a powerful and convenient way to search and add Feats, Features, Items, etc. In addition it provides some canned cheats based on the normally disabled console cheat commands.  Please backup your save before using.
+Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus . It provides a powerful and convenient way to edit the party composition, stats, features, search and add Feats, Features, Items, etc. In addition it provides a dozen or so cheats popular in the big Kingmaker mods In addition it provides some canned cheats based on the normally disabled console cheat commands.  Please backup your save before using.
 
 Current features include 
 
 ver 1.0
 - Search and entire blueprint catalog for feats, features, items and more
 - Browse party members, level up, mythic level up, modify stats
+ver 1.02
 - Browse and  remove features by party member (back up before using)
 - Various cheats based on console commands
 ver 1.03
-- party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
+- Party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
 - Add/Remove party members
 - Teleport Party To You
 - Run Perception Check
 - ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
+ver 1.04
+- Can now add features to a sepecificly chosen party member
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
 
@@ -32,7 +35,7 @@ Acknowledgments:
 		@Vek17, @Bubbles, @Balkoth, @swizzlewizzle and the rest of our great Discord modding community - help, moral support and just general awesomeness
 	@m0nster, @Hsinyu, @fireundubh for Bag of Tricks (level up code and Rich Text Utils)
 
-Source Code: https://github.com/cabarius/ToyBo
+Source Code: https://github.com/cabarius/ToyBox
 License: MIT
 
 Copyright <2021> Narria (github user Cabarius)

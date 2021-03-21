@@ -91,15 +91,19 @@
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\UnitEntityDetails.cs" />
     <Compile Include="classes\MonkeyPatchin\ToggleTab.cs" />
-    <Compile Include="classes\UI\Actions.cs" />
+    <Compile Include="classes\Infrastructure\Actions.cs" />
     <Compile Include="classes\UI\Main.cs" />
+    <Compile Include="classes\UI\BlueprintBrowser.cs" />
+    <Compile Include="classes\UI\CheapTricks.cs" />
+    <Compile Include="classes\UI\PartyEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\RichTextUtils.cs" />
-    <Compile Include="classes\Infrastructure\Settings.cs" />
+    <Compile Include="classes\Models\Settings.cs" />
     <Compile Include="classes\Infrastructure\UI.cs" />
     <Compile Include="classes\Infrastructure\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

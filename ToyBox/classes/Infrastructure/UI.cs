@@ -38,10 +38,8 @@ using Kingmaker.Utility;
 
 using GL = UnityEngine.GUILayout;
 
-namespace ToyBox
-{
-    public class UI
-    {
+namespace ToyBox {
+    public class UI {
         /*** ToyBox UI
          * 
          * This is a simple UI framework that simulates the style of SwiftUI.  
@@ -76,46 +74,82 @@ namespace ToyBox
         public const string disclosureArrowOn = "<color=orange><b>▶</b></color>";
         public const string disclosureArrowOff = "<color=white><b>▲</b></color>";
 
-        // UI Elements
-
+        // GUILayout wrappers and extensions so other modules can use UI.MethodName()
+        public static GUILayoutOption ExpandWidth(bool v) { return GL.ExpandWidth(v); }
+        public static GUILayoutOption ExpandHeight(bool v) { return GL.ExpandHeight(v); }
+        public static GUILayoutOption AutoWidth() { return GL.ExpandWidth(false); }
+        public static GUILayoutOption AutoHeight() { return GL.ExpandHeight(false); }
+        public static GUILayoutOption Width(float v) { return GL.Width(v); }
+        public static GUILayoutOption Heighth(float v) { return GL.Width(v); }
         public static void Space(float size = 150f) { GL.Space(size); }
+        public static void BeginHorizontal(params GUILayoutOption[] options) { GL.BeginHorizontal(options); }
+        public static void EndHorizontal() { GL.EndHorizontal(); }
+        public static void BeginVertical(params GUILayoutOption[] options) { GL.BeginHorizontal(options); }
 
-        public static void Label(String title, params GUILayoutOption[] options)
-        {
+        public static void EndVertical() { GL.BeginHorizontal(); }
+
+        public static void Label(String title, params GUILayoutOption[] options) {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, options);
         }
 
-        public static void ActionButton(String title, Action action, params GUILayoutOption[] options)
-        {
+        public static void TextField(ref string text, params GUILayoutOption[] options) {
+            text = GL.TextField(text, options);
+        }
+
+        public static void IntTextField(ref int value, params GUILayoutOption[] options) {
+            String searchLimitString = $"{value}";
+            UI.TextField(ref searchLimitString, UI.Width(500f));
+            Int32.TryParse(searchLimitString, out value);
+        }
+
+        public static void SelectionGrid(ref int value, String[] texts, int xCols, params GUILayoutOption[] options) {
+             value = GL.SelectionGrid(value, texts, xCols, options); 
+        }
+
+        // UI Elements
+
+        public static void ActionButton(String title, Action action, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, options)) { action(); }
+        }
+
+        public static void ActionTextField(ref string text, Action<String> action, params GUILayoutOption[] options) {
+            String newText = GL.TextField(text, options);
+            if (newText != text) {
+                text = newText;
+                action(text);
+            }
+        }
+
+        public static void ActionSelectionGrid(ref int value, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
+            int newValue = GL.SelectionGrid(value, texts, xCols, options);
+            if (newValue != value) {
+                value = newValue;
+                action(value);
+            }
         }
 
         static void TogglePrivate(
             String title,
             ref bool value,
             bool disclosureStyle = true,
-            params GUILayoutOption[] options)
-        {
-            if (!disclosureStyle)
-            {
-                if (GL.Button(title + " " + (value ? onMark : offMark), GL.ExpandWidth(false))) { value = !value; }
+            params GUILayoutOption[] options) {
+            if (!disclosureStyle) {
+                if (GL.Button(title + " " + (value ? onMark : offMark), AutoWidth())) { value = !value; }
             }
-            else
-            {
-                UI.Label(title, GL.ExpandWidth(false));
+            else {
+                UI.Label(title, AutoWidth());
                 GL.Space(10);
-                if (GL.Button(value ? disclosureArrowOn : disclosureArrowOff, GL.ExpandWidth(false))) { value = !value; }
+                if (GL.Button(value ? disclosureArrowOn : disclosureArrowOff, AutoWidth())) { value = !value; }
             }
         }
 
         public static void Toggle(
             String title,
             ref bool value,
-            params GUILayoutOption[] options)
-        {
+            params GUILayoutOption[] options) {
             TogglePrivate(title, ref value, false, options);
         }
 
@@ -123,92 +157,78 @@ namespace ToyBox
             String title,
             ref int bitfield,
             int offset,
-            params GUILayoutOption[] options)
-        {
+            params GUILayoutOption[] options) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
             TogglePrivate(title, ref newBit, false, options);
             if (bit != newBit) { bitfield ^= 1 << offset; }
         }
 
-        public static void DisclosureToggle(String title, ref bool value, params Action[] actions)
-        {
-            UI.TogglePrivate(title, ref value, true, GL.ExpandWidth(false));
+        public static void DisclosureToggle(String title, ref bool value, params Action[] actions) {
+            UI.TogglePrivate(title, ref value, true, AutoWidth());
             UI.If(value, actions);
         }
 
-        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, params Action[] actions)
-        {
+        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, params Action[] actions) {
 
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            TogglePrivate(title, ref newBit, true, GL.ExpandWidth(false));
+            TogglePrivate(title, ref newBit, true, AutoWidth());
             if (bit != newBit) { bitfield ^= (1 << offset); }
             UI.If(newBit, actions);
         }
 
-        public static T TypePicker<T>(String title, ref int selectedIndex, List<NamedFunc<T>> items) where T : class
-        {
+        public static T TypePicker<T>(String title, ref int selectedIndex, List<NamedFunc<T>> items) where T : class {
             var titles = items.Select((item) => item.name).ToArray();
-            if  (title?.Length > 0) { Label(title); }
+            if (title?.Length > 0) { Label(title); }
             selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
             return items[selectedIndex].func();
         }
 
         // UI Builders
 
-        public static void If(bool value, params Action[] actions)
-        {
-            if (value)
-            {
-                foreach (var action in actions)
-                {
+        public static void If(bool value, params Action[] actions) {
+            if (value) {
+                foreach (var action in actions) {
                     action();
                 }
             }
         }
 
-        public static void Group(params Action[] actions)
-        {
-            foreach (var action in actions)
-            {
+        public static void Group(params Action[] actions) {
+            foreach (var action in actions) {
                 action();
             }
         }
 
-        public static void HStack(String title = null, int stride = 0, params Action[] actions)
-        {
+        public static void HStack(String title = null, int stride = 0, params Action[] actions) {
             var length = actions.Length;
             if (stride < 1) { stride = length; }
-            for (int ii = 0; ii < actions.Length; ii += stride)
-            {
+            for (int ii = 0; ii < actions.Length; ii += stride) {
                 bool hasTitle = title != null;
-                GL.BeginHorizontal();
-                if (hasTitle)
-                {
-                    if (ii == 0) { UI.Label(title, GL.Width(150f)); }
-                    else { UI.Space(153);  }
+                UI.BeginHorizontal();
+                if (hasTitle) {
+                    if (ii == 0) { UI.Label(title, UI.Width(150f)); }
+                    else { UI.Space(153); }
                 }
                 UI.Group(actions.Skip(ii).Take(stride).ToArray());
-                GL.EndHorizontal();
+                UI.EndHorizontal();
             }
         }
 
-        public static void VStack(String title = null, params Action[] actions)
-        {
-            GL.BeginVertical();
+        public static void VStack(String title = null, params Action[] actions) {
+            UI.BeginVertical();
             if (title != null) { UI.Label(title); }
             UI.Group(actions);
-            GL.EndVertical();
+            UI.EndVertical();
         }
 
-        public static void Section(String title, params Action[] actions)
-        {
-            Space(25);
-            Label($"====== {title} ======".bold(), GL.ExpandWidth(true));
-            Space(25);
+        public static void Section(String title, params Action[] actions) {
+            UI.Space(25);
+            UI.Label($"====== {title} ======".bold(), GL.ExpandWidth(true));
+            UI.Space(25);
             foreach (Action action in actions) { action(); }
-            Space(10);
+            UI.Space(10);
         }
     }
 }

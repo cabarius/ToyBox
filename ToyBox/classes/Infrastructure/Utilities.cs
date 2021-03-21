@@ -62,16 +62,12 @@ using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using Kingmaker.Assets.UI;
 
-namespace ToyBox
-{
-    public class Utilties
-    {
-        public static string RemoveHtmlTags(string s)
-        {
+namespace ToyBox {
+    public class Utilties {
+        public static string RemoveHtmlTags(string s) {
             return Regex.Replace(s, "<.*?>", String.Empty);
         }
-        public static string UnityRichTextToHtml(string s)
-        {
+        public static string UnityRichTextToHtml(string s) {
             s = s.Replace("<color=", "<font color=");
             s = s.Replace("</color>", "</font>");
             s = s.Replace("<size=", "<size size=");
@@ -97,63 +93,52 @@ namespace ToyBox
             }
             return new string[] { fields, methods, properties };
         }
-
-
     }
 
-    public class NamedTypeFilter
-    {
+    public class NamedTypeFilter {
         public String name { get; set; }
         public Type type { get; set; }
         public NamedTypeFilter() { }
         public NamedTypeFilter(String name, Type type) { this.name = name; this.type = type; }
     }
 
-    public class NamedAction
-    {
+    public class NamedAction {
         public String name { get; set; }
         public Action action { get; set; }
         public NamedAction() { }
         public NamedAction(String name, Action action) { this.name = name; this.action = action; }
     }
-    public class NamedAction<T>
-    {
+    public class NamedAction<T> {
         public String name { get; set; }
         public Action<T> action { get; set; }
         public NamedAction() { }
         public NamedAction(String name, Action<T> action) { this.name = name; this.action = action; }
     }
 
-    public class NamedFunc<T>
-    {
+    public class NamedFunc<T> {
         public String name { get; set; }
         public Func<T> func { get; set; }
         public NamedFunc() { }
         public NamedFunc(String name, Func<T> func) { this.name = name; this.func = func; }
     }
 
-    public static class TB
-    {
-        public static bool IsKindOf(this Type type, Type baseType)
-        {
+    public static class TB {
+        public static bool IsKindOf(this Type type, Type baseType) {
             return type.IsSubclassOf(baseType) || type == baseType;
         }
     }
 
-    public static class BlueprintScriptableObjectUtils
-    {
+    public static class BlueprintScriptableObjectUtils {
         public static string GetDescription(this BlueprintScriptableObject bpObejct)
         // borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {
-            try
-            {
+            try {
                 UnitReference mainChar = Game.Instance.Player.MainCharacter;
                 if (mainChar == null) { return "n/a"; }
                 MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bpObejct, (MechanicsContext)null, (TargetWrapper)null);
                 return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Console.Write($"{e}");
 #if DEBUG
                 return "ERROR".red().bold() + $": caught exception {e}";

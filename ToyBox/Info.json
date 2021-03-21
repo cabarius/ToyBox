@@ -6,5 +6,7 @@
     "ManagerVersion": "0.23.0",
     "Requirements": [],
     "AssemblyName": "ToyBox.dll",
-    "EntryMethod": "ToyBox.Main.Load"
+    "EntryMethod": "ToyBox.Main.Load",
+    "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8?tab=posts&BH=0",
+    "Repository": "https://github.com/cabarius/ToyBox"
 }
