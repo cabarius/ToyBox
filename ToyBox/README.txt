@@ -13,8 +13,7 @@ ver 1.0
 - Browse party members, level up, mythic level up, modify stats
 - Browse and  remove features by party member (back up before using)
 - Various cheats based on console commands
-
-ver 1.1
+ver 1.03
 - party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
 - Add/Remove party members
 - Teleport Party To You
