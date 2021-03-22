@@ -46,7 +46,6 @@ namespace ToyBox {
         public static String parameter = "";
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
-        static bool searchChanged = false;
         static BackgroundWorker searchWorker = new BackgroundWorker();
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
@@ -59,6 +58,7 @@ namespace ToyBox {
             new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
             new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
             new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
+            new NamedTypeFilter("Units", typeof(BlueprintUnit)),
         };
         public static BlueprintScriptableObject[] GetBlueprints() {
             var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle")
@@ -72,7 +72,7 @@ namespace ToyBox {
         }
         static async void UpdateSearchResults() {
             if (blueprints == null) {
-                blueprints = GetBlueprints().Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
+                blueprints = GetBlueprints(); //.Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
             }
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
@@ -94,7 +94,6 @@ namespace ToyBox {
                     .OrderBy(bp => bp.name)
                     .Take(Main.settings.searchLimit).OrderBy(bp => bp.name).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
-            searchChanged = false;
         }
 
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
@@ -104,7 +103,7 @@ namespace ToyBox {
                 UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                     blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                     5,
-                    (selected) => { searchChanged = true;}, 
+                    (selected) => { UpdateSearchResults(); }, 
                     UI.MinWidth(200));
                 UI.Space(10);
 
@@ -112,7 +111,7 @@ namespace ToyBox {
                 UI.ActionTextField(
                     ref Main.settings.searchText, (text) => { },
                     "searhText", () => { UpdateSearchResults(); },
-                    UI.Width(200));
+                    UI.Width(400));
                 UI.Space(50);
                 UI.Label("Limit", UI.ExpandWidth(false));
                 UI.ActionIntTextField(
@@ -135,22 +134,23 @@ namespace ToyBox {
                 UI.Space(10);
 
                 if (filteredBPs != null) {
+                    UnitReference mainChar = Game.Instance.Player.MainCharacter;
                     int index = 0;
-                    int maxActionCount = 0;
+                    int maxActions = 0;
                     foreach (BlueprintScriptableObject blueprint in filteredBPs) {
-                        BlueprintAction[] actions = BlueprintAction.ActionsForBlueprint(blueprint);
-                        int actionCount = actions != null ? actions.Count() : 0;
-                        if (actionCount > maxActionCount) { maxActionCount = actionCount; }
+                        var actions = blueprint.ActionsForUnit(mainChar);
+                        maxActions = Math.Max(actions.Count, maxActions);
                     }
+
                     foreach (BlueprintScriptableObject blueprint in filteredBPs) {
                         UI.BeginHorizontal();
                         UI.Label(blueprint.name.orange().bold(), UI.Width(650));
-                        BlueprintAction[] actions = BlueprintAction.ActionsForBlueprint(blueprint);
+                        var actions = blueprint.ActionsForUnit(mainChar);
                         int actionCount = actions != null ? actions.Count() : 0;
-                        for (int ii = 0; ii < maxActionCount; ii++) {
+                        for (int ii = 0; ii < maxActions; ii++) {
                             if (ii < actionCount) {
                                 BlueprintAction action = actions[ii];
-                                UI.ActionButton(action.name, () => { action.action(blueprint); }, UI.Width(140));
+                                UI.ActionButton(action.name, () => { action.action(mainChar, blueprint); }, UI.Width(140));
                                 UI.Space(10);
                             }
                             else {
@@ -163,7 +163,7 @@ namespace ToyBox {
                         String description = blueprint.GetDescription();
                         if (description.Length > 0) {
                             UI.BeginHorizontal();
-                            UI.Space(684 + maxActionCount * 154);
+                            UI.Space(684 + maxActions * 154);
                             UI.Label($"{description.green()}");
                             UI.EndHorizontal();
                         }

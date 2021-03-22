@@ -118,6 +118,7 @@ namespace ToyBox {
                     UI.AutoWidth());
 #endif
                 CheapTricks.OnGUI(modEntry);
+                QuestEditor.OnGUI(modEntry);
                 PartyEditor.OnGUI(modEntry);
                 BlueprintBrowser.OnGUI(modEntry);
                 GL.EndVertical();

@@ -36,44 +36,43 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class NamedTypeFilter {
-        public String name { get; set; }
-        public Type type { get; set; }
-        public NamedTypeFilter() { }
+        public String name { get; }
+        public Type type { get; }
         public NamedTypeFilter(String name, Type type) { this.name = name; this.type = type; }
     }
 
     public class NamedAction {
-        public String name { get; set; }
-        public Action action { get; set; }
-        public NamedAction() { }
+        public String name { get; }
+        public Action action { get; }
         public NamedAction(String name, Action action) { this.name = name; this.action = action; }
     }
     public class NamedAction<T> {
-        public String name { get; set; }
-        public Action<T> action { get; set; }
-        public NamedAction() { }
+        public String name { get; }
+        public Action<T> action { get; }
         public NamedAction(String name, Action<T> action) { this.name = name; this.action = action; }
     }
 
     public class NamedFunc<T> {
-        public String name { get; set; }
-        public Func<T> func { get; set; }
-        public NamedFunc() { }
+        public String name { get; }
+        public Func<T> func { get; }
         public NamedFunc(String name, Func<T> func) { this.name = name; this.func = func; }
     }
 
-    // UnitEnitityData,
-    public class NamedAccessor<T, V> {
-        public String name { get; set; }
+    public class NamedMutator<Target, T> {
+        public String name { get; }
         public Type type { get; }
-        public Func<T, V> get { get; }
-        public Action<T, V> set { get;  }
-
-        public NamedAccessor(String name, Func<T, V> get, Action<T, V> set) {
+        public Action<Target, T> action { get; }
+        public Func<Target, T, bool> canPerform { get; }
+        public NamedMutator(
+            String name,
+            Type type,
+            Action<Target, T> action,
+            Func<Target, T, bool> canPerform = null
+            ) {
             this.name = name;
-            this.type = typeof(V);
-            this.get = get;
-            this.set = set;
+            this.type = type;
+            this.action = action;
+            this.canPerform = canPerform != null ? canPerform : (target, value) => true;
         }
     }
 }

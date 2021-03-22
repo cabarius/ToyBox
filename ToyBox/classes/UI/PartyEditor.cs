@@ -41,7 +41,7 @@ namespace ToyBox {
     public class PartyEditor {
         static int showStatsBitfield = 0;
         static int showDetailsBitfield = 0;
-        static String playerDetailsSearchText = "";
+        static String searchText = "";
         static List<UnitEntityData> characterList = null;
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
             var player = Game.Instance.Player;
@@ -97,9 +97,9 @@ namespace ToyBox {
                         UI.Label("Max", UI.Width(150));
                     }
                     UI.Space(25);
-                    UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex);
+                    UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, false);
                     UI.Space(25);
-                    UI.DisclosureBitFieldToggle("Details", ref showDetailsBitfield, chIndex);
+                    UI.DisclosureBitFieldToggle("Details", ref showDetailsBitfield, chIndex, false);
                     UI.Space(80);
                     if (!player.PartyAndPets.Contains(ch)) {
                         UI.ActionButton("Add To Party", () => { charToAdd = ch; }, UI.AutoWidth());
@@ -131,14 +131,14 @@ namespace ToyBox {
                     if (((1 << chIndex) & showDetailsBitfield) != 0) {
                         UI.BeginHorizontal();
                         UI.Space(100);
-                        UI.TextField(ref playerDetailsSearchText, null, UI.Width(200));
+                        UI.TextField(ref searchText, null, UI.Width(200));
                         UI.EndHorizontal();
                         FeatureCollection features = ch.Descriptor.Progression.Features;
                         EntityFact featureToRemove = null;
                         foreach (Feature fact in features) {
                             String name = fact.Name;
                             if (name == null) { name = $"{fact.Blueprint.name}"; }
-                            if (name != null && name.Length > 0 && (playerDetailsSearchText.Length == 0 || name.Contains(playerDetailsSearchText))) {
+                            if (name != null && name.Length > 0 && (searchText.Length == 0 || name.Contains(searchText))) {
                                 UI.BeginHorizontal();
                                 UI.Space(100);
                                 UI.Label($"{fact.Name}".cyan().bold(), UI.Width(400));

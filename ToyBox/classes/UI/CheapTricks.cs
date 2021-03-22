@@ -46,6 +46,7 @@ namespace ToyBox {
                     () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
                     () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
                     () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.FullBuffPlease(""); }); },
+                    () => { UI.ActionButton("Remove Buffs", () => { Actions.RemoveAllBuffs(); }); },
                     () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.DetachDebuff(); }); },
                     () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
                     () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }

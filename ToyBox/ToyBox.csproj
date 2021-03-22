@@ -86,6 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Infrastructure\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Logging.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="classes\UI\Main.cs" />
     <Compile Include="classes\UI\BlueprintBrowser.cs" />
     <Compile Include="classes\UI\CheapTricks.cs" />
+    <Compile Include="classes\UI\QuestEditor.cs" />
     <Compile Include="classes\UI\PartyEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\RichTextUtils.cs" />
@@ -129,7 +131,6 @@
     <PostBuildEvent>echo "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
 #start XCOPY /Y /R "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
 copy /Y "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll"
-copy /Y "$(TargetDir)Info.json" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\Info.json"
 copy /Y "$(TargetDir)$(TargetName).pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).pdb"
 </PostBuildEvent>
   </PropertyGroup>

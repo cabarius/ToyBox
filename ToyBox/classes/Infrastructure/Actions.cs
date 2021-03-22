@@ -60,170 +60,59 @@ using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 
-namespace ToyBox
-{
-    public class Actions
-    {
-        public static void RunPerceptionTriggers()
-        {
-            foreach (BlueprintComponent bc in Game.Instance.State.LoadedAreaState.Blueprint.CollectComponents())
-            {
-                if (bc.name.Contains("PerceptionTrigger"))
-                {
+namespace ToyBox {
+    public class Actions {
+        public static void RunPerceptionTriggers() {
+            foreach (BlueprintComponent bc in Game.Instance.State.LoadedAreaState.Blueprint.CollectComponents()) {
+                if (bc.name.Contains("PerceptionTrigger")) {
                     PerceptionTrigger pt = (PerceptionTrigger)bc;
                     pt.OnSpotted.Run();
                 }
             }
         }
 
-        public static void TeleportPartyToPlayer()
-        {
+        public static void TeleportPartyToPlayer() {
             GameModeType currentMode = Game.Instance.CurrentMode;
             var partyMembers = Game.Instance.Player.m_PartyAndPets;
-            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause)
-            {
-                foreach (var unit in partyMembers)
-                {
-                    if (unit != Game.Instance.Player.MainCharacter.Value)
-                    {
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                foreach (var unit in partyMembers) {
+                    if (unit != Game.Instance.Player.MainCharacter.Value) {
                         unit.Commands.InterruptMove();
                         unit.Commands.InterruptMove();
                         unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
 
                     }
-
                 }
             }
         }
 
-        public static void TeleportEveryoneToPlayer()
-        {
+        public static void TeleportEveryoneToPlayer() {
             GameModeType currentMode = Game.Instance.CurrentMode;
-            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause)
-            {
-                foreach (var unit in Game.Instance.State.Units)
-                {
-                    if (unit != Game.Instance.Player.MainCharacter.Value)
-                    {
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                foreach (var unit in Game.Instance.State.Units) {
+                    if (unit != Game.Instance.Player.MainCharacter.Value) {
                         unit.Commands.InterruptMove();
                         unit.Commands.InterruptMove();
                         unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
 
                     }
-
                 }
-
+            }
+        }
+        public static void RemoveAllBuffs() {
+            foreach (UnitEntityData target in Game.Instance.Player.Party) {
+                foreach (Buff buff in new List<Buff>(target.Descriptor.Buffs.Enumerable)) {
+                    target.Descriptor.RemoveFact(buff);
+                }
             }
         }
 
-    }
-
-    public class BlueprintAction : ToyBox.NamedAction<BlueprintScriptableObject>
-    {
-
-        public static HashSet<Type> ignoredBluePrintTypes = new HashSet<Type> {
-                typeof(BlueprintAiCastSpell),
-                typeof(BlueprintAnswer),
-                typeof(BlueprintAnswersList),
-                typeof(BlueprintAreaEnterPoint),
-                typeof(BlueprintBarkBanter),
-                typeof(BlueprintCue),
-                typeof(BlueprintCueSequence),
-                typeof(BlueprintDialog),
-                typeof(BlueprintGlobalMapEdge),
-                typeof(BlueprintGlobalMapPoint),
-                typeof(BlueprintQuest),
-                typeof(BlueprintSequenceExit),
-                typeof(BlueprintTutorial),
-                typeof(BlueprintTacticalCombatObstaclesMap),
-                typeof(BlueprintCheck),
-                typeof(BlueprintScriptZone),
-                typeof(BlueprintAreaMechanics),
-                typeof(BlueprintTacticalCombatAiCastSpell),
-                typeof(TacticalCombatTagConsideration),
-                typeof(BlueprintUnitAsksList),
-                typeof(BlueprintCreditsRoles),
-                typeof(CommandCooldownConsideration),
-                typeof(LifeStateConsideration),
-                typeof(BlueprintAiAttack),
-                typeof(BlueprintAiSwitchWeapon),
-                typeof(BlueprintCompanionStory),
-                typeof(CanMakeFullAttackConsideration),
-                typeof(DistanceConsideration),
-                typeof(FactConsideration),
-                typeof(NotImpatientConsideration),
-                typeof(BlueprintGlobalMapPointVariation),
-                typeof(BlueprintControllableProjectile),
-                typeof(BlueprintInteractionRoot),
-                typeof(UnitsThreateningConsideration),
-                typeof(BlueprintTacticalCombatAiAttack),
-                typeof(UnitsAroundConsideration),
-                typeof(LastTargetConsideration),
-                typeof(TargetSelfConsideration),
-                typeof(BlueprintAiFollow),
-                typeof(TargetClassConsideration),
-                typeof(HealthConsideration),
-                typeof(LineOfSightConsideration),
-                typeof(RaceGenderDistribution),
-                typeof(ArmorTypeConsideration),
-                typeof(ComplexConsideration),
-                typeof(ManualTargetConsideration),
-                typeof(BlueprintDungeonLocalizedStrings),
-                typeof(DistanceRangeConsideration),
-                typeof(AlignmentConsideration),
-                typeof(GamePadIcons),
-                typeof(GamePadTexts),
-                typeof(CasterClassConsideration),
-                typeof(StatConsideration),
-                typeof(BlueprintAiTouch),
-                typeof(ActiveCommandConsideration),
-                typeof(ArmyHealthConsideration),
-                typeof(BuffsAroundConsideration),
-                typeof(BuffConsideration),
-                typeof(HealthAroundConsideration),
-                typeof(HitThisRoundConsideration),
-                typeof(ThreatedByConsideration),
-                typeof(CanUseSpellCombatConsideration),
-                typeof(CustomAiConsiderationsRoot),
-                typeof(BlueprintQuestObjective),
-                typeof(BlueprintScriptZone),
-                typeof(BlueprintQuestGroups),
-                typeof(Cutscene),
-                typeof(Consideration),
-                typeof(BlueprintEtude),
-                typeof(BlueprintSummonPool),
-                typeof(BlueprintUnit),
-                typeof(BlueprintArea),
-                typeof(BlueprintArmorEnchantment),
-                typeof(BlueprintWeaponEnchantment),
-                typeof(BlueprintEquipmentEnchantment),
-                typeof(BlueprintEncyclopediaPage),
-                typeof(BlueprintAreaPart),
-                typeof(BlueprintLogicConnector),
-                typeof(BlueprintKingdomBuff),
-                typeof(BlueprintSettlementBuilding),
-            };
-
-        public static Action<BlueprintScriptableObject> addFact = bp => (Utilities.GetUnitUnderMouse() ?? GameHelper.GetPlayerCharacter()).Descriptor.AddFact((BlueprintUnitFact)bp);
-        public static Action<BlueprintScriptableObject> removeFact = bp => (Utilities.GetUnitUnderMouse() ?? GameHelper.GetPlayerCharacter()).Progression.Features.RemoveFact((BlueprintUnitFact)bp);
-
-        public static Action<BlueprintScriptableObject> addItem = bp => GameHelper.GetPlayerCharacter().Inventory.Add((BlueprintItem)bp, 1, null);
-
-        static BlueprintAction[] itemActions = new BlueprintAction[] {
-            new  BlueprintAction { name = "Add", action = addItem }
-        };
-
-        static BlueprintAction[] factActions = new BlueprintAction[] {
-            new  BlueprintAction { name = "Add", action = addFact },
-            new  BlueprintAction { name = "Remove", action = removeFact },
-        };
-
-        public static BlueprintAction[] ActionsForBlueprint(BlueprintScriptableObject bp)
-        {
-            Type type = bp.GetType();
-            if (type.IsKindOf(typeof(BlueprintItem))) { return itemActions; }
-            if (type.IsKindOf(typeof(BlueprintUnitFact))) { return factActions; }
-            return null;
+        public static void SpawnUnit(BlueprintUnit unit) {
+            Vector3 worldPosition = Game.Instance.ClickEventsController.WorldPosition;
+//           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
+            if (!(unit == null)) {
+                Game.Instance.EntityCreator.SpawnUnit(unit, new Vector3(worldPosition.x + 2f, worldPosition.y + 2f, worldPosition.z), Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+            }
         }
     }
 }

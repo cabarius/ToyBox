@@ -171,18 +171,22 @@ namespace ToyBox {
             }
         }
 
+
         static void TogglePrivate(
             String title,
             ref bool value,
-            bool disclosureStyle = true,
+            bool disclosureStyle = false,
+            bool forceHorizontal = true,
             params GUILayoutOption[] options) {
             if (!disclosureStyle) {
                 if (GL.Button(title + " " + (value ? onMark : offMark), AutoWidth())) { value = !value; }
             }
             else {
+                if (forceHorizontal) { UI.BeginHorizontal(UI.AutoWidth()); }
                 UI.Label(title, AutoWidth());
                 GL.Space(10);
                 if (GL.Button(value ? disclosureArrowOn : disclosureArrowOff, AutoWidth())) { value = !value; }
+                if (forceHorizontal) { UI.EndHorizontal(); }
             }
         }
 
@@ -190,7 +194,7 @@ namespace ToyBox {
             String title,
             ref bool value,
             params GUILayoutOption[] options) {
-            TogglePrivate(title, ref value, false, options);
+            TogglePrivate(title, ref value, false, false, options);
         }
 
         public static void BitFieldToggle(
@@ -200,20 +204,20 @@ namespace ToyBox {
             params GUILayoutOption[] options) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            TogglePrivate(title, ref newBit, false, options);
+            TogglePrivate(title, ref newBit, false, false, options);
             if (bit != newBit) { bitfield ^= 1 << offset; }
         }
 
-        public static void DisclosureToggle(String title, ref bool value, params Action[] actions) {
-            UI.TogglePrivate(title, ref value, true, AutoWidth());
+        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true,  params Action[] actions) {
+            UI.TogglePrivate(title, ref value, true, forceHorizontal, AutoWidth());
             UI.If(value, actions);
         }
 
-        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, params Action[] actions) {
+        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool forceHorizontal = true, params Action[] actions) {
 
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            TogglePrivate(title, ref newBit, true, AutoWidth());
+            TogglePrivate(title, ref newBit, true, forceHorizontal, AutoWidth());
             if (bit != newBit) { bitfield ^= (1 << offset); }
             UI.If(newBit, actions);
         }

@@ -24,6 +24,36 @@
             .Take(Settings.searchLimit).ToArray();
 
 
+you can do it async such as:
+var bundle = GetBlueprintAssetBundleFromResourcesLibrary();
+var request = AssetBundle.LoadAllAssetsAsync();
+request.completed += (asyncOperation) => {
+    var blueprints = request.allAssets;
+    //process blueprints
+};
+alternatively, you can use coroutines, such as
+const int BatchSize = 1000;
+IEnumerable ProcessBlueprints(){
+  var guids = GetBlueprintGuids();
+  int counter = 0;
+  foreach(var guid in guids){
+    //yield return to prevent blocking game
+    if(counter > BatchSize)
+    {
+      counter = 0;
+      yield return null;
+    }
+    counter++;
+    var blueprint = ResourcesLibrary.TryGetBlueprint<BlueprintScriptableObject>(guid);
+    //Process blueprint        
+  }
+}
+void Start()
+{
+  StartCoroutine(ProcessBlueprints());
+}
+
+
 GL.Space(10);
             GL.Label("MyFloatOption", GL.ExpandWidth(false));
             GL.Space(10);
