@@ -92,6 +92,7 @@
     <Compile Include="classes\Infrastructure\Borrowed\UnitEntityDetails.cs" />
     <Compile Include="classes\MonkeyPatchin\ToggleTab.cs" />
     <Compile Include="classes\Infrastructure\Actions.cs" />
+    <Compile Include="classes\Infrastructure\NamedTypes.cs" />
     <Compile Include="classes\UI\Main.cs" />
     <Compile Include="classes\UI\BlueprintBrowser.cs" />
     <Compile Include="classes\UI\CheapTricks.cs" />
@@ -128,6 +129,7 @@
     <PostBuildEvent>echo "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
 #start XCOPY /Y /R "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
 copy /Y "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll"
+copy /Y "$(TargetDir)Info.json" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\Info.json"
 copy /Y "$(TargetDir)$(TargetName).pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).pdb"
 </PostBuildEvent>
   </PropertyGroup>

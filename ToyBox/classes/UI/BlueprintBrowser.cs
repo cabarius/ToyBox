@@ -98,44 +98,28 @@ namespace ToyBox {
         }
 
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
-            if (selectedBlueprint != null) {
-                UI.BeginHorizontal();
-                UI.Label("Selected:", UI.ExpandWidth(false));
-                UI.Space(10);
-                UI.Label($"{selectedBlueprint.GetType().Name.cyan()}", UI.ExpandWidth(false));
-                UI.Space(30);
-                UI.Label($"{selectedBlueprint}".orange().bold());
-                UI.EndHorizontal();
-            }
-            UI.Space(25);
             UI.Section("Search 'n Pick", () => {
-                UI.Label("(please note the first search may take a few seconds)");
+                UI.Label("(please note the first search may take a few seconds)".green(), UI.AutoWidth());
                 UI.Space(25);
                 UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                     blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                     5,
                     (selected) => { searchChanged = true;}, 
-                    UI.ExpandWidth(false));
+                    UI.MinWidth(200));
                 UI.Space(10);
 
                 UI.BeginHorizontal();
                 UI.ActionTextField(
-                    ref Main.settings.searchText, (text) => { }, 
-                    "searhText", () => { UpdateSearchResults();},
-                    UI.Width(500f));
+                    ref Main.settings.searchText, (text) => { },
+                    "searhText", () => { UpdateSearchResults(); },
+                    UI.Width(200));
                 UI.Space(50);
                 UI.Label("Limit", UI.ExpandWidth(false));
                 UI.ActionIntTextField(
                     ref Main.settings.searchLimit, (limit) => {},
                     "searchLimit", () => { UpdateSearchResults(); },
-                    UI.Width(500f));
+                    UI.Width(200));
                 if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
-                UI.EndHorizontal();
-
-                UI.BeginHorizontal();
-                UI.ActionButton("Search", () => {
-                    UpdateSearchResults();
-                }, UI.AutoWidth());
                 UI.Space(50);
                 UI.Label((matchCount > 0
                             ? "Matches: ".green().bold() + $"{matchCount}".orange().bold()
@@ -143,8 +127,11 @@ namespace ToyBox {
                                     ? " => ".cyan() + $"{Main.settings.searchLimit}".cyan().bold()
                                     : "")
                             : ""), UI.ExpandWidth(false));
-
                 UI.EndHorizontal();
+
+                UI.ActionButton("Search", () => {
+                    UpdateSearchResults();
+                }, UI.AutoWidth());
                 UI.Space(10);
 
                 if (filteredBPs != null) {

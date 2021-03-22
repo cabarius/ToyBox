@@ -94,34 +94,6 @@ namespace ToyBox {
             return new string[] { fields, methods, properties };
         }
     }
-
-    public class NamedTypeFilter {
-        public String name { get; set; }
-        public Type type { get; set; }
-        public NamedTypeFilter() { }
-        public NamedTypeFilter(String name, Type type) { this.name = name; this.type = type; }
-    }
-
-    public class NamedAction {
-        public String name { get; set; }
-        public Action action { get; set; }
-        public NamedAction() { }
-        public NamedAction(String name, Action action) { this.name = name; this.action = action; }
-    }
-    public class NamedAction<T> {
-        public String name { get; set; }
-        public Action<T> action { get; set; }
-        public NamedAction() { }
-        public NamedAction(String name, Action<T> action) { this.name = name; this.action = action; }
-    }
-
-    public class NamedFunc<T> {
-        public String name { get; set; }
-        public Func<T> func { get; set; }
-        public NamedFunc() { }
-        public NamedFunc(String name, Func<T> func) { this.name = name; this.func = func; }
-    }
-
     public static class TB {
         public static bool IsKindOf(this Type type, Type baseType) {
             return type.IsSubclassOf(baseType) || type == baseType;

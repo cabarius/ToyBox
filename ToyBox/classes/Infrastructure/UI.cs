@@ -80,7 +80,18 @@ namespace ToyBox {
         public static GUILayoutOption AutoWidth() { return GL.ExpandWidth(false); }
         public static GUILayoutOption AutoHeight() { return GL.ExpandHeight(false); }
         public static GUILayoutOption Width(float v) { return GL.Width(v); }
-        public static GUILayoutOption Heighth(float v) { return GL.Width(v); }
+        public static GUILayoutOption[] Width(float min, float max) { 
+            return new GUILayoutOption[] { GL.MinWidth(min), GL.MaxWidth(max) };
+        }
+        public static GUILayoutOption[] Height(float min, float max) {
+            return new GUILayoutOption[] { GL.MinHeight(min), GL.MaxHeight(max) };
+        }
+        public static GUILayoutOption Height(float v) { return GL.Width(v); }
+        public static GUILayoutOption MaxWidth(float v) { return GL.MaxWidth(v); }
+        public static GUILayoutOption MaxHeight(float v) { return GL.MaxHeight(v); }
+        public static GUILayoutOption MinWidth(float v) { return GL.MinWidth(v); }
+        public static GUILayoutOption MinHeight(float v) { return GL.MinHeight(v); }
+
         public static void Space(float size = 150f) { GL.Space(size); }
         public static void BeginHorizontal(params GUILayoutOption[] options) { GL.BeginHorizontal(options); }
         public static void EndHorizontal() { GL.EndHorizontal(); }
@@ -90,7 +101,7 @@ namespace ToyBox {
 
         public static void Label(String title, params GUILayoutOption[] options) {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
-            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
+            //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, options);
         }
 
@@ -101,7 +112,7 @@ namespace ToyBox {
 
         public static void IntTextField(ref int value, String name = null, params GUILayoutOption[] options) {
             String searchLimitString = $"{value}";
-            UI.TextField(ref searchLimitString, name, UI.Width(500f));
+            UI.TextField(ref searchLimitString, name, options);
             Int32.TryParse(searchLimitString, out value);
         }
 

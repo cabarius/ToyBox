@@ -119,7 +119,6 @@ namespace ToyBox {
 #endif
                 CheapTricks.OnGUI(modEntry);
                 PartyEditor.OnGUI(modEntry);
-                UI.Space(20);
                 BlueprintBrowser.OnGUI(modEntry);
                 GL.EndVertical();
             }
