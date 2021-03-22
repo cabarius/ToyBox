@@ -126,6 +126,8 @@ namespace ToyBox {
                 (ch, bp) => { ch.Descriptor.RemoveFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return ch.Descriptor.Buffs.HasFact((BlueprintBuff)bp);  }
                 ),
+            // Races
+
             // Abilities
 #if false
             new BlueprintAction("Add", typeof(BlueprintAbility),

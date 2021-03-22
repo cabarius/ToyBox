@@ -64,7 +64,7 @@ namespace ToyBox {
             UI.Space(25);
             //            UI.Section("Quest Editor", () => {
             UI.BeginHorizontal();
-            UI.DisclosureToggle("Quests", ref showQuests, true, () => {
+            UI.DisclosureToggle("Quest Resolution", ref showQuests, true, () => {
                 UI.EndHorizontal();
                 GUILayout.Space(5f);
                 UI.Toggle("Hide Completed", ref Main.settings.hideCompleted);

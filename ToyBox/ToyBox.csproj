@@ -97,6 +97,7 @@
     <Compile Include="classes\UI\Main.cs" />
     <Compile Include="classes\UI\BlueprintBrowser.cs" />
     <Compile Include="classes\UI\CheapTricks.cs" />
+    <Compile Include="classes\UI\CharacterPicker.cs" />
     <Compile Include="classes\UI\QuestEditor.cs" />
     <Compile Include="classes\UI\PartyEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

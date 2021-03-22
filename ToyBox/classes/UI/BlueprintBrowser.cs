@@ -52,6 +52,7 @@ namespace ToyBox {
             new NamedTypeFilter("All", typeof(BlueprintScriptableObject)),
             new NamedTypeFilter("Facts",typeof(BlueprintFact)),
             new NamedTypeFilter("Features", typeof(BlueprintFeature)),
+            new NamedTypeFilter("Races", typeof(BlueprintRace)),
             new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
             new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon)),
             new NamedTypeFilter("Armor", typeof(BlueprintItemArmor)),
@@ -59,6 +60,7 @@ namespace ToyBox {
             new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
             new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
             new NamedTypeFilter("Units", typeof(BlueprintUnit)),
+            new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
         };
         public static BlueprintScriptableObject[] GetBlueprints() {
             var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle")
@@ -70,7 +72,7 @@ namespace ToyBox {
             filteredBPs = null;
             filteredBPNames = null;
         }
-        static async void UpdateSearchResults() {
+        public static async void UpdateSearchResults() {
             if (blueprints == null) {
                 blueprints = GetBlueprints(); //.Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
             }
@@ -103,7 +105,7 @@ namespace ToyBox {
                 UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                     blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                     5,
-                    (selected) => { UpdateSearchResults(); }, 
+                    (selected) => { UpdateSearchResults(); },
                     UI.MinWidth(200));
                 UI.Space(10);
 
@@ -115,7 +117,7 @@ namespace ToyBox {
                 UI.Space(50);
                 UI.Label("Limit", UI.ExpandWidth(false));
                 UI.ActionIntTextField(
-                    ref Main.settings.searchLimit, (limit) => {},
+                    ref Main.settings.searchLimit, (limit) => { },
                     "searchLimit", () => { UpdateSearchResults(); },
                     UI.Width(200));
                 if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
@@ -134,23 +136,23 @@ namespace ToyBox {
                 UI.Space(10);
 
                 if (filteredBPs != null) {
-                    UnitReference mainChar = Game.Instance.Player.MainCharacter;
+                    UnitReference selected = CharacterPicker.selectedCharacter;
                     int index = 0;
                     int maxActions = 0;
                     foreach (BlueprintScriptableObject blueprint in filteredBPs) {
-                        var actions = blueprint.ActionsForUnit(mainChar);
+                        var actions = blueprint.ActionsForUnit(selected);
                         maxActions = Math.Max(actions.Count, maxActions);
                     }
 
                     foreach (BlueprintScriptableObject blueprint in filteredBPs) {
                         UI.BeginHorizontal();
                         UI.Label(blueprint.name.orange().bold(), UI.Width(650));
-                        var actions = blueprint.ActionsForUnit(mainChar);
+                        var actions = blueprint.ActionsForUnit(selected);
                         int actionCount = actions != null ? actions.Count() : 0;
                         for (int ii = 0; ii < maxActions; ii++) {
                             if (ii < actionCount) {
                                 BlueprintAction action = actions[ii];
-                                UI.ActionButton(action.name, () => { action.action(mainChar, blueprint); }, UI.Width(140));
+                                UI.ActionButton(action.name, () => { action.action(selected, blueprint); }, UI.Width(140));
                                 UI.Space(10);
                             }
                             else {
