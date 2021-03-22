@@ -94,18 +94,19 @@ namespace ToyBox {
             GL.Label(title, options);
         }
 
-        public static void TextField(ref string text, params GUILayoutOption[] options) {
+        public static void TextField(ref String text, String name = null, params GUILayoutOption[] options) {
+            if (name != null) { GUI.SetNextControlName(name); }
             text = GL.TextField(text, options);
         }
 
-        public static void IntTextField(ref int value, params GUILayoutOption[] options) {
+        public static void IntTextField(ref int value, String name = null, params GUILayoutOption[] options) {
             String searchLimitString = $"{value}";
-            UI.TextField(ref searchLimitString, UI.Width(500f));
+            UI.TextField(ref searchLimitString, name, UI.Width(500f));
             Int32.TryParse(searchLimitString, out value);
         }
 
         public static void SelectionGrid(ref int value, String[] texts, int xCols, params GUILayoutOption[] options) {
-             value = GL.SelectionGrid(value, texts, xCols, options); 
+            value = GL.SelectionGrid(value, texts, xCols, options);
         }
 
         // UI Elements
@@ -115,12 +116,40 @@ namespace ToyBox {
             if (GL.Button(title, options)) { action(); }
         }
 
-        public static void ActionTextField(ref string text, Action<String> action, params GUILayoutOption[] options) {
+        public static void ActionTextField(ref string text,
+            Action<String> action,
+            String name,
+            Action enterAction,
+            params GUILayoutOption[] options
+            ) {
+            GUI.SetNextControlName(name);
             String newText = GL.TextField(text, options);
             if (newText != text) {
                 text = newText;
                 action(text);
             }
+            if (Main.userHasHitReturn && Main.focusedControlName == name) {
+                enterAction();
+            }
+        }
+
+        public static void ActionIntTextField(ref int value,
+            Action<int> action,
+            String name,
+            Action enterAction,
+            params GUILayoutOption[] options
+            ) {
+            bool changed = false;
+            bool hitEnter = false;
+            String searchLimitString = $"{value}";
+            UI.ActionTextField(ref searchLimitString, 
+                (text) => { changed = true;  }, 
+                name, 
+                () => { hitEnter = true; }, 
+                options);
+            Int32.TryParse(searchLimitString, out value);
+            if (changed) { action(value); }
+            if (hitEnter) { enterAction(); }
         }
 
         public static void ActionSelectionGrid(ref int value, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {

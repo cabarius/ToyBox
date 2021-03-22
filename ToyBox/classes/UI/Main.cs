@@ -52,6 +52,7 @@ namespace ToyBox {
 
         static Exception caughtException = null;
         static public bool userHasHitReturn = false;
+        static public String focusedControlName = null;
         static bool Load(UnityModManager.ModEntry modEntry) {
             try {
 #if DEBUG
@@ -101,7 +102,8 @@ namespace ToyBox {
         static void OnGUI(UnityModManager.ModEntry modEntry) {
             try {
                 Event e = Event.current;
-                if (e.keyCode == KeyCode.Return) userHasHitReturn = true;
+                userHasHitReturn = (e.keyCode == KeyCode.Return);
+                focusedControlName = GUI.GetNameOfFocusedControl();
 
                 if (caughtException != null) {
                     UI.Label("ERROR".red().bold() + $": caught exception {caughtException}");
@@ -109,10 +111,12 @@ namespace ToyBox {
                     return;
                 }
                 GL.BeginVertical("box");
-               
-                UI.Label("focused: " + $"{GUIUtility.keyboardControl}".orange().bold(), UI.AutoWidth());
-                UI.Label("hot: " + $"{GUIUtility.hotControl}".orange().bold(), UI.AutoWidth());
-
+#if false
+                UI.Label("focused: " 
+                    + $"{GUI.GetNameOfFocusedControl()}".orange().bold() 
+                    + "(" + $"{GUIUtility.keyboardControl}".cyan().bold() + ")", 
+                    UI.AutoWidth());
+#endif
                 CheapTricks.OnGUI(modEntry);
                 PartyEditor.OnGUI(modEntry);
                 UI.Space(20);

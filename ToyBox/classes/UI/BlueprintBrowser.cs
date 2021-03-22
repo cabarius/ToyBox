@@ -114,16 +114,21 @@ namespace ToyBox {
                 UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                     blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                     5,
-                    (selected) => {
-                        searchChanged = true;
-                    }, UI.ExpandWidth(false));
+                    (selected) => { searchChanged = true;}, 
+                    UI.ExpandWidth(false));
                 UI.Space(10);
 
                 UI.BeginHorizontal();
-                UI.TextField(ref Main.settings.searchText, UI.Width(500f));
+                UI.ActionTextField(
+                    ref Main.settings.searchText, (text) => { }, 
+                    "searhText", () => { UpdateSearchResults();},
+                    UI.Width(500f));
                 UI.Space(50);
                 UI.Label("Limit", UI.ExpandWidth(false));
-                UI.IntTextField(ref Main.settings.searchLimit, UI.Width(500f));
+                UI.ActionIntTextField(
+                    ref Main.settings.searchLimit, (limit) => {},
+                    "searchLimit", () => { UpdateSearchResults(); },
+                    UI.Width(500f));
                 if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
                 UI.EndHorizontal();
 
@@ -131,9 +136,6 @@ namespace ToyBox {
                 UI.ActionButton("Search", () => {
                     UpdateSearchResults();
                 }, UI.AutoWidth());
-                if (Main.userHasHitReturn || searchChanged) {
-                    UpdateSearchResults();
-                }
                 UI.Space(50);
                 UI.Label((matchCount > 0
                             ? "Matches: ".green().bold() + $"{matchCount}".orange().bold()
@@ -156,14 +158,6 @@ namespace ToyBox {
                     foreach (BlueprintScriptableObject blueprint in filteredBPs) {
                         UI.BeginHorizontal();
                         UI.Label(blueprint.name.orange().bold(), UI.Width(650));
-#if false
-                    if (UI.Button("Select", UI.ExpandWidth(false)))
-                    {
-                        selectedBlueprintIndex = index;
-                        selectedBlueprint = blueprint;
-                        parameter = blueprint.name;
-                    }
-#endif
                         BlueprintAction[] actions = BlueprintAction.ActionsForBlueprint(blueprint);
                         int actionCount = actions != null ? actions.Count() : 0;
                         for (int ii = 0; ii < maxActionCount; ii++) {

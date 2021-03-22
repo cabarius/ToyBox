@@ -131,7 +131,7 @@ namespace ToyBox {
                     if (((1 << chIndex) & showDetailsBitfield) != 0) {
                         UI.BeginHorizontal();
                         UI.Space(100);
-                        UI.TextField(ref playerDetailsSearchText, UI.Width(200));
+                        UI.TextField(ref playerDetailsSearchText, null, UI.Width(200));
                         UI.EndHorizontal();
                         FeatureCollection features = ch.Descriptor.Progression.Features;
                         EntityFact featureToRemove = null;
