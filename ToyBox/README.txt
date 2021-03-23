@@ -8,25 +8,25 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 
 Current features include 
 
-ver 1.0
+Ver 1.0
 - Search and entire blueprint catalog for feats, features, items and more
 - Browse party members, level up, mythic level up, modify stats
-ver 1.0.2
+Ver 1.0.2
 - Browse and  remove features by party member (back up before using)
 - Various cheats based on console commands
-ver 1.0.3
+Ver 1.0.3
 - Party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
 - Add/Remove party members
 - Teleport Party To You
 - Run Perception Check
 - ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
-ver 1.0.4
+Ver 1.0.4
 - Search Character Picker - Can now add features to a specifically chosen party member
 - Quest Resolution - browse and modify progress in your quests (great for dealing with bugged quests)
 - Improved layout at lower resolutions (not perfect yet)
 - Improved search performance
 - Misc other improvements
-ver 1.0.5
+Ver 1.0.5
 - Ported Dialog Preview from Kingdom Resolution Mod. Now you can get a preview of results from Dialog, Alignment Restricted Dialog, Events and Random Encounters
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
@@ -37,11 +37,13 @@ Acknowledgments:
 	Owlcat Games - for making fun and amazing games
 	Paizo - for carrying the D20 3.5 torch
 	Pathfinder Wrath of The Righteous Discord channel members
-		@Spacehamster - awesome tutorials and taking time to teach me modding WoTR
+		@Spacehamster - awesome tutorials and taking time to teach me modding WoTR, and letting me port stuff from Kingdom Resolution Mod
+		@m0nster - for giving me permission to port stuff from Back of Tricks
 		@Vek17, @Bubbles, @Balkoth, @swizzlewizzle and the rest of our great Discord modding community - help, moral support and just general awesomeness
-	@m0nster, @Hsinyu, @fireundubh for Bag of Tricks (level up code and Rich Text Utils)
+	@m0nster, @Hsinyu, @fireundubh for Bag of Tricks which inspired me to get into modding WoTR because I missed this mod so much
 
-PS: Learn to mod Kingmaker Games here https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide and join our discord https://discord.gg/bQVwsP7cky
+	PS: Learn to mod Kingmaker Games here https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide 
+		Join our discord https://discord.gg/bQVwsP7cky
 
 Source Code: https://github.com/cabarius/ToyBox
 License: MIT
