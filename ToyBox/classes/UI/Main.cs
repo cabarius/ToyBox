@@ -95,7 +95,6 @@ namespace ToyBox {
             settings = Settings.Load<Settings>(modEntry);
             settings.searchText = "";
             settings.searchLimit = 100;
-            CharacterPicker.selectedIndex = 0;
             ResetSearch();
             caughtException = null;
         }
@@ -121,7 +120,6 @@ namespace ToyBox {
                 CheapTricks.OnGUI(modEntry);
                 QuestEditor.OnGUI(modEntry);
                 PartyEditor.OnGUI(modEntry);
-                CharacterPicker.OnGUI(modEntry);
                 BlueprintBrowser.OnGUI(modEntry);
                 GL.EndVertical();
             }

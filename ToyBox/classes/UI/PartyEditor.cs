@@ -63,8 +63,6 @@ namespace ToyBox {
                     ref Main.settings.selectedPartyFilter,
                     partyFilterChoices
                     );
-                // why does this crash?
-                if (CharacterPicker.selectedIndex > characterList.Count()) { CharacterPicker.selectedIndex = 0; CharacterPicker.selectedCharacter = characterList[0];  }
                 int chIndex = 0;
                 foreach (UnitEntityData ch in characterList) {
                     UnitProgressionData progression = ch.Descriptor.Progression;

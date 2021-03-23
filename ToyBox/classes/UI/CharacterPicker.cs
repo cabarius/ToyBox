@@ -39,8 +39,18 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class CharacterPicker {
-        public static int selectedIndex = 0;
-        public static UnitEntityData selectedCharacter = null;
+        static int selectedIndex = 0;
+        static UnitEntityData selectedCharacter = null;
+        static public UnitEntityData GetSelectedCharacter() {
+            var characters = PartyEditor.characterList;
+            if (characters.Count == 0) {
+                return Game.Instance.Player.MainCharacter;
+            }
+            if (selectedIndex > characters.Count) {
+                selectedIndex = 0;
+            }
+            return characters[selectedIndex];
+        }
 
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
             UI.Space(25);
@@ -49,12 +59,11 @@ namespace ToyBox {
                 8,
                 (index) => {  BlueprintBrowser.UpdateSearchResults(); },
                 UI.MinWidth(200));
-            selectedCharacter = PartyEditor.characterList[selectedIndex];
             UI.Space(10);
             UI.HStack(null, 0, () => {
-                UI.Label($"{PartyEditor.characterList[CharacterPicker.selectedIndex].CharacterName}".orange().bold(), UI.AutoWidth());
-                UI.Space(25);
-                UI.Label("will be used for adding/remove features, buffs, etc in the search results below.".green());
+                UI.Label($"{GetSelectedCharacter().CharacterName}".orange().bold(), UI.AutoWidth());
+                UI.Space(5);
+                UI.Label("will be used for adding/remove features, buffs, etc ".green());
             });
         }
     }

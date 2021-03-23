@@ -21,7 +21,9 @@ ver 1.03
 - Run Perception Check
 - ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
 ver 1.04
-- Can now add features to a sepecificly chosen party member
+- Search Character Picker - Can now add features to a sepecificly chosen party member
+- Quest Resolution - browse and modify progress in your quests (great for dealing with bugged quests)
+- Improved layout at lower resolutions (not perfect yet)
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
 
