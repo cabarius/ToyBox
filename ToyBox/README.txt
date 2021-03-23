@@ -24,6 +24,8 @@ ver 1.04
 - Search Character Picker - Can now add features to a sepecificly chosen party member
 - Quest Resolution - browse and modify progress in your quests (great for dealing with bugged quests)
 - Improved layout at lower resolutions (not perfect yet)
+- Improved search performance
+- Misc other improvements
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
 
