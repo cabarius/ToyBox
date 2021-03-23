@@ -65,6 +65,13 @@ namespace ToyBox {
                     () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
                     );
             });
+            UI.HStack("Preview", 0, () => {
+                UI.Toggle("Dialog Results", ref Main.settings.previewDialogResults, UI.AutoWidth());
+                UI.Toggle("Dialog Alignment", ref Main.settings.previewAlignmentRestrictedDialog, UI.AutoWidth());
+                UI.Toggle("Random Encounters", ref Main.settings.previewRandomEncounters, UI.AutoWidth());
+                UI.Toggle("Events", ref Main.settings.previewEventResults, UI.AutoWidth());
+            });
+            UI.Space(10);
             UI.HStack("Flags", 1,
                 () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle, UI.AutoWidth()); }
                 );

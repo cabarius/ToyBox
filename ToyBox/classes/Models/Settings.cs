@@ -14,6 +14,12 @@ namespace ToyBox {
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
 
+        // Previews (Dialogs, Events ,etc)
+
+        public bool previewEventResults = false;
+        public bool previewDialogResults = false;
+        public bool previewAlignmentRestrictedDialog = false;
+        public bool previewRandomEncounters = false;
 
         // Quests
         public bool hideCompleted = true;
