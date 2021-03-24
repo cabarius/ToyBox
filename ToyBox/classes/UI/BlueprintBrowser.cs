@@ -103,86 +103,84 @@ namespace ToyBox {
         }
 
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
-            UI.Section("Search 'n Pick", () => {
-                UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
-                    blueprintTypeFilters.Select(tf => tf.name).ToArray(),
-                    5,
-                    (selected) => { UpdateSearchResults(); },
-                    UI.MinWidth(200));
-                UI.Space(10);
+            UI.Space(25);
+            UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
+                blueprintTypeFilters.Select(tf => tf.name).ToArray(),
+                5,
+                (selected) => { UpdateSearchResults(); },
+                UI.MinWidth(200));
+            UI.Space(10);
 
-                UI.BeginHorizontal();
-                UI.ActionTextField(
-                    ref Main.settings.searchText, (text) => { },
-                    "searhText", () => { UpdateSearchResults(); },
-                    UI.Width(400));
-                UI.Space(50);
-                UI.Label("Limit", UI.ExpandWidth(false));
-                UI.ActionIntTextField(
-                    ref Main.settings.searchLimit, (limit) => { },
-                    "searchLimit", () => { UpdateSearchResults(); },
-                    UI.Width(200));
-                if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
-                UI.EndHorizontal();
+            UI.BeginHorizontal();
+            UI.ActionTextField(
+                ref Main.settings.searchText, (text) => { },
+                "searhText", () => { UpdateSearchResults(); },
+                UI.Width(400));
+            UI.Space(50);
+            UI.Label("Limit", UI.ExpandWidth(false));
+            UI.ActionIntTextField(
+                ref Main.settings.searchLimit, (limit) => { },
+                "searchLimit", () => { UpdateSearchResults(); },
+                UI.Width(200));
+            if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
+            UI.EndHorizontal();
 
-                UI.BeginHorizontal();
-                UI.ActionButton("Search", () => {
-                    UpdateSearchResults();
-                }, UI.AutoWidth());
+            UI.BeginHorizontal();
+            UI.ActionButton("Search", () => {
+                UpdateSearchResults();
+            }, UI.AutoWidth());
+            UI.Space(25);
+            if (firstSearch) {
+                UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
+            }
+            else if (matchCount > 0) {
+                String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                if (matchCount > Main.settings.searchLimit) { title += " => ".cyan() + $"{Main.settings.searchLimit}".cyan().bold(); }
+                UI.Label(title, UI.ExpandWidth(false));
+            }
+            UI.EndHorizontal();
+            UI.Space(10);
+
+            if (filteredBPs != null) {
+                CharacterPicker.OnGUI(modEntry);
                 UI.Space(25);
-                if (firstSearch) {
-                    UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
+                UnitReference selected = CharacterPicker.GetSelectedCharacter();
+                int index = 0;
+                int maxActions = 0;
+                foreach (BlueprintScriptableObject blueprint in filteredBPs) {
+                    var actions = blueprint.ActionsForUnit(selected);
+                    maxActions = Math.Max(actions.Count, maxActions);
                 }
-                else if (matchCount > 0) {
-                    String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                    if (matchCount > Main.settings.searchLimit) { title += " => ".cyan() + $"{Main.settings.searchLimit}".cyan().bold(); }
-                    UI.Label(title, UI.ExpandWidth(false));
-                }
-                UI.EndHorizontal();
-                UI.Space(10);
 
-                if (filteredBPs != null) {
-                    CharacterPicker.OnGUI(modEntry);
-                    UI.Space(25);
-                    UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                    int index = 0;
-                    int maxActions = 0;
-                    foreach (BlueprintScriptableObject blueprint in filteredBPs) {
-                        var actions = blueprint.ActionsForUnit(selected);
-                        maxActions = Math.Max(actions.Count, maxActions);
+                foreach (BlueprintScriptableObject blueprint in filteredBPs) {
+                    UI.BeginHorizontal();
+                    UI.Label(blueprint.name.orange().bold(), UI.Width(650));
+                    var actions = blueprint.ActionsForUnit(selected);
+                    int actionCount = actions != null ? actions.Count() : 0;
+                    for (int ii = 0; ii < maxActions; ii++) {
+                        if (ii < actionCount) {
+                            BlueprintAction action = actions[ii];
+                            UI.ActionButton(action.name, () => { action.action(selected, blueprint); }, UI.Width(140));
+                            UI.Space(10);
+                        }
+                        else {
+                            UI.Space(154);
+                        }
                     }
-
-                    foreach (BlueprintScriptableObject blueprint in filteredBPs) {
+                    UI.Space(30);
+                    UI.Label($"{blueprint.GetType().Name.cyan()}", UI.Width(400));
+                    UI.EndHorizontal();
+                    String description = blueprint.GetDescription();
+                    if (description.Length > 0) {
                         UI.BeginHorizontal();
-                        UI.Label(blueprint.name.orange().bold(), UI.Width(650));
-                        var actions = blueprint.ActionsForUnit(selected);
-                        int actionCount = actions != null ? actions.Count() : 0;
-                        for (int ii = 0; ii < maxActions; ii++) {
-                            if (ii < actionCount) {
-                                BlueprintAction action = actions[ii];
-                                UI.ActionButton(action.name, () => { action.action(selected, blueprint); }, UI.Width(140));
-                                UI.Space(10);
-                            }
-                            else {
-                                UI.Space(154);
-                            }
-                        }
-                        UI.Space(30);
-                        UI.Label($"{blueprint.GetType().Name.cyan()}", UI.Width(400));
+                        UI.Space(684 + maxActions * 154);
+                        UI.Label($"{description.green()}");
                         UI.EndHorizontal();
-                        String description = blueprint.GetDescription();
-                        if (description.Length > 0) {
-                            UI.BeginHorizontal();
-                            UI.Space(684 + maxActions * 154);
-                            UI.Label($"{description.green()}");
-                            UI.EndHorizontal();
-                        }
-                        index++;
                     }
+                    index++;
                 }
-
-            });
+            }
+            UI.Space(25);
         }
-
     }
 }

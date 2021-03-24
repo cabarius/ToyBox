@@ -164,14 +164,16 @@ namespace ToyBox {
             if (hitEnter) { enterAction(); }
         }
 
-        public static void ActionSelectionGrid(ref int value, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
-            int newValue = GL.SelectionGrid(value, texts, xCols, options);
-            if (newValue != value) {
-                value = newValue;
-                action(value);
+        public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
+            int sel = selected;
+            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a.bold());
+
+            sel = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
+            if (selected != sel) {
+                selected = sel;
+                action(selected);
             }
         }
-
 
         static void TogglePrivate(
             String title,
@@ -223,7 +225,7 @@ namespace ToyBox {
             UI.If(newBit, actions);
         }
 
-        public static T TypePicker<T>(String title, ref int selectedIndex, List<NamedFunc<T>> items) where T : class {
+        public static T TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
             var titles = items.Select((item) => item.name).ToArray();
             if (title?.Length > 0) { Label(title); }
             selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
@@ -274,6 +276,15 @@ namespace ToyBox {
             UI.Space(25);
             foreach (Action action in actions) { action(); }
             UI.Space(10);
+        }
+        
+        public static void TabBar(ref int selected, params NamedAction[] actions) {
+            int sel = selected;
+            var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name.bold());
+            selected = GL.Toolbar(selected, titles.ToArray());
+            GL.BeginVertical("box");
+            actions[selected].action();
+            GL.EndVertical();
         }
     }
 }

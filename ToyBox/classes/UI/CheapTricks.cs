@@ -42,32 +42,32 @@ namespace ToyBox {
     public class CheapTricks {
 
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
-            UI.Section("Cheap Tricks", () => {
-                UI.HStack("Combat", 4,
-                    () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
-                    () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
-                    () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.FullBuffPlease(""); }); },
-                    () => { UI.ActionButton("Remove Buffs", () => { Actions.RemoveAllBuffs(); }); },
-                    () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.DetachDebuff(); }); },
-                    () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
-                    () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
-                 );
-                UI.Space(10);
-                UI.HStack("Common", 4,
-                    () => { UI.ActionButton("Teleport Party To You", () => { Actions.TeleportPartyToPlayer(); }); },
-                    () => { UI.ActionButton("Perception Checks", () => { Actions.RunPerceptionTriggers(); }); },
-                    () => {
-                        UI.ActionButton("Set Perception to 40", () => {
-                            CheatsCommon.StatPerception();
-                            Actions.RunPerceptionTriggers();
-                        });
-                    },
-                    () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
-                    () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); },
-                    () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
-                    () => { }
-                    );
-            });
+            UI.Space(25);
+            UI.HStack("Combat", 4,
+                () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
+                () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
+                () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.FullBuffPlease(""); }); },
+                () => { UI.ActionButton("Remove Buffs", () => { Actions.RemoveAllBuffs(); }); },
+                () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.DetachDebuff(); }); },
+                () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
+                () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
+             );
+            UI.Space(10);
+            UI.HStack("Common", 4,
+                () => { UI.ActionButton("Teleport Party To You", () => { Actions.TeleportPartyToPlayer(); }); },
+                () => { UI.ActionButton("Perception Checks", () => { Actions.RunPerceptionTriggers(); }); },
+                () => {
+                    UI.ActionButton("Set Perception to 40", () => {
+                        CheatsCommon.StatPerception();
+                        Actions.RunPerceptionTriggers();
+                    });
+                },
+                () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
+                () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); },
+                //                    () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
+                () => { }
+                );
+            UI.Space(10);
             UI.HStack("Preview", 0, () => {
                 UI.Toggle("Dialog Results", ref Main.settings.previewDialogResults, UI.AutoWidth());
                 UI.Toggle("Dialog Alignment", ref Main.settings.previewAlignmentRestrictedDialog, UI.AutoWidth());
@@ -78,6 +78,7 @@ namespace ToyBox {
             UI.HStack("Flags", 1,
                 () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle, UI.AutoWidth()); }
                 );
+            UI.Space(25);
         }
     }
 }

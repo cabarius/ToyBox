@@ -107,7 +107,7 @@ namespace ToyBox {
         {
             try {
                 UnitReference mainChar = Game.Instance.Player.MainCharacter;
-                if (mainChar == null) { return "n/a"; }
+                if (mainChar == null) { return ""; }
                 MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bpObejct, (MechanicsContext)null, (TargetWrapper)null);
                 return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
             }

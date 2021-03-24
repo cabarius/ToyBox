@@ -43,8 +43,8 @@ namespace ToyBox {
         static int selectedIndex = 0;
         static UnitEntityData selectedCharacter = null;
         static public UnitEntityData GetSelectedCharacter() {
-            var characters = PartyEditor.characterList;
-            if (characters.Count == 0) {
+            var characters = PartyEditor.GetCharacterList();
+            if (characters == null || characters.Count == 0) {
                 return Game.Instance.Player.MainCharacter;
             }
             if (selectedIndex > characters.Count) {
@@ -54,18 +54,25 @@ namespace ToyBox {
         }
 
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
+
+            var characters = PartyEditor.GetCharacterList();
+            if (characters == null) { return; }
             UI.Space(25);
             UI.ActionSelectionGrid(ref selectedIndex,
-                PartyEditor.characterList.Select((ch) => ch.CharacterName).ToArray(),
+                characters.Select((ch) => ch.CharacterName).ToArray(),
                 8,
                 (index) => {  BlueprintBrowser.UpdateSearchResults(); },
                 UI.MinWidth(200));
-            UI.Space(10);
-            UI.HStack(null, 0, () => {
-                UI.Label($"{GetSelectedCharacter().CharacterName}".orange().bold(), UI.AutoWidth());
-                UI.Space(5);
-                UI.Label("will be used for adding/remove features, buffs, etc ".green());
-            });
+            var selectedCharacter = GetSelectedCharacter();
+            if (selectedCharacter != null) {
+                UI.Space(10);
+                UI.HStack(null, 0, () => {
+                    UI.Label($"{GetSelectedCharacter().CharacterName}".orange().bold(), UI.AutoWidth());
+                    UI.Space(5);
+                    UI.Label("will be used for adding/remove features, buffs, etc ".green());
+                });
+            }
+            UI.Space(25);
         }
     }
 }

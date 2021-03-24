@@ -67,6 +67,7 @@ namespace ToyBox {
 
     public static class BlueprintExensions {
         public static List<BlueprintAction> ActionsForUnit(this BlueprintScriptableObject bp, UnitEntityData ch) {
+            if (ch == null) { return new List<BlueprintAction>(); }
             var results = new List<BlueprintAction>();
             Type type = bp.GetType();
             if (ch.IsMainCharacter) {

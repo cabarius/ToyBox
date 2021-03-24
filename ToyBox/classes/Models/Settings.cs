@@ -3,9 +3,12 @@ using UnityModManagerNet;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
+        // Main
+
+        public int selectedTab = 0;
+
         // Cheap Tricks
         public bool highlightObjectsToggle = false;
-
 
         // Party Editor
         public int selectedPartyFilter = 0;

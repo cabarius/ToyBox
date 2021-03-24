@@ -101,6 +101,10 @@ namespace ToyBox {
         }
 
         static void OnGUI(UnityModManager.ModEntry modEntry) {
+            if (!Enabled) return;
+            if (!Game.Instance.Player.Party.Any()) {
+                UI.Label("ToyBox has limited functionality from the main menu".yellow().bold());
+            }
             try {
                 Event e = Event.current;
                 userHasHitReturn = (e.keyCode == KeyCode.Return);
@@ -111,18 +115,18 @@ namespace ToyBox {
                     UI.ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, UI.AutoWidth());
                     return;
                 }
-                GL.BeginVertical("box");
 #if false
                 UI.Label("focused: " 
                     + $"{GUI.GetNameOfFocusedControl()}".orange().bold() 
                     + "(" + $"{GUIUtility.keyboardControl}".cyan().bold() + ")", 
                     UI.AutoWidth());
 #endif
-                CheapTricks.OnGUI(modEntry);
-                QuestEditor.OnGUI(modEntry);
-                PartyEditor.OnGUI(modEntry);
-                BlueprintBrowser.OnGUI(modEntry);
-                GL.EndVertical();
+                UI.TabBar(ref settings.selectedTab,
+                    new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(modEntry); }),
+                    new NamedAction("Party Editor", () => { PartyEditor.OnGUI(modEntry); }),
+                    new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(modEntry); }),
+                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(modEntry); })
+                    );
             }
             catch (Exception e) {
                 Console.Write($"{e}");

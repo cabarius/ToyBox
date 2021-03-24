@@ -45,6 +45,7 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.View;
 using Kingmaker.Interaction;
 using Kingmaker.Items;
 using Kingmaker.PubSubSystem;
@@ -64,7 +65,12 @@ using UnityModManagerNet;
 
 namespace ToyBox {
     public class Actions {
+
+        public static void ToggleModWindow() {
+            UnityModManager.UI.Instance.ToggleWindow();
+        }
         public static void RunPerceptionTriggers() {
+            if (!Game.Instance.Player.Party.Any()) { return; }
             foreach (BlueprintComponent bc in Game.Instance.State.LoadedAreaState.Blueprint.CollectComponents()) {
                 if (bc.name.Contains("PerceptionTrigger")) {
                     PerceptionTrigger pt = (PerceptionTrigger)bc;
@@ -110,7 +116,7 @@ namespace ToyBox {
         }
         public static void SpawnUnit(BlueprintUnit unit) {
             Vector3 worldPosition = Game.Instance.ClickEventsController.WorldPosition;
-//           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
+            //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
                 Game.Instance.EntityCreator.SpawnUnit(unit, new Vector3(worldPosition.x + 2f, worldPosition.y + 2f, worldPosition.z), Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
             }
@@ -120,10 +126,7 @@ namespace ToyBox {
 
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 UnityModManager.UI.Instance.ToggleWindow();
-#if false
-                var menuManager = Game.Instance.;
-                menuManager.ChangePartyOnMap();
-#endif
+                GlobalMapView.Instance.ChangePartyOnMap();
             }
         }
     }
