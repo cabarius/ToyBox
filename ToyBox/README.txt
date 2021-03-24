@@ -8,7 +8,7 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 
 Current features include 
 
-Ver 1.0
+Ver 1.0.0
 - Search and entire blueprint catalog for feats, features, items and more
 - Browse party members, level up, mythic level up, modify stats
 Ver 1.0.2
@@ -28,6 +28,8 @@ Ver 1.0.4
 - Misc other improvements
 Ver 1.0.5
 - Ported Dialog Preview from Kingdom Resolution Mod. Now you can get a preview of results from Dialog, Alignment Restricted Dialog, Events and Random Encounters
+Ver 1.0.6
+- fixed bug where the arrows were backwards in add/remove rank and also made sure it couldn't take you below 1
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
 

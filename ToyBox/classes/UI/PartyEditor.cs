@@ -143,10 +143,10 @@ namespace ToyBox {
                                 UI.Label($"{fact.Name}".cyan().bold(), UI.Width(400));
                                 UI.Space(30);
                                 var rank = fact.GetRank();
-                                UI.ActionButton("<", () => { fact.AddRank(); }, UI.AutoWidth());
+                                UI.ActionButton("<", () => { if (fact.GetRank() > 1) fact.RemoveRank(); }, UI.AutoWidth());
                                 UI.Space(10f);
                                 UI.Label($"{fact.GetRank()}".orange().bold(), UI.Width(30f));
-                                UI.ActionButton(">", () => { fact.RemoveRank(); }, UI.AutoWidth());
+                                UI.ActionButton(">", () => { fact.AddRank(); }, UI.AutoWidth());
                                 UI.Space(30);
                                 UI.ActionButton("Remove", () => { featureToRemove = fact; }, UI.Width(150));
                                 String description = fact.Description;
