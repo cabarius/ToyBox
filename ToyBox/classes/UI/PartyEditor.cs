@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
 using HarmonyLib;
@@ -95,6 +96,7 @@ namespace ToyBox {
                     else {
                         UI.Label("Max", UI.Width(150));
                     }
+                    UI.ActionButton("Respec", () => { UnitHelper.Respec(ch); }, UI.AutoWidth());
                     UI.Space(25);
                     UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, false);
                     UI.Space(25);

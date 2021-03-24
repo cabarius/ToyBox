@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
 using HarmonyLib;
@@ -62,7 +63,9 @@ namespace ToyBox {
                         });
                     },
                     () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
-                    () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); }
+                    () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); },
+                    () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
+                    () => { }
                     );
             });
             UI.HStack("Preview", 0, () => {

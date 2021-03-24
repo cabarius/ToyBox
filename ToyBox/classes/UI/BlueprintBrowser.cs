@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
 using HarmonyLib;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

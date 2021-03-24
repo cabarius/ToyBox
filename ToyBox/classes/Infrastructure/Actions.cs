@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityModManagerNet;
+﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using UnityEngine;
 using UnityEngine.UI;
 using HarmonyLib;
 using System;
@@ -53,12 +53,14 @@ using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.Tutorial;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.IngameMenu;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
+using UnityModManagerNet;
 
 namespace ToyBox {
     public class Actions {
@@ -106,12 +108,22 @@ namespace ToyBox {
                 }
             }
         }
-
         public static void SpawnUnit(BlueprintUnit unit) {
             Vector3 worldPosition = Game.Instance.ClickEventsController.WorldPosition;
 //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
                 Game.Instance.EntityCreator.SpawnUnit(unit, new Vector3(worldPosition.x + 2f, worldPosition.y + 2f, worldPosition.z), Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+            }
+        }
+        public static void ChangeParty() {
+            GameModeType currentMode = Game.Instance.CurrentMode;
+
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                UnityModManager.UI.Instance.ToggleWindow();
+#if false
+                var menuManager = Game.Instance.;
+                menuManager.ChangePartyOnMap();
+#endif
             }
         }
     }

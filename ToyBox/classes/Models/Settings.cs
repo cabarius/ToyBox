@@ -1,4 +1,5 @@
-﻿using UnityModManagerNet;
+﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using UnityModManagerNet;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {

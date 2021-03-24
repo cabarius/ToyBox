@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿// borrowed shamelessly and enchanced from Kingdom Resolution Mod
+//   "Author": "spacehamster",
+//   "HomePage": "https://www.nexusmods.com/pathfinderkingmaker/mods/36",
+//   "Repository": "https://raw.githubusercontent.com/spacehamster/KingmakerKingdomResolutionMod/master/KingdomResolution/Repository.json"
+// Copyright < 2018 > Spacehamster 
+// Copyright < 2021 > Ported version - Narria(github user Cabarius) - License: MIT
+using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
 using HarmonyLib;
