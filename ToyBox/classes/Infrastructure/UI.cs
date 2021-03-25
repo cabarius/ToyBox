@@ -166,7 +166,7 @@ namespace ToyBox {
 
         public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
             int sel = selected;
-            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a.bold());
+            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
 
             sel = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
             if (selected != sel) {
@@ -226,7 +226,8 @@ namespace ToyBox {
         }
 
         public static T TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
-            var titles = items.Select((item) => item.name).ToArray();
+            int sel = selectedIndex;
+            var titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();
             if (title?.Length > 0) { Label(title); }
             selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
             return items[selectedIndex].func();
@@ -268,7 +269,7 @@ namespace ToyBox {
             if (title != null) { UI.Label(title); }
             UI.Group(actions);
             UI.EndVertical();
-        }
+        }   `
 
         public static void Section(String title, params Action[] actions) {
             UI.Space(25);
@@ -280,7 +281,7 @@ namespace ToyBox {
         
         public static void TabBar(ref int selected, params NamedAction[] actions) {
             int sel = selected;
-            var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name.bold());
+            var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             selected = GL.Toolbar(selected, titles.ToArray());
             GL.BeginVertical("box");
             actions[selected].action();
