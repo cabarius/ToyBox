@@ -114,12 +114,6 @@ namespace ToyBox {
             UI.TextField(ref searchLimitString, name, options);
             Int32.TryParse(searchLimitString, out value);
         }
-        public static void SelectionGrid(ref int value, String[] texts, int xCols, params GUILayoutOption[] options) {
-            value = GL.SelectionGrid(value, texts, xCols, options);
-        }
-        public static void Toolbar(ref int value, String[] texts, params GUILayoutOption[] options) {
-            value = GL.Toolbar(value, texts, options);
-        }
 
         // UI Elements
 
@@ -178,15 +172,41 @@ namespace ToyBox {
             UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, options);
             value = (int)fvalue;
         }
+        public static void SelectionGrid(ref int value, String[] texts, int xCols, params GUILayoutOption[] options) {
+            if (xCols <= 0) xCols = texts.Count();
+            value = GL.SelectionGrid(value, texts, xCols, options);
+        }
+        public static void Toolbar(ref int value, String[] texts, params GUILayoutOption[] options) {
+            value = GL.Toolbar(value, texts, options);
+        }
         public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
-
+            if (xCols <= 0) xCols = texts.Count();
             sel = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
             if (selected != sel) {
                 selected = sel;
                 action(selected);
             }
+        }
+        public static void EnumerablePicker<T>(String title, ref int selected, IEnumerable<T> range, int xCols, params GUILayoutOption[] options) {
+            if (selected > range.Count()) selected = 0;
+            int sel = selected;
+            var titles = range.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
+            if (xCols <= 0) xCols = range.Count();
+            UI.BeginHorizontal(options);
+            UI.Label(title, UI.AutoWidth());
+            UI.Space(25);
+            selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
+            UI.EndHorizontal();
+        }
+
+        public static T TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
+            int sel = selectedIndex;
+            var titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();
+            if (title?.Length > 0) { Label(title); }
+            selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
+            return items[selectedIndex].func();
         }
         static void TogglePrivate(
             String title,
@@ -229,21 +249,16 @@ namespace ToyBox {
             UI.If(value, actions);
         }
 
-        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool forceHorizontal = true, params Action[] actions) {
+        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, params Action[] actions) {
 
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
             TogglePrivate(title, ref newBit, true, forceHorizontal, AutoWidth());
-            if (bit != newBit) { bitfield ^= (1 << offset); }
+            if (bit != newBit) {
+                if (exclusive) bitfield = 0;
+                bitfield ^= (1 << offset); 
+            }
             UI.If(newBit, actions);
-        }
-
-        public static T TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
-            int sel = selectedIndex;
-            var titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();
-            if (title?.Length > 0) { Label(title); }
-            selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
-            return items[selectedIndex].func();
         }
 
         // UI Builders

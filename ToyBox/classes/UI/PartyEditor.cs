@@ -119,13 +119,13 @@ namespace ToyBox {
                     UI.Label("Max", UI.Width(150));
                 }
                 UI.Space(25);
-                UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, false);
+                UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, true, false);
                 UI.Space(25);
-                UI.DisclosureBitFieldToggle("Facts", ref showFactsBitfield, chIndex, false);
+                UI.DisclosureBitFieldToggle("Facts", ref showFactsBitfield, chIndex, true, false);
                 UI.Space(25);
-                UI.DisclosureBitFieldToggle("Abilities", ref showAbilitiesBitfield, chIndex, false);
+                UI.DisclosureBitFieldToggle("Abilities", ref showAbilitiesBitfield, chIndex, true, false);
                 UI.Space(25);
-                UI.DisclosureBitFieldToggle("Spells", ref showSpellsBitfield, chIndex, false);
+                UI.DisclosureBitFieldToggle("Spells", ref showSpellsBitfield, chIndex, true, false);
                 UI.Space(50);
 
                 if (player.Party.Contains(ch)) {
@@ -174,13 +174,12 @@ namespace ToyBox {
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
                         UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1381));
+                        if (selectedSpellbook > spellbooks.Count()) selectedSpellbook = 0;
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
-                        var sbLevel = spellbook.GetMaxSpellLevel();
-                        var levelStrings = new List<String>();
+                        var casterLevel = spellbook.CasterLevel;
                         var memorizedSpells = spellbook.GetAllMemorizedSpells();
                         var knownSpells = spellbook.GetAllKnownSpells();
-                        for (int i = 0; i<= sbLevel; i++) { levelStrings.AddItem($"{i}");  }
-                        UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.AutoWidth());
+                        UI.EnumerablePicker<int>("Level", ref selectedSpellbookLevel, Enumerable.Range(0, casterLevel + 1), 0, UI.AutoWidth());
                         var spellList = knownSpells.Where((spell) => spell.SpellLevel == selectedSpellbookLevel);
                         var spells = spellList.Select((sp) => sp.Fact);
                         FactsEditor<Ability>.OnGUI(spells.ToList(), ch.Descriptor.Abilities);
