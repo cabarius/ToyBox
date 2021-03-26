@@ -7,6 +7,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -64,7 +65,50 @@ using Kingmaker.Visual.Sound;
 using Kingmaker.Assets.UI;
 
 namespace ToyBox {
-    public class Utilties {
+    public static class Utilties {
+        public static object GetPropValue(this object obj, String name) {
+            foreach (String part in name.Split('.')) {
+                if (obj == null) { return null; }
+
+                Type type = obj.GetType();
+                PropertyInfo info = type.GetProperty(part);
+                if (info == null) { return null; }
+
+                obj = info.GetValue(obj, null);
+            }
+            return obj;
+        }
+        public static T GetPropValue<T>(this object obj, String name) {
+            object retval = GetPropValue(obj, name);
+            if (retval == null) { return default(T); }
+            // throws InvalidCastException if types are incompatible
+            return (T)retval;
+        }
+        public static object SetPropValue(this object obj, String name, object value) {
+            var parts = name.Split('.');
+            var final = parts.Last();
+            if (final == null) return null;
+            foreach (String part in parts) {
+                if (obj == null) { return null; }
+                Type type = obj.GetType();
+                PropertyInfo info = type.GetProperty(part);
+                if (info == null) { return null; }
+                if (part == final) {
+                    info.SetValue(obj, value);
+                    return value;
+                }
+                else {
+                    obj = info.GetValue(obj, null);
+                }
+            }
+            return null;
+        }
+        public static T SetPropValue<T>(this object obj, String name, T value) {
+            object retval = SetPropValue(obj, name, value);
+            if (retval == null) { return default(T); }
+            // throws InvalidCastException if types are incompatible
+            return (T)retval;
+        }
         public static string RemoveHtmlTags(string s) {
             return Regex.Replace(s, "<.*?>", String.Empty);
         }

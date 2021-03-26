@@ -11,6 +11,7 @@ using System.Reflection;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
@@ -34,6 +35,8 @@ using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
@@ -54,20 +57,46 @@ namespace ToyBox {
             new NamedTypeFilter("All", typeof(BlueprintScriptableObject)),
             new NamedTypeFilter("Facts",typeof(BlueprintFact)),
             new NamedTypeFilter("Features", typeof(BlueprintFeature)),
-            new NamedTypeFilter("Races", typeof(BlueprintRace)),
+            new NamedTypeFilter("Abilities", typeof(BlueprintAbility)),
+            new NamedTypeFilter("Spellbooks", typeof(BlueprintSpellbook)),
             new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
+            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
             new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon)),
             new NamedTypeFilter("Armor", typeof(BlueprintItemArmor)),
             new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
-            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
+            new NamedTypeFilter("Head", typeof(BlueprintItemEquipmentHead)),
+            new NamedTypeFilter("Glasses", typeof(BlueprintItemEquipmentGlasses)),
+            new NamedTypeFilter("Neck", typeof(BlueprintItemEquipmentNeck)),
+            new NamedTypeFilter("Shoulders", typeof(BlueprintItemEquipmentShoulders)),
+            new NamedTypeFilter("Shirt", typeof(BlueprintItemEquipmentShirt)),
+            new NamedTypeFilter("Belts", typeof(BlueprintItemEquipmentBelt)),
+            new NamedTypeFilter("Wrist", typeof(BlueprintItemEquipmentWrist)),
+            new NamedTypeFilter("Hand", typeof(BlueprintItemEquipmentHand)),
+            new NamedTypeFilter("Rings", typeof(BlueprintItemEquipmentRing)),
+            new NamedTypeFilter("Gloves", typeof(BlueprintItemEquipmentGloves)),
+            new NamedTypeFilter("Boots", typeof(BlueprintItemEquipmentFeet)),
             new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
             new NamedTypeFilter("Units", typeof(BlueprintUnit)),
+            new NamedTypeFilter("Races", typeof(BlueprintRace)),
             new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
+
         };
         public static BlueprintScriptableObject[] GetBlueprints() {
             var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle")
                 .GetValue(null);
             return bundle.LoadAllAssets<BlueprintScriptableObject>();
+        }
+
+        // FIXME - performance for this sucks...
+        static Dictionary<Type, BlueprintScriptableObject[]> cached = new Dictionary<Type, BlueprintScriptableObject[]>();
+        public static TBlueprint[] GetBlueprints<TBlueprint>() where TBlueprint : BlueprintScriptableObject {
+            var type = typeof(TBlueprint);
+            if (cached.ContainsKey(type)) return (TBlueprint[])cached[type];
+            var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle")
+             .GetValue(null);
+            var result = bundle.LoadAllAssets<TBlueprint>();
+            cached[typeof(TBlueprint)] = result;
+            return (TBlueprint[])result;
         }
 
         public static void ResetSearch() {

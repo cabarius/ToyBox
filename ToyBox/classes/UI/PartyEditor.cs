@@ -11,6 +11,7 @@ using System.Reflection;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
@@ -34,6 +35,8 @@ using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
@@ -41,8 +44,11 @@ using Kingmaker.Utility;
 namespace ToyBox {
     public class PartyEditor {
         static int showStatsBitfield = 0;
-        static int showDetailsBitfield = 0;
-        static String searchText = "";
+        static int showFactsBitfield = 0;
+        static int showAbilitiesBitfield = 0;
+        static int showSpellsBitfield = 0;
+        static int addSpellbookBitfield = 0;
+        static int selectedSpellbook = 0;
         private static NamedFunc<List<UnitEntityData>>[] _partyFilterChoices = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             var player = Game.Instance.Player;
@@ -114,7 +120,11 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, false);
                 UI.Space(25);
-                UI.DisclosureBitFieldToggle("Details", ref showDetailsBitfield, chIndex, false);
+                UI.DisclosureBitFieldToggle("Facts", ref showFactsBitfield, chIndex, false);
+                UI.Space(25);
+                UI.DisclosureBitFieldToggle("Abilities", ref showAbilitiesBitfield, chIndex, false);
+                UI.Space(25);
+                UI.DisclosureBitFieldToggle("Spells", ref showSpellsBitfield, chIndex, false);
                 UI.Space(50);
 
                 if (player.Party.Contains(ch)) {
@@ -151,53 +161,29 @@ namespace ToyBox {
                     }
 
                 }
-
-                if (((1 << chIndex) & showDetailsBitfield) != 0) {
-                    UI.BeginHorizontal();
-                    UI.Space(100);
-                    UI.TextField(ref searchText, null, UI.Width(200));
-                    UI.EndHorizontal();
-                    var facts = ch.Descriptor.Progression.Features;
-                    Feature factToRemove = null;
-                    Feature factToRankUp = null;
-                    Feature factToRankDown = null;
-                    foreach (Feature fact in facts) {
-                        String name = fact.Name;
-                        if (name == null) { name = $"{fact.Blueprint.name}"; }
-                        if (name != null && name.Length > 0 && (searchText.Length == 0 || name.Contains(searchText))) {
-                            UI.BeginHorizontal();
-                            UI.Space(100);
-                            UI.Label($"{fact.Name}".cyan().bold(), UI.Width(400));
-                            UI.Space(30);
-                            try {
-                                var rank = fact.GetRank();
-                                var max = fact.Blueprint.Ranks;
-                                if (rank > 1) {
-                                    UI.ActionButton("<", () => { factToRankDown = fact; }, UI.Width(50));
-                                }
-                                else { UI.Space(53); }
-                                UI.Space(10f);
-                                UI.Label($"{rank}".orange().bold(), UI.Width(30f));
-                                if (rank < max) {
-                                    UI.ActionButton(">", () => { factToRankUp = fact; }, UI.Width(50));
-                                }
-                                else { UI.Space(53); }
-                            }
-                            catch { }
-                            UI.Space(30);
-                            UI.ActionButton("Remove", () => { factToRemove = fact; }, UI.Width(150));
-                            String description = fact.Description;
-                            if (description != null) {
-                                UI.Space(30);
-                                UI.Label(description.green(), UI.AutoWidth());
-                            }
-                            UI.EndHorizontal();
-                        }
+                if (((1 << chIndex) & showFactsBitfield) != 0) {
+                    FactsEditor<Feature>.OnGUI(ch.Progression.Features);
+                }
+                if (((1 << chIndex) & showAbilitiesBitfield) != 0) {
+                    FactsEditor<Ability>.OnGUI(ch.Descriptor.Abilities);
+                }
+                if (((1 << chIndex) & showSpellsBitfield) != 0) {
+                    var spellbooks = ch.Spellbooks;
+                    var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
+                    var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
+                    if (spellbooks.Any()) {
+                        UI.Toolbar(ref selectedSpellbook, titles, UI.AutoWidth());
                     }
-                    if (factToRankDown != null) { try { factToRankDown.RemoveRank(); } catch { } }
-                    if (factToRankUp != null) { try { factToRankUp.AddRank(); } catch { } }
-                    if (factToRemove != null) {
-                        ch.Descriptor.Progression.Features.RemoveFact(factToRemove);
+                    UI.Space(25);
+                    if (names.Count() < 5) {
+                        UI.DisclosureBitFieldToggle("Add Spellbook", ref addSpellbookBitfield, chIndex, true, () => {
+                            var availableSBs = BlueprintBrowser.GetBlueprints<BlueprintSpellbook>().Except((bp) => names.Contains(bp.Name));
+                            var availableTitles = availableSBs.Select((sb) => sb.Name.ToString()).ToArray();
+                            var selected = 0;
+                            UI.ActionSelectionGrid(ref selected, availableTitles, 8, (i) => {
+                                ch.Descriptor.DemandSpellbook(availableSBs.ElementAt(i).CharacterClass);
+                            });
+                        });
                     }
                 }
                 chIndex += 1;

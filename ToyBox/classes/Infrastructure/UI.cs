@@ -105,20 +105,20 @@ namespace ToyBox {
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, options);
         }
-
         public static void TextField(ref String text, String name = null, params GUILayoutOption[] options) {
             if (name != null) { GUI.SetNextControlName(name); }
             text = GL.TextField(text, options);
         }
-
         public static void IntTextField(ref int value, String name = null, params GUILayoutOption[] options) {
             String searchLimitString = $"{value}";
             UI.TextField(ref searchLimitString, name, options);
             Int32.TryParse(searchLimitString, out value);
         }
-
         public static void SelectionGrid(ref int value, String[] texts, int xCols, params GUILayoutOption[] options) {
             value = GL.SelectionGrid(value, texts, xCols, options);
+        }
+        public static void Toolbar(ref int value, String[] texts, params GUILayoutOption[] options) {
+            value = GL.Toolbar(value, texts, options);
         }
 
         // UI Elements
@@ -127,7 +127,6 @@ namespace ToyBox {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, options)) { action(); }
         }
-
         public static void ActionTextField(ref string text,
             Action<String> action,
             String name,
@@ -144,7 +143,6 @@ namespace ToyBox {
                 enterAction();
             }
         }
-
         public static void ActionIntTextField(ref int value,
             Action<int> action,
             String name,
@@ -163,7 +161,6 @@ namespace ToyBox {
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
         }
-
         public static void Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, params GUILayoutOption[] options) {
             UI.BeginHorizontal(options);
             UI.Label(title.cyan(), UI.Width(300));
@@ -181,7 +178,6 @@ namespace ToyBox {
             UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, options);
             value = (int)fvalue;
         }
-
         public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
@@ -192,7 +188,6 @@ namespace ToyBox {
                 action(selected);
             }
         }
-
         static void TogglePrivate(
             String title,
             ref bool value,

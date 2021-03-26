@@ -21,6 +21,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.CharGen;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Credits;
 using Kingmaker.Blueprints.Encyclopedia;
 using Kingmaker.Blueprints.Facts;
@@ -87,6 +88,7 @@ namespace ToyBox {
             Type type,
             Action<UnitEntityData, BlueprintScriptableObject> action,
             Func<UnitEntityData, BlueprintScriptableObject, bool> canPerform = null
+            
             ) : base(name, type, action, canPerform) { }
 
 
@@ -119,6 +121,16 @@ namespace ToyBox {
                 (ch, bp) => { ch.Progression.Features.RemoveFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return ch.Progression.Features.HasFact((BlueprintUnitFact)bp);  }
                 ),
+            // Spellbooks
+            new BlueprintAction("Add", typeof(BlueprintSpellbook),
+                (ch, bp) => { ch.Descriptor.DemandSpellbook(((BlueprintSpellbook)bp).CharacterClass); },
+                (ch, bp) => { return !ch.Descriptor.Spellbooks.Any((sp) => sp.Blueprint ==(BlueprintSpellbook)bp); }
+                ),
+            new BlueprintAction("Remove", typeof(BlueprintSpellbook),
+                (ch, bp) => { ch.Descriptor.DeleteSpellbook((BlueprintSpellbook)bp); },
+                (ch, bp) => { return ch.Descriptor.Spellbooks.Any((sp) => sp.Blueprint ==(BlueprintSpellbook)bp);  }
+                ),
+
             // Buffs
             new BlueprintAction("Add", typeof(BlueprintBuff),
                 (ch, bp) => { GameHelper.ApplyBuff(ch,(BlueprintBuff)bp); },
@@ -129,11 +141,10 @@ namespace ToyBox {
                 (ch, bp) => { return ch.Descriptor.Buffs.HasFact((BlueprintBuff)bp);  }
                 ),
             // Races
-
-            // Abilities
 #if false
+            // Abilities
             new BlueprintAction("Add", typeof(BlueprintAbility),
-                (ch, bp) => { ch.Progression   GameHelper.ApplyBuff(ch,(BlueprintBuff)bp); },
+                (ch, bp) => { ch.   GameHelper.ApplyBuff(ch,(BlueprintBuff)bp); },
                 (ch, bp) => { return !ch.Descriptor.Abilities.HasFact((BlueprintUnitFact)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintAbility),
