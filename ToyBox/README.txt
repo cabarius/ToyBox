@@ -33,6 +33,10 @@ Ver 1.0.6
 	Added experimental Respec Feature
 	Fixed bug where the arrows were backwards in add/remove rank and also made sure it couldn't take you below 1
 	Various stability improvements 
+Ver 1.1.0
+	Ported ~3 dozen flags, multipliers, etc patches from Bag of Tricks
+	Added UI.Slider for convenient sliders for multipliers
+	Cleaned up UI and bug fixes
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
 

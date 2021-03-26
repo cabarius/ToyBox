@@ -81,7 +81,7 @@ namespace ToyBox {
         public static GUILayoutOption AutoWidth() { return GL.ExpandWidth(false); }
         public static GUILayoutOption AutoHeight() { return GL.ExpandHeight(false); }
         public static GUILayoutOption Width(float v) { return GL.Width(v); }
-        public static GUILayoutOption[] Width(float min, float max) { 
+        public static GUILayoutOption[] Width(float min, float max) {
             return new GUILayoutOption[] { GL.MinWidth(min), GL.MaxWidth(max) };
         }
         public static GUILayoutOption[] Height(float min, float max) {
@@ -154,14 +154,32 @@ namespace ToyBox {
             bool changed = false;
             bool hitEnter = false;
             String searchLimitString = $"{value}";
-            UI.ActionTextField(ref searchLimitString, 
-                (text) => { changed = true;  }, 
-                name, 
-                () => { hitEnter = true; }, 
+            UI.ActionTextField(ref searchLimitString,
+                (text) => { changed = true; },
+                name,
+                () => { hitEnter = true; },
                 options);
             Int32.TryParse(searchLimitString, out value);
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
+        }
+
+        public static void Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, params GUILayoutOption[] options) {
+            UI.BeginHorizontal(options);
+            UI.Label(title.cyan(), UI.Width(300));
+            UI.Space(25);
+            float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(100)), decimals);
+            UI.Space(25);
+            UI.Label($"{value}".orange().bold(), UI.Width(100));
+            UI.Space(25);
+            UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+            UI.EndHorizontal();
+            value = newValue;
+        }
+        public static void Slider(String title, ref int value, int min, int max, int defaultValue = 1, params GUILayoutOption[] options) {
+            float fvalue = value;
+            UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, options);
+            value = (int)fvalue;
         }
 
         public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
@@ -182,7 +200,7 @@ namespace ToyBox {
             bool forceHorizontal = true,
             params GUILayoutOption[] options) {
             if (!disclosureStyle) {
-                if (GL.Button(title + " " + (value ? onMark : offMark), AutoWidth())) { value = !value; }
+                if (GL.Button("" + (value ? onMark : offMark) + " " + title , AutoWidth())) { value = !value; }
             }
             else {
                 if (forceHorizontal) { UI.BeginHorizontal(UI.AutoWidth()); }
@@ -211,7 +229,7 @@ namespace ToyBox {
             if (bit != newBit) { bitfield ^= 1 << offset; }
         }
 
-        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true,  params Action[] actions) {
+        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, params Action[] actions) {
             UI.TogglePrivate(title, ref value, true, forceHorizontal, AutoWidth());
             UI.If(value, actions);
         }
@@ -269,7 +287,7 @@ namespace ToyBox {
             if (title != null) { UI.Label(title); }
             UI.Group(actions);
             UI.EndVertical();
-        }   `
+        }
 
         public static void Section(String title, params Action[] actions) {
             UI.Space(25);
@@ -278,7 +296,7 @@ namespace ToyBox {
             foreach (Action action in actions) { action(); }
             UI.Space(10);
         }
-        
+
         public static void TabBar(ref int selected, params NamedAction[] actions) {
             int sel = selected;
             var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);

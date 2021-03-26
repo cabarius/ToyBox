@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 using UnityModManagerNet;
-    
-namespace ToyBox
-{
-    public class Logger
-    {
+
+namespace ToyBox {
+    public class Logger {
         public static UnityModManager.ModEntry.ModLogger modLogger;
         public static string modEntryPath = null;
 
@@ -26,135 +24,106 @@ namespace ToyBox
         private bool useTimeStamp = true;
         public bool UseTimeStamp { get => useTimeStamp; set => useTimeStamp = value; }
 
-        public Logger() : this(logFile)
-        {
+        public Logger() : this(logFile) {
 
         }
 
-        public Logger(String fileName, String fileExtension = ".log")
-        {
+        public Logger(String fileName, String fileExtension = ".log") {
             path = Path.Combine(modEntryPath, (fileName + fileExtension));
             Clear();
         }
 
-        public void Log(string str)
-        {
-            if (removeHtmlTags)
-            {
+        public void Log(string str) {
+            if (removeHtmlTags) {
                 str = Utilties.RemoveHtmlTags(str);
             }
-            if (UseTimeStamp)
-            {
+            if (UseTimeStamp) {
                 ToFile(TimeStamp() + " " + str);
             }
-            else
-            {
+            else {
                 ToFile(str);
 
             }
         }
 
-        private static string TimeStamp()
-        {
+        private static string TimeStamp() {
             return "[" + DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss.ff") + "]";
         }
 
-        private void ToFile(string s)
-        {
-            try
-            {
-                using (StreamWriter stream = File.AppendText(path))
-                {
+        private void ToFile(string s) {
+            try {
+                using (StreamWriter stream = File.AppendText(path)) {
                     stream.WriteLine(s);
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 modLogger.Log(e.ToString());
             }
         }
 
-        public void Clear()
-        {
-            if (File.Exists(path))
-            {
-                try
-                {
+        public void Clear() {
+            if (File.Exists(path)) {
+                try {
                     File.Delete(path);
-                    using (File.Create(path))
-                    {
+                    using (File.Create(path)) {
                     }
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     modLogger.Log(e.ToString());
                 }
             }
         }
-
-        public static void ModLoggerDebug(string message)
-        {
-            if (Main.settings.settingShowDebugInfo)
-            {
+        public static void ModLog(string message) {
+            Logger.modLogger.Log(message);
+        }
+        public static void ModLoggerDebug(string message) {
+            if (Main.settings.settingShowDebugInfo) {
                 Logger.modLogger.Log(message);
             }
         }
-        public static void ModLoggerDebug(int message)
-        {
-            if (Main.settings.settingShowDebugInfo)
-            {
+        public static void ModLoggerDebug(int message) {
+            if (Main.settings.settingShowDebugInfo) {
                 Logger.modLogger.Log(message.ToString());
             }
         }
-        public static void ModLoggerDebug(bool message)
-        {
-            if (Main.settings.settingShowDebugInfo)
-            {
+        public static void ModLoggerDebug(bool message) {
+            if (Main.settings.settingShowDebugInfo) {
                 Logger.modLogger.Log(message.ToString());
             }
         }
 
-        public static void Error(Exception ex)
-        {
+        public static void Error(Exception ex) {
             Logger.modLogger.Log(ex.ToString() + "\n" + ex.StackTrace);
         }
     }
 
-    public class HtmlLogger : Logger
-    {
+    public class HtmlLogger : Logger {
 
-        public HtmlLogger() : this(Logger.logFile)
-        {
+        public HtmlLogger() : this(Logger.logFile) {
         }
 
-        public HtmlLogger(String fileName) : base(fileName, ".html")
-        {
+        public HtmlLogger(String fileName) : base(fileName, ".html") {
             this.RemoveHtmlTags = false;
             this.UseTimeStamp = false;
         }
 
-        public new void Log(string str)
-        {
+        public new void Log(string str) {
             str = Utilties.UnityRichTextToHtml(str);
             base.Log(str);
         }
 
-        public static string[] getObjectInfo(object o)
-        {
+        public static string[] getObjectInfo(object o) {
 
             string fields = "";
-            foreach (string field in Traverse.Create(o).Fields())
-            {
+            foreach (string field in Traverse.Create(o).Fields()) {
                 fields = fields + field + ", ";
             }
             string methods = "";
-            foreach (string method in Traverse.Create(o).Methods())
-            {
+            foreach (string method in Traverse.Create(o).Methods()) {
                 methods = methods + method + ", ";
             }
             string properties = "";
-            foreach (string property in Traverse.Create(o).Properties())
-            {
+            foreach (string property in Traverse.Create(o).Properties()) {
                 properties = properties + property + ", ";
             }
             return new string[] { fields, methods, properties };

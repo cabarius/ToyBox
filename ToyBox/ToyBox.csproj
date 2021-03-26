@@ -104,6 +104,7 @@
     <Compile Include="classes\Infrastructure\Borrowed\PreviewManager.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\UnitEntityDetails.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Util.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches.cs" />
     <Compile Include="classes\MonkeyPatchin\ToggleTab.cs" />
     <Compile Include="classes\Infrastructure\Actions.cs" />
     <Compile Include="classes\Infrastructure\NamedTypes.cs" />
