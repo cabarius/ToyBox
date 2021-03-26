@@ -49,6 +49,7 @@ namespace ToyBox {
         static int showSpellsBitfield = 0;
         static int addSpellbookBitfield = 0;
         static int selectedSpellbook = 0;
+        static int selectedSpellbookLevel = 0;
         private static NamedFunc<List<UnitEntityData>>[] _partyFilterChoices = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             var player = Game.Instance.Player;
@@ -162,28 +163,27 @@ namespace ToyBox {
 
                 }
                 if (((1 << chIndex) & showFactsBitfield) != 0) {
-                    FactsEditor<Feature>.OnGUI(ch.Progression.Features);
+                    FactsEditor<Feature>.OnGUI(ch.Progression.Features.Enumerable, ch.Progression.Features);
                 }
                 if (((1 << chIndex) & showAbilitiesBitfield) != 0) {
-                    FactsEditor<Ability>.OnGUI(ch.Descriptor.Abilities);
+                    FactsEditor<Ability>.OnGUI(ch.Descriptor.Abilities.Enumerable, ch.Descriptor.Abilities);
                 }
                 if (((1 << chIndex) & showSpellsBitfield) != 0) {
-                    var spellbooks = ch.Spellbooks;
+                    var spellbooks = ch.Descriptor.Spellbooks;
                     var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
-                        UI.Toolbar(ref selectedSpellbook, titles, UI.AutoWidth());
-                    }
-                    UI.Space(25);
-                    if (names.Count() < 5) {
-                        UI.DisclosureBitFieldToggle("Add Spellbook", ref addSpellbookBitfield, chIndex, true, () => {
-                            var availableSBs = BlueprintBrowser.GetBlueprints<BlueprintSpellbook>().Except((bp) => names.Contains(bp.Name));
-                            var availableTitles = availableSBs.Select((sb) => sb.Name.ToString()).ToArray();
-                            var selected = 0;
-                            UI.ActionSelectionGrid(ref selected, availableTitles, 8, (i) => {
-                                ch.Descriptor.DemandSpellbook(availableSBs.ElementAt(i).CharacterClass);
-                            });
-                        });
+                        UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1381));
+                        var spellbook = spellbooks.ElementAt(selectedSpellbook);
+                        var sbLevel = spellbook.GetMaxSpellLevel();
+                        var levelStrings = new List<String>();
+                        var memorizedSpells = spellbook.GetAllMemorizedSpells();
+                        var knownSpells = spellbook.GetAllKnownSpells();
+                        for (int i = 0; i<= sbLevel; i++) { levelStrings.AddItem($"{i}");  }
+                        UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.AutoWidth());
+                        var spellList = knownSpells.Where((spell) => spell.SpellLevel == selectedSpellbookLevel);
+                        var spells = spellList.Select((sp) => sp.Fact);
+                        FactsEditor<Ability>.OnGUI(spells.ToList(), ch.Descriptor.Abilities);
                     }
                 }
                 chIndex += 1;

@@ -62,12 +62,12 @@ namespace ToyBox {
             new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
             new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
             new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon)),
-            new NamedTypeFilter("Armor", typeof(BlueprintItemArmor)),
             new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
             new NamedTypeFilter("Head", typeof(BlueprintItemEquipmentHead)),
             new NamedTypeFilter("Glasses", typeof(BlueprintItemEquipmentGlasses)),
             new NamedTypeFilter("Neck", typeof(BlueprintItemEquipmentNeck)),
             new NamedTypeFilter("Shoulders", typeof(BlueprintItemEquipmentShoulders)),
+            new NamedTypeFilter("Armor", typeof(BlueprintItemArmor)),
             new NamedTypeFilter("Shirt", typeof(BlueprintItemEquipmentShirt)),
             new NamedTypeFilter("Belts", typeof(BlueprintItemEquipmentBelt)),
             new NamedTypeFilter("Wrist", typeof(BlueprintItemEquipmentWrist)),
@@ -135,7 +135,7 @@ namespace ToyBox {
             UI.Space(25);
             UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                 blueprintTypeFilters.Select(tf => tf.name).ToArray(),
-                5,
+                9,
                 (selected) => { UpdateSearchResults(); },
                 UI.MinWidth(200));
             UI.Space(10);

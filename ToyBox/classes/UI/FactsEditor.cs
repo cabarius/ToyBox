@@ -43,7 +43,15 @@ using Kingmaker.Utility;
 namespace ToyBox {
     public class FactsEditor<T> where T : UnitFact {
         static String searchText = "";
+
+#if false
+        static public void OnGUI(UnitLogicCollection<T> facts) { OnGUI(facts.Enumerable.GetEnumerator()); }
+        static public void OnGUI(List<T> facts) { OnGUI(facts.GetEnumerator()); }
+
+        static public void OnGUI(IEnumerator<T> facts) {
         static public void OnGUI(UnitLogicCollection<T> facts) {
+#endif
+        static public void OnGUI(List<T> facts, UnitLogicCollection<T> collection) {
             UI.BeginHorizontal();
             UI.Space(100);
             UI.TextField(ref searchText, null, UI.Width(200));
@@ -55,7 +63,8 @@ namespace ToyBox {
             T toRemove = null;
             T toRankDown = null;
             T toRankUp = null;
-            foreach (var fact in facts.Enumerable) {
+            foreach (var fact in facts) {
+                if (fact == null) continue;                                                                                        
                 String name = fact.Name;
                 if (name == null) { name = $"{fact.Blueprint.name}"; }
                 if (name != null && name.Length > 0 && (searchText.Length == 0 || name.Contains(searchText))) {
@@ -91,7 +100,7 @@ namespace ToyBox {
             if (toRankDown != null) { try { removeRankMethod.Invoke(toRankDown, new object[] { }); } catch { } }
             if (toRankUp != null) { try { addRankMethod.Invoke(toRankDown, new object[] { }); ; } catch { } }
             if (toRemove != null) {
-                facts.RemoveFact(toRemove);
+                collection.RemoveFact(toRemove);
             }
         }
     }
