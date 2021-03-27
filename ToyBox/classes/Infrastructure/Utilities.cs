@@ -66,6 +66,14 @@ using Kingmaker.Assets.UI;
 
 namespace ToyBox {
     public static class Utilties {
+
+        public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default(TValue)) {
+            if (dictionary == null) { throw new ArgumentNullException(nameof(dictionary)); } // using C# 6
+            if (key == null) { throw new ArgumentNullException(nameof(key)); } //  using C# 6
+
+            TValue value;
+            return dictionary.TryGetValue(key, out value) ? value : defaultValue;
+        }
         public static object GetPropValue(this object obj, String name) {
             foreach (String part in name.Split('.')) {
                 if (obj == null) { return null; }

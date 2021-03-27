@@ -85,6 +85,7 @@ namespace ToyBox {
                 ref Main.settings.selectedPartyFilter,
                 filterChoices
                 );
+            UI.Space(20);
             int chIndex = 0;
             int respecableCount = 0;
             foreach (UnitEntityData ch in characterList) {
@@ -152,9 +153,9 @@ namespace ToyBox {
                             UI.BeginHorizontal();
                             UI.Space(69);   // the best number...
                             UI.Label(statType.ToString().green().bold(), UI.Width(400f));
-                            UI.Space(25f);
+                            UI.Space(25);
                             UI.ActionButton(" < ", () => { modifiableValue.BaseValue -= 1; }, UI.AutoWidth());
-                            UI.Space(20f);
+                            UI.Space(20);
                             UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
                             UI.ActionButton(" > ", () => { modifiableValue.BaseValue += 1; }, UI.AutoWidth());
                             UI.EndHorizontal();
@@ -163,26 +164,32 @@ namespace ToyBox {
 
                 }
                 if (((1 << chIndex) & showFactsBitfield) != 0) {
-                    FactsEditor<Feature>.OnGUI(ch.Progression.Features.Enumerable, ch.Progression.Features);
+                    FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
                 }
                 if (((1 << chIndex) & showAbilitiesBitfield) != 0) {
-                    FactsEditor<Ability>.OnGUI(ch.Descriptor.Abilities.Enumerable, ch.Descriptor.Abilities);
+                    FactsEditor.OnGUI(ch, ch.Descriptor.Abilities.Enumerable.ToList());
                 }
                 if (((1 << chIndex) & showSpellsBitfield) != 0) {
-                    var spellbooks = ch.Descriptor.Spellbooks;
+                    UI.Space(20);
+                    var spellbooks = ch.Spellbooks;
                     var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
+#if false
+                    var classes = ch.Descriptor.Progression.Classes;
+                    var spellbooks = classes.Select((c) => ch.Descriptor.GetSpellbook(c.CharacterClass))
+                                       .Where((s) => s != null);
+
+                    var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
+                    var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
+#endif
                     if (spellbooks.Any()) {
                         UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1381));
-                        if (selectedSpellbook > spellbooks.Count()) selectedSpellbook = 0;
+                        if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         var casterLevel = spellbook.CasterLevel;
-                        var memorizedSpells = spellbook.GetAllMemorizedSpells();
-                        var knownSpells = spellbook.GetAllKnownSpells();
                         UI.EnumerablePicker<int>("Level", ref selectedSpellbookLevel, Enumerable.Range(0, casterLevel + 1), 0, UI.AutoWidth());
-                        var spellList = knownSpells.Where((spell) => spell.SpellLevel == selectedSpellbookLevel);
-                        var spells = spellList.Select((sp) => sp.Fact);
-                        FactsEditor<Ability>.OnGUI(spells.ToList(), ch.Descriptor.Abilities);
+                        var spells = spellbook.GetKnownSpells(selectedSpellbookLevel).OrderBy(d => d.Name).ToList();
+                        FactsEditor.OnGUI(ch, spells.ToList());
                     }
                 }
                 chIndex += 1;

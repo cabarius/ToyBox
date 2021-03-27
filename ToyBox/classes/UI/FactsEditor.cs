@@ -41,8 +41,117 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 
 namespace ToyBox {
-    public class FactsEditor<T> where T : UnitFact {
+    public class FactsEditor {
         static String searchText = "";
+        static public void OnGUI<T>(UnitEntityData unit,
+                                    List<T> facts,
+                                    Func<T, BlueprintScriptableObject> blueprint,
+                                    Func<T, String> title,
+                                    Func<T, String> description = null,
+                                    Func<T, int> value = null,
+                                    params BlueprintAction[] actions
+            ) where T : IUIDataProvider {
+            var mutatorLookup = actions.Distinct().ToDictionary(a => a.name, a => a);
+            UI.BeginHorizontal();
+            UI.Space(100);
+            UI.TextField(ref searchText, null, UI.Width(200));
+            UI.EndHorizontal();
+
+            BlueprintAction add = mutatorLookup.GetValueOrDefault("Add", null);
+            BlueprintAction remove = mutatorLookup.GetValueOrDefault("Remove", null);
+            BlueprintAction decrease = mutatorLookup.GetValueOrDefault("<", null);
+            BlueprintAction increase = mutatorLookup.GetValueOrDefault(">", null);
+
+            mutatorLookup.Remove("Add");
+            mutatorLookup.Remove("Remove");
+            mutatorLookup.Remove("<");
+            mutatorLookup.Remove(">");
+
+            BlueprintScriptableObject toAdd = null;
+            BlueprintScriptableObject toRemove = null;
+            BlueprintScriptableObject toIncrease = null;
+            BlueprintScriptableObject toDecrease = null;
+            var toValues = new Dictionary<String, BlueprintScriptableObject>();
+
+            foreach (var fact in facts) {
+                if (fact == null) continue;
+                var bp = blueprint(fact);
+                String name = fact.Name;
+                if (name == null) { name = $"{title(fact)}"; }
+                if (name != null && name.Length > 0 && (searchText.Length == 0 || name.Contains(searchText))) {
+                    UI.BeginHorizontal();
+                    UI.Space(100);
+                    UI.Label($"{fact.Name}".cyan().bold(), UI.Width(400));
+                    UI.Space(30);
+                    if (value != null) {
+                        var v = value(fact);
+                        decrease.MutatorButton(unit, bp, () => { toDecrease = bp; }, 50);
+                        UI.Space(10f);
+                        UI.Label($"{v}".orange().bold(), UI.Width(30f));
+                        increase.MutatorButton(unit, bp, () => { toIncrease = bp; }, 50);
+                    }
+                    UI.Space(30);
+                    add.MutatorButton(unit, bp, () => { toAdd = bp; }, 150);
+                    UI.Space(30);
+                    remove.MutatorButton(unit, bp, () => { toAdd = bp; }, 150);
+                    foreach (var action in actions) {
+                        action.MutatorButton(unit, bp, () => { toValues[action.name] = bp; }, 150);
+                    }
+                    if (description != null) {
+                        UI.Space(30);
+                        UI.Label(description(fact).green(), UI.AutoWidth());
+                    }
+                    UI.EndHorizontal();
+                }
+            }
+            if (toAdd != null) { add.action(unit, toAdd); toAdd = null; }
+            if (toRemove != null) { remove.action(unit, toRemove); toRemove = null; }
+            if (toDecrease != null) { decrease.action(unit, toDecrease); toDecrease = null; }
+            if (toIncrease != null) { increase.action(unit, toIncrease); toIncrease = null; }
+            foreach (var item in toValues) {
+                var muator = mutatorLookup[item.Key];
+                if (muator != null) {
+                    muator.action(unit, item.Value);
+                }
+            }
+            toValues.Clear();
+        }
+        static public void OnGUI(UnitEntityData ch, List<Feature> facts) {
+            OnGUI<Feature>(ch, facts,
+                (fact) => fact.Blueprint,
+                (fact) => fact.Name,
+                (fact) => fact.Description,
+                (fact) => fact.GetRank(),
+                ch.BlueprintActions<BlueprintFeature>().ToArray()
+                );
+        }
+        static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
+            OnGUI<Ability>(ch, facts,
+                (fact) => fact.Blueprint,
+                (fact) => fact.Name,
+                (fact) => fact.Description,
+                (fact) => fact.GetRank(),
+                ch.BlueprintActions<BlueprintAbility>().ToArray()
+                );
+        }
+        static public void OnGUI(UnitEntityData ch, List<AbilityData> facts) {
+            OnGUI<AbilityData>(ch, facts,
+                (fact) => fact.Blueprint,
+                (fact) => fact.Name,
+                (fact) => fact.Description,
+                null,
+                ch.BlueprintActions<BlueprintAbility>().ToArray()
+                );
+        }
+    }
+}
+#if false
+            null,
+                new NamedMutator<U, T>("Remove", (fact) => collection.RemoveFact(fact), (fact) => collection.HasFact(fact)),
+                new NamedMutator<U, T>("Decrease", (fact) => collection.RemoveFact(fact), (fact) => collection.HasFact(fact) && fact.GetRank() > 1 ),
+                new NamedMutator<U, T>("Increase", (fact) => collection.RemoveFact(fact), (fact) => collection.HasFact(fact) && fact.GetRank() < fact.Blueprint.GetRanks() - 1)
+                );
+#endif
 
 #if false
         static public void OnGUI(UnitLogicCollection<T> facts) { OnGUI(facts.Enumerable.GetEnumerator()); }
@@ -51,57 +160,3 @@ namespace ToyBox {
         static public void OnGUI(IEnumerator<T> facts) {
         static public void OnGUI(UnitLogicCollection<T> facts) {
 #endif
-        static public void OnGUI(List<T> facts, UnitLogicCollection<T> collection) {
-            UI.BeginHorizontal();
-            UI.Space(100);
-            UI.TextField(ref searchText, null, UI.Width(200));
-            UI.EndHorizontal();
-
-            var addRankMethod = typeof(UnitLogicCollection<T>).GetMethod("AddRank");
-            var removeRankMethod = typeof(UnitLogicCollection<T>).GetMethod("RemoveRank");
-
-            T toRemove = null;
-            T toRankDown = null;
-            T toRankUp = null;
-            foreach (var fact in facts) {
-                if (fact == null) continue;                                                                                        
-                String name = fact.Name;
-                if (name == null) { name = $"{fact.Blueprint.name}"; }
-                if (name != null && name.Length > 0 && (searchText.Length == 0 || name.Contains(searchText))) {
-                    UI.BeginHorizontal();
-                    UI.Space(100);
-                    UI.Label($"{fact.Name}".cyan().bold(), UI.Width(400));
-                    UI.Space(30);
-                    try {
-                        var rank = fact.GetRank();
-                        var max = fact.Blueprint.GetPropValue<int>("Ranks");
-                        if (removeRankMethod != null && rank > 1) {
-                            UI.ActionButton("<", () => { toRankDown = fact; }, UI.Width(50));
-                        }
-                        else { UI.Space(53); }
-                        UI.Space(10f);
-                        UI.Label($"{rank}".orange().bold(), UI.Width(30f));
-                        if (addRankMethod != null && rank < max) {
-                            UI.ActionButton(">", () => { toRankUp = fact; }, UI.Width(50));
-                        }
-                        else { UI.Space(53); }
-                    }
-                    catch { }
-                    UI.Space(30);
-                    UI.ActionButton("Remove", () => { toRemove = fact; }, UI.Width(150));
-                    String description = fact.Description;
-                    if (description != null) {
-                        UI.Space(30);
-                        UI.Label(description.green(), UI.AutoWidth());
-                    }
-                    UI.EndHorizontal();
-                }
-            }
-            if (toRankDown != null) { try { removeRankMethod.Invoke(toRankDown, new object[] { }); } catch { } }
-            if (toRankUp != null) { try { addRankMethod.Invoke(toRankDown, new object[] { }); ; } catch { } }
-            if (toRemove != null) {
-                collection.RemoveFact(toRemove);
-            }
-        }
-    }
-}

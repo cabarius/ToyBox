@@ -81,9 +81,26 @@ namespace ToyBox {
             }
             return results;
         }
+
+        public static List<BlueprintAction> BlueprintActions<T>(this UnitEntityData ch) {
+            if (ch == null) { return new List<BlueprintAction>(); }
+            var results = new List<BlueprintAction>();
+            Type type = typeof(T);
+            if (ch.IsMainCharacter) {
+                foreach (var action in BlueprintAction.globalActions) {
+                    if (type.IsKindOf(action.type)) { results.Add(action); }
+                }
+            }
+            foreach (var action in BlueprintAction.characterActions) {
+                if (type.IsKindOf(action.type)) { results.Add(action); }
+            }
+
+            return results;
+        }
+
     }
     public class BlueprintAction : NamedMutator<UnitEntityData, BlueprintScriptableObject> {
-        public BlueprintAction(
+        public BlueprintAction (
             String name,
             Type type,
             Action<UnitEntityData, BlueprintScriptableObject> action,
@@ -121,6 +138,19 @@ namespace ToyBox {
                 (ch, bp) => { ch.Progression.Features.RemoveFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return ch.Progression.Features.HasFact((BlueprintUnitFact)bp);  }
                 ),
+            new BlueprintAction("<", typeof(BlueprintFeature),
+                (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
+                (ch, bp) => {
+                    var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
+                    return feature.GetRank() > 1;
+                }),
+            new BlueprintAction(">", typeof(BlueprintFeature),
+                (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).RemoveRank(); },
+                (ch, bp) => {
+                    var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
+                    return feature.GetRank() < feature.Blueprint.Ranks - 1;
+                }),
+
             // Spellbooks
             new BlueprintAction("Add", typeof(BlueprintSpellbook),
                 (ch, bp) => { ch.Descriptor.DemandSpellbook(((BlueprintSpellbook)bp).CharacterClass); },

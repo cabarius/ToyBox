@@ -172,9 +172,12 @@ namespace ToyBox {
             UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, options);
             value = (int)fvalue;
         }
-        public static void SelectionGrid(ref int value, String[] texts, int xCols, params GUILayoutOption[] options) {
+        public static void SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
-            value = GL.SelectionGrid(value, texts, xCols, options);
+            int sel = selected;
+            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
+            if (xCols <= 0) xCols = texts.Count();
+            selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
         public static void Toolbar(ref int value, String[] texts, params GUILayoutOption[] options) {
             value = GL.Toolbar(value, texts, options);
@@ -255,8 +258,12 @@ namespace ToyBox {
             bool newBit = bit;
             TogglePrivate(title, ref newBit, true, forceHorizontal, AutoWidth());
             if (bit != newBit) {
-                if (exclusive) bitfield = 0;
-                bitfield ^= (1 << offset); 
+                if (exclusive) {
+                    bitfield = (newBit ? 1 << offset : 0);   
+                }
+                else {
+                    bitfield ^= (1 << offset);
+                }
             }
             UI.If(newBit, actions);
         }
@@ -315,5 +322,33 @@ namespace ToyBox {
             actions[selected].action();
             GL.EndVertical();
         }
+    }
+    public static class UIExtensions {
+        // convenience extensions for constructing UI for special types
+        public static void ActionButton<T>(this NamedAction<T> namedAction, T value, Action buttonAction, float width) {
+            if (namedAction != null && namedAction.canPerform(value)) {
+                UI.ActionButton(namedAction.name, buttonAction, UI.Width(width));
+            }
+            else {
+                UI.Space(width + 3);
+            }
+        }
+        public static void MutatorButton<U, T>(this NamedMutator<U, T> muator, U unit, T value, Action buttonAction, float width) {
+            if (muator != null && muator.canPerform(unit, value)) {
+                UI.ActionButton(muator.name, buttonAction, UI.Width(width));
+            }
+            else {
+                UI.Space(width + 3);
+            }
+        }
+        public static void BlueprintActionButton<T>(this BlueprintAction action, UnitEntityData unit, BlueprintScriptableObject bp, Action buttonAction, float width) {
+            if (action != null && action.canPerform(unit, bp)) {
+                UI.ActionButton(action.name, buttonAction, UI.Width(width));
+            }
+            else {
+                UI.Space(width + 3);
+            }
+        }
+
     }
 }

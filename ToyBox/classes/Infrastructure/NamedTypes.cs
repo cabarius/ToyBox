@@ -45,18 +45,33 @@ namespace ToyBox {
     public class NamedAction {
         public String name { get; }
         public Action action { get; }
-        public NamedAction(String name, Action action) { this.name = name; this.action = action; }
+        public Func<bool> canPerform { get; }
+        public NamedAction(String name, Action action, Func<bool> canPerform = null) {
+            this.name = name; 
+            this.action = action;
+            this.canPerform = canPerform != null ? canPerform : () => { return true; };
+        }
     }
     public class NamedAction<T> {
         public String name { get; }
         public Action<T> action { get; }
-        public NamedAction(String name, Action<T> action) { this.name = name; this.action = action; }
+        public Func<T,bool> canPerform { get; }
+        public NamedAction(String name, Action<T> action, Func<T,bool> canPerform = null) {
+            this.name = name;
+            this.action = action;
+            this.canPerform = canPerform != null ? canPerform : (T) => { return true; };
+        }
     }
 
     public class NamedFunc<T> {
         public String name { get; }
         public Func<T> func { get; }
-        public NamedFunc(String name, Func<T> func) { this.name = name; this.func = func; }
+        public Func<bool> canPerform { get; }
+        public NamedFunc(String name, Func<T> func, Func<bool> canPerform = null) {
+            this.name = name;
+            this.func = func;
+            this.canPerform = canPerform != null ? canPerform : () => { return true; };
+        }
     }
 
     public class NamedMutator<Target, T> {
