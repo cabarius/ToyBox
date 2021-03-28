@@ -32,8 +32,6 @@ using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.UnitLogic.Abilities;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Blueprints.Quests;
@@ -58,6 +56,8 @@ using Kingmaker.Tutorial;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Customization;
@@ -116,11 +116,10 @@ namespace ToyBox {
             new BlueprintAction("Spawn", typeof(BlueprintUnit),
                 (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
                 ),
+#if false
             new BlueprintAction("Kill", typeof(BlueprintUnit),
                 (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
                 ),
-
-#if false
             new BlueprintAction("Remove", typeof(BlueprintUnit),
                 (ch, bp) => {CheatsCombat.Kill((BlueprintUnit)bp); },
                 (ch, bp) => { return ch.Inventory.Contains((BlueprintUnit)bp);  }
@@ -170,18 +169,16 @@ namespace ToyBox {
                 (ch, bp) => { ch.Descriptor.RemoveFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return ch.Descriptor.Buffs.HasFact((BlueprintBuff)bp);  }
                 ),
-            // Races
-#if false
             // Abilities
             new BlueprintAction("Add", typeof(BlueprintAbility),
-                (ch, bp) => { ch.   GameHelper.ApplyBuff(ch,(BlueprintBuff)bp); },
-                (ch, bp) => { return !ch.Descriptor.Abilities.HasFact((BlueprintUnitFact)bp); }
+                (ch, bp) => { ch.AddAbility((BlueprintAbility)bp); },
+                (ch, bp) => { return !ch.HasAbility((BlueprintAbility)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintAbility),
-                (ch, bp) => { ch.Descriptor.RemoveFact((BlueprintUnitFact)bp); },
-                (ch, bp) => { return ch.Descriptor.Buffs.HasFact((BlueprintBuff)bp);  }
+                (ch, bp) => { ch.RemoveAbility((BlueprintAbility)bp); },
+                (ch, bp) => { return ch.HasAbility((BlueprintAbility)bp); }
                 ),
-#endif
+            // Races - TODO ???
         };
 
         public static int maxActions() { return globalActions.Count() + characterActions.Count(); }

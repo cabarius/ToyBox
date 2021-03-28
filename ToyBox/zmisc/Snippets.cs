@@ -1,4 +1,29 @@
-﻿/* 
+﻿#if false
+    public class BlueprintLoader : MonoBehaviour {
+        AssetBundleRequest loadRequest = null;
+        Action<IEnumerable<BlueprintScriptableObject>> callback;
+        public BlueprintLoader(Action<IEnumerable<BlueprintScriptableObject>> callback) {
+            this.callback = callback;
+        }
+        void Start() {
+            StartCoroutine(Load());
+        }
+        public IEnumerator Load() {
+            if (loadRequest == null) {
+                var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
+                loadRequest = bundle.LoadAllAssetsAsync<BlueprintScriptableObject>();
+            }
+            if (!loadRequest.isDone) {
+                yield return null;
+            }
+            else {
+                callback(loadRequest.allAssets.Select((a) => (BlueprintScriptableObject)a));
+            }
+        }
+    }
+#endif
+
+/* 
             //if (GL.Button("Add Feature", GL.Width(300f))) {
 //    BlueprintActions.addFact(selectedBlueprint);
 //}

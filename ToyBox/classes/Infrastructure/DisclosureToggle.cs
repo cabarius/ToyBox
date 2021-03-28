@@ -101,8 +101,7 @@ public static class MyGUI
     public static bool DisclosureToggle(GUIContent label, bool value, GUIStyle style, params GUILayoutOption[] options)
     {
         style = new GUIStyle(style);
-        var buttonStyle = GUI.skin.button;
-        var arrowSize = buttonStyle.CalcSize(value ? OnContent : OffContent);
+        var arrowSize = style.CalcSize(value ? OnContent : OffContent);
         RectOffset padding = new RectOffset(0, (int)arrowSize.x + 10, 0, 0);
         style.padding = padding;
         Rect position = GUILayoutUtility.GetRect(label, style, options); 

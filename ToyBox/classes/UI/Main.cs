@@ -122,10 +122,10 @@ namespace ToyBox {
                     UI.AutoWidth());
 #endif
                 UI.TabBar(ref settings.selectedTab,
-                    new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(modEntry); }),
-                    new NamedAction("Party Editor", () => { PartyEditor.OnGUI(modEntry); }),
-                    new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(modEntry); }),
-                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(modEntry); })
+                    new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(); }),
+                    new NamedAction("Party Editor", () => { PartyEditor.OnGUI(); }),
+                    new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
+                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); })
                     );
             }
             catch (Exception e) {

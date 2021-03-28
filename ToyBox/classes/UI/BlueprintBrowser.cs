@@ -4,6 +4,7 @@ using UnityModManagerNet;
 using UnityEngine.UI;
 using HarmonyLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -42,16 +43,71 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 
 namespace ToyBox {
+
+    public static class BlueprintLoader {
+        static AssetBundleRequest LoadRequest;
+        public static void Load(Action<IEnumerable<BlueprintScriptableObject>> callback) {
+            var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
+            LoadRequest = bundle.LoadAllAssetsAsync<BlueprintScriptableObject>();
+            LoadRequest.completed += (asyncOperation) => {
+                callback(LoadRequest.allAssets.Cast<BlueprintScriptableObject>());
+                LoadRequest = null;
+            };
+        }
+        public static bool LoadInProgress() {
+            return LoadRequest != null ? true : false;
+        }
+    }
+    public class BlueprintListUI {
+        public static void OnGUI(UnitEntityData ch, IEnumerable<BlueprintScriptableObject> blueprints, float indent = 0, Func<String,String> titleFormater = null) {
+            if (titleFormater == null) titleFormater = (t) => t.orange().bold();
+            int index = 0;
+            int maxActions = 0;
+            foreach (BlueprintScriptableObject blueprint in blueprints) {
+                var actions = blueprint.ActionsForUnit(ch);
+                maxActions = Math.Max(actions.Count, maxActions);
+            }
+
+            foreach (BlueprintScriptableObject blueprint in blueprints) {
+                UI.BeginHorizontal();
+                UI.Space(indent);
+                UI.Label(titleFormater(blueprint.name), UI.Width(650));
+                var actions = blueprint.ActionsForUnit(ch);
+                int actionCount = actions != null ? actions.Count() : 0;
+                for (int ii = 0; ii < maxActions; ii++) {
+                    if (ii < actionCount) {
+                        BlueprintAction action = actions[ii];
+                        UI.ActionButton(action.name, () => { action.action(ch, blueprint); }, UI.Width(140));
+                        UI.Space(10);
+                    }
+                    else {
+                        UI.Space(154);
+                    }
+                }
+                UI.Space(30);
+                UI.Label($"{blueprint.GetType().Name.cyan()}", UI.Width(400));
+                UI.EndHorizontal();
+                String description = blueprint.GetDescription();
+                if (description.Length > 0) {
+                    UI.BeginHorizontal();
+                    UI.Space(684 + maxActions * 154);
+                    UI.Label($"{description.green()}");
+                    UI.EndHorizontal();
+                }
+                index++;
+            }
+        }
+    }
     public class BlueprintBrowser {
-        public static BlueprintScriptableObject[] blueprints = null;
-        public static BlueprintScriptableObject[] filteredBPs = null;
+        public static IEnumerable<BlueprintScriptableObject> blueprints = null;
+        public static IOrderedEnumerable<BlueprintScriptableObject> filteredBPs = null;
         static bool firstSearch = true;
         public static String[] filteredBPNames = null;
         public static int matchCount = 0;
         public static String parameter = "";
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
-        static BackgroundWorker searchWorker = new BackgroundWorker();
+ 
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter("All", typeof(BlueprintScriptableObject)),
@@ -81,32 +137,19 @@ namespace ToyBox {
             new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
 
         };
-        public static BlueprintScriptableObject[] GetBlueprints() {
-            var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle")
-                .GetValue(null);
-            return bundle.LoadAllAssets<BlueprintScriptableObject>();
-        }
-
-        // FIXME - performance for this sucks...
-        static Dictionary<Type, BlueprintScriptableObject[]> cached = new Dictionary<Type, BlueprintScriptableObject[]>();
-        public static TBlueprint[] GetBlueprints<TBlueprint>() where TBlueprint : BlueprintScriptableObject {
-            var type = typeof(TBlueprint);
-            if (cached.ContainsKey(type)) return (TBlueprint[])cached[type];
-            var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle")
-             .GetValue(null);
-            var result = bundle.LoadAllAssets<TBlueprint>();
-            cached[typeof(TBlueprint)] = result;
-            return (TBlueprint[])result;
-        }
 
         public static void ResetSearch() {
             filteredBPs = null;
             filteredBPNames = null;
         }
         public static async void UpdateSearchResults() {
-            if (blueprints == null) {
-                blueprints = GetBlueprints(); //.Where(bp => !BlueprintAction.ignoredBluePrintTypes.Contains(bp.GetType())).ToArray();
+             if (blueprints == null) {
+                if (BlueprintLoader.LoadInProgress()) { return; }
+                else {
+                    BlueprintLoader.Load((bps) => { blueprints = bps; });
+                }
             }
+            if (blueprints == null) return; 
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
             if (Main.settings.searchText.Trim().Length == 0) {
@@ -126,12 +169,12 @@ namespace ToyBox {
             matchCount = filtered.Count();
             filteredBPs = filtered
                     .OrderBy(bp => bp.name)
-                    .Take(Main.settings.searchLimit).OrderBy(bp => bp.name).ToArray();
+                    .Take(Main.settings.searchLimit).OrderBy(bp => bp.name);
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
             firstSearch = false;
         }
 
-        public static void OnGUI(UnityModManager.ModEntry modEntry) {
+        public static void OnGUI() {
             UI.Space(25);
             UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                 blueprintTypeFilters.Select(tf => tf.name).ToArray(),
@@ -145,7 +188,6 @@ namespace ToyBox {
                 ref Main.settings.searchText, (text) => { },
                 "searhText", () => { UpdateSearchResults(); },
                 UI.Width(400));
-            UI.Space(50);
             UI.Label("Limit", UI.ExpandWidth(false));
             UI.ActionIntTextField(
                 ref Main.settings.searchLimit, (limit) => { },
@@ -153,7 +195,6 @@ namespace ToyBox {
                 UI.Width(200));
             if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
             UI.EndHorizontal();
-
             UI.BeginHorizontal();
             UI.ActionButton("Search", () => {
                 UpdateSearchResults();
@@ -171,43 +212,10 @@ namespace ToyBox {
             UI.Space(10);
 
             if (filteredBPs != null) {
-                CharacterPicker.OnGUI(modEntry);
+                CharacterPicker.OnGUI();
                 UI.Space(25);
                 UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                int index = 0;
-                int maxActions = 0;
-                foreach (BlueprintScriptableObject blueprint in filteredBPs) {
-                    var actions = blueprint.ActionsForUnit(selected);
-                    maxActions = Math.Max(actions.Count, maxActions);
-                }
-
-                foreach (BlueprintScriptableObject blueprint in filteredBPs) {
-                    UI.BeginHorizontal();
-                    UI.Label(blueprint.name.orange().bold(), UI.Width(650));
-                    var actions = blueprint.ActionsForUnit(selected);
-                    int actionCount = actions != null ? actions.Count() : 0;
-                    for (int ii = 0; ii < maxActions; ii++) {
-                        if (ii < actionCount) {
-                            BlueprintAction action = actions[ii];
-                            UI.ActionButton(action.name, () => { action.action(selected, blueprint); }, UI.Width(140));
-                            UI.Space(10);
-                        }
-                        else {
-                            UI.Space(154);
-                        }
-                    }
-                    UI.Space(30);
-                    UI.Label($"{blueprint.GetType().Name.cyan()}", UI.Width(400));
-                    UI.EndHorizontal();
-                    String description = blueprint.GetDescription();
-                    if (description.Length > 0) {
-                        UI.BeginHorizontal();
-                        UI.Space(684 + maxActions * 154);
-                        UI.Label($"{description.green()}");
-                        UI.EndHorizontal();
-                    }
-                    index++;
-                }
+                BlueprintListUI.OnGUI(selected, filteredBPs);
             }
             UI.Space(25);
         }

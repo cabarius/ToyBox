@@ -66,7 +66,7 @@ namespace ToyBox {
                     new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets),
                     new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => !u.IsEnemy(palyerData)).ToList()),
                     new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u.IsEnemy(palyerData)).ToList()),
-                     new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
+                    new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
                };
             }
             return _partyFilterChoices;
@@ -77,7 +77,7 @@ namespace ToyBox {
             if (partyFilterChoices == null) { return null; }
             return partyFilterChoices[Main.settings.selectedPartyFilter].func();
         }
-        public static void OnGUI(UnityModManager.ModEntry modEntry) {
+        public static void OnGUI() {
             var player = Game.Instance.Player;
             var filterChoices = GetPartyFilterChoices();
             if (filterChoices == null) { return; }
@@ -100,58 +100,55 @@ namespace ToyBox {
                 int mythicLevel = progression.MythicExperience;
                 UI.BeginHorizontal();
 
-                UI.Label(ch.CharacterName.orange().bold(), UI.Width(250f));
-                UI.Label("level".green() + $": {level}", UI.Width(125f));
-                var classData = ch.Progression.Classes;
-                UI.DisclosureBitFieldToggle($"{classData.Count} Classes", ref showClassesBitfield, chIndex, true, false);
+                UI.Label(ch.CharacterName.orange().bold(), UI.Width(200));
                 UI.Space(25);
+                UI.Label("lvl".green() + $": {level}", UI.Width(75));
                 // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                 if (player.AllCharacters.Contains(ch)) {
                     if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
-                        UI.ActionButton(" +1 Level", () => {
+                        UI.ActionButton("+1 Lvl", () => {
                             progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
-                        }, UI.Width(150));
+                        }, UI.Width(110));
                     }
                     else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
-                        UI.Label("Level Up".cyan().italic(), UI.Width(150));
+                        UI.Label("Level Up".cyan().italic(), UI.Width(110));
                     }
-                    else { UI.Space(153); }
+                    else { UI.Space(113); }
                 }
-                else { UI.Space(153); }
-
-                UI.Space(30);
+                else { UI.Space(113); }
+                UI.Space(25);
                 UI.Label($"mythic".green() + $": {mythicLevel}", UI.Width(125));
                 if (player.AllCharacters.Contains(ch)) {
                     if (progression.MythicExperience < 10) {
-                        UI.ActionButton(" +1 Mythic", () => {
+                        UI.ActionButton("+1 ML", () => {
                             progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
-                        }, UI.Width(150));
+                        }, UI.Width(100));
                     }
-                    else { UI.Label("Max", UI.Width(150)); }
+                    else { UI.Label("Max", UI.Width(100)); }
                 }
-                else { UI.Space(153); }
-                UI.Space(25);
-                UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, true, false);
-                UI.Space(25);
-                UI.DisclosureBitFieldToggle("Facts", ref showFactsBitfield, chIndex, true, false);
-                UI.Space(25);
+                else { UI.Space(103); }
+                var classData = ch.Progression.Classes;
+                UI.Space(35);
+                UI.DisclosureBitFieldToggle($"{classData.Count} Classes", ref showClassesBitfield, chIndex, true, false);
+                UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, true, false, 150);
+                UI.DisclosureBitFieldToggle("Facts", ref showFactsBitfield, chIndex, true, false, 150);
                 UI.DisclosureBitFieldToggle("Abilities", ref showAbilitiesBitfield, chIndex, true, false);
                 UI.Space(25);
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 if (spellCount > 0) {
-                    UI.DisclosureBitFieldToggle($"{spellCount} Spells", ref showSpellsBitfield, chIndex, true, false, 200);
-                    UI.Space(25);
+                    UI.DisclosureBitFieldToggle($"{spellCount} Spells", ref showSpellsBitfield, chIndex, true, false);
                 }
-                else { UI.Space(153); }
+                else { UI.Space(180); }
+                UI.Space(25);
                 if (player.Party.Contains(ch)) {
                     respecableCount++;
                     UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
                 }
                 else {
-                    UI.Space(153);
+                    UI.Space(155);
                 }
-                UI.Space(50);
+                UI.Space(25);
                 if (!player.PartyAndPets.Contains(ch)) {
                     UI.ActionButton("Add To Party", () => { charToAdd = ch; }, UI.AutoWidth());
                 }
@@ -198,25 +195,17 @@ namespace ToyBox {
                     UI.Space(20);
                     var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
-#if false
-                    var classes = ch.Descriptor.Progression.Classes;
-                    var spellbooks = classes.Select((c) => ch.Descriptor.GetSpellbook(c.CharacterClass))
-                                       .Where((s) => s != null);
-
-                    var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
-                    var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
-#endif
                     if (spellbooks.Any()) {
                         UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
                         if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         var casterLevel = spellbook.CasterLevel;
                         UI.EnumerablePicker<int>(
-                            "Spell Level".bold() +" (" + "count".cyan() + ")",
+                            "Spell Level".bold() +" (count)",
                             ref selectedSpellbookLevel,
                             Enumerable.Range(0, casterLevel + 1),
                             0,
-                            (l) => $"{l}".bold() +" (" + $"{spellbook.GetKnownSpells(l).Count()}".cyan() +")",
+                            (l) => $"L{l}".bold() + $" ({spellbook.GetKnownSpells(l).Count()})".white(),
                             UI.AutoWidth()
                         );
                         var spells = spellbook.GetKnownSpells(selectedSpellbookLevel).OrderBy(d => d.Name).ToList();

@@ -23,7 +23,7 @@ namespace ToyBox
 
         public static string italic(this string s)
         {
-            return s = $"<b>{s}</b>";
+            return s = $"<i>{s}</i>";
         }
 
         public static string color(this string s, string color)
@@ -31,6 +31,7 @@ namespace ToyBox
             return s = $"<color={color}>{s}</color>";
 
         }
+        public static string white(this string s) { return s = s.color("white"); }
         public static string red(this string s) { return s = s.color("red"); }
         public static string green(this string s) { return s = s.color("green"); }
         public static string blue(this string s) { return s = s.color("blue"); }

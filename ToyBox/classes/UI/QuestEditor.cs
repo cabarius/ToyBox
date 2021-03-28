@@ -66,7 +66,7 @@ namespace ToyBox {
         static bool showQuests = false;
         static bool[] selectedQuests = new bool[0];
         static String searchText = "";
-        public static void OnGUI(UnityModManager.ModEntry modEntry) {
+        public static void OnGUI() {
             UI.Space(25);
             UI.Toggle("Hide Completed", ref Main.settings.hideCompleted);
             GUILayout.Space(5f);

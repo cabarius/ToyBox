@@ -43,9 +43,11 @@ using Kingmaker.Utility;
 namespace ToyBox {
     public class FactsEditor {
         static String searchText = "";
+        static bool showAll = false;
         static public void OnGUI<T>(UnitEntityData unit,
                                     List<T> facts,
                                     Func<T, BlueprintScriptableObject> blueprint,
+                                    IEnumerable<BlueprintScriptableObject> blueprints,
                                     Func<T, String> title,
                                     Func<T, String> description = null,
                                     Func<T, int> value = null,
@@ -55,8 +57,12 @@ namespace ToyBox {
             UI.BeginHorizontal();
             UI.Space(100);
             UI.TextField(ref searchText, null, UI.Width(200));
+            UI.DisclosureToggle("Show All", ref showAll);
             UI.EndHorizontal();
-
+            if (showAll) {
+                BlueprintListUI.OnGUI(unit, blueprints);
+                return;
+            }
             BlueprintAction add = mutatorLookup.GetValueOrDefault("Add", null);
             BlueprintAction remove = mutatorLookup.GetValueOrDefault("Remove", null);
             BlueprintAction decrease = mutatorLookup.GetValueOrDefault("<", null);
@@ -87,16 +93,20 @@ namespace ToyBox {
                         var v = value(fact);
                         decrease.MutatorButton(unit, bp, () => { toDecrease = bp; }, 50);
                         UI.Space(10f);
-                        UI.Label($"{v}".orange().bold(), UI.Width(30f));
+                        UI.Label($"{v}".orange().bold(), UI.Width(30));
                         increase.MutatorButton(unit, bp, () => { toIncrease = bp; }, 50);
                     }
+#if false
                     UI.Space(30);
                     add.MutatorButton(unit, bp, () => { toAdd = bp; }, 150);
+#endif
                     UI.Space(30);
-                    remove.MutatorButton(unit, bp, () => { toAdd = bp; }, 150);
+                    remove.MutatorButton(unit, bp, () => { toRemove = bp; }, 150);
+#if false
                     foreach (var action in actions) {
                         action.MutatorButton(unit, bp, () => { toValues[action.name] = bp; }, 150);
                     }
+#endif
                     if (description != null) {
                         UI.Space(30);
                         UI.Label(description(fact).green(), UI.AutoWidth());
@@ -119,6 +129,7 @@ namespace ToyBox {
         static public void OnGUI(UnitEntityData ch, List<Feature> facts) {
             OnGUI<Feature>(ch, facts,
                 (fact) => fact.Blueprint,
+                BlueprintBrowser.blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintFeature))),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -128,6 +139,7 @@ namespace ToyBox {
         static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
             OnGUI<Ability>(ch, facts,
                 (fact) => fact.Blueprint,
+                BlueprintBrowser.blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintAbility))).Where((bp) => !((BlueprintAbility)bp).IsSpell),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -137,6 +149,7 @@ namespace ToyBox {
         static public void OnGUI(UnitEntityData ch, List<AbilityData> facts) {
             OnGUI<AbilityData>(ch, facts,
                 (fact) => fact.Blueprint,
+                BlueprintBrowser.blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintAbility))).Where((bp) => ((BlueprintAbility)bp).IsSpell),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 null,

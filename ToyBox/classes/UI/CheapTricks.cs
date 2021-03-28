@@ -44,7 +44,7 @@ using Kingmaker.Utility;
 namespace ToyBox {
     public class CheapTricks {
 
-        public static void OnGUI(UnityModManager.ModEntry modEntry) {
+        public static void OnGUI() {
             UI.Space(25);
             UI.HStack("Combat", 4,
                 () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
@@ -78,11 +78,11 @@ namespace ToyBox {
                 UI.Toggle("Events", ref Main.settings.previewEventResults, 0);
             });
             UI.Space(10);
-            UI.HStack("Flags", 4,
+            UI.HStack("Flags", 3,
                 () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle,0); },
                 () => { UI.Toggle("Whole Team Moves Same Speed", ref Main.settings.toggleMoveSpeedAsOne,0); },
                 () => { UI.Toggle("Instant Cooldown", ref Main.settings.toggleInstantCooldown,0); },
-                () => { UI.Toggle("Spontaneous Casters Can Copy Spells", ref Main.settings.toggleSpontaneousCopyScrolls,0); },
+                () => { UI.Toggle("Spontaneous Caster Scroll Copy", ref Main.settings.toggleSpontaneousCopyScrolls,0); },
                 () => { UI.Toggle("Disable Equipment Restrictions", ref Main.settings.toggleEquipmentRestrictions,0); },
                 () => { UI.Toggle("Disable Dialog Restrictions", ref Main.settings.toggleDialogRestrictions,0); },
                 () => { UI.Toggle("Infinite Charges On Items", ref Main.settings.toggleInfiniteItems,0); },

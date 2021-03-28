@@ -20,6 +20,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.CharGen;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Credits;
 using Kingmaker.Blueprints.Encyclopedia;
 using Kingmaker.Blueprints.Facts;
@@ -56,6 +57,8 @@ using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.IngameMenu;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Customization;
@@ -64,7 +67,7 @@ using Kingmaker.Visual.Sound;
 using UnityModManagerNet;
 
 namespace ToyBox {
-    public class Actions {
+    public static class Actions {
 
         public static void ToggleModWindow() {
             UnityModManager.UI.Instance.ToggleWindow();
@@ -127,6 +130,41 @@ namespace ToyBox {
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 UnityModManager.UI.Instance.ToggleWindow();
                 GlobalMapView.Instance.ChangePartyOnMap();
+            }
+        }
+        public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
+            if (ch.Descriptor.Abilities.HasFact(ability)) return true;
+            if (ability.IsInSpellListOfUnit(ch)) return true;
+            //foreach (var spellbook in ch.Spellbooks) {
+            //    if (UIUtilityUnit.SpellbookHasSpell(spellbook, ability)) return true;
+            //}
+            return false;
+        }
+        public static void AddAbility(this UnitEntityData ch, BlueprintAbility ability) {
+            if (ability.IsSpell) {
+                foreach (var spellbook in ch.Spellbooks) {
+                    if (UIUtilityUnit.SpellbookHasSpell(spellbook, ability)) {
+                        spellbook.RemoveSpell(ability);
+                    }
+                }
+            }
+            else {
+                    var abilities = ch.Descriptor.Abilities;
+                    if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
+                }
+        }
+
+        public static void RemoveAbility(this UnitEntityData ch, BlueprintAbility ability) {
+            if (ability.IsSpell) {
+                foreach (var spellbook in ch.Spellbooks) {
+                    if (UIUtilityUnit.SpellbookHasSpell(spellbook, ability)) {
+                        spellbook.RemoveSpell(ability);
+                    }
+                }
+            }
+            else {
+                var abilities = ch.Descriptor.Abilities;
+                if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
             }
         }
     }

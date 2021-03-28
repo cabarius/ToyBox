@@ -255,12 +255,12 @@ namespace ToyBox {
             if (bit != newBit) { bitfield ^= 1 << offset; }
         }
 
-        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, float width = 0, params Action[] actions) {
+        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, float width = 175, params Action[] actions) {
             UI.TogglePrivate(title, ref value, true, forceHorizontal, width);
             UI.If(value, actions);
         }
 
-        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, float width = 0, params Action[] actions) {
+        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, float width = 175, params Action[] actions) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
             TogglePrivate(title, ref newBit, true, forceHorizontal, width);
@@ -319,6 +319,7 @@ namespace ToyBox {
         }
 
         public static void TabBar(ref int selected, params NamedAction[] actions) {
+            if (selected >= actions.Count()) selected = 0;
             int sel = selected;
             var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             selected = GL.Toolbar(selected, titles.ToArray());

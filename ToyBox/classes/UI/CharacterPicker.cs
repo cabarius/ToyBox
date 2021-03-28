@@ -53,11 +53,10 @@ namespace ToyBox {
             return characters[selectedIndex];
         }
 
-        public static void OnGUI(UnityModManager.ModEntry modEntry) {
+        public static void OnGUI() {
 
             var characters = PartyEditor.GetCharacterList();
             if (characters == null) { return; }
-            UI.Space(25);
             UI.ActionSelectionGrid(ref selectedIndex,
                 characters.Select((ch) => ch.CharacterName).ToArray(),
                 8,
@@ -72,7 +71,6 @@ namespace ToyBox {
                     UI.Label("will be used for adding/remove features, buffs, etc ".green());
                 });
             }
-            UI.Space(25);
         }
     }
 }
