@@ -71,10 +71,8 @@ namespace ToyBox {
             if (ch == null) { return new List<BlueprintAction>(); }
             var results = new List<BlueprintAction>();
             Type type = bp.GetType();
-            if (ch.IsMainCharacter) {
-                foreach (var action in BlueprintAction.globalActions) {
-                    if (type.IsKindOf(action.type) && action.canPerform(ch, bp)) { results.Add(action); }
-                }
+            foreach (var action in BlueprintAction.globalActions) {
+                if (type.IsKindOf(action.type) && action.canPerform(ch, bp)) { results.Add(action); }
             }
             foreach (var action in BlueprintAction.characterActions) {
                 if (type.IsKindOf(action.type) && action.canPerform(ch, bp)) { results.Add(action); }
@@ -86,10 +84,8 @@ namespace ToyBox {
             if (ch == null) { return new List<BlueprintAction>(); }
             var results = new List<BlueprintAction>();
             Type type = typeof(T);
-            if (ch.IsMainCharacter) {
-                foreach (var action in BlueprintAction.globalActions) {
-                    if (type.IsKindOf(action.type)) { results.Add(action); }
-                }
+            foreach (var action in BlueprintAction.globalActions) {
+                if (type.IsKindOf(action.type)) { results.Add(action); }
             }
             foreach (var action in BlueprintAction.characterActions) {
                 if (type.IsKindOf(action.type)) { results.Add(action); }
@@ -100,26 +96,30 @@ namespace ToyBox {
 
     }
     public class BlueprintAction : NamedMutator<UnitEntityData, BlueprintScriptableObject> {
-        public BlueprintAction (
+        public BlueprintAction(
             String name,
             Type type,
             Action<UnitEntityData, BlueprintScriptableObject> action,
             Func<UnitEntityData, BlueprintScriptableObject, bool> canPerform = null
-            
+
             ) : base(name, type, action, canPerform) { }
 
 
         public static BlueprintAction[] globalActions = new BlueprintAction[] {
             new BlueprintAction("Add", typeof(BlueprintItem),
-                (ch, bp) => { ch.Inventory.Add((BlueprintItem)bp, 1, null); }
+                (ch, bp) => { Game.Instance.Player.Inventory.Add((BlueprintItem)bp, 1, null); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintItem),
-                (ch, bp) => { ch.Inventory.Remove((BlueprintItem)bp, 1); },
-                (ch, bp) => { return ch.Inventory.Contains((BlueprintItem)bp);  }
+                (ch, bp) => { Game.Instance.Player.Inventory.Remove((BlueprintItem)bp, 1); },
+                (ch, bp) => { return Game.Instance.Player.Inventory.Contains((BlueprintItem)bp);  }
                 ),
             new BlueprintAction("Spawn", typeof(BlueprintUnit),
                 (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
                 ),
+            new BlueprintAction("Kill", typeof(BlueprintUnit),
+                (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
+                ),
+
 #if false
             new BlueprintAction("Remove", typeof(BlueprintUnit),
                 (ch, bp) => {CheatsCombat.Kill((BlueprintUnit)bp); },
@@ -142,13 +142,13 @@ namespace ToyBox {
                 (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
                 (ch, bp) => {
                     var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
-                    return feature.GetRank() > 1;
+                    return feature != null && feature.GetRank() > 1;
                 }),
             new BlueprintAction(">", typeof(BlueprintFeature),
                 (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).RemoveRank(); },
                 (ch, bp) => {
                     var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
-                    return feature.GetRank() < feature.Blueprint.Ranks - 1;
+                    return feature != null && feature.GetRank() < feature.Blueprint.Ranks - 1;
                 }),
 
             // Spellbooks

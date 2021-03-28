@@ -43,6 +43,7 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class PartyEditor {
+        static int showClassesBitfield = 0;
         static int showStatsBitfield = 0;
         static int showFactsBitfield = 0;
         static int showAbilitiesBitfield = 0;
@@ -53,6 +54,7 @@ namespace ToyBox {
         private static NamedFunc<List<UnitEntityData>>[] _partyFilterChoices = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             var player = Game.Instance.Player;
+            var palyerData = GameHelper.GetPlayerCharacter();
             if (player != null && _partyFilterChoices == null) {
                 _partyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
                     new NamedFunc<List<UnitEntityData>>("Party", () => player.Party),
@@ -61,8 +63,11 @@ namespace ToyBox {
                     new NamedFunc<List<UnitEntityData>>("Active Companions", () => player.ActiveCompanions),
                     new NamedFunc<List<UnitEntityData>>("Remote Companions", () => player.m_RemoteCompanions),
                     new NamedFunc<List<UnitEntityData>>("Custom (Mercs)", PartyUtils.GetCustomCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets)
-                };
+                    new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets),
+                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => !u.IsEnemy(palyerData)).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u.IsEnemy(palyerData)).ToList()),
+                     new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
+               };
             }
             return _partyFilterChoices;
         }
@@ -97,28 +102,34 @@ namespace ToyBox {
 
                 UI.Label(ch.CharacterName.orange().bold(), UI.Width(250f));
                 UI.Label("level".green() + $": {level}", UI.Width(125f));
+                var classData = ch.Progression.Classes;
+                UI.DisclosureBitFieldToggle($"{classData.Count} Classes", ref showClassesBitfield, chIndex, true, false);
+                UI.Space(25);
                 // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
-                if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
-                    UI.ActionButton(" +1 Level", () => {
-                        progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
-                    }, UI.Width(150));
+                if (player.AllCharacters.Contains(ch)) {
+                    if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
+                        UI.ActionButton(" +1 Level", () => {
+                            progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
+                        }, UI.Width(150));
+                    }
+                    else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
+                        UI.Label("Level Up".cyan().italic(), UI.Width(150));
+                    }
+                    else { UI.Space(153); }
                 }
-                else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
-                    UI.Label("Level Up".cyan().italic(), UI.Width(150));
-                }
-                else {
-                    UI.Space(153);
-                }
+                else { UI.Space(153); }
+
                 UI.Space(30);
                 UI.Label($"mythic".green() + $": {mythicLevel}", UI.Width(125));
-                if (progression.MythicExperience < 10) {
-                    UI.ActionButton(" +1 Mythic", () => {
-                        progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
-                    }, UI.Width(150));
+                if (player.AllCharacters.Contains(ch)) {
+                    if (progression.MythicExperience < 10) {
+                        UI.ActionButton(" +1 Mythic", () => {
+                            progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
+                        }, UI.Width(150));
+                    }
+                    else { UI.Label("Max", UI.Width(150)); }
                 }
-                else {
-                    UI.Label("Max", UI.Width(150));
-                }
+                else { UI.Space(153); }
                 UI.Space(25);
                 UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, true, false);
                 UI.Space(25);
@@ -126,9 +137,13 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.DisclosureBitFieldToggle("Abilities", ref showAbilitiesBitfield, chIndex, true, false);
                 UI.Space(25);
-                UI.DisclosureBitFieldToggle("Spells", ref showSpellsBitfield, chIndex, true, false);
-                UI.Space(50);
-
+                var spellbooks = ch.Spellbooks;
+                var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
+                if (spellCount > 0) {
+                    UI.DisclosureBitFieldToggle($"{spellCount} Spells", ref showSpellsBitfield, chIndex, true, false, 200);
+                    UI.Space(25);
+                }
+                else { UI.Space(153); }
                 if (player.Party.Contains(ch)) {
                     respecableCount++;
                     UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
@@ -145,8 +160,18 @@ namespace ToyBox {
                 }
                 UI.EndHorizontal();
 
+                if (((1 << chIndex) & showClassesBitfield) != 0) {
+                    foreach (var cd in classData) {
+                        UI.BeginHorizontal();
+                        UI.Space(253);
+                        UI.Label(cd.CharacterClass.Name.orange(), UI.Width(250));
+                        UI.Label("level".green() + $": {cd.Level}", UI.Width(125f));
+                        UI.Label(cd.CharacterClass.Description.green(), UI.AutoWidth());
+                        UI.EndHorizontal();
+                    }
+                }
                 if (((1 << chIndex) & showStatsBitfield) != 0) {
-                    foreach (object obj in Enum.GetValues(typeof(StatType))) {
+                    foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
                         if (modifiableValue != null) {
@@ -171,7 +196,6 @@ namespace ToyBox {
                 }
                 if (((1 << chIndex) & showSpellsBitfield) != 0) {
                     UI.Space(20);
-                    var spellbooks = ch.Spellbooks;
                     var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
 #if false
@@ -183,11 +207,18 @@ namespace ToyBox {
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
 #endif
                     if (spellbooks.Any()) {
-                        UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1381));
+                        UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
                         if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         var casterLevel = spellbook.CasterLevel;
-                        UI.EnumerablePicker<int>("Level", ref selectedSpellbookLevel, Enumerable.Range(0, casterLevel + 1), 0, UI.AutoWidth());
+                        UI.EnumerablePicker<int>(
+                            "Spell Level".bold() +" (" + "count".cyan() + ")",
+                            ref selectedSpellbookLevel,
+                            Enumerable.Range(0, casterLevel + 1),
+                            0,
+                            (l) => $"{l}".bold() +" (" + $"{spellbook.GetKnownSpells(l).Count()}".cyan() +")",
+                            UI.AutoWidth()
+                        );
                         var spells = spellbook.GetKnownSpells(selectedSpellbookLevel).OrderBy(d => d.Name).ToList();
                         FactsEditor.OnGUI(ch, spells.ToList());
                     }

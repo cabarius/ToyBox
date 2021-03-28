@@ -2902,25 +2902,40 @@ namespace ToyBox {
                 }
             }
         }
+#endif
 
-        [HarmonyPatch(typeof(RuleApplyBuff), MethodType.Constructor)]
-        [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(BlueprintBuff), typeof(MechanicsContext), typeof(TimeSpan?), typeof(Func<BlueprintBuff, MechanicsContext, TimeSpan?, Buff>) })]
-        public static class RuleApplyBuff_TickTime_Patch {
-            public static void Prefix(UnitEntityData initiator, BlueprintBuff blueprint, MechanicsContext context, ref TimeSpan? duration) {
+        /**
+        public Buff AddBuff(
+          BlueprintBuff blueprint,
+          UnitEntityData caster,
+          TimeSpan? duration,
+          [CanBeNull] AbilityParams abilityParams = null) {
+            MechanicsContext context = new MechanicsContext(caster, this.Owner, (BlueprintScriptableObject)blueprint);
+            if (abilityParams != null)
+                context.SetParams(abilityParams);
+            return this.Manager.Add<Buff>(new Buff(blueprint, context, duration));
+        }
+        */
+
+        [HarmonyPatch(typeof(BuffCollection), "AddBuff")]
+        [HarmonyPatch(new Type[] { typeof(BlueprintBuff), typeof(UnitEntityData), typeof(TimeSpan?), typeof(AbilityParams) })]
+        public static class Buff_AddBuff_patch {
+            public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
                 try {
-                    if (StringUtils.ToToggleBool(settings.toggleBuffDurationMultiplier) && UnitEntityDataUtils.CheckUnitEntityData(initiator, (UnitSelectType)settings.indexBuffDurationMultiplier) && duration != null && UnitEntityDataUtils.CheckUnitEntityData(context.MaybeCaster, (UnitSelectType)settings.indexBuffDurationMultiplier)) {
-                        duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.finalBuffDurationMultiplierValue));
+                    if (!caster.IsPlayersEnemy) {
+                        if (duration != null) {
+                            duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
+                        }
                     }
-
                 }
                 catch (Exception e) {
                     modLogger.Log(e.ToString());
                 }
 
-                Logger.ModLoggerDebug("Initiator: " + initiator.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nContext: " + context.Name + "\nContext.MaybeCaster: " + context.MaybeCaster + "\nContext.MaybeOwner: " + context.MaybeOwner + "\nDuration: " + duration.ToString());
+                Logger.ModLoggerDebug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
-
+#if false
         [HarmonyPatch(typeof(UberLogger.Logger), "ForwardToUnity")]
         static class UberLoggerLogger_ForwardToUnity_Patch {
             static void Prefix(ref object message) {

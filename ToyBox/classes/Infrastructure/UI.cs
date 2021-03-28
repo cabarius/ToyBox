@@ -72,8 +72,6 @@ namespace ToyBox {
 
         public const string onMark = "<color=green><b>✔</b></color>";
         public const string offMark = "<color=red><b>✖</b></color>";
-        public const string disclosureArrowOn = "<color=orange><b>▶</b></color>";
-        public const string disclosureArrowOff = "<color=white><b>▲</b></color>";
 
         // GUILayout wrappers and extensions so other modules can use UI.MethodName()
         public static GUILayoutOption ExpandWidth(bool v) { return GL.ExpandWidth(v); }
@@ -122,10 +120,10 @@ namespace ToyBox {
             if (GL.Button(title, options)) { action(); }
         }
         public static void ActionTextField(ref string text,
-            Action<String> action,
-            String name,
-            Action enterAction,
-            params GUILayoutOption[] options
+                Action<String> action,
+                String name,
+                Action enterAction,
+                params GUILayoutOption[] options
             ) {
             GUI.SetNextControlName(name);
             String newText = GL.TextField(text, options);
@@ -138,10 +136,10 @@ namespace ToyBox {
             }
         }
         public static void ActionIntTextField(ref int value,
-            Action<int> action,
-            String name,
-            Action enterAction,
-            params GUILayoutOption[] options
+                Action<int> action,
+                String name,
+                Action enterAction,
+                params GUILayoutOption[] options
             ) {
             bool changed = false;
             bool hitEnter = false;
@@ -192,10 +190,18 @@ namespace ToyBox {
                 action(selected);
             }
         }
-        public static void EnumerablePicker<T>(String title, ref int selected, IEnumerable<T> range, int xCols, params GUILayoutOption[] options) {
+        public static void EnumerablePicker<T>(
+                String title,
+                ref int selected,
+                IEnumerable<T> range,
+                int xCols,
+                Func<T, String> titleFormater = null,
+                params GUILayoutOption[] options
+            ) {
+            if (titleFormater == null) titleFormater = (a) => $"{a}";
             if (selected > range.Count()) selected = 0;
             int sel = selected;
-            var titles = range.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
+            var titles = range.Select((a, i) => i == sel ? titleFormater(a).orange().bold() : titleFormater(a));
             if (xCols <= 0) xCols = range.Count();
             UI.BeginHorizontal(options);
             UI.Label(title, UI.AutoWidth());
@@ -212,54 +218,55 @@ namespace ToyBox {
             return items[selectedIndex].func();
         }
         static void TogglePrivate(
-            String title,
-            ref bool value,
-            bool disclosureStyle = false,
-            bool forceHorizontal = true,
-            params GUILayoutOption[] options) {
+                String title,
+                ref bool value,
+                bool disclosureStyle = false,
+                bool forceHorizontal = true,
+                float width = 0,
+                params GUILayoutOption[] options
+            ) {
+            options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
-                if (GL.Button("" + (value ? onMark : offMark) + " " + title , AutoWidth())) { value = !value; }
+                if (GL.Button("" + (value ? onMark : offMark) + " " + title, options)) { value = !value; }
             }
             else {
-                if (forceHorizontal) { UI.BeginHorizontal(UI.AutoWidth()); }
-                UI.Label(title, AutoWidth());
-                GL.Space(10);
-                if (GL.Button(value ? disclosureArrowOn : disclosureArrowOff, AutoWidth())) { value = !value; }
-                if (forceHorizontal) { UI.EndHorizontal(); }
+                
+                if (MyGUI.DisclosureToggle(title, value, options)) { value = !value; }
             }
         }
-
         public static void Toggle(
-            String title,
-            ref bool value,
-            params GUILayoutOption[] options) {
-            TogglePrivate(title, ref value, false, false, options);
+                String title,
+                ref bool value,
+                float width = 0,
+                params GUILayoutOption[] options) {
+            TogglePrivate(title, ref value, false, false, width, options);
         }
 
         public static void BitFieldToggle(
-            String title,
-            ref int bitfield,
-            int offset,
-            params GUILayoutOption[] options) {
+                String title,
+                ref int bitfield,
+                int offset,
+                float width = 0,
+                params GUILayoutOption[] options
+            ) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            TogglePrivate(title, ref newBit, false, false, options);
+            TogglePrivate(title, ref newBit, false, false, width, options);
             if (bit != newBit) { bitfield ^= 1 << offset; }
         }
 
-        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, params Action[] actions) {
-            UI.TogglePrivate(title, ref value, true, forceHorizontal, AutoWidth());
+        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, float width = 0, params Action[] actions) {
+            UI.TogglePrivate(title, ref value, true, forceHorizontal, width);
             UI.If(value, actions);
         }
 
-        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, params Action[] actions) {
-
+        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, float width = 0, params Action[] actions) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
-            TogglePrivate(title, ref newBit, true, forceHorizontal, AutoWidth());
+            TogglePrivate(title, ref newBit, true, forceHorizontal, width);
             if (bit != newBit) {
                 if (exclusive) {
-                    bitfield = (newBit ? 1 << offset : 0);   
+                    bitfield = (newBit ? 1 << offset : 0);
                 }
                 else {
                     bitfield ^= (1 << offset);
@@ -277,13 +284,11 @@ namespace ToyBox {
                 }
             }
         }
-
         public static void Group(params Action[] actions) {
             foreach (var action in actions) {
                 action();
             }
         }
-
         public static void HStack(String title = null, int stride = 0, params Action[] actions) {
             var length = actions.Length;
             if (stride < 1) { stride = length; }
@@ -298,7 +303,6 @@ namespace ToyBox {
                 UI.EndHorizontal();
             }
         }
-
         public static void VStack(String title = null, params Action[] actions) {
             UI.BeginVertical();
             if (title != null) { UI.Label(title); }
@@ -325,17 +329,17 @@ namespace ToyBox {
     }
     public static class UIExtensions {
         // convenience extensions for constructing UI for special types
-        public static void ActionButton<T>(this NamedAction<T> namedAction, T value, Action buttonAction, float width) {
+        public static void ActionButton<T>(this NamedAction<T> namedAction, T value, Action buttonAction, float width = 0) {
             if (namedAction != null && namedAction.canPerform(value)) {
-                UI.ActionButton(namedAction.name, buttonAction, UI.Width(width));
+                UI.ActionButton(namedAction.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {
                 UI.Space(width + 3);
             }
         }
-        public static void MutatorButton<U, T>(this NamedMutator<U, T> muator, U unit, T value, Action buttonAction, float width) {
+        public static void MutatorButton<U, T>(this NamedMutator<U, T> muator, U unit, T value, Action buttonAction, float width = 0) {
             if (muator != null && muator.canPerform(unit, value)) {
-                UI.ActionButton(muator.name, buttonAction, UI.Width(width));
+                UI.ActionButton(muator.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {
                 UI.Space(width + 3);

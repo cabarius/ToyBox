@@ -72,27 +72,27 @@ namespace ToyBox {
                 );
             UI.Space(10);
             UI.HStack("Preview", 0, () => {
-                UI.Toggle("Dialog Results", ref Main.settings.previewDialogResults, UI.AutoWidth());
-                UI.Toggle("Dialog Alignment", ref Main.settings.previewAlignmentRestrictedDialog, UI.AutoWidth());
-                UI.Toggle("Random Encounters", ref Main.settings.previewRandomEncounters, UI.AutoWidth());
-                UI.Toggle("Events", ref Main.settings.previewEventResults, UI.AutoWidth());
+                UI.Toggle("Dialog Results", ref Main.settings.previewDialogResults, 0);
+                UI.Toggle("Dialog Alignment", ref Main.settings.previewAlignmentRestrictedDialog, 0);
+                UI.Toggle("Random Encounters", ref Main.settings.previewRandomEncounters, 0);
+                UI.Toggle("Events", ref Main.settings.previewEventResults, 0);
             });
             UI.Space(10);
             UI.HStack("Flags", 4,
-                () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle, UI.AutoWidth()); },
-                () => { UI.Toggle("Whole Team Moves Same Speed", ref Main.settings.toggleMoveSpeedAsOne, UI.AutoWidth()); },
-                () => { UI.Toggle("Instant Cooldown", ref Main.settings.toggleInstantCooldown, UI.AutoWidth()); },
-                () => { UI.Toggle("Spontaneous Casters Can Copy Spells", ref Main.settings.toggleSpontaneousCopyScrolls, UI.AutoWidth()); },
-                () => { UI.Toggle("Disable Equipment Restrictions", ref Main.settings.toggleEquipmentRestrictions, UI.AutoWidth()); },
-                () => { UI.Toggle("Disable Dialog Restrictions", ref Main.settings.toggleDialogRestrictions, UI.AutoWidth()); },
-                () => { UI.Toggle("Infinite Charges On Items", ref Main.settings.toggleInfiniteItems, UI.AutoWidth()); },
-                () => { UI.Toggle("No Friendly Fire On AOEs", ref Main.settings.toggleNoFriendlyFireForAOE, UI.AutoWidth()); },
-                () => { UI.Toggle("Free Meta-Magic", ref Main.settings.toggleMetamagicIsFree, UI.AutoWidth()); },
-                () => { UI.Toggle("No Material Components", ref Main.settings.toggleMaterialComponent, UI.AutoWidth()); },
-                //() => { UI.Toggle("Restore Spells & Skills After Combat", ref Main.settings.toggleRestoreSpellsAbilitiesAfterCombat, UI.AutoWidth()); },
-                () => { UI.Toggle("Access Remote Characters", ref Main.settings.toggleAccessRemoteCharacters, UI.AutoWidth()); },
-                //() => { UI.Toggle("Show Pet Portraits", ref Main.settings.toggleShowAllPartyPortraits, UI.AutoWidth()); },
-                () => { UI.Toggle("Instant Rest After Combat", ref Main.settings.toggleInstantRestAfterCombat, UI.AutoWidth()); },
+                () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle,0); },
+                () => { UI.Toggle("Whole Team Moves Same Speed", ref Main.settings.toggleMoveSpeedAsOne,0); },
+                () => { UI.Toggle("Instant Cooldown", ref Main.settings.toggleInstantCooldown,0); },
+                () => { UI.Toggle("Spontaneous Casters Can Copy Spells", ref Main.settings.toggleSpontaneousCopyScrolls,0); },
+                () => { UI.Toggle("Disable Equipment Restrictions", ref Main.settings.toggleEquipmentRestrictions,0); },
+                () => { UI.Toggle("Disable Dialog Restrictions", ref Main.settings.toggleDialogRestrictions,0); },
+                () => { UI.Toggle("Infinite Charges On Items", ref Main.settings.toggleInfiniteItems,0); },
+                () => { UI.Toggle("No Friendly Fire On AOEs", ref Main.settings.toggleNoFriendlyFireForAOE,0); },
+                () => { UI.Toggle("Free Meta-Magic", ref Main.settings.toggleMetamagicIsFree,0); },
+                () => { UI.Toggle("No Material Components", ref Main.settings.toggleMaterialComponent,0); },
+                //() => { UI.Toggle("Restore Spells & Skills After Combat", ref Main.settings.toggleRestoreSpellsAbilitiesAfterCombat,0); },
+                () => { UI.Toggle("Access Remote Characters", ref Main.settings.toggleAccessRemoteCharacters,0); },
+                //() => { UI.Toggle("Show Pet Portraits", ref Main.settings.toggleShowAllPartyPortraits,0); },
+                () => { UI.Toggle("Instant Rest After Combat", ref Main.settings.toggleInstantRestAfterCombat,0); },
                 () => { }
                 );
             UI.Space(10);
@@ -106,25 +106,26 @@ namespace ToyBox {
                 () => { UI.Slider("Travel Speed", ref Main.settings.travelSpeedMultiplier, 0.1f, 10, 1, 1, UI.AutoWidth()); },
                 () => { UI.Slider("Companion Cost", ref Main.settings.companionCostMultiplier, 0, 5, 1, 1, UI.AutoWidth()); },
                 () => { UI.Slider("Enemy HP Multiplier", ref Main.settings.enemyBaseHitPointsMultiplier, 0.1f, 10, 1, 1, UI.AutoWidth()); },
+                () => { UI.Slider("Buff Duration", ref Main.settings.buffDurationMultiplierValue, 0.1f, 10, 1, 1, UI.AutoWidth()); },
                 () => { }
                 );
             UI.Space(10);
             UI.HStack("Level Up", 1,
                 () => { UI.Slider("Feats Multiplier", ref Main.settings.featsMultiplier, 1, 5, 1, UI.AutoWidth()); },
-                () => { UI.Toggle("Always Able To Level Up", ref Main.settings.toggleNoLevelUpRestirctions, UI.AutoWidth()); },
-                () => { UI.Toggle("Add Full Hit Die Value", ref Main.settings.toggleFullHitdiceEachLevel, UI.AutoWidth()); },
-                () => { UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, UI.AutoWidth()); },
-                () => { UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref Main.settings.toggleFeaturesIgnorePrerequisites, UI.AutoWidth()); },
-                () => { UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref Main.settings.toggleIgnoreCasterTypeSpellLevel, UI.AutoWidth()); },
-                () => { UI.Toggle("Ignore Forbidden Archetypes", ref Main.settings.toggleIgnoreForbiddenArchetype, UI.AutoWidth()); },
-                () => { UI.Toggle("Ignore Required Stat Values", ref Main.settings.toggleIgnorePrerequisiteStatValue, UI.AutoWidth()); },
-                () => { UI.Toggle("Ignore Alignment When Choosing A Class", ref Main.settings.toggleIgnoreAlignmentWhenChoosingClass, UI.AutoWidth()); },
-                () => { UI.Toggle("Skip Spell Selection", ref Main.settings.toggleSkipSpellSelection, UI.AutoWidth()); },
+                () => { UI.Toggle("Always Able To Level Up", ref Main.settings.toggleNoLevelUpRestirctions, 0); },
+                () => { UI.Toggle("Add Full Hit Die Value", ref Main.settings.toggleFullHitdiceEachLevel, 0); },
+                () => { UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, 0); },
+                () => { UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref Main.settings.toggleFeaturesIgnorePrerequisites, 0); },
+                () => { UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref Main.settings.toggleIgnoreCasterTypeSpellLevel, 0); },
+                () => { UI.Toggle("Ignore Forbidden Archetypes", ref Main.settings.toggleIgnoreForbiddenArchetype, 0); },
+                () => { UI.Toggle("Ignore Required Stat Values", ref Main.settings.toggleIgnorePrerequisiteStatValue, 0); },
+                () => { UI.Toggle("Ignore Alignment When Choosing A Class", ref Main.settings.toggleIgnoreAlignmentWhenChoosingClass, 0); },
+                () => { UI.Toggle("Skip Spell Selection", ref Main.settings.toggleSkipSpellSelection, 0); },
 
 #if false
                 // Do we need these or is it covered by Ignore Fe
-                () => { UI.Toggle("Ignore Feat Prerequisites When Choosing A Class", ref Main.settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass, UI.AutoWidth()); },
-                () => { UI.Toggle("Ignore Feat Prerequisits (List) When Choosing A Class", ref Main.settings.toggle, UI.AutoWidth()); },
+                () => { UI.Toggle("Ignore Feat Prerequisites When Choosing A Class", ref Main.settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass, 0); },
+                () => { UI.Toggle("Ignore Feat Prerequisits (List) When Choosing A Class", ref Main.settings.toggle, 0); },
 #endif
 
                 () => { }
@@ -139,7 +140,7 @@ namespace ToyBox {
                 );
             UI.Space(10);
             UI.HStack("Crusade", 1,
-                () => { UI.Toggle("Instant Events", ref Main.settings.toggleInstantEvent, UI.AutoWidth()); },
+                () => { UI.Toggle("Instant Events", ref Main.settings.toggleInstantEvent, 0); },
                 () => {
                     UI.Slider("Build Time Modifer", ref Main.settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, UI.AutoWidth());
                     var instance = KingdomState.Instance;

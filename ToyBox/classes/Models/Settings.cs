@@ -62,6 +62,7 @@ namespace ToyBox {
         public float kingdomBuildingTimeModifier = 0;
         public float partyMovementSpeedMultiplier = 1;
         public float enemyBaseHitPointsMultiplier = 1;
+        public float buffDurationMultiplierValue = 1;
 
         // Party Editor
         public int selectedPartyFilter = 0;
