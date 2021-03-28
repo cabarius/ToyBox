@@ -45,7 +45,6 @@ namespace ToyBox {
     public class CheapTricks {
 
         public static void OnGUI() {
-            UI.Space(25);
             UI.HStack("Combat", 4,
                 () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
                 () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },

@@ -318,12 +318,13 @@ namespace ToyBox {
             UI.Space(10);
         }
 
-        public static void TabBar(ref int selected, params NamedAction[] actions) {
+        public static void TabBar(ref int selected, Action header = null, params NamedAction[] actions) {
             if (selected >= actions.Count()) selected = 0;
             int sel = selected;
             var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             selected = GL.Toolbar(selected, titles.ToArray());
             GL.BeginVertical("box");
+            if (header != null) header();
             actions[selected].action();
             GL.EndVertical();
         }

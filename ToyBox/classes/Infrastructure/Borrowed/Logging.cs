@@ -33,7 +33,10 @@ namespace ToyBox {
             Clear();
         }
 
-        public void Log(string str) {
+        public static void Log(string str) {
+            Logger.modLogger.Log(str);
+        }
+        public void LogToFiles(string str) {
             if (removeHtmlTags) {
                 str = Utilties.RemoveHtmlTags(str);
             }
@@ -109,7 +112,7 @@ namespace ToyBox {
 
         public new void Log(string str) {
             str = Utilties.UnityRichTextToHtml(str);
-            base.Log(str);
+            base.LogToFiles(str);
         }
 
         public static string[] getObjectInfo(object o) {

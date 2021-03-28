@@ -67,7 +67,6 @@ namespace ToyBox {
         static bool[] selectedQuests = new bool[0];
         static String searchText = "";
         public static void OnGUI() {
-            UI.Space(25);
             UI.Toggle("Hide Completed", ref Main.settings.hideCompleted);
             GUILayout.Space(5f);
             Quest[] quests = Game.Instance.Player.QuestBook.Quests.ToArray();

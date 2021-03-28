@@ -46,16 +46,24 @@ namespace ToyBox {
 
     public static class BlueprintLoader {
         static AssetBundleRequest LoadRequest;
+        public static float progress = 0;
         public static void Load(Action<IEnumerable<BlueprintScriptableObject>> callback) {
             var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
+            Logger.Log($"got bundle {bundle}");
             LoadRequest = bundle.LoadAllAssetsAsync<BlueprintScriptableObject>();
+            Logger.Log($"created request {LoadRequest}");
             LoadRequest.completed += (asyncOperation) => {
+                Logger.Log($"completed request and calling completion");
                 callback(LoadRequest.allAssets.Cast<BlueprintScriptableObject>());
                 LoadRequest = null;
             };
         }
         public static bool LoadInProgress() {
-            return LoadRequest != null ? true : false;
+            if (LoadRequest != null) {
+                progress = LoadRequest.progress;
+                return true;
+            }
+            return false;
         }
     }
     public class BlueprintListUI {
@@ -99,7 +107,6 @@ namespace ToyBox {
         }
     }
     public class BlueprintBrowser {
-        public static IEnumerable<BlueprintScriptableObject> blueprints = null;
         public static IOrderedEnumerable<BlueprintScriptableObject> filteredBPs = null;
         static bool firstSearch = true;
         public static String[] filteredBPNames = null;
@@ -138,17 +145,29 @@ namespace ToyBox {
 
         };
 
+        public static IEnumerable<BlueprintScriptableObject> blueprints = null;
+        public static IEnumerable<BlueprintScriptableObject> GetBluePrints() {
+            Logger.Log("BlueprintBrowser.GetBlueprints()");
+            if (blueprints == null) {
+                Logger.Log("GetBluePrints - blueprints are nut here yet...");
+                if (BlueprintLoader.LoadInProgress()) { return null; }
+                else {
+                    Logger.Log($"calling BlueprintLoader.Load");
+                    BlueprintLoader.Load((bps) => {
+                        blueprints = bps;
+                        Logger.Log($"success got {bps.Count()} bluerints");
+                    });
+                    return null;
+                }
+            }
+            return blueprints;
+        }
+
         public static void ResetSearch() {
             filteredBPs = null;
             filteredBPNames = null;
         }
-        public static async void UpdateSearchResults() {
-             if (blueprints == null) {
-                if (BlueprintLoader.LoadInProgress()) { return; }
-                else {
-                    BlueprintLoader.Load((bps) => { blueprints = bps; });
-                }
-            }
+        public static void UpdateSearchResults() {
             if (blueprints == null) return; 
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
@@ -174,8 +193,7 @@ namespace ToyBox {
             firstSearch = false;
         }
 
-        public static void OnGUI() {
-            UI.Space(25);
+        public static IEnumerable OnGUI() {
             UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                 blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                 9,
@@ -218,6 +236,7 @@ namespace ToyBox {
                 BlueprintListUI.OnGUI(selected, filteredBPs);
             }
             UI.Space(25);
+            return null;
         }
     }
 }

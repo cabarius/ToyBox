@@ -121,7 +121,14 @@ namespace ToyBox {
                     + "(" + $"{GUIUtility.keyboardControl}".cyan().bold() + ")", 
                     UI.AutoWidth());
 #endif
+
                 UI.TabBar(ref settings.selectedTab,
+                    () => {
+                        if (BlueprintBrowser.GetBluePrints() == null) {
+                            UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.progress.ToString("P2").cyan().bold());
+                        }
+                        else { UI.Space(25); }
+                    },
                     new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(); }),
                     new NamedAction("Party Editor", () => { PartyEditor.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),

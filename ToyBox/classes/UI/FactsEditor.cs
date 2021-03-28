@@ -127,9 +127,11 @@ namespace ToyBox {
             toValues.Clear();
         }
         static public void OnGUI(UnitEntityData ch, List<Feature> facts) {
+            var blueprints = BlueprintBrowser.GetBluePrints();
+            if (blueprints == null) return;
             OnGUI<Feature>(ch, facts,
                 (fact) => fact.Blueprint,
-                BlueprintBrowser.blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintFeature))),
+                blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintFeature))),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -137,9 +139,11 @@ namespace ToyBox {
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
+            var blueprints = BlueprintBrowser.GetBluePrints();
+            if (blueprints == null) return;
             OnGUI<Ability>(ch, facts,
                 (fact) => fact.Blueprint,
-                BlueprintBrowser.blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintAbility))).Where((bp) => !((BlueprintAbility)bp).IsSpell),
+                blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintAbility))).Where((bp) => !((BlueprintAbility)bp).IsSpell),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -147,9 +151,11 @@ namespace ToyBox {
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<AbilityData> facts) {
+            var blueprints = BlueprintBrowser.GetBluePrints();
+            if (blueprints == null) return;
             OnGUI<AbilityData>(ch, facts,
                 (fact) => fact.Blueprint,
-                BlueprintBrowser.blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintAbility))).Where((bp) => ((BlueprintAbility)bp).IsSpell),
+                blueprints.Where((bp) => bp.GetType().IsKindOf(typeof(BlueprintAbility))).Where((bp) => ((BlueprintAbility)bp).IsSpell),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 null,

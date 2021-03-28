@@ -81,7 +81,6 @@ namespace ToyBox {
             var player = Game.Instance.Player;
             var filterChoices = GetPartyFilterChoices();
             if (filterChoices == null) { return; }
-            UI.Space(25);
 
             UnitEntityData charToAdd = null;
             UnitEntityData charToRemove = null;
