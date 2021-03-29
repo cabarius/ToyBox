@@ -43,13 +43,17 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class PartyEditor {
-        // toggle bitfields
-        
-        static int showClassesBitfield = 0;
-        static int showStatsBitfield = 0;
-        static int showFactsBitfield = 0;
-        static int showAbilitiesBitfield = 0;
-        static int showSpellsBitfield = 0;
+        enum ToggleChoice {
+            Classes,
+            Stats,
+            Facts,
+            Abilities,
+            Spells,
+            None,
+        };
+
+        static UnitEntityData selectedCharacter = null;
+        static ToggleChoice selectedToggle = ToggleChoice.None;
 
         static int selectedSpellbook = 0;
         static int selectedSpellbookLevel = 0;
@@ -130,15 +134,36 @@ namespace ToyBox {
                 else { UI.Space(103); }
                 var classData = ch.Progression.Classes;
                 UI.Space(35);
-                UI.DisclosureBitFieldToggle($"{classData.Count} Classes", ref showClassesBitfield, chIndex, true, false);
-                UI.DisclosureBitFieldToggle("Stats", ref showStatsBitfield, chIndex, true, false, 150);
-                UI.DisclosureBitFieldToggle("Facts", ref showFactsBitfield, chIndex, true, false, 150);
-                UI.DisclosureBitFieldToggle("Abilities", ref showAbilitiesBitfield, chIndex, true, false);
+
+                bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
+                if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
+                    if (showClasses) { selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; }
+                    else { selectedToggle = ToggleChoice.None; }
+                }
+                bool showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
+                if (UI.DisclosureToggle("Stats", ref showStats, true, 150)) {
+                    if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
+                    else { selectedToggle = ToggleChoice.None; }
+                }
+                bool showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
+                if (UI.DisclosureToggle("Facts", ref showFacts, true, 150)) {
+                    if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
+                    else { selectedToggle = ToggleChoice.None; }
+                }
+                bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
+                if (UI.DisclosureToggle("Abilities", ref showAbilities, true)) {
+                    if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
+                    else { selectedToggle = ToggleChoice.None; }
+                }
                 UI.Space(25);
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 if (spellCount > 0) {
-                    UI.DisclosureBitFieldToggle($"{spellCount} Spells", ref showSpellsBitfield, chIndex, true, false);
+                    bool showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
+                    if (UI.DisclosureToggle($"{spellCount} Spells", ref showAbilities, true)) {
+                        if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
+                        else { selectedToggle = ToggleChoice.None;  }
+                    }
                 }
                 else { UI.Space(180); }
                 UI.Space(25);
@@ -158,7 +183,7 @@ namespace ToyBox {
                 }
                 UI.EndHorizontal();
 
-                if (((1 << chIndex) & showClassesBitfield) != 0) {
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
                     foreach (var cd in classData) {
                         UI.BeginHorizontal();
                         UI.Space(253);
@@ -168,7 +193,7 @@ namespace ToyBox {
                         UI.EndHorizontal();
                     }
                 }
-                if (((1 << chIndex) & showStatsBitfield) != 0) {
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
                     foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
@@ -186,13 +211,13 @@ namespace ToyBox {
                     }
 
                 }
-                if (((1 << chIndex) & showFactsBitfield) != 0) {
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
                     FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
                 }
-                if (((1 << chIndex) & showAbilitiesBitfield) != 0) {
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
                     FactsEditor.OnGUI(ch, ch.Descriptor.Abilities.Enumerable.ToList());
                 }
-                if (((1 << chIndex) & showSpellsBitfield) != 0) {
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     UI.Space(20);
                     var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();

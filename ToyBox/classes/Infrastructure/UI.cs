@@ -256,13 +256,11 @@ namespace ToyBox {
             if (bit != newBit) { bitfield ^= 1 << offset; }
             return bit != newBit;
         }
-
         public static bool DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, float width = 175, params Action[] actions) {
             bool changed = UI.TogglePrivate(title, ref value, true, forceHorizontal, width);
             UI.If(value, actions);
             return changed;
         }
-
         public static bool DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, float width = 175, params Action[] actions) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
