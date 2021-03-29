@@ -56,7 +56,7 @@ namespace ToyBox {
             foreach (BlueprintScriptableObject blueprint in blueprints) {
                 UI.BeginHorizontal();
                 UI.Space(indent);
-                UI.Label(titleFormater(blueprint.name), UI.Width(650));
+                UI.Label(titleFormater(blueprint.name), UI.Width(650 - indent));
                 var actions = blueprint.ActionsForUnit(ch);
                 int actionCount = actions != null ? actions.Count() : 0;
                 for (int ii = 0; ii < maxActions; ii++) {

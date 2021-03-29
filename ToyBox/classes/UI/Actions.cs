@@ -143,10 +143,22 @@ namespace ToyBox {
         }
         public static void AddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
+                Logger.Log($"adding spell: {ability.Name}");
                 foreach (var spellbook in ch.Spellbooks) {
-                    var allSpells = spellbook.Blueprint.SpellList;
-                    var level = allSpells.GetLevel(ability);
-                    spellbook.AddKnown(level, ability);
+                    var spellbookBP = spellbook.Blueprint;
+                    var maxLevel = spellbookBP.MaxSpellLevel;
+                    Logger.Log($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
+                    for (int level = 0; level < maxLevel; level++) {
+                        var learnable = spellbookBP.SpellList.GetSpells(level);
+                        var allowsSpell = learnable.Contains(ability);
+                        var allowText = allowsSpell ? "FOUND" : "did not find";
+                        Logger.Log($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
+                        if (allowsSpell) {
+                            Logger.Log($"spell level = {level}");
+                            spellbook.AddKnown(level, ability);
+                        }
+
+                    }
                 }
             }
             else {

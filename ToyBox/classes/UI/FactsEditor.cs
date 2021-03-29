@@ -86,13 +86,13 @@ namespace ToyBox {
             UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
             if (searchLimit > 1000) { searchLimit = 1000; }
             UI.Space(25);
-            searchChanged |= UI.DisclosureToggle("Show All", ref showAll);
+            searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
             UI.EndHorizontal();
             UI.BeginHorizontal();
             UI.Space(100);
             UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
             UI.Space(25);
-            if (matchCount > 0) {
+            if (matchCount > 0 && searchText.Length > 0) {
                 String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                 if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
                 UI.Label(matchesText, UI.ExpandWidth(false));
@@ -100,9 +100,10 @@ namespace ToyBox {
             UI.EndHorizontal();
 
             if (showAll) {
-//                if (filteredBPs == null || searchChanged) {
+                // TODO - do we need this logic or can we make blueprint filtering fast enough to do keys by key searching?
+                //if (filteredBPs == null || searchChanged) {
                     UpdateSearchResults(searchText, searchLimit, blueprints);
-//                }
+                //}
                 BlueprintListUI.OnGUI(unit, filteredBPs, 100);
                 return;
             }
@@ -123,14 +124,15 @@ namespace ToyBox {
             BlueprintScriptableObject toIncrease = null;
             BlueprintScriptableObject toDecrease = null;
             var toValues = new Dictionary<String, BlueprintScriptableObject>();
-
-            foreach (var fact in facts) {
+            var sorted = facts.OrderBy((f) => f.Name);
+            matchCount = 0;
+            foreach (var fact in sorted) {
                 if (fact == null) continue;
                 var bp = blueprint(fact);
                 String name = fact.Name.ToLower();
                 if (name == null) { name = $"{title(fact)}"; }
-//                var bpname = bp.name.ToLower();
-                if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => name.Contains(term)))) { // || bpname.Contains(term)))) {
+                if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => name.Contains(term)))) {
+                    matchCount++;
                     UI.BeginHorizontal();
                     UI.Space(100);
                     UI.Label($"{fact.Name}".cyan().bold(), UI.Width(400));
