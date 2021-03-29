@@ -67,33 +67,45 @@ using Kingmaker.Visual.Sound;
 namespace ToyBox {
 
     public static class BlueprintExensions {
+
+        static Dictionary<Type, List<BlueprintAction>> actionsByType = new Dictionary<Type, List<BlueprintAction>>();
+        public static List<BlueprintAction> BlueprintActions(this UnitEntityData ch, Type type) {
+            if (ch == null) { return new List<BlueprintAction>(); }
+            var results = new List<BlueprintAction>();
+            if (actionsByType.ContainsKey(type)) return actionsByType[type];
+            foreach (var action in BlueprintAction.globalActions) {
+                if (type.IsKindOf(action.type)) { results.Add(action); }
+            }
+            foreach (var action in BlueprintAction.characterActions) {
+                if (type.IsKindOf(action.type)) { results.Add(action); }
+            }
+            actionsByType[type] = results;
+            return results;
+        }
         public static List<BlueprintAction> ActionsForUnit(this BlueprintScriptableObject bp, UnitEntityData ch) {
             if (ch == null) { return new List<BlueprintAction>(); }
-            var results = new List<BlueprintAction>();
             Type type = bp.GetType();
-            foreach (var action in BlueprintAction.globalActions) {
-                if (type.IsKindOf(action.type) && action.canPerform(ch, bp)) { results.Add(action); }
-            }
-            foreach (var action in BlueprintAction.characterActions) {
-                if (type.IsKindOf(action.type) && action.canPerform(ch, bp)) { results.Add(action); }
-            }
-            return results;
-        }
-
-        public static List<BlueprintAction> BlueprintActions<T>(this UnitEntityData ch) {
-            if (ch == null) { return new List<BlueprintAction>(); }
+            var actions = ch.BlueprintActions(type);
             var results = new List<BlueprintAction>();
-            Type type = typeof(T);
-            foreach (var action in BlueprintAction.globalActions) {
-                if (type.IsKindOf(action.type)) { results.Add(action); }
+            foreach (var action in actions) {
+                if (action.canPerform(ch, bp)) { results.Add(action); }
             }
-            foreach (var action in BlueprintAction.characterActions) {
-                if (type.IsKindOf(action.type)) { results.Add(action); }
-            }
-
             return results;
         }
 
+        static Dictionary<Type, List<BlueprintScriptableObject>> blueprintsByType = new Dictionary<Type, List<BlueprintScriptableObject>>();
+        public static List<BlueprintScriptableObject> BlueprintsOfType(Type type) {
+            if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
+            var blueprints = BlueprintBrowser.GetBluePrints();
+            if (blueprints == null) return new List<BlueprintScriptableObject>();
+            var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
+            blueprintsByType[type] = filtered;
+            return filtered;
+        }
+
+        public static List<BlueprintScriptableObject> GetBlueprints<T>() where T : BlueprintScriptableObject {
+            return BlueprintsOfType(typeof(T));
+        }
     }
     public class BlueprintAction : NamedMutator<UnitEntityData, BlueprintScriptableObject> {
         public BlueprintAction(

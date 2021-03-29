@@ -109,6 +109,8 @@
     <Compile Include="classes\MonkeyPatchin\ToggleTab.cs" />
     <Compile Include="classes\UI\Actions.cs" />
     <Compile Include="classes\Infrastructure\NamedTypes.cs" />
+    <Compile Include="classes\UI\BlueprintListUI.cs" />
+    <Compile Include="classes\UI\BlueprintLoader.cs" />
     <Compile Include="classes\UI\FactsEditor.cs" />
     <Compile Include="classes\UI\Main.cs" />
     <Compile Include="classes\UI\BlueprintBrowser.cs" />

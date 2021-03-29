@@ -133,25 +133,25 @@ namespace ToyBox {
             }
         }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
-            if (ch.Descriptor.Abilities.HasFact(ability)) return true;
-            if (ability.IsInSpellListOfUnit(ch)) return true;
-            //foreach (var spellbook in ch.Spellbooks) {
-            //    if (UIUtilityUnit.SpellbookHasSpell(spellbook, ability)) return true;
-            //}
+            if (ability.IsSpell) {
+                if (ability.IsInSpellListOfUnit(ch)) return true;
+            }
+            else {
+                if (ch.Descriptor.Abilities.HasFact(ability)) return true;
+            }
             return false;
         }
         public static void AddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
                 foreach (var spellbook in ch.Spellbooks) {
-                    if (UIUtilityUnit.SpellbookHasSpell(spellbook, ability)) {
-                        spellbook.RemoveSpell(ability);
-                    }
+                    var allSpells = spellbook.Blueprint.SpellList;
+                    var level = allSpells.GetLevel(ability);
+                    spellbook.AddKnown(level, ability);
                 }
             }
             else {
-                    var abilities = ch.Descriptor.Abilities;
-                    if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
-                }
+                ch.Descriptor.AddFact(ability);
+            }
         }
 
         public static void RemoveAbility(this UnitEntityData ch, BlueprintAbility ability) {

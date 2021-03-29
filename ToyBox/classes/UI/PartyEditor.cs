@@ -43,12 +43,14 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class PartyEditor {
+        // toggle bitfields
+        
         static int showClassesBitfield = 0;
         static int showStatsBitfield = 0;
         static int showFactsBitfield = 0;
         static int showAbilitiesBitfield = 0;
         static int showSpellsBitfield = 0;
-        static int addSpellbookBitfield = 0;
+
         static int selectedSpellbook = 0;
         static int selectedSpellbookLevel = 0;
         private static NamedFunc<List<UnitEntityData>>[] _partyFilterChoices = null;
@@ -207,8 +209,7 @@ namespace ToyBox {
                             (l) => $"L{l}".bold() + $" ({spellbook.GetKnownSpells(l).Count()})".white(),
                             UI.AutoWidth()
                         );
-                        var spells = spellbook.GetKnownSpells(selectedSpellbookLevel).OrderBy(d => d.Name).ToList();
-                        FactsEditor.OnGUI(ch, spells.ToList());
+                        FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
                     }
                 }
                 chIndex += 1;

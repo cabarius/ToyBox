@@ -120,8 +120,8 @@ namespace ToyBox {
             if (GL.Button(title, options)) { action(); }
         }
         public static void ActionTextField(ref string text,
-                Action<String> action,
                 String name,
+                Action<String> action,
                 Action enterAction,
                 params GUILayoutOption[] options
             ) {
@@ -129,15 +129,15 @@ namespace ToyBox {
             String newText = GL.TextField(text, options);
             if (newText != text) {
                 text = newText;
-                action(text);
+                if (action != null) action(text);
             }
-            if (Main.userHasHitReturn && Main.focusedControlName == name) {
+            if (enterAction != null && Main.userHasHitReturn && Main.focusedControlName == name) {
                 enterAction();
             }
         }
         public static void ActionIntTextField(ref int value,
-                Action<int> action,
                 String name,
+                Action<int> action,
                 Action enterAction,
                 params GUILayoutOption[] options
             ) {
@@ -145,8 +145,8 @@ namespace ToyBox {
             bool hitEnter = false;
             String searchLimitString = $"{value}";
             UI.ActionTextField(ref searchLimitString,
-                (text) => { changed = true; },
                 name,
+                (text) => { changed = true; },
                 () => { hitEnter = true; },
                 options);
             Int32.TryParse(searchLimitString, out value);
@@ -217,7 +217,7 @@ namespace ToyBox {
             selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
             return items[selectedIndex].func();
         }
-        static void TogglePrivate(
+        static bool TogglePrivate(
                 String title,
                 ref bool value,
                 bool disclosureStyle = false,
@@ -225,24 +225,25 @@ namespace ToyBox {
                 float width = 0,
                 params GUILayoutOption[] options
             ) {
+            bool changed = false;
             options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
                 if (GL.Button("" + (value ? onMark : offMark) + " " + title, options)) { value = !value; }
             }
             else {
-                
-                if (MyGUI.DisclosureToggle(title, value, options)) { value = !value; }
+                if (MyGUI.DisclosureToggle(title, value, options)) { value = !value; changed = true;  }
             }
+            return changed;
         }
-        public static void Toggle(
+        public static bool Toggle(
                 String title,
                 ref bool value,
                 float width = 0,
                 params GUILayoutOption[] options) {
-            TogglePrivate(title, ref value, false, false, width, options);
+            return TogglePrivate(title, ref value, false, false, width, options);
         }
 
-        public static void BitFieldToggle(
+        public static bool BitFieldToggle(
                 String title,
                 ref int bitfield,
                 int offset,
@@ -253,14 +254,16 @@ namespace ToyBox {
             bool newBit = bit;
             TogglePrivate(title, ref newBit, false, false, width, options);
             if (bit != newBit) { bitfield ^= 1 << offset; }
+            return bit != newBit;
         }
 
-        public static void DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, float width = 175, params Action[] actions) {
-            UI.TogglePrivate(title, ref value, true, forceHorizontal, width);
+        public static bool DisclosureToggle(String title, ref bool value, bool forceHorizontal = true, float width = 175, params Action[] actions) {
+            bool changed = UI.TogglePrivate(title, ref value, true, forceHorizontal, width);
             UI.If(value, actions);
+            return changed;
         }
 
-        public static void DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, float width = 175, params Action[] actions) {
+        public static bool DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, bool forceHorizontal = true, float width = 175, params Action[] actions) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
             TogglePrivate(title, ref newBit, true, forceHorizontal, width);
@@ -273,6 +276,7 @@ namespace ToyBox {
                 }
             }
             UI.If(newBit, actions);
+            return bit != newBit;
         }
 
         // UI Builders

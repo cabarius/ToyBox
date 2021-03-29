@@ -43,71 +43,8 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 
 namespace ToyBox {
-
-    public static class BlueprintLoader {
-        static AssetBundleRequest LoadRequest;
-        public static float progress = 0;
-        public static void Load(Action<IEnumerable<BlueprintScriptableObject>> callback) {
-            var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
-            Logger.Log($"got bundle {bundle}");
-            LoadRequest = bundle.LoadAllAssetsAsync<BlueprintScriptableObject>();
-            Logger.Log($"created request {LoadRequest}");
-            LoadRequest.completed += (asyncOperation) => {
-                Logger.Log($"completed request and calling completion");
-                callback(LoadRequest.allAssets.Cast<BlueprintScriptableObject>());
-                LoadRequest = null;
-            };
-        }
-        public static bool LoadInProgress() {
-            if (LoadRequest != null) {
-                progress = LoadRequest.progress;
-                return true;
-            }
-            return false;
-        }
-    }
-    public class BlueprintListUI {
-        public static void OnGUI(UnitEntityData ch, IEnumerable<BlueprintScriptableObject> blueprints, float indent = 0, Func<String,String> titleFormater = null) {
-            if (titleFormater == null) titleFormater = (t) => t.orange().bold();
-            int index = 0;
-            int maxActions = 0;
-            foreach (BlueprintScriptableObject blueprint in blueprints) {
-                var actions = blueprint.ActionsForUnit(ch);
-                maxActions = Math.Max(actions.Count, maxActions);
-            }
-
-            foreach (BlueprintScriptableObject blueprint in blueprints) {
-                UI.BeginHorizontal();
-                UI.Space(indent);
-                UI.Label(titleFormater(blueprint.name), UI.Width(650));
-                var actions = blueprint.ActionsForUnit(ch);
-                int actionCount = actions != null ? actions.Count() : 0;
-                for (int ii = 0; ii < maxActions; ii++) {
-                    if (ii < actionCount) {
-                        BlueprintAction action = actions[ii];
-                        UI.ActionButton(action.name, () => { action.action(ch, blueprint); }, UI.Width(140));
-                        UI.Space(10);
-                    }
-                    else {
-                        UI.Space(154);
-                    }
-                }
-                UI.Space(30);
-                UI.Label($"{blueprint.GetType().Name.cyan()}", UI.Width(400));
-                UI.EndHorizontal();
-                String description = blueprint.GetDescription();
-                if (description.Length > 0) {
-                    UI.BeginHorizontal();
-                    UI.Space(684 + maxActions * 154);
-                    UI.Label($"{description.green()}");
-                    UI.EndHorizontal();
-                }
-                index++;
-            }
-        }
-    }
     public class BlueprintBrowser {
-        public static IOrderedEnumerable<BlueprintScriptableObject> filteredBPs = null;
+        public static IEnumerable<BlueprintScriptableObject> filteredBPs = null;
         static bool firstSearch = true;
         public static String[] filteredBPNames = null;
         public static int matchCount = 0;
@@ -120,7 +57,8 @@ namespace ToyBox {
             new NamedTypeFilter("All", typeof(BlueprintScriptableObject)),
             new NamedTypeFilter("Facts",typeof(BlueprintFact)),
             new NamedTypeFilter("Features", typeof(BlueprintFeature)),
-            new NamedTypeFilter("Abilities", typeof(BlueprintAbility)),
+            new NamedTypeFilter("Abilities", typeof(BlueprintAbility), (bp) => !((BlueprintAbility)bp).IsSpell),
+            new NamedTypeFilter("Spells", typeof(BlueprintAbility), (bp) => ((BlueprintAbility)bp).IsSpell),
             new NamedTypeFilter("Spellbooks", typeof(BlueprintSpellbook)),
             new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
             new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
@@ -147,7 +85,6 @@ namespace ToyBox {
 
         public static IEnumerable<BlueprintScriptableObject> blueprints = null;
         public static IEnumerable<BlueprintScriptableObject> GetBluePrints() {
-            Logger.Log("BlueprintBrowser.GetBlueprints()");
             if (blueprints == null) {
                 Logger.Log("GetBluePrints - blueprints are nut here yet...");
                 if (BlueprintLoader.LoadInProgress()) { return null; }
@@ -175,20 +112,19 @@ namespace ToyBox {
                 ResetSearch();
             }
 
-            var terms = Main.settings.searchText.Split(' ').Select(s => s.ToLower()).ToArray();
+            var terms = Main.settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
+            var bpTypeFilter = blueprintTypeFilters[Main.settings.selectedBPTypeFilter];
+            var selectedType = bpTypeFilter.type;
+            var bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => bpTypeFilter.filter(bp));
             var filtered = new List<BlueprintScriptableObject>();
-            var selectedType = blueprintTypeFilters[Main.settings.selectedBPTypeFilter].type;
-            foreach (BlueprintScriptableObject blueprint in blueprints) {
+            foreach (BlueprintScriptableObject blueprint in bps) {
                 var name = blueprint.name.ToLower();
-                var type = blueprint.GetType();
-                if (terms.All(term => name.Contains(term)) && type.IsKindOf(selectedType)) {
+                if (terms.All(term => name.Contains(term))) {
                     filtered.Add(blueprint);
                 }
             }
             matchCount = filtered.Count();
-            filteredBPs = filtered
-                    .OrderBy(bp => bp.name)
-                    .Take(Main.settings.searchLimit).OrderBy(bp => bp.name);
+            filteredBPs = filtered.OrderBy(bp => bp.name).Take(Main.settings.searchLimit).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
             firstSearch = false;
         }
@@ -203,13 +139,17 @@ namespace ToyBox {
 
             UI.BeginHorizontal();
             UI.ActionTextField(
-                ref Main.settings.searchText, (text) => { },
-                "searhText", () => { UpdateSearchResults(); },
+                ref Main.settings.searchText,
+                "searhText", 
+                (text) => { },
+                () => { UpdateSearchResults(); },
                 UI.Width(400));
             UI.Label("Limit", UI.ExpandWidth(false));
             UI.ActionIntTextField(
-                ref Main.settings.searchLimit, (limit) => { },
-                "searchLimit", () => { UpdateSearchResults(); },
+                ref Main.settings.searchLimit,
+                "searchLimit", 
+                (limit) => { },
+                () => { UpdateSearchResults(); },
                 UI.Width(200));
             if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
             UI.EndHorizontal();

@@ -39,7 +39,10 @@ namespace ToyBox {
     public class NamedTypeFilter {
         public String name { get; }
         public Type type { get; }
-        public NamedTypeFilter(String name, Type type) { this.name = name; this.type = type; }
+        public Func<BlueprintScriptableObject, bool> filter;
+        public NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null) {
+            this.name = name; this.type = type; this.filter = filter != null ? filter : (bp) => true;
+        }
     }
 
     public class NamedAction {
