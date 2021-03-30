@@ -150,13 +150,13 @@ namespace ToyBox {
                 (ch, bp) => { return ch.Progression.Features.HasFact((BlueprintUnitFact)bp);  }
                 ),
             new BlueprintAction("<", typeof(BlueprintFeature),
-                (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
+                (ch, bp) => { try { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).RemoveRank(); } catch (Exception e) { Logger.Log(e); } },
                 (ch, bp) => {
                     var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
                     return feature != null && feature.GetRank() > 1;
                 }),
             new BlueprintAction(">", typeof(BlueprintFeature),
-                (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).RemoveRank(); },
+                (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
                 (ch, bp) => {
                     var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
                     return feature != null && feature.GetRank() < feature.Blueprint.Ranks - 1;
@@ -181,10 +181,28 @@ namespace ToyBox {
                 (ch, bp) => { ch.Descriptor.RemoveFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return ch.Descriptor.Buffs.HasFact((BlueprintBuff)bp);  }
                 ),
+            new BlueprintAction("<", typeof(BlueprintBuff),
+                (ch, bp) => { ch.Descriptor.Buffs.GetFact((BlueprintBuff)bp).RemoveRank(); },
+                (ch, bp) => {
+                    var buff = ch.Descriptor.Buffs.GetFact((BlueprintBuff)bp);
+                    return buff != null && buff.GetRank() > 1;
+                }),
+            new BlueprintAction(">", typeof(BlueprintBuff),
+                (ch, bp) => { ch.Descriptor.Buffs.GetFact((BlueprintUnitFact)bp).AddRank(); },
+                (ch, bp) => {
+                    var buff = ch.Descriptor.Buffs.GetFact((BlueprintUnitFact)bp);
+                    return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
+                }),
+
+
             // Abilities
             new BlueprintAction("Add", typeof(BlueprintAbility),
                 (ch, bp) => { ch.AddAbility((BlueprintAbility)bp); },
-                (ch, bp) => { return !ch.HasAbility((BlueprintAbility)bp); }
+                (ch, bp) => { return ch.CanAddAbility((BlueprintAbility)bp); }
+                ),
+            new BlueprintAction("At Will", typeof(BlueprintAbility),
+                (ch, bp) => { ch.AddSpellAsAbility((BlueprintAbility)bp); },
+                (ch, bp) => { return ch.CanAddSpellAsAbility((BlueprintAbility)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintAbility),
                 (ch, bp) => { ch.RemoveAbility((BlueprintAbility)bp); },

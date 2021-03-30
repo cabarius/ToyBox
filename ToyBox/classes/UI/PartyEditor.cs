@@ -47,6 +47,7 @@ namespace ToyBox {
             Classes,
             Stats,
             Facts,
+            Buffs,
             Abilities,
             Spells,
             None,
@@ -150,6 +151,11 @@ namespace ToyBox {
                     if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
                     else { selectedToggle = ToggleChoice.None; }
                 }
+                bool showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
+                if (UI.DisclosureToggle("Buffs", ref showBuffs, true, 150)) {
+                    if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
+                    else { selectedToggle = ToggleChoice.None; }
+                }
                 bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
                 if (UI.DisclosureToggle("Abilities", ref showAbilities, true)) {
                     if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
@@ -160,7 +166,7 @@ namespace ToyBox {
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 if (spellCount > 0) {
                     bool showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
-                    if (UI.DisclosureToggle($"{spellCount} Spells", ref showAbilities, true)) {
+                    if (UI.DisclosureToggle($"{spellCount} Spells", ref showSpells, true)) {
                         if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                         else { selectedToggle = ToggleChoice.None;  }
                     }
@@ -213,6 +219,9 @@ namespace ToyBox {
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
                     FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
+                }
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
+                    FactsEditor.OnGUI(ch, ch.Descriptor.Buffs.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
                     FactsEditor.OnGUI(ch, ch.Descriptor.Abilities.Enumerable.ToList());

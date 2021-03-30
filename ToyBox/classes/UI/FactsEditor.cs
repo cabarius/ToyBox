@@ -157,7 +157,7 @@ namespace ToyBox {
 #endif
                     if (description != null) {
                         UI.Space(30);
-                        UI.Label(description(fact).green(), UI.AutoWidth());
+                        UI.Label(description(fact).green().bold(), UI.AutoWidth());
                     }
                     UI.EndHorizontal();
                 }
@@ -184,6 +184,18 @@ namespace ToyBox {
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
                 ch.BlueprintActions(typeof(BlueprintFeature))
+                );
+        }
+        static public void OnGUI(UnitEntityData ch, List<Buff> facts) {
+            var blueprints = BlueprintBrowser.GetBluePrints();
+            if (blueprints == null) return;
+            OnGUI<Buff>("Features", ch, facts,
+                (fact) => fact.Blueprint,
+                BlueprintExensions.GetBlueprints<BlueprintBuff>(),
+                (fact) => fact.Name,
+                (fact) => fact.Description,
+                (fact) => fact.GetRank(),
+                ch.BlueprintActions(typeof(BlueprintBuff))
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
@@ -215,18 +227,3 @@ namespace ToyBox {
         }
     }
 }
-#if false
-            null,
-                new NamedMutator<U, T>("Remove", (fact) => collection.RemoveFact(fact), (fact) => collection.HasFact(fact)),
-                new NamedMutator<U, T>("Decrease", (fact) => collection.RemoveFact(fact), (fact) => collection.HasFact(fact) && fact.GetRank() > 1 ),
-                new NamedMutator<U, T>("Increase", (fact) => collection.RemoveFact(fact), (fact) => collection.HasFact(fact) && fact.GetRank() < fact.Blueprint.GetRanks() - 1)
-                );
-#endif
-
-#if false
-        static public void OnGUI(UnitLogicCollection<T> facts) { OnGUI(facts.Enumerable.GetEnumerator()); }
-        static public void OnGUI(List<T> facts) { OnGUI(facts.GetEnumerator()); }
-
-        static public void OnGUI(IEnumerator<T> facts) {
-        static public void OnGUI(UnitLogicCollection<T> facts) {
-#endif

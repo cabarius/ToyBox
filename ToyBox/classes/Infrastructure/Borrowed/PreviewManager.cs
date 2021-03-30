@@ -326,7 +326,7 @@ namespace ToyBox {
                     if (!Main.Enabled) return;
                     if (Main.settings.previewRandomEncounters) {
                         var blueprint = encounter.Blueprint;
-                        var text = $"\n<size=70%>Name: {blueprint.name}\nType: {blueprint.Type}\nCR: {encounter.Blueprint.AvoidDC}</size>";
+                        var text = $"\n<size=70%>Name: {blueprint.Name}\nType: {blueprint.Type}\nCR: {encounter.Blueprint.AvoidDC}</size>";
                         m_DescriptionRef(__instance).text += text;
                     }
                 }

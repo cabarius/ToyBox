@@ -56,13 +56,24 @@ namespace ToyBox {
             foreach (BlueprintScriptableObject blueprint in blueprints) {
                 UI.BeginHorizontal();
                 UI.Space(indent);
-                UI.Label(titleFormater(blueprint.name), UI.Width(650 - indent));
                 var actions = blueprint.ActionsForUnit(ch);
+                var titles = actions.Select((a) => a.name);
+                var title = blueprint.name;
+                if (titles.Contains("Remove")) {
+                    title = title.cyan().bold();
+                }
+                else {
+                    title = titleFormater(title);
+                }
+
+                UI.Label(title, UI.Width(650 - indent));
                 int actionCount = actions != null ? actions.Count() : 0;
                 for (int ii = 0; ii < maxActions; ii++) {
                     if (ii < actionCount) {
                         BlueprintAction action = actions[ii];
-                        UI.ActionButton(action.name, () => { action.action(ch, blueprint); }, UI.Width(140));
+                        // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
+                        if (action.name == "<" || action.name == ">") continue;
+                            UI.ActionButton(action.name, () => { action.action(ch, blueprint); }, UI.Width(140));
                         UI.Space(10);
                     }
                     else {
@@ -70,8 +81,9 @@ namespace ToyBox {
                     }
                 }
                 UI.Space(30);
-                UI.Label($"{blueprint.GetType().Name.cyan()}", UI.Width(400));
+                UI.Label($"{blueprint.GetType().Name.cyan()}" + " " + blueprint.GetDescription().green().bold()); //, UI.Width(400));
                 UI.EndHorizontal();
+#if false
                 String description = blueprint.GetDescription();
                 if (description.Length > 0) {
                     UI.BeginHorizontal();
@@ -79,6 +91,7 @@ namespace ToyBox {
                     UI.Label($"{description.green()}");
                     UI.EndHorizontal();
                 }
+#endif
                 index++;
             }
         }

@@ -134,10 +134,27 @@ namespace ToyBox {
         }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
-                if (ability.IsInSpellListOfUnit(ch)) return true;
+                foreach (var spellbook in ch.Spellbooks) {
+                    if (spellbook.IsKnown(ability)) return true;
+                }
+            }
+            if (ch.Descriptor.Abilities.HasFact(ability)) return true;
+            return false;
+        }
+        public static bool CanAddAbility(this UnitEntityData ch, BlueprintAbility ability) {
+            if (ability.IsSpell) {
+                foreach (var spellbook in ch.Spellbooks) {
+                    if (spellbook.IsKnown(ability)) return false;
+                    var spellbookBP = spellbook.Blueprint;
+                    var maxLevel = spellbookBP.MaxSpellLevel;
+                    for (int level = 0; level < maxLevel; level++) {
+                        var learnable = spellbookBP.SpellList.GetSpells(level);
+                        if (learnable.Contains(ability)) return true; ;
+                    }
+                }
             }
             else {
-                if (ch.Descriptor.Abilities.HasFact(ability)) return true;
+                if (!ch.Descriptor.Abilities.HasFact(ability)) return true;
             }
             return false;
         }
@@ -165,7 +182,12 @@ namespace ToyBox {
                 ch.Descriptor.AddFact(ability);
             }
         }
-
+        static public bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
+            return ability.IsSpell && !ch.Descriptor.HasFact(ability);
+        }
+        public static void AddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
+            ch.Descriptor.AddFact(ability);
+        }
         public static void RemoveAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
                 foreach (var spellbook in ch.Spellbooks) {
@@ -174,10 +196,8 @@ namespace ToyBox {
                     }
                 }
             }
-            else {
-                var abilities = ch.Descriptor.Abilities;
-                if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
-            }
+            var abilities = ch.Descriptor.Abilities;
+            if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
         }
     }
 }

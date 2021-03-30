@@ -36,6 +36,10 @@ namespace ToyBox {
         public static void Log(string str) {
             Logger.modLogger.Log(str);
         }
+
+        public static void Log(Exception ex) {
+            Logger.modLogger.Log(ex.ToString().red().bold() + "\n" + ex.StackTrace);
+        }
         public void LogToFiles(string str) {
             if (removeHtmlTags) {
                 str = Utilties.RemoveHtmlTags(str);

@@ -86,12 +86,12 @@ namespace ToyBox {
         public static IEnumerable<BlueprintScriptableObject> blueprints = null;
         public static IEnumerable<BlueprintScriptableObject> GetBluePrints() {
             if (blueprints == null) {
-                Logger.Log("GetBluePrints - blueprints are nut here yet...");
                 if (BlueprintLoader.LoadInProgress()) { return null; }
                 else {
                     Logger.Log($"calling BlueprintLoader.Load");
                     BlueprintLoader.Load((bps) => {
                         blueprints = bps;
+                        UpdateSearchResults();
                         Logger.Log($"success got {bps.Count()} bluerints");
                     });
                     return null;
@@ -111,7 +111,6 @@ namespace ToyBox {
             if (Main.settings.searchText.Trim().Length == 0) {
                 ResetSearch();
             }
-
             var terms = Main.settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
             var bpTypeFilter = blueprintTypeFilters[Main.settings.selectedBPTypeFilter];
             var selectedType = bpTypeFilter.type;
