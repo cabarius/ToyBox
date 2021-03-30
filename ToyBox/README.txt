@@ -84,6 +84,9 @@ Ver 1.1.0
 			Ignore Required Stat Values
 			Ignore Alignment When Choosing A Class
 			Skip Spell Selection
+	Ver 1.1.0
+		Fixed Party Editor bug where it would get out of sync with the party, especially when loading other saves
+		Added Nearby Units and show distance to other units
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  At first you have to wait 10 seconds or so for the blueprints to load but after that, it is fast.  You choose a category with the provided toolbar.
 

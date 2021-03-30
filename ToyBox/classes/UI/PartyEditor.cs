@@ -53,36 +53,52 @@ namespace ToyBox {
             None,
         };
 
-        static UnitEntityData selectedCharacter = null;
         static ToggleChoice selectedToggle = ToggleChoice.None;
+        static int selectedCharacterIndex = 0;
 
         static int selectedSpellbook = 0;
         static int selectedSpellbookLevel = 0;
-        private static NamedFunc<List<UnitEntityData>>[] _partyFilterChoices = null;
+        static float nearByRange = 25;
+        private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
-            var player = Game.Instance.Player;
-            var palyerData = GameHelper.GetPlayerCharacter();
-            if (player != null && _partyFilterChoices == null) {
-                _partyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
-                    new NamedFunc<List<UnitEntityData>>("Party", () => player.Party),
-                    new NamedFunc<List<UnitEntityData>>("Party & Pets", () => player.m_PartyAndPets),
-                    new NamedFunc<List<UnitEntityData>>("All Characters", () => player.AllCharacters),
-                    new NamedFunc<List<UnitEntityData>>("Active Companions", () => player.ActiveCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Remote Companions", () => player.m_RemoteCompanions),
+            if (Game.Instance.Player != null && partyFilterChoices == null) {
+            return new NamedFunc<List<UnitEntityData>>[] {
+                    new NamedFunc<List<UnitEntityData>>("Party", () => Game.Instance.Player.Party),
+                    new NamedFunc<List<UnitEntityData>>("Party & Pets", () => Game.Instance.Player.m_PartyAndPets),
+                    new NamedFunc<List<UnitEntityData>>("All Characters", () => Game.Instance.Player.AllCharacters),
+                    new NamedFunc<List<UnitEntityData>>("Active Companions", () => Game.Instance.Player.ActiveCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Remote Companions", () => Game.Instance.Player.m_RemoteCompanions),
                     new NamedFunc<List<UnitEntityData>>("Custom (Mercs)", PartyUtils.GetCustomCompanions),
                     new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets),
-                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => !u.IsEnemy(palyerData)).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u.IsEnemy(palyerData)).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Nearby", () => {
+                        var player = GameHelper.GetPlayerCharacter();
+                        if (player == null) return new List<UnitEntityData> ();
+                        return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearByRange , false, false).ToList();
+                    }),
+                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
                     new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
                };
             }
-            return _partyFilterChoices;
+            return partyFilterChoices;
         }
-        static List<UnitEntityData> characterList = null;
         public static List<UnitEntityData> GetCharacterList() {
             var partyFilterChoices = GetPartyFilterChoices();
             if (partyFilterChoices == null) { return null; }
             return partyFilterChoices[Main.settings.selectedPartyFilter].func();
+        }
+        static UnitEntityData GetSelectedCharacter() {
+            var characterList = GetCharacterList();
+            if (characterList == null) return Game.Instance.Player.MainCharacter;
+            if (selectedCharacterIndex >= characterList.Count) selectedCharacterIndex = 0;
+            return characterList[selectedCharacterIndex];
+        }
+        public static void ResetGUI() {
+            selectedCharacterIndex = 0;
+            selectedSpellbook = 0;
+            selectedSpellbookLevel = 0;
+            partyFilterChoices = null;
+            Main.settings.selectedPartyFilter = 0;
         }
         public static void OnGUI() {
             var player = Game.Instance.Player;
@@ -91,14 +107,21 @@ namespace ToyBox {
 
             UnitEntityData charToAdd = null;
             UnitEntityData charToRemove = null;
-            characterList = UI.TypePicker<List<UnitEntityData>>(
+            var characterListFunc = UI.TypePicker<List<UnitEntityData>>(
                 null,
                 ref Main.settings.selectedPartyFilter,
                 filterChoices
                 );
+            var characterList = characterListFunc.func();
+            var mainChar = GameHelper.GetPlayerCharacter();
+            if (characterListFunc.name == "Nearby") {
+                UI.Slider("Nearby Distance", ref nearByRange, 1f, 200, 25, 0, " meters", UI.Width(250));
+                characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
+            }
             UI.Space(20);
             int chIndex = 0;
             int respecableCount = 0;
+            var selectedCharacter = GetSelectedCharacter();
             foreach (UnitEntityData ch in characterList) {
                 UnitProgressionData progression = ch.Descriptor.Progression;
                 BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
@@ -107,6 +130,9 @@ namespace ToyBox {
                 UI.BeginHorizontal();
 
                 UI.Label(ch.CharacterName.orange().bold(), UI.Width(200));
+                UI.Space(25);
+                float distance = mainChar.DistanceTo(ch); ;
+                UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
                 UI.Space(25);
                 UI.Label("lvl".green() + $": {level}", UI.Width(75));
                 // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
@@ -123,7 +149,7 @@ namespace ToyBox {
                 }
                 else { UI.Space(113); }
                 UI.Space(25);
-                UI.Label($"mythic".green() + $": {mythicLevel}", UI.Width(125));
+                UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
                 if (player.AllCharacters.Contains(ch)) {
                     if (progression.MythicExperience < 10) {
                         UI.ActionButton("+1 ML", () => {
@@ -168,7 +194,7 @@ namespace ToyBox {
                     bool showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
                     if (UI.DisclosureToggle($"{spellCount} Spells", ref showSpells, true)) {
                         if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
-                        else { selectedToggle = ToggleChoice.None;  }
+                        else { selectedToggle = ToggleChoice.None; }
                     }
                 }
                 else { UI.Space(180); }
@@ -236,7 +262,7 @@ namespace ToyBox {
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         var casterLevel = spellbook.CasterLevel;
                         UI.EnumerablePicker<int>(
-                            "Spell Level".bold() +" (count)",
+                            "Spell Level".bold() + " (count)",
                             ref selectedSpellbookLevel,
                             Enumerable.Range(0, casterLevel + 1),
                             0,

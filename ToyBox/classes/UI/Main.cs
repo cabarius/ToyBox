@@ -96,7 +96,11 @@ namespace ToyBox {
             settings = Settings.Load<Settings>(modEntry);
             settings.searchText = "";
             settings.searchLimit = 100;
-            ResetSearch();
+            CheapTricks.ResetGUI();
+            PartyEditor.ResetGUI();
+            CharacterPicker.ResetGUI();
+            BlueprintBrowser.ResetGUI();
+            QuestEditor.ResetGUI();
             caughtException = null;
         }
 

@@ -52,6 +52,10 @@ namespace ToyBox {
             }
             return characters[selectedIndex];
         }
+        public static void ResetGUI() {
+            selectedIndex = 0;
+            selectedCharacter = null;
+        }
 
         public static void OnGUI() {
 

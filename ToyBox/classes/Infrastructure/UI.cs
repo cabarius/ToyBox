@@ -153,21 +153,22 @@ namespace ToyBox {
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
         }
-        public static void Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, params GUILayoutOption[] options) {
+        public static void Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
             UI.BeginHorizontal(options);
             UI.Label(title.cyan(), UI.Width(300));
             UI.Space(25);
             float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(100)), decimals);
             UI.Space(25);
-            UI.Label($"{value}".orange().bold(), UI.Width(100));
+            var titleContent = new GUIContent($"{value}{units}".orange().bold());
+            UI.Label(titleContent, UI.Width(GUI.skin.label.CalcSize(title).x));
             UI.Space(25);
             UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
             UI.EndHorizontal();
             value = newValue;
         }
-        public static void Slider(String title, ref int value, int min, int max, int defaultValue = 1, params GUILayoutOption[] options) {
+        public static void Slider(String title, ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, options);
+            UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, "", options);
             value = (int)fvalue;
         }
         public static void SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
@@ -210,12 +211,12 @@ namespace ToyBox {
             UI.EndHorizontal();
         }
 
-        public static T TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
+        public static NamedFunc<T> TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
             int sel = selectedIndex;
             var titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();
             if (title?.Length > 0) { Label(title); }
             selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
-            return items[selectedIndex].func();
+            return items[selectedIndex];
         }
         static bool TogglePrivate(
                 String title,

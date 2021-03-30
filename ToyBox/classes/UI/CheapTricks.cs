@@ -43,7 +43,7 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class CheapTricks {
-
+        public static void ResetGUI() {}
         public static void OnGUI() {
             UI.HStack("Combat", 4,
                 () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
@@ -96,21 +96,21 @@ namespace ToyBox {
                 );
             UI.Space(10);
             UI.HStack("Multipliers", 1, 
-                () => { UI.Slider("Experience", ref Main.settings.experienceMultiplier, 0.1f, 10, 1, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Money Earned", ref Main.settings.moneyMultiplier, 0.1f, 10, 1, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Sell Price", ref Main.settings.vendorSellPriceMultiplier, 0.1f, 30, Main.settings.defaultVendorSellPriceMultiplier, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Encumberance", ref Main.settings.encumberanceMultiplier, 1, 100, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Spells Per Day", ref Main.settings.spellsPerDayMultiplier, 0.1f, 5, 1, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Movement Speed", ref Main.settings.partyMovementSpeedMultiplier, 0.1f, 10, 1, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Travel Speed", ref Main.settings.travelSpeedMultiplier, 0.1f, 10, 1, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Companion Cost", ref Main.settings.companionCostMultiplier, 0, 5, 1, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Enemy HP Multiplier", ref Main.settings.enemyBaseHitPointsMultiplier, 0.1f, 10, 1, 1, UI.AutoWidth()); },
-                () => { UI.Slider("Buff Duration", ref Main.settings.buffDurationMultiplierValue, 0.1f, 10, 1, 1, UI.AutoWidth()); },
+                () => { UI.Slider("Experience", ref Main.settings.experienceMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Money Earned", ref Main.settings.moneyMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Sell Price", ref Main.settings.vendorSellPriceMultiplier, 0.1f, 30, Main.settings.defaultVendorSellPriceMultiplier, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Encumberance", ref Main.settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Spells Per Day", ref Main.settings.spellsPerDayMultiplier, 0.1f, 5, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Movement Speed", ref Main.settings.partyMovementSpeedMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Travel Speed", ref Main.settings.travelSpeedMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Companion Cost", ref Main.settings.companionCostMultiplier, 0, 5, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Enemy HP Multiplier", ref Main.settings.enemyBaseHitPointsMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Buff Duration", ref Main.settings.buffDurationMultiplierValue, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
                 () => { }
                 );
             UI.Space(10);
             UI.HStack("Level Up", 1,
-                () => { UI.Slider("Feats Multiplier", ref Main.settings.featsMultiplier, 1, 5, 1, UI.AutoWidth()); },
+                () => { UI.Slider("Feats Multiplier", ref Main.settings.featsMultiplier, 1, 5, 1, "", UI.AutoWidth()); },
                 () => { UI.Toggle("Always Able To Level Up", ref Main.settings.toggleNoLevelUpRestirctions, 0); },
                 () => { UI.Toggle("Add Full Hit Die Value", ref Main.settings.toggleFullHitdiceEachLevel, 0); },
                 () => { UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, 0); },
@@ -131,17 +131,17 @@ namespace ToyBox {
                 );
             UI.Space(10);
             UI.HStack("Character Creation", 1,
-                () => { UI.Slider("Build Points (Main)", ref Main.settings.characterCreationAbilityPointsPlayer, 1, 200, 25, UI.AutoWidth()); },
-                () => { UI.Slider("Build Points (Mercenary)", ref Main.settings.characterCreationAbilityPointsMerc, 1, 200, 20, UI.AutoWidth()); },
-                () => { UI.Slider("Ability Max", ref Main.settings.characterCreationAbilityPointsMax, 0, 50, 18, UI.AutoWidth()); },
-                () => { UI.Slider("Ability Min", ref Main.settings.characterCreationAbilityPointsMin, 0, 50, 7, UI.AutoWidth()); },
+                () => { UI.Slider("Build Points (Main)", ref Main.settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", UI.AutoWidth()); },
+                () => { UI.Slider("Build Points (Mercenary)", ref Main.settings.characterCreationAbilityPointsMerc, 1, 200, 20, "", UI.AutoWidth()); },
+                () => { UI.Slider("Ability Max", ref Main.settings.characterCreationAbilityPointsMax, 0, 50, 18, "", UI.AutoWidth()); },
+                () => { UI.Slider("Ability Min", ref Main.settings.characterCreationAbilityPointsMin, 0, 50, 7, "", UI.AutoWidth()); },
                 () => { }
                 );
             UI.Space(10);
             UI.HStack("Crusade", 1,
                 () => { UI.Toggle("Instant Events", ref Main.settings.toggleInstantEvent, 0); },
                 () => {
-                    UI.Slider("Build Time Modifer", ref Main.settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, UI.AutoWidth());
+                    UI.Slider("Build Time Modifer", ref Main.settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
                     var instance = KingdomState.Instance;
                     if (instance != null) {
                         instance.BuildingTimeModifier = Main.settings.kingdomBuildingTimeModifier;

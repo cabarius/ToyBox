@@ -104,6 +104,11 @@ namespace ToyBox {
             filteredBPs = null;
             filteredBPNames = null;
         }
+
+        public static void ResetGUI() {
+            ResetSearch();
+            Main.settings.selectedBPTypeFilter = 1;
+        }
         public static void UpdateSearchResults() {
             if (blueprints == null) return; 
             selectedBlueprint = null;

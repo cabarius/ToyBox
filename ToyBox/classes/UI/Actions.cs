@@ -199,5 +199,9 @@ namespace ToyBox {
             var abilities = ch.Descriptor.Abilities;
             if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
         }
+        public static void ResetMythicPath(this UnitEntityData ch) {
+//            ch.Progression.
+        }
+
     }
 }
