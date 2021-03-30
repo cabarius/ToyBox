@@ -38,12 +38,13 @@ Ver 1.1.0
 		Ported ~3 dozen flags, multipliers, etc patches from Bag of Tricks (see below for full list)
 	Search 'n Pick 
 		New things to browse: Abilities, Spellbooks, Many specific equipment types
-		Can now Add/Remove abilties, spells, spellbooks
+		Can now Add/Remove abilities, spells, spellbooks
 	Party Editor
 		Can now browse and add blueprints in the party editor for various toggles (Show All)
 		Toggles to show classes, buffs, abilities and spellbook and can edit all but classes
  		Toggles in party editor now close other toggles
 		Show counts of some toggles like classes and spells
+		Can see Friendlies, Enemies and All Units!
 	Performance
 		Switched blueprint loading to async (no more freezing of app when you do first searcy)
 		Loading indicator on startup
@@ -84,8 +85,7 @@ Ver 1.1.0
 			Ignore Alignment When Choosing A Class
 			Skip Spell Selection
 
-
-To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
+To use search type a string into the search field at the bottom and hit enter or click the search button.  At first you have to wait 10 seconds or so for the blueprints to load but after that, it is fast.  You choose a category with the provided toolbar.
 
 Search results will offer you actions such as adding a feature or item.
 
