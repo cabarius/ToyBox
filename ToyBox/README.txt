@@ -84,7 +84,7 @@ Ver 1.1.0
 			Ignore Required Stat Values
 			Ignore Alignment When Choosing A Class
 			Skip Spell Selection
-	Ver 1.1.0
+	Ver 1.1.1
 		Fixed Party Editor bug where it would get out of sync with the party, especially when loading other saves
 		Added Nearby Units and show distance to other units
 
