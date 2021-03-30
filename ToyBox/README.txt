@@ -89,6 +89,13 @@ To use search type a string into the search field at the bottom and hit enter or
 
 Search results will offer you actions such as adding a feature or item.
 
+Install & Use
+	- Install the Unity Mod Manager﻿.
+	- Install the mod using the Unity Mod Manager﻿ or extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods').
+	- Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
+	- Open the Unity Mod Manager﻿ by pressing CTRL + F10.
+	- Adjust the settings in the mod's menu
+
 Acknowledgments:  
 	Owlcat Games - for making fun and amazing games
 	Paizo - for carrying the D20 3.5 torch
