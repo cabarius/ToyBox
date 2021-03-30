@@ -1196,8 +1196,7 @@ namespace ToyBox {
                 return settings.toggleMetamagicIsFree;
             }
             public static void Postfix(ref RuleCollectMetamagic __instance, int ___m_SpellLevel, Feature metamagicFeature) {
-                if (settings.toggleMetamagicIsFree) {
-
+                if (!settings.toggleMetamagicIsFree) {
                     AddMetamagicFeat component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
                         Logger.ModLoggerDebug(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));

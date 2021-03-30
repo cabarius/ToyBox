@@ -34,9 +34,56 @@ Ver 1.0.6
 	Fixed bug where the arrows were backwards in add/remove rank and also made sure it couldn't take you below 1
 	Various stability improvements 
 Ver 1.1.0
-	Ported ~3 dozen flags, multipliers, etc patches from Bag of Tricks
-	Added UI.Slider for convenient sliders for multipliers
+	Cheap Tricks
+		Ported ~3 dozen flags, multipliers, etc patches from Bag of Tricks (see below for full list)
+	Search 'n Pick 
+		New things to browse: Abilities, Spellbooks, Many specific equipment types
+		Can now Add/Remove abilties, spells, spellbooks
+	Party Editor
+		Can now browse and add blueprints in the party editor for various toggles (Show All)
+		Toggles to show classes, buffs, abilities and spellbook and can edit all but classes
+ 		Toggles in party editor now close other toggles
+		Show counts of some toggles like classes and spells
+	Performance
+		Switched blueprint loading to async (no more freezing of app when you do first searcy)
+		Loading indicator on startup
+		Massively improved performance on Party Editor and Search 'n Pick lists
 	Cleaned up UI and bug fixes
+	Ported BoT Features - this is experimental so please report bugs https://github.com/cabarius/ToyBox/issues
+		Flags
+			Whole Team Moves Same Speed
+			Instant Cooldown
+			Spontaneous Caster Scroll Copy
+			Disable Equipment Restrictions
+			Disable Dialog Restrictions
+			Infinite Charges On Items
+			No Friendly Fire On AOEs
+			Free Meta-Magic
+			No Material Components
+			Instant Rest After Combat
+        Multipliers 
+			Experience
+			Money Earned
+			Sell Price
+			Encumberance
+			Spells Per Day
+			Movement Speed
+			Travel Speed
+			Companion Cost
+			Enemy HP Multiplier
+			Buff Duration
+        Level Up
+			Feats Multiplier
+			Always Able To Level Up
+			Add Full Hit Die Value
+			Ignore Class And Feat Restrictions
+			Ignore Prerequisites When Choosing A Feat
+			Ignore Caster Type And Spell Level Restrictions
+			Ignore Forbidden Archetypes
+			Ignore Required Stat Values
+			Ignore Alignment When Choosing A Class
+			Skip Spell Selection
+
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  The first search will take a 10 seconds or but after that it is fast.  You choose a category with the provided toolbar.
 
@@ -54,6 +101,7 @@ Acknowledgments:
 	PS: Learn to mod Kingmaker Games here https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide 
 		Join our discord https://discord.gg/bQVwsP7cky
 
+Report Bugs: https://github.com/cabarius/ToyBox/issues
 Source Code: https://github.com/cabarius/ToyBox
 License: MIT
 

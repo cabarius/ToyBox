@@ -89,7 +89,7 @@ namespace ToyBox {
                 () => { UI.Toggle("Free Meta-Magic", ref Main.settings.toggleMetamagicIsFree,0); },
                 () => { UI.Toggle("No Material Components", ref Main.settings.toggleMaterialComponent,0); },
                 //() => { UI.Toggle("Restore Spells & Skills After Combat", ref Main.settings.toggleRestoreSpellsAbilitiesAfterCombat,0); },
-                () => { UI.Toggle("Access Remote Characters", ref Main.settings.toggleAccessRemoteCharacters,0); },
+                //() => { UI.Toggle("Access Remote Characters", ref Main.settings.toggleAccessRemoteCharacters,0); },
                 //() => { UI.Toggle("Show Pet Portraits", ref Main.settings.toggleShowAllPartyPortraits,0); },
                 () => { UI.Toggle("Instant Rest After Combat", ref Main.settings.toggleInstantRestAfterCombat,0); },
                 () => { }
