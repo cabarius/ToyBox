@@ -159,8 +159,7 @@ namespace ToyBox {
             UI.Space(25);
             float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(100)), decimals);
             UI.Space(25);
-            var titleContent = new GUIContent($"{value}{units}".orange().bold());
-            UI.Label(titleContent, UI.Width(GUI.skin.label.CalcSize(title).x));
+            UI.Label($"{value}{units}".orange().bold(), UI.Width(75 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
             UI.Space(25);
             UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
             UI.EndHorizontal();
