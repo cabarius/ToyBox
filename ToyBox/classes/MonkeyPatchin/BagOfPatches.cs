@@ -572,24 +572,25 @@ namespace ToyBox {
         [HarmonyPatch(new Type[] { typeof(UnitCommand) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch1 {
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
-                if (__instance.Unit.IsDirectlyControllable) {
-                    __result = !settings.toggleInstantCooldown;
+                if (settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
+                    __result = false;
                 }
-                if (__instance.Unit.IsMainCharacter) {
-                    __result = !settings.toggleInstantCooldown;
+                if (CombatController.IsInTurnBasedCombat() && settings.toggleUnlimitedActionsPerTurn) {
+                    __result = false;
                 }
             }
         }
-
         [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
         [HarmonyPatch(new Type[] { typeof(UnitCommand.CommandType) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch2 {
+
+
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
-                if (__instance.Unit.IsDirectlyControllable) {
-                    __result = !settings.toggleInstantCooldown;
+                if (settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
+                    __result = false;
                 }
-                if (__instance.Unit.IsMainCharacter) {
-                    __result = !settings.toggleInstantCooldown;
+                if (CombatController.IsInTurnBasedCombat() && settings.toggleUnlimitedActionsPerTurn) {
+                    __result = false;
                 }
             }
         }
@@ -604,7 +605,7 @@ namespace ToyBox {
                     __instance.Cooldown.SwiftAction = 0f;
                     __instance.Cooldown.AttackOfOpportunity = 0f;
                 }
-                if (__instance.Unit.IsMainCharacter && settings.toggleInstantCooldown) {
+                if (CombatController.IsInTurnBasedCombat() && settings.toggleUnlimitedActionsPerTurn) {
                     __instance.Cooldown.Initiative = 0f;
                     __instance.Cooldown.StandardAction = 0f;
                     __instance.Cooldown.MoveAction = 0f;
@@ -614,60 +615,47 @@ namespace ToyBox {
                 return true;
             }
         }
-#if false
-        [HarmonyPatch(typeof(UnitActionController), "UpdateCooldowns")]
-        public static class UnitActionController_UpdateCooldowns_Patch {
 
-            public static void Postfix(ref UnitCommand command) {
-                if (settings.toggleInstantCooldown) {
-                    if (!command.Executor.IsInCombat || command.IsIgnoreCooldown) {
-                        return;
-                    }
+        [HarmonyPatch(typeof(UnitEntityData), "SpendAction")]
+        public static class UnitEntityData_SpendAction_Patch {
 
-                    bool isPlayerFaction = command.Executor.IsPlayerFaction;
-                    float timeSinceStart = command.TimeSinceStart;
-
-                    float moveActionCooldown = isPlayerFaction ? 0f : 3f - timeSinceStart;
-                    float standardActionCooldown = isPlayerFaction ? 0f : 6f - timeSinceStart;
-                    float swiftActionCooldown = isPlayerFaction ? 0f : 6f - timeSinceStart;
-
-                    switch (command.Type) {
+            public static void Postfix(UnitCommand.CommandType type, bool isFullRound, float timeSinceCommandStart, UnitEntityData __instance) {
+                if (!__instance.IsInCombat)
+                    return;
+                UnitCombatState.Cooldowns cooldown = __instance.CombatState.Cooldown;
+                if (CombatController.IsInTurnBasedCombat()) {
+                    if (settings.toggleUnlimitedActionsPerTurn) return;
+                    switch (type) {
                         case UnitCommand.CommandType.Free:
-                        case UnitCommand.CommandType.Move:
-                            command.Executor.CombatState.Cooldown.MoveAction = moveActionCooldown;
                             break;
                         case UnitCommand.CommandType.Standard:
-                            command.Executor.CombatState.Cooldown.StandardAction = standardActionCooldown;
+                            cooldown.StandardAction += 6f;
+                            if (!isFullRound)
+                                break;
+                            cooldown.MoveAction += 3f;
                             break;
                         case UnitCommand.CommandType.Swift:
-                            command.Executor.CombatState.Cooldown.SwiftAction = swiftActionCooldown;
+                            cooldown.SwiftAction += 6f;
+                            break;
+                        case UnitCommand.CommandType.Move:
+                            cooldown.MoveAction += 3f;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
                 }
-                if (settings.toggleInstantCooldown) {
-                    if (!command.Executor.IsInCombat || command.IsIgnoreCooldown) {
-                        return;
-                    }
-
-                    bool isMainChar = command.Executor.IsMainCharacter;
-                    float timeSinceStart = command.TimeSinceStart;
-
-                    float moveActionCooldown = isMainChar ? 0f : 3f - timeSinceStart;
-                    float standardActionCooldown = isMainChar ? 0f : 6f - timeSinceStart;
-                    float swiftActionCooldown = isMainChar ? 0f : 6f - timeSinceStart;
-
-                    switch (command.Type) {
+                else {
+                    if (settings.toggleInstantCooldown) return;
+                    switch (type) {
                         case UnitCommand.CommandType.Free:
                         case UnitCommand.CommandType.Move:
-                            command.Executor.CombatState.Cooldown.MoveAction = moveActionCooldown;
+                            cooldown.MoveAction = 3f - timeSinceCommandStart;
                             break;
                         case UnitCommand.CommandType.Standard:
-                            command.Executor.CombatState.Cooldown.StandardAction = standardActionCooldown;
+                            cooldown.StandardAction = 6f - timeSinceCommandStart;
                             break;
                         case UnitCommand.CommandType.Swift:
-                            command.Executor.CombatState.Cooldown.SwiftAction = swiftActionCooldown;
+                            cooldown.SwiftAction = 6f - timeSinceCommandStart;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -676,69 +664,6 @@ namespace ToyBox {
             }
         }
 
-        [HarmonyPatch(typeof(UnitStealthController), "TickUnit")]
-        public static class UnitStealthController_TickUnit_Patch {
-            public static bool Prefix(UnitEntityData unit, ref UnitStealthController __instance) {
-                if (!unit.IsPlayerFaction || settings.toggleUndetectableStealth) {
-                    return true;
-                }
-                UnitState unitState = unit.Descriptor.State;
-
-                bool isInStealth = unitState.IsInStealth;
-                bool shouldBeInStealth = __instance.ShouldBeInStealth(unit);
-
-                if (unitState.IsInStealth) {
-                    if (shouldBeInStealth) {
-                        for (int i = 0; i < Game.Instance.State.AwakeUnits.Count; i++) {
-                            UnitEntityData spotterUnit = Game.Instance.State.AwakeUnits[i];
-
-                            bool hasBeenSpotted = unit.Stealth.SpottedBy.Contains(spotterUnit);
-                            bool consciousWithLOS = spotterUnit.Descriptor.State.IsConscious && spotterUnit.HasLOS(unit);
-
-                            if (!consciousWithLOS || hasBeenSpotted || !spotterUnit.IsEnemy(unit)) {
-                                if (!hasBeenSpotted && consciousWithLOS && !spotterUnit.IsEnemy(unit) && !unit.Stealth.InAmbush) {
-                                    unit.Stealth.AddSpottedBy(spotterUnit);
-                                }
-                            }
-                            else {
-                                float distanceToSpotter = unit.DistanceTo(spotterUnit.Position) - unit.View.Corpulence - spotterUnit.View.Corpulence;
-                                if (distanceToSpotter > GameConsts.MinWeaponRange.Meters - 0.1f) {
-                                    continue;
-                                }
-                                var source_SpotterBreaksStealth = Traverse.Create(__instance).Method("SpotterBreaksStealth", unit, spotterUnit);
-                                if (source_SpotterBreaksStealth.GetValue<bool>()) {
-                                    shouldBeInStealth = false;
-                                    break;
-                                }
-                                if (!unit.Stealth.AddSpottedBy(spotterUnit)) {
-                                    continue;
-                                }
-                                EventBus.RaiseEvent<IUnitSpottedHandler>(h => h.HandleUnitSpotted(unit, spotterUnit));
-                            }
-                        }
-                    }
-
-                    if (!shouldBeInStealth) {
-                        unitState.IsInStealth = false;
-                        unit.Stealth.Clear();
-                        if (unit.IsPlayerFaction) {
-                            unit.Stealth.WantEnterStealth = false;
-                        }
-                    }
-                }
-                else if (!unitState.IsInStealth && shouldBeInStealth) {
-                    Rulebook.Trigger(new RuleEnterStealth(unit));
-                }
-
-                if (isInStealth != unitState.IsInStealth) {
-                    EventBus.RaiseEvent<IUnitStealthHandler>(h => h.HandleUnitSwitchStealthCondition(unit, unitState.IsInStealth));
-                }
-                unit.Stealth.ForceEnterStealth = false;
-                unit.Stealth.BecameInvisibleThisFrame = false;
-                return false;
-            }
-        }
-#endif
         [HarmonyPatch(typeof(LevelUpState), MethodType.Constructor)]
         [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(LevelUpState.CharBuildMode) })]
         public static class LevelUpState_Patch {
@@ -1196,7 +1121,8 @@ namespace ToyBox {
                 return settings.toggleMetamagicIsFree;
             }
             public static void Postfix(ref RuleCollectMetamagic __instance, int ___m_SpellLevel, Feature metamagicFeature) {
-                if (!settings.toggleMetamagicIsFree) {
+                if (settings.toggleMetamagicIsFree) {
+
                     AddMetamagicFeat component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
                         Logger.ModLoggerDebug(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
@@ -1265,7 +1191,7 @@ namespace ToyBox {
             }
         }
 #endif
-        [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[]{ typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
         public static class SpellSelectionData_CanSelectAnything_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleSkipSpellSelection) {

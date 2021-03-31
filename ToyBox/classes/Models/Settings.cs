@@ -16,6 +16,7 @@ namespace ToyBox {
         public bool toggleInfiniteAbilities = false;
         public bool toggleInfiniteSkillpoints = false;
         public bool toggleInstantCooldown = false;
+        public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleEquipmentRestrictions = false;
         public bool toggleDialogRestrictions = false;
         public bool toggleSettlementRestrictions = false;

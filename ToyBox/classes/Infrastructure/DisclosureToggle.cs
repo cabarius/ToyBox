@@ -97,12 +97,12 @@ public static class MyGUI
     }
 
     // Button Control - Layout Version
-
+    static Vector2 cachedArrowSize = new Vector2(0,0);
     public static bool DisclosureToggle(GUIContent label, bool value, GUIStyle style, params GUILayoutOption[] options)
     {
         style = new GUIStyle(style);
-        var arrowSize = style.CalcSize(value ? OnContent : OffContent);
-        RectOffset padding = new RectOffset(0, (int)arrowSize.x + 10, 0, 0);
+        if (cachedArrowSize.x == 0) cachedArrowSize = style.CalcSize(OffContent);
+        RectOffset padding = new RectOffset(0, (int)cachedArrowSize.x + 10, 0, 0);
         style.padding = padding;
         Rect position = GUILayoutUtility.GetRect(label, style, options); 
         return DisclosureToggle(position, label, value, style);

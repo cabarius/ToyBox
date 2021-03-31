@@ -81,6 +81,7 @@ namespace ToyBox {
                 () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle,0); },
                 () => { UI.Toggle("Whole Team Moves Same Speed", ref Main.settings.toggleMoveSpeedAsOne,0); },
                 () => { UI.Toggle("Instant Cooldown", ref Main.settings.toggleInstantCooldown,0); },
+                () => { UI.Toggle("Unlimited Actions During Turn", ref Main.settings.toggleUnlimitedActionsPerTurn, 0); },
                 () => { UI.Toggle("Spontaneous Caster Scroll Copy", ref Main.settings.toggleSpontaneousCopyScrolls,0); },
                 () => { UI.Toggle("Disable Equipment Restrictions", ref Main.settings.toggleEquipmentRestrictions,0); },
                 () => { UI.Toggle("Disable Dialog Restrictions", ref Main.settings.toggleDialogRestrictions,0); },

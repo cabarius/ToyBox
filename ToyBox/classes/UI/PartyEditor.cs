@@ -89,7 +89,7 @@ namespace ToyBox {
         }
         static UnitEntityData GetSelectedCharacter() {
             var characterList = GetCharacterList();
-            if (characterList == null) return Game.Instance.Player.MainCharacter;
+            if (characterList == null || characterList.Count == 0) return null;
             if (selectedCharacterIndex >= characterList.Count) selectedCharacterIndex = 0;
             return characterList[selectedCharacterIndex];
         }
@@ -152,7 +152,7 @@ namespace ToyBox {
                 UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
                 if (player.AllCharacters.Contains(ch)) {
                     if (progression.MythicExperience < 10) {
-                        UI.ActionButton("+1 ML", () => {
+                        UI.ActionButton("+1 My", () => {
                             progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
                         }, UI.Width(100));
                     }

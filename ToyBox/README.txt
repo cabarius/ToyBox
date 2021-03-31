@@ -87,6 +87,11 @@ Ver 1.1.0
 	Ver 1.1.1
 		Fixed Party Editor bug where it would get out of sync with the party, especially when loading other saves
 		Added Nearby Units and show distance to other units
+	Ver 1.1.2
+		Fixed bug that broke abilities and cooldowns during combat
+		Added bonus feature 'Unlimited Actions During Turn' for Turn Based Combat
+		Tweaks to party editor UI and labels
+
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  At first you have to wait 10 seconds or so for the blueprints to load but after that, it is fast.  You choose a category with the provided toolbar.
 
