@@ -115,7 +115,7 @@ namespace ToyBox {
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
             if (characterListFunc.name == "Nearby") {
-                UI.Slider("Nearby Distance", ref nearByRange, 1f, 200, 25, 0, " meters", UI.Width(250));
+                UI.Slider("Nearby Distance", ref nearByRange, 1f, 200, 25, 0, " meters", UI.Width(250)); 
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
             UI.Space(20);
@@ -164,7 +164,8 @@ namespace ToyBox {
 
                 bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                 if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
-                    if (showClasses) { selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; }
+                    if (showClasses) { selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Logger.Log($"selected {ch.CharacterName}");
+                    }
                     else { selectedToggle = ToggleChoice.None; }
                 }
                 bool showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
@@ -260,6 +261,7 @@ namespace ToyBox {
                         UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
                         if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
+                        
                         var casterLevel = spellbook.CasterLevel;
                         UI.EnumerablePicker<int>(
                             "Spell Level".bold() + " (count)",
@@ -271,6 +273,9 @@ namespace ToyBox {
                         );
                         FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
                     }
+                }
+                if (selectedCharacter != GetSelectedCharacter()) {
+                    selectedCharacterIndex = characterList.IndexOf(selectedCharacter);
                 }
                 chIndex += 1;
             }

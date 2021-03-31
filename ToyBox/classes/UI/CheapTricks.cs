@@ -42,9 +42,31 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 
 namespace ToyBox {
-    public class CheapTricks {
-        public static void ResetGUI() {}
+    public static class CheapTricks {
+        public static void ResetGUI() { }
         public static void OnGUI() {
+            if (Main.IsInGame) {
+                UI.BeginHorizontal();
+                UI.Space(25);
+                UI.Label("increment".cyan(), UI.AutoWidth());
+                var increment = UI.IntTextField(ref Main.settings.increment, null, UI.Width(150));
+                UI.EndHorizontal();
+                UI.Space(25);
+                var mainChar = Game.Instance.Player.MainCharacter.Value;
+                UI.HStack("Resources", 1,
+                    () => {
+                        UI.Label("Gold".cyan(), UI.Width(150));
+                        UI.Label(Game.Instance.Player.Money.ToString().orange().bold(), UI.Width(200));
+                        UI.ActionButton($"Gain {increment}", () => { Game.Instance.Player.GainMoney(increment); }, UI.AutoWidth());
+                    },
+                    () => {
+                        UI.Label("Experience".cyan(), UI.Width(150));
+                        UI.Label(mainChar.Progression.Experience.ToString().orange().bold(), UI.Width(200));
+                        UI.ActionButton($"Gain {increment}", () => { Game.Instance.Player.GainPartyExperience(increment); }, UI.AutoWidth());
+                    },
+                    () => { }
+                    );
+            }
             UI.HStack("Combat", 4,
                 () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
                 () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
@@ -53,7 +75,7 @@ namespace ToyBox {
                 () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.DetachDebuff(); }); },
                 () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
                 () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
-             );
+                );
             UI.Space(10);
             UI.HStack("Common", 4,
                 () => { UI.ActionButton("Teleport Party To You", () => { Actions.TeleportPartyToPlayer(); }); },
@@ -78,25 +100,25 @@ namespace ToyBox {
             });
             UI.Space(10);
             UI.HStack("Flags", 3,
-                () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle,0); },
-                () => { UI.Toggle("Whole Team Moves Same Speed", ref Main.settings.toggleMoveSpeedAsOne,0); },
-                () => { UI.Toggle("Instant Cooldown", ref Main.settings.toggleInstantCooldown,0); },
+                () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle, 0); },
+                () => { UI.Toggle("Whole Team Moves Same Speed", ref Main.settings.toggleMoveSpeedAsOne, 0); },
+                () => { UI.Toggle("Instant Cooldown", ref Main.settings.toggleInstantCooldown, 0); },
                 () => { UI.Toggle("Unlimited Actions During Turn", ref Main.settings.toggleUnlimitedActionsPerTurn, 0); },
-                () => { UI.Toggle("Spontaneous Caster Scroll Copy", ref Main.settings.toggleSpontaneousCopyScrolls,0); },
-                () => { UI.Toggle("Disable Equipment Restrictions", ref Main.settings.toggleEquipmentRestrictions,0); },
-                () => { UI.Toggle("Disable Dialog Restrictions", ref Main.settings.toggleDialogRestrictions,0); },
-                () => { UI.Toggle("Infinite Charges On Items", ref Main.settings.toggleInfiniteItems,0); },
-                () => { UI.Toggle("No Friendly Fire On AOEs", ref Main.settings.toggleNoFriendlyFireForAOE,0); },
-                () => { UI.Toggle("Free Meta-Magic", ref Main.settings.toggleMetamagicIsFree,0); },
-                () => { UI.Toggle("No Material Components", ref Main.settings.toggleMaterialComponent,0); },
+                () => { UI.Toggle("Spontaneous Caster Scroll Copy", ref Main.settings.toggleSpontaneousCopyScrolls, 0); },
+                () => { UI.Toggle("Disable Equipment Restrictions", ref Main.settings.toggleEquipmentRestrictions, 0); },
+                () => { UI.Toggle("Disable Dialog Restrictions", ref Main.settings.toggleDialogRestrictions, 0); },
+                () => { UI.Toggle("Infinite Charges On Items", ref Main.settings.toggleInfiniteItems, 0); },
+                () => { UI.Toggle("No Friendly Fire On AOEs", ref Main.settings.toggleNoFriendlyFireForAOE, 0); },
+                () => { UI.Toggle("Free Meta-Magic", ref Main.settings.toggleMetamagicIsFree, 0); },
+                () => { UI.Toggle("No Material Components", ref Main.settings.toggleMaterialComponent, 0); },
                 //() => { UI.Toggle("Restore Spells & Skills After Combat", ref Main.settings.toggleRestoreSpellsAbilitiesAfterCombat,0); },
                 //() => { UI.Toggle("Access Remote Characters", ref Main.settings.toggleAccessRemoteCharacters,0); },
                 //() => { UI.Toggle("Show Pet Portraits", ref Main.settings.toggleShowAllPartyPortraits,0); },
-                () => { UI.Toggle("Instant Rest After Combat", ref Main.settings.toggleInstantRestAfterCombat,0); },
+                () => { UI.Toggle("Instant Rest After Combat", ref Main.settings.toggleInstantRestAfterCombat, 0); },
                 () => { }
                 );
             UI.Space(10);
-            UI.HStack("Multipliers", 1, 
+            UI.HStack("Multipliers", 1,
                 () => { UI.Slider("Experience", ref Main.settings.experienceMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Money Earned", ref Main.settings.moneyMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Sell Price", ref Main.settings.vendorSellPriceMultiplier, 0.1f, 30, Main.settings.defaultVendorSellPriceMultiplier, 1, "", UI.AutoWidth()); },

@@ -121,7 +121,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\RichTextUtils.cs" />
     <Compile Include="classes\Models\Settings.cs" />
-    <Compile Include="classes\Infrastructure\UI.cs" />
+    <Compile Include="classes\UI\UI.cs" />
     <Compile Include="classes\Infrastructure\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

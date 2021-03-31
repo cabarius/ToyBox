@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public static class MyGUI
+public static partial class MyGUI
 {
     const string disclosureArrowOn = "<color=orange><b>▶</b></color>";
     const string disclosureArrowOff = "<color=white><b>▲</b></color>";
@@ -18,8 +18,6 @@ public static class MyGUI
         _LabelContent.tooltip = null;
         return _LabelContent;
     }
-
-    // Button Control - Manual Version
 
     private static readonly int s_ButtonHint = "MyGUI.Button".GetHashCode();
 

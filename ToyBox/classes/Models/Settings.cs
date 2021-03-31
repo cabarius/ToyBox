@@ -8,8 +8,10 @@ namespace ToyBox {
         public int selectedTab = 0;
 
         // Cheap Tricks
-        
-           // flags
+
+        public int increment = 10000;
+
+        // flags
         public bool highlightObjectsToggle = false;
         public bool toggleSpontaneousCopyScrolls = false;
         public bool toggleInstantEvent = false;

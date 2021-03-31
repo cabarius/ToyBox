@@ -103,14 +103,16 @@ namespace ToyBox {
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, options);
         }
-        public static void TextField(ref String text, String name = null, params GUILayoutOption[] options) {
+        public static String TextField(ref String text, String name = null, params GUILayoutOption[] options) {
             if (name != null) { GUI.SetNextControlName(name); }
             text = GL.TextField(text, options);
+            return text;
         }
-        public static void IntTextField(ref int value, String name = null, params GUILayoutOption[] options) {
+        public static int IntTextField(ref int value, String name = null, params GUILayoutOption[] options) {
             String searchLimitString = $"{value}";
             UI.TextField(ref searchLimitString, name, options);
             Int32.TryParse(searchLimitString, out value);
+            return value;
         }
 
         // UI Elements
@@ -152,6 +154,21 @@ namespace ToyBox {
             Int32.TryParse(searchLimitString, out value);
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
+        }
+        public static void ValueEditor(String title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, float titleWidth = 500) {
+            var value = get();
+            var inc = increment;
+            UI.Label(title.cyan(), UI.Width(titleWidth));
+            UI.Space(25);
+            float fieldWidth = GUI.skin.textField.CalcSize(new GUIContent(max.ToString())).x;
+            UI.ActionButton(" < ", () => { set(Math.Max(value - inc, min)); }, UI.AutoWidth());
+            UI.Space(20);
+            UI.Label($"{value}".orange().bold(), UI.AutoWidth()); ;
+            UI.Space(20);
+            UI.ActionButton(" > ", () => { set(Math.Min(value + inc, max)); }, UI.AutoWidth());
+            UI.Space(50);
+            UI.ActionIntTextField(ref inc, title, (v) => { }, null, UI.Width(fieldWidth + 25));
+            increment = inc;
         }
         public static void Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
             UI.BeginHorizontal(options);

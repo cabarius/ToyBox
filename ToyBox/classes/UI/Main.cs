@@ -50,6 +50,7 @@ namespace ToyBox {
         static string modId;
         public static Settings settings;
         public static bool Enabled;
+        public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
 
         static Exception caughtException = null;
         static public bool userHasHitReturn = false;
@@ -106,7 +107,7 @@ namespace ToyBox {
 
         static void OnGUI(UnityModManager.ModEntry modEntry) {
             if (!Enabled) return;
-            if (!Game.Instance.Player.Party.Any()) {
+            if (!IsInGame) {
                 UI.Label("ToyBox has limited functionality from the main menu".yellow().bold());
             }
             try {

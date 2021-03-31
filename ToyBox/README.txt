@@ -88,6 +88,7 @@ Ver 1.1.0
 		Fixed Party Editor bug where it would get out of sync with the party, especially when loading other saves
 		Added Nearby Units and show distance to other units
 	Ver 1.1.2
+		Fixed bug where you could only toggle to show stats/facts/abilities/etc for main character even though you selected a toggle on another
 		Fixed bug that broke abilities and cooldowns during combat
 		Added bonus feature 'Unlimited Actions During Turn' for Turn Based Combat
 		Tweaks to party editor UI and labels

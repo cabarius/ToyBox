@@ -10,7 +10,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Kingmaker;
+using Kingmaker.AreaLogic;
+using Kingmaker.Armies;
+using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
@@ -29,6 +33,8 @@ using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.GameModes;
+using Kingmaker.Globalmap;
+using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Items;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem;
@@ -79,6 +85,11 @@ namespace ToyBox {
             new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
             new NamedTypeFilter("Units", typeof(BlueprintUnit)),
             new NamedTypeFilter("Races", typeof(BlueprintRace)),
+            new NamedTypeFilter("Areas", typeof(BlueprintArea)),
+            new NamedTypeFilter("", typeof(BlueprintAreaEnterPoint)),
+//            new NamedTypeFilter("Enter Points", typeof(BlueprintAreaEnterPoint)),
+            new NamedTypeFilter("Global Map", typeof(BlueprintGlobalMapPoint)),
+//            new NamedTypeFilter("Armies", typeof(BlueprintArmyPreset)),
             new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
 
         };
@@ -136,7 +147,7 @@ namespace ToyBox {
         public static IEnumerable OnGUI() {
             UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                 blueprintTypeFilters.Select(tf => tf.name).ToArray(),
-                9,
+                10,
                 (selected) => { UpdateSearchResults(); },
                 UI.MinWidth(200));
             UI.Space(10);

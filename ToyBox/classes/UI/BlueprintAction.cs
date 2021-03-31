@@ -32,8 +32,6 @@ using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Blueprints.Quests;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
@@ -44,11 +42,15 @@ using Kingmaker.Designers.EventConditionActionSystem.Events;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Dungeon.Blueprints;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Interaction;
 using Kingmaker.Items;
+using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Blueprints;
+using Kingmaker.Kingdom.Settlements;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules.Damage;
@@ -128,6 +130,17 @@ namespace ToyBox {
             new BlueprintAction("Spawn", typeof(BlueprintUnit),
                 (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
                 ),
+            new BlueprintAction("Teleport", typeof(BlueprintAreaEnterPoint),
+                (ch, bp) => {
+                    var enterPoint = (BlueprintAreaEnterPoint)bp;
+                    GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+                }),
+            //new BlueprintAction("Teleport", typeof(BlueprintArea),
+            //    (ch, bp) => {
+            //        var area = (BlueprintArea)bp;
+            //        var enterPoint = Utilities.GetEnterPoint(area);
+            //        GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+            //    }),
 #if false
             new BlueprintAction("Kill", typeof(BlueprintUnit),
                 (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
@@ -159,7 +172,7 @@ namespace ToyBox {
                 (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
                 (ch, bp) => {
                     var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
-                    return feature != null && feature.GetRank() < feature.Blueprint.Ranks - 1;
+                    return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                 }),
 
             // Spellbooks
@@ -194,7 +207,6 @@ namespace ToyBox {
                     return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
                 }),
 
-
             // Abilities
             new BlueprintAction("Add", typeof(BlueprintAbility),
                 (ch, bp) => { ch.AddAbility((BlueprintAbility)bp); },
@@ -208,7 +220,6 @@ namespace ToyBox {
                 (ch, bp) => { ch.RemoveAbility((BlueprintAbility)bp); },
                 (ch, bp) => { return ch.HasAbility((BlueprintAbility)bp); }
                 ),
-            // Races - TODO ???
         };
 
         public static int maxActions() { return globalActions.Count() + characterActions.Count(); }
