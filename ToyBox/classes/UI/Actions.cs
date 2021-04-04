@@ -209,7 +209,7 @@ namespace ToyBox {
             if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
         }
         public static void ResetMythicPath(this UnitEntityData ch) {
-//            ch.Progression.
+//            ch.Descriptor.Progression.RemoveMythicLevel
         }
         public static void resetClassLevel(this UnitEntityData ch) {
             // TODO - this doesn't seem to work in BoT either...

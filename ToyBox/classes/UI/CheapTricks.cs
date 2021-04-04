@@ -159,7 +159,12 @@ namespace ToyBox {
                 () => { UI.Slider("Feature Selection Multiplier", ref Main.settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()); },
                 () => { UI.Toggle("Always Able To Level Up", ref Main.settings.toggleNoLevelUpRestirctions, 0); },
                 () => { UI.Toggle("Add Full Hit Die Value", ref Main.settings.toggleFullHitdiceEachLevel, 0); },
-                () => { UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, 0); },
+                () => { 
+                    UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, 0);
+                    UI.Space(25);
+                    UI.Label("Warning! This currently can break leveling up mythic paths like when leveling  from 3 to 4 it reverts back to Mythic Hero instead of your choosen mythic until level 6 so just turn this off when leveling up mythics until you get past the first screen.".green());
+
+                },
                 () => { UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref Main.settings.toggleFeaturesIgnorePrerequisites, 0); },
                 () => { UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref Main.settings.toggleIgnoreCasterTypeSpellLevel, 0); },
                 () => { UI.Toggle("Ignore Forbidden Archetypes", ref Main.settings.toggleIgnoreForbiddenArchetype, 0); },

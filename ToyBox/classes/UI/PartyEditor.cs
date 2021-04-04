@@ -247,8 +247,8 @@ namespace ToyBox {
                     UI.Space(175);
                     UI.Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
                     UI.EndHorizontal();
-                    UI.Div(100, 20);
                     foreach (var cd in classData) {
+                        UI.Div(100, 20);
                         UI.BeginHorizontal();
                         UI.Space(100);
                         UI.Label(cd.CharacterClass.Name.orange(), UI.Width(250));
