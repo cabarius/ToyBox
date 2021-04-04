@@ -73,8 +73,10 @@ namespace ToyBox {
                     if (ii < actionCount) {
                         BlueprintAction action = actions[ii];
                         // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
-                        if (action.name == "<" || action.name == ">") continue;
-                            UI.ActionButton(action.name, () => { action.action(ch, blueprint); }, UI.Width(140));
+                        if (action.name == "<" || action.name == ">") {
+                            UI.Space(154); continue;
+                        }
+                        UI.ActionButton(action.name, () => { action.action(ch, blueprint); }, UI.Width(140));
                         UI.Space(10);
                     }
                     else {

@@ -71,7 +71,7 @@ namespace ToyBox {
         */
 
         public const string onMark = "<color=green><b>✔</b></color>";
-        public const string offMark = "<color=#FFA0A0E0><b>✖</b></color>";
+        public const string offMark = "<color=#A0A0A0E0>✖</color>";
 
         // GUILayout wrappers and extensions so other modules can use UI.MethodName()
         public static GUILayoutOption ExpandWidth(bool v) { return GL.ExpandWidth(v); }
@@ -117,8 +117,10 @@ namespace ToyBox {
 
         // UI Elements
 
-        private static Texture2D fillTexture;
-        private static GUIStyle fillStyle;
+        private static Texture2D fillTexture = null;
+        private static GUIStyle fillStyle = null;
+        private static Color fillColor = new Color(1f, 1f, 1f, 0.65f);
+        private static Color fillColor2 = new Color(1f, 1f, 1f, 0.35f);
 
         public static GUIStyle FillStyle(Color color) {
             if (fillTexture == null) fillTexture = new Texture2D(1, 1);
@@ -133,7 +135,11 @@ namespace ToyBox {
             GUI.Box(position, GUIContent.none, FillStyle(color));
         }
         private static GUIStyle divStyle;
-        public static void Div(Color color, float indent = 0, float width = 0) {
+        public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
+            if (!Main.settings.showDivisions) {
+                UI.Space(height);
+                return;
+            }
             if (fillTexture == null) fillTexture = new Texture2D(1, 1);
             if (divStyle == null) {
                 divStyle = new GUIStyle();
@@ -142,12 +148,16 @@ namespace ToyBox {
             fillTexture.SetPixel(0, 0, color);
             fillTexture.Apply();
             divStyle.normal.background = fillTexture;
-            divStyle.margin = new RectOffset((int)indent, 0, 4, 4);
+            divStyle.margin = new RectOffset((int)indent , 0, 4, 4);
+            if (width > 0) divStyle.fixedWidth = width;
+            else divStyle.fixedWidth = 0;
+            UI.Space((2f * height)/3f);
             GUILayout.Box(GUIContent.none, divStyle);
+            UI.Space(height / 3f);
         }
 
-        public static void Div(float indent = 0, float width = 0) {
-            Div(Color.grey, indent, width);
+        public static void Div(float indent = 0, float height = 0, float width = 0) {
+            Div(fillColor, indent, height, width);
         }
 
         public static void ActionButton(String title, Action action, params GUILayoutOption[] options) {
@@ -252,12 +262,11 @@ namespace ToyBox {
             if (selected > range.Count()) selected = 0;
             int sel = selected;
             var titles = range.Select((a, i) => i == sel ? titleFormater(a).orange().bold() : titleFormater(a));
+            if (xCols > range.Count()) xCols = range.Count();
             if (xCols <= 0) xCols = range.Count();
-            UI.BeginHorizontal(options);
             UI.Label(title, UI.AutoWidth());
             UI.Space(25);
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
-            UI.EndHorizontal();
         }
 
         public static NamedFunc<T> TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
@@ -348,7 +357,7 @@ namespace ToyBox {
                 bool hasTitle = title != null;
                 UI.BeginHorizontal();
                 if (hasTitle) {
-                    if (ii == 0) { UI.Label(title, UI.Width(150f)); }
+                    if (ii == 0) { UI.Label(title.bold(), UI.Width(150f)); }
                     else { UI.Space(153); }
                 }
                 UI.Group(actions.Skip(ii).Take(stride).ToArray());

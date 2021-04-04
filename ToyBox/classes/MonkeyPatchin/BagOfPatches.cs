@@ -141,7 +141,7 @@ namespace ToyBox {
                 __result = __result * (float)Math.Round(settings.fatigueHoursModifierMultiplier, 1);
             }
         }
-#if false 
+#if false
         [HarmonyPatch(typeof(RestController), "CalculateNeededRations")]
         static class RestController_CalculateNeededRations_Patch {
             static void Postfix(ref int __result) {

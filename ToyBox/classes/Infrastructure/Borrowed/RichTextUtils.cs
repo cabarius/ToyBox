@@ -33,7 +33,7 @@ namespace ToyBox
         }
         public static string white(this string s) { return s = s.color("white"); }
         public static string grey(this string s) { return s = s.color("#A0A0A0FF"); }
-        public static string red(this string s) { return s = s.color("red"); }
+        public static string red(this string s) { return s = s.color("#C04040E0"); }
         public static string pink(this string s) { return s = s.color("#FFA0A0E0");  }
         public static string green(this string s) { return s = s.color("#00ff00ff"); }
         public static string blue(this string s) { return s = s.color("blue"); }

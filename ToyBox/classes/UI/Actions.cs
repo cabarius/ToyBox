@@ -5,6 +5,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Kingmaker;
 using Kingmaker.AI.Blueprints;
 using Kingmaker.AI.Blueprints.Considerations;
@@ -154,7 +155,10 @@ namespace ToyBox {
                     var maxLevel = spellbookBP.MaxSpellLevel;
                     for (int level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
-                        if (learnable.Contains(ability)) return true; ;
+                        if (learnable.Contains(ability)) {
+//                            Logger.Log($"found spell {ability.Name} in {learnable.Count()} level {level} spells");
+                            return true; ;
+                        }
                     }
                 }
             }
@@ -170,7 +174,7 @@ namespace ToyBox {
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
                     Logger.Log($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
-                    for (int level = 0; level < maxLevel; level++) {
+                    for (int level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         var allowsSpell = learnable.Contains(ability);
                         var allowText = allowsSpell ? "FOUND" : "did not find";
@@ -207,6 +211,24 @@ namespace ToyBox {
         public static void ResetMythicPath(this UnitEntityData ch) {
 //            ch.Progression.
         }
+        public static void resetClassLevel(this UnitEntityData ch) {
+            // TODO - this doesn't seem to work in BoT either...
+            int level = 21;
+            int xp = ch.Descriptor.Progression.Experience;
+            BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
 
+            for (int i = 20; i >= 1; i--) {
+                int xpBonus = xpTable.GetBonus(i);
+
+                Logger.Log(i + ": " + xpBonus + " | " + xp);
+
+                if ((xp - xpBonus) >= 0) {
+                    Logger.Log(i + ": " + (xp - xpBonus));
+                    level = i;
+                    break;
+                }
+            }
+            ch.Descriptor.Progression.CharacterLevel = level;
+        }
     }
 }

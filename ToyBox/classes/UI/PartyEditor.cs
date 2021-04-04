@@ -56,12 +56,14 @@ namespace ToyBox {
         static int selectedCharacterIndex = 0;
         static int selectedSpellbook = 0;
         static int selectedSpellbookLevel = 0;
+        static bool editSpellbooks = false;
+        static UnitEntityData spellbookEditCharacter = null;
         static float nearbyRange = 25;
         static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             if (Game.Instance.Player != null && partyFilterChoices == null) {
-            return new NamedFunc<List<UnitEntityData>>[] {
+                return new NamedFunc<List<UnitEntityData>>[] {
                     new NamedFunc<List<UnitEntityData>>("Party", () => Game.Instance.Player.Party),
                     new NamedFunc<List<UnitEntityData>>("Party & Pets", () => Game.Instance.Player.m_PartyAndPets),
                     new NamedFunc<List<UnitEntityData>>("All Characters", () => Game.Instance.Player.AllCharacters),
@@ -114,7 +116,7 @@ namespace ToyBox {
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
             if (characterListFunc.name == "Nearby") {
-                UI.Slider("Nearby Distance", ref nearbyRange, 1f, 200, 25, 0, " meters", UI.Width(250)); 
+                UI.Slider("Nearby Distance", ref nearbyRange, 1f, 200, 25, 0, " meters", UI.Width(250));
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
             UI.Space(20);
@@ -145,7 +147,7 @@ namespace ToyBox {
                         UI.Label("Level Up".cyan().italic(), UI.Width(110));
                     }
                     else { UI.Space(113); }
-                } 
+                }
                 else { UI.Space(113); }
                 UI.Space(25);
                 UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
@@ -163,7 +165,8 @@ namespace ToyBox {
 
                 bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                 if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
-                    if (showClasses) { selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Logger.Log($"selected {ch.CharacterName}");
+                    if (showClasses) {
+                        selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Logger.Log($"selected {ch.CharacterName}");
                     }
                     else { selectedToggle = ToggleChoice.None; }
                 }
@@ -214,30 +217,69 @@ namespace ToyBox {
                     UI.ActionButton("Remove From Party", () => { charToRemove = ch; }, UI.AutoWidth());
                 }
                 UI.EndHorizontal();
-
+                if (selectedCharacter != spellbookEditCharacter) {
+                    editSpellbooks = false;
+                    spellbookEditCharacter = null;
+                }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
+                    UI.Div(100, 20);
+                    UI.BeginHorizontal();
+                    UI.Space(100);
+                    UI.Label("Character Level".cyan(), UI.Width(250));
+                    var prog = ch.Descriptor.Progression;
+                    UI.ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), UI.AutoWidth());
+                    UI.Space(25);
+                    UI.Label("level".green() + $": {prog.CharacterLevel}", UI.Width(100f));
+                    UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(20, prog.CharacterLevel + 1), UI.AutoWidth());
+                    UI.Space(25);
+                    UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
+                    UI.Space(23);
+                    UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above".green());
+                    UI.EndHorizontal();
+                    UI.Div(0, 25);
+                    UI.BeginHorizontal();
+                    UI.Space(100);
+                    UI.Label("Mythic Level".cyan(), UI.Width(250));
+                    UI.ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), UI.AutoWidth());
+                    UI.Space(25);
+                    UI.Label("my lvl".green() + $": {prog.MythicLevel}", UI.Width(100f));
+                    UI.ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), UI.AutoWidth());
+                    UI.Space(175);
+                    UI.Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
+                    UI.EndHorizontal();
+                    UI.Div(100, 20);
                     foreach (var cd in classData) {
                         UI.BeginHorizontal();
-                        UI.Space(253);
+                        UI.Space(100);
                         UI.Label(cd.CharacterClass.Name.orange(), UI.Width(250));
-                        UI.Label("level".green() + $": {cd.Level}", UI.Width(125f));
+                        UI.ActionButton("<", () => cd.Level = Math.Max(0, cd.Level - 1), UI.AutoWidth());
+                        UI.Space(25);
+                        UI.Label("level".green() + $": {cd.Level}", UI.Width(100f));
+                        var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
+                        UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
+                        UI.Space(175);
                         UI.Label(cd.CharacterClass.Description.green(), UI.AutoWidth());
                         UI.EndHorizontal();
                     }
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
+                    UI.Div(100, 20, 755);
                     foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
                         if (modifiableValue != null) {
                             String key = $"{ch.CharacterName}-{statType.ToString()}";
                             var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
+                            var statName = statType.ToString();
+                            if (statName == "BaseAttackBonus" || statName == "SkillAthletics") {
+                                UI.Div(100, 20, 755);
+                            }
                             UI.BeginHorizontal();
-                            UI.Space(69);   // the best number...
-                            UI.Label(statType.ToString().green().bold(), UI.Width(400f));
+                            UI.Space(100);
+                            UI.Label(statName, UI.Width(400f));
                             UI.Space(25);
-                            UI.ActionButton(" < ", () => { 
-                                modifiableValue.BaseValue -= 1; 
+                            UI.ActionButton(" < ", () => {
+                                modifiableValue.BaseValue -= 1;
                                 storedValue = modifiableValue.BaseValue;
                             }, UI.AutoWidth());
                             UI.Space(20);
@@ -248,7 +290,7 @@ namespace ToyBox {
                             }, UI.AutoWidth());
                             UI.Space(25);
                             UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
-                                modifiableValue.BaseValue = v; 
+                                modifiableValue.BaseValue = v;
                             }, null, UI.Width(75));
                             statEditorStorage[key] = storedValue;
                             UI.EndHorizontal();
@@ -267,29 +309,52 @@ namespace ToyBox {
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     UI.Space(20);
-                    var names = spellbooks.Select((sb) => sb.Blueprint.Name.ToString()).ToArray();
+                    var names = spellbooks.Select((sb) => sb.Blueprint.GetDisplayName()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
+                        UI.BeginHorizontal();
                         UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
                         if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
-                        var maxLevel = spellbook.Blueprint.MaxSpellLevel;
-                        var casterLevel = spellbook.CasterLevel;
-                        UI.EnumerablePicker<int>(
-                            "Spell Level".bold() + " (count)",
-                            ref selectedSpellbookLevel,
-                            Enumerable.Range(0, Math.Max(casterLevel, maxLevel) + 1),
-                            0,
-                            (lvl) => {
-                                var levelText = lvl <= casterLevel ? $"L{lvl}".bold() : $"L{lvl}".grey();
-                                var knownCount = spellbook.GetKnownSpells(lvl).Count();
-                                var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
-                                return levelText + countText;
+//                        UI.DisclosureToggle("Edit", ref editSpellbooks);
+                        UI.EndHorizontal();
+                        if (editSpellbooks) {
+                            spellbookEditCharacter = ch;
+                            var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
+                            BlueprintListUI.OnGUI(ch, blueprints, 100);
+                        }
+                        else {
+                            var maxLevel = spellbook.Blueprint.MaxSpellLevel;
+                            var casterLevel = spellbook.CasterLevel;
+                            UI.BeginHorizontal();
+                            UI.EnumerablePicker<int>(
+                                "Spell Level".bold() + " (count)",
+                                ref selectedSpellbookLevel,
+                                Enumerable.Range(0, casterLevel + 1),
+                                0,
+                                (lvl) => {
+                                    var levelText = lvl <= casterLevel ? $"L{lvl}".bold() : $"L{lvl}".grey();
+                                    var knownCount = spellbook.GetKnownSpells(lvl).Count();
+                                    var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
+                                    return levelText + countText;
                                 },
-                            UI.AutoWidth()
-                        );
-                        FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
+                                UI.AutoWidth()
+                            );
+                            if (casterLevel < maxLevel) {
+                                UI.ActionButton("+1 Caster Level", () => spellbook.AddBaseLevel());
+                            }
+                            UI.EndHorizontal();
+                            FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
+                        }
                     }
+#if false
+                    else {
+                        spellbookEditCharacter = ch;
+                        editSpellbooks = true;
+                        var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
+                        BlueprintListUI.OnGUI(ch, blueprints, 100);
+                    }
+#endif
                 }
                 if (selectedCharacter != GetSelectedCharacter()) {
                     selectedCharacterIndex = characterList.IndexOf(selectedCharacter);

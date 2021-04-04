@@ -171,6 +171,9 @@ namespace ToyBox {
             if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
             UI.Space(25);
             UI.Toggle("Show GUIs", ref Main.settings.showAssetIDs);
+            UI.Space(25);
+            UI.Toggle("Dividers", ref Main.settings.showDivisions);
+
             UI.EndHorizontal();
             UI.BeginHorizontal();
             UI.ActionButton("Search", () => {

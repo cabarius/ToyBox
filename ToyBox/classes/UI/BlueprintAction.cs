@@ -71,6 +71,12 @@ namespace ToyBox {
 
     public static class BlueprintExensions {
 
+        public static String GetDisplayName(this BlueprintScriptableObject bp) { return bp.name; }
+        public static String GetDisplayName(this BlueprintSpellbook bp) {
+            var name = bp.DisplayName;
+            if (name == null || name.Length == 0) name = bp.name.Replace("Spellbook", "");
+            return name;
+        }
         static Dictionary<Type, List<BlueprintAction>> actionsByType = new Dictionary<Type, List<BlueprintAction>>();
         public static List<BlueprintAction> BlueprintActions(this UnitEntityData ch, Type type) {
             if (ch == null) { return new List<BlueprintAction>(); }
@@ -198,11 +204,22 @@ namespace ToyBox {
             // Spellbooks
             new BlueprintAction("Add", typeof(BlueprintSpellbook),
                 (ch, bp) => { ch.Descriptor.DemandSpellbook(((BlueprintSpellbook)bp).CharacterClass); },
-                (ch, bp) => { return !ch.Descriptor.Spellbooks.Any((sp) => sp.Blueprint ==(BlueprintSpellbook)bp); }
+                (ch, bp) => { return !ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintSpellbook),
                 (ch, bp) => { ch.Descriptor.DeleteSpellbook((BlueprintSpellbook)bp); },
-                (ch, bp) => { return ch.Descriptor.Spellbooks.Any((sp) => sp.Blueprint ==(BlueprintSpellbook)bp);  }
+                (ch, bp) => { return ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp);  }
+                ),
+            new BlueprintAction(">", typeof(BlueprintSpellbook),
+                (ch, bp) => {
+                    try {
+                        var spellbook = ch.Descriptor.Spellbooks.First((sb) => sb.Blueprint == (BlueprintSpellbook)bp);
+                        if (spellbook.IsMythic) spellbook.AddMythicLevel();
+                        else spellbook.AddBaseLevel();
+                    }
+                    catch (Exception e) { Logger.Log(e); }
+                },
+                (ch, bp) => ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp && sb.CasterLevel < ((BlueprintSpellbook)bp).MaxSpellLevel)
                 ),
 
             // Buffs

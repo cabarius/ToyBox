@@ -9,15 +9,25 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 Current features include 
 
 Ver 1.1.3
-	Added divider lines to make it easier to look through lists of blueprints, features, abilities, spells, etc
-    Added Cheap Trick for Unlocking All Mythic Paths
-    Added text field for direct stat editing
-    Added gold and party exprience increase in cheap tricks
-    Added a fun teleport feature to blueprint browser look for its on column
+	Party Editor > Classes
+		Can now adjust character level, mythic level, and indivual class level without triggering level up 
+		Reset character level to current xp
+	    Added text field for direct stat editing
+	Cheap Tricks
+	    Gold and party exprience increase
+	    Added Cheap Trick for Unlocking All Mythic Paths
+	Search 'n Pick
+	    Added a fun teleport feature to blueprint browser (Entr Points)
+		Added more filter categories
+	Misc
+		Added divider lines (optional) to make it easier to look through lists of blueprints, features, abilities, spells, etc
+		Improved look of checkboxes (got rid of distracting red x and made them grey)
+		Improved formating of spellbook names and avoid blank names where possible
     Fixed issue during level up where the game might demand you pick a feature (feat, boon, etc) from a list where nothing was available.  This makes feat multiplier work in many cases where it didn't even in bag of tricks.  
     Increased max feat multiplier to 10
     Fixed issue where movement speed multiplier was not being applied correctly
-    Fixed issue bug that was preventing bard/azata build from spending resource points
+    Fixed bug that was preventing bard/azata build from spending resource points
+	Fixed issue that prevented adding 9th level spells
 
 Ver 1.1.2
 	Fixed bug where you could only toggle to show stats/facts/abilities/etc for main character even though you selected a toggle on another

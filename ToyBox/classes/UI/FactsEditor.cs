@@ -11,6 +11,7 @@ using System.Reflection;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
@@ -72,7 +73,7 @@ namespace ToyBox {
                                     Func<T, String> description = null,
                                     Func<T, int> value = null,
                                     List<BlueprintAction> actions = null
-                ) where T : IUIDataProvider {
+                ) {
             bool searchChanged = false;
             if (actions == null) actions = new List<BlueprintAction>();
             if (callerKey != prevCallerKey) { searchChanged = true; showAll = false; }
@@ -87,6 +88,8 @@ namespace ToyBox {
             if (searchLimit > 1000) { searchLimit = 1000; }
             UI.Space(25);
             UI.Toggle("Show GUIs", ref Main.settings.showAssetIDs);
+            UI.Space(25);
+            UI.Toggle("Dividers", ref Main.settings.showDivisions);
             UI.Space(25);
             searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
             UI.EndHorizontal();
@@ -126,19 +129,19 @@ namespace ToyBox {
             BlueprintScriptableObject toIncrease = null;
             BlueprintScriptableObject toDecrease = null;
             var toValues = new Dictionary<String, BlueprintScriptableObject>();
-            var sorted = facts.OrderBy((f) => f.Name);
+            var sorted = facts.OrderBy((f) => title(f));
             matchCount = 0;
             UI.Div(100);
             foreach (var fact in sorted) {
                 if (fact == null) continue;
                 var bp = blueprint(fact);
-                String name = fact.Name.ToLower();
-                if (name == null) { name = $"{title(fact)}"; }
-                if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => name.Contains(term)))) {
+                String name = title(fact);
+                String nameLower = name.ToLower();
+                if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => nameLower.Contains(term)))) {
                     matchCount++;
                     UI.BeginHorizontal();
                     UI.Space(100);
-                    UI.Label($"{fact.Name}".cyan().bold(), UI.Width(400));
+                    UI.Label($"{name}".cyan().bold(), UI.Width(400));
                     UI.Space(30);
                     if (value != null) {
                         var v = value(fact);
@@ -229,6 +232,18 @@ namespace ToyBox {
                 (fact) => fact.Description,
                 null,
                 ch.BlueprintActions(typeof(BlueprintAbility))
+                );
+        }
+        static public void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
+            var blueprints = BlueprintBrowser.GetBluePrints();
+            if (blueprints == null) return;
+            OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
+                (sb) => sb.Blueprint,
+                BlueprintExensions.GetBlueprints<BlueprintSpellbook>(),
+                (sb) => sb.Blueprint.GetDisplayName(),
+                (sb) => sb.Blueprint.GetDescription(),
+                null,
+                ch.BlueprintActions(typeof(BlueprintSpellbook))
                 );
         }
     }

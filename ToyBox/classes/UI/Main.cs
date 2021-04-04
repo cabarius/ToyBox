@@ -126,7 +126,6 @@ namespace ToyBox {
                     + "(" + $"{GUIUtility.keyboardControl}".cyan().bold() + ")", 
                     UI.AutoWidth());
 #endif
-
                 UI.TabBar(ref settings.selectedTab,
                     () => {
                         if (BlueprintBrowser.GetBluePrints() == null) {
