@@ -71,7 +71,7 @@ namespace ToyBox {
         */
 
         public const string onMark = "<color=green><b>✔</b></color>";
-        public const string offMark = "<color=red><b>✖</b></color>";
+        public const string offMark = "<color=#FFA0A0E0><b>✖</b></color>";
 
         // GUILayout wrappers and extensions so other modules can use UI.MethodName()
         public static GUILayoutOption ExpandWidth(bool v) { return GL.ExpandWidth(v); }
@@ -116,6 +116,39 @@ namespace ToyBox {
         }
 
         // UI Elements
+
+        private static Texture2D fillTexture;
+        private static GUIStyle fillStyle;
+
+        public static GUIStyle FillStyle(Color color) {
+            if (fillTexture == null) fillTexture = new Texture2D(1, 1);
+            if (fillStyle == null) fillStyle = new GUIStyle();
+            fillTexture.SetPixel(0, 0, color);
+            fillTexture.Apply();
+            fillStyle.normal.background = fillTexture;
+            return fillStyle;
+        }
+        public static void GUIDrawRect(Rect position, Color color) {
+
+            GUI.Box(position, GUIContent.none, FillStyle(color));
+        }
+        private static GUIStyle divStyle;
+        public static void Div(Color color, float indent = 0, float width = 0) {
+            if (fillTexture == null) fillTexture = new Texture2D(1, 1);
+            if (divStyle == null) {
+                divStyle = new GUIStyle();
+                divStyle.fixedHeight = 1;
+            }
+            fillTexture.SetPixel(0, 0, color);
+            fillTexture.Apply();
+            divStyle.normal.background = fillTexture;
+            divStyle.margin = new RectOffset((int)indent, 0, 4, 4);
+            GUILayout.Box(GUIContent.none, divStyle);
+        }
+
+        public static void Div(float indent = 0, float width = 0) {
+            Div(Color.grey, indent, width);
+        }
 
         public static void ActionButton(String title, Action action, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
@@ -248,7 +281,7 @@ namespace ToyBox {
                 if (GL.Button("" + (value ? onMark : offMark) + " " + title, options)) { value = !value; }
             }
             else {
-                if (MyGUI.DisclosureToggle(title, value, options)) { value = !value; changed = true;  }
+                if (MyGUI.DisclosureToggle(title, value, options)) { value = !value; changed = true; }
             }
             return changed;
         }

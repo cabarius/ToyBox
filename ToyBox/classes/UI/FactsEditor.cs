@@ -86,6 +86,8 @@ namespace ToyBox {
             UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
             if (searchLimit > 1000) { searchLimit = 1000; }
             UI.Space(25);
+            UI.Toggle("Show GUIs", ref Main.settings.showAssetIDs);
+            UI.Space(25);
             searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
             UI.EndHorizontal();
             UI.BeginHorizontal();
@@ -126,6 +128,7 @@ namespace ToyBox {
             var toValues = new Dictionary<String, BlueprintScriptableObject>();
             var sorted = facts.OrderBy((f) => f.Name);
             matchCount = 0;
+            UI.Div(100);
             foreach (var fact in sorted) {
                 if (fact == null) continue;
                 var bp = blueprint(fact);
@@ -157,10 +160,13 @@ namespace ToyBox {
 #endif
                     if (description != null) {
                         UI.Space(30);
-                        UI.Label(description(fact).green().bold(), UI.AutoWidth());
+                        var assetID = Main.settings.showAssetIDs ? blueprint(fact).AssetGuid.magenta() + " " : "";
+                        UI.Label(assetID + description(fact).green(), UI.AutoWidth());
                     }
                     UI.EndHorizontal();
+                    UI.Div(100);
                 }
+
             }
             if (toAdd != null) { add.action(unit, toAdd); toAdd = null; }
             if (toRemove != null) { remove.action(unit, toRemove); toRemove = null; }
@@ -216,7 +222,7 @@ namespace ToyBox {
             var learnable = spellbookBP.SpellList.GetSpells(level);
             var blueprints = BlueprintBrowser.GetBluePrints();
             if (blueprints == null) return;
-            OnGUI<AbilityData>($"Spells.{spellbookBP.Name}.{level}", ch, spells,
+            OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
                 (fact) => fact.Blueprint,
                 learnable,
                 (fact) => fact.Name,

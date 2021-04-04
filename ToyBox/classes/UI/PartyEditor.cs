@@ -52,13 +52,12 @@ namespace ToyBox {
             Spells,
             None,
         };
-
         static ToggleChoice selectedToggle = ToggleChoice.None;
         static int selectedCharacterIndex = 0;
-
         static int selectedSpellbook = 0;
         static int selectedSpellbookLevel = 0;
-        static float nearByRange = 25;
+        static float nearbyRange = 25;
+        static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             if (Game.Instance.Player != null && partyFilterChoices == null) {
@@ -73,7 +72,7 @@ namespace ToyBox {
                     new NamedFunc<List<UnitEntityData>>("Nearby", () => {
                         var player = GameHelper.GetPlayerCharacter();
                         if (player == null) return new List<UnitEntityData> ();
-                        return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearByRange , false, false).ToList();
+                        return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearbyRange , false, false).ToList();
                     }),
                     new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
                     new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
@@ -115,7 +114,7 @@ namespace ToyBox {
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
             if (characterListFunc.name == "Nearby") {
-                UI.Slider("Nearby Distance", ref nearByRange, 1f, 200, 25, 0, " meters", UI.Width(250)); 
+                UI.Slider("Nearby Distance", ref nearbyRange, 1f, 200, 25, 0, " meters", UI.Width(250)); 
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
             UI.Space(20);
@@ -146,7 +145,7 @@ namespace ToyBox {
                         UI.Label("Level Up".cyan().italic(), UI.Width(110));
                     }
                     else { UI.Space(113); }
-                }
+                } 
                 else { UI.Space(113); }
                 UI.Space(25);
                 UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
@@ -231,14 +230,27 @@ namespace ToyBox {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
                         if (modifiableValue != null) {
+                            String key = $"{ch.CharacterName}-{statType.ToString()}";
+                            var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
                             UI.BeginHorizontal();
                             UI.Space(69);   // the best number...
                             UI.Label(statType.ToString().green().bold(), UI.Width(400f));
                             UI.Space(25);
-                            UI.ActionButton(" < ", () => { modifiableValue.BaseValue -= 1; }, UI.AutoWidth());
+                            UI.ActionButton(" < ", () => { 
+                                modifiableValue.BaseValue -= 1; 
+                                storedValue = modifiableValue.BaseValue;
+                            }, UI.AutoWidth());
                             UI.Space(20);
                             UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
-                            UI.ActionButton(" > ", () => { modifiableValue.BaseValue += 1; }, UI.AutoWidth());
+                            UI.ActionButton(" > ", () => {
+                                modifiableValue.BaseValue += 1;
+                                storedValue = modifiableValue.BaseValue;
+                            }, UI.AutoWidth());
+                            UI.Space(25);
+                            UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
+                                modifiableValue.BaseValue = v; 
+                            }, null, UI.Width(75));
+                            statEditorStorage[key] = storedValue;
                             UI.EndHorizontal();
                         }
                     }
@@ -261,14 +273,19 @@ namespace ToyBox {
                         UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
                         if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
-                        
+                        var maxLevel = spellbook.Blueprint.MaxSpellLevel;
                         var casterLevel = spellbook.CasterLevel;
                         UI.EnumerablePicker<int>(
                             "Spell Level".bold() + " (count)",
                             ref selectedSpellbookLevel,
-                            Enumerable.Range(0, casterLevel + 1),
+                            Enumerable.Range(0, Math.Max(casterLevel, maxLevel) + 1),
                             0,
-                            (l) => $"L{l}".bold() + $" ({spellbook.GetKnownSpells(l).Count()})".white(),
+                            (lvl) => {
+                                var levelText = lvl <= casterLevel ? $"L{lvl}".bold() : $"L{lvl}".grey();
+                                var knownCount = spellbook.GetKnownSpells(lvl).Count();
+                                var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
+                                return levelText + countText;
+                                },
                             UI.AutoWidth()
                         );
                         FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);

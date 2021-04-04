@@ -68,8 +68,13 @@ using UnityModManagerNet;
 
 namespace ToyBox {
     public static class Actions {
-
-        public static void ToggleModWindow() {
+        public static void UnlockAllMythicPaths() {
+                Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("d85f7367b453b7b468b77e5e708297ae"));
+                Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("e6669aad304206c4d969f6602e6b412e"));
+                Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("8f2f0ea65ef3a3f48948d27a39b37db1"));
+                Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("f6dce66b61f98eb4dbe6388e16b1de11"));
+            }
+            public static void ToggleModWindow() {
             UnityModManager.UI.Instance.ToggleWindow();
         }
         public static void RunPerceptionTriggers() {
@@ -147,7 +152,7 @@ namespace ToyBox {
                     if (spellbook.IsKnown(ability)) return false;
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
-                    for (int level = 0; level < maxLevel; level++) {
+                    for (int level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         if (learnable.Contains(ability)) return true; ;
                     }

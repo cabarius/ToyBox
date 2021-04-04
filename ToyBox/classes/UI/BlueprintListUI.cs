@@ -53,6 +53,7 @@ namespace ToyBox {
                 maxActions = Math.Max(actions.Count, maxActions);
             }
 
+            UI.Div(indent);
             foreach (BlueprintScriptableObject blueprint in blueprints) {
                 UI.BeginHorizontal();
                 UI.Space(indent);
@@ -81,7 +82,8 @@ namespace ToyBox {
                     }
                 }
                 UI.Space(30);
-                UI.Label($"{blueprint.GetType().Name.cyan()}" + " " + blueprint.GetDescription().green().bold()); //, UI.Width(400));
+                var assetID = Main.settings.showAssetIDs ? blueprint.AssetGuid.magenta() + " " : "";
+                UI.Label($"{blueprint.GetType().Name.cyan()}" + " " + assetID + blueprint.GetDescription().green()); //, UI.Width(400));
                 UI.EndHorizontal();
 #if false
                 String description = blueprint.GetDescription();
@@ -92,6 +94,7 @@ namespace ToyBox {
                     UI.EndHorizontal();
                 }
 #endif
+                UI.Div(indent);
                 index++;
             }
         }

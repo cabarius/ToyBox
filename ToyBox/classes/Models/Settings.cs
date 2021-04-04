@@ -74,6 +74,7 @@ namespace ToyBox {
         public int searchLimit = 100;
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
+        public bool showAssetIDs = false;
 
         // Previews (Dialogs, Events ,etc)
 

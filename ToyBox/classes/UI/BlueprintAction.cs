@@ -21,6 +21,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.CharGen;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Credits;
 using Kingmaker.Blueprints.Encyclopedia;
@@ -107,6 +108,25 @@ namespace ToyBox {
 
         public static List<BlueprintScriptableObject> GetBlueprints<T>() where T : BlueprintScriptableObject {
             return BlueprintsOfType(typeof(T));
+        }
+        public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
+            int count = 0;
+            NoSelectionIfAlreadyHasFeature component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();
+            if ((UnityEngine.Object)component == (UnityEngine.Object)null)
+                return count;
+            if (component.AnyFeatureFromSelection) {
+                foreach (BlueprintFeature allFeature in selection.AllFeatures) {
+                    if (!unit.Progression.Features.HasFact((BlueprintFact)allFeature)) {
+                        count++;
+                    }
+                }
+            }
+            foreach (BlueprintFeature feature in component.Features) {
+                if (!unit.Progression.Features.HasFact((BlueprintFact)feature)) {
+                    count++;
+                }
+            }
+            return count;
         }
     }
     public class BlueprintAction : NamedMutator<UnitEntityData, BlueprintScriptableObject> {

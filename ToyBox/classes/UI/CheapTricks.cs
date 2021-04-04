@@ -55,18 +55,32 @@ namespace ToyBox {
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 UI.HStack("Resources", 1,
                     () => {
+                        var money = Game.Instance.Player.Money;
                         UI.Label("Gold".cyan(), UI.Width(150));
-                        UI.Label(Game.Instance.Player.Money.ToString().orange().bold(), UI.Width(200));
+                        UI.Label(money.ToString().orange().bold(), UI.Width(200));
                         UI.ActionButton($"Gain {increment}", () => { Game.Instance.Player.GainMoney(increment); }, UI.AutoWidth());
+                        UI.ActionButton($"Lose {increment}", () => { 
+                            var loss = Math.Min(money, increment);
+                            Game.Instance.Player.GainMoney(-loss); }, UI.AutoWidth());
                     },
                     () => {
+                        var exp = mainChar.Progression.Experience;
                         UI.Label("Experience".cyan(), UI.Width(150));
-                        UI.Label(mainChar.Progression.Experience.ToString().orange().bold(), UI.Width(200));
-                        UI.ActionButton($"Gain {increment}", () => { Game.Instance.Player.GainPartyExperience(increment); }, UI.AutoWidth());
+                        UI.Label(exp.ToString().orange().bold(), UI.Width(200));
+                        UI.ActionButton($"Gain {increment}", () => {
+                            Game.Instance.Player.GainPartyExperience(increment); 
+                        }, UI.AutoWidth());
+#if false
+                        UI.ActionButton($"Lose {increment}", () => {
+                            var loss = Math.Min(exp, increment);
+                            Game.Instance.Player.GainPartyExperience(-loss);
+                        }, UI.AutoWidth());
+#endif
                     },
                     () => { }
                     );
             }
+            UI.Div();
             UI.HStack("Combat", 4,
                 () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
                 () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
@@ -76,6 +90,7 @@ namespace ToyBox {
                 () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
                 () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
                 );
+            UI.Div();
             UI.Space(10);
             UI.HStack("Common", 4,
                 () => { UI.ActionButton("Teleport Party To You", () => { Actions.TeleportPartyToPlayer(); }); },
@@ -91,6 +106,13 @@ namespace ToyBox {
                 //                    () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
                 () => { }
                 );
+            UI.Div();
+            UI.Space(10);
+            UI.HStack("Unlocks", 4, () => {
+                UI.ActionButton("Unlock All Mythic Paths", () => { Actions.UnlockAllMythicPaths(); });
+                UI.Label("Warning! Using this might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".green().bold());
+            });
+            UI.Div();
             UI.Space(10);
             UI.HStack("Preview", 0, () => {
                 UI.Toggle("Dialog Results", ref Main.settings.previewDialogResults, 0);
@@ -99,6 +121,7 @@ namespace ToyBox {
                 UI.Toggle("Events", ref Main.settings.previewEventResults, 0);
             });
             UI.Space(10);
+            UI.Div();
             UI.HStack("Flags", 3,
                 () => { UI.Toggle("Object Highlight Toggle Mode", ref Main.settings.highlightObjectsToggle, 0); },
                 () => { UI.Toggle("Whole Team Moves Same Speed", ref Main.settings.toggleMoveSpeedAsOne, 0); },
@@ -118,13 +141,14 @@ namespace ToyBox {
                 () => { }
                 );
             UI.Space(10);
+            UI.Div();
             UI.HStack("Multipliers", 1,
                 () => { UI.Slider("Experience", ref Main.settings.experienceMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Money Earned", ref Main.settings.moneyMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Sell Price", ref Main.settings.vendorSellPriceMultiplier, 0.1f, 30, Main.settings.defaultVendorSellPriceMultiplier, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Encumberance", ref Main.settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Spells Per Day", ref Main.settings.spellsPerDayMultiplier, 0.1f, 5, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Movement Speed", ref Main.settings.partyMovementSpeedMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Movement Speed", ref Main.settings.partyMovementSpeedMultiplier, 1, 10, 1, 0, "", UI.AutoWidth()); },
                 () => { UI.Slider("Travel Speed", ref Main.settings.travelSpeedMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Companion Cost", ref Main.settings.companionCostMultiplier, 0, 5, 1, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Enemy HP Multiplier", ref Main.settings.enemyBaseHitPointsMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
@@ -132,8 +156,9 @@ namespace ToyBox {
                 () => { }
                 );
             UI.Space(10);
+            UI.Div();
             UI.HStack("Level Up", 1,
-                () => { UI.Slider("Feats Multiplier", ref Main.settings.featsMultiplier, 1, 5, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Feature Selection Multiplier", ref Main.settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()); },
                 () => { UI.Toggle("Always Able To Level Up", ref Main.settings.toggleNoLevelUpRestirctions, 0); },
                 () => { UI.Toggle("Add Full Hit Die Value", ref Main.settings.toggleFullHitdiceEachLevel, 0); },
                 () => { UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, 0); },
@@ -152,6 +177,7 @@ namespace ToyBox {
 
                 () => { }
                 );
+            UI.Div();
             UI.Space(10);
             UI.HStack("Character Creation", 1,
                 () => { UI.Slider("Build Points (Main)", ref Main.settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", UI.AutoWidth()); },
@@ -160,6 +186,7 @@ namespace ToyBox {
                 () => { UI.Slider("Ability Min", ref Main.settings.characterCreationAbilityPointsMin, 0, 50, 7, "", UI.AutoWidth()); },
                 () => { }
                 );
+            UI.Div();
             UI.Space(10);
             UI.HStack("Crusade", 1,
                 () => { UI.Toggle("Instant Events", ref Main.settings.toggleInstantEvent, 0); },

@@ -505,6 +505,7 @@ namespace ToyBox {
             }
         }
 #endif
+
         [HarmonyPatch(typeof(KingdomTaskEvent), "SkipPlayerTime", MethodType.Getter)]
         public static class KingdomTaskEvent_SkipPlayerTime_Patch {
             public static void Postfix(ref int __result) {
@@ -548,7 +549,7 @@ namespace ToyBox {
                 }
             }
         }
-
+#if false
         [HarmonyPatch(typeof(AbilityResourceLogic), "Spend")]
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
@@ -564,10 +565,10 @@ namespace ToyBox {
         [HarmonyPatch(typeof(ActivatableAbilityResourceLogic), "SpendResource")]
         public static class ActivatableAbilityResourceLogic_SpendResource_Patch {
             public static bool Prefix() {
-                return settings.toggleInfiniteAbilities;
+                return !settings.toggleInfiniteAbilities;
             }
         }
-
+#endif
         [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
         [HarmonyPatch(new Type[] { typeof(UnitCommand) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch1 {
@@ -583,8 +584,6 @@ namespace ToyBox {
         [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
         [HarmonyPatch(new Type[] { typeof(UnitCommand.CommandType) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch2 {
-
-
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
                 if (settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
                     __result = false;
@@ -594,7 +593,6 @@ namespace ToyBox {
                 }
             }
         }
-
         [HarmonyPatch(typeof(UnitCombatState), "OnNewRound")]
         public static class UnitCombatState_OnNewRound_Patch {
             public static bool Prefix(UnitCombatState __instance) {
@@ -692,10 +690,76 @@ namespace ToyBox {
             }
         }
 
+        // stuff for fixing feat multiplier
+        // LevelUpState
+        //     public bool CanSelectAnything(LevelUpState state, UnitEntityData unit)
+
+#if false
+        [HarmonyPatch(typeof(FeatureSelectionState), "CanSelectAnything")]
+        public static class FeatureSelectionState_CanSelectAnything_Patch {
+
+            public static bool Prefix(ref bool __result, FeatureSelectionState __instance, LevelUpState state, UnitEntityData unit) {
+                __result = false;
+                if (__instance.Selection.IsObligatory())
+                    __result = true;
+                else if (__instance.Selection.IsSelectionProhibited(unit.Descriptor))
+                    __result = false;
+                else {
+                    foreach (IFeatureSelectionItem featureSelectionItem in __instance.Selection.Items) {
+                        if (featureSelectionItem != __instance.SelectedItem && __instance.Selection.CanSelect(unit.Descriptor, state, __instance, featureSelectionItem))
+                            __result = true;
+                    }
+                }
+                return true;
+            }
+        }
+#endif
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] IList<BlueprintFeatureBase> features, [CanBeNull] FeatureSource source, int level) {
-                for (int i = 0; i < settings.featsMultiplier; ++i) {
+
+#if true
+                Logger.Log($"feature count = {features.ToArray().Count()} ");
+                var description = source.Blueprint.GetDescription() ?? "nil";
+                Logger.Log($"source: {source.Blueprint.name} - {description}");
+                foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
+                    if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
+                        Logger.Log($"    name: {blueprintFeature.Name} : {blueprintFeature.GetType()}");
+                        if (blueprintFeature is IFeatureSelection selection) {
+                            // Bug Fix - due to issues in the implementation of FeatureSelectionState.CanSelectAnything we can get level up blocked so this is an attempt to work around for that
+                            var numToAdd = settings.featsMultiplier;
+                            if (selection is BlueprintFeatureSelection bpFS) {
+                                var bpFeatures = bpFS;
+                                var items = bpFS.ExtractSelectionItems(unit, null);
+                                Logger.Log($"        items: {items.Count()}");
+                                var availableCount = 0;
+                                foreach (var item in items) {
+                                    if (!unit.Progression.Features.HasFact(item.Feature)) availableCount++;
+                                }
+                                if (numToAdd > availableCount) {
+                                    Logger.Log($"reduced numToAdd: {numToAdd} -> {availableCount}");
+                                    numToAdd = availableCount;
+                                }
+                            }
+                            Logger.Log($"        IFeatureSelection: {selection} adding: {numToAdd}");
+                            for (int i = 0; i < numToAdd; ++i) {
+                                state.AddSelection((FeatureSelectionState)null, source, selection, level);
+                            }
+                        }
+                        Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
+                        BlueprintProgression progression = blueprintFeature as BlueprintProgression;
+                        if ((UnityEngine.Object)progression != (UnityEngine.Object)null) {
+                            Logger.Log($"        BlueprintProgression: {progression}");
+                            LevelUpHelper.UpdateProgression(state, unit, progression);
+                        }
+                        FeatureSource source1 = source;
+                        int level1 = level;
+                        feature.SetSource(source1, level1);
+                    }
+                }
+                return false;
+#else
+                for (int i = 0; i < settings.featsMultiplier  ; ++i) {
                     foreach (BlueprintFeatureSelection item in features.OfType<BlueprintFeatureSelection>()) {
                         state.AddSelection(null, source, item, level);
                     }
@@ -709,21 +773,6 @@ namespace ToyBox {
                     }
                 }
                 return false;
-                // the following is the code from WoTR.  Do we need to make our mod version use this?
-#if false
-                foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
-                    if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
-                        if (blueprintFeature is IFeatureSelection selection)
-                            state.AddSelection((FeatureSelectionState)null, source, selection, level);
-                        Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
-                        BlueprintProgression progression = blueprintFeature as BlueprintProgression;
-                        if ((UnityEngine.Object)progression != (UnityEngine.Object)null)
-                            LevelUpHelper.UpdateProgression(state, unit, progression);
-                        FeatureSource source1 = source;
-                        int level1 = level;
-                        feature.SetSource(source1, level1);
-                    }
-                }
 #endif
             }
         }
@@ -754,6 +803,7 @@ namespace ToyBox {
                 }
             }
         }
+
         [HarmonyPatch(typeof(StatsDistribution), "CanAdd")]
         public static class StatsDistribution_CanAdd_Patch {
             public static void Postfix(ref bool __result, StatType attribute, StatsDistribution __instance) {
@@ -923,61 +973,31 @@ namespace ToyBox {
         [HarmonyPatch(typeof(ClickGroundHandler), "RunCommand")]
         public static class ClickGroundHandler_RunCommand_Patch {
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
-                if (Main.settings.toggleMoveSpeedAsOne) {
-                    UnitMoveTo unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
-                        MovementDelay = settings.Delay,
-                        Orientation = new float?(settings.Orientation),
-                        CreatedByPlayer = true
-                    };
-                    UnitMoveTo unitMoveTo2 = unitMoveTo;
-                    if (BuildModeUtility.IsDevelopment) {
-                        if (CheatsAnimation.SpeedForce > 0f) {
-                            unitMoveTo2.OverrideSpeed = new float?(CheatsAnimation.SpeedForce);
-                        }
-                        unitMoveTo2.MovementType = (UnitAnimationActionLocoMotion.WalkSpeedType)CheatsAnimation.MoveType.Get();
-                    }
-                    unitMoveTo2.SpeedLimit = settings.SpeedLimit * Main.settings.partyMovementSpeedMultiplier;
-                    unitMoveTo2.ApplySpeedLimitInCombat = settings.ApplySpeedLimitInCombat;
-                    unit.Commands.Run(unitMoveTo);
-                    if (unit.Commands.Queue.FirstOrDefault((UnitCommand c) => c is UnitMoveTo) == unitMoveTo2 || Game.Instance.IsPaused) {
-                        ClickGroundHandler.ShowDestination(unit, unitMoveTo.Target, false);
-                    }
-                    return false;
-                }
-                return true;
-#if false
-                if (settings.toggleMoveSpeedAsOne) {
-                    var speedLimit = UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits);
-                    commandSettings.SpeedLimit = speedLimit;
-                    speedLimit = speedLimit * settings.partyMovementSpeedMultiplier;
-                    UnitMoveTo unitMoveTo1 = new UnitMoveTo(p, 0.3f);
-                    unitMoveTo1.MovementDelay = commandSettings.Delay;
-                    unitMoveTo1.Orientation = new float?(orientation);
-                    unitMoveTo1.CreatedByPlayer = true;
-                    UnitMoveTo unitMoveTo2 = unitMoveTo1;
-                    if (BuildModeUtility.IsDevelopment) {
-                        float speedForce = Traverse.CreateWithType("Kingmaker.Cheats.CheatsAnimation").Field("SpeedForce").GetValue<float>();
-                        float moveType = Traverse.CreateWithType("Kingmaker.Cheats.CheatsAnimation").Field("moveType").GetValue<float>();
-                        if (speedForce > 0.0) {
-                            unitMoveTo2.OverrideSpeed = speedForce;
+                var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
+                var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : settings.SpeedLimit;
+                speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
-                        }
-                        unitMoveTo2.MovementType = (UnitAnimationActionLocoMotion.WalkSpeedType)moveType;
+                 UnitMoveTo unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
+                    MovementDelay = settings.Delay,
+                    Orientation = new float?(settings.Orientation),
+                    CreatedByPlayer = true
+                };
+                if (BuildModeUtility.IsDevelopment) {
+                    if (CheatsAnimation.SpeedForce > 0f) {
+                        unitMoveTo.OverrideSpeed = new float?(CheatsAnimation.SpeedForce);
                     }
-                    unitMoveTo2.OverrideSpeed = speedLimit;
-                    unitMoveTo2.SpeedLimit = speedLimit;
-//                    unitMoveTo2.ShowTargetMarker = showTargetMarker;
-                    unit.Commands.Run((UnitCommand)unitMoveTo2);
-                    if (unit.Commands.Queue.FirstOrDefault<UnitCommand>((Func<UnitCommand, bool>)(c => c is UnitMoveTo)) != unitMoveTo2 && !Game.Instance.IsPaused) {
-
-                    }
-                    else {
-                        ClickGroundHandler.ShowDestination(unit, unitMoveTo2.Target, false);
-                    }
-                    return false;
+                    unitMoveTo.MovementType = (UnitAnimationActionLocoMotion.WalkSpeedType)CheatsAnimation.MoveType.Get();
                 }
-                return true;
-#endif
+                if (Main.settings.partyMovementSpeedMultiplier > 1) {
+                    unitMoveTo.OverrideSpeed = speedLimit;
+                }
+                unitMoveTo.SpeedLimit = speedLimit;
+                unitMoveTo.ApplySpeedLimitInCombat = settings.ApplySpeedLimitInCombat;
+                unit.Commands.Run(unitMoveTo);
+                if (unit.Commands.Queue.FirstOrDefault((UnitCommand c) => c is UnitMoveTo) == unitMoveTo || Game.Instance.IsPaused) {
+                    ClickGroundHandler.ShowDestination(unit, unitMoveTo.Target, false);
+                }
+                return false;
             }
         }
 
@@ -1601,6 +1621,7 @@ namespace ToyBox {
 
             }
         }
+
         [HarmonyPatch(typeof(Inventory), "UpdatePlayerMoneyAndInventoryWeight")]
         internal static class Inventory_UpdatePlayerMoneyAndInventoryWeight_Patch {
             private static void Postfix(Inventory __instance, TextMeshProUGUI ___PlayerMoneyNow) {

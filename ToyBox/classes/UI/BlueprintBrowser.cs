@@ -16,6 +16,7 @@ using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
@@ -86,9 +87,10 @@ namespace ToyBox {
             new NamedTypeFilter("Units", typeof(BlueprintUnit)),
             new NamedTypeFilter("Races", typeof(BlueprintRace)),
             new NamedTypeFilter("Areas", typeof(BlueprintArea)),
-            new NamedTypeFilter("", typeof(BlueprintAreaEnterPoint)),
+            new NamedTypeFilter("Enter Points", typeof(BlueprintAreaEnterPoint)),
 //            new NamedTypeFilter("Enter Points", typeof(BlueprintAreaEnterPoint)),
             new NamedTypeFilter("Global Map", typeof(BlueprintGlobalMapPoint)),
+            new NamedTypeFilter("Feature Sel", typeof(BlueprintFeatureSelection)),
 //            new NamedTypeFilter("Armies", typeof(BlueprintArmyPreset)),
             new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
 
@@ -167,6 +169,8 @@ namespace ToyBox {
                 () => { UpdateSearchResults(); },
                 UI.Width(200));
             if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
+            UI.Space(25);
+            UI.Toggle("Show GUIs", ref Main.settings.showAssetIDs);
             UI.EndHorizontal();
             UI.BeginHorizontal();
             UI.ActionButton("Search", () => {

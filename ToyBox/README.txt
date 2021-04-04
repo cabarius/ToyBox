@@ -8,31 +8,25 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 
 Current features include 
 
-Ver 1.0.0
-	Search and entire blueprint catalog for feats, features, items and more
-	Browse party members, level up, mythic level up, modify stats
-Ver 1.0.2
-	Browse and  remove features by party member (back up before using)
-	Various cheats based on console commands
-Ver 1.0.3
-	Party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
-	Add/Remove party members
-	eleport Party To You
-	Run Perception Check
-	ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
-Ver 1.0.4
-	Search Character Picker - Can now add features to a specifically chosen party member
-	Quest Resolution - browse and modify progress in your quests (great for dealing with bugged quests)
-	Improved layout at lower resolutions (not perfect yet)
-	Improved search performance
-	Misc other improvements
-Ver 1.0.5
-	Ported Dialog Preview from Kingdom Resolution Mod. Now you can get a preview of results from Dialog, Alignment Restricted Dialog, Events and Random Encounters
-Ver 1.0.6
-	Major Overhaul of the UI.  Each major area of features is in a separate tab (Cheap Tricks, Party Editor, Blueprint Search, Quest Resolution)
-	Added experimental Respec Feature
-	Fixed bug where the arrows were backwards in add/remove rank and also made sure it couldn't take you below 1
-	Various stability improvements 
+Ver 1.1.3
+	Added divider lines to make it easier to look through lists of blueprints, features, abilities, spells, etc
+    Added Cheap Trick for Unlocking All Mythic Paths
+    Added text field for direct stat editing
+    Added gold and party exprience increase in cheap tricks
+    Added a fun teleport feature to blueprint browser look for its on column
+    Fixed issue during level up where the game might demand you pick a feature (feat, boon, etc) from a list where nothing was available.  This makes feat multiplier work in many cases where it didn't even in bag of tricks.  
+    Increased max feat multiplier to 10
+    Fixed issue where movement speed multiplier was not being applied correctly
+    Fixed issue bug that was preventing bard/azata build from spending resource points
+
+Ver 1.1.2
+	Fixed bug where you could only toggle to show stats/facts/abilities/etc for main character even though you selected a toggle on another
+	Fixed bug that broke abilities and cooldowns during combat
+	Added bonus feature 'Unlimited Actions During Turn' for Turn Based Combat
+	Tweaks to party editor UI and labels
+Ver 1.1.1
+	Fixed Party Editor bug where it would get out of sync with the party, especially when loading other saves
+	Added Nearby Units and show distance to other units
 Ver 1.1.0
 	Cheap Tricks
 		Ported ~3 dozen flags, multipliers, etc patches from Bag of Tricks (see below for full list)
@@ -84,14 +78,31 @@ Ver 1.1.0
 			Ignore Required Stat Values
 			Ignore Alignment When Choosing A Class
 			Skip Spell Selection
-	Ver 1.1.1
-		Fixed Party Editor bug where it would get out of sync with the party, especially when loading other saves
-		Added Nearby Units and show distance to other units
-	Ver 1.1.2
-		Fixed bug where you could only toggle to show stats/facts/abilities/etc for main character even though you selected a toggle on another
-		Fixed bug that broke abilities and cooldowns during combat
-		Added bonus feature 'Unlimited Actions During Turn' for Turn Based Combat
-		Tweaks to party editor UI and labels
+Ver 1.0.5
+	Ported Dialog Preview from Kingdom Resolution Mod. Now you can get a preview of results from Dialog, Alignment Restricted Dialog, Events and Random Encounters
+Ver 1.0.6
+	Major Overhaul of the UI.  Each major area of features is in a separate tab (Cheap Tricks, Party Editor, Blueprint Search, Quest Resolution)
+	Added experimental Respec Feature
+	Fixed bug where the arrows were backwards in add/remove rank and also made sure it couldn't take you below 1
+	Various stability improvements 
+Ver 1.0.4
+	Search Character Picker - Can now add features to a specifically chosen party member
+	Quest Resolution - browse and modify progress in your quests (great for dealing with bugged quests)
+	Improved layout at lower resolutions (not perfect yet)
+	Improved search performance
+	Misc other improvements
+Ver 1.0.3
+	Party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
+	Add/Remove party members
+	eleport Party To You
+	Run Perception Check
+	ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
+Ver 1.0.2
+	Browse and  remove features by party member (back up before using)
+	Various cheats based on console commands
+Ver 1.0.0
+	Search and entire blueprint catalog for feats, features, items and more
+	Browse party members, level up, mythic level up, modify stats
 
 
 To use search type a string into the search field at the bottom and hit enter or click the search button.  At first you have to wait 10 seconds or so for the blueprints to load but after that, it is fast.  You choose a category with the provided toolbar.
