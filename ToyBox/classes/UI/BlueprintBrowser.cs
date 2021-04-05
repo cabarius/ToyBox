@@ -97,7 +97,7 @@ namespace ToyBox {
         };
 
         public static IEnumerable<BlueprintScriptableObject> blueprints = null;
-        public static IEnumerable<BlueprintScriptableObject> GetBluePrints() {
+        public static IEnumerable<BlueprintScriptableObject> GetBlueprints() {
             if (blueprints == null) {
                 if (BlueprintLoader.LoadInProgress()) { return null; }
                 else {

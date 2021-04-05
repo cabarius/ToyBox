@@ -128,7 +128,7 @@ namespace ToyBox {
 #endif
                 UI.TabBar(ref settings.selectedTab,
                     () => {
-                        if (BlueprintBrowser.GetBluePrints() == null) {
+                        if (BlueprintBrowser.GetBlueprints() == null) {
                             UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.progress.ToString("P2").cyan().bold());
                         }
                         else { UI.Space(25); }

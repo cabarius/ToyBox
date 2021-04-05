@@ -110,7 +110,7 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Unlocks", 4, () => {
-                UI.ActionButton("Unlock All Mythic Paths", () => { Actions.UnlockAllMythicPaths(); });
+                UI.ActionButton("All Mythic Paths", () => { Actions.UnlockAllMythicPaths(); });
                 UI.Space(25);
                 UI.Label("Warning! Using this might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".green());
             });
@@ -141,25 +141,11 @@ namespace ToyBox {
                 () => { }
                 );
             UI.Div(0, 25);
-            UI.HStack("Multipliers", 1,
-                () => { UI.Slider("Experience", ref Main.settings.experienceMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Money Earned", ref Main.settings.moneyMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Sell Price", ref Main.settings.vendorSellPriceMultiplier, 0.1f, 30, Main.settings.defaultVendorSellPriceMultiplier, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Encumberance", ref Main.settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Spells Per Day", ref Main.settings.spellsPerDayMultiplier, 0.1f, 5, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Movement Speed", ref Main.settings.partyMovementSpeedMultiplier, 1, 10, 1, 0, "", UI.AutoWidth()); },
-                () => { UI.Slider("Travel Speed", ref Main.settings.travelSpeedMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Companion Cost", ref Main.settings.companionCostMultiplier, 0, 5, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Enemy HP Multiplier", ref Main.settings.enemyBaseHitPointsMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Buff Duration", ref Main.settings.buffDurationMultiplierValue, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { }
-                );
-            UI.Div(0, 25);
             UI.HStack("Level Up", 1,
                 () => { UI.Slider("Feature Selection Multiplier", ref Main.settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()); },
                 () => { UI.Toggle("Always Able To Level Up", ref Main.settings.toggleNoLevelUpRestirctions, 0); },
                 () => { UI.Toggle("Add Full Hit Die Value", ref Main.settings.toggleFullHitdiceEachLevel, 0); },
-                () => { 
+                () => {
                     UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, 0);
                     UI.Space(25);
                     UI.Label("Warning! This currently can break leveling up mythic paths like when leveling  from 3 to 4 it reverts back to Mythic Hero instead of your choosen mythic until level 6 so just turn this off when leveling up mythics until you get past the first screen.".green());
@@ -173,13 +159,28 @@ namespace ToyBox {
                 () => { UI.Toggle("Skip Spell Selection", ref Main.settings.toggleSkipSpellSelection, 0); },
 
 #if false
-                // Do we need these or is it covered by Ignore Fe
+                // Do we need these or is it covered by toggleFeaturesIgnorePrerequisites
                 () => { UI.Toggle("Ignore Feat Prerequisites When Choosing A Class", ref Main.settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass, 0); },
                 () => { UI.Toggle("Ignore Feat Prerequisits (List) When Choosing A Class", ref Main.settings.toggle, 0); },
 #endif
 
                 () => { }
                 );
+            UI.Div(0, 25);
+            UI.HStack("Multipliers", 1,
+                () => { UI.Slider("Experience", ref Main.settings.experienceMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Money Earned", ref Main.settings.moneyMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Sell Price", ref Main.settings.vendorSellPriceMultiplier, 0.1f, 30, Main.settings.defaultVendorSellPriceMultiplier, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Encumberance", ref Main.settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Spells Per Day", ref Main.settings.spellsPerDayMultiplier, 0.1f, 5, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Movement Speed", ref Main.settings.partyMovementSpeedMultiplier, 1, 10, 1, 0, "", UI.AutoWidth()); },
+                () => { UI.Slider("Travel Speed", ref Main.settings.travelSpeedMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Companion Cost", ref Main.settings.companionCostMultiplier, 0, 5, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Enemy HP Multiplier", ref Main.settings.enemyBaseHitPointsMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.Slider("Buff Duration", ref Main.settings.buffDurationMultiplierValue, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { }
+                );
+
             UI.Div(0, 25);
             UI.HStack("Character Creation", 1,
                 () => { UI.Slider("Build Points (Main)", ref Main.settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", UI.AutoWidth()); },

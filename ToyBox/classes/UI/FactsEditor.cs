@@ -184,7 +184,7 @@ namespace ToyBox {
             toValues.Clear();
         }
         static public void OnGUI(UnitEntityData ch, List<Feature> facts) {
-            var blueprints = BlueprintBrowser.GetBluePrints();
+            var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Feature>("Features", ch, facts,
                 (fact) => fact.Blueprint,
@@ -196,7 +196,7 @@ namespace ToyBox {
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Buff> facts) {
-            var blueprints = BlueprintBrowser.GetBluePrints();
+            var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Buff>("Features", ch, facts,
                 (fact) => fact.Blueprint,
@@ -208,7 +208,7 @@ namespace ToyBox {
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
-            var blueprints = BlueprintBrowser.GetBluePrints();
+            var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Ability>("Abilities", ch, facts,
                 (fact) => fact.Blueprint,
@@ -223,7 +223,7 @@ namespace ToyBox {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
             var learnable = spellbookBP.SpellList.GetSpells(level);
-            var blueprints = BlueprintBrowser.GetBluePrints();
+            var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
                 (fact) => fact.Blueprint,
@@ -235,7 +235,7 @@ namespace ToyBox {
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
-            var blueprints = BlueprintBrowser.GetBluePrints();
+            var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
                 (sb) => sb.Blueprint,

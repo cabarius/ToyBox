@@ -105,7 +105,7 @@ namespace ToyBox {
         static Dictionary<Type, List<BlueprintScriptableObject>> blueprintsByType = new Dictionary<Type, List<BlueprintScriptableObject>>();
         public static List<BlueprintScriptableObject> BlueprintsOfType(Type type) {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
-            var blueprints = BlueprintBrowser.GetBluePrints();
+            var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return new List<BlueprintScriptableObject>();
             var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
             blueprintsByType[type] = filtered;

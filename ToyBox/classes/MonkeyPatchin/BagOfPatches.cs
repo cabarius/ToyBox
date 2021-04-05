@@ -734,7 +734,34 @@ namespace ToyBox {
                                 Logger.Log($"        items: {items.Count()}");
                                 var availableCount = 0;
                                 foreach (var item in items) {
-                                    if (!unit.Progression.Features.HasFact(item.Feature)) availableCount++;
+#if false
+                                    if (bpFS. is BlueprintParametrizedFeature bppF) {
+                                        Logger.Log($"checking parameterized feature {bppF.Name}");
+                                        if (selection.CanSelect(unit, state, null, item)) {
+                                            Logger.Log($"        {item.Feature.name}  is avaiable");
+                                            availableCount++;
+                                        }
+                                    }
+                                    else
+#endif
+                                    if (!unit.Progression.Features.HasFact(item.Feature)) {
+                                        availableCount++;
+                                        Logger.Log($"        {item.Feature.name}  is avaiable");
+                                    }
+#if false
+                                    if (selection.CanSelect(unit, state, null, item)) {
+                                        Logger.Log($"        {item.Feature.name}  is avaiable");
+                                        availableCount++;
+                                    }
+                                    else Logger.Log($"        {item.Feature.name}  is NOT avaiable");
+                                    if (!unit.Progression.Features.HasFact(item.Feature)) {
+                                        if (item.Feature.MeetsPrerequisites(null, unit, state, true)) {
+                                            Logger.Log($"        {item.Feature.name}  is avaiable");
+                                            availableCount++;
+                                        }
+                                    }
+                                    else Logger.Log($"        has Fact {item.Feature.Name}");
+#endif
                                 }
                                 if (numToAdd > availableCount) {
                                     Logger.Log($"reduced numToAdd: {numToAdd} -> {availableCount}");
@@ -759,7 +786,7 @@ namespace ToyBox {
                 }
                 return false;
 #else
-                for (int i = 0; i < settings.featsMultiplier  ; ++i) {
+                                    for (int i = 0; i < settings.featsMultiplier  ; ++i) {
                     foreach (BlueprintFeatureSelection item in features.OfType<BlueprintFeatureSelection>()) {
                         state.AddSelection(null, source, item, level);
                     }
