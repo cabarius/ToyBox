@@ -153,7 +153,6 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>echo "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
-#start XCOPY /Y /R "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
 copy /Y "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll"
 copy /Y "$(TargetDir)$(TargetName).pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).pdb"
 </PostBuildEvent>
