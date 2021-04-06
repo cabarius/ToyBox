@@ -746,7 +746,7 @@ namespace ToyBox {
 #endif
                                     if (!unit.Progression.Features.HasFact(item.Feature)) {
                                         availableCount++;
-                                        Logger.Log($"        {item.Feature.name}  is avaiable");
+//                                        Logger.Log($"        {item.Feature.name}  is avaiable");
                                     }
 #if false
                                     if (selection.CanSelect(unit, state, null, item)) {
