@@ -73,6 +73,10 @@ using Kingmaker.UI.IngameMenu;
 using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Log;
 using Kingmaker.UI.MainMenuUI;
+using Kingmaker.UI.MVVM;
+using Kingmaker.UI.MVVM.CharGen;
+using Kingmaker.UI.MVVM.CharGen.Phases;
+using Kingmaker.UI.MVVM.CharGen.Phases.Mythic;
 using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
@@ -719,19 +723,19 @@ namespace ToyBox {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] IList<BlueprintFeatureBase> features, [CanBeNull] FeatureSource source, int level) {
 
 #if true
-                Logger.Log($"feature count = {features.ToArray().Count()} ");
+                //Logger.Log($"feature count = {features.ToArray().Count()} ");
                 var description = source.Blueprint.GetDescription() ?? "nil";
-                Logger.Log($"source: {source.Blueprint.name} - {description}");
+                //Logger.Log($"source: {source.Blueprint.name} - {description}");
                 foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
                     if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
-                        Logger.Log($"    name: {blueprintFeature.Name} : {blueprintFeature.GetType()}");
+                        //Logger.Log($"    name: {blueprintFeature.Name} : {blueprintFeature.GetType()}");
                         if (blueprintFeature is IFeatureSelection selection) {
                             // Bug Fix - due to issues in the implementation of FeatureSelectionState.CanSelectAnything we can get level up blocked so this is an attempt to work around for that
                             var numToAdd = settings.featsMultiplier;
                             if (selection is BlueprintFeatureSelection bpFS) {
                                 var bpFeatures = bpFS;
                                 var items = bpFS.ExtractSelectionItems(unit, null);
-                                Logger.Log($"        items: {items.Count()}");
+                                //Logger.Log($"        items: {items.Count()}");
                                 var availableCount = 0;
                                 foreach (var item in items) {
 #if false
@@ -1883,6 +1887,8 @@ namespace ToyBox {
                 }
             }
         }
+
+
 #if false
         [HarmonyPatch(typeof(TimeController), "Tick")]
         static class TimeController_Tick_Patch {
@@ -2772,6 +2778,47 @@ namespace ToyBox {
                 }
             }
         }
+#if false
+        [HarmonyPatch(typeof(CharGenMythicPhaseVM), "IsClassVisible")]
+        static class CharGenMythicPhaseVM_IsClassVisible_Patch {
+            private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
+                Logger.Log("IsClassVisible");
+                if (settings.toggleIgnorePrerequisites) {
+                    __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(CharGenMythicPhaseVM), "IsClassAvailableToSelect")]
+        static class CharGenMythicPhaseVM_IsClassAvailableToSelect_Patch {
+            private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
+                Logger.Log("CharGenMythicPhaseVM.IsClassAvailableToSelect");
+                if (settings.toggleIgnorePrerequisites) {
+                    __result = true;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(CharGenMythicPhaseVM), "IsPossibleMythicSelection", MethodType.Getter)]
+        static class CharGenMythicPhaseVM_IsPossibleMythicSelection_Patch {
+            private static void Postfix(ref bool __result) {
+                Logger.Log("CharGenMythicPhaseVM.IsPossibleMythicSelection");
+                if (settings.toggleIgnorePrerequisites) {
+                    __result = true;
+                }
+            }
+        }
+#endif
+
+        [HarmonyPatch(typeof(LevelUpController), "IsPossibleMythicSelection", MethodType.Getter)]
+        static class LevelUpControllerIsPossibleMythicSelection_Patch {
+            private static void Postfix(ref bool __result) {
+                //Logger.Log($"LevelUpController.IsPossibleMythicSelection {settings.toggleIgnorePrerequisites}");
+                if (settings.toggleIgnorePrerequisites) {
+                    __result = true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "Check")]
         public static class PrerequisiteCasterTypeSpellLevel_Check_Patch {
             public static void Postfix(ref bool __result) {

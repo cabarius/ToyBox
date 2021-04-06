@@ -148,7 +148,7 @@ namespace ToyBox {
                 () => {
                     UI.Toggle("Ignore Class And Feat Restrictions", ref Main.settings.toggleIgnorePrerequisites, 0);
                     UI.Space(25);
-                    UI.Label("Warning! This currently can break leveling up mythic paths like when leveling  from 3 to 4 it reverts back to Mythic Hero instead of your choosen mythic until level 6 so just turn this off when leveling up mythics until you get past the first screen.".green());
+                    UI.Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
 
                 },
                 () => { UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref Main.settings.toggleFeaturesIgnorePrerequisites, 0); },
