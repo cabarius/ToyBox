@@ -8,7 +8,10 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 
 Current features include 
 
-Ver 1.1.3
+Ver 1.1.5
+    Fixed bug with meta magic where if Free Meta Magic is on it doubles the metamagic and if off it hides it
+    (I fixed this before but it was lost somewhere along the way)
+Ver 1.1.3 (and 1.1.4)
     Party Editor > Classes
         Can now adjust character level, mythic level, and indivual class level without triggering level up 
         Reset character level to current xp

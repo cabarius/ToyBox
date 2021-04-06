@@ -1165,7 +1165,7 @@ namespace ToyBox {
         [HarmonyPatch(typeof(RuleCollectMetamagic), "AddMetamagic")]
         public static class RuleCollectMetamagic_AddMetamagic_Patch {
             public static bool Prefix() {
-                return settings.toggleMetamagicIsFree;
+                return !settings.toggleMetamagicIsFree;
             }
             public static void Postfix(ref RuleCollectMetamagic __instance, int ___m_SpellLevel, Feature metamagicFeature) {
                 if (settings.toggleMetamagicIsFree) {
