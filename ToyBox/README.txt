@@ -10,9 +10,8 @@ Current features include 
 
 ver 1.1.7
     Added Attack of Opportunity Disable to Cheap Tricks
-    Party Editor > Stats
-        Can now choose Alignment
-        Can now choose Size
+    Can now choose Alignment in Party Editor > Stats
+    Can now choose Size in Party Editor > Stats
     Added Item and Ingrediant as options in Search 'n Pick
     In search and pick some actions (add/remove item and spawn) now support a parameter do it up to 100 times
     Improved legibility of colors
