@@ -47,6 +47,7 @@ namespace ToyBox {
         static String prevCallerKey = "";
         static String searchText = "";
         static int searchLimit = 100;
+        static int repeatCount = 1;
         public static int matchCount = 0;
 
         static bool showAll = false;
@@ -102,6 +103,15 @@ namespace ToyBox {
                 if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
                 UI.Label(matchesText, UI.ExpandWidth(false));
             }
+#if false
+            UI.Label("Repeat Count", UI.ExpandWidth(false));
+            UI.ActionIntTextField(
+                ref repeatCount,
+                "repeatCount",
+                (limit) => { },
+                () => { },
+                UI.Width(200));
+#endif
             UI.EndHorizontal();
 
             if (showAll) {
@@ -169,16 +179,15 @@ namespace ToyBox {
                     UI.EndHorizontal();
                     UI.Div(100);
                 }
-
             }
-            if (toAdd != null) { add.action(unit, toAdd); toAdd = null; }
-            if (toRemove != null) { remove.action(unit, toRemove); toRemove = null; }
-            if (toDecrease != null) { decrease.action(unit, toDecrease); toDecrease = null; }
-            if (toIncrease != null) { increase.action(unit, toIncrease); toIncrease = null; }
+            if (toAdd != null) { add.action(unit, toAdd, repeatCount); toAdd = null; }
+            if (toRemove != null) { remove.action(unit, toRemove, repeatCount); toRemove = null; }
+            if (toDecrease != null) { decrease.action(unit, toDecrease, repeatCount); toDecrease = null; }
+            if (toIncrease != null) { increase.action(unit, toIncrease, repeatCount); toIncrease = null; }
             foreach (var item in toValues) {
                 var muator = mutatorLookup[item.Key];
                 if (muator != null) {
-                    muator.action(unit, item.Value);
+                    muator.action(unit, item.Value, repeatCount);
                 }
             }
             toValues.Clear();

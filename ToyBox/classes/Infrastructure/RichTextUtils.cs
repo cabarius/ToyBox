@@ -4,11 +4,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ToyBox
 {
     public static class RichTextUtils
     {
+
+        // https://docs.unity3d.com/Manual/StyledText.html
+
+        public enum RGBA : uint {
+            aqua = 0x00ffffff,
+            black = 0x000000ff,
+            blue = 0x8080ffff,
+            brown = 0xC09050ff, //0xa52a2aff,
+            cyan = 0x00ffffff,
+            darkblue = 0x0000a0ff,
+            fuchsia = 0xff40ffff,
+            green = 0x40C040ff,
+            grey = 0xC0C0C0ff,
+            lightblue = 0xd8e6ff,
+            lime = 0x40ff40ff,
+            magenta = 0xff40ffff,
+            maroon = 0xFF6060ff,
+            navy = 0x000080ff,
+            olive = 0xB0B000ff,
+            orange = 0xffa500ff, // 0xffa500ff,
+            purple = 0xC060F0ff,
+            red = 0xFF4040ff,
+            silver = 0xc0c0c0ff,
+            teal = 0x80f0c0ff,
+            white = 0xffffffff,
+            yellow = 0xffff00ff
+        }
+
+        public static string ToHtmlString(this RGBA color) {
+            return $"{color:X}";
+        }
         public static string size(this string s, int size)
         {
             return s = $"<size={size}>{s}</size>";
@@ -29,7 +61,12 @@ namespace ToyBox
         public static string color(this string s, string color)
         {
             return s = $"<color={color}>{s}</color>";
-
+        }
+        public static string color(this string str, RGBA color) {
+            return $"<color=#{color:X}>{str}</color>";
+        }
+        public static string color(this string str, Color32 color) {
+            return $"<color=#{color.r:X}{color.g:X}{color.b:X}{color.a:X}>{str}</color>";
         }
         public static string white(this string s) { return s = s.color("white"); }
         public static string grey(this string s) { return s = s.color("#A0A0A0FF"); }

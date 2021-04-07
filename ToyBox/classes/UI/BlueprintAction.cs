@@ -139,25 +139,30 @@ namespace ToyBox {
         public BlueprintAction(
             String name,
             Type type,
-            Action<UnitEntityData, BlueprintScriptableObject> action,
-            Func<UnitEntityData, BlueprintScriptableObject, bool> canPerform = null
-
-            ) : base(name, type, action, canPerform) { }
+            Action<UnitEntityData, BlueprintScriptableObject, int> action,
+            Func<UnitEntityData, BlueprintScriptableObject, bool> canPerform = null,
+            bool isRepeatable = false
+            ) : base(name, type, action, canPerform, isRepeatable) { }
 
 
         public static BlueprintAction[] globalActions = new BlueprintAction[] {
             new BlueprintAction("Add", typeof(BlueprintItem),
-                (ch, bp) => { Game.Instance.Player.Inventory.Add((BlueprintItem)bp, 1, null); }
+                (ch, bp , n) => { Game.Instance.Player.Inventory.Add((BlueprintItem)bp, n, null); },
+                null,
+                true
                 ),
             new BlueprintAction("Remove", typeof(BlueprintItem),
-                (ch, bp) => { Game.Instance.Player.Inventory.Remove((BlueprintItem)bp, 1); },
-                (ch, bp) => { return Game.Instance.Player.Inventory.Contains((BlueprintItem)bp);  }
+                (ch, bp, n) => { Game.Instance.Player.Inventory.Remove((BlueprintItem)bp, n); },
+                (ch, bp) => { return Game.Instance.Player.Inventory.Contains((BlueprintItem)bp); },
+                true
                 ),
             new BlueprintAction("Spawn", typeof(BlueprintUnit),
-                (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
+                (ch, bp, n) => { Actions.SpawnUnit((BlueprintUnit)bp, n); },
+                null,
+                true
                 ),
             new BlueprintAction("Teleport", typeof(BlueprintAreaEnterPoint),
-                (ch, bp) => {
+                (ch, bp, n) => {
                     var enterPoint = (BlueprintAreaEnterPoint)bp;
                     GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
                 }),
@@ -181,21 +186,21 @@ namespace ToyBox {
         public static BlueprintAction[] characterActions = new BlueprintAction[] {
             // Features
             new BlueprintAction("Add", typeof(BlueprintFeature),
-                (ch, bp) => { ch.Descriptor.AddFact((BlueprintUnitFact)bp); },
+                (ch, bp, n) => { ch.Descriptor.AddFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return !ch.Progression.Features.HasFact((BlueprintUnitFact)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintFeature),
-                (ch, bp) => { ch.Progression.Features.RemoveFact((BlueprintUnitFact)bp); },
+                (ch, bp, n) => { ch.Progression.Features.RemoveFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return ch.Progression.Features.HasFact((BlueprintUnitFact)bp);  }
                 ),
             new BlueprintAction("<", typeof(BlueprintFeature),
-                (ch, bp) => { try { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).RemoveRank(); } catch (Exception e) { Logger.Log(e); } },
+                (ch, bp, n) => { try { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).RemoveRank(); } catch (Exception e) { Logger.Log(e); } },
                 (ch, bp) => {
                     var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
                     return feature != null && feature.GetRank() > 1;
                 }),
             new BlueprintAction(">", typeof(BlueprintFeature),
-                (ch, bp) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
+                (ch, bp, n) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
                 (ch, bp) => {
                     var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
                     return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
@@ -203,15 +208,15 @@ namespace ToyBox {
 
             // Spellbooks
             new BlueprintAction("Add", typeof(BlueprintSpellbook),
-                (ch, bp) => { ch.Descriptor.DemandSpellbook(((BlueprintSpellbook)bp).CharacterClass); },
+                (ch, bp, n) => { ch.Descriptor.DemandSpellbook(((BlueprintSpellbook)bp).CharacterClass); },
                 (ch, bp) => { return !ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintSpellbook),
-                (ch, bp) => { ch.Descriptor.DeleteSpellbook((BlueprintSpellbook)bp); },
+                (ch, bp, n) => { ch.Descriptor.DeleteSpellbook((BlueprintSpellbook)bp); },
                 (ch, bp) => { return ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp);  }
                 ),
             new BlueprintAction(">", typeof(BlueprintSpellbook),
-                (ch, bp) => {
+                (ch, bp, n) => {
                     try {
                         var spellbook = ch.Descriptor.Spellbooks.First((sb) => sb.Blueprint == (BlueprintSpellbook)bp);
                         if (spellbook.IsMythic) spellbook.AddMythicLevel();
@@ -224,21 +229,21 @@ namespace ToyBox {
 
             // Buffs
             new BlueprintAction("Add", typeof(BlueprintBuff),
-                (ch, bp) => { GameHelper.ApplyBuff(ch,(BlueprintBuff)bp); },
+                (ch, bp, n) => { GameHelper.ApplyBuff(ch,(BlueprintBuff)bp); },
                 (ch, bp) => { return !ch.Descriptor.Buffs.HasFact((BlueprintUnitFact)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintBuff),
-                (ch, bp) => { ch.Descriptor.RemoveFact((BlueprintUnitFact)bp); },
+                (ch, bp, n) => { ch.Descriptor.RemoveFact((BlueprintUnitFact)bp); },
                 (ch, bp) => { return ch.Descriptor.Buffs.HasFact((BlueprintBuff)bp);  }
                 ),
             new BlueprintAction("<", typeof(BlueprintBuff),
-                (ch, bp) => { ch.Descriptor.Buffs.GetFact((BlueprintBuff)bp).RemoveRank(); },
+                (ch, bp, n) => { ch.Descriptor.Buffs.GetFact((BlueprintBuff)bp).RemoveRank(); },
                 (ch, bp) => {
                     var buff = ch.Descriptor.Buffs.GetFact((BlueprintBuff)bp);
                     return buff != null && buff.GetRank() > 1;
                 }),
             new BlueprintAction(">", typeof(BlueprintBuff),
-                (ch, bp) => { ch.Descriptor.Buffs.GetFact((BlueprintUnitFact)bp).AddRank(); },
+                (ch, bp, n) => { ch.Descriptor.Buffs.GetFact((BlueprintUnitFact)bp).AddRank(); },
                 (ch, bp) => {
                     var buff = ch.Descriptor.Buffs.GetFact((BlueprintUnitFact)bp);
                     return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
@@ -246,15 +251,15 @@ namespace ToyBox {
 
             // Abilities
             new BlueprintAction("Add", typeof(BlueprintAbility),
-                (ch, bp) => { ch.AddAbility((BlueprintAbility)bp); },
+                (ch, bp, n) => { ch.AddAbility((BlueprintAbility)bp); },
                 (ch, bp) => { return ch.CanAddAbility((BlueprintAbility)bp); }
                 ),
             new BlueprintAction("At Will", typeof(BlueprintAbility),
-                (ch, bp) => { ch.AddSpellAsAbility((BlueprintAbility)bp); },
+                (ch, bp, n) => { ch.AddSpellAsAbility((BlueprintAbility)bp); },
                 (ch, bp) => { return ch.CanAddSpellAsAbility((BlueprintAbility)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintAbility),
-                (ch, bp) => { ch.RemoveAbility((BlueprintAbility)bp); },
+                (ch, bp, n) => { ch.RemoveAbility((BlueprintAbility)bp); },
                 (ch, bp) => { return ch.HasAbility((BlueprintAbility)bp); }
                 ),
         };

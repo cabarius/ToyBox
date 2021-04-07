@@ -230,12 +230,21 @@ namespace ToyBox {
             UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, "", options);
             value = (int)fvalue;
         }
-        public static void SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
+        public static bool SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0) xCols = texts.Count();
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
+            return sel != selected;
+        }
+        public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, params GUILayoutOption[] options) {
+            if (xCols <= 0) xCols = items.Count();
+            int sel = selected;
+            var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
+            if (xCols <= 0) xCols = items.Count();
+            selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
+            return sel != selected;
         }
         public static void Toolbar(ref int value, String[] texts, params GUILayoutOption[] options) {
             value = GL.Toolbar(value, texts, options);

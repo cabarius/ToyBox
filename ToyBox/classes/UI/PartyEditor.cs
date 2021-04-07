@@ -40,6 +40,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
+using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -59,6 +60,11 @@ namespace ToyBox {
         static bool editSpellbooks = false;
         static UnitEntityData spellbookEditCharacter = null;
         static float nearbyRange = 25;
+        static Alignment[] alignments = new Alignment[] {
+                    Alignment.LawfulGood,       Alignment.NeutralGood,      Alignment.ChaoticGood,
+                    Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
+                    Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
+        };
         static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
@@ -263,6 +269,22 @@ namespace ToyBox {
                     }
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
+                    UI.Div(100, 20, 755);
+                    UI.BeginHorizontal();
+                    UI.Space(100);
+                    UI.Label("Alignment", UI.Width(425));
+                    var alignment = ch.Descriptor.Alignment.Value;
+                    UI.Label($"{alignment.Name()}".color(alignment.Color()).bold(), UI.Width(1250f));
+                    UI.EndHorizontal();
+                    UI.BeginHorizontal();
+                    UI.Space(525);
+                    int alignmentIndex = Array.IndexOf(alignments, alignment);
+                    var titles = alignments.Select(
+                        a => a.Acronym().color(a.Color()).bold()).ToArray();
+                    if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
+                        ch.Descriptor.Alignment.Set(alignments[alignmentIndex]);
+                    }
+                    UI.EndHorizontal();
                     UI.Div(100, 20, 755);
                     foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
                         StatType statType = (StatType)obj;

@@ -44,15 +44,32 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class BlueprintListUI {
+        public static int repeatCount = 1;
         public static void OnGUI(UnitEntityData ch, IEnumerable<BlueprintScriptableObject> blueprints, float indent = 0, Func<String,String> titleFormater = null) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             int index = 0;
             int maxActions = 0;
+            bool hasRepeatableAction = false;
             foreach (BlueprintScriptableObject blueprint in blueprints) {
                 var actions = blueprint.ActionsForUnit(ch);
+                if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
                 maxActions = Math.Max(actions.Count, maxActions);
             }
-
+            if (hasRepeatableAction) {
+                UI.BeginHorizontal();
+                UI.Space(650);
+                UI.ActionIntTextField(
+                    ref repeatCount,
+                    "repeatCount",
+                    (limit) => { },
+                    () => { },
+                    UI.Width(140));
+                UI.Space(25);
+                UI.Label("Parameter".cyan() + ": " + $"{repeatCount}".orange(), UI.ExpandWidth(false));
+                repeatCount = Math.Max(1, repeatCount);
+                repeatCount = Math.Min(100, repeatCount);
+                UI.EndHorizontal();
+            }
             UI.Div(indent);
             foreach (BlueprintScriptableObject blueprint in blueprints) {
                 UI.BeginHorizontal();
@@ -76,7 +93,13 @@ namespace ToyBox {
                         if (action.name == "<" || action.name == ">") {
                             UI.Space(154); continue;
                         }
-                        UI.ActionButton(action.name, () => { action.action(ch, blueprint); }, UI.Width(140));
+                        var actionName = action.name;
+                        float extraSpace = 0;
+                        if (action.isRepeatable) {
+                            actionName += (action.isRepeatable ? $" {repeatCount}" : "");
+                            extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
+                        }
+                        UI.ActionButton(actionName, () => { action.action(ch, blueprint, repeatCount); }, UI.Width(140 + extraSpace));
                         UI.Space(10);
                     }
                     else {

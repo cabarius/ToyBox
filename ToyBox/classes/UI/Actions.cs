@@ -123,11 +123,18 @@ namespace ToyBox {
                 }
             }
         }
-        public static void SpawnUnit(BlueprintUnit unit) {
+        public static void SpawnUnit(BlueprintUnit unit, int count) {
             Vector3 worldPosition = Game.Instance.ClickEventsController.WorldPosition;
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
-                Game.Instance.EntityCreator.SpawnUnit(unit, new Vector3(worldPosition.x + 2f, worldPosition.y + 2f, worldPosition.z), Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+                for (int i = 0; i < count; i++) {
+                    Vector3 offset = 5f*UnityEngine.Random.insideUnitSphere;
+                    Vector3 spawnPosition = new Vector3(
+                        worldPosition.x + offset.x,
+                        worldPosition.y,
+                        worldPosition.z + offset.z);
+                    Game.Instance.EntityCreator.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+                }
             }
         }
         public static void ChangeParty() {

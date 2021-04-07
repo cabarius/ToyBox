@@ -40,8 +40,12 @@ namespace ToyBox {
         public String name { get; }
         public Type type { get; }
         public Func<BlueprintScriptableObject, bool> filter;
-        public NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null) {
-            this.name = name; this.type = type; this.filter = filter != null ? filter : (bp) => true;
+        public Func<BlueprintScriptableObject, String> collator;
+        public NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null, Func<BlueprintScriptableObject, String> collator = null) {
+            this.name = name;
+            this.type = type;
+            this.filter = filter != null ? filter : (bp) => true;
+            this.collator = collator;
         }
     }
 
@@ -50,7 +54,7 @@ namespace ToyBox {
         public Action action { get; }
         public Func<bool> canPerform { get; }
         public NamedAction(String name, Action action, Func<bool> canPerform = null) {
-            this.name = name; 
+            this.name = name;
             this.action = action;
             this.canPerform = canPerform != null ? canPerform : () => { return true; };
         }
@@ -58,8 +62,8 @@ namespace ToyBox {
     public class NamedAction<T> {
         public String name { get; }
         public Action<T> action { get; }
-        public Func<T,bool> canPerform { get; }
-        public NamedAction(String name, Action<T> action, Func<T,bool> canPerform = null) {
+        public Func<T, bool> canPerform { get; }
+        public NamedAction(String name, Action<T> action, Func<T, bool> canPerform = null) {
             this.name = name;
             this.action = action;
             this.canPerform = canPerform != null ? canPerform : (T) => { return true; };
@@ -80,18 +84,21 @@ namespace ToyBox {
     public class NamedMutator<Target, T> {
         public String name { get; }
         public Type type { get; }
-        public Action<Target, T> action { get; }
+        public Action<Target, T, int> action { get; }
         public Func<Target, T, bool> canPerform { get; }
+        public bool isRepeatable { get; }
         public NamedMutator(
             String name,
             Type type,
-            Action<Target, T> action,
-            Func<Target, T, bool> canPerform = null
+            Action<Target, T, int> action,
+            Func<Target, T, bool> canPerform = null,
+            bool isRepeatable = false
             ) {
             this.name = name;
             this.type = type;
             this.action = action;
             this.canPerform = canPerform != null ? canPerform : (target, value) => true;
+            this.isRepeatable = isRepeatable;
         }
     }
 }
