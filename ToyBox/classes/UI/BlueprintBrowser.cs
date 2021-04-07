@@ -29,6 +29,7 @@ using Kingmaker.Blueprints.Quests;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Craft;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
@@ -63,14 +64,15 @@ namespace ToyBox {
  
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
-            new NamedTypeFilter("All", typeof(BlueprintScriptableObject)),
+            new NamedTypeFilter("All", typeof(BlueprintScriptableObject), null, (bp) => ((BlueprintItem)bp).SubtypeName),
             new NamedTypeFilter("Facts",typeof(BlueprintFact)),
             new NamedTypeFilter("Features", typeof(BlueprintFeature)),
             new NamedTypeFilter("Abilities", typeof(BlueprintAbility), (bp) => !((BlueprintAbility)bp).IsSpell),
             new NamedTypeFilter("Spells", typeof(BlueprintAbility), (bp) => ((BlueprintAbility)bp).IsSpell),
             new NamedTypeFilter("Spellbooks", typeof(BlueprintSpellbook)),
             new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
-            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment)),
+            new NamedTypeFilter("Item", typeof(BlueprintItem), null,  (bp) => ((BlueprintItem)bp).SubtypeName),
+            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment), null, (bp) => ((BlueprintItem)bp).SubtypeName),
             new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => ((BlueprintItemWeapon)bp).Type.ToString()),
             new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
             new NamedTypeFilter("Head", typeof(BlueprintItemEquipmentHead)),
@@ -86,6 +88,7 @@ namespace ToyBox {
             new NamedTypeFilter("Gloves", typeof(BlueprintItemEquipmentGloves)),
             new NamedTypeFilter("Boots", typeof(BlueprintItemEquipmentFeet)),
             new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
+            new NamedTypeFilter("Ingredient", typeof(BlueprintIngredient)),
             new NamedTypeFilter("Units", typeof(BlueprintUnit)),
             new NamedTypeFilter("Races", typeof(BlueprintRace)),
             new NamedTypeFilter("Areas", typeof(BlueprintArea)),

@@ -12,6 +12,7 @@ ver 1.1.7
     Party Editor > Stats
         Can now choose Alignment
         Can now choose Size
+    Added Item and Ingrediant as options in Search 'n Pick
     In search and pick some actions (add/remove item and spawn) now support a parameter do it up to 100 times
     Improved legibility of colors
 Ver 1.1.6
