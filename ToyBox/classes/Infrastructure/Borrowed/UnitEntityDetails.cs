@@ -57,6 +57,7 @@ namespace ToyBox
 {
     public enum UnitSelectType
     {
+        None,
         Everyone,
         Party,
         MainCharacter,
@@ -71,10 +72,7 @@ namespace ToyBox
 
         public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType)
         {
-            if (unitEntityData == null)
-            {
-                return false;
-            }
+            if (unitEntityData == null) return false;
             switch (selectType)
             {
                 case UnitSelectType.Everyone:

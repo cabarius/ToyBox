@@ -246,6 +246,34 @@ namespace ToyBox {
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
             return sel != selected;
         }
+        public static void EnumGrid<TEnum>(Func<TEnum> get, Action<TEnum> set, int xCols, params GUILayoutOption[] options) where TEnum : struct {
+            var value = get();
+            var names = Enum.GetNames(typeof(TEnum));
+            int index = Array.IndexOf(names, value.ToString());
+            if (UI.SelectionGrid(ref index, names, xCols, options)) {
+                TEnum newValue;
+                if (Enum.TryParse(names[index], out newValue)) {
+                    set(newValue);
+                }
+            }
+        }
+        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
+            var names = Enum.GetNames(typeof(TEnum));
+            int index = Array.IndexOf(names, value.ToString());
+            if (UI.SelectionGrid(ref index, names, xCols, options)) {
+                TEnum newValue;
+                if (Enum.TryParse(names[index], out newValue)) {
+                    value = newValue;
+                }
+            }
+        }
+        public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
+            UI.BeginHorizontal();
+            UI.Label(title.cyan(), UI.AutoWidth());
+            UI.Space(25);
+            UI.EnumGrid<TEnum>(ref value, xCols, options);
+            UI.EndHorizontal();
+        }
         public static void Toolbar(ref int value, String[] texts, params GUILayoutOption[] options) {
             value = GL.Toolbar(value, texts, options);
         }
@@ -296,6 +324,7 @@ namespace ToyBox {
             bool changed = false;
             options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
+                title = value ? title.bold() : title.grey();
                 if (GL.Button("" + (value ? onMark : offMark) + " " + title, options)) { value = !value; }
             }
             else {

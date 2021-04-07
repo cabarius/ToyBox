@@ -1005,7 +1005,7 @@ namespace ToyBox {
         public static class ClickGroundHandler_RunCommand_Patch {
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
                 var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
-                var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : settings.SpeedLimit;
+                var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
                  UnitMoveTo unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
@@ -2594,22 +2594,21 @@ namespace ToyBox {
 #endif
             }
         }
-#if false
         [HarmonyPatch(typeof(UnitCombatState), "AttackOfOpportunity")]
         static class UnitCombatState_AttackOfOpportunity_Patch {
             static bool Prefix(UnitEntityData target) {
-                if (StringUtils.ToToggleBool(settings.toggleNoAttacksOfOpportunity) && UnitEntityDataUtils.CheckUnitEntityData(target, (UnitSelectType)settings.indexNoAttacksOfOpportunity)) {
+                if (UnitEntityDataUtils.CheckUnitEntityData(target, settings.noAttacksOfOpportunitySelection)) {
                     return false;
                 }
                 return true;
 
             }
         }
-
+#if false
         [HarmonyPatch(typeof(CampingSettings), "IsDungeon", MethodType.Getter)]
         static class CampingSettings_IsDungeon_Patch {
             static void Postfix(ref bool __result) {
-                if (!Main.enabled) {
+                if (!Main.Enabled) {
                     return;
                 }
                 if (StringUtils.ToToggleBool(settings.toggleCookingAndHuntingInDungeons)) {

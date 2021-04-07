@@ -28,7 +28,16 @@ namespace ToyBox {
         public bool toggleShowAllPartyPortraits = false;
         public bool toggleAccessRemoteCharacters = false;
 
-            // level up
+        // selector
+        public enum DisableAOO {
+            Off,
+            MainCharacter,
+            Party,
+            Enemies
+        }
+        public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.None;
+
+        // level up
         public bool toggleNoLevelUpRestirctions = false;
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnorePrerequisites = false;

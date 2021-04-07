@@ -9,12 +9,15 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 Current features include 
 
 ver 1.1.7
+    Added Attack of Opportunity Disable to Cheap Tricks
     Party Editor > Stats
         Can now choose Alignment
         Can now choose Size
     Added Item and Ingrediant as options in Search 'n Pick
     In search and pick some actions (add/remove item and spawn) now support a parameter do it up to 100 times
     Improved legibility of colors
+    Fixed bug with movement speed multiplier where it made the main character go slow with moveAsOne off
+
 Ver 1.1.6
     Ignore Class And Feat Restrictions now allows you to choose any mythic class each time you level up starting from level 1
 Ver 1.1.5

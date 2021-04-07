@@ -294,14 +294,10 @@ namespace ToyBox {
                     UI.EndHorizontal();
                     UI.BeginHorizontal();
                     UI.Space(528);
-                    var sizes = Enum.GetNames(typeof(Kingmaker.Enums.Size));
-                    int sizeIndex = Array.IndexOf(sizes, size.ToString());
-                    if (UI.SelectionGrid(ref sizeIndex, sizes, 3, UI.Width(600))) {
-                        Kingmaker.Enums.Size newSize;
-                        if (Enum.TryParse(sizes[sizeIndex], out newSize)) {
-                            ch.Descriptor.State.Size = newSize;
-                        }
-                    }
+                    UI.EnumGrid(
+                        () => ch.Descriptor.State.Size,
+                        (s) => ch.Descriptor.State.Size = s,
+                        3, UI.Width(600));
                     UI.EndHorizontal();
                     UI.BeginHorizontal();
                     UI.Space(525);
