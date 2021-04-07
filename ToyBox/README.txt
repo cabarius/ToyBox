@@ -9,7 +9,9 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 Current features include 
 
 ver 1.1.7
-    Added alignment picker under Party Editor > Stats
+    Party Editor > Stats
+        Can now choose Alignment
+        Can now choose Size
     In search and pick some actions (add/remove item and spawn) now support a parameter do it up to 100 times
     Improved legibility of colors
 Ver 1.1.6

@@ -277,13 +277,35 @@ namespace ToyBox {
                     UI.Label($"{alignment.Name()}".color(alignment.Color()).bold(), UI.Width(1250f));
                     UI.EndHorizontal();
                     UI.BeginHorizontal();
-                    UI.Space(525);
+                    UI.Space(528);
                     int alignmentIndex = Array.IndexOf(alignments, alignment);
                     var titles = alignments.Select(
                         a => a.Acronym().color(a.Color()).bold()).ToArray();
                     if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
                         ch.Descriptor.Alignment.Set(alignments[alignmentIndex]);
                     }
+                    UI.EndHorizontal();
+                    UI.Div(100, 20, 755);
+                    UI.BeginHorizontal();
+                    UI.Space(100);
+                    UI.Label("Size", UI.Width(425));
+                    var size = ch.Descriptor.State.Size;
+                    UI.Label($"{size}".orange().bold(), UI.Width(175));
+                    UI.EndHorizontal();
+                    UI.BeginHorizontal();
+                    UI.Space(528);
+                    var sizes = Enum.GetNames(typeof(Kingmaker.Enums.Size));
+                    int sizeIndex = Array.IndexOf(sizes, size.ToString());
+                    if (UI.SelectionGrid(ref sizeIndex, sizes, 3, UI.Width(600))) {
+                        Kingmaker.Enums.Size newSize;
+                        if (Enum.TryParse(sizes[sizeIndex], out newSize)) {
+                            ch.Descriptor.State.Size = newSize;
+                        }
+                    }
+                    UI.EndHorizontal();
+                    UI.BeginHorizontal();
+                    UI.Space(528);
+                    UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
                     UI.EndHorizontal();
                     UI.Div(100, 20, 755);
                     foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
