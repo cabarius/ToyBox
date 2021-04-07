@@ -57,14 +57,14 @@ namespace ToyBox {
             }
             if (hasRepeatableAction) {
                 UI.BeginHorizontal();
-                UI.Space(650);
+                UI.Space(553);
                 UI.ActionIntTextField(
                     ref repeatCount,
                     "repeatCount",
                     (limit) => { },
                     () => { },
-                    UI.Width(140));
-                UI.Space(25);
+                    UI.Width(160));
+                UI.Space(40);
                 UI.Label("Parameter".cyan() + ": " + $"{repeatCount}".orange(), UI.ExpandWidth(false));
                 repeatCount = Math.Max(1, repeatCount);
                 repeatCount = Math.Min(100, repeatCount);
@@ -84,14 +84,14 @@ namespace ToyBox {
                     title = titleFormater(title);
                 }
 
-                UI.Label(title, UI.Width(650 - indent));
+                UI.Label(title, UI.Width(550 - indent));
                 int actionCount = actions != null ? actions.Count() : 0;
                 for (int ii = 0; ii < maxActions; ii++) {
                     if (ii < actionCount) {
                         BlueprintAction action = actions[ii];
                         // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
                         if (action.name == "<" || action.name == ">") {
-                            UI.Space(154); continue;
+                            UI.Space(164); continue;
                         }
                         var actionName = action.name;
                         float extraSpace = 0;
@@ -99,11 +99,11 @@ namespace ToyBox {
                             actionName += (action.isRepeatable ? $" {repeatCount}" : "");
                             extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
                         }
-                        UI.ActionButton(actionName, () => { action.action(ch, blueprint, repeatCount); }, UI.Width(140 + extraSpace));
+                        UI.ActionButton(actionName, () => { action.action(ch, blueprint, repeatCount); }, UI.Width(160 + extraSpace));
                         UI.Space(10);
                     }
                     else {
-                        UI.Space(154);
+                        UI.Space(174);
                     }
                 }
                 UI.Space(30);
