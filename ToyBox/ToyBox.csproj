@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="classes\Infrastructure\DisclosureToggle.cs" />
     <Compile Include="classes\Infrastructure\Extensions.cs" />
+    <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
     <Compile Include="classes\UI\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Logging.cs" />

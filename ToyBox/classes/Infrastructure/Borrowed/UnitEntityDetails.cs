@@ -57,11 +57,12 @@ namespace ToyBox
 {
     public enum UnitSelectType
     {
-        None,
-        Everyone,
+        Off,
+        You,
         Party,
-        MainCharacter,
-        Enemies
+        Friendly,
+        Enemies,
+        Everyone,
     }
     static class UnitEntityDataUtils
     {
@@ -83,13 +84,16 @@ namespace ToyBox
                         return true;
                     }
                     return false;
-                case UnitSelectType.MainCharacter:
+                case UnitSelectType.You:
                     if (unitEntityData.IsMainCharacter)
                     {
                         return true;
                     }
                     return false;
+                case UnitSelectType.Friendly:
+                    return !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter());
                 case UnitSelectType.Enemies:
+                    // TODO - should this be IsEnemy instead?
                     if (!unitEntityData.IsPlayerFaction && unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction))
                     {
                         return true;
@@ -99,7 +103,6 @@ namespace ToyBox
                     return false;
             }
         }
-
         public static void Kill(UnitEntityData unit)
         {
             unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue + unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;

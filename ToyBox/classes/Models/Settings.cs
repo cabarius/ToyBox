@@ -29,13 +29,9 @@ namespace ToyBox {
         public bool toggleAccessRemoteCharacters = false;
 
         // selector
-        public enum DisableAOO {
-            Off,
-            MainCharacter,
-            Party,
-            Enemies
-        }
-        public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.None;
+        public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
+        public UnitSelectType allowMovementThroughSelection = UnitSelectType.Off;
+        public float collisionRadiusMultiplier = 1;
 
         // level up
         public bool toggleNoLevelUpRestirctions = false;
@@ -75,6 +71,18 @@ namespace ToyBox {
         public float partyMovementSpeedMultiplier = 1;
         public float enemyBaseHitPointsMultiplier = 1;
         public float buffDurationMultiplierValue = 1;
+
+        // Dice Rolls
+
+        public UnitSelectType allHitsCritical = UnitSelectType.Off;
+        public UnitSelectType rollWithAdvantage = UnitSelectType.Off;
+        public UnitSelectType rollWithDisadvantage = UnitSelectType.Off;
+        public UnitSelectType alwaysRoll20 = UnitSelectType.Off;
+        public UnitSelectType neverRoll20 = UnitSelectType.Off;
+        public UnitSelectType alwaysRoll1 = UnitSelectType.Off;
+        public UnitSelectType neverRoll1 = UnitSelectType.Off;
+        public UnitSelectType roll20Initiative = UnitSelectType.Off;
+        public UnitSelectType roll1Initiative = UnitSelectType.Off;
 
         // Party Editor
         public int selectedPartyFilter = 0;

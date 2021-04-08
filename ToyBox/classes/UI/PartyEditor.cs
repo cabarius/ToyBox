@@ -300,7 +300,7 @@ namespace ToyBox {
                         3, UI.Width(600));
                     UI.EndHorizontal();
                     UI.BeginHorizontal();
-                    UI.Space(525);
+                    UI.Space(528);
                     UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
                     UI.EndHorizontal();
                     UI.Div(100, 20, 755);

@@ -8,6 +8,10 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 
 Current features include 
 
+Ver 1.1.8
+    Added Dice Roll Tweaks to Cheap Tricks
+    Added friendly (Non Hostile) as a category to which you can apply tweaks
+
 ver 1.1.7
     Added Attack of Opportunity Disable to Cheap Tricks
     Can now choose Alignment in Party Editor > Stats

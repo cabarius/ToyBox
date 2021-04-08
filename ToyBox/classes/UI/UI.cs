@@ -269,7 +269,7 @@ namespace ToyBox {
         }
         public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             UI.BeginHorizontal();
-            UI.Label(title.cyan(), UI.AutoWidth());
+            UI.Label(title.cyan(), UI.Width(300));
             UI.Space(25);
             UI.EnumGrid<TEnum>(ref value, xCols, options);
             UI.EndHorizontal();

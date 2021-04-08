@@ -63,16 +63,17 @@ namespace ToyBox {
                         UI.Label("Gold".cyan(), UI.Width(150));
                         UI.Label(money.ToString().orange().bold(), UI.Width(200));
                         UI.ActionButton($"Gain {increment}", () => { Game.Instance.Player.GainMoney(increment); }, UI.AutoWidth());
-                        UI.ActionButton($"Lose {increment}", () => { 
+                        UI.ActionButton($"Lose {increment}", () => {
                             var loss = Math.Min(money, increment);
-                            Game.Instance.Player.GainMoney(-loss); }, UI.AutoWidth());
+                            Game.Instance.Player.GainMoney(-loss);
+                        }, UI.AutoWidth());
                     },
                     () => {
                         var exp = mainChar.Progression.Experience;
                         UI.Label("Experience".cyan(), UI.Width(150));
                         UI.Label(exp.ToString().orange().bold(), UI.Width(200));
                         UI.ActionButton($"Gain {increment}", () => {
-                            Game.Instance.Player.GainPartyExperience(increment); 
+                            Game.Instance.Player.GainPartyExperience(increment);
                         }, UI.AutoWidth());
 #if false
                         UI.ActionButton($"Lose {increment}", () => {
@@ -141,10 +142,19 @@ namespace ToyBox {
                 () => { UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0); },
                 () => { }
                 );
-            UI.HStack("", 1, () => {
-                UI.EnumGrid("Disable Attacks Of Opportunity",
-                    ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth());
-            });
+            UI.HStack("", 1,
+                () => {
+                    UI.EnumGrid("Disable Attacks Of Opportunity",
+                        ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth());
+                },
+#if false
+                () => {
+                    UI.EnumGrid("Allow Movement Through", ref settings.allowMovementThroughSelection, 0, UI.AutoWidth());
+                },
+                () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
+#endif
+                () => {}
+                );
             UI.Div(0, 25);
             UI.HStack("Level Up", 1,
                 () => { UI.Slider("Feature Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()); },
@@ -185,7 +195,19 @@ namespace ToyBox {
                 () => { UI.Slider("Buff Duration", ref settings.buffDurationMultiplierValue, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
                 () => { }
                 );
-
+            UI.Div(0, 25);
+            UI.HStack("Dice Rolls", 1,
+                () => UI.EnumGrid("All Hits Critical", ref settings.allHitsCritical, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 20", ref settings.alwaysRoll20, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 1", ref settings.alwaysRoll1, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Never Roll 20", ref settings.neverRoll20, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Never Roll 1", ref settings.neverRoll1, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Initivate => 20", ref settings.roll20Initiative, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Initivate => 1", ref settings.roll1Initiative, 0, UI.AutoWidth()),
+                () => { }
+                );
             UI.Div(0, 25);
             UI.HStack("Character Creation", 1,
                 () => { UI.Slider("Build Points (Main)", ref settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", UI.AutoWidth()); },

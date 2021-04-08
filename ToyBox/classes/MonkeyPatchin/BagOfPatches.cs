@@ -198,153 +198,56 @@ namespace ToyBox {
                 }
             }
         }
+#endif
 
-        [HarmonyPatch(typeof(RuleRollD20), "Roll")]
-        public static class RuleRollD20_Roll_Patch {
-            static void Postfix(RuleRollD20 __instance, ref int __result) {
-                Logger.ModLoggerDebug("Initial D20Roll: " + __result);
-                if (StringUtils.ToToggleBool(settings.toggleRollWithDisadvantage)) {
-                    switch (settings.rollWithDisadvantageeIndex) {
-                        case 0:
-                            __result = Math.Min(__result, UnityEngine.Random.Range(1, 21));
-                            break;
-                        case 1:
-                            if (__instance.Initiator.IsPlayerFaction) {
-                                __result = Math.Min(__result, UnityEngine.Random.Range(1, 21));
-                            }
-                            break;
-                        case 2:
-                            if (!__instance.Initiator.IsPlayerFaction && __instance.Initiator.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                                __result = Math.Min(__result, UnityEngine.Random.Range(1, 21));
-                            }
-                            break;
+        [HarmonyPatch(typeof(RuleRollDice), "Roll")]
+        public static class RuleRollDice_Roll_Patch {
+            static void Postfix(RuleRollDice __instance) {
+                if (__instance.DiceFormula.Dice != DiceType.D20) return;
+                var initiator = __instance.Initiator;
+                int result = __instance.m_Result;
+                Logger.ModLoggerDebug("Initial D20Roll: " + result);
+                if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)) {
+                    result = 20;
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)) {
+                    result = 1;
+                }
+                else {
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
+                        result = Math.Max(result, UnityEngine.Random.Range(1, 21));
+                    }
+                    else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
+                        result = Math.Min(result, UnityEngine.Random.Range(1, 21));
+                    }
+                    int min = 1;
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
+                        result = UnityEngine.Random.Range(2, 21);
+                        min = 2;
+                    }
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll20) && result == 20) {
+                        result = UnityEngine.Random.Range(min, 20);
                     }
                 }
-
-                if (StringUtils.ToToggleBool(settings.toggleRollWithAdvantage)) {
-                    switch (settings.rollWithAdvantageIndex) {
-                        case 0:
-                            __result = Math.Max(__result, UnityEngine.Random.Range(1, 21));
-                            break;
-                        case 1:
-                            if (__instance.Initiator.IsPlayerFaction) {
-                                __result = Math.Max(__result, UnityEngine.Random.Range(1, 21));
-                            }
-                            break;
-                        case 2:
-                            if (!__instance.Initiator.IsPlayerFaction && __instance.Initiator.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                                __result = Math.Max(__result, UnityEngine.Random.Range(1, 21));
-                            }
-                            break;
-                    }
-                }
-
-                if (settings.toggleNeverRoll1 && __result == 1) {
-                    switch (settings.neverRoll1Index) {
-                        case 0:
-                            __result = UnityEngine.Random.Range(2, 21);
-                            break;
-                        case 1:
-                            if (__instance.Initiator.IsPlayerFaction) {
-                                __result = UnityEngine.Random.Range(2, 21);
-                            }
-                            break;
-                        case 2:
-                            if (!__instance.Initiator.IsPlayerFaction && __instance.Initiator.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                                __result = UnityEngine.Random.Range(2, 21);
-                            }
-                            break;
-                    }
-                }
-                if (settings.toggleNeverRoll20 && __result == 20) {
-                    switch (settings.neverRoll20Index) {
-                        case 0:
-                            __result = UnityEngine.Random.Range(1, 20);
-                            break;
-                        case 1:
-                            if (__instance.Initiator.IsPlayerFaction) {
-                                __result = UnityEngine.Random.Range(1, 20);
-                            }
-                            break;
-                        case 2:
-                            if (!__instance.Initiator.IsPlayerFaction && __instance.Initiator.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                                __result = UnityEngine.Random.Range(1, 20);
-                            }
-                            break;
-                    }
-                }
-
-                modLogger.Log(StringUtils.ToToggleBool(settings.togglePartyAlwaysRoll20) + " | " + (settings.takeXIndex != 0) + " | " + __instance.Initiator.IsPlayerFaction + " | " + !__instance.Initiator.IsInCombat);
-                if (!StringUtils.ToToggleBool(settings.togglePartyAlwaysRoll20) && settings.takeXIndex != 0 && __instance.Initiator.IsPlayerFaction && !__instance.Initiator.IsInCombat) {
-                    switch (settings.takeXIndex) {
-                        case 1:
-                            __result = 10;
-                            break;
-                        case 2:
-                            __result = 20;
-                            break;
-                        case 3:
-                            if (StringUtils.ToToggleBool(settings.toggleCustomTakeXAsMin)) {
-                                __result = Math.Max(Mathf.RoundToInt(settings.takeXCustom), __result);
-                            }
-                            else {
-                                __result = Mathf.RoundToInt(settings.takeXCustom);
-
-                            }
-                            break;
-                    }
-                }
-
-                if (StringUtils.ToToggleBool(settings.toggleMainCharacterRoll20)) {
-                    if (__instance.Initiator.IsMainCharacter) {
-                        __result = 20;
-                    }
-                }
-                if (settings.togglePartyAlwaysRoll20) {
-                    if (__instance.Initiator.IsPlayerFaction) {
-                        __result = 20;
-                    }
-                }
-                if (settings.toggleEnemiesAlwaysRoll1) {
-                    if (!__instance.Initiator.IsPlayerFaction && __instance.Initiator.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                        __result = 1;
-                    }
-                }
-                if (settings.toggleEveryoneExceptPlayerFactionRolls1) {
-                    if (!__instance.Initiator.IsPlayerFaction) {
-                        __result = 1;
-                    }
-                }
-                Logger.ModLoggerDebug("Modified D20Roll: " + __result);
+                Logger.ModLoggerDebug("Modified D20Roll: " + result);
+                __instance.m_Result = result;
             }
         }
 
         [HarmonyPatch(typeof(RuleInitiativeRoll), "Result", MethodType.Getter)]
         public static class RuleInitiativeRoll_OnTrigger_Patch {
             static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
-                if (StringUtils.ToToggleBool(settings.toggleRoll20Initiative)) {
-                    Logger.ModLoggerDebug("Initial InitiativeRoll: " + __result);
-                    switch (settings.roll20InitiativeIndex) {
-                        case 0:
-                            __result = 20;
-                            break;
-                        case 1:
-                            if (__instance.Initiator.IsPlayerFaction) {
-                                __result = 20;
-
-                            }
-                            break;
-                        case 2:
-                            if (!__instance.Initiator.IsPlayerFaction && __instance.Initiator.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                                __result = 20;
-                            }
-                            break;
-                    }
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
+                    __result = 1;
+                    Logger.ModLoggerDebug("Modified InitiativeRoll: " + __result);
+                }
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
+                    __result = 20;
                     Logger.ModLoggerDebug("Modified InitiativeRoll: " + __result);
                 }
             }
         }
-#endif
+
         [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
         static class Spellbook_GetSpellsPerDay_Patch {
             static void Postfix(ref int __result) {
@@ -673,7 +576,13 @@ namespace ToyBox {
             public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance) {
                 if (__instance.IsFirstCharacterLevel) {
                     if (mode != CharBuildMode.PreGen) {
-                        int pointCount = Math.Max(0, unit.IsCustomCompanion() ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+                        // Kludge - there is some wierdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
+                        bool isCustom = unit.Blueprint.ToString() == "CustomCompanion";
+                        Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
+                        Logger.Log($"not pregen - isCust: {isCustom}");
+                        int pointCount = Math.Max(0, isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+                            Logger.Log($"points: {pointCount}");
+
                         __instance.StatsDistribution.Start(pointCount);
                     }
                 }
@@ -772,7 +681,7 @@ namespace ToyBox {
                                     numToAdd = availableCount;
                                 }
                             }
-                            Logger.Log($"        IFeatureSelection: {selection} adding: {numToAdd}");
+                            //Logger.Log($"        IFeatureSelection: {selection} adding: {numToAdd}");
                             for (int i = 0; i < numToAdd; ++i) {
                                 state.AddSelection((FeatureSelectionState)null, source, selection, level);
                             }
@@ -780,7 +689,7 @@ namespace ToyBox {
                         Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
                         BlueprintProgression progression = blueprintFeature as BlueprintProgression;
                         if ((UnityEngine.Object)progression != (UnityEngine.Object)null) {
-                            Logger.Log($"        BlueprintProgression: {progression}");
+                            //Logger.Log($"        BlueprintProgression: {progression}");
                             LevelUpHelper.UpdateProgression(state, unit, progression);
                         }
                         FeatureSource source1 = source;
@@ -2559,16 +2468,15 @@ namespace ToyBox {
                 }
             }
         }
-
+#endif
         [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
         static class HitPlayer_OnTriggerl_Patch {
             static void Postfix(ref bool __result, RuleAttackRoll __instance) {
-                if (StringUtils.ToToggleBool(settings.toggleAllHitsAreCritical) && __instance.Initiator.IsPlayerFaction) {
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allHitsCritical)) {
                     __result = true;
                 }
             }
         }
-#endif
         [HarmonyPatch(typeof(RuleSavingThrow), "IsPassed", MethodType.Getter)]
         public static class RuleSavingThrow_IsPassed_Patch {
             static void Postfix(ref bool __result, RuleSavingThrow __instance) {
