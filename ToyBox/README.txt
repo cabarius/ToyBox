@@ -11,6 +11,7 @@ Current features include 
 Ver 1.1.8
     Added Dice Roll Tweaks to Cheap Tricks
     Added friendly (Non Hostile) as a category to which you can apply tweaks
+    Fixed bug where mercenaries where getting main character build points instead of mercenary
 
 ver 1.1.7
     Added Attack of Opportunity Disable to Cheap Tricks
