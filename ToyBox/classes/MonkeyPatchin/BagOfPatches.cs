@@ -59,6 +59,7 @@ using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RandomEncounters;
+using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
 using Kingmaker.RuleSystem.Rules.Abilities;
@@ -105,7 +106,6 @@ using Kingmaker.View.MapObjects.InteractionRestrictions;
 using Kingmaker.View.Spawners;
 using Kingmaker.Visual;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
-//using Kingmaker.Visual.FogOfWar;
 using Kingmaker.Visual.HitSystem;
 using Kingmaker.Visual.LocalMap;
 using Kingmaker.Visual.Sound;
@@ -173,17 +173,6 @@ namespace ToyBox {
             }
         }
 #if false
-        [HarmonyPatch(typeof(FogOfWarRenderer), "Update")]
-        public static class FogOfWarRenderer_Update_Patch {
-            public static bool Prefix() {
-                if (!StringUtils.ToToggleBool(settings.toggleFogOfWarVisuals)) {
-                    Shader.SetGlobalFloat("_FogOfWarGlobalFlag", 0.0f);
-                    return false;
-                }
-                return true;
-            }
-        }
-
         [HarmonyPatch(typeof(RuleCastSpell), "IsArcaneSpellFailed", MethodType.Getter)]
         public static class RuleCastSpell_IsArcaneSpellFailed_Patch {
             static void Postfix(RuleCastSpell __instance, ref bool __result) {
@@ -456,7 +445,7 @@ namespace ToyBox {
                 }
             }
         }
-#if false
+
         [HarmonyPatch(typeof(AbilityResourceLogic), "Spend")]
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
@@ -475,7 +464,14 @@ namespace ToyBox {
                 return !settings.toggleInfiniteAbilities;
             }
         }
-#endif
+
+        [HarmonyPatch(typeof(AbilityData), "SpellSlotCost", MethodType.Getter)]
+        public static class AbilityData_SpellSlotCost_Patch {
+            public static bool Prefix() {
+                return !settings.toggleInfiniteSpellCasts;
+            }
+        }
+
         [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
         [HarmonyPatch(new Type[] { typeof(UnitCommand) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch1 {
@@ -1672,7 +1668,27 @@ namespace ToyBox {
                 Game.Instance.BlueprintRoot.Vendors.SellModifier = settings.vendorSellPriceMultiplier;
             }
         }
+
+        [HarmonyPatch(typeof(FogOfWarArea), "Active", MethodType.Getter)]
+        public static class FogOfWarArea_Active_Patch {
+            private static void Postfix(ref FogOfWarArea __result) {
+                __result.enabled = !settings.toggleNoFogOfWar;
+            }
+        }
+
 #if false
+        [HarmonyPatch(typeof(FogOfWarRenderer), "Update")]
+        public static class FogOfWarRenderer_Update_Patch {
+            public static bool Prefix() {
+                if (!StringUtils.ToToggleBool(settings.toggleFogOfWarVisuals)) {
+                    Shader.SetGlobalFloat("_FogOfWarGlobalFlag", 0.0f);
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
         [HarmonyPatch(typeof(LocationMaskRenderer), "OnAreaDidLoad")]
         static class LocationMaskRenderer_OnAreaDidLoad_PostPatch {
             private static void Postfix() {
@@ -1704,7 +1720,7 @@ namespace ToyBox {
             }
         }
 #endif
-        [HarmonyPatch(typeof(LevelUpController), "CanLevelUp")]
+            [HarmonyPatch(typeof(LevelUpController), "CanLevelUp")]
         static class LevelUpController_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleNoLevelUpRestirctions) {

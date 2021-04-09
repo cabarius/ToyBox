@@ -8,6 +8,11 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 
 Current features include 
 
+Ver 1.1.9
+    Selector to allow you to move through other units during combat (real-time and turn based)
+    Infinite Abilities and Spell Casts
+    Disable Fog of War
+    When you enable 'Show GUIDs' in Search 'n Pick they can now be copied to the clipboard
 Ver 1.1.8
     Added Dice Roll Tweaks to Cheap Tricks
     Added friendly (Non Hostile) as a category to which you can apply tweaks

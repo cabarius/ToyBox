@@ -16,6 +16,7 @@ namespace ToyBox {
         public bool toggleSpontaneousCopyScrolls = false;
         public bool toggleInstantEvent = false;
         public bool toggleInfiniteAbilities = false;
+        public bool toggleInfiniteSpellCasts = false;
         public bool toggleInfiniteSkillpoints = false;
         public bool toggleInstantCooldown = false;
         public bool toggleUnlimitedActionsPerTurn = false;
@@ -23,6 +24,7 @@ namespace ToyBox {
         public bool toggleDialogRestrictions = false;
         public bool toggleSettlementRestrictions = false;
         public bool toggleMoveSpeedAsOne = false;
+        public bool toggleNoFogOfWar = false;
         public bool toggleRestoreSpellsAbilitiesAfterCombat = false;
         public bool toggleInstantRestAfterCombat = false;
         public bool toggleShowAllPartyPortraits = false;

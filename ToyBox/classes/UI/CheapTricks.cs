@@ -127,14 +127,21 @@ namespace ToyBox {
             UI.HStack("Tweaks", 3,
                 () => { UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0); },
                 () => { UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0); },
-                () => { UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0); },
                 () => { UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0); },
+
+                () => { UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities    , 0); },
+                () => { UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0); },
+                () => { UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0); },
+
+                () => { UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0); },
                 () => { UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0); },
                 () => { UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0); },
+
                 () => { UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0); },
-                () => { UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0); },
                 () => { UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0); },
                 () => { UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0); },
+
+                () => { UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0); },
                 () => { UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0); },
                 //() => { UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0); },
                 //() => { UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0); },
@@ -147,10 +154,11 @@ namespace ToyBox {
                     UI.EnumGrid("Disable Attacks Of Opportunity",
                         ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth());
                 },
-#if false
                 () => {
-                    UI.EnumGrid("Allow Movement Through", ref settings.allowMovementThroughSelection, 0, UI.AutoWidth());
+                    UI.EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, 0, UI.AutoWidth());
                 },
+                () => { UI.Space(328);  UI.Label("This allows characters you control to move through the selected category of units during combat".green(), UI.AutoWidth());  },
+#if false
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
 #endif
                 () => {}
@@ -204,8 +212,8 @@ namespace ToyBox {
                 () => UI.EnumGrid("Always Roll 1", ref settings.alwaysRoll1, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Never Roll 20", ref settings.neverRoll20, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Never Roll 1", ref settings.neverRoll1, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Initivate => 20", ref settings.roll20Initiative, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Initivate => 1", ref settings.roll1Initiative, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, 0, UI.AutoWidth()),
                 () => { }
                 );
             UI.Div(0, 25);

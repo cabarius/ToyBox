@@ -20,7 +20,6 @@ namespace ToyBox {
         // moving through ... feature
         public static Settings settings { get { return Main.settings; } }
 
-#if false
         [HarmonyPatch(typeof(UnitMovementAgent), nameof(UnitMovementAgent.AvoidanceDisabled), MethodType.Getter)]
         static class UnitMovementAgent_AvoidanceDisabled_Patch {
             [HarmonyPostfix]
@@ -52,6 +51,5 @@ namespace ToyBox {
                     __result *= settings.collisionRadiusMultiplier;
             }
         }
-#endif
     }
 }

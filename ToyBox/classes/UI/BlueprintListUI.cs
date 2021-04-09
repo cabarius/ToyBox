@@ -107,9 +107,25 @@ namespace ToyBox {
                     }
                 }
                 UI.Space(30);
-                var assetID = Main.settings.showAssetIDs ? blueprint.AssetGuid.magenta() + " " : "";
-                UI.Label($"{blueprint.GetType().Name.cyan()}" + " " + assetID + blueprint.GetDescription().green()); //, UI.Width(400));
-                UI.EndHorizontal();
+                var description = blueprint.GetDescription();
+                if (description != null && description.Length > 0) description = $"\n{description.green()}";
+                else description = "";
+                if (Main.settings.showAssetIDs) {
+                    UI.Label($"{blueprint.GetType().Name.cyan()}");
+                    Rect rect = GUILayoutUtility.GetLastRect();
+                    GUILayout.TextField(blueprint.AssetGuid, UI.Width(450));
+                    UI.EndHorizontal();
+                    if (description.Length > 0) {
+                        UI.BeginHorizontal();
+                        UI.Label("", UI.Width(rect.x));
+                        UI.Label($"{rect} " + blueprint.GetDescription().green()); //, 
+                        UI.EndHorizontal();
+                    }
+                }
+                else {
+                    UI.Label($"{blueprint.GetType().Name.cyan()}" + description);
+                    UI.EndHorizontal();
+                }
 #if false
                 String description = blueprint.GetDescription();
                 if (description.Length > 0) {
