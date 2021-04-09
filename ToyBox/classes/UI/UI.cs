@@ -213,7 +213,7 @@ namespace ToyBox {
             UI.ActionIntTextField(ref inc, title, (v) => { }, null, UI.Width(fieldWidth + 25));
             increment = inc;
         }
-        public static void Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
+        public static bool Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
             UI.BeginHorizontal(options);
             UI.Label(title.cyan(), UI.Width(300));
             UI.Space(25);
@@ -223,12 +223,15 @@ namespace ToyBox {
             UI.Space(25);
             UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
             UI.EndHorizontal();
+            bool changed = value != newValue;
             value = newValue;
+            return changed;
         }
-        public static void Slider(String title, ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
+        public static bool Slider(String title, ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, "", options);
+            bool changed = UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, "", options);
             value = (int)fvalue;
+            return changed;
         }
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();

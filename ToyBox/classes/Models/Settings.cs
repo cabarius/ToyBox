@@ -37,6 +37,7 @@ namespace ToyBox {
 
         // level up
         public bool toggleNoLevelUpRestirctions = false;
+        public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnorePrerequisites = false;
         public bool toggleIgnoreCasterTypeSpellLevel = false;
@@ -59,6 +60,7 @@ namespace ToyBox {
         public float experienceMultiplier = 1;
         public float moneyMultiplier = 1;
         public float vendorSellPriceMultiplier = 1;
+        public float vendorBuyPriceMultiplier = 1;
         public float defaultVendorSellPriceMultiplier = 1;
         public float fatigueHoursModifierMultiplier = 1;
         public float spellsPerDayMultiplier = 1;
