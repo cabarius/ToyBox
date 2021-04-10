@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System;
 
 namespace ToyBox {
-    class Util {
+    class PreviewUtilities {
         static private GUIStyle m_BoldLabel;
         static public GUIStyle BoldLabel {
             get {

@@ -45,7 +45,12 @@ using Kingmaker.Utility;
 namespace ToyBox {
     public class BlueprintListUI {
         public static int repeatCount = 1;
-        public static void OnGUI(UnitEntityData ch, IEnumerable<BlueprintScriptableObject> blueprints, float indent = 0, Func<String,String> titleFormater = null) {
+        public static void OnGUI(UnitEntityData ch,
+            IEnumerable<BlueprintScriptableObject> blueprints,
+            IEnumerable<IGrouping<String, BlueprintScriptableObject>> collatedBPs,
+            float indent = 0, 
+            Func<String,String> titleFormater = null
+        ) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             int index = 0;
             int maxActions = 0;

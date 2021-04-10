@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ToyBox
 {
-    public static class RichTextUtils
+    public static class RichText
     {
 
         // https://docs.unity3d.com/Manual/StyledText.html

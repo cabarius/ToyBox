@@ -1,7 +1,6 @@
 ﻿
 # Brief Description
-Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus . It provides a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members. It has over 190 cheats, tweaks and quality of life improvements for Pathfinder: WoTR.
-
+Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus. It has over 190 cheats, tweaks and quality of life improvements for PF: WoTR.  It provides a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members. 
 # Detailed Description
 
 Now with 190+ Cheats, Tweaks and Quality of Life Improvements

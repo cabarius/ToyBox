@@ -64,10 +64,10 @@ using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using Kingmaker.Assets.UI;
 using Alignment = Kingmaker.Enums.Alignment;
-using RGBA = ToyBox.RichTextUtils.RGBA;
+using RGBA = ToyBox.RichText.RGBA;
 namespace ToyBox {
-    public static class Extensions {
-        public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a);  }
+    public static class WrathExtensions {
+        public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }
         public static string Acronym(this Alignment a) { return UIUtility.GetAlignmentAcronym(a); }
         public static RGBA Color(this Alignment a) {
             switch (a) {
@@ -82,6 +82,24 @@ namespace ToyBox {
                 case Alignment.ChaoticEvil: return RGBA.red;
             }
             return RGBA.grey;
+        }
+        public static string GetDescription(this BlueprintScriptableObject bpObejct)
+        // borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+        {
+            try {
+                UnitReference mainChar = Game.Instance.Player.MainCharacter;
+                if (mainChar == null) { return ""; }
+                MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bpObejct, (MechanicsContext)null, (TargetWrapper)null);
+                return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
+            }
+            catch (Exception e) {
+                Console.Write($"{e}");
+#if DEBUG
+                return "ERROR".red().bold() + $": caught exception {e}";
+#else
+                return "";
+#endif
+            }
         }
     }
 }

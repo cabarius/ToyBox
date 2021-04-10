@@ -119,7 +119,7 @@ namespace ToyBox {
                 //if (filteredBPs == null || searchChanged) {
                     UpdateSearchResults(searchText, searchLimit, blueprints);
                 //}
-                BlueprintListUI.OnGUI(unit, filteredBPs, 100);
+                BlueprintListUI.OnGUI(unit, filteredBPs, null, 100);
                 return;
             }
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();

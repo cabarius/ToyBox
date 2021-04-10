@@ -202,7 +202,7 @@ namespace ToyBox {
                         var line = new List<string>();
                         if (actions.Length > 0) {
                             line.AddRange(actions.
-                                SelectMany(action => Util.FormatActionAsList(action)
+                                SelectMany(action => PreviewUtilities.FormatActionAsList(action)
                                 .Select(actionText => actionText == "" ? "EmptyAction" : actionText)));
                         }
                         if (alignment != null && alignment.Value > 0) {
@@ -231,7 +231,7 @@ namespace ToyBox {
                     var alignment = cue.AlignmentShift;
                     var text = "";
                     if (actions.Length > 0) {
-                        var result = Util.FormatActions(actions);
+                        var result = PreviewUtilities.FormatActions(actions);
                         if (result == "") result = "EmptyAction";
                         text += $" \n<size=75%>[{result}]</size>";
                     }

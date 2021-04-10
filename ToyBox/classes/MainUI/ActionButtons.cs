@@ -42,7 +42,21 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 
 namespace ToyBox {
-    public static class UIExtensions {
+    public class NamedTypeFilter {
+        public String name { get; }
+        public Type type { get; }
+        public Func<BlueprintScriptableObject, bool> filter;
+        public Func<BlueprintScriptableObject, String> collator;
+        public NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null, Func<BlueprintScriptableObject, String> collator = null) {
+            this.name = name;
+            this.type = type;
+            this.filter = filter != null ? filter : (bp) => true;
+            this.collator = collator;
+        }
+    }
+
+
+    public static class ActionButtons {
         public static Settings settings { get { return Main.settings; } }
         public static void ResetGUI() { }
 

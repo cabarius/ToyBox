@@ -130,99 +130,100 @@ namespace ToyBox {
             int respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
             foreach (UnitEntityData ch in characterList) {
+                var classData = ch.Progression.Classes;
+                // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
                 UnitProgressionData progression = ch.Descriptor.Progression;
                 BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
                 int level = progression.CharacterLevel;
                 int mythicLevel = progression.MythicExperience;
-                UI.BeginHorizontal();
-
-                UI.Label(ch.CharacterName.orange().bold(), UI.Width(200));
-                UI.Space(25);
-                float distance = mainChar.DistanceTo(ch); ;
-                UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
-                UI.Space(25);
-                UI.Label("lvl".green() + $": {level}", UI.Width(75));
-                // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
-                if (player.AllCharacters.Contains(ch)) {
-                    if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
-                        UI.ActionButton("+1 Lvl", () => {
-                            progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
-                        }, UI.Width(110));
-                    }
-                    else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
-                        UI.Label("Level Up".cyan().italic(), UI.Width(110));
-                    }
-                    else { UI.Space(113); }
-                }
-                else { UI.Space(113); }
-                UI.Space(25);
-                UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
-                if (player.AllCharacters.Contains(ch)) {
-                    if (progression.MythicExperience < 10) {
-                        UI.ActionButton("+1 My", () => {
-                            progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
-                        }, UI.Width(100));
-                    }
-                    else { UI.Label("Max", UI.Width(100)); }
-                }
-                else { UI.Space(103); }
-                var classData = ch.Progression.Classes;
-                UI.Space(35);
-
-                bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
-                if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
-                    if (showClasses) {
-                        selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Logger.Log($"selected {ch.CharacterName}");
-                    }
-                    else { selectedToggle = ToggleChoice.None; }
-                }
-                bool showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
-                if (UI.DisclosureToggle("Stats", ref showStats, true, 150)) {
-                    if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
-                    else { selectedToggle = ToggleChoice.None; }
-                }
-                bool showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
-                if (UI.DisclosureToggle("Facts", ref showFacts, true, 150)) {
-                    if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
-                    else { selectedToggle = ToggleChoice.None; }
-                }
-                bool showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
-                if (UI.DisclosureToggle("Buffs", ref showBuffs, true, 150)) {
-                    if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
-                    else { selectedToggle = ToggleChoice.None; }
-                }
-                bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
-                if (UI.DisclosureToggle("Abilities", ref showAbilities, true)) {
-                    if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
-                    else { selectedToggle = ToggleChoice.None; }
-                }
-                UI.Space(25);
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
-                if (spellCount > 0) {
-                    bool showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
-                    if (UI.DisclosureToggle($"{spellCount} Spells", ref showSpells, true)) {
-                        if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
+                using (UI.HorizontalScope()) {
+
+                    UI.Label(ch.CharacterName.orange().bold(), UI.Width(200));
+                    UI.Space(25);
+                    float distance = mainChar.DistanceTo(ch); ;
+                    UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
+                    UI.Space(25);
+                    UI.Label("lvl".green() + $": {level}", UI.Width(75));
+                    // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
+                    if (player.AllCharacters.Contains(ch)) {
+                        if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
+                            UI.ActionButton("+1 Lvl", () => {
+                                progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
+                            }, UI.Width(110));
+                        }
+                        else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
+                            UI.Label("Level Up".cyan().italic(), UI.Width(110));
+                        }
+                        else { UI.Space(113); }
+                    }
+                    else { UI.Space(113); }
+                    UI.Space(25);
+                    UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
+                    if (player.AllCharacters.Contains(ch)) {
+                        if (progression.MythicExperience < 10) {
+                            UI.ActionButton("+1 My", () => {
+                                progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
+                            }, UI.Width(100));
+                        }
+                        else { UI.Label("Max", UI.Width(100)); }
+                    }
+                    else { UI.Space(103); }
+                    UI.Space(35);
+
+                    bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
+                    if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
+                        if (showClasses) {
+                            selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Logger.Log($"selected {ch.CharacterName}");
+                        }
                         else { selectedToggle = ToggleChoice.None; }
                     }
+                    bool showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
+                    if (UI.DisclosureToggle("Stats", ref showStats, true, 150)) {
+                        if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
+                        else { selectedToggle = ToggleChoice.None; }
+                    }
+                    bool showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
+                    if (UI.DisclosureToggle("Facts", ref showFacts, true, 150)) {
+                        if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
+                        else { selectedToggle = ToggleChoice.None; }
+                    }
+                    bool showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
+                    if (UI.DisclosureToggle("Buffs", ref showBuffs, true, 150)) {
+                        if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
+                        else { selectedToggle = ToggleChoice.None; }
+                    }
+                    bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
+                    if (UI.DisclosureToggle("Abilities", ref showAbilities, true)) {
+                        if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
+                        else { selectedToggle = ToggleChoice.None; }
+                    }
+                    UI.Space(25);
+                    if (spellCount > 0) {
+                        bool showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
+                        if (UI.DisclosureToggle($"{spellCount} Spells", ref showSpells, true)) {
+                            if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
+                            else { selectedToggle = ToggleChoice.None; }
+                        }
+                    }
+                    else { UI.Space(180); }
+                    UI.Space(25);
+                    if (player.Party.Contains(ch)) {
+                        respecableCount++;
+                        UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
+                    }
+                    else {
+                        UI.Space(155);
+                    }
+                    UI.Space(25);
+                    if (!player.PartyAndPets.Contains(ch)) {
+                        UI.ActionButton("Add", () => { charToAdd = ch; }, UI.AutoWidth());
+                    }
+                    else if (player.ActiveCompanions.Contains(ch)) {
+                        UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.AutoWidth());
+                    }
                 }
-                else { UI.Space(180); }
-                UI.Space(25);
-                if (player.Party.Contains(ch)) {
-                    respecableCount++;
-                    UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
-                }
-                else {
-                    UI.Space(155);
-                }
-                UI.Space(25);
-                if (!player.PartyAndPets.Contains(ch)) {
-                    UI.ActionButton("Add To Party", () => { charToAdd = ch; }, UI.AutoWidth());
-                }
-                else if (player.ActiveCompanions.Contains(ch)) {
-                    UI.ActionButton("Remove From Party", () => { charToRemove = ch; }, UI.AutoWidth());
-                }
-                UI.EndHorizontal();
                 if (selectedCharacter != spellbookEditCharacter) {
                     editSpellbooks = false;
                     spellbookEditCharacter = null;
@@ -361,7 +362,7 @@ namespace ToyBox {
                         if (editSpellbooks) {
                             spellbookEditCharacter = ch;
                             var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
-                            BlueprintListUI.OnGUI(ch, blueprints, 100);
+                            BlueprintListUI.OnGUI(ch, blueprints, null, 100);
                         }
                         else {
                             var maxLevel = spellbook.Blueprint.MaxSpellLevel;

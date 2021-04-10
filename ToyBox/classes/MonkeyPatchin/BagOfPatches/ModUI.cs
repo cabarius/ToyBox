@@ -123,22 +123,21 @@ using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
-namespace ToyBox {
-    static class BagOfPatches_Selectors {
-        public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
-        public static Player player = Game.Instance.Player;
+namespace ToyBox.BagOfPatches {
+    static class ModUI {
 
-        [HarmonyPatch(typeof(UnitCombatState), "AttackOfOpportunity")]
-        static class UnitCombatState_AttackOfOpportunity_Patch {
-            static bool Prefix(UnitEntityData target) {
-                if (UnitEntityDataUtils.CheckUnitEntityData(target, settings.noAttacksOfOpportunitySelection)) {
-                    return false;
-                }
-                return true;
-
+        [HarmonyPatch(typeof(UnityModManager.UI), "Update")]
+        internal static class UnityModManager_UI_Update_Patch {
+            private static void Postfix(UnityModManager.UI __instance, ref Rect ___mWindowRect, ref Vector2[] ___mScrollPosition, ref int ___tabId) {
+                // hack to fix mouse wheel
+                var scrollPosition = ___mScrollPosition[0];
+                scrollPosition.x = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
+                ___mScrollPosition[0] = scrollPosition;
+                // save these in case we need them inside the mod
+                Main.ummRect = ___mWindowRect;
+                Main.ummScrollPosition = ___mScrollPosition;
+                Main.ummTabID = ___tabId;
             }
         }
-
     }
 }

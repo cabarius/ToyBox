@@ -145,13 +145,15 @@ namespace ToyBox {
                     filtered.Add(blueprint);
                 }
             }
+            filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
-#if false
             if (bpTypeFilter.collator != null) {
                 collatedBPs = filtered.GroupBy(bpTypeFilter.collator);
+                foreach (var group in collatedBPs) {
+                    
+                }
             }
-#endif
-            filteredBPs = filtered.OrderBy(bp => bp.name).Take(Main.settings.searchLimit).ToArray();
+            filteredBPs = filteredBPs.Take(Main.settings.searchLimit).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
             firstSearch = false;
         }
@@ -206,7 +208,7 @@ namespace ToyBox {
             if (filteredBPs != null) {
                 CharacterPicker.OnGUI();
                 UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                BlueprintListUI.OnGUI(selected, filteredBPs, 0);
+                BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0);
             }
             UI.Space(25);
             return null;

@@ -5,50 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using Kingmaker;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Blueprints.Items.Components;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items.Shields;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Blueprints.Quests;
-using Kingmaker.Blueprints.Root;
-using Kingmaker.Cheats;
-using Kingmaker.Controllers.Rest;
-using Kingmaker.Designers;
-using Kingmaker.EntitySystem;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.GameModes;
-using Kingmaker.Items;
-using Kingmaker.PubSubSystem;
-using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.UI;
-using Kingmaker.UI.Common;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.Utility;
 
 namespace ToyBox {
-    public class NamedTypeFilter {
-        public String name { get; }
-        public Type type { get; }
-        public Func<BlueprintScriptableObject, bool> filter;
-        public Func<BlueprintScriptableObject, String> collator;
-        public NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null, Func<BlueprintScriptableObject, String> collator = null) {
-            this.name = name;
-            this.type = type;
-            this.filter = filter != null ? filter : (bp) => true;
-            this.collator = collator;
-        }
-    }
-
     public class NamedAction {
         public String name { get; }
         public Action action { get; }
