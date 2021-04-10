@@ -1,4 +1,4 @@
-﻿
+﻿    
 # Brief Description
 Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus. It has over 190 cheats, tweaks and quality of life improvements for PF: WoTR.  It provides a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members. 
 # Detailed Description
@@ -9,6 +9,7 @@ Now with 190+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 53 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.1.10  
 Ver 1.1.9
     Kingdom Resource Editing (Finances, Materials, Divine Favors)
     Selector to allow you to move through other units during combat (real-time and turn based)
