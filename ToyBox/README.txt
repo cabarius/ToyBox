@@ -16,6 +16,7 @@ Ver 1.1.9
     Multiplier Sliders now give you a text field to edit the value
     Multiplier Sliders should work better for adjusting for small and big values
     Fixed bug with item sell price multiplier where it was selling for too much when multiplier is 1
+    Mouse Wheel scrolling should work reliably now
 Ver 1.1.8
     Added Dice Roll Tweaks to Cheap Tricks
     Added friendly (Non Hostile) as a category to which you can apply tweaks

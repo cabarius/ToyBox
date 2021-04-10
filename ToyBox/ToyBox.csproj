@@ -91,6 +91,12 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
@@ -107,6 +113,7 @@
   <ItemGroup>
     <Compile Include="classes\Infrastructure\DisclosureToggle.cs" />
     <Compile Include="classes\Infrastructure\Extensions.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches_NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches_NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches_DiceRolls.cs" />

@@ -532,7 +532,6 @@ namespace ToyBox {
                 }
             }
         }
-        // TODO - This may contain  fix for mouse wheel getting lost...
         [HarmonyPatch(typeof(GlobalMapLocation), "HandleHoverChange", new Type[] { typeof(bool) })]
         internal static class GlobalMapLocation_HandleHoverChange_Patch {
             private static void Postfix(GlobalMapLocation __instance, ref bool isHover) {
@@ -543,6 +542,7 @@ namespace ToyBox {
             }
         }
 
+        // TODO - This may contain  fix for mouse wheel getting lost...
         [HarmonyPatch(typeof(UnityModManager.UI), "Update")]
         internal static class UnityModManager_UI_Update_Patch {
             private static void Postfix(UnityModManager.UI __instance, ref Rect ___mWindowRect, ref Vector2[] ___mScrollPosition, ref int ___tabId) {

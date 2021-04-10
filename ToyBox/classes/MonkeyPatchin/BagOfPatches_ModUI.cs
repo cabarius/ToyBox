@@ -124,61 +124,18 @@ using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox {
-    static class HarmonyPatches_Misc {
-        public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
-        public static Player player = Game.Instance.Player;
-
-        [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
-        static class Spellbook_GetSpellsPerDay_Patch {
-            static void Postfix(ref int __result) {
-                __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.spellsPerDayMultiplier, 1));
-            }
-        }
-
-        public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
-            ItemEntityUsable itemEntityUsable = item as ItemEntityUsable;
-            if (itemEntityUsable?.Blueprint.Type != UsableItemType.Scroll) {
-                return null;
-            }
-            return itemEntityUsable.Blueprint.Ability.Parent ? itemEntityUsable.Blueprint.Ability.Parent : itemEntityUsable.Blueprint.Ability;
-        }
-
-        public static string GetSpellbookActionName(string actionName, ItemEntity item, UnitEntityData unit) {
-            if (actionName != LocalizedTexts.Instance.Items.CopyScroll) {
-                return actionName;
-            }
-
-            BlueprintAbility spell = ExtractSpell(item);
-            if (spell == null) {
-                return actionName;
-            }
-
-            List<Spellbook> spellbooks = unit.Descriptor.Spellbooks.Where(x => x.Blueprint.SpellList.Contains(spell)).ToList();
-
-            int count = spellbooks.Count;
-
-            if (count <= 0) {
-                return actionName;
-            }
-
-            string actionFormat = "{0} <{1}>";
-
-            return string.Format(actionFormat, actionName, count == 1 ? spellbooks.First().Blueprint.Name : "Multiple");
-        }
-
-
-        [HarmonyPatch(typeof(Kingmaker.UI.ServiceWindow.ItemSlot), "ScrollContent", MethodType.Getter)]
-        public static class ItemSlot_ScrollContent_Patch {
-            [HarmonyPostfix]
-            static void Postfix(Kingmaker.UI.ServiceWindow.ItemSlot __instance, ref string __result) {
-                UnitEntityData currentCharacter = UIUtility.GetCurrentCharacter();
-                CopyItem component = __instance.Item.Blueprint.GetComponent<CopyItem>();
-                string actionName = component?.GetActionName(currentCharacter) ?? string.Empty;
-                if (!string.IsNullOrWhiteSpace(actionName)) {
-                    actionName = GetSpellbookActionName(actionName, __instance.Item, currentCharacter);
-                }
-                __result = actionName;
+    static class HarmonyPatches_ModUI {
+        [HarmonyPatch(typeof(UnityModManager.UI), "Update")]
+        internal static class UnityModManager_UI_Update_Patch {
+            private static void Postfix(UnityModManager.UI __instance, ref Rect ___mWindowRect, ref Vector2[] ___mScrollPosition, ref int ___tabId) {
+                // hack to fix mouse wheel
+                var scrollPosition = ___mScrollPosition[0];
+                scrollPosition.x = UnityEngine.Input.GetAxis("Mouse ScrollWheel");
+                ___mScrollPosition[0] = scrollPosition;
+                // save these in case we need them inside the mod
+                Main.ummRect = ___mWindowRect;
+                Main.ummScrollPosition = ___mScrollPosition;
+                Main.ummTabID = ___tabId;
             }
         }
     }

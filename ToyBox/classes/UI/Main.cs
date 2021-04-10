@@ -55,6 +55,12 @@ namespace ToyBox {
         static Exception caughtException = null;
         static public bool userHasHitReturn = false;
         static public String focusedControlName = null;
+
+        public static Rect ummRect = new Rect();
+        public static float ummWidth = 960f;
+        public static int ummTabID = 0;
+        public static Vector2[] ummScrollPosition;
+
         static bool Load(UnityModManager.ModEntry modEntry) {
             try {
 #if DEBUG
