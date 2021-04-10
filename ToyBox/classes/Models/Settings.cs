@@ -11,7 +11,7 @@ namespace ToyBox {
 
         public int increment = 10000;
 
-        // flags
+        // Tweaks
         public bool highlightObjectsToggle = false;
         public bool toggleSpontaneousCopyScrolls = false;
         public bool toggleInstantEvent = false;
@@ -22,21 +22,24 @@ namespace ToyBox {
         public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleEquipmentRestrictions = false;
         public bool toggleDialogRestrictions = false;
+        public bool toggleNoFriendlyFireForAOE = false;
         public bool toggleSettlementRestrictions = false;
         public bool toggleMoveSpeedAsOne = false;
         public bool toggleNoFogOfWar = false;
         public bool toggleRestoreSpellsAbilitiesAfterCombat = false;
         public bool toggleInstantRestAfterCombat = false;
-        public bool toggleShowAllPartyPortraits = false;
+        public bool toggleShowAllPartyPortraits = false;    // TODO - port this
         public bool toggleAccessRemoteCharacters = false;
+        public bool toggleInfiniteItems = false;
+        public bool toggleMetamagicIsFree = false;
+        public bool toggleMaterialComponent = false;
 
-        // selector
+        // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
         public UnitSelectType allowMovementThroughSelection = UnitSelectType.Off;
         public float collisionRadiusMultiplier = 1;
 
         // level up
-        public bool toggleNoLevelUpRestirctions = false;
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnorePrerequisites = false;
@@ -44,15 +47,11 @@ namespace ToyBox {
         public bool toggleIgnoreForbiddenArchetype = false;
         public bool toggleIgnorePrerequisiteStatValue = false;
         public bool toggleIgnoreAlignmentWhenChoosingClass = false;
-        public bool toggleIgnoreFeaturePrerequisitesWhenChoosingClass = false;
+        public bool toggleIgnoreFeaturePrerequisitesWhenChoosingClass = false;  // TODO - implement
         public bool toggleIgnoreForbiddenFeatures = false;
         public bool toggleIgnoreFeaturePrerequisites = false;
         public bool toggleIgnoreFeatureListPrerequisites = false;
         public bool toggleFeaturesIgnorePrerequisites = false;
-        public bool toggleInfiniteItems = false;
-        public bool toggleNoFriendlyFireForAOE = false;
-        public bool toggleMetamagicIsFree = false;
-        public bool toggleMaterialComponent = false;
         public bool toggleSkipSpellSelection = false;
 
         // Multipliers
@@ -61,7 +60,6 @@ namespace ToyBox {
         public float moneyMultiplier = 1;
         public float vendorSellPriceMultiplier = 1;
         public float vendorBuyPriceMultiplier = 1;
-        public float defaultVendorSellPriceMultiplier = 1;
         public float fatigueHoursModifierMultiplier = 1;
         public float spellsPerDayMultiplier = 1;
         public int featsMultiplier = 1;
@@ -77,7 +75,6 @@ namespace ToyBox {
         public float buffDurationMultiplierValue = 1;
 
         // Dice Rolls
-
         public UnitSelectType allHitsCritical = UnitSelectType.Off;
         public UnitSelectType rollWithAdvantage = UnitSelectType.Off;
         public UnitSelectType rollWithDisadvantage = UnitSelectType.Off;
@@ -110,6 +107,9 @@ namespace ToyBox {
 
         // Other
         public bool settingShowDebugInfo = true;
+
+        // Deprecated
+        public bool toggleNoLevelUpRestirctions = false;    // deprecated
 
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);

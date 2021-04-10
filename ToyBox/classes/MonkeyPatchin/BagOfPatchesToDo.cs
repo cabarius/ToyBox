@@ -1594,5 +1594,409 @@ namespace ToyBox {
         }
 
     }
+        [HarmonyPatch(typeof(CampingSettings), "IsDungeon", MethodType.Getter)]
+        static class CampingSettings_IsDungeon_Patch {
+            static void Postfix(ref bool __result) {
+                if (!Main.Enabled) {
+                    return;
+                }
+                if (StringUtils.ToToggleBool(settings.toggleCookingAndHuntingInDungeons)) {
+                    __result = false;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(SoundState), "OnAreaLoadingComplete")]
+        public static class SoundState_OnAreaLoadingComplete_Patch {
+            private static void Postfix() {
+                Logger.ModLoggerDebug(Game.Instance.CurrentlyLoadedArea.AreaName.ToString());
+                Logger.ModLoggerDebug(Game.Instance.CurrentlyLoadedArea.AssetGuid);
+                Logger.ModLoggerDebug(SceneManager.GetActiveScene().name);
+
+                if (StringUtils.ToToggleBool(settings.toggleUnlimitedCasting) && SceneManager.GetActiveScene().name == "HouseAtTheEdgeOfTime_Courtyard_Light") {
+                    UIUtility.ShowMessageBox(Strings.GetText("warning_UnlimitedCasting"), DialogMessageBoxBase.BoxType.Message, new Action<DialogMessageBoxBase.BoxButton>(Common.CloseMessageBox));
+                }
+                if (StringUtils.ToToggleBool(settings.toggleNoDamageFromEnemies) && Game.Instance.CurrentlyLoadedArea.AssetGuid == "0ba5b24abcd5523459e54cd5877cb837") {
+                    UIUtility.ShowMessageBox(Strings.GetText("warning_NoDamageFromEnemies"), DialogMessageBoxBase.BoxType.Message, new Action<DialogMessageBoxBase.BoxButton>(Common.CloseMessageBox));
+                }
+
+            }
+        }
+
+        [HarmonyPatch(typeof(EncumbranceHelper.CarryingCapacity), "GetEncumbrance")]
+        [HarmonyPatch(new Type[] { typeof(float) })]
+        static class EncumbranceHelperCarryingCapacity_GetEncumbrance_Patch {
+            static void Postfix(ref Encumbrance __result) {
+                if (StringUtils.ToToggleBool(settings.toggleSetEncumbrance)) {
+                    __result = Common.IntToEncumbrance(settings.setEncumbrancIndex);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(PartyEncumbranceController), "UpdateUnitEncumbrance")]
+        static class PartyEncumbranceController_UpdateUnitEncumbrance_Patch {
+            static void Postfix(UnitDescriptor unit) {
+                if (StringUtils.ToToggleBool(settings.toggleSetEncumbrance)) {
+                    unit.Encumbrance = Common.IntToEncumbrance(settings.setEncumbrancIndex);
+                    unit.Remove<UnitPartEncumbrance>();
+                }
+            }
+        }
+        [HarmonyPatch(typeof(PartyEncumbranceController), "UpdatePartyEncumbrance")]
+        static class PartyEncumbranceController_UpdatePartyEncumbrance_Patch {
+            static bool Prefix() {
+                if (StringUtils.ToToggleBool(settings.toggleSetEncumbrance)) {
+                    player.Encumbrance = Common.IntToEncumbrance(settings.setEncumbrancIndex);
+                    return false;
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(GlobalMapRules), "ChangePartyOnMap")]
+        static class GlobalMapRules_ChangePartyOnMap_Patch {
+            static bool Prefix() {
+                if (StringUtils.ToToggleBool(settings.toggleInstantPartyChange)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(IngameMenuManager), "OpenGroupManager")]
+        static class IngameMenuManager_OpenGroupManager_Patch {
+            static bool Prefix(IngameMenuManager __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleInstantPartyChange)) {
+                    MethodInfo startChangedPartyOnGlobalMap = __instance.GetType().GetMethod("StartChangedPartyOnGlobalMap", BindingFlags.NonPublic | BindingFlags.Instance);
+                    startChangedPartyOnGlobalMap.Invoke(__instance, new object[] { });
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(BuildModeUtility), "IsDevelopment", MethodType.Getter)]
+        static class BuildModeUtility_IsDevelopment_Patch {
+            static void Postfix(ref bool __result) {
+                if (StringUtils.ToToggleBool(settings.toggleDevTools)) {
+                    __result = true;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SmartConsole), "WriteLine")]
+        static class SmartConsole_WriteLine_Patch {
+            static void Postfix(string message) {
+                if (StringUtils.ToToggleBool(settings.toggleDevTools)) {
+                    modLogger.Log(message);
+                    UberLoggerAppWindow.Instance.Log(new UberLogger.LogInfo((UnityEngine.Object)null, nameof(SmartConsole), UberLogger.LogSeverity.Message, new List<UberLogger.LogStackFrame>(), (object)message, (object[])Array.Empty<object>()));
+
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SmartConsole), "Initialise")]
+        static class SmartConsole_Initialise_Patch {
+            static void Postfix() {
+                if (StringUtils.ToToggleBool(settings.toggleDevTools)) {
+                    SmartConsoleCommands.Register();
+                }
+            }
+        }
+        [HarmonyPatch(typeof(Kingmaker.MainMenu), "Start")]
+        static class MainMenu_Start_Patch {
+            static void Postfix() {
+                ModifiedBlueprintTools.Patch();
+
+                if (StringUtils.ToToggleBool(settings.toggleNoTempHPKineticist)) {
+                    Cheats.PatchBurnEffectBuff(0);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(MainMenuButtons), "Update")]
+        static class MainMenuButtons_Update_Patch {
+            static void Postfix() {
+                if (StringUtils.ToToggleBool(settings.toggleAutomaticallyLoadLastSave) && Storage.firstStart) {
+                    Storage.firstStart = false;
+                    EventBus.RaiseEvent<IUIMainMenu>((Action<IUIMainMenu>)(h => h.LoadLastGame()));
+                }
+                Storage.firstStart = false;
+            }
+        }
+
+
+        [HarmonyPatch(typeof(UnitPartNegativeLevels), "Add")]
+        static class UnitPartNegativeLevels_Add_Patch {
+            static bool Prefix(UnitPartNegativeLevels __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleNoNegativeLevels) && __instance.Owner.IsPlayerFaction) {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), "RemoveItem")]
+        [HarmonyPatch(new Type[] { typeof(bool) })]
+        static class ItemSlot_RemoveItem_Patch {
+            static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity ___m_Item, UnitDescriptor ___Owner, ref ItemEntity __state) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && StringUtils.ToToggleBool(settings.togglAutoEquipConsumables)) {
+                    __state = null;
+                    if (___Owner.Body.QuickSlots.Any(x => x.HasItem && x.Item == ___m_Item)) {
+                        __state = ___m_Item;
+                    }
+                }
+            }
+            static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity ___m_Item, UnitDescriptor ___Owner, ItemEntity __state) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && StringUtils.ToToggleBool(settings.togglAutoEquipConsumables)) {
+                    if (__state != null) {
+                        BlueprintItem blueprint = __state.Blueprint;
+                        foreach (ItemEntity item in Game.Instance.Player.Inventory.Items) {
+                            if (item.Blueprint.ItemType == ItemsFilter.ItemType.Usable && item.Blueprint == blueprint) {
+                                __instance.InsertItem(item);
+                                break;
+                            }
+                        }
+                        __state = null;
+                    }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitEntityData), "CreateView")]
+        public static class UnitEntityData_CreateView_Patch {
+            public static void Prefix(ref UnitEntityData __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleSpiderBegone)) {
+                    SpidersBegone.CheckAndReplace(ref __instance);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintUnit), "PreloadResources")]
+        public static class BlueprintUnit_PreloadResources_Patch {
+            public static void Prefix(ref BlueprintUnit __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleSpiderBegone)) {
+                    SpidersBegone.CheckAndReplace(ref __instance);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
+        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState) })]
+        public static class EntityCreationControllert_SpawnUnit_Patch1 {
+            public static void Prefix(ref BlueprintUnit unit) {
+                if (StringUtils.ToToggleBool(settings.toggleSpiderBegone)) {
+                    SpidersBegone.CheckAndReplace(ref unit);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
+        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(UnitEntityView), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState) })]
+        public static class EntityCreationControllert_SpawnUnit_Patch2 {
+            public static void Prefix(ref BlueprintUnit unit) {
+                if (StringUtils.ToToggleBool(settings.toggleSpiderBegone)) {
+                    SpidersBegone.CheckAndReplace(ref unit);
+                }
+            }
+
+        }
+
+        [HarmonyPatch(typeof(ContextConditionAlignment), "CheckCondition")]
+        public static class ContextConditionAlignment_CheckCondition_Patch {
+            public static void Postfix(ref bool __result, ContextConditionAlignment __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleReverseCasterAlignmentChecks)) {
+                    if (__instance.CheckCaster) {
+                        __result = !__result;
+                    }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleSummonUnit), MethodType.Constructor)]
+        [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(BlueprintUnit), typeof(Vector3), typeof(Rounds), typeof(int) })]
+        public static class RuleSummonUnit_Constructor_Patch {
+            public static void Prefix(UnitEntityData initiator, BlueprintUnit blueprint, Vector3 position, ref Rounds duration, ref int level, RuleSummonUnit __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleSummonDurationMultiplier) && UnitEntityDataUtils.CheckUnitEntityData(initiator, (UnitSelectType)settings.indexSummonDurationMultiplier)) {
+                    duration = new Rounds(Convert.ToInt32(duration.Value * settings.finalSummonDurationMultiplierValue)); ;
+                }
+
+                if (StringUtils.ToToggleBool(settings.toggleSetSummonLevelTo20) && UnitEntityDataUtils.CheckUnitEntityData(initiator, (UnitSelectType)settings.indexSetSummonLevelTo20)) {
+                    level = 20;
+                }
+
+                if (StringUtils.ToToggleBool(settings.toggleMakeSummmonsControllable)) {
+                    Storage.SummonedByPlayerFaction = initiator.IsPlayerFaction;
+                }
+
+                Logger.ModLoggerDebug("Initiator: " + initiator.CharacterName + $"(PlayerFaction : {initiator.IsPlayerFaction})" + "\nBlueprint: " + blueprint.CharacterName + "\nPosition: " + position.ToString() + "\nDuration: " + duration.Value + "\nLevel: " + level);
+            }
+        }
+
+        [HarmonyPatch(typeof(ActionBarManager), "CheckTurnPanelView")]
+        internal static class ActionBarManager_CheckTurnPanelView_Patch {
+            private static void Postfix(ActionBarManager __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleMakeSummmonsControllable) && CombatController.IsInTurnBasedCombat()) {
+                    Traverse.Create((object)__instance).Method("ShowTurnPanel", Array.Empty<object>()).GetValue();
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(UberLogger.Logger), "ForwardToUnity")]
+        static class UberLoggerLogger_ForwardToUnity_Patch {
+            static void Prefix(ref object message) {
+                if (StringUtils.ToToggleBool(settings.toggleUberLoggerForwardPrefix)) {
+                    string message1 = "[UberLogger] " + message as string;
+                    message = message1 as object;
+                }
+            }
+        }
+
+
+        [HarmonyPatch(typeof(DungeonStageInitializer), "Initialize")]
+        static class DungeonStageInitializer_Initialize_Patch {
+            static void Prefix(BlueprintDungeonArea area) {
+                Logger.ModLoggerDebug("Game.Instance.Player.DungeonState.Stage: " + Game.Instance.Player.DungeonState.Stage);
+            }
+        }
+        [HarmonyPatch(typeof(DungeonDebug), "SaveStage")]
+        static class DungeonDebug_SaveStage_Patch_Pre {
+            static void Prefix(string filename) {
+                Logger.ModLoggerDebug("DungeonDebug.SaveStage filename: " + filename);
+                Logger.ModLoggerDebug("DungeonDebug.SaveStage Path: " + Path.Combine(Application.persistentDataPath, "DungeonStages"));
+            }
+        }
+        [HarmonyPatch(typeof(DungeonDebug), "SaveStage")]
+        static class DungeonDebug_SaveStage_Patch_Post {
+            static void Postfix(string filename) {
+                if (settings.settingShowDebugInfo) {
+                    try {
+                        string str = File.ReadAllText(Path.Combine(Application.persistentDataPath, $"DungeonStages\\{filename}"));
+                        modLogger.Log($"START---{filename}---START\n" + str + $"\nEND---{filename}---END");
+                    }
+                    catch (Exception e) {
+                        modLogger.Log(e.ToString());
+                    }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleCalculateArmorCheckPenalty), "OnTrigger")]
+        public static class RuleCalculateArmorCheckPenalty_OnTrigger_Patch {
+            private static bool Prefix(RuleCalculateArmorCheckPenalty __instance) {
+                if (StringUtils.ToToggleBool(settings.toggleArmourChecksPenalty0)) {
+                    if (!StringUtils.ToToggleBool(settings.toggleArmourChecksPenalty0OutOfCombatOnly)) {
+                        Traverse.Create(__instance).Property("Penalty").SetValue(0);
+                        return false;
+                    }
+                    else if (StringUtils.ToToggleBool(settings.toggleArmourChecksPenalty0OutOfCombatOnly) && !__instance.Armor.Wielder.Unit.IsInCombat) {
+                        Traverse.Create(__instance).Property("Penalty").SetValue(0);
+                        return false;
+                    }
+
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(UIUtilityItem), "GetArmorData")]
+        public static class UIUtilityItem_GetArmorData_Patch {
+            private static void Postfix(ref UIUtilityItem.ArmorData __result, ref ItemEntityArmor armor) {
+                if (StringUtils.ToToggleBool(settings.toggleArmourChecksPenalty0)) {
+                    if (!StringUtils.ToToggleBool(settings.toggleArmourChecksPenalty0OutOfCombatOnly)) {
+                        UIUtilityItem.ArmorData armorData = __result;
+                        armorData.ArmorCheckPenalty = 0;
+                        __result = armorData;
+                    }
+                    else if (StringUtils.ToToggleBool(settings.toggleArmourChecksPenalty0OutOfCombatOnly)) {
+                        Logger.ModLoggerDebug(armor.Name);
+                        if (armor.Wielder != null) {
+                            Logger.ModLoggerDebug(armor.Name + ": " + armor.Wielder.CharacterName);
+                            if (!armor.Wielder.Unit.IsInCombat) {
+                                Logger.ModLoggerDebug(armor.Name + ": " + armor.Wielder.CharacterName + " - " + armor.Wielder.Unit.IsInCombat);
+                                UIUtilityItem.ArmorData armorData = __result;
+                                armorData.ArmorCheckPenalty = 0;
+                                __result = armorData;
+                            }
+                        }
+                        else {
+                            Logger.ModLoggerDebug("!" + armor.Name);
+                            UIUtilityItem.ArmorData armorData = __result;
+                            armorData.ArmorCheckPenalty = 0;
+                            __result = armorData;
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+        [HarmonyPatch(typeof(BlueprintAbility), "GetRange")]
+        static class BlueprintAbility_GetRange_Patch_Pre {
+
+            private static Feet defaultClose = 30.Feet();
+            private static Feet defaultMedium = 40.Feet();
+            private static Feet defaultlong = 50.Feet();
+            private static Feet cotwMedium = 60.Feet();
+            private static Feet cotwLong = 100.Feet();
+            [HarmonyPriority(Priority.Low)]
+            static void Postfix(ref Feet __result) {
+                if (StringUtils.ToToggleBool(settings.toggleTabletopSpellAbilityRange)) {
+                    if (Main.callOfTheWild.ModIsActive()) {
+                        if (__result == defaultClose) {
+                            __result = 25.Feet();
+                        }
+                        else if (__result == cotwMedium) {
+                            __result = 100.Feet();
+                        }
+                        else if (__result == cotwLong) {
+                            __result = 400.Feet();
+                        }
+                    }
+                    else {
+                        if (__result == defaultClose) {
+                            __result = 25.Feet();
+                        }
+                        else if (__result == defaultMedium) {
+                            __result = 100.Feet();
+                        }
+                        else if (__result == defaultlong) {
+                            __result = 400.Feet();
+                        }
+                    }
+                }
+                if (StringUtils.ToToggleBool(settings.toggleCustomSpellAbilityRange)) {
+                    if (Main.callOfTheWild.ModIsActive()) {
+                        if (__result == defaultClose) {
+                            __result = settings.customSpellAbilityRangeClose.Feet();
+                        }
+                        else if (__result == cotwMedium) {
+                            __result = settings.customSpellAbilityRangeMedium.Feet();
+                        }
+                        else if (__result == cotwLong) {
+                            __result = settings.customSpellAbilityRangeLong.Feet();
+                        }
+                    }
+                    else {
+                        if (__result == defaultClose) {
+                            __result = settings.customSpellAbilityRangeClose.Feet();
+                        }
+                        else if (__result == defaultMedium) {
+                            __result = settings.customSpellAbilityRangeMedium.Feet();
+                        }
+                        else if (__result == defaultlong) {
+                            __result = settings.customSpellAbilityRangeLong.Feet();
+                        }
+                    }
+
+                }
+
+
+
+                if (StringUtils.ToToggleBool(settings.toggleSpellAbilityRangeMultiplier)) {
+                    if (settings.useCustomSpellAbilityRangeMultiplier) {
+                        __result = __result * settings.customSpellAbilityRangeMultiplier;
+                    }
+                    else {
+                        __result = __result * settings.spellAbilityRangeMultiplier;
+                    }
+                }
+            }
+        }
 #endif
 }

@@ -107,6 +107,13 @@
   <ItemGroup>
     <Compile Include="classes\Infrastructure\DisclosureToggle.cs" />
     <Compile Include="classes\Infrastructure\Extensions.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_CharacterCreation.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_NoFriendlyFire.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_DiceRolls.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_Multipliers.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_Selectors.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_LevelUp.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
     <Compile Include="classes\UI\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
@@ -115,8 +122,8 @@
     <Compile Include="classes\Infrastructure\Borrowed\PreviewManager.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\UnitEntityDetails.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Util.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches.cs" />
-    <Compile Include="classes\MonkeyPatchin\ToggleTab.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_Misc.cs" />
+    <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\UI\Actions.cs" />
     <Compile Include="classes\Infrastructure\NamedTypes.cs" />
     <Compile Include="classes\UI\BlueprintListUI.cs" />
