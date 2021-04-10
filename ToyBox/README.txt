@@ -1,15 +1,17 @@
 ﻿
 # Brief Description
-Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus . It provides a powerful and convenient way to edit the party composition, stats, features, search and add Feats, Features, Items, etc. In addition it provides a dozen or so cheats popular in the big Kingmaker mods
+Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus . It provides a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members. It has over 190 cheats, tweaks and quality of life improvements for Pathfinder: WoTR.
 
 # Detailed Description
 
-Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu but with a little different focus . It provides a powerful and convenient way to edit the party composition, stats, features, search and add Feats, Features, Items, etc. In addition it provides a dozen or so cheats popular in the big Kingmaker mods In addition it provides some canned cheats based on the normally disabled console cheat commands.  Please backup your save before using.
-
-Current features include 
+Now with 190+ Cheats, Tweaks and Quality of Life Improvements
+    Tweaks: 72
+    Party Editor: 64
+    Search 'n Pick: 53 ways to view, add, remove blueprints plus a fun global teleportation feature
+    Quest Resolution: 1
 
 Ver 1.1.9
-    Kingdom Resource Editing
+    Kingdom Resource Editing (Finances, Materials, Divine Favors)
     Selector to allow you to move through other units during combat (real-time and turn based)
     Infinite Abilities and Spell Casts
     Disable Fog of War
@@ -18,6 +20,7 @@ Ver 1.1.9
     Multiplier Sliders should work better for adjusting for small and big values
     Fixed bug with item sell price multiplier where it was selling for too much when multiplier is 1
     Mouse Wheel scrolling should work reliably now
+
 Ver 1.1.8
     Added Dice Roll Tweaks to Cheap Tricks
     Added friendly (Non Hostile) as a category to which you can apply tweaks
