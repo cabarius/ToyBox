@@ -191,17 +191,17 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Multipliers", 1,
-                () => { UI.Slider("Experience", ref settings.experienceMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Money Earned", ref settings.moneyMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 30, settings.defaultVendorSellPriceMultiplier, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 30, settings.defaultVendorSellPriceMultiplier, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
                 () => { UI.Slider("Encumberance", ref settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0.1f, 5, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 1, 10, 1, 0, "", UI.AutoWidth()); },
-                () => { UI.Slider("Travel Speed", ref settings.travelSpeedMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Companion Cost", ref settings.companionCostMultiplier, 0, 5, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Buff Duration", ref settings.buffDurationMultiplierValue, 0.1f, 10, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
+                () => { UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 100, 1, 1, "", UI.AutoWidth()); },
                 () => { }
                 );
             UI.Div(0, 25);

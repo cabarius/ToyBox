@@ -128,7 +128,7 @@ using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox {
-    static class BagOfPatches_CharacterCreation {
+    static class BagOfPatches_NewChar {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;

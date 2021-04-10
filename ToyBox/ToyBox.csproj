@@ -107,7 +107,7 @@
   <ItemGroup>
     <Compile Include="classes\Infrastructure\DisclosureToggle.cs" />
     <Compile Include="classes\Infrastructure\Extensions.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches_CharacterCreation.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches_NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches_NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches_DiceRolls.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches_Multipliers.cs" />

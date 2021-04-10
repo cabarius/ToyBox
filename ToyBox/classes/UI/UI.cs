@@ -109,9 +109,18 @@ namespace ToyBox {
             return text;
         }
         public static int IntTextField(ref int value, String name = null, params GUILayoutOption[] options) {
-            String searchLimitString = $"{value}";
-            UI.TextField(ref searchLimitString, name, options);
-            Int32.TryParse(searchLimitString, out value);
+            String text = $"{value}";
+            UI.TextField(ref text, name, options);
+            Int32.TryParse(text, out value);
+            return value;
+        }
+        public static float FloatTextField(ref float value, String name = null, params GUILayoutOption[] options) {
+            String text = $"{value}";
+            UI.TextField(ref text, name, options);
+            var val = value;
+            if (float.TryParse(text, out val)) {
+                value = val;
+            }
             return value;
         }
 
@@ -188,13 +197,13 @@ namespace ToyBox {
             ) {
             bool changed = false;
             bool hitEnter = false;
-            String searchLimitString = $"{value}";
-            UI.ActionTextField(ref searchLimitString,
+            String str = $"{value}";
+            UI.ActionTextField(ref str,
                 name,
                 (text) => { changed = true; },
                 () => { hitEnter = true; },
                 options);
-            Int32.TryParse(searchLimitString, out value);
+            Int32.TryParse(str, out value);
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
         }
@@ -214,12 +223,15 @@ namespace ToyBox {
             increment = inc;
         }
         public static bool Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
+            value = Math.Max(min, Math.Min(max, value));    // clamp it
             UI.BeginHorizontal(options);
             UI.Label(title.cyan(), UI.Width(300));
             UI.Space(25);
-            float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(100)), decimals);
+            float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
             UI.Space(25);
-            UI.Label($"{value}{units}".orange().bold(), UI.Width(75 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
+            UI.FloatTextField(ref newValue, null, UI.Width(75));
+            if (units.Length > 0) 
+                UI.Label($"{units}".orange().bold(), UI.Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
             UI.Space(25);
             UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
             UI.EndHorizontal();
@@ -231,6 +243,30 @@ namespace ToyBox {
             float fvalue = value;
             bool changed = UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, "", options);
             value = (int)fvalue;
+            return changed;
+        }
+        public static bool LogSlider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
+            if (min < 0) throw new Exception("LogSlider - min value: {min} must be >= 0");
+            UI.BeginHorizontal(options);
+            UI.Label(title.cyan(), UI.Width(300));
+            UI.Space(25);
+            value = Math.Max(min, Math.Min(max, value));    // clamp it
+            var offset = 1;
+            var places = (int)Math.Max(0, Math.Min(15, 2.01-Math.Log10(value+offset)));
+            var logMin = 100f*(float)Math.Log10(min + offset);
+            var logMax = 100f*(float)Math.Log10(max + offset);
+            var logValue = 100f*(float)Math.Log10(value + offset);
+            var logNewValue = (float)(GL.HorizontalSlider(logValue, logMin, logMax, UI.Width(200)));
+            var newValue = (float)Math.Round(Math.Pow(10, logNewValue/100f) - offset, places);  
+            UI.Space(25);
+            UI.FloatTextField(ref newValue, null, UI.Width(75));
+            if (units.Length > 0)
+                UI.Label($"{units}".orange().bold(), UI.Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
+            UI.Space(25);
+            UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+            UI.EndHorizontal();
+            bool changed = value != newValue;
+            value = newValue;
             return changed;
         }
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {

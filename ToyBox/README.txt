@@ -13,6 +13,8 @@ Ver 1.1.9
     Infinite Abilities and Spell Casts
     Disable Fog of War
     When you enable 'Show GUIDs' in Search 'n Pick they can now be copied to the clipboard
+    Multiplier Sliders now give you a text field to edit the value
+    Multiplier Sliders should work better for adjusting for small and big values
     Fixed bug with item sell price multiplier where it was selling for too much when multiplier is 1
 Ver 1.1.8
     Added Dice Roll Tweaks to Cheap Tricks
