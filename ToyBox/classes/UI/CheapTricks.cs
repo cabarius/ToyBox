@@ -56,6 +56,7 @@ namespace ToyBox {
                 UI.EndHorizontal();
                 UI.Space(25);
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
+                var kingdom = KingdomState.Instance;
                 UI.Div(0, 25);
                 UI.HStack("Resources", 1,
                     () => {
@@ -75,15 +76,41 @@ namespace ToyBox {
                         UI.ActionButton($"Gain {increment}", () => {
                             Game.Instance.Player.GainPartyExperience(increment);
                         }, UI.AutoWidth());
-#if false
-                        UI.ActionButton($"Lose {increment}", () => {
-                            var loss = Math.Min(exp, increment);
-                            Game.Instance.Player.GainPartyExperience(-loss);
-                        }, UI.AutoWidth());
-#endif
-                    },
-                    () => { }
-                    );
+                    });
+                if (kingdom != null) {
+                    UI.Div(0, 25);
+                    UI.HStack("Kingdom", 1,
+                        () => {
+                            UI.Label("Finances".cyan(), UI.Width(150));
+                            UI.Label(kingdom.Resources.Finances.ToString().orange().bold(), UI.Width(200));
+                            UI.ActionButton($"Gain {increment}", () => {
+                                kingdom.Resources += KingdomResourcesAmount.FromFinances(increment);
+                            }, UI.AutoWidth());
+                            UI.ActionButton($"Lose {increment}", () => {
+                                kingdom.Resources -= KingdomResourcesAmount.FromFinances(increment);
+                            }, UI.AutoWidth());
+                        },
+                        () => {
+                            UI.Label("Materials".cyan(), UI.Width(150));
+                            UI.Label(kingdom.Resources.Materials.ToString().orange().bold(), UI.Width(200));
+                            UI.ActionButton($"Gain {increment}", () => {
+                                kingdom.Resources += KingdomResourcesAmount.FromMaterials(increment);
+                            }, UI.AutoWidth());
+                            UI.ActionButton($"Lose {increment}", () => {
+                                kingdom.Resources -= KingdomResourcesAmount.FromMaterials(increment);
+                            }, UI.AutoWidth());
+                        },
+                        () => {
+                            UI.Label("Favors".cyan(), UI.Width(150));
+                            UI.Label(kingdom.Resources.Favors.ToString().orange().bold(), UI.Width(200));
+                            UI.ActionButton($"Gain {increment}", () => {
+                                kingdom.Resources += KingdomResourcesAmount.FromFavors(increment);
+                            }, UI.AutoWidth());
+                            UI.ActionButton($"Lose {increment}", () => {
+                                kingdom.Resources -= KingdomResourcesAmount.FromFavors(increment);
+                            }, UI.AutoWidth());
+                        });
+                }
             }
             UI.Div(0, 25);
             UI.HStack("Combat", 4,
@@ -129,7 +156,7 @@ namespace ToyBox {
                 () => { UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0); },
                 () => { UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0); },
 
-                () => { UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities    , 0); },
+                () => { UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0); },
                 () => { UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0); },
                 () => { UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0); },
 
@@ -157,11 +184,11 @@ namespace ToyBox {
                 () => {
                     UI.EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, 0, UI.AutoWidth());
                 },
-                () => { UI.Space(328);  UI.Label("This allows characters you control to move through the selected category of units during combat".green(), UI.AutoWidth());  },
+                () => { UI.Space(328); UI.Label("This allows characters you control to move through the selected category of units during combat".green(), UI.AutoWidth()); },
 #if false
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
 #endif
-                () => {}
+                () => { }
                 );
             UI.Div(0, 25);
             UI.HStack("Level Up", 1,

@@ -9,6 +9,7 @@ Toy Box is a cute and playful mod in the spirit of Bag of Tricks and Cheat Menu 
 Current features include 
 
 Ver 1.1.9
+    Kingdom Resource Editing
     Selector to allow you to move through other units during combat (real-time and turn based)
     Infinite Abilities and Spell Casts
     Disable Fog of War
