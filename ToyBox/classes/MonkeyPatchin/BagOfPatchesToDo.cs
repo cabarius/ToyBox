@@ -1,9 +1,5 @@
 ﻿// borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
-//using BagOfTricks.Favourites;
-//using BagOfTricks.Utils;
-//using BagOfTricks.Utils.HarmonyPatches;
-//using BagOfTricks.Utils.Kingmaker;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
