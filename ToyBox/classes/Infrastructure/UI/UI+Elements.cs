@@ -57,5 +57,14 @@ namespace ToyBox {
         public static void Div(float indent = 0, float height = 0, float width = 0) {
             Div(fillColor, indent, height, width);
         }
+
+        public static void Wrap(bool condition, float indent = 0, float space = 10) {
+            if (condition) {
+                UI.EndHorizontal();
+                UI.Space(space);
+                UI.BeginHorizontal();
+                UI.Space(indent);
+            }
+        }
     }
 }

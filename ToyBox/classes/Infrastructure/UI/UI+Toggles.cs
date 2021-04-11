@@ -24,7 +24,7 @@ namespace ToyBox {
             bool changed = false;
             options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
-                title = value ? title.bold() : title.grey();
+                title = value ? title.bold() : title.color(RGBA.lightgrey);
                 if (GL.Button("" + (value ? onMark : offMark) + " " + title, options)) { value = !value; }
             }
             else {

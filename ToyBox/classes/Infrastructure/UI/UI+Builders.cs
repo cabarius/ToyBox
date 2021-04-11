@@ -55,6 +55,7 @@ namespace ToyBox {
         public static void HStack(String title = null, int stride = 0, params Action[] actions) {
             var length = actions.Length;
             if (stride < 1) { stride = length; }
+            if (Main.IsNarrow) stride = Math.Min(3, stride);
             for (int ii = 0; ii < actions.Length; ii += stride) {
                 bool hasTitle = title != null;
                 UI.BeginHorizontal();

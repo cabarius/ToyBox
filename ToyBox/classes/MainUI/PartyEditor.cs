@@ -55,6 +55,9 @@ namespace ToyBox {
         };
         static ToggleChoice selectedToggle = ToggleChoice.None;
         static int selectedCharacterIndex = 0;
+        static UnitEntityData charToAdd = null;
+        static UnitEntityData charToRemove = null;
+        static int respecableCount = 0;
         static int selectedSpellbook = 0;
         static int selectedSpellbookLevel = 0;
         static bool editSpellbooks = false;
@@ -67,15 +70,17 @@ namespace ToyBox {
         };
         static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
+        private static Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
+            if (partyFilterPlayer != Game.Instance.Player) partyFilterChoices = null;
             if (Game.Instance.Player != null && partyFilterChoices == null) {
-                return new NamedFunc<List<UnitEntityData>>[] {
+                partyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
                     new NamedFunc<List<UnitEntityData>>("Party", () => Game.Instance.Player.Party),
                     new NamedFunc<List<UnitEntityData>>("Party & Pets", () => Game.Instance.Player.m_PartyAndPets),
-                    new NamedFunc<List<UnitEntityData>>("All Characters", () => Game.Instance.Player.AllCharacters),
-                    new NamedFunc<List<UnitEntityData>>("Active Companions", () => Game.Instance.Player.ActiveCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Remote Companions", () => Game.Instance.Player.m_RemoteCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Custom (Mercs)", PartyUtils.GetCustomCompanions),
+                    new NamedFunc<List<UnitEntityData>>("All", () => Game.Instance.Player.AllCharacters),
+                    new NamedFunc<List<UnitEntityData>>("Active", () => Game.Instance.Player.ActiveCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Remote", () => Game.Instance.Player.m_RemoteCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Custom", PartyUtils.GetCustomCompanions),
                     new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets),
                     new NamedFunc<List<UnitEntityData>>("Nearby", () => {
                         var player = GameHelper.GetPlayerCharacter();
@@ -107,13 +112,33 @@ namespace ToyBox {
             partyFilterChoices = null;
             Main.settings.selectedPartyFilter = 0;
         }
+
+        public static void ActionsGUI(UnitEntityData ch) {
+            var player = Game.Instance.Player;
+            UI.Space(25);
+            if (!player.PartyAndPets.Contains(ch)) {
+                UI.ActionButton("Add", () => { charToAdd = ch; }, UI.Width(150));
+                UI.Space(25);
+            }
+            else if (player.ActiveCompanions.Contains(ch)) {
+                UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.Width(150));
+                UI.Space(25);
+            }
+            if (player.Party.Contains(ch)) {
+                respecableCount++;
+                UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
+            }
+            else {
+                UI.Space(170);
+            }
+        }
         public static void OnGUI() {
             var player = Game.Instance.Player;
             var filterChoices = GetPartyFilterChoices();
             if (filterChoices == null) { return; }
 
-            UnitEntityData charToAdd = null;
-            UnitEntityData charToRemove = null;
+            charToAdd = null;
+            charToRemove = null;
             var characterListFunc = UI.TypePicker<List<UnitEntityData>>(
                 null,
                 ref Main.settings.selectedPartyFilter,
@@ -127,8 +152,9 @@ namespace ToyBox {
             }
             UI.Space(20);
             int chIndex = 0;
-            int respecableCount = 0;
+            respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
+            bool isWide = Main.IsWide;
             foreach (UnitEntityData ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
@@ -149,29 +175,30 @@ namespace ToyBox {
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
-                            UI.ActionButton("+1 Lvl", () => {
+                            UI.ActionButton("+1", () => {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
-                            }, UI.Width(110));
+                            }, UI.Width(70));
                         }
                         else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
-                            UI.Label("Level Up".cyan().italic(), UI.Width(110));
+                            UI.Label("LvUp".cyan().italic(), UI.Width(70));
                         }
-                        else { UI.Space(113); }
+                        else { UI.Space(73); }
                     }
-                    else { UI.Space(113); }
+                    else { UI.Space(73); }
                     UI.Space(25);
                     UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.MythicExperience < 10) {
-                            UI.ActionButton("+1 My", () => {
+                            UI.ActionButton("+1", () => {
                                 progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
-                            }, UI.Width(100));
+                            }, UI.Width(70));
                         }
-                        else { UI.Label("Max", UI.Width(100)); }
+                        else { UI.Label("max".cyan(), UI.Width(70)); }
                     }
-                    else { UI.Space(103); }
+                    else { UI.Space(73); }
                     UI.Space(35);
-
+                    if (!isWide) ActionsGUI(ch);
+                    UI.Wrap(!Main.IsWide, 303, 0);
                     bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
@@ -180,20 +207,22 @@ namespace ToyBox {
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     bool showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
-                    if (UI.DisclosureToggle("Stats", ref showStats, true, 150)) {
+                    if (UI.DisclosureToggle("Stats", ref showStats, true, isWide ? 150 : 200)) {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
+                    UI.Wrap(Main.IsNarrow, 279);
                     bool showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
-                    if (UI.DisclosureToggle("Facts", ref showFacts, true, 150)) {
+                    if (UI.DisclosureToggle("Facts", ref showFacts, true, isWide ? 150 : 200)) {
                         if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     bool showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
-                    if (UI.DisclosureToggle("Buffs", ref showBuffs, true, 150)) {
+                    if (UI.DisclosureToggle("Buffs", ref showBuffs, true, isWide ? 150 : 200)) {
                         if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
+                    UI.Wrap(Main.IsNarrow, 304);
                     bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
                     if (UI.DisclosureToggle("Abilities", ref showAbilities, true)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
@@ -208,21 +237,10 @@ namespace ToyBox {
                         }
                     }
                     else { UI.Space(180); }
-                    UI.Space(25);
-                    if (player.Party.Contains(ch)) {
-                        respecableCount++;
-                        UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
-                    }
-                    else {
-                        UI.Space(155);
-                    }
-                    UI.Space(25);
-                    if (!player.PartyAndPets.Contains(ch)) {
-                        UI.ActionButton("Add", () => { charToAdd = ch; }, UI.AutoWidth());
-                    }
-                    else if (player.ActiveCompanions.Contains(ch)) {
-                        UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.AutoWidth());
-                    }
+                    if (isWide) ActionsGUI(ch);
+                }
+                if (!Main.IsWide) {
+                    UI.Div(20, 20);
                 }
                 if (selectedCharacter != spellbookEditCharacter) {
                     editSpellbooks = false;

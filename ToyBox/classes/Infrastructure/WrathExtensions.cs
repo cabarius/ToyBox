@@ -64,7 +64,7 @@ using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using Kingmaker.Assets.UI;
 using Alignment = Kingmaker.Enums.Alignment;
-using RGBA = ToyBox.RichText.RGBA;
+
 namespace ToyBox {
     public static class WrathExtensions {
         public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }

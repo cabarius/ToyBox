@@ -9,7 +9,9 @@ Now with 190+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 53 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
-Ver 1.1.10  
+Ver 1.1.10
+    Improved layout for mod window sizes < 2000 and < 1600
+    Reverted mouse wheel patch that broke horizontal scrolling
 Ver 1.1.9
     Kingdom Resource Editing (Finances, Materials, Divine Favors)
     Selector to allow you to move through other units during combat (real-time and turn based)

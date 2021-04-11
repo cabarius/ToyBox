@@ -48,6 +48,7 @@ namespace ToyBox {
     static class Main {
         static Harmony HarmonyInstance;
         static string modId;
+        public static UnityModManager.ModEntry modEntry = null;
         public static Settings settings;
         public static bool Enabled;
         public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
@@ -59,6 +60,9 @@ namespace ToyBox {
         public static Rect ummRect = new Rect();
         public static float ummWidth = 960f;
         public static int ummTabID = 0;
+        public static bool IsNarrow { get { return ummWidth < 1600;  } }
+        public static bool IsWide { get { return ummWidth >= 2000; } }
+
         public static Vector2[] ummScrollPosition;
 
         static bool Load(UnityModManager.ModEntry modEntry) {
@@ -112,6 +116,7 @@ namespace ToyBox {
         }
 
         static void OnGUI(UnityModManager.ModEntry modEntry) {
+            Main.modEntry = modEntry;
             if (!Enabled) return;
             if (!IsInGame) {
                 UI.Label("ToyBox has limited functionality from the main menu".yellow().bold());

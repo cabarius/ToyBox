@@ -54,7 +54,6 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.Toggle("Dividers", ref settings.showDivisions);
                 UI.EndHorizontal();
-                UI.Space(25);
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 var kingdom = KingdomState.Instance;
                 UI.Div(0, 25);
@@ -151,20 +150,22 @@ namespace ToyBox {
                 UI.Toggle("Events", ref settings.previewEventResults, 0);
             });
             UI.Div(0, 25);
-            UI.HStack("Tweaks", 3,
+            UI.HStack("Tweaks", 1,
                 () => { UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0); },
                 () => { UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0); },
-                () => { UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0); },
 
                 () => { UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0); },
                 () => { UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0); },
+
+                () => { UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0); },
                 () => { UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0); },
 
                 () => { UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0); },
                 () => { UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0); },
-                () => { UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0); },
 
+                () => { UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0); },
                 () => { UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0); },
+
                 () => { UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0); },
                 () => { UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0); },
 
@@ -176,6 +177,7 @@ namespace ToyBox {
                 () => { UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0); },
                 () => { }
                 );
+            UI.Div(153, 25);
             UI.HStack("", 1,
                 () => {
                     UI.EnumGrid("Disable Attacks Of Opportunity",

@@ -49,6 +49,7 @@ namespace ToyBox {
 
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
+            if (Main.IsNarrow) xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0) xCols = texts.Count();
@@ -57,6 +58,7 @@ namespace ToyBox {
         }
         public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = items.Count();
+            if (Main.IsNarrow) xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
             if (xCols <= 0) xCols = items.Count();
