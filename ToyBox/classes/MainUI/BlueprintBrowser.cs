@@ -63,13 +63,13 @@ namespace ToyBox {
         public static String parameter = "";
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
- 
+
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter("All", typeof(BlueprintScriptableObject), null, null),
             new NamedTypeFilter("Facts",typeof(BlueprintFact)),
             new NamedTypeFilter("Features", typeof(BlueprintFeature)),
-            new NamedTypeFilter("Abilities", typeof(BlueprintAbility), (bp) => !((BlueprintAbility)bp).IsSpell),
-            new NamedTypeFilter("Spells", typeof(BlueprintAbility), (bp) => ((BlueprintAbility)bp).IsSpell),
+            new NamedTypeFilter("Abilities", typeof(BlueprintAbility), bp => !((BlueprintAbility)bp).IsSpell),
+            new NamedTypeFilter("Spells", typeof(BlueprintAbility), bp => ((BlueprintAbility)bp).IsSpell),
             new NamedTypeFilter("Spellbooks", typeof(BlueprintSpellbook)),
             new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
             new NamedTypeFilter("Item", typeof(BlueprintItem), null,  (bp) => {
@@ -176,63 +176,66 @@ namespace ToyBox {
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
-            UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
-                blueprintTypeFilters.Select(tf => tf.name).ToArray(),
-                10,
-                (selected) => { UpdateSearchResults(); },
-                UI.MinWidth(200));
-            UI.Space(10);
-
-            UI.BeginHorizontal();
-            UI.ActionTextField(
-                ref settings.searchText,
-                "searhText", 
-                (text) => { },
-                () => { UpdateSearchResults(); },
-                UI.Width(400));
-            UI.Label("Limit", UI.ExpandWidth(false));
-            UI.ActionIntTextField(
-                ref settings.searchLimit,
-                "searchLimit", 
-                (limit) => { },
-                () => { UpdateSearchResults(); },
-                UI.Width(200));
-            if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
-            UI.Space(25);
-            UI.Toggle("Show GUIs", ref settings.showAssetIDs);
-            UI.Space(25);
-            UI.Toggle("Dividers", ref settings.showDivisions);
-
-            UI.EndHorizontal();
-            UI.BeginHorizontal();
-            UI.ActionButton("Search", () => {
-                UpdateSearchResults();
-            }, UI.AutoWidth());
-            UI.Space(25);
-            if (firstSearch) {
-                UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
-            }
-            else if (matchCount > 0) {
-                String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
-                if (collatedBPs != null) {
-                    foreach (var group in collatedBPs) {
-                        title += $" {group.Key} ({group.Count()})";
-                    }
+            using (UI.HorizontalScope()) {
+                using (UI.VerticalScope()) {
+                    UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
+                        blueprintTypeFilters.Select(tf => tf.name).ToArray(),
+                        1,
+                        (selected) => { UpdateSearchResults(); },
+                        UI.MinWidth(200));
                 }
-                UI.Label(title, UI.ExpandWidth(false));
-            }
-            UI.Space(50);
-            UI.Label("".green(), UI.AutoWidth());
-            UI.EndHorizontal();
-            UI.Space(10);
+                using (UI.VerticalScope()) {
+                    using (UI.HorizontalScope()) {
+                        UI.ActionTextField(
+                            ref settings.searchText,
+                            "searhText",
+                            (text) => { },
+                            () => { UpdateSearchResults(); },
+                            UI.Width(400));
+                        UI.Label("Limit", UI.ExpandWidth(false));
+                        UI.ActionIntTextField(
+                            ref settings.searchLimit,
+                            "searchLimit",
+                            (limit) => { },
+                            () => { UpdateSearchResults(); },
+                            UI.Width(200));
+                        if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
+                        UI.Space(25);
+                        UI.Toggle("Show GUIs", ref settings.showAssetIDs);
+                        UI.Space(25);
+                        UI.Toggle("Dividers", ref settings.showDivisions);
+                    }
+                    using (UI.HorizontalScope()) {
+                        UI.ActionButton("Search", () => {
+                            UpdateSearchResults();
+                        }, UI.AutoWidth());
+                        UI.Space(25);
+                        if (firstSearch) {
+                            UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
+                        }
+                        else if (matchCount > 0) {
+                            String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                            if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
+                            if (collatedBPs != null) {
+                                foreach (var group in collatedBPs) {
+                                    title += $" {group.Key} ({group.Count()})";
+                                }
+                            }
+                            UI.Label(title, UI.ExpandWidth(false));
+                        }
+                        UI.Space(50);
+                        UI.Label("".green(), UI.AutoWidth());
+                    }
+                    UI.Space(10);
 
-            if (filteredBPs != null) {
-                CharacterPicker.OnGUI();
-                UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0, null, selectedTypeFilter);
+                    if (filteredBPs != null) {
+                        CharacterPicker.OnGUI();
+                        UnitReference selected = CharacterPicker.GetSelectedCharacter();
+                        BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0, null, selectedTypeFilter);
+                    }
+                    UI.Space(25);
+                }
             }
-            UI.Space(25);
             return null;
         }
     }

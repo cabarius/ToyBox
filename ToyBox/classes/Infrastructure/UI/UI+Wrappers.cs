@@ -36,7 +36,11 @@ namespace ToyBox {
         public static GL.AreaScope AreaScope(Rect screenRect) { return new GL.AreaScope(screenRect); }
         public static GL.AreaScope AreaScope(Rect screenRect, String text) { return new GL.AreaScope(screenRect, text); }
         public static GL.HorizontalScope HorizontalScope(params GUILayoutOption[] options) { return new GL.HorizontalScope(options);  }
+        public static GL.HorizontalScope HorizontalScope(GUIStyle style, params GUILayoutOption[] options) { return new GL.HorizontalScope(style, options); }
+        public static GL.VerticalScope VerticalScope(params GUILayoutOption[] options) { return new GL.VerticalScope(options); }
+        public static GL.VerticalScope VerticalScope(GUIStyle style, params GUILayoutOption[] options) { return new GL.VerticalScope(style, options); }
         public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options) { return new GL.ScrollViewScope(scrollPosition, options); }
+        public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, GUIStyle style, params GUILayoutOption[] options) { return new GL.ScrollViewScope(scrollPosition, style, options); }
         public static void BeginVertical(params GUILayoutOption[] options) { GL.BeginHorizontal(options); }
 
         public static void EndVertical() { GL.BeginHorizontal(); }
