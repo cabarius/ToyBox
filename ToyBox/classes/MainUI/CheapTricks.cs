@@ -175,6 +175,7 @@ namespace ToyBox {
                 //() => { UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0); },
                 //() => { UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0); },
                 () => { UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0); },
+                () => { UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0); },
                 () => { }
                 );
             UI.Div(153, 25);

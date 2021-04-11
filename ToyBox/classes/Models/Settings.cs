@@ -33,6 +33,7 @@ namespace ToyBox {
         public bool toggleInfiniteItems = false;
         public bool toggleMetamagicIsFree = false;
         public bool toggleMaterialComponent = false;
+        public bool toggleAutomaticallyLoadLastSave = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;

@@ -51,6 +51,7 @@ namespace ToyBox {
         public static UnityModManager.ModEntry modEntry = null;
         public static Settings settings;
         public static bool Enabled;
+        public static bool freshlyLaunched = true;
         public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
 
         static Exception caughtException = null;

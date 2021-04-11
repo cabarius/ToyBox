@@ -147,17 +147,18 @@ namespace ToyBox {
             }
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
+#if false
             if (bpTypeFilter.collator != null) {
                 collatedBPs = filtered.GroupBy(bpTypeFilter.collator);
                 foreach (var group in collatedBPs) {
                     
                 }
             }
+#endif
             filteredBPs = filteredBPs.Take(Main.settings.searchLimit).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
             firstSearch = false;
         }
-
         public static IEnumerable OnGUI() {
             UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
                 blueprintTypeFilters.Select(tf => tf.name).ToArray(),

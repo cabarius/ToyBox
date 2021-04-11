@@ -647,5 +647,16 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+
+        [HarmonyPatch(typeof(MainMenuButtons), "Update")]
+        static class MainMenuButtons_Update_Patch {
+            static void Postfix() {
+                if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
+                    Main.freshlyLaunched = false;
+                    EventBus.RaiseEvent<IUIMainMenu>((Action<IUIMainMenu>)(h => h.LoadLastGame()));
+                }
+                Main.freshlyLaunched = false;
+            }
+        }
     }
 }

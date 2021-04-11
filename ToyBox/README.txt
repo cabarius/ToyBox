@@ -10,6 +10,7 @@ Now with 190+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.1.10
+    Tweak for autoloading last save on app launch
     Improved layout for mod window sizes < 2000 and < 1600
     Reverted mouse wheel patch that broke horizontal scrolling
 Ver 1.1.9
