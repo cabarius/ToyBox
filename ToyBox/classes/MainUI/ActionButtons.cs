@@ -55,7 +55,6 @@ namespace ToyBox {
         }
     }
 
-
     public static class ActionButtons {
         public static Settings settings { get { return Main.settings; } }
         public static void ResetGUI() { }

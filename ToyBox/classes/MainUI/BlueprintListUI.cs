@@ -49,7 +49,8 @@ namespace ToyBox {
             IEnumerable<BlueprintScriptableObject> blueprints,
             IEnumerable<IGrouping<String, BlueprintScriptableObject>> collatedBPs,
             float indent = 0, 
-            Func<String,String> titleFormater = null
+            Func<String,String> titleFormater = null,
+            NamedTypeFilter typeFilter = null
         ) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             int index = 0;
@@ -115,8 +116,20 @@ namespace ToyBox {
                 var description = blueprint.GetDescription();
                 if (description != null && description.Length > 0) description = $"\n{description.green()}";
                 else description = "";
+                if (blueprint.ComponentsArray != null) {
+                    String componentStr = String.Join<object>(" ", blueprint.ComponentsArray).grey();
+                    if (description.Length == 0) description = componentStr;
+                    else description = componentStr + description;
+                }
+                if (blueprint.ElementsArray != null) {
+                    String elementsStr = String.Join<object>(" ", blueprint.ElementsArray).yellow();
+                    if (description.Length == 0) description = elementsStr;
+                    else description = elementsStr + "\n" + description;
+                }
                 if (Main.settings.showAssetIDs) {
-                    UI.Label($"{blueprint.GetType().Name.cyan()}");
+                    String typeString = blueprint.GetType().Name;
+                    if (typeFilter?.collator != null) typeString += $" : {typeFilter.collator(blueprint)}";
+                    UI.Label(typeString.cyan());
                     Rect rect = GUILayoutUtility.GetLastRect();
                     GUILayout.TextField(blueprint.AssetGuid, UI.Width(450));
                     UI.EndHorizontal();
@@ -128,7 +141,9 @@ namespace ToyBox {
                     }
                 }
                 else {
-                    UI.Label($"{blueprint.GetType().Name.cyan()}" + description);
+                    String typeString = blueprint.GetType().Name.cyan();
+                    if (typeFilter?.collator != null) typeString += ": ".cyan() + typeFilter.collator(blueprint).green();
+                    UI.Label(typeString + " " + description);
                     UI.EndHorizontal();
                 }
 #if false

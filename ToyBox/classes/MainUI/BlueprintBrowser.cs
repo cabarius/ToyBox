@@ -52,6 +52,8 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class BlueprintBrowser {
+        public static Settings settings { get { return Main.settings; } }
+
         public static IEnumerable<BlueprintScriptableObject> filteredBPs = null;
         public static IEnumerable<IGrouping<String, BlueprintScriptableObject>> collatedBPs = null;
         public static int selectedCollationIndex = 0;
@@ -62,18 +64,21 @@ namespace ToyBox {
         static int selectedBlueprintIndex = -1;
         static BlueprintScriptableObject selectedBlueprint = null;
  
-
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
-            new NamedTypeFilter("All", typeof(BlueprintScriptableObject), null, (bp) => ((BlueprintItem)bp).SubtypeName),
+            new NamedTypeFilter("All", typeof(BlueprintScriptableObject), null, null),
             new NamedTypeFilter("Facts",typeof(BlueprintFact)),
             new NamedTypeFilter("Features", typeof(BlueprintFeature)),
             new NamedTypeFilter("Abilities", typeof(BlueprintAbility), (bp) => !((BlueprintAbility)bp).IsSpell),
             new NamedTypeFilter("Spells", typeof(BlueprintAbility), (bp) => ((BlueprintAbility)bp).IsSpell),
             new NamedTypeFilter("Spellbooks", typeof(BlueprintSpellbook)),
             new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
-            new NamedTypeFilter("Item", typeof(BlueprintItem), null,  (bp) => ((BlueprintItem)bp).SubtypeName),
-            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment), null, (bp) => ((BlueprintItem)bp).SubtypeName),
-            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => ((BlueprintItemWeapon)bp).Type.ToString()),
+            new NamedTypeFilter("Item", typeof(BlueprintItem), null,  (bp) => {
+                var ibp = (BlueprintItem)bp;
+                if (ibp.m_NonIdentifiedNameText?.ToString().Length > 0) return ibp.m_NonIdentifiedNameText;
+                return ibp.ItemType.ToString();
+            }),
+            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment), null, (bp) => ((BlueprintItemEquipment)bp).ItemType.ToString()),
+            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => ((BlueprintItemWeapon)bp).Type?.NameSafe() ?? "?"),
             new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
             new NamedTypeFilter("Head", typeof(BlueprintItemEquipmentHead)),
             new NamedTypeFilter("Glasses", typeof(BlueprintItemEquipmentGlasses)),
@@ -89,7 +94,10 @@ namespace ToyBox {
             new NamedTypeFilter("Boots", typeof(BlueprintItemEquipmentFeet)),
             new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
             new NamedTypeFilter("Ingredient", typeof(BlueprintIngredient)),
-            new NamedTypeFilter("Units", typeof(BlueprintUnit)),
+            new NamedTypeFilter("Units", typeof(BlueprintUnit), null, bp => {
+                var bpu = (BlueprintUnit)bp;
+                return bpu.Type?.Name ?? bpu.Race?.Name ?? "?";
+            }),
             new NamedTypeFilter("Races", typeof(BlueprintRace)),
             new NamedTypeFilter("Areas", typeof(BlueprintArea)),
             new NamedTypeFilter("Enter Points", typeof(BlueprintAreaEnterPoint)),
@@ -99,6 +107,8 @@ namespace ToyBox {
 //            new NamedTypeFilter("Armies", typeof(BlueprintArmyPreset)),
             new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
         };
+
+        public static NamedTypeFilter selectedTypeFilter = null;
 
         public static IEnumerable<BlueprintScriptableObject> blueprints = null;
         public static IEnumerable<BlueprintScriptableObject> GetBlueprints() {
@@ -120,24 +130,25 @@ namespace ToyBox {
         public static void ResetSearch() {
             filteredBPs = null;
             filteredBPNames = null;
+            collatedBPs = null;
         }
 
         public static void ResetGUI() {
             ResetSearch();
-            Main.settings.selectedBPTypeFilter = 1;
+            settings.selectedBPTypeFilter = 1;
         }
         public static void UpdateSearchResults() {
             if (blueprints == null) return;
             selectedCollationIndex = 0;
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
-            if (Main.settings.searchText.Trim().Length == 0) {
+            if (settings.searchText.Trim().Length == 0) {
                 ResetSearch();
             }
-            var terms = Main.settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
-            var bpTypeFilter = blueprintTypeFilters[Main.settings.selectedBPTypeFilter];
-            var selectedType = bpTypeFilter.type;
-            var bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => bpTypeFilter.filter(bp));
+            var terms = settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
+            selectedTypeFilter = blueprintTypeFilters[settings.selectedBPTypeFilter];
+            var selectedType = selectedTypeFilter.type;
+            var bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
             var filtered = new List<BlueprintScriptableObject>();
             foreach (BlueprintScriptableObject blueprint in bps) {
                 var name = blueprint.name.ToLower();
@@ -147,20 +158,17 @@ namespace ToyBox {
             }
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
-#if false
-            if (bpTypeFilter.collator != null) {
-                collatedBPs = filtered.GroupBy(bpTypeFilter.collator);
-                foreach (var group in collatedBPs) {
-                    
-                }
+            if (selectedTypeFilter.collator != null) {
+                collatedBPs = filtered.GroupBy(selectedTypeFilter.collator);
+                // I could do something like this but I will leave it up to the UI when a collation is selected.
+                // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
             }
-#endif
-            filteredBPs = filteredBPs.Take(Main.settings.searchLimit).ToArray();
+            filteredBPs = filteredBPs.Take(settings.searchLimit).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
-            UI.ActionSelectionGrid(ref Main.settings.selectedBPTypeFilter,
+            UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
                 blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                 10,
                 (selected) => { UpdateSearchResults(); },
@@ -169,23 +177,23 @@ namespace ToyBox {
 
             UI.BeginHorizontal();
             UI.ActionTextField(
-                ref Main.settings.searchText,
+                ref settings.searchText,
                 "searhText", 
                 (text) => { },
                 () => { UpdateSearchResults(); },
                 UI.Width(400));
             UI.Label("Limit", UI.ExpandWidth(false));
             UI.ActionIntTextField(
-                ref Main.settings.searchLimit,
+                ref settings.searchLimit,
                 "searchLimit", 
                 (limit) => { },
                 () => { UpdateSearchResults(); },
                 UI.Width(200));
-            if (Main.settings.searchLimit > 1000) { Main.settings.searchLimit = 1000; }
+            if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
             UI.Space(25);
-            UI.Toggle("Show GUIs", ref Main.settings.showAssetIDs);
+            UI.Toggle("Show GUIs", ref settings.showAssetIDs);
             UI.Space(25);
-            UI.Toggle("Dividers", ref Main.settings.showDivisions);
+            UI.Toggle("Dividers", ref settings.showDivisions);
 
             UI.EndHorizontal();
             UI.BeginHorizontal();
@@ -198,7 +206,12 @@ namespace ToyBox {
             }
             else if (matchCount > 0) {
                 String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                if (matchCount > Main.settings.searchLimit) { title += " => ".cyan() + $"{Main.settings.searchLimit}".cyan().bold(); }
+                if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
+                if (collatedBPs != null) {
+                    foreach (var group in collatedBPs) {
+                        title += $" {group.Key} ({group.Count()})";
+                    }
+                }
                 UI.Label(title, UI.ExpandWidth(false));
             }
             UI.Space(50);
@@ -209,7 +222,7 @@ namespace ToyBox {
             if (filteredBPs != null) {
                 CharacterPicker.OnGUI();
                 UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0);
+                BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0, null, selectedTypeFilter);
             }
             UI.Space(25);
             return null;
