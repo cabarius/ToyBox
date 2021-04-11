@@ -78,7 +78,15 @@ namespace ToyBox {
                 return ibp.ItemType.ToString();
             }),
             new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment), null, (bp) => ((BlueprintItemEquipment)bp).ItemType.ToString()),
-            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => ((BlueprintItemWeapon)bp).Type?.NameSafe() ?? "?"),
+            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => {
+                var bpw = ((BlueprintItemWeapon)bp);
+                var type = bpw.Type;
+                var category = type?.Category;
+                if (category != null) return category.ToString();
+                if (type != null) return type.NameSafe();
+                return "?";
+                }),
+//            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => ((BlueprintItemWeapon)bp).Type?.NameSafe() ?? "?"),
             new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
             new NamedTypeFilter("Head", typeof(BlueprintItemEquipmentHead)),
             new NamedTypeFilter("Glasses", typeof(BlueprintItemEquipmentGlasses)),
