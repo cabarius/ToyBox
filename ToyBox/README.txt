@@ -13,6 +13,7 @@ Ver 1.1.10
     Tweak for autoloading last save on app launch
     Improved layout for mod window sizes < 2000 and < 1600
     Reverted mouse wheel patch that broke horizontal scrolling
+
 Ver 1.1.9
     Kingdom Resource Editing (Finances, Materials, Divine Favors)
     Selector to allow you to move through other units during combat (real-time and turn based)

@@ -182,9 +182,9 @@ namespace ToyBox {
                         else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
                             UI.Label("LvUp".cyan().italic(), UI.Width(70));
                         }
-                        else { UI.Space(73); }
+                        else { UI.Space(74); }
                     }
-                    else { UI.Space(73); }
+                    else { UI.Space(74); }
                     UI.Space(25);
                     UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
                     if (player.AllCharacters.Contains(ch)) {
@@ -195,7 +195,7 @@ namespace ToyBox {
                         }
                         else { UI.Label("max".cyan(), UI.Width(70)); }
                     }
-                    else { UI.Space(73); }
+                    else { UI.Space(74); }
                     UI.Space(35);
                     if (!isWide) ActionsGUI(ch);
                     UI.Wrap(!Main.IsWide, 303, 0);
