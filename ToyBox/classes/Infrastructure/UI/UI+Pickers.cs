@@ -46,6 +46,9 @@ namespace ToyBox {
         public static void Toolbar(ref int value, String[] texts, params GUILayoutOption[] options) {
             value = GL.Toolbar(value, texts, options);
         }
+        public static void Toolbar(ref int value, String[] texts, GUIStyle style, params GUILayoutOption[] options) {
+            value = GL.Toolbar(value, texts, style, options);
+        }
 
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
@@ -56,6 +59,15 @@ namespace ToyBox {
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
             return sel != selected;
         }
+        public static bool SelectionGrid(ref int selected, String[] texts, int xCols, GUIStyle style, params GUILayoutOption[] options) {
+            if (xCols <= 0) xCols = texts.Count();
+            if (Main.IsNarrow) xCols = Math.Min(4, xCols);
+            int sel = selected;
+            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
+            if (xCols <= 0) xCols = texts.Count();
+            selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, style, options);
+            return sel != selected;
+        }
         public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = items.Count();
             if (Main.IsNarrow) xCols = Math.Min(4, xCols);
@@ -64,6 +76,35 @@ namespace ToyBox {
             if (xCols <= 0) xCols = items.Count();
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
             return sel != selected;
+        }
+        public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, GUIStyle style, params GUILayoutOption[] options) {
+            if (xCols <= 0) xCols = items.Count();
+            if (Main.IsNarrow) xCols = Math.Min(4, xCols);
+            int sel = selected;
+            var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
+            if (xCols <= 0) xCols = items.Count();
+            selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, style, options);
+            return sel != selected;
+        }
+        public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
+            int sel = selected;
+            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
+            if (xCols <= 0) xCols = texts.Count();
+            sel = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
+            if (selected != sel) {
+                selected = sel;
+                action(selected);
+            }
+        }
+        public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, GUIStyle style, params GUILayoutOption[] options) {
+            int sel = selected;
+            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
+            if (xCols <= 0) xCols = texts.Count();
+            sel = GL.SelectionGrid(selected, titles.ToArray(), xCols, style, options);
+            if (selected != sel) {
+                selected = sel;
+                action(selected);
+            }
         }
         public static void EnumGrid<TEnum>(Func<TEnum> get, Action<TEnum> set, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             var value = get();
@@ -92,16 +133,6 @@ namespace ToyBox {
             UI.Space(25);
             UI.EnumGrid<TEnum>(ref value, xCols, options);
             UI.EndHorizontal();
-        }
-        public static void ActionSelectionGrid(ref int selected, String[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
-            int sel = selected;
-            var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
-            if (xCols <= 0) xCols = texts.Count();
-            sel = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
-            if (selected != sel) {
-                selected = sel;
-                action(selected);
-            }
         }
         public static void EnumerablePicker<T>(
                 String title,

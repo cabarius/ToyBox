@@ -176,15 +176,19 @@ namespace ToyBox {
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
+            // Stackable browser
             using (UI.HorizontalScope()) {
-                using (UI.VerticalScope()) {
+                // First column - Type Selection Grid
+                using (UI.VerticalScope(GUI.skin.box)) {
                     UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
                         blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                         1,
                         (selected) => { UpdateSearchResults(); },
                         UI.MinWidth(200));
                 }
+                // Section Column  - Main Area
                 using (UI.VerticalScope()) {
+                    // Search Field and modifiers
                     using (UI.HorizontalScope()) {
                         UI.ActionTextField(
                             ref settings.searchText,
@@ -205,6 +209,7 @@ namespace ToyBox {
                         UI.Space(25);
                         UI.Toggle("Dividers", ref settings.showDivisions);
                     }
+                    // Search Button and Results Summmary
                     using (UI.HorizontalScope()) {
                         UI.ActionButton("Search", () => {
                             UpdateSearchResults();
