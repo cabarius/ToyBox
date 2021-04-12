@@ -48,7 +48,7 @@ namespace ToyBox {
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<BlueprintScriptableObject> blueprints,
             IEnumerable<IGrouping<String, BlueprintScriptableObject>> collatedBPs,
-            float indent = 0, 
+            float indent = 0, float remainingWidth = 0,
             Func<String,String> titleFormater = null,
             NamedTypeFilter typeFilter = null
         ) {
@@ -113,6 +113,7 @@ namespace ToyBox {
                     }
                 }
                 UI.Space(30);
+                Rect rect = GUILayoutUtility.GetLastRect();
                 var description = blueprint.GetDescription();
                 if (description != null && description.Length > 0) description = $"\n{description.green()}";
                 else description = "";
@@ -130,20 +131,22 @@ namespace ToyBox {
                     String typeString = blueprint.GetType().Name;
                     if (typeFilter?.collator != null) typeString += $" : {typeFilter.collator(blueprint)}";
                     UI.Label(typeString.cyan());
-                    Rect rect = GUILayoutUtility.GetLastRect();
                     GUILayout.TextField(blueprint.AssetGuid, UI.Width(450));
                     UI.EndHorizontal();
                     if (description.Length > 0) {
                         UI.BeginHorizontal();
                         UI.Label("", UI.Width(rect.x));
-                        UI.Label($"{rect} " + blueprint.GetDescription().green()); //, 
+                        UI.Label(blueprint.GetDescription().green()); //, 
                         UI.EndHorizontal();
                     }
                 }
                 else {
+                    GUI.Box(rect, "*");
                     String typeString = blueprint.GetType().Name.cyan();
                     if (typeFilter?.collator != null) typeString += ": ".cyan() + typeFilter.collator(blueprint).green();
-                    UI.Label(typeString + " " + description);
+                    float width = remainingWidth - rect.xMax;
+                    UI.Label($"{remainingWidth} - {rect.xMax} = {width}" + typeString + " " + description,
+                        UI.Width(800));
                     UI.EndHorizontal();
                 }
 #if false

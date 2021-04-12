@@ -184,10 +184,11 @@ namespace ToyBox {
                         blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                         1,
                         (selected) => { UpdateSearchResults(); },
-                        UI.MinWidth(200));
+                        UI.Width(250));
                 }
                 // Section Column  - Main Area
-                using (UI.VerticalScope()) {
+                float remainingWidth = Main.ummWidth - 325;
+                using (UI.VerticalScope(UI.Width(remainingWidth))) {
                     // Search Field and modifiers
                     using (UI.HorizontalScope()) {
                         UI.ActionTextField(
@@ -229,14 +230,14 @@ namespace ToyBox {
                             UI.Label(title, UI.ExpandWidth(false));
                         }
                         UI.Space(50);
-                        UI.Label("".green(), UI.AutoWidth());
+                        UI.Label($"".green(), UI.AutoWidth());
                     }
                     UI.Space(10);
 
                     if (filteredBPs != null) {
                         CharacterPicker.OnGUI();
                         UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                        BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0, null, selectedTypeFilter);
+                        BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0, remainingWidth, null, selectedTypeFilter);
                     }
                     UI.Space(25);
                 }
