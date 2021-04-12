@@ -108,10 +108,10 @@ namespace ToyBox {
             }),
             new NamedTypeFilter("Races", typeof(BlueprintRace)),
             new NamedTypeFilter("Areas", typeof(BlueprintArea)),
-            new NamedTypeFilter("Enter Points", typeof(BlueprintAreaEnterPoint)),
+            new NamedTypeFilter("Entery Points", typeof(BlueprintAreaEnterPoint)),
 //            new NamedTypeFilter("Enter Points", typeof(BlueprintAreaEnterPoint)),
             new NamedTypeFilter("Global Map", typeof(BlueprintGlobalMapPoint)),
-            new NamedTypeFilter("Feature Sel", typeof(BlueprintFeatureSelection)),
+            new NamedTypeFilter("Feature Select", typeof(BlueprintFeatureSelection)),
 //            new NamedTypeFilter("Armies", typeof(BlueprintArmyPreset)),
             new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
         };
@@ -177,7 +177,7 @@ namespace ToyBox {
         }
         public static IEnumerable OnGUI() {
             // Stackable browser
-            using (UI.HorizontalScope()) {
+            using (UI.HorizontalScope(UI.Width(450))) {
                 // First column - Type Selection Grid
                 using (UI.VerticalScope(GUI.skin.box)) {
                     UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
