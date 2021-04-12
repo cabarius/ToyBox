@@ -132,12 +132,6 @@ namespace ToyBox {
                     UI.ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, UI.AutoWidth());
                     return;
                 }
-#if false
-                UI.Label("focused: " 
-                    + $"{GUI.GetNameOfFocusedControl()}".orange().bold() 
-                    + "(" + $"{GUIUtility.keyboardControl}".cyan().bold() + ")", 
-                    UI.AutoWidth());
-#endif
                 UI.TabBar(ref settings.selectedTab,
                     () => {
                         if (BlueprintBrowser.GetBlueprints() == null) {
