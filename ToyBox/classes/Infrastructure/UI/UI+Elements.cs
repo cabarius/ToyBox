@@ -32,6 +32,12 @@ namespace ToyBox {
 
             GUI.Box(position, GUIContent.none, FillStyle(color));
         }
+
+        private static GUIStyle _buttonStyle;
+        public static GUIStyle buttonStyle { get { 
+                if (_buttonStyle == null) _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft };
+                return _buttonStyle;
+            } }
         private static GUIStyle divStyle;
         public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
             if (!Main.settings.showDivisions) {

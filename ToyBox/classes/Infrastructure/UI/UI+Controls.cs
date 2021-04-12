@@ -12,8 +12,6 @@ using GL = UnityEngine.GUILayout;
 namespace ToyBox {
     public static partial class UI {
 
-        public const string onMark = "<color=green><b>✔</b></color>";
-        public const string offMark = "<color=#A0A0A0E0>✖</color>";
         public static void Label(String title, params GUILayoutOption[] options) {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
