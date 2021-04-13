@@ -94,6 +94,8 @@ namespace ToyBox {
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
         public bool showAssetIDs = false;
+        public bool showComponents = false;
+        public bool showElements = false;
         public bool showDivisions = true;
 
         // Previews (Dialogs, Events ,etc)

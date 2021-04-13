@@ -129,8 +129,6 @@ namespace ToyBox.BagOfPatches {
         public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
-
-
         [HarmonyPatch(typeof(LevelUpState), MethodType.Constructor)]
         [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(LevelUpState.CharBuildMode) })]
         public static class LevelUpState_Patch {

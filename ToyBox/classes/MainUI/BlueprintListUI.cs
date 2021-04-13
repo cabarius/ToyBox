@@ -44,6 +44,8 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
     public class BlueprintListUI {
+        public static Settings settings { get { return Main.settings; } }
+
         public static int repeatCount = 1;
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<BlueprintScriptableObject> blueprints,
@@ -113,23 +115,23 @@ namespace ToyBox {
                     }
                 }
                 UI.Space(30);
+                String typeString = blueprint.GetType().Name;
+                if (typeFilter?.collator != null) typeString += $" : {typeFilter.collator(blueprint)}".blue();
                 Rect rect = GUILayoutUtility.GetLastRect();
                 var description = blueprint.GetDescription();
                 if (description != null && description.Length > 0) description = $"\n{description.green()}";
                 else description = "";
-                if (blueprint.ComponentsArray != null) {
+                if (settings.showComponents && blueprint.ComponentsArray != null) {
                     String componentStr = String.Join<object>(" ", blueprint.ComponentsArray).grey();
                     if (description.Length == 0) description = componentStr;
                     else description = componentStr + description;
                 }
-                if (blueprint.ElementsArray != null) {
+                if (settings.showElements && blueprint.ElementsArray != null) {
                     String elementsStr = String.Join<object>(" ", blueprint.ElementsArray).yellow();
                     if (description.Length == 0) description = elementsStr;
                     else description = elementsStr + "\n" + description;
                 }
-                if (Main.settings.showAssetIDs) {
-                    String typeString = blueprint.GetType().Name;
-                    if (typeFilter?.collator != null) typeString += $" : {typeFilter.collator(blueprint)}";
+                if (settings.showAssetIDs) {
                     UI.Label(typeString.cyan());
                     GUILayout.TextField(blueprint.AssetGuid, UI.Width(450));
                     UI.EndHorizontal();
@@ -141,9 +143,6 @@ namespace ToyBox {
                     }
                 }
                 else {
-                    GUI.Box(rect, "*");
-                    String typeString = blueprint.GetType().Name.cyan();
-                    if (typeFilter?.collator != null) typeString += ": ".cyan() + typeFilter.collator(blueprint).green();
                     float width = remainingWidth - rect.xMax;
                     UI.Label($"{remainingWidth} - {rect.xMax} = {width}" + typeString + " " + description,
                         UI.Width(800));
