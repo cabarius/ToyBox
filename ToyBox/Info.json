@@ -8,5 +8,5 @@
     "AssemblyName": "ToyBox.dll",
     "EntryMethod": "ToyBox.Main.Load",
     "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8?tab=posts&BH=0",
-    "Repository": "https://github.com/cabarius/ToyBox"
+    "Repository": "https://github.com/cabarius/ToyBox/Repository.json"
 }
