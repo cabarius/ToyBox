@@ -49,7 +49,6 @@ namespace ToyBox {
         public static int repeatCount = 1;
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<BlueprintScriptableObject> blueprints,
-            IEnumerable<IGrouping<String, BlueprintScriptableObject>> collatedBPs,
             float indent = 0, float remainingWidth = 0,
             Func<String,String> titleFormater = null,
             NamedTypeFilter typeFilter = null

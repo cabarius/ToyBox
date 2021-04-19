@@ -184,7 +184,19 @@ namespace ToyBox {
                         blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                         1,
                         (selected) => { UpdateSearchResults(); },
-                        UI.Width(250));
+                        UI.buttonStyle,
+                        UI.Width(200));
+                }
+                var collationKeys = new List<String>() { "All" };
+                collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
+                if (collatedBPs != null) {
+                    using (UI.VerticalScope(GUI.skin.box)) {
+                        UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(), 
+                            1,
+                            (selected) => { },
+                            UI.buttonStyle,
+                            UI.Width(200));
+                    }
                 }
                 // Section Column  - Main Area
                 float remainingWidth = Main.ummWidth - 325;
@@ -214,7 +226,7 @@ namespace ToyBox {
                         UI.Space(25);
                         UI.Toggle("Dividers", ref settings.showDivisions);
                     }
-                    // Search Button and Results Summmary
+                    // Search Button and Results Summary
                     using (UI.HorizontalScope()) {
                         UI.ActionButton("Search", () => {
                             UpdateSearchResults();
@@ -226,11 +238,11 @@ namespace ToyBox {
                         else if (matchCount > 0) {
                             String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
-                            if (collatedBPs != null) {
-                                foreach (var group in collatedBPs) {
-                                    title += $" {group.Key} ({group.Count()})";
-                                }
-                            }
+                            //if (collatedBPs != null) {
+                            //    foreach (var group in collatedBPs) {
+                            //        title += $" {group.Key} ({group.Count()})";
+                            //    }
+                            //}
                             UI.Label(title, UI.ExpandWidth(false));
                         }
                         UI.Space(50);
@@ -241,7 +253,21 @@ namespace ToyBox {
                     if (filteredBPs != null) {
                         CharacterPicker.OnGUI();
                         UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                        BlueprintListUI.OnGUI(selected, filteredBPs, collatedBPs, 0, remainingWidth, null, selectedTypeFilter);
+                        var bps = filteredBPs.ToList();
+                        if (selectedCollationIndex > 0) {
+                            var key = collationKeys.ElementAt(selectedCollationIndex);
+                            var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
+                            foreach (IGrouping<String, BlueprintScriptableObject> group in collatedBPs) {
+                                if (selectedKey == group.Key) bps = group.ToList();
+                                var thisIsYourGroupKey = group.Key;
+                                List<smth> list = group.ToList();     // or use directly group.foreach
+                            }
+
+                            var bps = collatedBPs.ToDictionary<String, IEnumerable<BlueprintScriptableObject>>();
+
+//                            bps = collatedBPs.ToArray[selectedCollationIndex - 1];
+  //                          : collatedBPs selectedCollationIndex - 1];
+                        BlueprintListUI.OnGUI(selected, filteredBPs, 0, remainingWidth, null, selectedTypeFilter);
                     }
                     UI.Space(25);
                 }
