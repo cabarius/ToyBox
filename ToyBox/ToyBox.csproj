@@ -111,6 +111,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Infrastructure\Borrowed\SerializableDictionary.cs" />
     <Compile Include="classes\Infrastructure\UI\Private\Private.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\UI\UI+Pickers.cs" />
@@ -118,7 +119,7 @@
     <Compile Include="classes\Infrastructure\UI\UI+Toggles.cs" />
     <Compile Include="classes\Infrastructure\UI\UI+Elements.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
-    <Compile Include="classes\MainUI\Multiclass.cs" />
+    <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multiclass.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
