@@ -44,6 +44,7 @@ using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public class PartyEditor {
+        public static Settings settings { get { return Main.settings; } }
         enum ToggleChoice {
             Classes,
             Stats,
@@ -57,6 +58,8 @@ namespace ToyBox {
         static int selectedCharacterIndex = 0;
         static UnitEntityData charToAdd = null;
         static UnitEntityData charToRemove = null;
+        static bool editMultiClass = false;
+        static UnitEntityData multiclassEditCharacter = null;
         static int respecableCount = 0;
         static int selectedSpellbook = 0;
         static int selectedSpellbookLevel = 0;
@@ -131,6 +134,33 @@ namespace ToyBox {
             else {
                 UI.Space(170);
             }
+        }
+        public static bool MulticlassPicker(BlueprintCharacterClass cl, HashSet<string> multiclassSet) {
+            bool changed = false;
+            using (UI.HorizontalScope()) {
+                UI.Space(100);
+                UI.ActionToggle(
+                    cl.Name,
+                    () => multiclassSet.Contains(cl.AssetGuid),
+                    (v) => { if (v) multiclassSet.Add(cl.AssetGuid); else multiclassSet.Remove(cl.AssetGuid); changed = true; },
+                    350
+                    );
+                var archetypes = cl.Archetypes.ToArray();
+                if (multiclassSet.Contains(cl.AssetGuid) && archetypes.Any()) {
+                    UI.Space(50);
+                    int originalArchetype = 0;
+                    int selectedArchetype = originalArchetype = Array.FindIndex(archetypes,
+                        archetype => multiclassSet.Contains(archetype.AssetGuid)) + 1;
+                    var choices = new String[] { cl.Name }.Concat(archetypes.Select(a => a.Name)).ToArray();
+                    UI.ActionSelectionGrid(ref selectedArchetype, choices, 6, (sel) => {
+                        if (originalArchetype > 0)
+                            multiclassSet.Remove(archetypes[originalArchetype - 1].AssetGuid);
+                        if (selectedArchetype > 0)
+                            multiclassSet.Add(archetypes[selectedArchetype - 1].AssetGuid);
+                    }, UI.AutoWidth());
+                }
+            }
+            return changed;
         }
         public static void OnGUI() {
             var player = Game.Instance.Player;
@@ -246,82 +276,116 @@ namespace ToyBox {
                     editSpellbooks = false;
                     spellbookEditCharacter = null;
                 }
+                if (selectedCharacter != multiclassEditCharacter) {
+                    editMultiClass = false;
+                    multiclassEditCharacter = null;
+                }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
                     UI.Div(100, 20);
-                    UI.BeginHorizontal();
-                    UI.Space(100);
-                    UI.Label("Character Level".cyan(), UI.Width(250));
-                    var prog = ch.Descriptor.Progression;
-                    UI.ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), UI.AutoWidth());
-                    UI.Space(25);
-                    UI.Label("level".green() + $": {prog.CharacterLevel}", UI.Width(100f));
-                    UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(20, prog.CharacterLevel + 1), UI.AutoWidth());
-                    UI.Space(25);
-                    UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
-                    UI.Space(23);
-                    UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above".green());
-                    UI.EndHorizontal();
-                    UI.Div(0, 25);
-                    UI.BeginHorizontal();
-                    UI.Space(100);
-                    UI.Label("Mythic Level".cyan(), UI.Width(250));
-                    UI.ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), UI.AutoWidth());
-                    UI.Space(25);
-                    UI.Label("my lvl".green() + $": {prog.MythicLevel}", UI.Width(100f));
-                    UI.ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), UI.AutoWidth());
-                    UI.Space(175);
-                    UI.Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
-                    UI.EndHorizontal();
-                    foreach (var cd in classData) {
-                        UI.Div(100, 20);
-                        UI.BeginHorizontal();
+                    using (UI.HorizontalScope()) {
                         UI.Space(100);
-                        UI.Label(cd.CharacterClass.Name.orange(), UI.Width(250));
-                        UI.ActionButton("<", () => cd.Level = Math.Max(0, cd.Level - 1), UI.AutoWidth());
-                        UI.Space(25);
-                        UI.Label("level".green() + $": {cd.Level}", UI.Width(100f));
-                        var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
-                        UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
-                        UI.Space(175);
-                        UI.Label(cd.CharacterClass.Description.green(), UI.AutoWidth());
-                        UI.EndHorizontal();
+                        UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
+                        if (settings.toggleMulticlass) {
+                            UI.Space(39);
+                            if (UI.DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
+                                multiclassEditCharacter = selectedCharacter;
+                            }
+                            UI.Space(25);
+                            UI.Label("See 'Level Up + Multiclass' for more options".green());
+                        }
+                    }
+                    UI.Div(100, 20);
+                    if (editMultiClass) {
+                        var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
+                        var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
+                        var multiclassSet = settings.selectedMulticlassSets.GetValueOrDefault(ch.CharacterName + ch.UniqueId,  new HashSet<string>());
+                        foreach (var cl in classes) {
+                            MulticlassPicker(cl, multiclassSet);
+                        }
+                        UI.Div(100, 20);
+                        foreach (var mycl in mythicClasses) {
+                            using (UI.HorizontalScope()) {
+                                MulticlassPicker(mycl, multiclassSet);
+                            }
+                        }
+                        settings.selectedMulticlassSets[ch.CharacterName + ch.UniqueId] = multiclassSet;
+                    }
+                    else {
+                        var prog = ch.Descriptor.Progression;
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.Label("Character Level".cyan(), UI.Width(250));
+                            UI.ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), UI.AutoWidth());
+                            UI.Space(25);
+                            UI.Label("level".green() + $": {prog.CharacterLevel}", UI.Width(100f));
+                            UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(20, prog.CharacterLevel + 1), UI.AutoWidth());
+                            UI.Space(25);
+                            UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
+                            UI.Space(23);
+                            UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above".green());
+                        }
+                        UI.Div(0, 25);
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.Label("Mythic Level".cyan(), UI.Width(250));
+                            UI.ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), UI.AutoWidth());
+                            UI.Space(25);
+                            UI.Label("my lvl".green() + $": {prog.MythicLevel}", UI.Width(100f));
+                            UI.ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), UI.AutoWidth());
+                            UI.Space(175);
+                            UI.Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
+                        }
+                        foreach (var cd in classData) {
+                            UI.Div(100, 20);
+                            using (UI.HorizontalScope()) {
+                                UI.Space(100);
+                                UI.Label(cd.CharacterClass.Name.orange(), UI.Width(250));
+                                UI.ActionButton("<", () => cd.Level = Math.Max(0, cd.Level - 1), UI.AutoWidth());
+                                UI.Space(25);
+                                UI.Label("level".green() + $": {cd.Level}", UI.Width(100f));
+                                var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
+                                UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
+                                UI.Space(175);
+                                UI.Label(cd.CharacterClass.Description.green(), UI.AutoWidth());
+                            }
+                        }
                     }
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
                     UI.Div(100, 20, 755);
-                    UI.BeginHorizontal();
-                    UI.Space(100);
-                    UI.Label("Alignment", UI.Width(425));
                     var alignment = ch.Descriptor.Alignment.Value;
-                    UI.Label($"{alignment.Name()}".color(alignment.Color()).bold(), UI.Width(1250f));
-                    UI.EndHorizontal();
-                    UI.BeginHorizontal();
-                    UI.Space(528);
-                    int alignmentIndex = Array.IndexOf(alignments, alignment);
-                    var titles = alignments.Select(
-                        a => a.Acronym().color(a.Color()).bold()).ToArray();
-                    if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
-                        ch.Descriptor.Alignment.Set(alignments[alignmentIndex]);
+                    using (UI.HorizontalScope()) {
+                        UI.Space(100);
+                        UI.Label("Alignment", UI.Width(425));
+                        UI.Label($"{alignment.Name()}".color(alignment.Color()).bold(), UI.Width(1250f));
                     }
-                    UI.EndHorizontal();
+                    using (UI.HorizontalScope()) {
+                        UI.Space(528);
+                        int alignmentIndex = Array.IndexOf(alignments, alignment);
+                        var titles = alignments.Select(
+                            a => a.Acronym().color(a.Color()).bold()).ToArray();
+                        if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
+                            ch.Descriptor.Alignment.Set(alignments[alignmentIndex]);
+                        }
+                    }
                     UI.Div(100, 20, 755);
-                    UI.BeginHorizontal();
-                    UI.Space(100);
-                    UI.Label("Size", UI.Width(425));
-                    var size = ch.Descriptor.State.Size;
-                    UI.Label($"{size}".orange().bold(), UI.Width(175));
-                    UI.EndHorizontal();
-                    UI.BeginHorizontal();
-                    UI.Space(528);
-                    UI.EnumGrid(
-                        () => ch.Descriptor.State.Size,
-                        (s) => ch.Descriptor.State.Size = s,
-                        3, UI.Width(600));
-                    UI.EndHorizontal();
-                    UI.BeginHorizontal();
-                    UI.Space(528);
-                    UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
-                    UI.EndHorizontal();
+                    using (UI.HorizontalScope()) {
+                        UI.Space(100);
+                        UI.Label("Size", UI.Width(425));
+                        var size = ch.Descriptor.State.Size;
+                        UI.Label($"{size}".orange().bold(), UI.Width(175));
+                    }
+                    using (UI.HorizontalScope()) {
+                        UI.Space(528);
+                        UI.EnumGrid(
+                            () => ch.Descriptor.State.Size,
+                            (s) => ch.Descriptor.State.Size = s,
+                            3, UI.Width(600));
+                    }
+                    using (UI.HorizontalScope()) {
+                        UI.Space(528);
+                        UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
+                    }
                     UI.Div(100, 20, 755);
                     foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
                         StatType statType = (StatType)obj;
@@ -333,26 +397,26 @@ namespace ToyBox {
                             if (statName == "BaseAttackBonus" || statName == "SkillAthletics") {
                                 UI.Div(100, 20, 755);
                             }
-                            UI.BeginHorizontal();
-                            UI.Space(100);
-                            UI.Label(statName, UI.Width(400f));
-                            UI.Space(25);
-                            UI.ActionButton(" < ", () => {
-                                modifiableValue.BaseValue -= 1;
-                                storedValue = modifiableValue.BaseValue;
-                            }, UI.AutoWidth());
-                            UI.Space(20);
-                            UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
-                            UI.ActionButton(" > ", () => {
-                                modifiableValue.BaseValue += 1;
-                                storedValue = modifiableValue.BaseValue;
-                            }, UI.AutoWidth());
-                            UI.Space(25);
-                            UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
-                                modifiableValue.BaseValue = v;
-                            }, null, UI.Width(75));
-                            statEditorStorage[key] = storedValue;
-                            UI.EndHorizontal();
+                            using (UI.HorizontalScope()) {
+                                UI.Space(100);
+                                UI.Label(statName, UI.Width(400f));
+                                UI.Space(25);
+                                UI.ActionButton(" < ", () => {
+                                    modifiableValue.BaseValue -= 1;
+                                    storedValue = modifiableValue.BaseValue;
+                                }, UI.AutoWidth());
+                                UI.Space(20);
+                                UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
+                                UI.ActionButton(" > ", () => {
+                                    modifiableValue.BaseValue += 1;
+                                    storedValue = modifiableValue.BaseValue;
+                                }, UI.AutoWidth());
+                                UI.Space(25);
+                                UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
+                                    modifiableValue.BaseValue = v;
+                                }, null, UI.Width(75));
+                                statEditorStorage[key] = storedValue;
+                            }
                         }
                     }
 
@@ -371,12 +435,12 @@ namespace ToyBox {
                     var names = spellbooks.Select((sb) => sb.Blueprint.GetDisplayName()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
-                        UI.BeginHorizontal();
-                        UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
-                        if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
+                        using (UI.HorizontalScope()) {
+                            UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
+                            if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
+                            //                        UI.DisclosureToggle("Edit", ref editSpellbooks);
+                        }
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
-//                        UI.DisclosureToggle("Edit", ref editSpellbooks);
-                        UI.EndHorizontal();
                         if (editSpellbooks) {
                             spellbookEditCharacter = ch;
                             var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
@@ -385,24 +449,24 @@ namespace ToyBox {
                         else {
                             var maxLevel = spellbook.Blueprint.MaxSpellLevel;
                             var casterLevel = spellbook.CasterLevel;
-                            UI.BeginHorizontal();
-                            UI.EnumerablePicker<int>(
-                                "Spell Level".bold() + " (count)",
-                                ref selectedSpellbookLevel,
-                                Enumerable.Range(0, casterLevel + 1),
-                                0,
-                                (lvl) => {
-                                    var levelText = lvl <= casterLevel ? $"L{lvl}".bold() : $"L{lvl}".grey();
-                                    var knownCount = spellbook.GetKnownSpells(lvl).Count();
-                                    var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
-                                    return levelText + countText;
-                                },
-                                UI.AutoWidth()
-                            );
-                            if (casterLevel < maxLevel) {
-                                UI.ActionButton("+1 Caster Level", () => spellbook.AddBaseLevel());
+                            using (UI.HorizontalScope()) {
+                                UI.EnumerablePicker<int>(
+                                    "Spell Level".bold() + " (count)",
+                                    ref selectedSpellbookLevel,
+                                    Enumerable.Range(0, casterLevel + 1),
+                                    0,
+                                    (lvl) => {
+                                        var levelText = lvl <= casterLevel ? $"L{lvl}".bold() : $"L{lvl}".grey();
+                                        var knownCount = spellbook.GetKnownSpells(lvl).Count();
+                                        var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
+                                        return levelText + countText;
+                                    },
+                                    UI.AutoWidth()
+                                );
+                                if (casterLevel < maxLevel) {
+                                    UI.ActionButton("+1 Caster Level", () => spellbook.AddBaseLevel());
+                                }
                             }
-                            UI.EndHorizontal();
                             FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
                         }
                     }

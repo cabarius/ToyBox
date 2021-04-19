@@ -1,4 +1,5 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using System.Collections.Generic;
 using UnityModManagerNet;
 
 namespace ToyBox {
@@ -107,6 +108,51 @@ namespace ToyBox {
 
         // Quests
         public bool hideCompleted = true;
+
+        // Multi-Class 
+        public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
+
+        //public HashSet<string> selectedMulticlassSet = new HashSet<string>();
+        //public HashSet<string> selectedCharGenMulticlassSet = new HashSet<string>();
+        public SerializableDictionary<string, HashSet<string>> selectedMulticlassSets = new SerializableDictionary<string, HashSet<string>>();
+
+        public bool toggleTakeHighestHitDie = true;
+        public bool toggleTakeHighestSkillPoints = true;
+        public bool toggleTakeHighestBAB = true;
+        public bool toggleTakeHighestSaveByRecalculation = true;
+        public bool toggleTakeHighestSaveByAlways = false;
+        public bool toggleRecalculateCasterLevelOnLevelingUp = true;
+        public bool toggleRestrictCasterLevelToCharacterLevel = true;
+        public bool toggleRestrictCasterLevelToCharacterLevelTemporary = false;
+        public bool toggleRestrictClassLevelForPrerequisitesToCharacterLevel = true;
+        public bool toggleFixFavoredClassHP = false;
+        public bool toggleAlwaysReceiveFavoredClassHPExceptPrestige = true;
+        public bool toggleAlwaysReceiveFavoredClassHP = false;
+
+        // these are useful and belong in Char Generation
+        public bool toggleIgnoreAlignmentRestrictionCharGen = false;    // was called toggleIgnoreAlignmentRestriction in Multi-Class mod
+        public bool toggleIgnoreAttributeStatCapChargen = false;
+        public bool toggleIgnoreAttributePointsRemainingChargen = false;
+
+        // these are useful and belong in LevelUp
+        public bool toggleLockCharacterLevel = false;
+        public bool toggleIgnoreAttributePointsRemaining = false;
+        public bool toggleIgnoreSkillCap = false;
+        public bool toggleIgnoreSkillPointsRemaining = false;
+
+        // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
+        // public bool toggleIgnorePrerequisites = false; 
+        public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
+
+        public bool toggleIgnoreSpellbookAlignmentRestriction = false;
+        public bool toggleIgnoreAbilityCasterCheckers = false;
+        public HashSet<string> ignoredAbilityCasterCheckerSet = new HashSet<string>();
+        public bool toggleIgnoreActivatableAbilityRestrictions = false;
+        public HashSet<string> ignoredActivatableAbilityRestrictionSet = new HashSet<string>();
+        public bool toggleIgnoreEquipmentRestrictions = false;
+        public HashSet<string> ignoredEquipmentRestrictionSet = new HashSet<string>();
+        public bool toggleIgnoreBuildingRestrictions = false;
+        public HashSet<string> ignoredBuildingRestrictionSet = new HashSet<string>();
 
         // Other
         public bool settingShowDebugInfo = true;

@@ -49,7 +49,6 @@ namespace ToyBox {
         public static void Toolbar(ref int value, String[] texts, GUIStyle style, params GUILayoutOption[] options) {
             value = GL.Toolbar(value, texts, style, options);
         }
-
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
             if (Main.IsNarrow) xCols = Math.Min(4, xCols);
@@ -152,7 +151,6 @@ namespace ToyBox {
             UI.Space(25);
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
-
         public static NamedFunc<T> TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
             int sel = selectedIndex;
             var titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();

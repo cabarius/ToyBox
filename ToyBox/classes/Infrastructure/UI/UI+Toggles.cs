@@ -27,7 +27,7 @@ namespace ToyBox {
             options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
                 title = value ? title.bold() : title.color(RGBA.lightgrey);
-                if (GL.Button("" + (value ? onMark : offMark) + " " + title, options)) { value = !value; }
+                if (GL.Button("" + (value ? onMark : offMark) + " " + title, UI.buttonStyle, options)) { value = !value; changed = true; }
             }
             else {
                 if (Private.UI.DisclosureToggle(title, value, options)) { value = !value; changed = true; }
@@ -42,6 +42,18 @@ namespace ToyBox {
             return TogglePrivate(title, ref value, false, false, width, options);
         }
 
+        public static bool ActionToggle(
+                String title,
+                Func<bool> get,
+                Action<bool> set,
+                float width = 0,
+                params GUILayoutOption[] options) {
+            bool value = get();
+            if (TogglePrivate(title, ref value, false, false, width, options)) {
+                set(value);
+            }
+            return value;
+        }
         public static bool BitFieldToggle(
                 String title,
                 ref int bitfield,
@@ -75,5 +87,6 @@ namespace ToyBox {
             UI.If(newBit, actions);
             return bit != newBit;
         }
+
     }
 }

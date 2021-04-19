@@ -109,11 +109,11 @@ namespace ToyBox {
             settings.searchText = "";
             settings.searchLimit = 100;
             CheapTricks.ResetGUI();
+            LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
             CharacterPicker.ResetGUI();
             BlueprintBrowser.ResetGUI();
             QuestEditor.ResetGUI();
-            Multiclass.ResetGUI();
             caughtException = null;
         }
 
@@ -141,10 +141,10 @@ namespace ToyBox {
                         else { UI.Space(25); }
                     },
                     new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(); }),
+                    new NamedAction("Level Up + Multiclass", () => { LevelUp.OnGUI(); }),
                     new NamedAction("Party Editor", () => { PartyEditor.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
-                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); }),
-                    new NamedAction("Multi-Class", () => { Multiclass.OnGUI(); })
+                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); })
                     );
             }
             catch (Exception e) {
