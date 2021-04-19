@@ -113,6 +113,7 @@ namespace ToyBox {
             CharacterPicker.ResetGUI();
             BlueprintBrowser.ResetGUI();
             QuestEditor.ResetGUI();
+            Multiclass.ResetGUI();
             caughtException = null;
         }
 
@@ -142,7 +143,8 @@ namespace ToyBox {
                     new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(); }),
                     new NamedAction("Party Editor", () => { PartyEditor.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
-                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); })
+                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); }),
+                    new NamedAction("Multi-Class", () => { Multiclass.OnGUI(); })
                     );
             }
             catch (Exception e) {

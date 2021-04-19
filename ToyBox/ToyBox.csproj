@@ -118,6 +118,8 @@
     <Compile Include="classes\Infrastructure\UI\UI+Toggles.cs" />
     <Compile Include="classes\Infrastructure\UI\UI+Elements.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
+    <Compile Include="classes\MainUI\Multiclass.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multiclass.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NoFriendlyFire.cs" />
