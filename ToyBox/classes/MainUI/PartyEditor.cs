@@ -444,7 +444,7 @@ namespace ToyBox {
                         if (editSpellbooks) {
                             spellbookEditCharacter = ch;
                             var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
-                            BlueprintListUI.OnGUI(ch, blueprints, null, 100);
+                            BlueprintListUI.OnGUI(ch, blueprints, 100);
                         }
                         else {
                             var maxLevel = spellbook.Blueprint.MaxSpellLevel;

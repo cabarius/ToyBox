@@ -188,8 +188,8 @@ namespace ToyBox {
                         UI.Width(200));
                 }
                 var collationKeys = new List<String>() { "All" };
-                collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
                 if (collatedBPs != null) {
+                    collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
                     using (UI.VerticalScope(GUI.skin.box)) {
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(), 
                             1,
@@ -257,17 +257,13 @@ namespace ToyBox {
                         if (selectedCollationIndex > 0) {
                             var key = collationKeys.ElementAt(selectedCollationIndex);
                             var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
+                            var list = new List<BlueprintScriptableObject>();
                             foreach (IGrouping<String, BlueprintScriptableObject> group in collatedBPs) {
-                                if (selectedKey == group.Key) bps = group.ToList();
-                                var thisIsYourGroupKey = group.Key;
-                                List<smth> list = group.ToList();     // or use directly group.foreach
+                                if (selectedKey == group.Key) list.Concat(group.ToList());
                             }
-
-                            var bps = collatedBPs.ToDictionary<String, IEnumerable<BlueprintScriptableObject>>();
-
-//                            bps = collatedBPs.ToArray[selectedCollationIndex - 1];
-  //                          : collatedBPs selectedCollationIndex - 1];
-                        BlueprintListUI.OnGUI(selected, filteredBPs, 0, remainingWidth, null, selectedTypeFilter);
+                            bps = list;
+                        }
+                        BlueprintListUI.OnGUI(selected, bps, 0, remainingWidth, null, selectedTypeFilter);
                     }
                     UI.Space(25);
                 }
