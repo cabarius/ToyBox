@@ -111,7 +111,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\Infrastructure\Borrowed\SerializableDictionary.cs" />
+    <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\UI\Private\Private.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\UI\UI+Pickers.cs" />
@@ -119,8 +119,10 @@
     <Compile Include="classes\Infrastructure\UI\UI+Toggles.cs" />
     <Compile Include="classes\Infrastructure\UI\UI+Elements.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
+    <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multiclass.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NoFriendlyFire.cs" />
@@ -152,6 +154,8 @@
     <Compile Include="classes\MainUI\CharacterPicker.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\Mod.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\WrathExtensionsMulticlass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="classes\Infrastructure\UI\RichText.cs" />
     <Compile Include="classes\Models\Settings.cs" />
@@ -175,6 +179,7 @@
     <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup />
+  <Import Project="..\..\WrathModMaker\ModMaker\ModMaker.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -136,9 +136,7 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 }
                 return true;
-
             }
         }
-
     }
 }

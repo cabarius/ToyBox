@@ -1,20 +1,4 @@
 ﻿// borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT Licenseusing Kingmaker;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.Cheats;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Mechanics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Kingmaker.GameModes;
-using UnityEngine;
-
-// Thanks to @SpaceHampster and @Velk17 from Pathfinder: Wrath of the Rightous Discord server
 using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
@@ -23,9 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
@@ -51,6 +38,7 @@ using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 
 namespace ToyBox 
