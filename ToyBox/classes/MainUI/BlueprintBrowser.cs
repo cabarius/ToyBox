@@ -107,9 +107,10 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintRace>("Races"),
             new NamedTypeFilter<BlueprintArea>("Areas"),
             new NamedTypeFilter<BlueprintAreaEnterPoint>("Entry Points", null, bp => bp.m_Area.NameSafe()),
-            new NamedTypeFilter<BlueprintGlobalMapPoint>("Global Map", null, bp => bp.Region.ToString()),
+            new NamedTypeFilter<BlueprintAreaEnterPoint>("Entry Points", null, bp => bp.m_Tooltip.ToString()),
+            new NamedTypeFilter<BlueprintGlobalMapPoint>("Global Map", null, bp => bp.GlobalMapZone.ToString()),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
-            new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.Leader.ToString()),
+            new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.GetFactType()?.ToString()),
         };
 
