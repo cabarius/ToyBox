@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
@@ -26,6 +26,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.CharGen;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Credits;
 using Kingmaker.Blueprints.Encyclopedia;
 using Kingmaker.Blueprints.Facts;
@@ -55,18 +56,26 @@ using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.Tutorial;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.LevelUp;
+using Kingmaker.UI.LevelUp.Phase;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Class.LevelUp;
+using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.UnitLogic.Customization;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using Kingmaker.Assets.UI;
+using ModMaker.Utility;
+using static ModMaker.Utility.ReflectionCache;
 using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public static class WrathExtensions {
+        public static string HashKey(this UnitEntityData ch) { return ch.CharacterName + ch.UniqueId; }
+        public static string HashKey(this UnitDescriptor ch) { return ch.Unit?.HashKey(); }
         public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }
         public static string Acronym(this Alignment a) { return UIUtility.GetAlignmentAcronym(a); }
         public static RGBA Color(this Alignment a) {
@@ -84,7 +93,7 @@ namespace ToyBox {
             return RGBA.grey;
         }
         public static string GetDescription(this BlueprintScriptableObject bpObejct)
-        // borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+        // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {
             try {
                 UnitReference mainChar = Game.Instance.Player.MainCharacter;

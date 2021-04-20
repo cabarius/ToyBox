@@ -110,6 +110,14 @@ namespace ToyBox {
                     () => { UI.Toggle("Always Receive Favored Class HP Except Prestige", ref settings.toggleAlwaysReceiveFavoredClassHPExceptPrestige, 0); },
                     () => { }
                     );
+                UI.Div(0, 25);
+                UI.HStack("Character Generation", 1,
+                    () =>
+                UI.Label("Choose default multiclass setting to use during creation of new characters".green(), UI.AutoWidth())
+                );
+                var multiclassSet = settings.charGenMulticlassSet;
+                MulticlassPicker.OnGUI(multiclassSet, 150);
+                settings.charGenMulticlassSet = multiclassSet;
             }
         }
     }

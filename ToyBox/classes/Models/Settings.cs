@@ -1,4 +1,5 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using ModMaker.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 
@@ -112,8 +113,7 @@ namespace ToyBox {
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
 
-        //public HashSet<string> selectedMulticlassSet = new HashSet<string>();
-        //public HashSet<string> selectedCharGenMulticlassSet = new HashSet<string>();
+        public HashSet<string> charGenMulticlassSet = new HashSet<string>();
         public SerializableDictionary<string, HashSet<string>> selectedMulticlassSets = new SerializableDictionary<string, HashSet<string>>();
 
         public bool toggleTakeHighestHitDie = true;

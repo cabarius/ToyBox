@@ -38,7 +38,7 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
-
+using ToyBox.Multiclass;
 using GL = UnityEngine.GUILayout;
 
 namespace ToyBox {
@@ -50,6 +50,7 @@ namespace ToyBox {
         static string modId;
         public static UnityModManager.ModEntry modEntry = null;
         public static Settings settings;
+        public static Mod multiclassMod;
         public static bool Enabled;
         public static bool freshlyLaunched = true;
         public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
@@ -82,6 +83,7 @@ namespace ToyBox {
                 modEntry.OnToggle = OnToggle;
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnSaveGUI = OnSaveGUI;
+                multiclassMod = new Multiclass.Mod();
             }
             catch (Exception e) {
                 Logger.Error(e);

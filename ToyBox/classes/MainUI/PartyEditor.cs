@@ -40,6 +40,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
+using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
@@ -134,33 +135,6 @@ namespace ToyBox {
             else {
                 UI.Space(170);
             }
-        }
-        public static bool MulticlassPicker(BlueprintCharacterClass cl, HashSet<string> multiclassSet) {
-            bool changed = false;
-            using (UI.HorizontalScope()) {
-                UI.Space(100);
-                UI.ActionToggle(
-                    cl.Name,
-                    () => multiclassSet.Contains(cl.AssetGuid),
-                    (v) => { if (v) multiclassSet.Add(cl.AssetGuid); else multiclassSet.Remove(cl.AssetGuid); changed = true; },
-                    350
-                    );
-                var archetypes = cl.Archetypes.ToArray();
-                if (multiclassSet.Contains(cl.AssetGuid) && archetypes.Any()) {
-                    UI.Space(50);
-                    int originalArchetype = 0;
-                    int selectedArchetype = originalArchetype = Array.FindIndex(archetypes,
-                        archetype => multiclassSet.Contains(archetype.AssetGuid)) + 1;
-                    var choices = new String[] { cl.Name }.Concat(archetypes.Select(a => a.Name)).ToArray();
-                    UI.ActionSelectionGrid(ref selectedArchetype, choices, 6, (sel) => {
-                        if (originalArchetype > 0)
-                            multiclassSet.Remove(archetypes[originalArchetype - 1].AssetGuid);
-                        if (selectedArchetype > 0)
-                            multiclassSet.Add(archetypes[selectedArchetype - 1].AssetGuid);
-                    }, UI.AutoWidth());
-                }
-            }
-            return changed;
         }
         public static void OnGUI() {
             var player = Game.Instance.Player;
@@ -296,19 +270,9 @@ namespace ToyBox {
                     }
                     UI.Div(100, 20);
                     if (editMultiClass) {
-                        var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
-                        var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
-                        var multiclassSet = settings.selectedMulticlassSets.GetValueOrDefault(ch.CharacterName + ch.UniqueId,  new HashSet<string>());
-                        foreach (var cl in classes) {
-                            MulticlassPicker(cl, multiclassSet);
-                        }
-                        UI.Div(100, 20);
-                        foreach (var mycl in mythicClasses) {
-                            using (UI.HorizontalScope()) {
-                                MulticlassPicker(mycl, multiclassSet);
-                            }
-                        }
-                        settings.selectedMulticlassSets[ch.CharacterName + ch.UniqueId] = multiclassSet;
+                        var multiclassSet = ch.GetMulticlassSet();
+                        MulticlassPicker.OnGUI(multiclassSet);
+                        ch.SetMulticlassSet(multiclassSet);
                     }
                     else {
                         var prog = ch.Descriptor.Progression;
@@ -419,7 +383,6 @@ namespace ToyBox {
                             }
                         }
                     }
-
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
                     FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
