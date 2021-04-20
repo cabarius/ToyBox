@@ -66,55 +66,51 @@ namespace ToyBox {
         static BlueprintScriptableObject selectedBlueprint = null;
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
-            new NamedTypeFilter("All", typeof(BlueprintScriptableObject), null, null),
-            new NamedTypeFilter("Facts",typeof(BlueprintFact)),
-            new NamedTypeFilter("Features", typeof(BlueprintFeature)),
-            new NamedTypeFilter("Abilities", typeof(BlueprintAbility), bp => !((BlueprintAbility)bp).IsSpell),
-            new NamedTypeFilter("Spells", typeof(BlueprintAbility), bp => ((BlueprintAbility)bp).IsSpell),
-            new NamedTypeFilter("Spellbooks", typeof(BlueprintSpellbook)),
-            new NamedTypeFilter("Buffs", typeof(BlueprintBuff)),
-            new NamedTypeFilter("Item", typeof(BlueprintItem), null,  (bp) => {
-                var ibp = (BlueprintItem)bp;
-                if (ibp.m_NonIdentifiedNameText?.ToString().Length > 0) return ibp.m_NonIdentifiedNameText;
-                return ibp.ItemType.ToString();
+            new NamedTypeFilter<BlueprintScriptableObject>("All", null, bp => bp.CollationName()),
+            new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationName()),
+            new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationName()),
+            new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.Type.ToString()),
+            new NamedTypeFilter<BlueprintAbility>("Actions", null, bp => bp.ActionType.ToString()),
+            new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.School.ToString()),
+            new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.GetType().ToString()),
+            new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationName()),
+            new NamedTypeFilter<BlueprintItem>("Item", null,  (bp) => {
+                if (bp.m_NonIdentifiedNameText?.ToString().Length > 0) return bp.m_NonIdentifiedNameText;
+                return bp.ItemType.ToString();
             }),
-            new NamedTypeFilter("Equipment", typeof(BlueprintItemEquipment), null, (bp) => ((BlueprintItemEquipment)bp).ItemType.ToString()),
-            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => {
-                var bpw = ((BlueprintItemWeapon)bp);
-                var type = bpw.Type;
+            new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) => bp.ItemType.ToString()),
+            new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
+                var type = bp.Type;
                 var category = type?.Category;
                 if (category != null) return category.ToString();
                 if (type != null) return type.NameSafe();
                 return "?";
                 }),
-//            new NamedTypeFilter("Weapons", typeof(BlueprintItemWeapon), null, (bp) => ((BlueprintItemWeapon)bp).Type?.NameSafe() ?? "?"),
-            new NamedTypeFilter("Shields", typeof(BlueprintItemShield)),
-            new NamedTypeFilter("Head", typeof(BlueprintItemEquipmentHead)),
-            new NamedTypeFilter("Glasses", typeof(BlueprintItemEquipmentGlasses)),
-            new NamedTypeFilter("Neck", typeof(BlueprintItemEquipmentNeck)),
-            new NamedTypeFilter("Shoulders", typeof(BlueprintItemEquipmentShoulders)),
-            new NamedTypeFilter("Armor", typeof(BlueprintItemArmor)),
-            new NamedTypeFilter("Shirt", typeof(BlueprintItemEquipmentShirt)),
-            new NamedTypeFilter("Belts", typeof(BlueprintItemEquipmentBelt)),
-            new NamedTypeFilter("Wrist", typeof(BlueprintItemEquipmentWrist)),
-            new NamedTypeFilter("Hand", typeof(BlueprintItemEquipmentHand)),
-            new NamedTypeFilter("Rings", typeof(BlueprintItemEquipmentRing)),
-            new NamedTypeFilter("Gloves", typeof(BlueprintItemEquipmentGloves)),
-            new NamedTypeFilter("Boots", typeof(BlueprintItemEquipmentFeet)),
-            new NamedTypeFilter("Usable", typeof(BlueprintItemEquipmentUsable)),
-            new NamedTypeFilter("Ingredient", typeof(BlueprintIngredient)),
-            new NamedTypeFilter("Units", typeof(BlueprintUnit), null, bp => {
-                var bpu = (BlueprintUnit)bp;
-                return bpu.Type?.Name ?? bpu.Race?.Name ?? "?";
-            }),
-            new NamedTypeFilter("Races", typeof(BlueprintRace)),
-            new NamedTypeFilter("Areas", typeof(BlueprintArea)),
-            new NamedTypeFilter("Entery Points", typeof(BlueprintAreaEnterPoint)),
-//            new NamedTypeFilter("Enter Points", typeof(BlueprintAreaEnterPoint)),
-            new NamedTypeFilter("Global Map", typeof(BlueprintGlobalMapPoint)),
-            new NamedTypeFilter("Feature Select", typeof(BlueprintFeatureSelection)),
-//            new NamedTypeFilter("Armies", typeof(BlueprintArmyPreset)),
-            new NamedTypeFilter("Quests", typeof(BlueprintQuest)),
+#if false
+            new NamedTypeFilter<BlueprintItemShield>("Shields"),
+            new NamedTypeFilter<BlueprintItemEquipmentHead>("Head"),
+            new NamedTypeFilter<BlueprintItemEquipmentGlasses>("Glasses"),
+            new NamedTypeFilter<BlueprintItemEquipmentNeck>("Neck"),
+            new NamedTypeFilter<BlueprintItemEquipmentShoulders>("Shoulders"),
+            new NamedTypeFilter<BlueprintItemArmor>("Armor"),
+            new NamedTypeFilter<BlueprintItemEquipmentShirt>("Shirt"),
+            new NamedTypeFilter<BlueprintItemEquipmentBelt>("Belts"),
+            new NamedTypeFilter<BlueprintItemEquipmentWrist>("Wrist"),
+            new NamedTypeFilter<BlueprintItemEquipmentHand>("Hand"),
+            new NamedTypeFilter<BlueprintItemEquipmentRing>("Rings"),
+            new NamedTypeFilter<BlueprintItemEquipmentGloves>("Gloves"),
+            new NamedTypeFilter<BlueprintItemEquipmentFeet>("Boots"),
+#endif
+            new NamedTypeFilter<BlueprintItemEquipmentUsable>("Usable", null, bp => bp.SubtypeName),
+            new NamedTypeFilter<BlueprintIngredient>("Ingredient"),
+            new NamedTypeFilter<BlueprintUnit>("Units", null, bp => bp.Type?.Name ?? bp.Race?.Name ?? "?"),
+            new NamedTypeFilter<BlueprintRace>("Races"),
+            new NamedTypeFilter<BlueprintArea>("Areas"),
+            new NamedTypeFilter<BlueprintAreaEnterPoint>("Entry Points", null, bp => bp.m_Area.NameSafe()),
+            new NamedTypeFilter<BlueprintGlobalMapPoint>("Global Map", null, bp => bp.Region.ToString()),
+            new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
+            new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.Leader.ToString()),
+            new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.GetFactType()?.ToString()),
         };
 
         public static NamedTypeFilter selectedTypeFilter = null;
@@ -221,7 +217,7 @@ namespace ToyBox {
                             UI.Width(200));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
-                        UI.Toggle("Show GUIs", ref settings.showAssetIDs);
+                        UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
                         UI.Space(25);
                         UI.Toggle("Components", ref settings.showComponents);
                         UI.Space(25);

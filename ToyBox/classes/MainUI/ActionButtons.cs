@@ -47,14 +47,20 @@ namespace ToyBox {
         public Type type { get; }
         public Func<BlueprintScriptableObject, bool> filter;
         public Func<BlueprintScriptableObject, String> collator;
-        public NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null, Func<BlueprintScriptableObject, String> collator = null) {
+        protected NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null, Func<BlueprintScriptableObject, String> collator = null) {
             this.name = name;
             this.type = type;
             this.filter = filter != null ? filter : (bp) => true;
             this.collator = collator;
         }
     }
-
+    public class NamedTypeFilter<TBlueprint> : NamedTypeFilter where TBlueprint : BlueprintScriptableObject {
+        public NamedTypeFilter(String name, Func<TBlueprint, bool> filter = null, Func<TBlueprint, String> collator = null)
+            : base(name, typeof(TBlueprint), null, null) {
+            if (filter != null) this.filter = (bp) => filter((TBlueprint)bp);
+            if (collator != null) this.collator = (bp) => collator((TBlueprint)bp);
+        }
+    }
     public static class ActionButtons {
         public static Settings settings { get { return Main.settings; } }
         public static void ResetGUI() { }
