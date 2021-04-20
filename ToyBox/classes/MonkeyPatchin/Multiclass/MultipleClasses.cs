@@ -260,6 +260,7 @@ namespace ToyBox.Multiclass {
 
             [HarmonyPostfix, HarmonyPriority(Priority.Last)]
             static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
+                if (!settings.toggleMulticlass) return;
                 if (__state != null) {
                     __state.Restore();
                 }
@@ -288,6 +289,7 @@ namespace ToyBox.Multiclass {
 
             [HarmonyPostfix, HarmonyPriority(Priority.Last)]
             static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
+                if (!settings.toggleMulticlass) return;
                 if (__state != null) {
                     __state.Restore();
                 }

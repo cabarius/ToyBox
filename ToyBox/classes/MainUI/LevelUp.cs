@@ -91,10 +91,11 @@ namespace ToyBox {
                     );
                 UI.Div(0, 25);
                 UI.HStack("Multiple Classes", 1,
+                    () => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),
                     () => {
                         UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
                         UI.Space(25);
-                        UI.Label("Experimental".cyan() + ": With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. Please go to Party Editor > Character > Classes to configure this".green());
+                        UI.Label("With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. Please go to Party Editor > Character > Classes to configure this".green());
                     },
                     () => { UI.Toggle("Use Highest Hit Die", ref settings.toggleTakeHighestHitDie, 0); },
                     () => { UI.Toggle("Use Highest Skill Points", ref settings.toggleTakeHighestSkillPoints, 0); },
@@ -110,14 +111,16 @@ namespace ToyBox {
                     () => { UI.Toggle("Always Receive Favored Class HP Except Prestige", ref settings.toggleAlwaysReceiveFavoredClassHPExceptPrestige, 0); },
                     () => { }
                     );
-                UI.Div(0, 25);
-                UI.HStack("Character Generation", 1,
-                    () =>
-                UI.Label("Choose default multiclass setting to use during creation of new characters".green(), UI.AutoWidth())
-                );
-                var multiclassSet = settings.charGenMulticlassSet;
-                MulticlassPicker.OnGUI(multiclassSet, 150);
-                settings.charGenMulticlassSet = multiclassSet;
+                if (settings.toggleMulticlass) {
+                    UI.Div(0, 25);
+                    UI.HStack("Character Generation", 1,
+                        () =>
+                    UI.Label("Choose default multiclass setting to use during creation of new characters".green(), UI.AutoWidth())
+                    );
+                    var multiclassSet = settings.charGenMulticlassSet;
+                    MulticlassPicker.OnGUI(multiclassSet, 150);
+                    settings.charGenMulticlassSet = multiclassSet;
+                }
             }
         }
     }

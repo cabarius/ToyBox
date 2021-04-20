@@ -115,7 +115,11 @@ namespace ToyBox {
                 }
                 UI.Space(30);
                 String typeString = blueprint.GetType().Name;
-                if (typeFilter?.collator != null) typeString += $" : {typeFilter.collator(blueprint)}".blue();
+                if (typeFilter?.collator != null) {
+                    var collatorString = typeFilter.collator(blueprint);
+                    if (!typeString.Contains(collatorString)) 
+                        typeString += $" : {collatorString}".yellow();
+                }
                 Rect rect = GUILayoutUtility.GetLastRect();
                 var description = blueprint.GetDescription();
                 if (description != null && description.Length > 0) description = $"\n{description.green()}";
@@ -143,8 +147,8 @@ namespace ToyBox {
                 }
                 else {
                     float width = remainingWidth - rect.xMax;
-                    UI.Label($"{remainingWidth} - {rect.xMax} = {width}" + typeString + " " + description,
-                        UI.Width(800));
+                    UI.Label(typeString.cyan() + " " + description,UI.Width(800));
+                    //UI.Label($"{remainingWidth} - {rect.xMax} = {width}" + typeString + " " + description, UI.Width(800));
                     UI.EndHorizontal();
                 }
 #if false
