@@ -72,7 +72,8 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.Type.ToString()),
             new NamedTypeFilter<BlueprintAbility>("Actions", null, bp => bp.ActionType.ToString()),
             new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.School.ToString()),
-            new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.GetType().ToString()),
+            new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationName()),
+            new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CharacterClass.Name.ToString()),
             new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintItem>("Item", null,  (bp) => {
                 if (bp.m_NonIdentifiedNameText?.ToString().Length > 0) return bp.m_NonIdentifiedNameText;
@@ -102,7 +103,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintItemEquipmentFeet>("Boots"),
 #endif
             new NamedTypeFilter<BlueprintItemEquipmentUsable>("Usable", null, bp => bp.SubtypeName),
-            new NamedTypeFilter<BlueprintIngredient>("Ingredient"),
+            new NamedTypeFilter<BlueprintIngredient>("Ingredient", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintUnit>("Units", null, bp => bp.Type?.Name ?? bp.Race?.Name ?? "?"),
             new NamedTypeFilter<BlueprintRace>("Races"),
             new NamedTypeFilter<BlueprintArea>("Areas"),

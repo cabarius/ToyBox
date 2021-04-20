@@ -24,6 +24,7 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Credits;
+using Kingmaker.Craft;
 using Kingmaker.Blueprints.Encyclopedia;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
@@ -83,6 +84,33 @@ namespace ToyBox {
             if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
             return typeName;
         }
+        public static String CollationName(this BlueprintSpellbook bp) {
+            if (bp.IsMythic) return "Mythic";
+            if (bp.IsAlchemist) return "Alchemist";
+            if (bp.IsArcane) return "Arcane";
+            if (bp.IsSinMagicSpecialist) return "Specialist";
+            if (bp.CharacterClass.IsDivineCaster) return "Divine";
+            return bp.GetType().ToString();
+        }
+        public static String CollationName(this BlueprintBuff bp) {
+            if (bp.IsClassFeature) return "Class Feature";
+            if (bp.IsFromSpell) return "From Spell";
+            if (bp.Harmful) return "Harmful";
+            if (bp.RemoveOnRest) return "Rest Removes";
+            if (bp.RemoveOnResurrect) return "Res Removes";
+            if (bp.Ranks > 0) return $"{bp.Ranks} Ranks";
+            return bp.GetType().ToString();
+        }
+
+        public static String CollationName(this BlueprintIngredient bp) {
+            if (bp.IsNotable) return "Notable";
+            if (bp.AllowMakeStackable) return "Stackable";
+            if (bp.Destructible) return "Destructable";
+            if (bp.FlavorText != null) return bp.FlavorText;
+            return bp.NonIdentifiedName;
+        }
+
+
         static Dictionary<Type, List<BlueprintAction>> actionsByType = new Dictionary<Type, List<BlueprintAction>>();
         public static List<BlueprintAction> BlueprintActions(this UnitEntityData ch, Type type) {
             if (ch == null) { return new List<BlueprintAction>(); }
