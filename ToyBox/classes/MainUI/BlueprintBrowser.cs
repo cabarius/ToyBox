@@ -56,6 +56,7 @@ namespace ToyBox {
 
         public static IEnumerable<BlueprintScriptableObject> filteredBPs = null;
         public static IEnumerable<IGrouping<String, BlueprintScriptableObject>> collatedBPs = null;
+        public static IEnumerable<BlueprintScriptableObject> selectedCollatedBPs = null;
         public static int selectedCollationIndex = 0;
         static bool firstSearch = true;
         public static String[] filteredBPNames = null;
@@ -150,6 +151,7 @@ namespace ToyBox {
             selectedCollationIndex = 0;
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
+            selectedCollatedBPs = null;
             if (settings.searchText.Trim().Length == 0) {
                 ResetSearch();
             }
@@ -167,7 +169,7 @@ namespace ToyBox {
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
             if (selectedTypeFilter.collator != null) {
-                collatedBPs = filtered.GroupBy(selectedTypeFilter.collator);
+                collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key);
                 // I could do something like this but I will leave it up to the UI when a collation is selected.
                 // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
             }
@@ -188,12 +190,13 @@ namespace ToyBox {
                         UI.Width(200));
                 }
                 var collationKeys = new List<String>() { "All" };
+                bool collationChanged = false;
                 if (collatedBPs != null) {
                     collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
                     using (UI.VerticalScope(GUI.skin.box)) {
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(), 
                             1,
-                            (selected) => { },
+                            (selected) => { collationChanged = true; },
                             UI.buttonStyle,
                             UI.Width(200));
                     }
@@ -238,11 +241,6 @@ namespace ToyBox {
                         else if (matchCount > 0) {
                             String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
-                            //if (collatedBPs != null) {
-                            //    foreach (var group in collatedBPs) {
-                            //        title += $" {group.Key} ({group.Count()})";
-                            //    }
-                            //}
                             UI.Label(title, UI.ExpandWidth(false));
                         }
                         UI.Space(50);
@@ -253,18 +251,21 @@ namespace ToyBox {
                     if (filteredBPs != null) {
                         CharacterPicker.OnGUI();
                         UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                        var bps = filteredBPs.ToList();
+                        var bps = filteredBPs;
+                        if (selectedCollationIndex == 0) selectedCollatedBPs = null;
                         if (selectedCollationIndex > 0) {
-                            var key = collationKeys.ElementAt(selectedCollationIndex);
+                            if (collationChanged) {
+                                var key = collationKeys.ElementAt(selectedCollationIndex);
 
-                            var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-                            var list = new List<BlueprintScriptableObject>();
-                            foreach (var group in collatedBPs) {
-                                if (group.Key == selectedKey) {
-                                    list = group.ToList();
+                                var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
+
+                                foreach (var group in collatedBPs) {
+                                    if (group.Key == selectedKey) {
+                                        selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
+                                    }
                                 }
                             }
-                            bps = list;
+                            bps = selectedCollatedBPs;
                         }
                         BlueprintListUI.OnGUI(selected, bps, 0, remainingWidth, null, selectedTypeFilter);
                     }

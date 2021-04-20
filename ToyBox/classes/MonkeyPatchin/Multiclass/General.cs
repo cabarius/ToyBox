@@ -148,6 +148,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor), typeof(BlueprintProgression) })]
         static class LevelUpHelper_UpdateProgression_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] BlueprintProgression progression) {
+                if (!settings.toggleMulticlass) return false;
                 ProgressionData progressionData = unit.Progression.SureProgressionData(progression);
                 int level = progressionData.Level;
                 int nextLevel = progressionData.Blueprint.CalcLevel(unit);
@@ -180,6 +181,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(CharBSelectionSwitchSpells), "ParseSpellSelection")]
         static class CharBSelectionSwitchSpells_ParseSpellSelection_Patch {
             public static bool Prefix(CharBSelectionSwitchSpells __instance) {
+                if (!settings.toggleMulticlass) return false;
                 int num = 0;
                 __instance.HasEmptyCollections = false;
                 foreach (SpellSelectionData spellsCollection in __instance.m_ShowedSpellsCollections) {
@@ -205,6 +207,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
+                if (!settings.toggleMulticlass) return false;
                 if ((UnityEngine.Object)state.SelectedClass == (UnityEngine.Object)null)
                     return true;
                 SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
@@ -258,6 +261,7 @@ namespace ToyBox.Multiclass {
         static class SpellSelectionData_SetLevelSpells_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(SpellSelectionData __instance, int level, ref int count) {
+                if (!settings.toggleMulticlass) return;
                 if (__instance.LevelCount[level] != null) {
                     count += __instance.LevelCount[level].SpellSelections.Length;
                 }
@@ -268,11 +272,13 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(SpellSelectionData), nameof(SpellSelectionData.SetExtraSpells), new Type[] { typeof(int), typeof(int) })]
         static class SpellSelectionData_SetExtraSpells_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
-            static void Prefix(SpellSelectionData __instance, ref int count, ref int maxLevel) {
+            static bool Prefix(SpellSelectionData __instance, ref int count, ref int maxLevel) {
+                if (!settings.toggleMulticlass) return false;
                 if (__instance.ExtraSelected != null) {
                     __instance.ExtraMaxLevel = maxLevel = Math.Max(__instance.ExtraMaxLevel, maxLevel);
                     count += __instance.ExtraSelected.Length;
                 }
+                return true;
             }
         }
 
@@ -286,6 +292,7 @@ namespace ToyBox.Multiclass {
 
             [HarmonyPostfix, HarmonyPriority(Priority.Last)]
             static void Postfix(CharBPhaseSpells __instance) {
+                if (!settings.toggleMulticlass) return;
                 __instance.HandleSelectLevel(__instance.ChooseLevelForBook());
             }
         }
@@ -296,6 +303,7 @@ namespace ToyBox.Multiclass {
         static class CharacterBuildController_SetSpell_Patch {
 
             public static bool Prefix(CharacterBuildController __instance, BlueprintAbility spell, int spellLevel, bool multilevel) {
+                if (!settings.toggleMulticlass) return false;
                 BlueprintSpellbook spellbook = __instance.Spells.CurrentSpellSelectionData.Spellbook;
                 BlueprintSpellList spellList = __instance.Spells.CurrentSpellSelectionData.SpellList;
                 int spellsCollectionIndex = __instance.Spells.CurrentSpellsCollectionIndex;
@@ -324,6 +332,7 @@ namespace ToyBox.Multiclass {
         static class CharBPhaseSpells_OnChangeCurrentCollection_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(CharBPhaseSpells __instance) {
+                if (!settings.toggleMulticlass) return;
                 if (__instance.CurrentSpellSelectionData != null) {
                     __instance.SetSpellbook(__instance.CurrentSpellSelectionData.Spellbook.CharacterClass);
                 }
@@ -335,6 +344,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(SpellSelectionData), typeof(int) })]
         static class CharBFeatureSelector_FillDataAllSpells_Patch {
             public static bool Prefix(CharBFeatureSelector __instance, SpellSelectionData spellSelectionData, int maxLevel) {
+                if (!settings.toggleMulticlass) return false;
                 __instance.Init();
                 CharBSelectorLayer selectorLayerBody = __instance.SelectorLayerBody;
                 if (selectorLayerBody.CurrentSpellSelectionData != null 
@@ -362,6 +372,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(SpellSelectionData), typeof(int) })]
         static class CharBFeatureSelector_FillDataSpellLevel_Patch {
             public static bool Prefix(CharBFeatureSelector __instance,SpellSelectionData spellSelectionData, int spellLevel) {
+                if (!settings.toggleMulticlass) return false;
                 __instance.Init();
                 CharBSelectorLayer selectorLayerBody = __instance.SelectorLayerBody;
                 if (selectorLayerBody.CurrentSpellSelectionData != null 
@@ -390,6 +401,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyProgressions")]
         static class ApplyClassMechanics_ApplyProgressions_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
+                if (!settings.toggleMulticlass) return false;
                 BlueprintCharacterClass blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
                 foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
                     BlueprintProgression p = blueprintProgression;
