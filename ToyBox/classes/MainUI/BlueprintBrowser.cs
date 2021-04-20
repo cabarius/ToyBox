@@ -256,10 +256,13 @@ namespace ToyBox {
                         var bps = filteredBPs.ToList();
                         if (selectedCollationIndex > 0) {
                             var key = collationKeys.ElementAt(selectedCollationIndex);
+
                             var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
                             var list = new List<BlueprintScriptableObject>();
-                            foreach (IGrouping<String, BlueprintScriptableObject> group in collatedBPs) {
-                                if (selectedKey == group.Key) list.Concat(group.ToList());
+                            foreach (var group in collatedBPs) {
+                                if (group.Key == selectedKey) {
+                                    list = group.ToList();
+                                }
                             }
                             bps = list;
                         }
