@@ -77,6 +77,12 @@ namespace ToyBox {
             if (name == null || name.Length == 0) name = bp.name.Replace("Spellbook", "");
             return name;
         }
+        public static String CollationName(this BlueprintScriptableObject bp) {
+            var typeName = bp.GetType().ToString();
+            var stripIndex = typeName.LastIndexOf("Blueprint");
+            if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
+            return typeName;
+        }
         static Dictionary<Type, List<BlueprintAction>> actionsByType = new Dictionary<Type, List<BlueprintAction>>();
         public static List<BlueprintAction> BlueprintActions(this UnitEntityData ch, Type type) {
             if (ch == null) { return new List<BlueprintAction>(); }
