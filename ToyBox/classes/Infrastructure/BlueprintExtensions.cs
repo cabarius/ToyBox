@@ -67,11 +67,12 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
+using System.Runtime.CompilerServices;
 
 namespace ToyBox {
 
     public static class BlueprintExensions {
-
+        private static ConditionalWeakTable<object, string> cachedCollationNames = new ConditionalWeakTable<object, string> { };
         public static String GetDisplayName(this BlueprintScriptableObject bp) { return bp.name; }
         public static String GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
@@ -79,9 +80,13 @@ namespace ToyBox {
             return name;
         }
         public static String CollationName(this BlueprintScriptableObject bp) {
+            string collationName;
+            cachedCollationNames.TryGetValue(bp, out collationName);
+            if (collationName != null) return collationName;
             var typeName = bp.GetType().ToString();
             var stripIndex = typeName.LastIndexOf("Blueprint");
             if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
+            cachedCollationNames.Add(bp, typeName);
             return typeName;
         }
         public static String CollationName(this BlueprintSpellbook bp) {
