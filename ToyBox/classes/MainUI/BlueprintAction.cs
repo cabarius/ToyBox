@@ -68,136 +68,182 @@ using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 
 namespace ToyBox {
-    public class BlueprintAction : NamedMutator<UnitEntityData, BlueprintScriptableObject> {
+    public abstract class BlueprintAction {
+        public delegate void Perform(BlueprintScriptableObject bp, UnitEntityData ch = null, int count = 1);
+        public delegate bool CanPerform(BlueprintScriptableObject bp, UnitEntityData ch = null);
+        private static Dictionary<Type, List<BlueprintAction>> actionsForType = null;
+        public static List<BlueprintAction> ActionsForType(Type type) {
+            if (actionsForType == null) {
+                actionsForType = new Dictionary<Type, List<BlueprintAction>> { };
+                BlueprintActions.InitializeActions();
+            }
+            List<BlueprintAction> result;
+            actionsForType.TryGetValue(type, out result);
+            if (result == null) {
+                var baseType = type.BaseType;
+                if (baseType != null)
+                    result = ActionsForType(baseType);
+                if (result == null) {
+                    result = new List<BlueprintAction> { };
+                }
+                actionsForType[type] = result;
+            }
+            return result;
+        }
+        public static IEnumerable<BlueprintAction> ActionsForBlueprint(BlueprintScriptableObject bp) {
+            return ActionsForType(bp.GetType());
+        }
+        public static void Register(params BlueprintAction[] actions) {
+            foreach (var action in actions) {
+                var type = action.BlueprintType;
+                List<BlueprintAction> list;
+                actionsForType.TryGetValue(type, out list);
+                if (list == null) {
+                    list = new List<BlueprintAction> { };
+                }
+                list.Add(action);
+                actionsForType[type] = list;
+            }
+        }
+
+        public String name { get; protected set; }
+        public Perform action;
+        public CanPerform canPerform;
+        protected BlueprintAction(String name, bool isRepeatable) { this.name = name; this.isRepeatable = isRepeatable; }
+        public bool isRepeatable;
+        abstract public Type BlueprintType { get; }
+    }
+    public class BlueprintAction<BPType> : BlueprintAction where BPType : BlueprintScriptableObject {
+        public delegate void Perform(BPType bp, UnitEntityData ch, int count = 1);
+        public delegate bool CanPerform(BPType bp, UnitEntityData ch);
+
         public BlueprintAction(
             String name,
-            Type type,
-            Action<UnitEntityData, BlueprintScriptableObject, int> action,
-            Func<UnitEntityData, BlueprintScriptableObject, bool> canPerform = null,
+            Perform action,
+            CanPerform canPerform = null,
             bool isRepeatable = false
-            ) : base(name, type, action, canPerform, isRepeatable) { }
-
-
-        public static BlueprintAction[] globalActions = new BlueprintAction[] {
-            new BlueprintAction("Add", typeof(BlueprintItem),
-                (ch, bp , n) => { Game.Instance.Player.Inventory.Add((BlueprintItem)bp, n, null); },
+            ) : base(name, isRepeatable) {
+            this.action = (bp, ch, n) => action((BPType)bp, ch, n);
+            this.canPerform = (bp, ch) => (bp is BPType bpt) ? (canPerform != null ? canPerform(bpt, ch) : true) : false;
+        }
+        override public Type BlueprintType { get { return typeof(BPType); } }
+    }
+    public static class BlueprintActions {
+        public static IEnumerable<BlueprintAction> GetActions(this BlueprintScriptableObject bp) {
+            return BlueprintAction.ActionsForBlueprint(bp);
+        }
+        public static void InitializeActions() {
+            BlueprintAction.Register(
+                new BlueprintAction<BlueprintItem>("Add",
+                (bp, ch, n) => Game.Instance.Player.Inventory.Add(bp, n, null),
                 null,
                 true
                 ),
-            new BlueprintAction("Remove", typeof(BlueprintItem),
-                (ch, bp, n) => { Game.Instance.Player.Inventory.Remove((BlueprintItem)bp, n); },
-                (ch, bp) => { return Game.Instance.Player.Inventory.Contains((BlueprintItem)bp); },
+            new BlueprintAction<BlueprintItem>("Remove",
+                (bp, ch, n) => Game.Instance.Player.Inventory.Remove(bp, n),
+                (bp, ch) => Game.Instance.Player.Inventory.Contains(bp),
                 true
                 ),
-            new BlueprintAction("Spawn", typeof(BlueprintUnit),
-                (ch, bp, n) => { Actions.SpawnUnit((BlueprintUnit)bp, n); },
+            new BlueprintAction<BlueprintUnit>("Spawn",
+                (bp, ch, n) => Actions.SpawnUnit(bp, n),
                 null,
                 true
                 ),
-            new BlueprintAction("Teleport", typeof(BlueprintAreaEnterPoint),
-                (ch, bp, n) => {
-                    var enterPoint = (BlueprintAreaEnterPoint)bp;
-                    GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
-                }),
-            //new BlueprintAction("Teleport", typeof(BlueprintArea),
-            //    (ch, bp) => {
-            //        var area = (BlueprintArea)bp;
-            //        var enterPoint = Utilities.GetEnterPoint(area);
-            //        GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
-            //    }),
 #if false
             new BlueprintAction("Kill", typeof(BlueprintUnit),
-                (ch, bp) => { Actions.SpawnUnit((BlueprintUnit)bp); }
+                (bp, ch) => { Actions.SpawnUnit((BlueprintUnit)bp); }
                 ),
             new BlueprintAction("Remove", typeof(BlueprintUnit),
-                (ch, bp) => {CheatsCombat.Kill((BlueprintUnit)bp); },
-                (ch, bp) => { return ch.Inventory.Contains((BlueprintUnit)bp);  }
+                (bp, ch) => {CheatsCombat.Kill((BlueprintUnit)bp); },
+                (bp, ch) => { return ch.Inventory.Contains((BlueprintUnit)bp);  }
                 ),
 #endif
-        };
-
-        public static BlueprintAction[] characterActions = new BlueprintAction[] {
-            // Features
-            new BlueprintAction("Add", typeof(BlueprintFeature),
-                (ch, bp, n) => { ch.Descriptor.AddFact((BlueprintUnitFact)bp); },
-                (ch, bp) => { return !ch.Progression.Features.HasFact((BlueprintUnitFact)bp); }
+            new BlueprintAction<BlueprintAreaEnterPoint>("Teleport",
+                (bp, ch, n) => GameHelper.EnterToArea(bp, AutoSaveMode.None)
                 ),
-            new BlueprintAction("Remove", typeof(BlueprintFeature),
-                (ch, bp, n) => { ch.Progression.Features.RemoveFact((BlueprintUnitFact)bp); },
-                (ch, bp) => { return ch.Progression.Features.HasFact((BlueprintUnitFact)bp);  }
+            new BlueprintAction<BlueprintArea>("Teleport",
+                (bp, ch, n) => {
+                    var enterPoint = Utilities.GetEnterPoint(bp);
+                    GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+                }),
+            new BlueprintAction<BlueprintFeature>("Add",
+                (bp, ch, n) => ch.Descriptor.AddFact(bp),
+                (bp, ch) => !ch.Progression.Features.HasFact(bp)
                 ),
-            new BlueprintAction("<", typeof(BlueprintFeature),
-                (ch, bp, n) => { try { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).RemoveRank(); } catch (Exception e) { Logger.Log(e); } },
-                (ch, bp) => {
-                    var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
+            new BlueprintAction<BlueprintFeature>("Remove",
+                (bp, ch, n) => ch.Progression.Features.RemoveFact(bp),
+                (bp, ch) => ch.Progression.Features.HasFact(bp)
+                ),
+            new BlueprintAction<BlueprintFeature>("<",
+                (bp, ch, n) => { try { ch.Progression.Features.GetFact(bp).RemoveRank(); } catch (Exception e) { Logger.Log(e); } },
+                (bp, ch) => {
+                    var feature = ch.Progression.Features.GetFact(bp);
                     return feature != null && feature.GetRank() > 1;
                 }),
-            new BlueprintAction(">", typeof(BlueprintFeature),
-                (ch, bp, n) => { ch.Progression.Features.GetFact((BlueprintUnitFact)bp).AddRank(); },
-                (ch, bp) => {
-                    var feature = ch.Progression.Features.GetFact((BlueprintUnitFact)bp);
+            new BlueprintAction<BlueprintFeature>(">",
+                (bp, ch, n) => ch.Progression.Features.GetFact(bp).AddRank(),
+                (bp, ch) => {
+                    var feature = ch.Progression.Features.GetFact(bp);
                     return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                 }),
 
             // Spellbooks
-            new BlueprintAction("Add", typeof(BlueprintSpellbook),
-                (ch, bp, n) => { ch.Descriptor.DemandSpellbook(((BlueprintSpellbook)bp).CharacterClass); },
-                (ch, bp) => { return !ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp); }
+            new BlueprintAction<BlueprintSpellbook>("Add",
+                (bp, ch, n) => { ch.Descriptor.DemandSpellbook(bp.CharacterClass); },
+                (bp, ch) => !ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == bp)
                 ),
-            new BlueprintAction("Remove", typeof(BlueprintSpellbook),
-                (ch, bp, n) => { ch.Descriptor.DeleteSpellbook((BlueprintSpellbook)bp); },
-                (ch, bp) => { return ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp);  }
+            new BlueprintAction<BlueprintSpellbook>("Remove",
+                (bp, ch, n) => ch.Descriptor.DeleteSpellbook(bp),
+                (bp, ch) => ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == bp)
                 ),
-            new BlueprintAction(">", typeof(BlueprintSpellbook),
-                (ch, bp, n) => {
+            new BlueprintAction<BlueprintSpellbook>(">",
+                (bp, ch, n) => {
                     try {
-                        var spellbook = ch.Descriptor.Spellbooks.First((sb) => sb.Blueprint == (BlueprintSpellbook)bp);
+                        var spellbook = ch.Descriptor.Spellbooks.First((sb) => sb.Blueprint == bp);
                         if (spellbook.IsMythic) spellbook.AddMythicLevel();
                         else spellbook.AddBaseLevel();
                     }
                     catch (Exception e) { Logger.Log(e); }
                 },
-                (ch, bp) => ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == (BlueprintSpellbook)bp && sb.CasterLevel < ((BlueprintSpellbook)bp).MaxSpellLevel)
+                (bp, ch) => ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel)
                 ),
 
             // Buffs
-            new BlueprintAction("Add", typeof(BlueprintBuff),
-                (ch, bp, n) => { GameHelper.ApplyBuff(ch,(BlueprintBuff)bp); },
-                (ch, bp) => { return !ch.Descriptor.Buffs.HasFact((BlueprintUnitFact)bp); }
+            new BlueprintAction<BlueprintBuff>("Add",
+                (bp, ch, n) => GameHelper.ApplyBuff(ch, bp),
+                (bp, ch) => !ch.Descriptor.Buffs.HasFact(bp)
                 ),
-            new BlueprintAction("Remove", typeof(BlueprintBuff),
-                (ch, bp, n) => { ch.Descriptor.RemoveFact((BlueprintUnitFact)bp); },
-                (ch, bp) => { return ch.Descriptor.Buffs.HasFact((BlueprintBuff)bp);  }
+            new BlueprintAction<BlueprintBuff>("Remove",
+                (bp, ch, n) => ch.Descriptor.RemoveFact(bp),
+                (bp, ch) => ch.Descriptor.Buffs.HasFact(bp)
                 ),
-            new BlueprintAction("<", typeof(BlueprintBuff),
-                (ch, bp, n) => { ch.Descriptor.Buffs.GetFact((BlueprintBuff)bp).RemoveRank(); },
-                (ch, bp) => {
-                    var buff = ch.Descriptor.Buffs.GetFact((BlueprintBuff)bp);
+            new BlueprintAction<BlueprintBuff>("<",
+                (bp, ch, n) => ch.Descriptor.Buffs.GetFact(bp).RemoveRank(),
+                (bp, ch) => {
+                    var buff = ch.Descriptor.Buffs.GetFact(bp);
                     return buff != null && buff.GetRank() > 1;
                 }),
-            new BlueprintAction(">", typeof(BlueprintBuff),
-                (ch, bp, n) => { ch.Descriptor.Buffs.GetFact((BlueprintUnitFact)bp).AddRank(); },
-                (ch, bp) => {
-                    var buff = ch.Descriptor.Buffs.GetFact((BlueprintUnitFact)bp);
+            new BlueprintAction<BlueprintBuff>(">",
+                (bp, ch, n) => ch.Descriptor.Buffs.GetFact(bp).AddRank(),
+                (bp, ch) => {
+                    var buff = ch.Descriptor.Buffs.GetFact(bp);
                     return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
                 }),
 
             // Abilities
-            new BlueprintAction("Add", typeof(BlueprintAbility),
-                (ch, bp, n) => { ch.AddAbility((BlueprintAbility)bp); },
-                (ch, bp) => { return ch.CanAddAbility((BlueprintAbility)bp); }
+            new BlueprintAction<BlueprintAbility>("Add",
+                (bp, ch, n) => ch.AddAbility(bp),
+                (bp, ch) => ch.CanAddAbility(bp)
                 ),
-            new BlueprintAction("At Will", typeof(BlueprintAbility),
-                (ch, bp, n) => { ch.AddSpellAsAbility((BlueprintAbility)bp); },
-                (ch, bp) => { return ch.CanAddSpellAsAbility((BlueprintAbility)bp); }
+            new BlueprintAction<BlueprintAbility>("At Will",
+                (bp, ch, n) => ch.AddSpellAsAbility(bp),
+                (bp, ch) => ch.CanAddSpellAsAbility(bp)
                 ),
-            new BlueprintAction("Remove", typeof(BlueprintAbility),
-                (ch, bp, n) => { ch.RemoveAbility((BlueprintAbility)bp); },
-                (ch, bp) => { return ch.HasAbility((BlueprintAbility)bp); }
-                ),
-        };
-
-        public static int maxActions() { return globalActions.Count() + characterActions.Count(); }
-        public static int maxCharacterActions() { return characterActions.Count(); }
+            new BlueprintAction<BlueprintAbility>("Remove",
+                (bp, ch, n) => ch.RemoveAbility(bp),
+                (bp, ch) => ch.HasAbility(bp)
+                )
+            );
+        }
     }
 }

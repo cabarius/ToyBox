@@ -138,6 +138,7 @@ namespace ToyBox {
             filteredBPs = null;
             filteredBPNames = null;
             collatedBPs = null;
+            BlueprintListUI.needsLayout = true;
         }
 
         public static void ResetGUI() {
@@ -150,6 +151,7 @@ namespace ToyBox {
             selectedBlueprint = null;
             selectedBlueprintIndex = -1;
             selectedCollatedBPs = null;
+            BlueprintListUI.needsLayout = true;
             if (settings.searchText.Trim().Length == 0) {
                 ResetSearch();
             }
@@ -262,6 +264,7 @@ namespace ToyBox {
                                         selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
                                     }
                                 }
+                                BlueprintListUI.needsLayout = true;
                             }
                             bps = selectedCollatedBPs;
                         }

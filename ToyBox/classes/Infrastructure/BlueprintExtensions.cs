@@ -110,35 +110,9 @@ namespace ToyBox {
         public static String CollationName(this BlueprintIngredient bp) {
             if (bp.IsNotable) return "Notable";
             if (bp.AllowMakeStackable) return "Stackable";
-            if (bp.Destructible) return "Destructable";
+            if (bp.Destructible) return "Destructible";
             if (bp.FlavorText != null) return bp.FlavorText;
             return bp.NonIdentifiedName;
-        }
-
-
-        static Dictionary<Type, List<BlueprintAction>> actionsByType = new Dictionary<Type, List<BlueprintAction>>();
-        public static List<BlueprintAction> BlueprintActions(this UnitEntityData ch, Type type) {
-            if (ch == null) { return new List<BlueprintAction>(); }
-            var results = new List<BlueprintAction>();
-            if (actionsByType.ContainsKey(type)) return actionsByType[type];
-            foreach (var action in BlueprintAction.globalActions) {
-                if (type.IsKindOf(action.type)) { results.Add(action); }
-            }
-            foreach (var action in BlueprintAction.characterActions) {
-                if (type.IsKindOf(action.type)) { results.Add(action); }
-            }
-            actionsByType[type] = results;
-            return results;
-        }
-        public static List<BlueprintAction> ActionsForUnit(this BlueprintScriptableObject bp, UnitEntityData ch) {
-            if (ch == null) { return new List<BlueprintAction>(); }
-            Type type = bp.GetType();
-            var actions = ch.BlueprintActions(type);
-            var results = new List<BlueprintAction>();
-            foreach (var action in actions) {
-                if (action.canPerform(ch, bp)) { results.Add(action); }
-            }
-            return results;
         }
 
         static Dictionary<Type, List<BlueprintScriptableObject>> blueprintsByType = new Dictionary<Type, List<BlueprintScriptableObject>>();
@@ -151,8 +125,18 @@ namespace ToyBox {
             return filtered;
         }
 
+        public static List<BlueprintScriptableObject> BlueprintsOfType<BPType>() where BPType : BlueprintScriptableObject {
+            var type = typeof(BPType);
+            if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
+            var blueprints = BlueprintBrowser.GetBlueprints();
+            if (blueprints == null) return new List<BlueprintScriptableObject>();
+            var filtered = blueprints.Where((bp) => (bp is BPType) ? true : false).ToList();
+            blueprintsByType[type] = filtered;
+            return filtered;
+        }
+
         public static List<BlueprintScriptableObject> GetBlueprints<T>() where T : BlueprintScriptableObject {
-            return BlueprintsOfType(typeof(T));
+            return BlueprintsOfType<T>();
         }
         public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
             int count = 0;
