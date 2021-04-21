@@ -13,7 +13,9 @@ Ver 1.1.11
     Getting ready for 1.2.0 but doing a pre-release as 1.1.11
     Blueprint Browser UI has been revamped
         Categories are now in a column on the left
-        Many categories like Items, Weapons, and Units will offer a subtype filter
+        Most categories have a subtype filter
+        Areas can now be teleported directly. 
+        Added some useful filters for Areas too
         Toggles for showing components and elements
     Experimental Multiclass on level up preview
     Various other small improvements
