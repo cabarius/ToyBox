@@ -162,9 +162,11 @@ namespace ToyBox {
                 (bp, ch, n) => GameHelper.EnterToArea(bp, AutoSaveMode.None)
                 ),
             new BlueprintAction<BlueprintArea>("Teleport",
-                (bp, ch, n) => {
-                    var enterPoint = Utilities.GetEnterPoint(bp);
-                    GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+                (area, ch, n) => {
+                    var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
+                    var blueprint = areaEnterPoints.Where(bp => (bp is BlueprintAreaEnterPoint ep) ? ep.Area == area : false).FirstOrDefault();
+                    if (blueprint is BlueprintAreaEnterPoint enterPoint)
+                        GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
                 }),
             new BlueprintAction<BlueprintFeature>("Add",
                 (bp, ch, n) => ch.Descriptor.AddFact(bp),
