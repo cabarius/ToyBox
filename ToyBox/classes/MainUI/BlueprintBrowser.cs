@@ -106,7 +106,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintIngredient>("Ingredient", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintUnit>("Units", null, bp => bp.Type?.Name ?? bp.Race?.Name ?? "?"),
             new NamedTypeFilter<BlueprintRace>("Races"),
-            new NamedTypeFilter<BlueprintArea>("Areas"),
+            new NamedTypeFilter<BlueprintArea>("Areas", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAreaEnterPoint>("Entry Points", null, bp => bp.m_Area.NameSafe()),
             new NamedTypeFilter<BlueprintAreaEnterPoint>("Entry Points", null, bp => bp.m_Tooltip.ToString()),
             new NamedTypeFilter<BlueprintGlobalMapPoint>("Global Map", null, bp => bp.GlobalMapZone.ToString()),
