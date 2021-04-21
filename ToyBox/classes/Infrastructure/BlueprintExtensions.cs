@@ -114,6 +114,13 @@ namespace ToyBox {
             if (bp.FlavorText != null) return bp.FlavorText;
             return bp.NonIdentifiedName;
         }
+        public static String CollationName(this BlueprintArea bp) {
+            var typeName = bp.GetType().Name.Replace("Blueprint", "");
+            if (typeName == "Area") return $"Area CR{bp.CR}";
+            if (bp.IsGlobalMap) return $"GlobalMap";
+            if (bp.IsIndoor) return "Indoor";
+            return typeName;
+        }
 
         static Dictionary<Type, List<BlueprintScriptableObject>> blueprintsByType = new Dictionary<Type, List<BlueprintScriptableObject>>();
         public static List<BlueprintScriptableObject> BlueprintsOfType(Type type) {
