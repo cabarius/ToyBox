@@ -66,12 +66,11 @@ namespace ToyBox {
                     (v) => { if (v) multiclassSet.Add(cl.AssetGuid); else multiclassSet.Remove(cl.AssetGuid); changed = true; },
                     350
                     );
-                var archetypes = cl.Archetypes.ToArray();
+                var archetypes = cl.Archetypes;
                 if (multiclassSet.Contains(cl.AssetGuid) && archetypes.Any()) {
                     UI.Space(50);
                     int originalArchetype = 0;
-                    int selectedArchetype = originalArchetype = Array.FindIndex(archetypes,
-                        archetype => multiclassSet.Contains(archetype.AssetGuid)) + 1;
+                    int selectedArchetype = originalArchetype = archetypes.FindIndex(archetype => multiclassSet.Contains(archetype.AssetGuid)) + 1;
                     var choices = new String[] { cl.Name }.Concat(archetypes.Select(a => a.Name)).ToArray();
                     UI.ActionSelectionGrid(ref selectedArchetype, choices, 6, (sel) => {
                         if (originalArchetype > 0)

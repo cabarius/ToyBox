@@ -74,17 +74,17 @@ namespace ToyBox {
                 UI.Space(width + 3);
             }
         }
-        public static void MutatorButton<U, T>(this NamedMutator<U, T> muator, U unit, T value, Action buttonAction, float width = 0) {
-            if (muator != null && muator.canPerform(unit, value)) {
-                UI.ActionButton(muator.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
+        public static void MutatorButton<U, T>(this NamedMutator<U, T> mutator, U unit, T value, Action buttonAction, float width = 0) {
+            if (mutator != null && mutator.canPerform(unit, value)) {
+                UI.ActionButton(mutator.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {
                 UI.Space(width + 3);
             }
         }
-        public static void BlueprintActionButton<T>(this BlueprintAction action, UnitEntityData unit, BlueprintScriptableObject bp, Action buttonAction, float width) {
-            if (action != null && action.canPerform(unit, bp)) {
-                UI.ActionButton(action.name, buttonAction, UI.Width(width));
+        public static void BlueprintActionButton(this BlueprintAction action, UnitEntityData unit, BlueprintScriptableObject bp, Action buttonAction, float width) {
+            if (action != null && action.canPerform(bp, unit)) {
+                UI.ActionButton(action.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {
                 UI.Space(width + 3);

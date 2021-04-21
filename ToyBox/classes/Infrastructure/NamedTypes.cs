@@ -41,19 +41,16 @@ namespace ToyBox {
 
     public class NamedMutator<Target, T> {
         public String name { get; }
-        public Type type { get; }
         public Action<Target, T, int> action { get; }
         public Func<Target, T, bool> canPerform { get; }
         public bool isRepeatable { get; }
         public NamedMutator(
             String name,
-            Type type,
             Action<Target, T, int> action,
             Func<Target, T, bool> canPerform = null,
             bool isRepeatable = false
             ) {
             this.name = name;
-            this.type = type;
             this.action = action;
             this.canPerform = canPerform != null ? canPerform : (target, value) => true;
             this.isRepeatable = isRepeatable;

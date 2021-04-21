@@ -47,6 +47,9 @@ namespace ToyBox {
         public static Settings settings { get { return Main.settings; } }
 
         public static int repeatCount = 1;
+        public static bool hasRepeatableAction = false;
+        public static int maxActions = 0;
+        public static bool needsLayout = true;
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<BlueprintScriptableObject> blueprints,
             float indent = 0, float remainingWidth = 0,
@@ -55,12 +58,13 @@ namespace ToyBox {
         ) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             int index = 0;
-            int maxActions = 0;
-            bool hasRepeatableAction = false;
-            foreach (BlueprintScriptableObject blueprint in blueprints) {
-                var actions = blueprint.ActionsForUnit(ch);
-                if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
-                maxActions = Math.Max(actions.Count, maxActions);
+            if (needsLayout) {
+                foreach (BlueprintScriptableObject blueprint in blueprints) {
+                    var actions = blueprint.GetActions();
+                    if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
+                    int actionCount = actions.Sum(action => action.canPerform(blueprint, ch) ? 1 : 0);
+                    maxActions = Math.Max(actionCount, maxActions);
+                }
             }
             if (hasRepeatableAction) {
                 UI.BeginHorizontal();
@@ -81,8 +85,8 @@ namespace ToyBox {
             foreach (BlueprintScriptableObject blueprint in blueprints) {
                 UI.BeginHorizontal();
                 UI.Space(indent);
-                var actions = blueprint.ActionsForUnit(ch);
-                var titles = actions.Select((a) => a.name);
+                var actions = blueprint.GetActions().Where(action => action.canPerform(blueprint, ch)).ToArray();
+                var titles = actions.Select(a => a.name);
                 var title = blueprint.name;
                 if (titles.Contains("Remove")) {
                     title = title.cyan().bold();
@@ -106,7 +110,7 @@ namespace ToyBox {
                             actionName += (action.isRepeatable ? $" {repeatCount}" : "");
                             extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
                         }
-                        UI.ActionButton(actionName, () => { action.action(ch, blueprint, repeatCount); }, UI.Width(160 + extraSpace));
+                        UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
                         UI.Space(10);
                     }
                     else {

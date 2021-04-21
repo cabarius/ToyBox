@@ -64,6 +64,7 @@ namespace ToyBox {
             }
             matchCount = filtered.Count();
             filteredBPs = filtered.Take(searchLimit).OrderBy(bp => bp.name).ToArray();
+            BlueprintListUI.needsLayout = true;
         }
         static public void OnGUI<T>(String callerKey,
                                     UnitEntityData unit,
@@ -73,7 +74,7 @@ namespace ToyBox {
                                     Func<T, String> title,
                                     Func<T, String> description = null,
                                     Func<T, int> value = null,
-                                    List<BlueprintAction> actions = null
+                                    IEnumerable<BlueprintAction> actions = null
                 ) {
             bool searchChanged = false;
             if (actions == null) actions = new List<BlueprintAction>();
@@ -88,7 +89,7 @@ namespace ToyBox {
             UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
             if (searchLimit > 1000) { searchLimit = 1000; }
             UI.Space(25);
-            UI.Toggle("Show GUIs", ref Main.settings.showAssetIDs);
+            UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
             UI.Space(25);
             UI.Toggle("Dividers", ref Main.settings.showDivisions);
             UI.Space(25);
@@ -155,17 +156,17 @@ namespace ToyBox {
                     UI.Space(30);
                     if (value != null) {
                         var v = value(fact);
-                        decrease.MutatorButton(unit, bp, () => { toDecrease = bp; }, 50);
+                        decrease.BlueprintActionButton(unit, bp, () => { toDecrease = bp; }, 50);
                         UI.Space(10f);
                         UI.Label($"{v}".orange().bold(), UI.Width(30));
-                        increase.MutatorButton(unit, bp, () => { toIncrease = bp; }, 50);
+                        increase.BlueprintActionButton(unit, bp, () => { toIncrease = bp; }, 50);
                     }
 #if false
                     UI.Space(30);
-                    add.MutatorButton(unit, bp, () => { toAdd = bp; }, 150);
+                    add.BlueprintActionButton(unit, bp, () => { toAdd = bp; }, 150);
 #endif
                     UI.Space(30);
-                    remove.MutatorButton(unit, bp, () => { toRemove = bp; }, 150);
+                    remove.BlueprintActionButton(unit, bp, () => { toRemove = bp; }, 150);
 #if false
                     foreach (var action in actions) {
                         action.MutatorButton(unit, bp, () => { toValues[action.name] = bp; }, 150);
@@ -180,14 +181,14 @@ namespace ToyBox {
                     UI.Div(100);
                 }
             }
-            if (toAdd != null) { add.action(unit, toAdd, repeatCount); toAdd = null; }
-            if (toRemove != null) { remove.action(unit, toRemove, repeatCount); toRemove = null; }
-            if (toDecrease != null) { decrease.action(unit, toDecrease, repeatCount); toDecrease = null; }
-            if (toIncrease != null) { increase.action(unit, toIncrease, repeatCount); toIncrease = null; }
+            if (toAdd != null) { add.action(toAdd, unit, repeatCount); toAdd = null; }
+            if (toRemove != null) { remove.action(toRemove, unit, repeatCount); toRemove = null; }
+            if (toDecrease != null) { decrease.action(toDecrease, unit, repeatCount); toDecrease = null; }
+            if (toIncrease != null) { increase.action(toIncrease, unit, repeatCount); toIncrease = null; }
             foreach (var item in toValues) {
                 var muator = mutatorLookup[item.Key];
                 if (muator != null) {
-                    muator.action(unit, item.Value, repeatCount);
+                    muator.action(item.Value, unit, repeatCount);
                 }
             }
             toValues.Clear();
@@ -201,7 +202,7 @@ namespace ToyBox {
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
-                ch.BlueprintActions(typeof(BlueprintFeature))
+                BlueprintAction.ActionsForType(typeof(BlueprintFeature))
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Buff> facts) {
@@ -213,7 +214,7 @@ namespace ToyBox {
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
-                ch.BlueprintActions(typeof(BlueprintBuff))
+               BlueprintAction.ActionsForType(typeof(BlueprintBuff))
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
@@ -225,7 +226,7 @@ namespace ToyBox {
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
-                ch.BlueprintActions(typeof(BlueprintAbility))
+                BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
         static public void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
@@ -240,7 +241,7 @@ namespace ToyBox {
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 null,
-                ch.BlueprintActions(typeof(BlueprintAbility))
+                BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
@@ -252,7 +253,7 @@ namespace ToyBox {
                 (sb) => sb.Blueprint.GetDisplayName(),
                 (sb) => sb.Blueprint.GetDescription(),
                 null,
-                ch.BlueprintActions(typeof(BlueprintSpellbook))
+                BlueprintAction.ActionsForType(typeof(BlueprintSpellbook))
                 );
         }
     }
