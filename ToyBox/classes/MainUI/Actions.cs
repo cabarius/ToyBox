@@ -98,7 +98,6 @@ namespace ToyBox {
                         unit.Commands.InterruptMove();
                         unit.Commands.InterruptMove();
                         unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
-
                     }
                 }
             }
@@ -111,7 +110,6 @@ namespace ToyBox {
                         unit.Commands.InterruptMove();
                         unit.Commands.InterruptMove();
                         unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
-
                     }
                 }
             }
@@ -126,15 +124,16 @@ namespace ToyBox {
                 GlobalMapView instance = GlobalMapView.Instance;
                 GlobalMapState globalMapState = Game.Instance.Player.GetGlobalMap(globalMapPoint.GlobalMap);
                 instance.TeleportParty(globalMapPoint);
-                GlobalMapPointState pointState = globalMapState.GetPointState(globalMapPoint);
+                GlobalMapPointState pointState = Game.Instance.Player.GlobalMap.GetPointState(globalMapPoint);
                 pointState.EdgesOpened = true;
                 pointState.Reveal();
                 GlobalMapPointView pointView = instance.GetPointView(globalMapPoint);
+                instance.RevealLocation(pointView);
                 if ((bool)(UnityEngine.Object)instance) {
                     if ((bool)(UnityEngine.Object)pointView)
                         instance.RevealLocation(pointView);
                 }
-
+                instance.UpdatePawnPosition();
                 pointState.LastVisited = Game.Instance.TimeController.GameTime;
                 return true;
             }
