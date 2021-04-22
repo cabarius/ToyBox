@@ -9,10 +9,11 @@ Now with 230+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 70 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+
 Ver 1.1.11
     Getting ready for 1.2.0 but doing a pre-release as 1.1.11
     Moved Level Up related tweaks to a new tab called 'Level Up'
-    Blueprint Browser UI has been revamped
+    Pick & Search UI has been revamped
         Categories are now in a column on the left
         Most categories have a subtype filter
         Areas can now be teleported directly. 
@@ -25,6 +26,7 @@ Ver 1.1.11
         It does not let you choose feats, abilities, spells
         If you want to check it out please download the side experimental version from nexus
     Various other small improvements
+
 Ver 1.1.10
     Tweak for autoloading last save on app launch
     Improved layout for mod window sizes < 2000 and < 1600
