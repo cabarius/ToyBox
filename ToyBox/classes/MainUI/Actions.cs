@@ -66,6 +66,8 @@ using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using UnityModManagerNet;
+using Kingmaker.Globalmap.State;
+using Kingmaker.EntitySystem.Persistence;
 
 namespace ToyBox {
     public static class Actions {
@@ -87,7 +89,6 @@ namespace ToyBox {
                 }
             }
         }
-
         public static void TeleportPartyToPlayer() {
             GameModeType currentMode = Game.Instance.CurrentMode;
             var partyMembers = Game.Instance.Player.m_PartyAndPets;
@@ -102,7 +103,6 @@ namespace ToyBox {
                 }
             }
         }
-
         public static void TeleportEveryoneToPlayer() {
             GameModeType currentMode = Game.Instance.CurrentMode;
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
@@ -115,6 +115,30 @@ namespace ToyBox {
                     }
                 }
             }
+        }
+        public static void TeleportToGlobalMap(Action callback = null) {
+            var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
+            var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
+            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback != null ? callback : () => { });
+        }
+        public static bool TeleportToGlobalMapPoint(BlueprintGlobalMapPoint globalMapPoint) {
+            if (GlobalMapView.Instance != null) {
+                GlobalMapView instance = GlobalMapView.Instance;
+                GlobalMapState globalMapState = Game.Instance.Player.GetGlobalMap(globalMapPoint.GlobalMap);
+                instance.TeleportParty(globalMapPoint);
+                GlobalMapPointState pointState = globalMapState.GetPointState(globalMapPoint);
+                pointState.EdgesOpened = true;
+                pointState.Reveal();
+                GlobalMapPointView pointView = instance.GetPointView(globalMapPoint);
+                if ((bool)(UnityEngine.Object)instance) {
+                    if ((bool)(UnityEngine.Object)pointView)
+                        instance.RevealLocation(pointView);
+                }
+
+                pointState.LastVisited = Game.Instance.TimeController.GameTime;
+                return true;
+            }
+            return false;
         }
         public static void RemoveAllBuffs() {
             foreach (UnitEntityData target in Game.Instance.Player.Party) {

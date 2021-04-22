@@ -58,6 +58,7 @@ using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.Tutorial;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.GlobalMap.Teleport;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -67,6 +68,8 @@ using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using Kingmaker.UnitLogic.ActivatableAbilities;
+using Kingmaker.Globalmap.View;
+using Kingmaker.Globalmap.State;
 
 namespace ToyBox {
     public abstract class BlueprintAction {
@@ -169,6 +172,14 @@ namespace ToyBox {
                     var blueprint = areaEnterPoints.Where(bp => (bp is BlueprintAreaEnterPoint ep) ? ep.Area == area : false).FirstOrDefault();
                     if (blueprint is BlueprintAreaEnterPoint enterPoint)
                         GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+                }),
+                new BlueprintAction<BlueprintGlobalMapPoint>("Teleport",
+                (globalMapPoint, ch, n) => {
+                    if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
+                        Actions.TeleportToGlobalMap(() => {
+                            Actions.TeleportToGlobalMapPoint(globalMapPoint);
+                        });
+                    }
                 }),
             new BlueprintAction<BlueprintFeature>("Add",
                 (bp, ch, n) => ch.Descriptor.AddFact(bp),

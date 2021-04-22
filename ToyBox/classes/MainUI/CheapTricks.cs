@@ -62,7 +62,7 @@ namespace ToyBox {
                         var money = Game.Instance.Player.Money;
                         UI.Label("Gold".cyan(), UI.Width(150));
                         UI.Label(money.ToString().orange().bold(), UI.Width(200));
-                        UI.ActionButton($"Gain {increment}", () => { Game.Instance.Player.GainMoney(increment); }, UI.AutoWidth());
+                        UI.ActionButton($"Gain {increment}", () => Game.Instance.Player.GainMoney(increment), UI.AutoWidth());
                         UI.ActionButton($"Lose {increment}", () => {
                             var loss = Math.Min(money, increment);
                             Game.Instance.Player.GainMoney(-loss);
@@ -113,32 +113,33 @@ namespace ToyBox {
             }
             UI.Div(0, 25);
             UI.HStack("Combat", 4,
-                () => { UI.ActionButton("Rest All", () => { CheatsCombat.RestAll(); }); },
-                () => { UI.ActionButton("Empowered", () => { CheatsCombat.Empowered(""); }); },
-                () => { UI.ActionButton("Full Buff Please", () => { CheatsCombat.FullBuffPlease(""); }); },
-                () => { UI.ActionButton("Remove Buffs", () => { Actions.RemoveAllBuffs(); }); },
-                () => { UI.ActionButton("Remove Death's Door", () => { CheatsCombat.DetachDebuff(); }); },
-                () => { UI.ActionButton("Kill All Enemies", () => { CheatsCombat.KillAll(); }); },
-                () => { UI.ActionButton("Summon Zoo", () => { CheatsCombat.SpawnInspectedEnemiesUnderCursor(""); }); }
+                () => UI.ActionButton("Rest All", () => CheatsCombat.RestAll()),
+                () => UI.ActionButton("Empowered", () => CheatsCombat.Empowered("")),
+                () => UI.ActionButton("Full Buff Please", () => CheatsCombat.FullBuffPlease("")),
+                () => UI.ActionButton("Remove Buffs", () => Actions.RemoveAllBuffs()),
+                () => UI.ActionButton("Remove Death's Door", () => CheatsCombat.DetachDebuff()),
+                () => UI.ActionButton("Kill All Enemies", () => CheatsCombat.KillAll()),
+                () => UI.ActionButton("Summon Zoo", () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""))
                 );
             UI.Div(0, 25);
             UI.HStack("Common", 4,
-                () => { UI.ActionButton("Teleport Party To You", () => { Actions.TeleportPartyToPlayer(); }); },
-                () => { UI.ActionButton("Perception Checks", () => { Actions.RunPerceptionTriggers(); }); },
+                () => UI.ActionButton("Teleport Party To You", () => Actions.TeleportPartyToPlayer()),
+                () => UI.ActionButton("Go To Global Map", () => Actions.TeleportToGlobalMap()),
+                () => UI.ActionButton("Perception Checks", () => Actions.RunPerceptionTriggers()),
                 () => {
                     UI.ActionButton("Set Perception to 40", () => {
                         CheatsCommon.StatPerception();
                         Actions.RunPerceptionTriggers();
                     });
                 },
-                () => { UI.ActionButton("Change Weather", () => { CheatsCommon.ChangeWeather(""); }); },
-                () => { UI.ActionButton("Give All Items", () => { CheatsUnlock.CreateAllItems(""); }); },
+                () => UI.ActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
+                () => UI.ActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
                 //                    () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
                 () => { }
                 );
             UI.Div(0, 25);
             UI.HStack("Unlocks", 4, () => {
-                UI.ActionButton("All Mythic Paths", () => { Actions.UnlockAllMythicPaths(); });
+                UI.ActionButton("All Mythic Paths", () => Actions.UnlockAllMythicPaths());
                 UI.Space(25);
                 UI.Label("Warning! Using this might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".green());
             });
@@ -151,42 +152,37 @@ namespace ToyBox {
             });
             UI.Div(0, 25);
             UI.HStack("Tweaks", 1,
-                () => { UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0); },
-                () => { UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0); },
+                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
+                () => UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0),
 
-                () => { UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0); },
-                () => { UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0); },
+                () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
+                () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
 
-                () => { UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0); },
-                () => { UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0); },
+                () => UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0),
+                () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
 
-                () => { UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0); },
-                () => { UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0); },
+                () => UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0),
+                () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
 
-                () => { UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0); },
-                () => { UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0); },
+                () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
+                () => UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0),
 
-                () => { UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0); },
-                () => { UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0); },
+                () => UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0),
+                () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
 
-                () => { UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0); },
-                () => { UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0); },
-                //() => { UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0); },
-                //() => { UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0); },
-                //() => { UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0); },
-                () => { UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0); },
-                () => { UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0); },
+                () => UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0),
+                () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
+                //() => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
+                //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
+                //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
+                () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
+                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
                 () => { }
                 );
             UI.Div(153, 25);
             UI.HStack("", 1,
-                () => {
-                    UI.EnumGrid("Disable Attacks Of Opportunity",
-                        ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth());
-                },
-                () => {
-                    UI.EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, 0, UI.AutoWidth());
-                },
+                () => UI.EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, 0, UI.AutoWidth()),
                 () => { UI.Space(328); UI.Label("This allows characters you control to move through the selected category of units during combat".green(), UI.AutoWidth()); }
 #if false
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
@@ -194,17 +190,17 @@ namespace ToyBox {
                 );
 
             UI.HStack("Multipliers", 1,
-                () => { UI.LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.Slider("Encumbrance", ref settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()); },
-                () => { UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 100, 1, 1, "", UI.AutoWidth()); },
+                () => UI.LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Encumbrance", ref settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 100, 1, 1, "", UI.AutoWidth()),
                 () => { }
                 );
             UI.Div(0, 25);
@@ -222,7 +218,7 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Crusade", 1,
-                () => { UI.Toggle("Instant Events", ref settings.toggleInstantEvent, 0); },
+                () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent, 0),
                 () => {
                     UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
                     var instance = KingdomState.Instance;
