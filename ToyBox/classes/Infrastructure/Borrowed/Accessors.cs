@@ -1,4 +1,4 @@
-﻿// some stuff borrowed shamelessly and enchanced from Kingdom Resolution Mod
+﻿// some stuff borrowed shamelessly and enhanced from Kingdom Resolution Mod
 //   "Author": "spacehamster",
 //   "HomePage": "https://www.nexusmods.com/pathfinderkingmaker/mods/36",
 //   "Repository": "https://raw.githubusercontent.com/spacehamster/KingmakerKingdomResolutionMod/master/KingdomResolution/Repository.json"
