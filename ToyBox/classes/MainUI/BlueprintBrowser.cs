@@ -57,6 +57,7 @@ namespace ToyBox {
         public static IEnumerable<BlueprintScriptableObject> filteredBPs = null;
         public static IEnumerable<IGrouping<String, BlueprintScriptableObject>> collatedBPs = null;
         public static IEnumerable<BlueprintScriptableObject> selectedCollatedBPs = null;
+        public static List<String> collationKeys = null;
         public static int selectedCollationIndex = 0;
         static bool firstSearch = true;
         public static String[] filteredBPNames = null;
@@ -172,6 +173,8 @@ namespace ToyBox {
                 collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key);
                 // I could do something like this but I will leave it up to the UI when a collation is selected.
                 // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
+                collationKeys = new List<String>() { "All" };
+                collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
             }
             filteredBPs = filteredBPs.Take(settings.searchLimit).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
@@ -189,10 +192,8 @@ namespace ToyBox {
                         UI.buttonStyle,
                         UI.Width(200));
                 }
-                var collationKeys = new List<String>() { "All" };
                 bool collationChanged = false;
                 if (collatedBPs != null) {
-                    collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
                     using (UI.VerticalScope(GUI.skin.box)) {
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(), 
                             1,
