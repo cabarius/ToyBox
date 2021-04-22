@@ -71,38 +71,38 @@ namespace ToyBox {
     public abstract class BlueprintAction {
         public delegate void Perform(BlueprintScriptableObject bp, UnitEntityData ch = null, int count = 1);
         public delegate bool CanPerform(BlueprintScriptableObject bp, UnitEntityData ch = null);
-        private static Dictionary<Type, List<BlueprintAction>> actionsForType = null;
-        public static List<BlueprintAction> ActionsForType(Type type) {
+        private static Dictionary<Type, BlueprintAction[]> actionsForType = null;
+        public static BlueprintAction[] ActionsForType(Type type) {
             if (actionsForType == null) {
-                actionsForType = new Dictionary<Type, List<BlueprintAction>> { };
+                actionsForType = new Dictionary<Type, BlueprintAction[]> { };
                 BlueprintActions.InitializeActions();
             }
-            List<BlueprintAction> result;
+            BlueprintAction[] result;
             actionsForType.TryGetValue(type, out result);
             if (result == null) {
                 var baseType = type.BaseType;
                 if (baseType != null)
                     result = ActionsForType(baseType);
                 if (result == null) {
-                    result = new List<BlueprintAction> { };
+                    result = new BlueprintAction[] { };
                 }
                 actionsForType[type] = result;
             }
             return result;
         }
-        public static IEnumerable<BlueprintAction> ActionsForBlueprint(BlueprintScriptableObject bp) {
+        public static BlueprintAction[] ActionsForBlueprint(BlueprintScriptableObject bp) {
             return ActionsForType(bp.GetType());
         }
         public static void Register(params BlueprintAction[] actions) {
             foreach (var action in actions) {
                 var type = action.BlueprintType;
-                List<BlueprintAction> list;
-                actionsForType.TryGetValue(type, out list);
-                if (list == null) {
-                    list = new List<BlueprintAction> { };
+                BlueprintAction[] existing;
+                actionsForType.TryGetValue(type, out existing);
+                if (existing == null) {
+                    existing = new BlueprintAction[] { };
                 }
-                list.Add(action);
-                actionsForType[type] = list;
+                existing.AddToArray(action);
+                actionsForType[type] = existing;
             }
         }
 
