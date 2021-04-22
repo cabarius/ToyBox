@@ -52,7 +52,12 @@ namespace ToyBox {
             fillTexture.SetPixel(0, 0, color);
             fillTexture.Apply();
             divStyle.normal.background = fillTexture;
-            divStyle.margin = new RectOffset((int)indent, 0, 4, 4);
+            if (divStyle == null) {
+                divStyle.margin = new RectOffset((int)indent, 0, 4, 4);
+            }
+            else {
+                divStyle.margin.left = (int)indent;
+            }
             if (width > 0) divStyle.fixedWidth = width;
             else divStyle.fixedWidth = 0;
             UI.Space((2f * height) / 3f);

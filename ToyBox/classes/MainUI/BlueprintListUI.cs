@@ -65,6 +65,7 @@ namespace ToyBox {
                     int actionCount = actions.Sum(action => action.canPerform(blueprint, ch) ? 1 : 0);
                     maxActions = Math.Max(actionCount, maxActions);
                 }
+                needsLayout = false;
             }
             if (hasRepeatableAction) {
                 UI.BeginHorizontal();
