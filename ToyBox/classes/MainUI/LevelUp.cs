@@ -74,21 +74,22 @@ namespace ToyBox {
                     () => { UI.Toggle("Ignore Required Stat Values", ref settings.toggleIgnorePrerequisiteStatValue, 0); },
                     () => { UI.Toggle("Ignore Alignment When Choosing A Class", ref settings.toggleIgnoreAlignmentWhenChoosingClass, 0); },
                     () => { UI.Toggle("Skip Spell Selection", ref settings.toggleSkipSpellSelection, 0); },
-
+#if DEBUG
                     () => { UI.Toggle("Lock Character Level", ref settings.toggleLockCharacterLevel, 0); },
 //                    () => { UI.Toggle("Ignore Alignment Restrictions", ref settings.toggleIgnoreAlignmentRestriction, 0); },
-                    () => { UI.Toggle("Skip Spell Selection", ref settings.toggleIgnoreAttributePointsRemaining, 0); },
-                    () => { UI.Toggle("Skip Spell Selection", ref settings.toggleIgnoreSkillCap, 0); },
-                    () => { UI.Toggle("Skip Spell Selection", ref settings.toggleIgnoreSkillPointsRemaining, 0); },
-
+                    () => { UI.Toggle("Ignore Remaining Attribute Points", ref settings.toggleIgnoreAttributePointsRemaining, 0); },
+                    () => { UI.Toggle("Ignore Skill Cap", ref settings.toggleIgnoreSkillCap, 0); },
+                    () => { UI.Toggle("Ignore Remaining Skill Points", ref settings.toggleIgnoreSkillPointsRemaining, 0); },
+#endif
 #if false
                 // Do we need these or is it covered by toggleFeaturesIgnorePrerequisites
                 () => { UI.Toggle("Ignore Feat Prerequisites When Choosing A Class", ref settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass, 0); },
                 () => { UI.Toggle("Ignore Feat Prerequisits (List) When Choosing A Class", ref settings.toggle, 0); },
 #endif
 
-        () => { }
+                    () => { }
                     );
+#if DEBUG
                 UI.Div(0, 25);
                 UI.HStack("Multiple Classes", 1,
                     () => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),
@@ -121,6 +122,7 @@ namespace ToyBox {
                     MulticlassPicker.OnGUI(multiclassSet, 150);
                     settings.charGenMulticlassSet = multiclassSet;
                 }
+#endif
             }
         }
     }

@@ -128,7 +128,7 @@ namespace ToyBox.Multiclass {
     static class MultipleClasses {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-
+#if DEBUG
         public static bool IsAvailable() {
             return Main.Enabled &&
                 settings.toggleMulticlass &&
@@ -332,6 +332,7 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
-#endregion
+        #endregion
+#endif
     }
 }
