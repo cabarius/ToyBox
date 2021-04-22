@@ -20,6 +20,9 @@ Ver 1.1.11
         You can now add BlueprintActivatableAbility
         Added category for browsing Wrath's in memory cache
     Experimental Multiclass on level up preview (experimental binary only)
+        This is very limited right now as it only gives you the classes
+        It does not let you choose feats, abilities, spells
+        If you want to check it out please download the side experimental version from nexus
     Various other small improvements
 Ver 1.1.10
     Tweak for autoloading last save on app launch
