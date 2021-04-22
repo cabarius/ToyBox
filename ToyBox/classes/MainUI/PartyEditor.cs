@@ -255,6 +255,7 @@ namespace ToyBox {
                     multiclassEditCharacter = null;
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
+#if DEBUG
                     UI.Div(100, 20);
                     using (UI.HorizontalScope()) {
                         UI.Space(100);
@@ -269,6 +270,7 @@ namespace ToyBox {
                         }
                         else { UI.Space(50);  UI.Label("Experimental Preview ".magenta());  }
                     }
+#endif
                     UI.Div(100, 20);
                     if (editMultiClass) {
                         var multiclassSet = ch.GetMulticlassSet();

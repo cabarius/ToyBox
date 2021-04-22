@@ -114,6 +114,8 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.GetFactType()?.ToString()),
+            new NamedTypeFilter<BlueprintScriptableObject>("In Memory", null, bp => bp.CollationName(), () => ResourcesLibrary.s_LoadedBlueprints.Values.Where(bp => bp != null)),
+
         };
 
         public static NamedTypeFilter selectedTypeFilter = null;
@@ -159,7 +161,9 @@ namespace ToyBox {
             var terms = settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
             selectedTypeFilter = blueprintTypeFilters[settings.selectedBPTypeFilter];
             var selectedType = selectedTypeFilter.type;
-            var bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
+            IEnumerable<BlueprintScriptableObject> bps = null;
+            if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
+            else bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
             var filtered = new List<BlueprintScriptableObject>();
             foreach (BlueprintScriptableObject blueprint in bps) {
                 var name = blueprint.name.ToLower();
@@ -195,7 +199,7 @@ namespace ToyBox {
                 bool collationChanged = false;
                 if (collatedBPs != null) {
                     using (UI.VerticalScope(GUI.skin.box)) {
-                        UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(), 
+                        UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(),
                             1,
                             (selected) => { collationChanged = true; BlueprintListUI.needsLayout = true; },
                             UI.buttonStyle,

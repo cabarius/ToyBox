@@ -3,7 +3,7 @@
 Toy Box is a cute and playful mod with 232+ cheats, tweaks and quality of life improvements for Pathfinder: WoTR. It was created in the spirit of Bag of Tricks & Cheat Menu but with a little different focus . It provides a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members.
 # Detailed Description
 
-Now with 232+ Cheats, Tweaks and Quality of Life Improvements
+Now with 230+ Cheats, Tweaks and Quality of Life Improvements
     Tweaks: 72 - 113 depending on how you count
     Level Up & Multiclass Preview: 23 + (48 for Multiclass)
     Party Editor: 67    
@@ -18,7 +18,8 @@ Ver 1.1.11
         Added some useful filters for Areas too
         Toggles for showing components and elements
         You can now add BlueprintActivatableAbility
-    Experimental Multiclass on level up preview
+        Added category for browsing Wrath's in memory cache
+    Experimental Multiclass on level up preview (experimental binary only)
     Various other small improvements
 Ver 1.1.10
     Tweak for autoloading last save on app launch

@@ -47,16 +47,18 @@ namespace ToyBox {
         public Type type { get; }
         public Func<BlueprintScriptableObject, bool> filter;
         public Func<BlueprintScriptableObject, String> collator;
-        protected NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null, Func<BlueprintScriptableObject, String> collator = null) {
+        public Func<IEnumerable<BlueprintScriptableObject>> blueprintSource;
+        protected NamedTypeFilter(String name, Type type, Func<BlueprintScriptableObject, bool> filter = null, Func<BlueprintScriptableObject, String> collator = null, Func<IEnumerable<BlueprintScriptableObject>> blueprintSource = null) {
             this.name = name;
             this.type = type;
             this.filter = filter != null ? filter : (bp) => true;
             this.collator = collator;
+            this.blueprintSource = blueprintSource;
         }
     }
     public class NamedTypeFilter<TBlueprint> : NamedTypeFilter where TBlueprint : BlueprintScriptableObject {
-        public NamedTypeFilter(String name, Func<TBlueprint, bool> filter = null, Func<TBlueprint, String> collator = null)
-            : base(name, typeof(TBlueprint), null, null) {
+        public NamedTypeFilter(String name, Func<TBlueprint, bool> filter = null, Func<TBlueprint, String> collator = null, Func<IEnumerable<BlueprintScriptableObject>> blueprintSource = null)
+            : base(name, typeof(TBlueprint), null, null, blueprintSource) {
             if (filter != null) this.filter = (bp) => filter((TBlueprint)bp);
             if (collator != null) this.collator = (bp) => collator((TBlueprint)bp);
         }
