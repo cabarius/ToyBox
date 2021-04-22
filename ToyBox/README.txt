@@ -11,6 +11,7 @@ Now with 230+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 Ver 1.1.11
     Getting ready for 1.2.0 but doing a pre-release as 1.1.11
+    Moved Level Up related tweaks to a new tab called 'Level Up'
     Blueprint Browser UI has been revamped
         Categories are now in a column on the left
         Most categories have a subtype filter

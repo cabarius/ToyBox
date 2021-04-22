@@ -143,7 +143,11 @@ namespace ToyBox {
                         else { UI.Space(25); }
                     },
                     new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(); }),
+#if DEBUG
                     new NamedAction("Level Up & Multiclass", () => { LevelUp.OnGUI(); }),
+#else
+                    new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
+#endif
                     new NamedAction("Party Editor", () => { PartyEditor.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
                     new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); })
