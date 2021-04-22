@@ -66,6 +66,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
+using Kingmaker.UnitLogic.ActivatableAbilities;
 
 namespace ToyBox {
     public abstract class BlueprintAction {
@@ -101,8 +102,9 @@ namespace ToyBox {
                 if (existing == null) {
                     existing = new BlueprintAction[] { };
                 }
-                existing.AddToArray(action);
-                actionsForType[type] = existing;
+                var list = existing.ToList();
+                list.Add(action);
+                actionsForType[type] = list.ToArray();
             }
         }
 
@@ -244,6 +246,15 @@ namespace ToyBox {
             new BlueprintAction<BlueprintAbility>("Remove",
                 (bp, ch, n) => ch.RemoveAbility(bp),
                 (bp, ch) => ch.HasAbility(bp)
+                ),
+            // BlueprintActivatableAbility
+            new BlueprintAction<BlueprintActivatableAbility>("Add",
+                (bp, ch, n) => ch.Descriptor.AddFact(bp),
+                (bp, ch) => !ch.Descriptor.HasFact(bp)
+            ),
+            new BlueprintAction<BlueprintActivatableAbility>("Remove",
+                (bp, ch, n) => ch.Descriptor.RemoveFact(bp),
+                (bp, ch) => ch.Descriptor.HasFact(bp)
                 )
             );
         }

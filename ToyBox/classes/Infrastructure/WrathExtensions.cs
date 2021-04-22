@@ -92,14 +92,23 @@ namespace ToyBox {
             }
             return RGBA.grey;
         }
-        public static string GetDescription(this BlueprintScriptableObject bpObejct)
+        public static string GetDescription(this BlueprintScriptableObject bp)
         // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {
             try {
+                // avoid exceptions on known broken items
+                var guid = bp.AssetGuid;
+                if (guid == "b60252a8ae028ba498340199f48ead67" || guid == "fb379e61500421143b52c739823b4082") return null;
+                IUIDataProvider associatedBlueprint = bp as IUIDataProvider;
+                return associatedBlueprint?.Description;
+                // Why did BoT do this instead of the above which is what MechanicsContext.SelectUIData() does for description
+#if false
+                var description = bp.Des
                 UnitReference mainChar = Game.Instance.Player.MainCharacter;
                 if (mainChar == null) { return ""; }
-                MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bpObejct, (MechanicsContext)null, (TargetWrapper)null);
+                MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bp, (MechanicsContext)null, (TargetWrapper)null);
                 return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
+#endif
             }
             catch (Exception e) {
                 Console.Write($"{e}");

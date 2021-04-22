@@ -197,7 +197,7 @@ namespace ToyBox {
                     using (UI.VerticalScope(GUI.skin.box)) {
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(), 
                             1,
-                            (selected) => { collationChanged = true; },
+                            (selected) => { collationChanged = true; BlueprintListUI.needsLayout = true; },
                             UI.buttonStyle,
                             UI.Width(200));
                     }
