@@ -17,6 +17,7 @@ Ver 1.1.11
         Areas can now be teleported directly. 
         Added some useful filters for Areas too
         Toggles for showing components and elements
+        You can now add BlueprintActivatableAbility
     Experimental Multiclass on level up preview
     Various other small improvements
 Ver 1.1.10

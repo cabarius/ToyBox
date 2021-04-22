@@ -63,7 +63,10 @@ namespace ToyBox {
                     if (ii == 0) { UI.Label(title.bold(), UI.Width(150f)); }
                     else { UI.Space(153); }
                 }
-                UI.Group(actions.Skip(ii).Take(stride).ToArray());
+                var filteredActions = actions.Skip(ii).Take(stride);
+                foreach (var action in filteredActions) {
+                    action();
+                }
                 UI.EndHorizontal();
             }
         }
