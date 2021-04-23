@@ -50,6 +50,7 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using Kingmaker.AreaLogic.Etudes;
+using Kingmaker.AreaLogic.Cutscenes;
 
 namespace ToyBox {
     public class BlueprintBrowser {
@@ -93,13 +94,14 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintIngredient>("Ingredient", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintUnit>("Units", null, bp => bp.Type?.Name ?? bp.Race?.Name ?? "?"),
             new NamedTypeFilter<BlueprintRace>("Races"),
-            new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp => bp.Parent?.GetBlueprint().NameSafe() ?? ""),
             new NamedTypeFilter<BlueprintArea>("Areas", null, bp => bp.CollationName()),
             //new NamedTypeFilter<BlueprintAreaPart>("Area Parts", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAreaEnterPoint>("Area Entry", null, bp => bp.m_Area.NameSafe()),
             //new NamedTypeFilter<BlueprintAreaEnterPoint>("AreaEntry ", null, bp => bp.m_Tooltip.ToString()),
             new NamedTypeFilter<BlueprintGlobalMapPoint>("Map Points", null, bp => bp.GlobalMapZone.ToString()),
             new NamedTypeFilter<BlueprintGlobalMap>("Global Map"),
+            new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.Priority.ToString()),
+            new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp => bp.Parent?.GetBlueprint().NameSafe() ?? ""),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.GetFactType()?.ToString()),

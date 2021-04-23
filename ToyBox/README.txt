@@ -15,6 +15,7 @@ Ver 1.1.12
         Teleport to GlobalMap (World or Kenabres)
         Teleport to different global map points
         Start and complete Etudes
+        Can not start Cut Scenes which have various fun effects
 Ver 1.1.11
     Getting ready for 1.2.0 but doing a pre-release as 1.1.11
     Moved Level Up related tweaks to a new tab called 'Level Up'
