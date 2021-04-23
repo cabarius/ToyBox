@@ -70,6 +70,7 @@ using Kingmaker.Visual.Sound;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Globalmap.State;
+using Kingmaker.Designers.EventConditionActionSystem.ContextData;
 
 namespace ToyBox {
     public abstract class BlueprintAction {
@@ -256,8 +257,21 @@ namespace ToyBox {
                 ),
             new BlueprintAction<BlueprintEtude>("Complete",
                 (bp, ch, n) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
-                (bp, ch) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) && !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp) 
+                (bp, ch) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) && !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp)
                 ),
+            // Cut Scenes
+            new BlueprintAction<Cutscene>("Play",
+                (bp, ch, n) => {
+                    Actions.ToggleModWindow();
+                    CutscenePlayerData cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault<CutscenePlayerData>((Func<CutscenePlayerData, bool>)(c => c.PlayActionId == bp.name));
+                    if (cutscenePlayerData != null) {
+                        cutscenePlayerData.PreventDestruction = true;
+                        cutscenePlayerData.Stop();
+                        cutscenePlayerData.PreventDestruction = false;
+                    }
+                    var state = Kingmaker.ElementsSystem.ContextData<SpawnedUnitData>.Current?.State;
+                    CutscenePlayerView.Play(bp, null, true, state).PlayerData.PlayActionId = bp.name;
+                }),
             // Teleport
             new BlueprintAction<BlueprintAreaEnterPoint>("Teleport",
                 (bp, ch, n) => GameHelper.EnterToArea(bp, AutoSaveMode.None)
@@ -283,7 +297,7 @@ namespace ToyBox {
                         });
                     }
                 })
-            ) ;
+            );
         }
     }
 }
