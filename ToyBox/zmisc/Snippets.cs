@@ -1,4 +1,24 @@
 ﻿#if false
+
+ var smallFontSize = 10;
+                                    if (profile.Spells.Where(b => b.Name == sp.Name).FirstOrDefault() != null)
+                                    {
+                                        GUI.backgroundColor = Color.green;
+                                        if (sp.Name.Length > 25)
+                                        {
+                                            GUI.skin.button.fontSize = smallFontSize;
+                                            GUI.skin.button.wordWrap = true;
+                                        }
+                                        if (GUILayout.Button("<b>" + sp.Name + "</b>", GUILayout.Width(220), GUILayout.Height(25)))
+                                        {
+                                            profile.Spells.Remove(profile.Spells.Where(b => b.Name == sp.Name).FirstOrDefault());
+                                        }
+                                        GUI.skin.button.fontSize = defaultFontSize;
+                                        GUI.skin.button.wordWrap = false;
+                                        GUI.backgroundColor = defaultColor;
+                                    }
+
+
     public class BlueprintLoader : MonoBehaviour {
         AssetBundleRequest loadRequest = null;
         Action<IEnumerable<BlueprintScriptableObject>> callback;

@@ -10,7 +10,11 @@ Now with 230+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 70 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
-
+Ver 1.1.12
+    Search 'n Pick
+        Teleport to GlobalMap (World or Kenabres)
+        Teleport to different global map points
+        Start and complete Etudes
 Ver 1.1.11
     Getting ready for 1.2.0 but doing a pre-release as 1.1.11
     Moved Level Up related tweaks to a new tab called 'Level Up'

@@ -68,6 +68,7 @@ using Kingmaker.Visual.Sound;
 using UnityModManagerNet;
 using Kingmaker.Globalmap.State;
 using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.Globalmap;
 
 namespace ToyBox {
     public static class Actions {
@@ -119,22 +120,51 @@ namespace ToyBox {
             var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
             Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback != null ? callback : () => { });
         }
-        public static bool TeleportToGlobalMapPoint(BlueprintGlobalMapPoint globalMapPoint) {
+        public static bool TeleportToGlobalMapPoint(BlueprintGlobalMapPoint destination) {
             if (GlobalMapView.Instance != null) {
-                GlobalMapView instance = GlobalMapView.Instance;
-                GlobalMapState globalMapState = Game.Instance.Player.GetGlobalMap(globalMapPoint.GlobalMap);
-                instance.TeleportParty(globalMapPoint);
-                GlobalMapPointState pointState = Game.Instance.Player.GlobalMap.GetPointState(globalMapPoint);
+                var globalMapController = Game.Instance.GlobalMapController;
+                GlobalMapUI globalMapUI = Game.Instance.UI.GlobalMapUI;
+                GlobalMapView globalMapView = GlobalMapView.Instance;
+                GlobalMapState globalMapState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap);
+
+                GlobalMapPointState pointState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap).GetPointState(destination);
                 pointState.EdgesOpened = true;
                 pointState.Reveal();
-                GlobalMapPointView pointView = instance.GetPointView(globalMapPoint);
-                instance.RevealLocation(pointView);
-                if ((bool)(UnityEngine.Object)instance) {
+                GlobalMapPointView pointView = globalMapView.GetPointView(destination);
+                if ((bool)(UnityEngine.Object)globalMapView) {
                     if ((bool)(UnityEngine.Object)pointView)
-                        instance.RevealLocation(pointView);
+                        globalMapView.RevealLocation(pointView);
                 }
-                instance.UpdatePawnPosition();
+                foreach (var edge in pointState.Edges) {
+                    edge.UpdateExplored(1f, 1);
+                    globalMapView.GetEdgeView(edge.Blueprint).UpdateRenderers();
+
+                }
+                globalMapController.StartTravels();
+                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStarted((IGlobalMapTraveler)globalMapView.State.Player)));
+                globalMapView.State.Player.SetCurrentPosition(new GlobalMapPosition(destination));
+                globalMapView.GetPointView(destination)?.OpenOutgoingEdges((GlobalMapPointView)null);
+                globalMapView.UpdatePawnPosition();
+                globalMapController.Stop();
+                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped((IGlobalMapTraveler)globalMapView.State.Player)));
+                globalMapView.PlayerPawn.m_Compass.TryClear();
+                globalMapView.PlayerPawn.m_Compass.TrySet();
+#if false
+                globalMapView.TeleportParty(globalMapPoint);
+                globalMapUI.HandleGlobalMapPlayerTravelStopped(globalMapState.Player);
+                     GlobalMapPointState pointState = Game.Instance.Player.GlobalMap.GetPointState(globalMapPoint);
+                pointState.EdgesOpened = true;
+                pointState.Reveal();
+                GlobalMapPointView pointView = globalMapView.GetPointView(globalMapPoint);
+                pointView?.OpenOutgoingEdges((GlobalMapPointView)null);
+                globalMapView.RevealLocation(pointView);
+                if ((bool)(UnityEngine.Object)globalMapView) {
+                    if ((bool)(UnityEngine.Object)pointView)
+                        globalMapView.RevealLocation(pointView);
+                }
+                globalMapView.UpdatePawnPosition();
                 pointState.LastVisited = Game.Instance.TimeController.GameTime;
+#endif
                 return true;
             }
             return false;
