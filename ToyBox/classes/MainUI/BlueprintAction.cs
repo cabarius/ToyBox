@@ -163,24 +163,6 @@ namespace ToyBox {
                 (bp, ch) => { return ch.Inventory.Contains((BlueprintUnit)bp);  }
                 ),
 #endif
-            new BlueprintAction<BlueprintAreaEnterPoint>("Teleport",
-                (bp, ch, n) => GameHelper.EnterToArea(bp, AutoSaveMode.None)
-                ),
-            new BlueprintAction<BlueprintArea>("Teleport",
-                (area, ch, n) => {
-                    var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
-                    var blueprint = areaEnterPoints.Where(bp => (bp is BlueprintAreaEnterPoint ep) ? ep.Area == area : false).FirstOrDefault();
-                    if (blueprint is BlueprintAreaEnterPoint enterPoint)
-                        GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
-                }),
-                new BlueprintAction<BlueprintGlobalMapPoint>("Teleport",
-                (globalMapPoint, ch, n) => {
-                    if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
-                        Actions.TeleportToGlobalMap(() => {
-                            Actions.TeleportToGlobalMapPoint(globalMapPoint);
-                        });
-                    }
-                }),
             new BlueprintAction<BlueprintFeature>("Add",
                 (bp, ch, n) => ch.Descriptor.AddFact(bp),
                 (bp, ch) => !ch.Progression.Features.HasFact(bp)
@@ -266,8 +248,42 @@ namespace ToyBox {
             new BlueprintAction<BlueprintActivatableAbility>("Remove",
                 (bp, ch, n) => ch.Descriptor.RemoveFact(bp),
                 (bp, ch) => ch.Descriptor.HasFact(bp)
-                )
-            );
+            ),
+            // Etudes
+            new BlueprintAction<BlueprintEtude>("Start",
+                (bp, ch, n) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
+                (bp, ch) => Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp)
+                ),
+            new BlueprintAction<BlueprintEtude>("Complete",
+                (bp, ch, n) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
+                (bp, ch) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) && !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp) 
+                ),
+            // Teleport
+            new BlueprintAction<BlueprintAreaEnterPoint>("Teleport",
+                (bp, ch, n) => GameHelper.EnterToArea(bp, AutoSaveMode.None)
+                ),
+            new BlueprintAction<BlueprintGlobalMap>("Teleport",
+                (bp, ch, n) => GameHelper.EnterToArea(bp.GlobalMapEnterPoint, AutoSaveMode.None)
+                ),
+            //new BlueprintAction<BlueprintAreaPart>("Teleport",
+            //    (bp, ch, n) => GameHelper.EnterToArea(bp, AutoSaveMode.None)
+            //    ),
+            new BlueprintAction<BlueprintArea>("Teleport",
+                (area, ch, n) => {
+                    var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
+                    var blueprint = areaEnterPoints.Where(bp => (bp is BlueprintAreaEnterPoint ep) ? ep.Area == area : false).FirstOrDefault();
+                    if (blueprint is BlueprintAreaEnterPoint enterPoint)
+                        GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+                }),
+                new BlueprintAction<BlueprintGlobalMapPoint>("Teleport",
+                (globalMapPoint, ch, n) => {
+                    if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
+                        Actions.TeleportToGlobalMap(() => {
+                            Actions.TeleportToGlobalMapPoint(globalMapPoint);
+                        });
+                    }
+                })
+            ) ;
         }
     }
 }
