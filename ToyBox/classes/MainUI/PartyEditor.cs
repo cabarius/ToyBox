@@ -42,6 +42,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
+using ModMaker;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -158,7 +159,7 @@ namespace ToyBox {
             int chIndex = 0;
             respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
-            bool isWide = Main.IsWide;
+            bool isWide = UI.IsWide;
             foreach (UnitEntityData ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
@@ -202,7 +203,7 @@ namespace ToyBox {
                     else { UI.Space(74); }
                     UI.Space(35);
                     if (!isWide) ActionsGUI(ch);
-                    UI.Wrap(!Main.IsWide, 303, 0);
+                    UI.Wrap(!UI.IsWide, 303, 0);
                     bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
@@ -215,7 +216,7 @@ namespace ToyBox {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    UI.Wrap(Main.IsNarrow, 279);
+                    UI.Wrap(UI.IsNarrow, 279);
                     bool showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
                     if (UI.DisclosureToggle("Facts", ref showFacts, true, isWide ? 150 : 200)) {
                         if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
@@ -226,7 +227,7 @@ namespace ToyBox {
                         if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    UI.Wrap(Main.IsNarrow, 304);
+                    UI.Wrap(UI.IsNarrow, 304);
                     bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
                     if (UI.DisclosureToggle("Abilities", ref showAbilities, true)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
@@ -243,7 +244,7 @@ namespace ToyBox {
                     else { UI.Space(180); }
                     if (isWide) ActionsGUI(ch);
                 }
-                if (!Main.IsWide) {
+                if (!UI.IsWide) {
                     UI.Div(20, 20);
                 }
                 if (selectedCharacter != spellbookEditCharacter) {

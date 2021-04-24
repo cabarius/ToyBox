@@ -122,6 +122,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
+using ModMaker;
 
 namespace ToyBox.BagOfPatches {
     static class ModUI {
@@ -147,10 +148,10 @@ namespace ToyBox.BagOfPatches {
 #endif
                 // save these in case we need them inside the mod
                 //Logger.Log($"Rect: {___mWindowRect}");
-                Main.ummRect = ___mWindowRect;
-                Main.ummWidth = ___mWindowRect.width;
-                Main.ummScrollPosition = ___mScrollPosition;
-                Main.ummTabID = ___tabId;
+                UI.ummRect = ___mWindowRect;
+                UI.ummWidth = ___mWindowRect.width;
+                UI.ummScrollPosition = ___mScrollPosition;
+                UI.ummTabID = ___tabId;
             }
         }
     }

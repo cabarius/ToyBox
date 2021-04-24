@@ -37,6 +37,7 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
+using ModMaker;
 
 namespace ToyBox {
     public class MulticlassPicker {

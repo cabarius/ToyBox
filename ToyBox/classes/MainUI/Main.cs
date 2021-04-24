@@ -40,6 +40,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using GL = UnityEngine.GUILayout;
+using ModMaker;
 
 namespace ToyBox {
 #if DEBUG
@@ -56,16 +57,6 @@ namespace ToyBox {
         public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
 
         static Exception caughtException = null;
-        static public bool userHasHitReturn = false;
-        static public String focusedControlName = null;
-
-        public static Rect ummRect = new Rect();
-        public static float ummWidth = 960f;
-        public static int ummTabID = 0;
-        public static bool IsNarrow { get { return ummWidth < 1600;  } }
-        public static bool IsWide { get { return ummWidth >= 2000; } }
-
-        public static Vector2[] ummScrollPosition;
 
         static bool Load(UnityModManager.ModEntry modEntry) {
             try {
@@ -127,8 +118,8 @@ namespace ToyBox {
             }
             try {
                 Event e = Event.current;
-                userHasHitReturn = (e.keyCode == KeyCode.Return);
-                focusedControlName = GUI.GetNameOfFocusedControl();
+                UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
+                UI.focusedControlName = GUI.GetNameOfFocusedControl();
 
                 if (caughtException != null) {
                     UI.Label("ERROR".red().bold() + $": caught exception {caughtException}");
