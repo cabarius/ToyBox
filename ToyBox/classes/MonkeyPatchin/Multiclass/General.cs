@@ -405,7 +405,7 @@ namespace ToyBox.Multiclass {
                 BlueprintCharacterClass blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
                 foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
                     BlueprintProgression p = blueprintProgression;
-                    if (blueprintCharacterClass != null
+                    if (blueprintCharacterClass != nullfff
                         // && p.Classes.Contains<BlueprintCharacterClass>(blueprintCharacterClass)) 
                         && p.IsChildProgressionOf(unit, blueprintCharacterClass) // Mod Line replacing above
                         )
