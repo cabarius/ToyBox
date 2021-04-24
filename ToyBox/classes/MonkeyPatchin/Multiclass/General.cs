@@ -256,6 +256,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
+        /*
         // Fixed new spell slots (to be calculated not only from the highest caster level when gaining more than one level of a spontaneous caster at a time)
         [HarmonyPatch(typeof(SpellSelectionData), nameof(SpellSelectionData.SetLevelSpells), new Type[] { typeof(int), typeof(int) })]
         static class SpellSelectionData_SetLevelSpells_Patch {
@@ -281,7 +282,7 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-
+        */
         // Fixed the UI for selecting new spells (to refresh the level tabs of the spellbook correctly on toggling the spellbook)
         [HarmonyPatch(typeof(CharBPhaseSpells), "RefreshSpelbookView")]
         static class CharBPhaseSpells_RefreshSpelbookView_Patch {
@@ -405,7 +406,7 @@ namespace ToyBox.Multiclass {
                 BlueprintCharacterClass blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
                 foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
                     BlueprintProgression p = blueprintProgression;
-                    if (blueprintCharacterClass != nullfff
+                    if (blueprintCharacterClass != null
                         // && p.Classes.Contains<BlueprintCharacterClass>(blueprintCharacterClass)) 
                         && p.IsChildProgressionOf(unit, blueprintCharacterClass) // Mod Line replacing above
                         )
