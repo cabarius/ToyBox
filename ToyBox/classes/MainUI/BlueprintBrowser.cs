@@ -51,6 +51,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.Cutscenes;
+using ModMaker;
 
 namespace ToyBox {
     public class BlueprintBrowser {
@@ -198,7 +199,7 @@ namespace ToyBox {
                     }
                 }
                 // Section Column  - Main Area
-                float remainingWidth = Main.ummWidth - 325;
+                float remainingWidth = UI.ummWidth - 325;
                 using (UI.VerticalScope(UI.Width(remainingWidth))) {
                     // Search Field and modifiers
                     using (UI.HorizontalScope()) {
