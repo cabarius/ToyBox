@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModMaker", "ModMaker\ModMaker.shproj", "{7D3F9428-C134-47FE-9D04-305B4D330401}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ModMaker\ModMaker.projitems*{7d3f9428-c134-47fe-9d04-305b4d330401}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D7AC7F5-7C06-45EB-B1DF-917061FBA1EF}
+	EndGlobalSection
+EndGlobal

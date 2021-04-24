@@ -42,6 +42,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
+using Kingmaker.UnitLogic.Parts;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -59,6 +60,7 @@ namespace ToyBox {
         static int selectedCharacterIndex = 0;
         static UnitEntityData charToAdd = null;
         static UnitEntityData charToRemove = null;
+        static UnitEntityData charToDismiss = null;
         static bool editMultiClass = false;
         static UnitEntityData multiclassEditCharacter = null;
         static int respecableCount = 0;
@@ -126,6 +128,10 @@ namespace ToyBox {
             }
             else if (player.ActiveCompanions.Contains(ch)) {
                 UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.Width(150));
+                UI.Space(25);
+            }
+            else if (ch.IsPet) {
+                UI.ActionButton("Dismiss", () => { charToDismiss = ch; }, UI.Width(150));
                 UI.Space(25);
             }
             if (player.Party.Contains(ch)) {
@@ -458,6 +464,14 @@ namespace ToyBox {
             UI.Space(25);
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
+            if (charToDismiss != null) {
+                Game.Instance.Player.PartyAndPets.Remove(charToDismiss);
+                Game.Instance.Player.PartyAndPetsDetached.Remove(charToDismiss);
+                Game.Instance.Player.PartyCharacters.Remove(charToDismiss);
+                Game.Instance.Player.AllCharacters.Remove(charToDismiss);
+                Game.Instance.Player.MainCharacter.Value.Ensure<UnitPartPetMaster>().RemovePet(charToDismiss);
+            }
+
         }
     }
 }

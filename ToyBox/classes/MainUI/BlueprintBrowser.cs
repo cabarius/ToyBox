@@ -163,7 +163,15 @@ namespace ToyBox {
                 if (terms.All(term => name.Contains(term))) {
                     filtered.Add(blueprint);
                 }
+                // Added codes start here
+                if(blueprint is BlueprintUnitFact) {
+                    if(terms.All(term => (blueprint as BlueprintUnitFact).Name.Contains(term))) {
+                        filtered.Add(blueprint);
+                    }
+                }
+                // Added codes end here
             }
+
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
             if (selectedTypeFilter.collator != null) {

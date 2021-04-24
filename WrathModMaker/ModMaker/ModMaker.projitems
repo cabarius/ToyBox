@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7d3f9428-c134-47fe-9d04-305b4d330401</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ModMaker</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BlueprintLibrary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LocalizationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MenuManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\CodeInstructionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\RichTextExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\HotkeyHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\DoubleDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\GUIHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionFieldCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionMethodCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionPropertyCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\SerializableDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\TripleDictionary.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Utility\" />
+  </ItemGroup>
+</Project>

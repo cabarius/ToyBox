@@ -123,6 +123,7 @@ using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using static ModMaker.Utility.ReflectionCache;
+using ModMaker.Utility;
 
 namespace ToyBox.Multiclass {
     static class MultipleClasses {
@@ -174,12 +175,21 @@ namespace ToyBox.Multiclass {
         static class SelectClass_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
+                //Logger.ModLog($"SelectClass.Apply.Postfix, is avialable  = {IsAvailable()}");
                 if (IsAvailable()) {
                     Main.multiclassMod.AppliedMulticlassSet.Clear();
                     Main.multiclassMod.UpdatedProgressions.Clear();
 
                     // get multi-class setting
-                    HashSet<string> selectedMulticlassSet = unit.GetMulticlassSet();
+                    HashSet<string> selectedMulticlassSet;
+                    if (unit.Unit.CopyOf != null) {
+                        selectedMulticlassSet = unit.Unit.CopyOf.Entity.Descriptor.GetMulticlassSet();
+                    }
+                    else {
+                        selectedMulticlassSet = unit.GetMulticlassSet();
+                    }
+
+
                     if (selectedMulticlassSet == null || selectedMulticlassSet.Count == 0)
                         return;
 
@@ -188,6 +198,9 @@ namespace ToyBox.Multiclass {
                     foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses) {
                         if (characterClass != stateReplacer.SelectedClass && selectedMulticlassSet.Contains(characterClass.AssetGuid)) {
                             stateReplacer.Replace(null, 0);
+                            //Logger.ModLog($"进行{characterClass.AssetGuid}（{characterClass.Name}）的SelectClass操作");
+                            //stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+
                             if (new SelectClass(characterClass).Check(state, unit)) {
                                 Logger.ModLoggerDebug($" - {nameof(SelectClass)}.{nameof(SelectClass.Apply)}*({characterClass}, {unit})");
 
@@ -205,6 +218,7 @@ namespace ToyBox.Multiclass {
 
                     // applying archetypes
                     ForEachAppliedMulticlass(state, unit, () => {
+                        //Logger.ModLog($"进行{state.SelectedClass.AssetGuid}（{state.SelectedClass.Name}）的SelectClass-ForEachApplied操作");
                         foreach (BlueprintArchetype archetype in state.SelectedClass.Archetypes) {
                             if (selectedMulticlassSet.Contains(archetype.AssetGuid)) {
                                 AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
@@ -222,10 +236,24 @@ namespace ToyBox.Multiclass {
 
 #region Skills & Features
 
+        [HarmonyPatch(typeof(LevelUpController))]
+        [HarmonyPatch("ApplyLevelup")]
+        static class LevelUpController_ApplyLevelup_Patch {
+            static void Prefix(LevelUpController __instance, UnitEntityData unit) {
+                if(unit == __instance.Preview) {
+                    Logger.ModLog($"Unit Preview = {unit.CharacterName}");
+                    Logger.ModLog("所有的levelup action：");
+                    foreach(var action in __instance.LevelUpActions) {
+                        Logger.ModLog($"{action.GetType().ToString()}");
+                    }
+                }
+            }
+        }
         [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplyClassMechanics_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
+                //Logger.ModLog($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()}");
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
@@ -245,7 +273,7 @@ namespace ToyBox.Multiclass {
                 if (IsAvailable()) {
                     if (__instance.Item != null) {
                         FeatureSelectionState selectionState =
-                            GetMethodDel<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
+                            ReflectionCache.GetMethod<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
                             ("GetSelectionState")(__instance, state);
                         if (selectionState != null) {
                             BlueprintCharacterClass sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
@@ -274,7 +302,7 @@ namespace ToyBox.Multiclass {
                 if (IsAvailable()) {
                     if (__instance.Item != null) {
                         FeatureSelectionState selectionState =
-                            GetMethodDel<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
+                            ReflectionCache.GetMethod<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
                             ("GetSelectionState")(__instance, state);
                         if (selectionState != null) {
                             BlueprintCharacterClass sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
