@@ -1,5 +1,5 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
-using ToyKit.Utility;
+using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 

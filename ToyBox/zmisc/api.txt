@@ -1,0 +1,1 @@
+﻿dotnet nuget push ModKit.1.0.0.nupkg --api-key oy2bkpc6bwo3tfwo7acawx2fv46b6pyu3axskvmmcfs2xu --source https://api.nuget.org/v3/index.json

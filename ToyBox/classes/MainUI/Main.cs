@@ -40,7 +40,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using GL = UnityEngine.GUILayout;
-using ToyKit;
+using ModKit;
 
 namespace ToyBox {
 #if DEBUG

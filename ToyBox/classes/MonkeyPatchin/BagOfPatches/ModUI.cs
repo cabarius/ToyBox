@@ -122,7 +122,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
-using ToyKit;
+using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class ModUI {

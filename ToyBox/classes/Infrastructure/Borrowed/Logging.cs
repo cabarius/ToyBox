@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 using UnityModManagerNet;
-using ToyKit;
+using ModKit;
 
 namespace ToyBox {
     public class Logger {

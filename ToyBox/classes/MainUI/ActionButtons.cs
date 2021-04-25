@@ -40,7 +40,7 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
-using ToyKit;
+using ModKit;
 
 namespace ToyBox {
     public class NamedTypeFilter {
