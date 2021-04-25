@@ -15,6 +15,10 @@
     <PackageTags>Unity, Mod, UnityModManager, UMM</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
