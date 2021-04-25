@@ -4,7 +4,13 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModKit", "C:\Users\PC\source\repos\ToyBox\ModKit\ModKit.csproj", "{BD28D55C-3A8D-4078-9C56-D8FA20526C7E}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModKitSrc", "ModKitSrc.shproj", "{7D3F9428-C134-47FE-9D04-305B4D330401}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ModKitSrc.projitems*{7d3f9428-c134-47fe-9d04-305b4d330401}*SharedItemsImports = 13
+		ModKitSrc.projitems*{bd28d55c-3a8d-4078-9c56-d8fa20526c7e}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
