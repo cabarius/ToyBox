@@ -20,6 +20,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ModKit\**" />
+    <Compile Remove="UI\**" />
+    <Compile Remove="Utility\**" />
+    <EmbeddedResource Remove="ModKit\**" />
+    <EmbeddedResource Remove="UI\**" />
+    <EmbeddedResource Remove="Utility\**" />
+    <None Remove="ModKit\**" />
+    <None Remove="UI\**" />
+    <None Remove="Utility\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -56,5 +68,7 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Import Project="ModKitSrc.projitems" Label="Shared" />
 
 </Project>

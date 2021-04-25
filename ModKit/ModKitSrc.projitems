@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7d3f9428-c134-47fe-9d04-305b4d330401</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ModMaker</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ModKit\LocalizationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModKit\MenuManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Private.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\RichText.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Builders.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Controls.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Elements.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Pickers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Toggles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Wrappers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\CodeInstructionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\DoubleDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\RichTextExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\GUIHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\NamedTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\SerializableDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\TripleDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionFieldCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionMethodCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionPropertyCache.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Utility\Extensions\" />
+  </ItemGroup>
+</Project>
