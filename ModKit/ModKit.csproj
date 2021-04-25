@@ -2,11 +2,11 @@
 
   <PropertyGroup>
 	  <TargetFramework>net4.7.2</TargetFramework>
-	  <AssemblyName>0ToyKit</AssemblyName>
-    <PackageId>ToyKit</PackageId>
+	  <AssemblyName>ModKit</AssemblyName>
+    <PackageId>ModKit</PackageId>
     <Authors>Narria</Authors>
     <Company>Cabarius</Company>
-    <Product>ToyKit</Product>
+    <Product>ModKit</Product>
     <Description>A game agnostic toolkit for building Mod UI for unity mod manager based mods.  Builds on ModMaker (https://github.com/cabarius/WrathModMaker and all past repos it was forked from)</Description>
     <Copyright>Copyright © 2021</Copyright>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -18,18 +18,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>5</WarningLevel>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="ModKit\**" />
-    <Compile Remove="UI\**" />
-    <Compile Remove="Utility\**" />
-    <EmbeddedResource Remove="ModKit\**" />
-    <EmbeddedResource Remove="UI\**" />
-    <EmbeddedResource Remove="Utility\**" />
-    <None Remove="ModKit\**" />
-    <None Remove="UI\**" />
-    <None Remove="Utility\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE.txt">
