@@ -5,7 +5,7 @@ using Kingmaker.Settings;
 using System;
 using System.Collections.Generic;
 
-namespace ToyKit.Utility
+namespace ModKit.Utility
 {
     public static class HotkeyHelper
     {

@@ -68,8 +68,8 @@ using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using Kingmaker.Assets.UI;
-using ToyKit.Utility;
-using static ToyKit.Utility.ReflectionCache;
+using ModKit.Utility;
+using static ModKit.Utility.ReflectionCache;
 using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox.Multiclass {

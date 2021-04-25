@@ -122,7 +122,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
-using static ToyKit.Utility.ReflectionCache;
+using static ModKit.Utility.ReflectionCache;
 
 namespace ToyBox.Multiclass {
     static class MultipleClasses {

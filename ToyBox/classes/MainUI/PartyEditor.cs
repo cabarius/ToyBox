@@ -42,7 +42,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
-using ToyKit;
+using ModKit;
 
 namespace ToyBox {
     public class PartyEditor {

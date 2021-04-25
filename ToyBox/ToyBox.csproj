@@ -166,14 +166,15 @@
     <None Include="Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="zmisc\packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="zmisc\Snippets.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.txt" />
+    <Content Include="zmisc\api.txt" />
   </ItemGroup>
+  <Import Project="..\ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -186,9 +187,6 @@
     <PostBuildEvent>echo "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
 copy /Y "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll"
 copy /Y "$(TargetDir)$(TargetName).pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).pdb"
-echo  "$(TargetDir)0ToyKit.dll" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\0ToyKit.dll"
-copy /Y "$(TargetDir)0ToyKit.dll" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\0ToyKit.dll"
-copy /Y "$(TargetDir)0ToyKit.pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\0ToyKit.pdb"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
