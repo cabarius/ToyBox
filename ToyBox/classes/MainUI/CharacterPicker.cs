@@ -37,7 +37,7 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
-using ModMaker;
+using ToyKit;
 
 namespace ToyBox {
     public class CharacterPicker {

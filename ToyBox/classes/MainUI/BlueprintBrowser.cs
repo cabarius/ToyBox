@@ -51,7 +51,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.Cutscenes;
-using ModMaker;
+using ToyKit;
 
 namespace ToyBox {
     public class BlueprintBrowser {

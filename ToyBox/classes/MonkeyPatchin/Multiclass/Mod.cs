@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine.SceneManagement;
-using static ModMaker.Utility.ReflectionCache;
+using static ToyKit.Utility.ReflectionCache;
 
 namespace ToyBox.Multiclass {
     public class Mod {

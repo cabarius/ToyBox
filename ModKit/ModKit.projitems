@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7d3f9428-c134-47fe-9d04-305b4d330401</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ModMaker</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ModKit\LocalizationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModKit\MenuManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Private.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\RichText.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Builders.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Controls.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Elements.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Pickers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Toggles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Wrappers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\GUIHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)ModKit\" />
+  </ItemGroup>
+</Project>
