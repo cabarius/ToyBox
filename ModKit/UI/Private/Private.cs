@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace ToyKit.Private {
+namespace ModKit.Private {
     public static partial class UI {
         const string disclosureArrowOn = "<color=orange><b>▶</b></color>";
         const string disclosureArrowOff = "<color=white><b>▲</b></color>";

@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using GL = UnityEngine.GUILayout;
 
-namespace ToyKit {
+namespace ModKit {
     public static partial class UI {
 
         // UI for picking items from a collection

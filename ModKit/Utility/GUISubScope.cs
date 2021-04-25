@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace ToyKit.Utility
+namespace ModKit.Utility
 {
     public class GUISubScope : IDisposable
     {

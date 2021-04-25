@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ModMaker.Utility
+namespace ModKit.Utility
 {
     public static class UnityExtensions
     {

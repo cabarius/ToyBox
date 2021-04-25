@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityModManagerNet;
 
-namespace ToyKit
+namespace ModKit
 {
     public interface ILanguage
     {

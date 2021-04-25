@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472 </TargetFramework>
-    <AssemblyName>0ToyKit</AssemblyName>
+	  <TargetFramework>net4.7.2</TargetFramework>
+	  <AssemblyName>0ToyKit</AssemblyName>
     <PackageId>ToyKit</PackageId>
     <Authors>Narria</Authors>
     <Company>Cabarius</Company>

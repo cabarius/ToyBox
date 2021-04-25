@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace ModMaker {
+namespace ModKit {
     public class NamedAction {
         public String name { get; }
         public Action action { get; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ModMaker.Utility
+namespace ModKit.Utility
 {
     public class DoubleDictionary<TKey1, TKey2, TValue>
     {

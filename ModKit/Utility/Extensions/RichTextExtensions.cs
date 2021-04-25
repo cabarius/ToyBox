@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace ModMaker.Utility {
+namespace ModKit.Utility {
     public static class StringExtensions {
         public static bool Matches(string source, string other) {
             if (source == null || other == null) return false;

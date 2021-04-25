@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ToyKit {
+namespace ModKit {
     // https://docs.unity3d.com/Manual/StyledText.html
     public enum RGBA : uint {
         aqua = 0x00ffffff,

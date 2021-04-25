@@ -10,7 +10,7 @@ using System.Linq;
 
 using GL = UnityEngine.GUILayout;
 
-namespace ToyKit {
+namespace ModKit {
     public static partial class UI {
 
         // Basic UI Elements (box, div, etc.)
