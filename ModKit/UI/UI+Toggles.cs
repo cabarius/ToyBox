@@ -10,7 +10,7 @@ using System.Linq;
 
 using GL = UnityEngine.GUILayout;
 
-namespace ToyKit {
+namespace ModKit {
     public static partial class UI {
         public const string onMark = "<color=green><b>✔</b></color>";
         public const string offMark = "<color=#A0A0A0E0>✖</color>";

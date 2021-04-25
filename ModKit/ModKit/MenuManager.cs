@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityModManagerNet;
-using ToyKit.Utility;
+using ModKit.Utility;
 
-namespace ToyKit
+namespace ModKit
 {
     public interface IMenuPage
     {

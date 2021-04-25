@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ModMaker.Utility
+namespace ModKit.Utility
 {
     public class TripleDictionary<TKey1, TKey2, TKey3, TValue>
     {

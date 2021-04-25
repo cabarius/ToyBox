@@ -9,7 +9,7 @@ using System.Linq;
 
 using GL = UnityEngine.GUILayout;
 
-namespace ToyKit {
+namespace ModKit {
     public static partial class UI {
 
         // GUILayout wrappers and extensions so other modules can use UI.MethodName()

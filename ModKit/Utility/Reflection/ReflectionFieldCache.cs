@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ModMaker.Utility
+namespace ModKit.Utility
 {
     public static partial class ReflectionCache
     {
