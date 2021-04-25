@@ -9,9 +9,9 @@
     <Import_RootNamespace>ModMaker</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ModKit\LocalizationManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ModKit\MenuManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LocalizationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MenuManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Private.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\RichText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Builders.cs" />

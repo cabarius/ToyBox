@@ -1,9 +1,8 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModKit", "ModKit.csproj", "{16230C32-26A9-401E-96C5-94FA6C96D4DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModKit", "C:\Users\PC\source\repos\ToyBox\ModKit\ModKit.csproj", "{BD28D55C-3A8D-4078-9C56-D8FA20526C7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +10,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{16230C32-26A9-401E-96C5-94FA6C96D4DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16230C32-26A9-401E-96C5-94FA6C96D4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16230C32-26A9-401E-96C5-94FA6C96D4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16230C32-26A9-401E-96C5-94FA6C96D4DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD28D55C-3A8D-4078-9C56-D8FA20526C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD28D55C-3A8D-4078-9C56-D8FA20526C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD28D55C-3A8D-4078-9C56-D8FA20526C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD28D55C-3A8D-4078-9C56-D8FA20526C7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B24F2A17-DE13-4D78-85EE-EA71565CD041}
+		SolutionGuid = {2F8600CB-2139-46EF-B0F5-36C36F060BAD}
 	EndGlobalSection
 EndGlobal
