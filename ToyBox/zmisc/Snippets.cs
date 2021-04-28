@@ -21,8 +21,8 @@
 
     public class BlueprintLoader : MonoBehaviour {
         AssetBundleRequest loadRequest = null;
-        Action<IEnumerable<BlueprintScriptableObject>> callback;
-        public BlueprintLoader(Action<IEnumerable<BlueprintScriptableObject>> callback) {
+        Action<IEnumerable<SimpleBlueprint>> callback;
+        public BlueprintLoader(Action<IEnumerable<SimpleBlueprint>> callback) {
             this.callback = callback;
         }
         void Start() {
@@ -31,13 +31,13 @@
         public IEnumerator Load() {
             if (loadRequest == null) {
                 var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
-                loadRequest = bundle.LoadAllAssetsAsync<BlueprintScriptableObject>();
+                loadRequest = bundle.LoadAllAssetsAsync<SimpleBlueprint>();
             }
             if (!loadRequest.isDone) {
                 yield return null;
             }
             else {
-                callback(loadRequest.allAssets.Select((a) => (BlueprintScriptableObject)a));
+                callback(loadRequest.allAssets.Select((a) => (SimpleBlueprint)a));
             }
         }
     }
@@ -89,7 +89,7 @@ IEnumerable ProcessBlueprints(){
       yield return null;
     }
     counter++;
-    var blueprint = ResourcesLibrary.TryGetBlueprint<BlueprintScriptableObject>(guid);
+    var blueprint = ResourcesLibrary.TryGetBlueprint<SimpleBlueprint>(guid);
     //Process blueprint        
   }
 }
@@ -121,9 +121,9 @@ GL.Space(10);
             */
 
 #if false
-                List<BlueprintScriptableObject> bps = new List<BlueprintScriptableObject>();
-                BlueprintScriptableObject[] allBPs = GetBlueprints();
-                foreach (BlueprintScriptableObject bp in allBPs)
+                List<SimpleBlueprint> bps = new List<SimpleBlueprint>();
+                SimpleBlueprint[] allBPs = GetBlueprints();
+                foreach (SimpleBlueprint bp in allBPs)
                 {
                     bool ignoreFound = false;
                     foreach (Type t in BlueprintAction.ignoredBluePrintTypes)
@@ -184,7 +184,7 @@ public static ContextActionApplyBuff[] GetAbilityContextActionApplyBuffs(Bluepri
           case FeatureParameterType.Custom:
           case FeatureParameterType.SpellSpecialization:
           case FeatureParameterType.FeatureSelection:
-            this.m_CachedItems = this.ExtractItemsFromBlueprints(((IEnumerable<BlueprintReference<BlueprintScriptableObject>>) this.BlueprintParameterVariants).Dereference<BlueprintScriptableObject>()).ToArray<FeatureUIData>();
+            this.m_CachedItems = this.ExtractItemsFromBlueprints(((IEnumerable<BlueprintReference<SimpleBlueprint>>) this.BlueprintParameterVariants).Dereference<SimpleBlueprint>()).ToArray<FeatureUIData>();
             break;
           case FeatureParameterType.WeaponCategory:
             this.m_CachedItems = this.ExtractItemsWeaponCategory().ToArray<FeatureUIData>();
@@ -193,7 +193,7 @@ public static ContextActionApplyBuff[] GetAbilityContextActionApplyBuffs(Bluepri
             this.m_CachedItems = this.ExtractItemsSpellSchool().ToArray<FeatureUIData>();
             break;
           case FeatureParameterType.LearnSpell:
-            this.m_CachedItems = this.ExtractItemsFromBlueprints(((IEnumerable<BlueprintReference<BlueprintScriptableObject>>) this.BlueprintParameterVariants).Dereference<BlueprintScriptableObject>()).ToArray<FeatureUIData>();
+            this.m_CachedItems = this.ExtractItemsFromBlueprints(((IEnumerable<BlueprintReference<SimpleBlueprint>>) this.BlueprintParameterVariants).Dereference<SimpleBlueprint>()).ToArray<FeatureUIData>();
             break;
           case FeatureParameterType.Skill:
             this.m_CachedItems = this.ExtractSkills().ToArray<FeatureUIData>();

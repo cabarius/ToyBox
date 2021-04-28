@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;

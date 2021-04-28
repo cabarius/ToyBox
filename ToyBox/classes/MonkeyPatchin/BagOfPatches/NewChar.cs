@@ -70,10 +70,10 @@ using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Log;
 using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM.CharGen;
-using Kingmaker.UI.MVVM.CharGen.Phases;
-using Kingmaker.UI.MVVM.CharGen.Phases.Mythic;
-using Kingmaker.UI.RestCamp;
+using Kingmaker.UI.MVVM._PCView.CharGen;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+//using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
 using Kingmaker.UnitLogic;
@@ -135,8 +135,8 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPriority(Priority.Low)]
             public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance) {
                 if (__instance.IsFirstCharacterLevel) {
-                    if (mode != CharBuildMode.PreGen) {
-                        // Kludge - there is some wierdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
+                    if (!__instance.IsPregen) {
+                        // Kludge - there is some weirdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
                         bool isCustom = unit.Blueprint.ToString() == "CustomCompanion";
                         //Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
                         //Logger.Log($"not pregen - isCust: {isCustom}");

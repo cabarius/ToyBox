@@ -1,6 +1,6 @@
 ﻿// This code is licensed under MIT license (see LICENSE for details)
 // Based on work in https://github.com/hsinyuhcan/KingmakerTurnBasedMod by Hsinyu Chan 
-// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using System;
 using System.Collections.Generic;
 using System.Linq;

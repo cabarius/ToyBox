@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
@@ -74,8 +74,8 @@ using Kingmaker.Designers.EventConditionActionSystem.ContextData;
 
 namespace ToyBox {
     public abstract class BlueprintAction {
-        public delegate void Perform(BlueprintScriptableObject bp, UnitEntityData ch = null, int count = 1);
-        public delegate bool CanPerform(BlueprintScriptableObject bp, UnitEntityData ch = null);
+        public delegate void Perform(SimpleBlueprint bp, UnitEntityData ch = null, int count = 1);
+        public delegate bool CanPerform(SimpleBlueprint bp, UnitEntityData ch = null);
         private static Dictionary<Type, BlueprintAction[]> actionsForType = null;
         public static BlueprintAction[] ActionsForType(Type type) {
             if (actionsForType == null) {
@@ -95,7 +95,7 @@ namespace ToyBox {
             }
             return result;
         }
-        public static BlueprintAction[] ActionsForBlueprint(BlueprintScriptableObject bp) {
+        public static BlueprintAction[] ActionsForBlueprint(SimpleBlueprint bp) {
             return ActionsForType(bp.GetType());
         }
         public static void Register(params BlueprintAction[] actions) {
@@ -119,7 +119,7 @@ namespace ToyBox {
         public bool isRepeatable;
         abstract public Type BlueprintType { get; }
     }
-    public class BlueprintAction<BPType> : BlueprintAction where BPType : BlueprintScriptableObject {
+    public class BlueprintAction<BPType> : BlueprintAction where BPType : SimpleBlueprint {
         public delegate void Perform(BPType bp, UnitEntityData ch, int count = 1);
         public delegate bool CanPerform(BPType bp, UnitEntityData ch);
 
@@ -130,12 +130,12 @@ namespace ToyBox {
             bool isRepeatable = false
             ) : base(name, isRepeatable) {
             this.action = (bp, ch, n) => action((BPType)bp, ch, n);
-            this.canPerform = (bp, ch) => (bp is BPType bpt) ? (canPerform != null ? canPerform(bpt, ch) : true) : false;
+            this.canPerform = (bp, ch) => Main.IsInGame && (bp is BPType bpt) ? (canPerform != null ? canPerform(bpt, ch) : true) : false;
         }
         override public Type BlueprintType { get { return typeof(BPType); } }
     }
     public static class BlueprintActions {
-        public static IEnumerable<BlueprintAction> GetActions(this BlueprintScriptableObject bp) {
+        public static IEnumerable<BlueprintAction> GetActions(this SimpleBlueprint bp) {
             return BlueprintAction.ActionsForBlueprint(bp);
         }
         public static void InitializeActions() {

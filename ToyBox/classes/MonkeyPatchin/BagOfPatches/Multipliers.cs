@@ -70,10 +70,10 @@ using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Log;
 using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM.CharGen;
-using Kingmaker.UI.MVVM.CharGen.Phases;
-using Kingmaker.UI.MVVM.CharGen.Phases.Mythic;
-using Kingmaker.UI.RestCamp;
+using Kingmaker.UI.MVVM._PCView.CharGen;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+//using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
 using Kingmaker.UnitLogic;
@@ -201,7 +201,7 @@ namespace ToyBox.BagOfPatches {
           UnitEntityData caster,
           TimeSpan? duration,
           [CanBeNull] AbilityParams abilityParams = null) {
-            MechanicsContext context = new MechanicsContext(caster, this.Owner, (BlueprintScriptableObject)blueprint);
+            MechanicsContext context = new MechanicsContext(caster, this.Owner, (SimpleBlueprint)blueprint);
             if (abilityParams != null)
                 context.SetParams(abilityParams);
             return this.Manager.Add<Buff>(new Buff(blueprint, context, duration));

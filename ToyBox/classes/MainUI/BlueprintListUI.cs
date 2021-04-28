@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
@@ -52,15 +52,15 @@ namespace ToyBox {
         public static int maxActions = 0;
         public static bool needsLayout = true;
         public static void OnGUI(UnitEntityData ch,
-            IEnumerable<BlueprintScriptableObject> blueprints,
+            IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
-            Func<String,String> titleFormater = null,
+            Func<String, String> titleFormater = null,
             NamedTypeFilter typeFilter = null
         ) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             int index = 0;
             if (needsLayout) {
-                foreach (BlueprintScriptableObject blueprint in blueprints) {
+                foreach (SimpleBlueprint blueprint in blueprints) {
                     var actions = blueprint.GetActions();
                     if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
                     int actionCount = actions.Sum(action => action.canPerform(blueprint, ch) ? 1 : 0);
@@ -84,7 +84,7 @@ namespace ToyBox {
                 UI.EndHorizontal();
             }
             UI.Div(indent);
-            foreach (BlueprintScriptableObject blueprint in blueprints) {
+            foreach (SimpleBlueprint blueprint in blueprints) {
                 UI.BeginHorizontal();
                 UI.Space(indent);
                 var actions = blueprint.GetActions().Where(action => action.canPerform(blueprint, ch)).ToArray();
@@ -123,22 +123,24 @@ namespace ToyBox {
                 String typeString = blueprint.GetType().Name;
                 if (typeFilter?.collator != null) {
                     var collatorString = typeFilter.collator(blueprint);
-                    if (!typeString.Contains(collatorString)) 
+                    if (!typeString.Contains(collatorString))
                         typeString += $" : {collatorString}".yellow();
                 }
                 Rect rect = GUILayoutUtility.GetLastRect();
                 var description = blueprint.GetDescription();
                 if (description != null && description.Length > 0) description = $"\n{description.green()}";
                 else description = "";
-                if (settings.showComponents && blueprint.ComponentsArray != null) {
-                    String componentStr = String.Join<object>(" ", blueprint.ComponentsArray).grey();
-                    if (description.Length == 0) description = componentStr;
-                    else description = componentStr + description;
-                }
-                if (settings.showElements && blueprint.ElementsArray != null) {
-                    String elementsStr = String.Join<object>(" ", blueprint.ElementsArray).yellow();
-                    if (description.Length == 0) description = elementsStr;
-                    else description = elementsStr + "\n" + description;
+                if (blueprint is BlueprintScriptableObject bpso) {
+                    if (settings.showComponents && bpso.ComponentsArray != null) {
+                        String componentStr = String.Join<object>(" ", bpso.ComponentsArray).grey();
+                        if (description.Length == 0) description = componentStr;
+                        else description = componentStr + description;
+                    }
+                    if (settings.showElements && bpso.ElementsArray != null) {
+                        String elementsStr = String.Join<object>(" ", bpso.ElementsArray).yellow();
+                        if (description.Length == 0) description = elementsStr;
+                        else description = elementsStr + "\n" + description;
+                    }
                 }
                 if (settings.showAssetIDs) {
                     UI.Label(typeString.cyan());
@@ -153,7 +155,7 @@ namespace ToyBox {
                 }
                 else {
                     float width = remainingWidth - rect.xMax;
-                    UI.Label(typeString.cyan() + " " + description,UI.Width(800));
+                    UI.Label(typeString.cyan() + " " + description, UI.Width(800));
                     //UI.Label($"{remainingWidth} - {rect.xMax} = {width}" + typeString + " " + description, UI.Width(800));
                     UI.EndHorizontal();
                 }
