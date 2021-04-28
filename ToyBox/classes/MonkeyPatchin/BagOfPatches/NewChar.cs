@@ -129,11 +129,12 @@ namespace ToyBox.BagOfPatches {
         public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
+        //     public LevelUpState([NotNull] UnitEntityData unit, LevelUpState.CharBuildMode mode, bool isPregen)
         [HarmonyPatch(typeof(LevelUpState), MethodType.Constructor)]
-        [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(LevelUpState.CharBuildMode) })]
+        [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(LevelUpState.CharBuildMode), typeof(bool) })]
         public static class LevelUpState_Patch {
             [HarmonyPriority(Priority.Low)]
-            public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance) {
+            public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance, bool isPregen) {
                 if (__instance.IsFirstCharacterLevel) {
                     if (!__instance.IsPregen) {
                         // Kludge - there is some weirdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
@@ -148,8 +149,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-
 
         [HarmonyPatch(typeof(StatsDistribution), "CanRemove")]
         public static class StatsDistribution_CanRemove_Patch {
@@ -208,6 +207,5 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
     }
 }

@@ -128,7 +128,6 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
-
         [HarmonyPatch(typeof(UnitCombatState), "AttackOfOpportunity")]
         static class UnitCombatState_AttackOfOpportunity_Patch {
             static bool Prefix(UnitEntityData target) {
