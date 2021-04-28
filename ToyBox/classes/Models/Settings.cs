@@ -131,7 +131,7 @@ namespace ToyBox {
 
         // these are useful and belong in Char Generation
         public bool toggleIgnoreAlignmentRestrictionCharGen = false;    // was called toggleIgnoreAlignmentRestriction in Multi-Class mod
-        public bool toggleIgnoreAttributeStatCapChargen = false;
+        public bool toggleIgnoreAttributeCap = false;
         public bool toggleIgnoreAttributePointsRemainingChargen = false;
 
         // these are useful and belong in LevelUp
