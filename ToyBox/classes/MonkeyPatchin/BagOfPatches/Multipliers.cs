@@ -249,15 +249,27 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice")]
+        [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(ItemEntity) })]
         static class VendorLogic_GetItemSellPrice_Patch {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorSellPriceMultiplier);
             }
         }
+        [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(BlueprintItem) })]
+        static class VendorLogic_GetItemSellPrice_Patch2 {
+            private static void Postfix(ref long __result) {
+                __result = (long)(__result * settings.vendorSellPriceMultiplier);
+            }
+        }
 
-        [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice")]
+        [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", new Type[] { typeof(ItemEntity) })]
         static class VendorLogic_GetItemBuyPrice_Patch {
+            private static void Postfix(ref long __result) {
+                __result = (long)(__result * settings.vendorBuyPriceMultiplier);
+            }
+        }
+        [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", new Type[] { typeof(BlueprintItem) })]
+        static class VendorLogic_GetItemBuyPrice_Patc2h {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorBuyPriceMultiplier);
             }
