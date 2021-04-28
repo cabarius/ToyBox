@@ -57,7 +57,7 @@ using Kingmaker.Tutorial;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.LevelUp;
-using Kingmaker.UI.LevelUp.Phase;
+//using Kingmaker.UI.LevelUp.Phase;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
@@ -148,8 +148,9 @@ namespace ToyBox.Multiclass {
             return controller != null &&
                 controller.Unit.IsPlayerFaction &&
                 (allowPet || !controller.Unit.IsPet) &&
-                (allowAutoCommit || !controller.AutoCommit) &&
-                (allowPregen || !controller.State.IsPreGen());
+                (allowAutoCommit || !controller.AutoCommit);
+                // && (allowPregen || !controller.State.IsPreGen()
+                
         }
 
         public static bool IsCharGen(this LevelUpState state) {
@@ -160,10 +161,13 @@ namespace ToyBox.Multiclass {
             return state.Mode == LevelUpState.CharBuildMode.LevelUp;
         }
 
+#if false
         public static bool IsPreGen(this LevelUpState state) {
-            return state.Mode == LevelUpState.CharBuildMode.PreGen;
+            return state.Mode == LevelUpState.CharBuildMode.;
         }
+#endif
 
+#if false
         public static void SetSpellbook(this CharBPhaseSpells instance, BlueprintCharacterClass characterClass) {
             LevelUpState state = Game.Instance.UI.CharacterBuildController.LevelUpController.State;
             BlueprintCharacterClass selectedClass = state.SelectedClass;
@@ -171,7 +175,7 @@ namespace ToyBox.Multiclass {
             GetMethodDel<CharBPhaseSpells, Action<CharBPhaseSpells>>("SetupSpellBookView")(instance);
             state.SelectedClass = selectedClass;
         }
-
+#endif
         //public static ClassData SureClassData(this UnitProgressionData progression, BlueprintCharacterClass characterClass)
         //{
         //    ClassData classData = progression.Classes.FirstOrDefault((ClassData cd) => cd.CharacterClass == characterClass);

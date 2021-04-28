@@ -71,10 +71,10 @@ using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Log;
 using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM.CharGen;
-using Kingmaker.UI.MVVM.CharGen.Phases;
-using Kingmaker.UI.MVVM.CharGen.Phases.Mythic;
-using Kingmaker.UI.RestCamp;
+using Kingmaker.UI.MVVM._PCView.CharGen;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+//using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
 using Kingmaker.UnitLogic;
@@ -114,7 +114,7 @@ using System.Reflection.Emit;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using Kingmaker.UI.ActionBar;
 using Kingmaker.UI.LevelUp;
-using Kingmaker.UI.LevelUp.Phase;
+//using Kingmaker.UI.LevelUp.Phase;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using TMPro;
 using TurnBased.Controllers;
@@ -157,7 +157,7 @@ namespace ToyBox.Multiclass {
                 // if (nextLevel > maxLevel)
                 //     nextLevel = maxLevel;
                 progressionData.Level = nextLevel;
-                if (level >= nextLevel || (UnityEngine.Object)progression.ExclusiveProgression != (UnityEngine.Object)null && (UnityEngine.Object)state.SelectedClass != (UnityEngine.Object)progression.ExclusiveProgression)
+                if (level >= nextLevel || progression.ExclusiveProgression != null && state.SelectedClass != progression.ExclusiveProgression)
                     return false;
                 if (!progression.GiveFeaturesForPreviousLevels)
                     level = nextLevel - 1;
@@ -177,7 +177,8 @@ namespace ToyBox.Multiclass {
             }
         }
 
-
+#if false
+        // TODO - FIXME - what is the replacement for this?
         [HarmonyPatch(typeof(CharBSelectionSwitchSpells), "ParseSpellSelection")]
         static class CharBSelectionSwitchSpells_ParseSpellSelection_Patch {
             public static bool Prefix(CharBSelectionSwitchSpells __instance) {
@@ -201,24 +202,24 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-
+#endif
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return false;
-                if ((UnityEngine.Object)state.SelectedClass == (UnityEngine.Object)null)
+                if (state.SelectedClass == null)
                     return true;
                 SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
-                if ((UnityEngine.Object)component1 != (UnityEngine.Object)null && ((IEnumerable<int>)component1.Levels).Contains<int>(state.NextClassLevel))
+                if (component1 != null && ((IEnumerable<int>)component1.Levels).Contains<int>(state.NextClassLevel))
                     return true;
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
-                if (classData == null || !((UnityEngine.Object)classData.Spellbook != (UnityEngine.Object)null))
+                if (classData == null || !(classData.Spellbook != null))
                     return true;
                 Spellbook spellbook1 = unit.DemandSpellbook(classData.Spellbook);
-                if ((bool)(UnityEngine.Object)state.SelectedClass.Spellbook && (UnityEngine.Object)state.SelectedClass.Spellbook != (UnityEngine.Object)classData.Spellbook) {
-                    Spellbook spellbook2 = unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(s => (UnityEngine.Object)s.Blueprint == (UnityEngine.Object)state.SelectedClass.Spellbook));
+                if ((bool)state.SelectedClass.Spellbook && state.SelectedClass.Spellbook != classData.Spellbook) {
+                    Spellbook spellbook2 = unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(s => s.Blueprint == state.SelectedClass.Spellbook));
                     if (spellbook2 != null) {
                         foreach (AbilityData allKnownSpell in spellbook2.GetAllKnownSpells())
                             spellbook1.AddKnown(allKnownSpell.SpellLevel, allKnownSpell.Blueprint);
@@ -230,7 +231,7 @@ namespace ToyBox.Multiclass {
                 int casterLevelAfter = spellbook1.CasterLevel;
                 if (casterLevelBefore == casterLevelAfter) return true; // Mod line
                 SpellSelectionData spellSelectionData = state.DemandSpellSelection(spellbook1.Blueprint, spellbook1.Blueprint.SpellList);
-                if ((UnityEngine.Object)spellbook1.Blueprint.SpellsKnown != (UnityEngine.Object)null) {
+                if (spellbook1.Blueprint.SpellsKnown != null) {
                     for (int index = 0; index <= 10; ++index) {
                         BlueprintSpellsTable spellsKnown = spellbook1.Blueprint.SpellsKnown;
                         int? count = spellsKnown.GetCount(casterLevelBefore, index);
@@ -282,6 +283,8 @@ namespace ToyBox.Multiclass {
             }
         }
 
+#if false
+        // TODO - FIXME - what is the replacement for this?
         // Fixed the UI for selecting new spells (to refresh the level tabs of the spellbook correctly on toggling the spellbook)
         [HarmonyPatch(typeof(CharBPhaseSpells), "RefreshSpelbookView")]
         static class CharBPhaseSpells_RefreshSpelbookView_Patch {
@@ -297,6 +300,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
+        // TODO - FIXME - what is the replacement for this?
         // Fixed the UI for selecting new spells (to switch the spellbook correctly on selecting a spell)
         [HarmonyPatch(typeof(CharacterBuildController), nameof(CharacterBuildController.SetSpell))]
         [HarmonyPatch(new Type[] { typeof(BlueprintAbility), typeof(int), typeof(bool) })]
@@ -326,7 +330,6 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-
         // Fixed the UI for selecting new spells (to switch the spellbook correctly on clicking a slot)
         [HarmonyPatch(typeof(CharBPhaseSpells), nameof(CharBPhaseSpells.OnChangeCurrentCollection))]
         static class CharBPhaseSpells_OnChangeCurrentCollection_Patch {
@@ -396,6 +399,7 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
+#endif
 
         // Fixed a vanilla PFK bug that caused dragon bloodline to be displayed in Magus' feats tree
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyProgressions")]

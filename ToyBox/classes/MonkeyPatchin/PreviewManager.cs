@@ -85,11 +85,13 @@ namespace ToyBox {
             var cueResults = new List<Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>>();
             var toCheck = new Queue<Tuple<BlueprintCueBase, int>>();
             isRecursive = false;
+            var visited = new HashSet<BlueprintAnswerBase> { };
+            visited.Add(answer);
             if (answer.NextCue.Cues.Count > 0) {
                 toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(answer.NextCue.Cues[0], 1));
             }
             cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>(
-                answer.ParentAsset as BlueprintCueBase,
+                null,
                 0,
                 answer.OnSelect.Actions,
                 answer.AlignmentShift
@@ -107,8 +109,12 @@ namespace ToyBox {
                         cue.AlignmentShift
                         ));
                     if (cue.Answers.Count > 0) {
-                        if (cue.Answers[0] == answer.ParentAsset) isRecursive = true;
-                        break;
+                        var subAnswer = cue.Answers[0].Get();
+                        if (visited.Contains(subAnswer)) {
+                            isRecursive = true;
+                            break;
+                        }
+                        visited.Add(subAnswer);
                     }
                     if (cue.Continue.Cues.Count > 0) {
                         toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(cue.Continue.Cues[0], currentDepth + 1));
@@ -122,10 +128,12 @@ namespace ToyBox {
                         null
                         ));
                     if (page.Answers.Count > 0) {
-                        if (page.Answers[0] == answer.ParentAsset) {
+                        var subAnswer = page.Answers[0].Get();
+                        if (visited.Contains(subAnswer)) {
                             isRecursive = true;
                             break;
                         }
+                        visited.Add(subAnswer);
                         if (page.Answers[0] is BlueprintAnswersList) break;
                     }
                     if (page.Cues.Count > 0) {
@@ -140,10 +148,12 @@ namespace ToyBox {
                     foreach (var c in sequence.Cues) if (c.Get().CanShow()) toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
                     if (sequence.Exit != null) {
                         var exit = sequence.Exit;
-                        if (exit.Answers.Count > 0) {
-                            if (exit.Answers[0] == answer.ParentAsset) isRecursive = true;
+                        var subAnswer = exit.Answers[0];
+                        if (visited.Contains(subAnswer)) {
+                            isRecursive = true;
                             break;
                         }
+                        visited.Add(subAnswer);
                         if (exit.Continue.Cues.Count > 0) {
                             toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
                         }
@@ -266,7 +276,8 @@ namespace ToyBox {
                     var solutions = blueprint.Solutions;
                     var resolutions = solutions.GetResolutions(leader.Type);
                     solutionText.text += "<size=75%>";
-
+#if false
+                    TODO - does this matter in WoTR?  It seems like the ability to get alignment or name is gone from LeaderState
                     var leaderAlignmentMask = leader.LeaderSelection.Alignment.ToMask();
                     bool isValid(EventResult result) => (leaderAlignmentMask & result.LeaderAlignment) != AlignmentMaskType.None;
                     var validResults = resolutions.Where(isValid);
@@ -274,6 +285,7 @@ namespace ToyBox {
                     foreach (var eventResult in validResults) {
                         solutionText.text += FormatResult(kingdomEventView.Task.Event, eventResult.Margin, leaderAlignmentMask, leader.Type);
                     }
+#endif
                     //Calculate best result
                     int bestResult = 0;
                     KingdomStats.Changes bestEventResult = null;
@@ -297,12 +309,16 @@ namespace ToyBox {
                     if (bestEventResult != null) {
                         solutionText.text += "<size=50%>\n<size=75%>";
                         solutionText.text += "Best Result: Leader " + bestLeader + " - Alignment " + bestAlignment + "\n";
+#if false
                         if (bestLeader == leader.Type && (leaderAlignmentMask & bestAlignment) != AlignmentMaskType.None) {
                             solutionText.text += "<color=#308014>";
                         }
                         else {
                             solutionText.text += "<color=#808080>";
                         }
+#else
+                        solutionText.text += "<color=#808080>";
+#endif
                         solutionText.text += FormatResult(kingdomEventView.Task.Event, EventResult.MarginType.GreatSuccess, bestAlignment, bestLeader);
                         solutionText.text += "</color>";
                     }
