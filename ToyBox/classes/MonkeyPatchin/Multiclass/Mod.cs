@@ -56,6 +56,5 @@ namespace ToyBox.Multiclass {
         public LibraryScriptableObject LibraryObject => typeof(ResourcesLibrary).GetFieldValue<LibraryScriptableObject>("s_LibraryObject");
 
         public Player Player => Game.Instance.Player;
-
     }
 }

@@ -19,7 +19,6 @@ namespace ToyBox {
     public static class MoveThroughOthers {
         // moving through ... feature
         public static Settings settings { get { return Main.settings; } }
-
         [HarmonyPatch(typeof(UnitMovementAgent), nameof(UnitMovementAgent.AvoidanceDisabled), MethodType.Getter)]
         static class UnitMovementAgent_AvoidanceDisabled_Patch {
             [HarmonyPostfix]
@@ -44,8 +43,8 @@ namespace ToyBox {
         }
 
         // modify collision radius
-        [HarmonyPatch(typeof(UnitMovementAgent), nameof(UnitMovementAgent.Corpulence), MethodType.Getter)]
-        static class UnitMovementAgent_get_Corpulence_Patch {
+        [HarmonyPatch(typeof(UnitMovementAgentBase), nameof(UnitMovementAgent.Corpulence), MethodType.Getter)]
+        static class UnitMovementAgentBaset_get_Corpulence_Patch {
             [HarmonyPostfix]
             static void Postfix(ref float __result) {
                     __result *= settings.collisionRadiusMultiplier;
