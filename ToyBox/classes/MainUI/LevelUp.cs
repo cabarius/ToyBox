@@ -47,10 +47,6 @@ namespace ToyBox {
         public static void ResetGUI() { }
         public static void OnGUI() {
             UI.HStack("Character Creation", 1,
-                        () => UI.Toggle("Ignore Attribute Cap", ref settings.toggleIgnoreAttributeStatCapChargen, 0),
-                        () => UI.Toggle("Ignore Remaining Attribute Points", ref settings.toggleIgnoreAttributePointsRemainingChargen, 0),
-                        () => UI.Toggle("Ignore Alignment", ref settings.toggleIgnoreAttributeStatCapChargen, 0),
-
                         () => UI.Slider("Build Points (Main)", ref settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", UI.AutoWidth()),
                         () => UI.Slider("Build Points (Mercenary)", ref settings.characterCreationAbilityPointsMerc, 1, 200, 20, "", UI.AutoWidth()),
                         () => UI.Slider("Ability Max", ref settings.characterCreationAbilityPointsMax, 0, 50, 18, "", UI.AutoWidth()),
@@ -58,16 +54,25 @@ namespace ToyBox {
                         () => { }
                     );
             UI.Div(0, 25);
-            UI.HStack("Level Up", 1,
+            UI.HStack("Create & Level Up", 1,
                 () => UI.Slider("Feature Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()),
+                () => {
+                    UI.Toggle("Ignore Attribute Cap", ref settings.toggleIgnoreAttributeCap, 0);
+                    UI.Space(25);
+                    UI.Toggle("Ignore Remaining Attribute Points", ref settings.toggleIgnoreAttributePointsRemaining, 0);
+                },
+                () => {
+                    UI.Toggle("Ignore Skill Cap", ref settings.toggleIgnoreSkillCap, 0);
+                    UI.Space(73);
+                    UI.Toggle("Ignore Remaining Skill Points", ref settings.toggleIgnoreSkillPointsRemaining, 0);
+                    },
                 () => UI.Toggle("Always Able To Level Up", ref settings.toggleNoLevelUpRestrictions, 0),
                 () => UI.Toggle("Add Full Hit Die Value", ref settings.toggleFullHitdiceEachLevel, 0),
                 () => {
                     UI.Toggle("Ignore Class And Feat Restrictions", ref settings.toggleIgnorePrerequisites, 0);
                     UI.Space(25);
                     UI.Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
-
-                },
+                    },
                 () => UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref settings.toggleFeaturesIgnorePrerequisites, 0),
                 () => UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref settings.toggleIgnoreCasterTypeSpellLevel, 0),
                 () => UI.Toggle("Ignore Forbidden Archetypes", ref settings.toggleIgnoreForbiddenArchetype, 0),
@@ -77,9 +82,6 @@ namespace ToyBox {
 #if DEBUG
                     () => UI.Toggle("Lock Character Level", ref settings.toggleLockCharacterLevel, 0),
                 //                    () => UI.Toggle("Ignore Alignment Restrictions", ref settings.toggleIgnoreAlignmentRestriction, 0),
-                () => UI.Toggle("Ignore Remaining Attribute Points", ref settings.toggleIgnoreAttributePointsRemaining, 0),
-                () => UI.Toggle("Ignore Skill Cap", ref settings.toggleIgnoreSkillCap, 0),
-                () => UI.Toggle("Ignore Remaining Skill Points", ref settings.toggleIgnoreSkillPointsRemaining, 0),
 #endif
 #if false
                 // Do we need these or is it covered by toggleFeaturesIgnorePrerequisites
