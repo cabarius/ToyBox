@@ -1,6 +1,6 @@
 ﻿// Copyright (c) 2018 fireundubh <fireundubh@gmail.com>
 // This code is licensed under MIT license (see LICENSE for details)
-// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using System;
 using System.Collections.Generic;
 using System.Linq;

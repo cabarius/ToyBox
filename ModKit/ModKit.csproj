@@ -17,6 +17,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>5</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 	
   <ItemGroup>
@@ -28,7 +29,7 @@
 		  <Pack>True</Pack>
 		  <PackagePath></PackagePath>
 	  </None>
-	  <None Include="ModKitSrc.shproj">
+	  <None Include="ModKitSrc.projitems">
 		  <Pack>True</Pack>
 		  <PackagePath></PackagePath>
 	  </None>

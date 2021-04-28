@@ -20,17 +20,17 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\ToyBox\</OutputPath>
+    <OutputPath>bin\Debug\0ToyBox0\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>none</ErrorReport>
-    <WarningLevel>0</WarningLevel>
+    <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\ToyBox\</OutputPath>
+    <OutputPath>bin\Release\0ToyBox0\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -60,6 +60,14 @@
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Owlcat.Runtime.Core">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.UI">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Owlcat.Runtime.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Owlcat.Runtime.Visual">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
       <Private>False</Private>
@@ -135,9 +143,9 @@
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Logging.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
-    <Compile Include="classes\Infrastructure\Borrowed\PreviewManager.cs" />
+    <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\Infrastructure\UnitEntityDetails.cs" />
-    <Compile Include="classes\Infrastructure\Borrowed\PreviewUtilities.cs" />
+    <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
@@ -184,9 +192,13 @@
     <Error Condition="!Exists('..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>echo "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll*"
-copy /Y "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).dll"
-copy /Y "$(TargetDir)$(TargetName).pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\$(ProjectName)\$(ProjectName).pdb"
+    <PostBuildEvent>echo "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+xcopy /Y "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\0$(ProjectName)0\$(ProjectName).dll"
+xcopy /Y "$(TargetDir)$(TargetName).pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\0$(ProjectName)0\$(ProjectName).pdb"
 </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

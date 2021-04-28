@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // Special thanks to @SpaceHampster and @Velk17 from Pathfinder: Wrath of the Rightous Discord server for teaching me how to mod Unity games
 using UnityEngine;
 using UnityModManagerNet;
@@ -41,6 +41,7 @@ using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using GL = UnityEngine.GUILayout;
 using ModKit;
+using ModKit.Utility;
 
 namespace ToyBox {
 #if DEBUG
@@ -57,6 +58,8 @@ namespace ToyBox {
         public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
 
         static Exception caughtException = null;
+        public static void Log(string s) { if (modEntry != null) modEntry.Logger.Log(s); }
+        public static void Log(int indent, string s) { Log("    ".Repeat(indent) + s); }
 
         static bool Load(UnityModManager.ModEntry modEntry) {
             try {
@@ -69,7 +72,7 @@ namespace ToyBox {
                 Logger.modEntryPath = modEntry.Path;
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
-                HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+                //HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
                 modEntry.OnToggle = OnToggle;
                 modEntry.OnGUI = OnGUI;
@@ -129,7 +132,7 @@ namespace ToyBox {
                 UI.TabBar(ref settings.selectedTab,
                     () => {
                         if (BlueprintBrowser.GetBlueprints() == null) {
-                            UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.progress.ToString("P2").cyan().bold());
+                            UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
                         }
                         else { UI.Space(25); }
                     },
