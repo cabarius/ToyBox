@@ -148,6 +148,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+        
         [HarmonyPatch(typeof(SpendAttributePoint), "Check")]
         static class SpendAttributePoint_Check_Patch {
             private static void Postfix(ref bool __result) {
@@ -160,12 +161,12 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(StatsDistribution), "CanAdd", new Type[] { typeof(StatType) })]
         static class StatsDistribution_CanAdd_Patch {
             public static bool Prefix(SpendSkillPoint __instance) {
-                return !(settings.toggleIgnoreAttributePointsRemaining || settings.toggleIgnoreAttributeCap);
+                return !settings.toggleIgnoreAttributeCap;
             }
             private static void Postfix(ref bool __result, StatsDistribution __instance, StatType attribute) {
                __result = __instance.Available 
                     && (settings.toggleIgnoreAttributeCap || __instance.StatValues[attribute] < 18)
-                    && (settings.toggleIgnoreAttributePointsRemaining || __instance.GetAddCost(attribute) <= __instance.Points);
+                    && (__instance.GetAddCost(attribute) <= __instance.Points);
             }
         }
         // ignoreSkillPointsRemaining
