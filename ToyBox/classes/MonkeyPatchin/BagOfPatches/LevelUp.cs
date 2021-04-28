@@ -122,6 +122,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -138,7 +139,73 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        // ignoreAttributesPointsRemainng
+        [HarmonyPatch(typeof(StatsDistribution), "IsComplete")]
+        static class StatsDistribution_IsComplete_Patch {
+            private static void Postfix(ref bool __result) {
+                if (settings.toggleIgnoreAttributePointsRemaining) {
+                    __result = true;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SpendAttributePoint), "Check")]
+        static class SpendAttributePoint_Check_Patch {
+            private static void Postfix(ref bool __result) {
+                if (settings.toggleIgnoreAttributePointsRemaining) {
+                    __result = true;
+                }
+            }
+        }
+        // ignoreAttributeCap
+        [HarmonyPatch(typeof(StatsDistribution), "CanAdd", new Type[] { typeof(StatType) })]
+        static class StatsDistribution_CanAdd_Patch {
+            public static bool Prefix(SpendSkillPoint __instance) {
+                return !(settings.toggleIgnoreAttributePointsRemaining || settings.toggleIgnoreAttributeCap);
+            }
+            private static void Postfix(ref bool __result, StatsDistribution __instance, StatType attribute) {
+               __result = __instance.Available 
+                    && (settings.toggleIgnoreAttributeCap || __instance.StatValues[attribute] < 18)
+                    && (settings.toggleIgnoreAttributePointsRemaining || __instance.GetAddCost(attribute) <= __instance.Points);
+            }
+        }
+        // ignoreSkillPointsRemaining
+        [HarmonyPatch(typeof(CharGenSkillsPhaseVM), "SelectionStateIsCompleted")]
+        static class CharGenSkillsPhaseVM_SelectionStateIsCompleted_Patch {
+            private static void Postfix(ref bool __result) {
+                if (settings.toggleIgnoreSkillPointsRemaining) {
+                    __result = true;
+                }
+            }
+        }
+        // ignoreSkillPointsRemaing, ignoreSkillCap
+        [HarmonyPatch(typeof(SpendSkillPoint), "Check", new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        static class SpendSkillPoint_Check_Patch {
+            public static bool Prefix(SpendSkillPoint __instance) {
+                return !(settings.toggleIgnoreSkillCap || settings.toggleIgnoreSkillPointsRemaining);
+            }
+            private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) {
+                __result = (StatTypeHelper.Skills).Contains<StatType>(__instance.Skill)
+                    && (settings.toggleIgnoreSkillCap || unit.Stats.GetStat(__instance.Skill).BaseValue < state.NextCharacterLevel)
+                    && (settings.toggleIgnoreSkillPointsRemaining || state.SkillPointsRemaining > 0);
+            }
+        }
+        // ignoreSkillCap
+        [HarmonyPatch(typeof(CharGenSkillAllocatorVM), "UpdateSkillAllocator")]
+        static class CharGenSkillAllocatorVM_UpdateSkillAllocator_Patch {
+            public static bool Prefix(CharGenSkillAllocatorVM __instance) {
+                if (settings.toggleIgnoreSkillCap) {
+                    __instance.IsClassSkill.Value = (bool)__instance.Skill?.ClassSkill;
+                    ModifiableValue stat1 = __instance.m_LevelUpController.Unit.Stats.GetStat(__instance.StatType);
+                    ModifiableValue stat2 = __instance.m_LevelUpController.Preview.Stats.GetStat(__instance.StatType);
+                    __instance.CanAdd.Value = !__instance.m_LevelUpController.State.IsSkillPointsComplete() && __instance.m_LevelUpController.State.SkillPointsRemaining > 0;
+                    __instance.CanRemove.Value = stat2.BaseValue > stat1.BaseValue;
+                    return false;
+                }
+                return true;
+            }
+        }
 
+        // full HD
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyHitPoints", new Type[] { typeof(LevelUpState), typeof(ClassData), typeof(UnitDescriptor) })]
         static class ApplyClassMechanics_ApplyHitPoints_Patch {
             private static void Postfix(LevelUpState state, ClassData classData, ref UnitDescriptor unit) {
