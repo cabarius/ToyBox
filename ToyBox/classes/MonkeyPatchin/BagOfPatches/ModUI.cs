@@ -126,7 +126,6 @@ using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class ModUI {
-
         [HarmonyPatch(typeof(UnityModManager.UI), "Update")]
         internal static class UnityModManager_UI_Update_Patch {
             static Dictionary<int, float> scrollOffsets = new Dictionary<int, float> { };

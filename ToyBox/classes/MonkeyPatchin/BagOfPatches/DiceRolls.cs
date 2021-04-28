@@ -201,6 +201,5 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
     }
 }

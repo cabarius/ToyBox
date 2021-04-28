@@ -129,7 +129,6 @@ namespace ToyBox.BagOfPatches {
         public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
-
         [HarmonyPatch(typeof(AbilityTargetsAround), "Select")]
         public static class AbilityTargetsAround_Select_Patch {
             public static void Postfix(ref IEnumerable<TargetWrapper> __result, AbilityTargetsAround __instance, ConditionsChecker ___m_Condition, AbilityExecutionContext context, TargetWrapper anchor) {
@@ -195,10 +194,11 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+//        public bool IsSuccessRoll(int d20, int successBonus = 0) => d20 + this.TotalBonus + successBonus >= this.DC;
+        [HarmonyPatch(typeof(RuleSkillCheck), "IsSuccessRoll")]
+        [HarmonyPatch(new Type[] { typeof(int), typeof(int) })]
 
-
-        [HarmonyPatch(typeof(RuleSkillCheck), "IsPassed", MethodType.Getter)]
-        public static class RuleSkillCheck_IsPassed_Patch {
+        public static class RuleSkillCheck_IsSuccessRoll_Patch {
             private static void Postfix(ref bool __result, RuleSkillCheck __instance) {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     if (__instance.Reason != null) {
@@ -212,7 +212,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RulePartySkillCheck), "IsPassed", MethodType.Getter)]
+        [HarmonyPatch(typeof(RulePartySkillCheck), "Success", MethodType.Getter)]
         public static class RulePartySkillCheck_IsPassed_Patch {
             private static void Postfix(ref bool __result, RulePartySkillCheck __instance) {
                 if (settings.toggleNoFriendlyFireForAOE) {

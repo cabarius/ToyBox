@@ -72,7 +72,7 @@ namespace ToyBox {
                 Logger.modEntryPath = modEntry.Path;
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
-                //HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+                HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
                 modEntry.OnToggle = OnToggle;
                 modEntry.OnGUI = OnGUI;

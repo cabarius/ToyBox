@@ -332,7 +332,7 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
-        #endregion
+#endregion
 #endif
     }
 }
