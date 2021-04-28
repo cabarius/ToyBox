@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
@@ -73,13 +73,13 @@ namespace ToyBox {
 
     public static class BlueprintExensions {
         private static ConditionalWeakTable<object, string> cachedCollationNames = new ConditionalWeakTable<object, string> { };
-        public static String GetDisplayName(this BlueprintScriptableObject bp) { return bp.name; }
+        public static String GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
         public static String GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
             if (name == null || name.Length == 0) name = bp.name.Replace("Spellbook", "");
             return name;
         }
-        public static String CollationName(this BlueprintScriptableObject bp) {
+        public static String CollationName(this SimpleBlueprint bp) {
             string collationName;
             cachedCollationNames.TryGetValue(bp, out collationName);
             if (collationName != null) return collationName;
@@ -122,33 +122,33 @@ namespace ToyBox {
             return typeName;
         }
 
-        static Dictionary<Type, List<BlueprintScriptableObject>> blueprintsByType = new Dictionary<Type, List<BlueprintScriptableObject>>();
-        public static List<BlueprintScriptableObject> BlueprintsOfType(Type type) {
+        static Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new Dictionary<Type, List<SimpleBlueprint>>();
+        public static List<SimpleBlueprint> BlueprintsOfType(Type type) {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();
-            if (blueprints == null) return new List<BlueprintScriptableObject>();
+            if (blueprints == null) return new List<SimpleBlueprint>();
             var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }
 
-        public static List<BlueprintScriptableObject> BlueprintsOfType<BPType>() where BPType : BlueprintScriptableObject {
+        public static List<SimpleBlueprint> BlueprintsOfType<BPType>() where BPType : SimpleBlueprint {
             var type = typeof(BPType);
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();
-            if (blueprints == null) return new List<BlueprintScriptableObject>();
+            if (blueprints == null) return new List<SimpleBlueprint>();
             var filtered = blueprints.Where((bp) => (bp is BPType) ? true : false).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }
 
-        public static List<BlueprintScriptableObject> GetBlueprints<T>() where T : BlueprintScriptableObject {
+        public static List<SimpleBlueprint> GetBlueprints<T>() where T : SimpleBlueprint {
             return BlueprintsOfType<T>();
         }
         public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
             int count = 0;
             NoSelectionIfAlreadyHasFeature component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();
-            if ((UnityEngine.Object)component == (UnityEngine.Object)null)
+            if (component == null)
                 return count;
             if (component.AnyFeatureFromSelection) {
                 foreach (BlueprintFeature allFeature in selection.AllFeatures) {

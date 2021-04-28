@@ -70,10 +70,10 @@ using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Log;
 using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM.CharGen;
-using Kingmaker.UI.MVVM.CharGen.Phases;
-using Kingmaker.UI.MVVM.CharGen.Phases.Mythic;
-using Kingmaker.UI.RestCamp;
+using Kingmaker.UI.MVVM._PCView.CharGen;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+//using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
 using Kingmaker.UnitLogic;
@@ -400,7 +400,7 @@ namespace ToyBox.BagOfPatches {
                         }
                         Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
                         BlueprintProgression progression = blueprintFeature as BlueprintProgression;
-                        if ((UnityEngine.Object)progression != (UnityEngine.Object)null) {
+                        if (progression != null) {
                             //Logger.Log($"        BlueprintProgression: {progression}");
                             LevelUpHelper.UpdateProgression(state, unit, progression);
                         }

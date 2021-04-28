@@ -70,10 +70,10 @@ using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Log;
 using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM.CharGen;
-using Kingmaker.UI.MVVM.CharGen.Phases;
-using Kingmaker.UI.MVVM.CharGen.Phases.Mythic;
-using Kingmaker.UI.RestCamp;
+using Kingmaker.UI.MVVM._PCView.CharGen;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+//using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
 using Kingmaker.UnitLogic;
@@ -140,7 +140,7 @@ namespace ToyBox.BagOfPatches {
                         __result = Enumerable.Empty<TargetWrapper>();
                         return;
                     }
-                    switch (__instance.TargetType) {
+                    switch (__instance.m_TargetType) {
                         case TargetType.Enemy:
                             targets = targets.Where(caster.IsEnemy);
                             break;
@@ -181,7 +181,7 @@ namespace ToyBox.BagOfPatches {
         public static class RuleDealDamage_ApplyDifficultyModifiers_Patch {
             public static void Postfix(ref int __result, RuleDealDamage __instance, int damage) {
                 if (settings.toggleNoFriendlyFireForAOE) {
-                    BlueprintScriptableObject blueprint = __instance.Reason.Context?.AssociatedBlueprint;
+                    SimpleBlueprint blueprint = __instance.Reason.Context?.AssociatedBlueprint;
                     if (!(blueprint is BlueprintBuff)) {
                         BlueprintAbility blueprintAbility = __instance.Reason.Context?.SourceAbility;
                         if (blueprintAbility != null &&

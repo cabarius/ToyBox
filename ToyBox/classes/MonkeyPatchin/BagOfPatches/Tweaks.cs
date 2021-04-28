@@ -70,10 +70,11 @@ using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Log;
 using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM.CharGen;
-using Kingmaker.UI.MVVM.CharGen.Phases;
-using Kingmaker.UI.MVVM.CharGen.Phases.Mythic;
-using Kingmaker.UI.RestCamp;
+using Kingmaker.UI.MVVM._PCView.CharGen;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+using Kingmaker.UI.MVVM._VM.MainMenu;
+//using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
 using Kingmaker.UnitLogic;
@@ -165,12 +166,12 @@ namespace ToyBox.BagOfPatches {
                     if (___m_KingdomEventView != null) {
                         EventBus.RaiseEvent((IEventSceneHandler h) => h.OnEventSelected(null, ___m_Cart));
 
-                        if (___m_KingdomEventView.IsFinished || ___m_KingdomEventView.AssignedLeader == null || ___m_KingdomEventView.Blueprint.NeedToVisitTheThroneRoom) {
+                        if (___m_KingdomEventView.IsFinished || ___m_KingdomEventView.m_Event.AssociatedTask?.AssignedLeader == null || ___m_KingdomEventView.Blueprint.NeedToVisitTheThroneRoom) {
                             return;
                         }
 
                         bool inProgress = ___m_KingdomEventView.IsInProgress;
-                        BlueprintUnit leader = ___m_KingdomEventView.AssignedLeader.Blueprint;
+                        var leader = ___m_KingdomEventView.m_Event.AssociatedTask?.AssignedLeader;
 
                         if (!inProgress || leader == null) {
                             return;
@@ -647,13 +648,13 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        [HarmonyPatch(typeof(MainMenuButtons), "Update")]
+        [HarmonyPatch(typeof(MainMenuBoard), "Update")]
         static class MainMenuButtons_Update_Patch {
             static void Postfix() {
                 if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
-                    EventBus.RaiseEvent<IUIMainMenu>((Action<IUIMainMenu>)(h => h.LoadLastGame()));
+                    var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
+                    mainMenuVM.EnterGame(new Action(mainMenuVM.LoadLastSave));
                 }
                 Main.freshlyLaunched = false;
             }

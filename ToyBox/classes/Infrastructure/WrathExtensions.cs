@@ -57,7 +57,7 @@ using Kingmaker.Tutorial;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.LevelUp;
-using Kingmaker.UI.LevelUp.Phase;
+//using Kingmaker.UI.LevelUp.Phase;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
@@ -93,7 +93,7 @@ namespace ToyBox {
             }
             return RGBA.grey;
         }
-        public static string GetDescription(this BlueprintScriptableObject bp)
+        public static string GetDescription(this SimpleBlueprint bp)
         // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {
             try {

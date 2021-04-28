@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using UnityModManagerNet;
 using UnityEngine.UI;
@@ -44,7 +44,7 @@ using ModKit;
 
 namespace ToyBox {
     public class FactsEditor {
-        public static IEnumerable<BlueprintScriptableObject> filteredBPs = null;
+        public static IEnumerable<SimpleBlueprint> filteredBPs = null;
         static String prevCallerKey = "";
         static String searchText = "";
         static int searchLimit = 100;
@@ -52,11 +52,11 @@ namespace ToyBox {
         public static int matchCount = 0;
 
         static bool showAll = false;
-        public static void UpdateSearchResults(String searchText, int limit, IEnumerable<BlueprintScriptableObject> blueprints) {
+        public static void UpdateSearchResults(String searchText, int limit, IEnumerable<SimpleBlueprint> blueprints) {
             if (blueprints == null) return;
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
-            var filtered = new List<BlueprintScriptableObject>();
-            foreach (BlueprintScriptableObject blueprint in blueprints) {
+            var filtered = new List<SimpleBlueprint>();
+            foreach (SimpleBlueprint blueprint in blueprints) {
                 var name = blueprint.name.ToLower();
                 var type = blueprint.GetType();
                 if (terms.All(term => name.Contains(term))) {
@@ -70,8 +70,8 @@ namespace ToyBox {
         static public void OnGUI<T>(String callerKey,
                                     UnitEntityData unit,
                                     List<T> facts,
-                                    Func<T, BlueprintScriptableObject> blueprint,
-                                    IEnumerable<BlueprintScriptableObject> blueprints,
+                                    Func<T, SimpleBlueprint> blueprint,
+                                    IEnumerable<SimpleBlueprint> blueprints,
                                     Func<T, String> title,
                                     Func<T, String> description = null,
                                     Func<T, int> value = null,
@@ -136,11 +136,11 @@ namespace ToyBox {
             mutatorLookup.Remove("<");
             mutatorLookup.Remove(">");
 
-            BlueprintScriptableObject toAdd = null;
-            BlueprintScriptableObject toRemove = null;
-            BlueprintScriptableObject toIncrease = null;
-            BlueprintScriptableObject toDecrease = null;
-            var toValues = new Dictionary<String, BlueprintScriptableObject>();
+            SimpleBlueprint toAdd = null;
+            SimpleBlueprint toRemove = null;
+            SimpleBlueprint toIncrease = null;
+            SimpleBlueprint toDecrease = null;
+            var toValues = new Dictionary<String, SimpleBlueprint>();
             var sorted = facts.OrderBy((f) => title(f));
             matchCount = 0;
             UI.Div(100);
