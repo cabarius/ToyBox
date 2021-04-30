@@ -131,7 +131,7 @@ namespace ToyBox.Multiclass {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
         public static LevelUpController levelUpController { get; internal set; }
-#if DEBUG
+#if false //DEBUG
         [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor)]
         [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(bool), typeof(LevelUpState.CharBuildMode) })]
         static class LevelUpController_ctor_Patch {
