@@ -54,6 +54,12 @@ namespace ToyBox {
                         () => { }
                     );
             UI.Div(0, 25);
+            UI.HStack("Unlocks", 4, () => {
+                UI.ActionButton("All Mythic Paths", () => Actions.UnlockAllMythicPaths());
+                UI.Space(25);
+                UI.Label("Warning! Using this might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".green());
+            });
+            UI.Div(0, 25);
             UI.HStack("Create & Level Up", 1,
                 () => UI.Slider("Feature Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()),
                 () => {
