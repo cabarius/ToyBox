@@ -123,7 +123,7 @@ namespace ToyBox {
 
                 }
 #else
-                if (BlueprintLoader.Shared.LoadInProgress()) { return null; }
+                if (BlueprintLoader.Shared.IsLoading) { return null; }
                 else {
                     Logger.Log($"calling BlueprintLoader.Load");
                     BlueprintLoader.Shared.Load((bps) => {
@@ -194,6 +194,7 @@ namespace ToyBox {
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
+            if (blueprints == null) BlueprintBrowser.GetBlueprints();
             // Stackable browser
             using (UI.HorizontalScope(UI.Width(450))) {
                 // First column - Type Selection Grid

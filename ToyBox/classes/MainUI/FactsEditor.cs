@@ -41,9 +41,11 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ModKit;
+using ModKit.Utility;
 
 namespace ToyBox {
     public class FactsEditor {
+        public static Settings settings { get { return Main.settings; } }
         public static IEnumerable<SimpleBlueprint> filteredBPs = null;
         static String prevCallerKey = "";
         static String searchText = "";
@@ -57,10 +59,16 @@ namespace ToyBox {
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
             var filtered = new List<SimpleBlueprint>();
             foreach (SimpleBlueprint blueprint in blueprints) {
-                var name = blueprint.name.ToLower();
-                var type = blueprint.GetType();
-                if (terms.All(term => name.Contains(term))) {
+                if (blueprint.AssetGuid.Contains(searchText)
+                    || blueprint.GetType().ToString().Contains(searchText)
+                    ) {
                     filtered.Add(blueprint);
+                }
+                else {
+                    var name = blueprint.name.ToLower();
+                    if (terms.All(term => StringExtensions.Matches(name, term))) {
+                        filtered.Add(blueprint);
+                    }
                 }
             }
             matchCount = filtered.Count();
@@ -151,34 +159,36 @@ namespace ToyBox {
                 String nameLower = name.ToLower();
                 if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => nameLower.Contains(term)))) {
                     matchCount++;
-                    UI.BeginHorizontal();
-                    UI.Space(100);
-                    UI.Label($"{name}".cyan().bold(), UI.Width(400));
-                    UI.Space(30);
-                    if (value != null) {
-                        var v = value(fact);
-                        decrease.BlueprintActionButton(unit, bp, () => { toDecrease = bp; }, 50);
-                        UI.Space(10f);
-                        UI.Label($"{v}".orange().bold(), UI.Width(30));
-                        increase.BlueprintActionButton(unit, bp, () => { toIncrease = bp; }, 50);
-                    }
+                    using (UI.HorizontalScope()) {
+                        UI.Space(100);
+                        UI.Label($"{name}".cyan().bold(), UI.Width(400));
+                        UI.Space(30);
+                        if (value != null) {
+                            var v = value(fact);
+                            decrease.BlueprintActionButton(unit, bp, () => { toDecrease = bp; }, 50);
+                            UI.Space(10f);
+                            UI.Label($"{v}".orange().bold(), UI.Width(30));
+                            increase.BlueprintActionButton(unit, bp, () => { toIncrease = bp; }, 50);
+                        }
 #if false
                     UI.Space(30);
                     add.BlueprintActionButton(unit, bp, () => { toAdd = bp; }, 150);
 #endif
-                    UI.Space(30);
-                    remove.BlueprintActionButton(unit, bp, () => { toRemove = bp; }, 150);
+                        UI.Space(30);
+                        remove.BlueprintActionButton(unit, bp, () => { toRemove = bp; }, 150);
 #if false
                     foreach (var action in actions) {
                         action.MutatorButton(unit, bp, () => { toValues[action.name] = bp; }, 150);
                     }
 #endif
-                    if (description != null) {
-                        UI.Space(30);
-                        var assetID = Main.settings.showAssetIDs ? blueprint(fact).AssetGuid.magenta() + " " : "";
-                        UI.Label(assetID + description(fact).green(), UI.AutoWidth());
+                        if (description != null) {
+                            UI.Space(30);
+
+                            UI.Label(description(fact).green(), UI.AutoWidth());
+                            if (settings.showAssetIDs)
+                                GUILayout.TextField(blueprint(fact).AssetGuid, UI.Width(450));
+                        }
                     }
-                    UI.EndHorizontal();
                     UI.Div(100);
                 }
             }
