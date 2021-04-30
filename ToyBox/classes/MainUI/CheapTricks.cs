@@ -139,12 +139,6 @@ namespace ToyBox {
                 () => { }
                 );
             UI.Div(0, 25);
-            UI.HStack("Unlocks", 4, () => {
-                UI.ActionButton("All Mythic Paths", () => Actions.UnlockAllMythicPaths());
-                UI.Space(25);
-                UI.Label("Warning! Using this might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".green());
-            });
-            UI.Div(0, 25);
             UI.HStack("Preview", 0, () => {
                 UI.Toggle("Dialog Results", ref settings.previewDialogResults, 0);
                 UI.Toggle("Dialog Alignment", ref settings.previewAlignmentRestrictedDialog, 0);

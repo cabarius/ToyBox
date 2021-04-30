@@ -52,6 +52,8 @@ using Kingmaker.Utility;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
+using ModKit.Utility;
+using Kingmaker.DialogSystem.Blueprints;
 
 namespace ToyBox {
     public class BlueprintBrowser {
@@ -102,6 +104,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintGlobalMapPoint>("Map Points", null, bp => bp.GlobalMapZone.ToString()),
             new NamedTypeFilter<BlueprintGlobalMap>("Global Map"),
             new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.Priority.ToString()),
+            new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
             new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp => bp.Parent?.GetBlueprint().NameSafe() ?? ""),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
@@ -156,7 +159,8 @@ namespace ToyBox {
             if (settings.searchText.Trim().Length == 0) {
                 ResetSearch();
             }
-            var terms = settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
+            var searchText = settings.searchText;
+            var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
             selectedTypeFilter = blueprintTypeFilters[settings.selectedBPTypeFilter];
             var selectedType = selectedTypeFilter.type;
             IEnumerable<SimpleBlueprint> bps = null;
@@ -164,9 +168,16 @@ namespace ToyBox {
             else bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
             var filtered = new List<SimpleBlueprint>();
             foreach (SimpleBlueprint blueprint in bps) {
-                var name = blueprint.name.ToLower();
-                if (terms.All(term => name.Contains(term))) {
+                if (blueprint.AssetGuid.Contains(searchText)
+                    || blueprint.GetType().ToString().Contains(searchText)
+                    ) {
                     filtered.Add(blueprint);
+                }
+                else {
+                    var name = blueprint.name.ToLower();
+                    if (terms.All(term => StringExtensions.Matches(name, term))) {
+                        filtered.Add(blueprint);
+                    }
                 }
             }
             filteredBPs = filtered.OrderBy(bp => bp.name);
