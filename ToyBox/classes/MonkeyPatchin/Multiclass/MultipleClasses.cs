@@ -128,7 +128,7 @@ namespace ToyBox.Multiclass {
     static class MultipleClasses {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-#if false //DEBUG
+#if DEBUG
         public static bool IsAvailable() {
             return Main.Enabled &&
                 settings.toggleMulticlass &&
