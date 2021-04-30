@@ -112,11 +112,12 @@ namespace ToyBox {
             coroutine = LoadBlueprints();
             StartCoroutine(coroutine);
         }
-        public bool LoadInProgress() {
-            if (coroutine != null) {
-                return true;
+        public bool IsLoading { get {
+                if (coroutine != null) {
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
     }
 }

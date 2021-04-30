@@ -131,7 +131,7 @@ namespace ToyBox.Multiclass {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
         public static LevelUpController levelUpController { get; internal set; }
-#if false //DEBUG
+#if DEBUG
         [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor)]
         [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(bool), typeof(LevelUpState.CharBuildMode) })]
         static class LevelUpController_ctor_Patch {
@@ -203,6 +203,7 @@ namespace ToyBox.Multiclass {
             }
         }
 #endif
+#if false 
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
@@ -421,6 +422,7 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
+#endif
 #endif
     }
 }
