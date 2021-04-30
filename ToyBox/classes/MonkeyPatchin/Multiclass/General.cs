@@ -144,11 +144,17 @@ namespace ToyBox.Multiclass {
             }
         }
 
+        /*     public static void UpdateProgression(
+                                    [NotNull] LevelUpState state,
+                                    [NotNull] UnitDescriptor unit,
+                                    [NotNull] BlueprintProgression progression)
+        */
         [HarmonyPatch(typeof(LevelUpHelper), "UpdateProgression")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor), typeof(BlueprintProgression) })]
         static class LevelUpHelper_UpdateProgression_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] BlueprintProgression progression) {
-                if (!settings.toggleMulticlass) return false;
+
+                if (!settings.toggleMulticlass) return true;
                 ProgressionData progressionData = unit.Progression.SureProgressionData(progression);
                 int level = progressionData.Level;
                 int nextLevel = progressionData.Blueprint.CalcLevel(unit);
@@ -176,7 +182,6 @@ namespace ToyBox.Multiclass {
                 // || progression.AssetGuid != "fe9220cdc16e5f444a84d85d5fa8e3d5";
             }
         }
-
 #if false
         // TODO - FIXME - what is the replacement for this?
         [HarmonyPatch(typeof(CharBSelectionSwitchSpells), "ParseSpellSelection")]
@@ -203,7 +208,6 @@ namespace ToyBox.Multiclass {
             }
         }
 #endif
-#if false 
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
@@ -422,7 +426,6 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-#endif
 #endif
     }
 }
