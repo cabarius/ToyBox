@@ -254,7 +254,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
         [HarmonyPatch(typeof(IgnorePrerequisites), "Ignore", MethodType.Getter)]
         static class IgnorePrerequisites_Ignore_Patch {
             private static void Postfix(ref bool __result) {
