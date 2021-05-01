@@ -189,7 +189,7 @@ namespace ToyBox.Multiclass {
                         if (characterClass != stateReplacer.SelectedClass && selectedMulticlassSet.Contains(characterClass.AssetGuid)) {
                             stateReplacer.Replace(null, 0);
                             if (new SelectClass(characterClass).Check(state, unit)) {
-                                Logger.ModLoggerDebug($" - {nameof(SelectClass)}.{nameof(SelectClass.Apply)}*({characterClass}, {unit})");
+                                Main.Debug($" - {nameof(SelectClass)}.{nameof(SelectClass.Apply)}*({characterClass}, {unit})");
 
                                 unit.Progression.AddClassLevel_NotCharacterLevel(characterClass);
                                 //state.NextClassLevel = unit.Progression.GetClassLevel(characterClass);
@@ -229,7 +229,7 @@ namespace ToyBox.Multiclass {
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
-                            Logger.ModLoggerDebug($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}[{state.NextClassLevel}], {unit})");
+                            Main.Debug($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}[{state.NextClassLevel}], {unit})");
 
                             __instance.Apply_NoStatsAndHitPoints(state, unit);
                         });

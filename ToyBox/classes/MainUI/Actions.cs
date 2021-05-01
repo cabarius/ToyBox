@@ -238,18 +238,18 @@ namespace ToyBox {
         }
         public static void AddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
-                Logger.Log($"adding spell: {ability.Name}");
+                Main.Log($"adding spell: {ability.Name}");
                 foreach (var spellbook in ch.Spellbooks) {
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
-                    Logger.Log($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
+                    Main.Log($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
                     for (int level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         var allowsSpell = learnable.Contains(ability);
                         var allowText = allowsSpell ? "FOUND" : "did not find";
-                        Logger.Log($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
+                        Main.Log($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
                         if (allowsSpell) {
-                            Logger.Log($"spell level = {level}");
+                            Main.Log($"spell level = {level}");
                             spellbook.AddKnown(level, ability);
                         }
 
@@ -289,10 +289,10 @@ namespace ToyBox {
             for (int i = 20; i >= 1; i--) {
                 int xpBonus = xpTable.GetBonus(i);
 
-                Logger.Log(i + ": " + xpBonus + " | " + xp);
+                Main.Log(i + ": " + xpBonus + " | " + xp);
 
                 if ((xp - xpBonus) >= 0) {
-                    Logger.Log(i + ": " + (xp - xpBonus));
+                    Main.Log(i + ": " + (xp - xpBonus));
                     level = i;
                     break;
                 }

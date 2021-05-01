@@ -127,7 +127,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         //     private static bool CanCopySpell([NotNull] BlueprintAbility spell, [NotNull] Spellbook spellbook) => spellbook.Blueprint.CanCopyScrolls && !spellbook.IsKnown(spell) && spellbook.Blueprint.SpellList.Contains(spell);
@@ -636,7 +636,7 @@ namespace ToyBox.BagOfPatches {
 
                     AddMetamagicFeat component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
-                        Logger.ModLoggerDebug(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
+                        Main.Debug(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
                     }
                     else {
                         Metamagic metamagic = component.Metamagic;
