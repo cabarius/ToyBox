@@ -198,7 +198,7 @@ namespace ToyBox.Multiclass {
                 }
                 else
                     __instance.Hide();
-                return true;
+                return false;
             }
         }
 
@@ -209,13 +209,13 @@ namespace ToyBox.Multiclass {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
                 if ((UnityEngine.Object)state.SelectedClass == (UnityEngine.Object)null)
-                    return true;
+                    return false;
                 SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
                 if ((UnityEngine.Object)component1 != (UnityEngine.Object)null && ((IEnumerable<int>)component1.Levels).Contains<int>(state.NextClassLevel))
-                    return true;
+                    return false;
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData == null || !((UnityEngine.Object)classData.Spellbook != (UnityEngine.Object)null))
-                    return true;
+                    return false;
                 Spellbook spellbook1 = unit.DemandSpellbook(classData.Spellbook);
                 if ((bool)(UnityEngine.Object)state.SelectedClass.Spellbook && (UnityEngine.Object)state.SelectedClass.Spellbook != (UnityEngine.Object)classData.Spellbook) {
                     Spellbook spellbook2 = unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(s => (UnityEngine.Object)s.Blueprint == (UnityEngine.Object)state.SelectedClass.Spellbook));
@@ -228,7 +228,7 @@ namespace ToyBox.Multiclass {
                 int casterLevelBefore = spellbook1.CasterLevel;
                 spellbook1.AddLevelFromClass(classData.CharacterClass);
                 int casterLevelAfter = spellbook1.CasterLevel;
-                if (casterLevelBefore == casterLevelAfter) return true; // Mod line
+                if (casterLevelBefore == casterLevelAfter) return false; // Mod line
                 SpellSelectionData spellSelectionData = state.DemandSpellSelection(spellbook1.Blueprint, spellbook1.Blueprint.SpellList);
                 if ((UnityEngine.Object)spellbook1.Blueprint.SpellsKnown != (UnityEngine.Object)null) {
                     for (int index = 0; index <= 10; ++index) {
@@ -252,7 +252,7 @@ namespace ToyBox.Multiclass {
                 }
                 foreach (AddCustomSpells component2 in spellbook1.Blueprint.GetComponents<AddCustomSpells>())
                     ApplySpellbook.TryApplyCustomSpells(spellbook1, component2, state, unit);
-                return true;
+                return false;
             }
         }
 
@@ -416,6 +416,20 @@ namespace ToyBox.Multiclass {
                     LevelUpHelper.UpdateProgression(state, unit, p);
                 }
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitHelper))]
+        [HarmonyPatch("CopyInternal")]
+        static class UnitProgressionData_CopyFrom_Patch {
+            static void Postfix(UnitEntityData unit, UnitEntityData __result) {
+                //升级时会用这个方法复制一个UnitEntityData，其中涉及到复制UnitProgressionData
+                //默认状况下，复制的UnitProgressionData的CharacterLevel等于所有非神话职业等级之和
+                //如果人物等级不等于这个默认值，会出问题（比如在低于默认值时，可能没到20级就升不了级了，因为非神话职业等级之和已经提前超过了20级）
+                //修正这一点。
+
+                var UnitProgressionData_CharacterLevel = AccessTools.Property(typeof(UnitProgressionData), nameof(UnitProgressionData.CharacterLevel));
+                UnitProgressionData_CharacterLevel.SetValue(__result.Descriptor.Progression, unit.Descriptor.Progression.CharacterLevel);
             }
         }
     }

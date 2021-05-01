@@ -182,11 +182,16 @@ namespace ToyBox.Multiclass {
 
                     // get multi-class setting
                     HashSet<string> selectedMulticlassSet;
-                    if (unit.Unit.CopyOf != null) {
-                        selectedMulticlassSet = unit.Unit.CopyOf.Entity.Descriptor.GetMulticlassSet();
+                    if (!state.IsCharGen()) {
+                        if (unit.Unit.CopyOf != null) {
+                            selectedMulticlassSet = unit.Unit.CopyOf.Entity.Descriptor.GetMulticlassSet();
+                        }
+                        else {
+                            selectedMulticlassSet = unit.GetMulticlassSet();
+                        }
                     }
                     else {
-                        selectedMulticlassSet = unit.GetMulticlassSet();
+                        selectedMulticlassSet = Main.settings.charGenMulticlassSet;
                     }
 
 
