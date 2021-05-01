@@ -71,6 +71,7 @@ using Kingmaker.Assets.UI;
 using ModKit.Utility;
 using static ModKit.Utility.ReflectionCache;
 using Alignment = Kingmaker.Enums.Alignment;
+using ModKit;
 
 namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
