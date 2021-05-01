@@ -68,6 +68,7 @@ using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Sound;
 using System.Runtime.CompilerServices;
+using ModKit;
 
 namespace ToyBox {
 
