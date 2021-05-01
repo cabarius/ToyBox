@@ -374,9 +374,10 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-
+#endif
+#if false
         // Fixed the UI for selecting new spells (to refresh the spell list correctly on clicking a slot when the selections have the same spell list) - spontaneous caster
-        [HarmonyPatch(typeof(CharBFeatureSelector), nameof(CharBFeatureSelector.FillDataSpellLevel))]
+        [HarmonyPatch(typeof(CharBFeatureSelector), nameof(CharBFeatureSelector.FillDataSpellLevel))] 
         [HarmonyPatch(new Type[] { typeof(SpellSelectionData), typeof(int) })]
         static class CharBFeatureSelector_FillDataSpellLevel_Patch {
             public static bool Prefix(CharBFeatureSelector __instance,SpellSelectionData spellSelectionData, int spellLevel) {
@@ -405,7 +406,6 @@ namespace ToyBox.Multiclass {
             }
         }
 #endif
-
         // Fixed a vanilla PFK bug that caused dragon bloodline to be displayed in Magus' feats tree
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyProgressions")]
         static class ApplyClassMechanics_ApplyProgressions_Patch {
