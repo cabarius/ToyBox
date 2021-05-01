@@ -122,6 +122,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
+using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.State;
+using Kingmaker.Globalmap.View;
 
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
@@ -192,6 +195,39 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ref float __result) {
                 float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                 __result = speedMultiplier * __result;
+            }
+        }
+
+        /**
+            GlobalMapState state,
+            GlobalMapView view,
+            IGlobalMapTraveler traveler,
+            float visualStepDistance)
+        */
+        [HarmonyPatch(typeof(GlobalMapMovementUtility), "MoveAlongEdge", new Type[] {
+            typeof(GlobalMapState), typeof(GlobalMapView), typeof(IGlobalMapTraveler), typeof(float)
+            })]
+        public static class GlobalMapMovementUtility_MoveAlongEdge_Patch {
+            public static void Prefix(
+                GlobalMapState state,
+                GlobalMapView view,
+                IGlobalMapTraveler traveler,
+                ref float visualStepDistance) {
+                // TODO - can we get rid of the other map movement multipliers and do them all here?
+                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
+                    float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                    visualStepDistance = speedMultiplier * visualStepDistance;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(GlobalMapArmyState), "SpendMovementPoints", new Type[] { typeof(float) })]
+        public static class GlobalMapArmyState_SpendMovementPoints_Patch {
+            public static void Prefix(GlobalMapArmyState __instance, ref float points) {
+                if (__instance.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
+                    float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                    points = points / speedMultiplier;
+                }
             }
         }
 

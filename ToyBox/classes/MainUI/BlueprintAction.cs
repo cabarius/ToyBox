@@ -250,6 +250,27 @@ namespace ToyBox {
                 (bp, ch, n) => ch.Descriptor.RemoveFact(bp),
                 (bp, ch) => ch.Descriptor.HasFact(bp)
             ),
+            // Quests 
+            new BlueprintAction<BlueprintQuest>("Start",
+                (bp, ch, n) => Game.Instance.Player.QuestBook.GiveObjective(bp.Objectives.First()),
+                (bp, ch) => Game.Instance.Player.QuestBook.GetQuest(bp) == null
+                ),
+            new BlueprintAction<BlueprintQuest>("Complete",
+                (bp, ch, n) => {
+                    foreach (var objective in bp.Objectives) {
+                        Game.Instance.Player.QuestBook.CompleteObjective(objective);
+                    }
+                },
+                (bp, ch) => Game.Instance.Player.QuestBook.GetQuest(bp)?.State == Kingmaker.AreaLogic.QuestSystem.QuestState.Started
+                ),
+            new BlueprintAction<BlueprintQuestObjective>("Start",
+                (bp, ch, n) => Game.Instance.Player.QuestBook.GiveObjective(bp),
+                (bp, ch) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest) == null
+                ),
+            new BlueprintAction<BlueprintQuestObjective>("Complete",
+                (bp, ch, n) => Game.Instance.Player.QuestBook.CompleteObjective(bp),
+                (bp, ch) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest)?.State == Kingmaker.AreaLogic.QuestSystem.QuestState.Started
+                ),
             // Etudes
             new BlueprintAction<BlueprintEtude>("Start",
                 (bp, ch, n) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
