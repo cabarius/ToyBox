@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace ToyBox {
+namespace ModKit {
     public static class Utilties {
 
         public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default(TValue)) {
@@ -95,7 +95,7 @@ namespace ToyBox {
             return new string[] { fields, methods, properties };
         }
     }
-    public static class TB {
+    public static class MK {
         public static bool IsKindOf(this Type type, Type baseType) {
             return type.IsSubclassOf(baseType) || type == baseType;
         }

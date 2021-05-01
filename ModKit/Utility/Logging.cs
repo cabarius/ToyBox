@@ -1,7 +1,5 @@
 ﻿// some stuff borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 using System;
-using ToyBox;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +15,7 @@ namespace ModKit {
         public static UnityModManager.ModEntry.ModLogger modLogger;
         public static string modEntryPath = null;
 
-        public static readonly string logFile = "ToyBox";
+        public static readonly string logFile = "ModKit";
 
         private String path;
         private bool removeHtmlTags = true;
@@ -90,19 +88,19 @@ namespace ModKit {
             Logger.modLogger.Log(message);
         }
         public static void ModLoggerDebug(string message) {
-            if (Main.settings.settingShowDebugInfo) {
+            //if (Main.settings.settingShowDebugInfo) {
                 Logger.modLogger.Log(message);
-            }
+            //}
         }
         public static void ModLoggerDebug(int message) {
-            if (Main.settings.settingShowDebugInfo) {
+            //if (Main.settings.settingShowDebugInfo) {
                 Logger.modLogger.Log(message.ToString());
-            }
+            //}
         }
         public static void ModLoggerDebug(bool message) {
-            if (Main.settings.settingShowDebugInfo) {
+            //if (Main.settings.settingShowDebugInfo) {
                 Logger.modLogger.Log(message.ToString());
-            }
+            //}
         }
     }
 
