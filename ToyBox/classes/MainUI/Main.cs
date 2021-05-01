@@ -58,8 +58,10 @@ namespace ToyBox {
         public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
 
         static Exception caughtException = null;
-        public static void Log(string s) { if (modEntry != null) modEntry.Logger.Log(s); }
+        public static void Log(string s) { if (modEntry != null) ModKit.Logger.Log(s); }
         public static void Log(int indent, string s) { Log("    ".Repeat(indent) + s); }
+        public static void Debug(String s) { if (modEntry != null) ModKit.Logger.ModLoggerDebug(s); }
+        public static void Error(Exception e) { if (modEntry != null) ModKit.Logger.Log(e); }
 
         static bool Load(UnityModManager.ModEntry modEntry) {
             try {
@@ -67,9 +69,9 @@ namespace ToyBox {
                 modEntry.OnUnload = Unload;
 #endif
                 modId = modEntry.Info.Id;
-                Logger.modLogger = modEntry.Logger;
+                ModKit.Logger.modLogger = modEntry.Logger;
                 settings = Settings.Load<Settings>(modEntry);
-                Logger.modEntryPath = modEntry.Path;
+                ModKit.Logger.modEntryPath = modEntry.Path;
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
@@ -80,7 +82,7 @@ namespace ToyBox {
                 multiclassMod = new Multiclass.Mod();
             }
             catch (Exception e) {
-                Logger.Error(e);
+                Main.Error(e);
                 throw e;
             }
             return true;

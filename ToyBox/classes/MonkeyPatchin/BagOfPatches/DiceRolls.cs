@@ -126,7 +126,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 namespace ToyBox.BagOfPatches {
     static class DiceRolls {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
@@ -160,7 +160,7 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.DiceFormula.Dice != DiceType.D20) return;
                 var initiator = __instance.Initiator;
                 int result = __instance.m_Result;
-                Logger.ModLoggerDebug("Initial D20Roll: " + result);
+                Main.Debug("Initial D20Roll: " + result);
                 if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)) {
                     result = 20;
                 }
@@ -183,7 +183,7 @@ namespace ToyBox.BagOfPatches {
                         result = UnityEngine.Random.Range(min, 20);
                     }
                 }
-                Logger.ModLoggerDebug("Modified D20Roll: " + result);
+                Main.Debug("Modified D20Roll: " + result);
                 __instance.m_Result = result;
             }
         }
@@ -193,11 +193,11 @@ namespace ToyBox.BagOfPatches {
             static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
                     __result = 1;
-                    Logger.ModLoggerDebug("Modified InitiativeRoll: " + __result);
+                    Main.Debug("Modified InitiativeRoll: " + __result);
                 }
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
                     __result = 20;
-                    Logger.ModLoggerDebug("Modified InitiativeRoll: " + __result);
+                    Main.Debug("Modified InitiativeRoll: " + __result);
                 }
             }
         }

@@ -225,7 +225,7 @@ namespace ToyBox {
                     if (results.Count > 0) __result += $" \n<size=75%>[{results.Join()}]</size>";
                 }
                 catch (Exception ex) {
-                    Logger.Error(ex);
+                    Main.Error(ex);
                 }
             }
         }
@@ -250,7 +250,7 @@ namespace ToyBox {
                     __instance.DialogPhrase.text += text;
                 }
                 catch (Exception ex) {
-                    Logger.Error(ex);
+                    Main.Error(ex);
                 }
             }
         }
@@ -325,7 +325,7 @@ namespace ToyBox {
                 }
 
                 catch (Exception ex) {
-                    Logger.Error(ex);
+                    Main.Error(ex);
                 }
             }
         }
@@ -346,7 +346,7 @@ namespace ToyBox {
                     }
                 }
                 catch (Exception ex) {
-                    Logger.Error(ex);
+                    Main.Error(ex);
                 }
             }
         }

@@ -143,7 +143,6 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-
         /*     public static void UpdateProgression(
                                     [NotNull] LevelUpState state,
                                     [NotNull] UnitDescriptor unit,
@@ -213,15 +212,16 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
-                if (!settings.toggleMulticlass) return false;
+                if (!settings.toggleMulticlass) return true;
+                // this code copies the code from the game so we will return false as not to execute it again.  TODO - can we make this cleaner and more robust to new versions?
                 if (state.SelectedClass == null)
-                    return true;
+                    return false;
                 SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
                 if (component1 != null && ((IEnumerable<int>)component1.Levels).Contains<int>(state.NextClassLevel))
-                    return true;
+                    return false;
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData == null || !(classData.Spellbook != null))
-                    return true;
+                    return false;
                 Spellbook spellbook1 = unit.DemandSpellbook(classData.Spellbook);
                 if ((bool)state.SelectedClass.Spellbook && state.SelectedClass.Spellbook != classData.Spellbook) {
                     Spellbook spellbook2 = unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(s => s.Blueprint == state.SelectedClass.Spellbook));
@@ -258,10 +258,9 @@ namespace ToyBox.Multiclass {
                 }
                 foreach (AddCustomSpells component2 in spellbook1.Blueprint.GetComponents<AddCustomSpells>())
                     ApplySpellbook.TryApplyCustomSpells(spellbook1, component2, state, unit);
-                return true;
+                return false;
             }
         }
-
         // Fixed new spell slots (to be calculated not only from the highest caster level when gaining more than one level of a spontaneous caster at a time)
         [HarmonyPatch(typeof(SpellSelectionData), nameof(SpellSelectionData.SetLevelSpells), new Type[] { typeof(int), typeof(int) })]
         static class SpellSelectionData_SetLevelSpells_Patch {
@@ -273,7 +272,6 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
-
         // Fixed new spell slots (to be calculated not only from the highest caster level when gaining more than one level of a memorizer at a time)
         [HarmonyPatch(typeof(SpellSelectionData), nameof(SpellSelectionData.SetExtraSpells), new Type[] { typeof(int), typeof(int) })]
         static class SpellSelectionData_SetExtraSpells_Patch {
@@ -287,7 +285,6 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-
 #if false
         // TODO - FIXME - what is the replacement for this?
         // Fixed the UI for selecting new spells (to refresh the level tabs of the spellbook correctly on toggling the spellbook)
@@ -410,7 +407,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyProgressions")]
         static class ApplyClassMechanics_ApplyProgressions_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
-                if (!settings.toggleMulticlass) return false;
+                if (!settings.toggleMulticlass) return true;
                 BlueprintCharacterClass blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
                 foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
                     BlueprintProgression p = blueprintProgression;
@@ -423,7 +420,7 @@ namespace ToyBox.Multiclass {
                             );
                     LevelUpHelper.UpdateProgression(state, unit, p);
                 }
-                return true;
+                return false;
             }
         }
 #endif

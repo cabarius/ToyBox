@@ -38,6 +38,14 @@ namespace ModKit {
                 if (_buttonStyle == null) _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft };
                 return _buttonStyle;
             } }
+        private static GUIStyle _toggleStyle;
+        public static GUIStyle toggleStyle {
+            get {
+                if (_toggleStyle == null)
+                    _toggleStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft };
+                return _toggleStyle;
+            }
+        }
         private static GUIStyle divStyle;
         public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
             if (fillTexture == null) fillTexture = new Texture2D(1, 1);

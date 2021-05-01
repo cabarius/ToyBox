@@ -173,7 +173,7 @@ namespace ToyBox {
                 (bp, ch) => ch.Progression.Features.HasFact(bp)
                 ),
             new BlueprintAction<BlueprintFeature>("<",
-                (bp, ch, n) => { try { ch.Progression.Features.GetFact(bp).RemoveRank(); } catch (Exception e) { Logger.Log(e); } },
+                (bp, ch, n) => { try { ch.Progression.Features.GetFact(bp).RemoveRank(); } catch (Exception e) { Main.Error(e); } },
                 (bp, ch) => {
                     var feature = ch.Progression.Features.GetFact(bp);
                     return feature != null && feature.GetRank() > 1;
@@ -201,7 +201,7 @@ namespace ToyBox {
                         if (spellbook.IsMythic) spellbook.AddMythicLevel();
                         else spellbook.AddBaseLevel();
                     }
-                    catch (Exception e) { Logger.Log(e); }
+                    catch (Exception e) { Main.Error(e); }
                 },
                 (bp, ch) => ch.Descriptor.Spellbooks.Any((sb) => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel)
                 ),
