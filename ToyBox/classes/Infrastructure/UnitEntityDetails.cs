@@ -115,7 +115,7 @@ namespace ToyBox
             }
             else
             {
-                Logger.ModLoggerDebug("Unit is null!");
+                Main.Debug("Unit is null!");
             }
         }
         public static void AddToParty(UnitEntityData unit)

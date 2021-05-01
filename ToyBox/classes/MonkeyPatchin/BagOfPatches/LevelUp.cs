@@ -127,7 +127,7 @@ using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(LevelUpController), "CanLevelUp")]
@@ -409,7 +409,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] IList<BlueprintFeatureBase> features, [CanBeNull] FeatureSource source, int level) {
-                if (!Main.IsInGame) return false;
+                if (!Main.IsInGame) return true;
 #if true
                 //Logger.Log($"feature count = {features.ToArray().Count()} ");
                 var description = source.Blueprint.GetDescription() ?? "nil";
@@ -456,7 +456,7 @@ namespace ToyBox.BagOfPatches {
 #endif
                                 }
                                 if (numToAdd > availableCount) {
-                                    Logger.Log($"reduced numToAdd: {numToAdd} -> {availableCount}");
+                                    Main.Log($"reduced numToAdd: {numToAdd} -> {availableCount}");
                                     numToAdd = availableCount;
                                 }
                             }

@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using ModKit;
 
-namespace ToyBox {
+namespace ModKit {
     public class Logger {
         public static UnityModManager.ModEntry.ModLogger modLogger;
         public static string modEntryPath = null;
@@ -41,6 +41,11 @@ namespace ToyBox {
         public static void Log(Exception ex) {
             Logger.modLogger.Log(ex.ToString().red().bold() + "\n" + ex.StackTrace);
         }
+
+        public static void Error(Exception ex) {
+            Logger.modLogger.Log(ex.ToString() + "\n" + ex.StackTrace);
+        }
+
         public void LogToFiles(string str) {
             if (removeHtmlTags) {
                 str = Utilties.RemoveHtmlTags(str);
@@ -98,10 +103,6 @@ namespace ToyBox {
             if (Main.settings.settingShowDebugInfo) {
                 Logger.modLogger.Log(message.ToString());
             }
-        }
-
-        public static void Error(Exception ex) {
-            Logger.modLogger.Log(ex.ToString() + "\n" + ex.StackTrace);
         }
     }
 

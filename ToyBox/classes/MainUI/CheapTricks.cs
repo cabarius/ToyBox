@@ -141,8 +141,11 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Preview", 0, () => {
                 UI.Toggle("Dialog Results", ref settings.previewDialogResults, 0);
+                UI.Space(25);
                 UI.Toggle("Dialog Alignment", ref settings.previewAlignmentRestrictedDialog, 0);
+                UI.Space(25);
                 UI.Toggle("Random Encounters", ref settings.previewRandomEncounters, 0);
+                UI.Space(25);
                 UI.Toggle("Events", ref settings.previewEventResults, 0);
             });
             UI.Div(0, 25);

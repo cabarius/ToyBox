@@ -63,7 +63,7 @@ namespace ToyBox.classes.MonkeyPatchin
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex);
+                    Main.Error(ex);
                 }
                 return true;
             }
@@ -83,7 +83,7 @@ namespace ToyBox.classes.MonkeyPatchin
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex);
+                    Main.Error(ex);
                 }
                 return true;
             }
