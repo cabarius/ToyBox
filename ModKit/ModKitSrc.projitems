@@ -17,7 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\LocalizationManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\MenuManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Private.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Toggle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\RichText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Builders.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Controls.cs" />
@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\GUIHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Logging.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\NamedTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\SerializableDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\TripleDictionary.cs" />

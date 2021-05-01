@@ -144,7 +144,6 @@
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
-    <Compile Include="classes\Infrastructure\Borrowed\Logging.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\Infrastructure\UnitEntityDetails.cs" />

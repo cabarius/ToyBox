@@ -129,6 +129,9 @@ namespace ToyBox {
                 UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.Width(150));
                 UI.Space(25);
             }
+            else {
+                UI.Space(178);
+            }
             if (player.Party.Contains(ch)) {
                 respecableCount++;
                 UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
@@ -207,7 +210,7 @@ namespace ToyBox {
                     bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
-                            selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Logger.Log($"selected {ch.CharacterName}");
+                            selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Main.Log($"selected {ch.CharacterName}");
                         }
                         else { selectedToggle = ToggleChoice.None; }
                     }
@@ -262,11 +265,11 @@ namespace ToyBox {
                         UI.Space(100);
                         UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
                         if (settings.toggleMulticlass) {
-                            UI.Space(39);
+                            UI.Space(40);
                             if (UI.DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
                                 multiclassEditCharacter = selectedCharacter;
                             }
-                            UI.Space(25);
+                            UI.Space(50);
                             UI.Label("Experimental Preview ".magenta() + "See 'Level Up + Multiclass' for more options".green());
                         }
                         else { UI.Space(50);  UI.Label("Experimental Preview ".magenta());  }

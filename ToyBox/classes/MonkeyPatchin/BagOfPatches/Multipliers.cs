@@ -129,7 +129,7 @@ using Kingmaker.Globalmap.View;
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EncumbranceHelper), "GetHeavy")]
@@ -174,7 +174,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Player), "GetCustomCompanionCost")]
         public static class Player_GetCustomCompanionCost_Patch {
             public static bool Prefix(ref bool __state) {
-                return !__state;
+                return !__state;    // FIXME - why did Bag of Tricks do this?
             }
 
             public static void Postfix(ref int __result) {
@@ -259,7 +259,7 @@ namespace ToyBox.BagOfPatches {
                     modLogger.Log(e.ToString());
                 }
 
-                Logger.ModLoggerDebug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+                Main.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
 
@@ -268,7 +268,7 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref IList<UnitEntityData> units) {
                 foreach (UnitEntityData unit in units) {
                     if (unit.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                        Logger.ModLoggerDebug("RandomEncounterUnitSelector.PlaceUnits: " + unit.CharacterName);
+                        Main.Debug("RandomEncounterUnitSelector.PlaceUnits: " + unit.CharacterName);
                         unit.Stats.HitPoints.BaseValue = Mathf.RoundToInt(unit.Stats.HitPoints.BaseValue * settings.enemyBaseHitPointsMultiplier);
                     }
                 }
@@ -279,7 +279,7 @@ namespace ToyBox.BagOfPatches {
         internal static class UnitSpawner_Spawn_Patch {
             private static void Postfix(ref UnitEntityData __result) {
                 if (__result != null && __result.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
-                    Logger.ModLoggerDebug("UnitSpawner.Spawn: " + __result.CharacterName);
+                    Main.Debug("UnitSpawner.Spawn: " + __result.CharacterName);
                     __result.Stats.HitPoints.BaseValue = Mathf.RoundToInt(__result.Stats.HitPoints.BaseValue * settings.enemyBaseHitPointsMultiplier);
                 }
             }

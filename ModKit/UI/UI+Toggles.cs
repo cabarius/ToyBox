@@ -24,10 +24,13 @@ namespace ModKit {
                 params GUILayoutOption[] options
             ) {
             bool changed = false;
+            if (width == 0 && !disclosureStyle) {
+                width  = UI.toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
+            }
             options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
                 title = value ? title.bold() : title.color(RGBA.lightgrey);
-                if (GL.Button("" + (value ? onMark : offMark) + " " + title, UI.buttonStyle, options)) { value = !value; changed = true; }
+                if (Private.UI.CheckBox(title, value, UI.toggleStyle, options)) { value = !value; changed = true; }
             }
             else {
                 if (Private.UI.DisclosureToggle(title, value, options)) { value = !value; changed = true; }
