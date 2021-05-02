@@ -104,7 +104,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintGlobalMapPoint>("Map Points", null, bp => bp.GlobalMapZone.ToString()),
             new NamedTypeFilter<BlueprintGlobalMap>("Global Map"),
             new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.Priority.ToString()),
-            new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
+            //new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.m_Type.ToString()),
             new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp => bp.m_Type.ToString()),
             new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp => bp.Parent?.GetBlueprint().NameSafe() ?? ""),
@@ -197,7 +197,8 @@ namespace ToyBox {
         public static IEnumerable OnGUI() {
             if (blueprints == null) BlueprintBrowser.GetBlueprints();
             // Stackable browser
-            using (UI.HorizontalScope(UI.Width(450))) {
+            using (UI.HorizontalScope(UI.Width(350))) {
+                float remainingWidth = UI.ummWidth;
                 // First column - Type Selection Grid
                 using (UI.VerticalScope(GUI.skin.box)) {
                     UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
@@ -207,6 +208,7 @@ namespace ToyBox {
                         UI.buttonStyle,
                         UI.Width(200));
                 }
+                remainingWidth -= 350;
                 bool collationChanged = false;
                 if (collatedBPs != null) {
                     using (UI.VerticalScope(GUI.skin.box)) {
@@ -216,10 +218,11 @@ namespace ToyBox {
                             UI.buttonStyle,
                             UI.Width(200));
                     }
+                    remainingWidth -= 350;
                 }
+
                 // Section Column  - Main Area
-                float remainingWidth = UI.ummWidth - 325;
-                using (UI.VerticalScope(UI.Width(remainingWidth))) {
+                using (UI.VerticalScope(UI.MinWidth(remainingWidth))) {
                     // Search Field and modifiers
                     using (UI.HorizontalScope()) {
                         UI.ActionTextField(
@@ -227,21 +230,21 @@ namespace ToyBox {
                             "searhText",
                             (text) => { },
                             () => { UpdateSearchResults(); },
-                            UI.MaxWidth(400));
+                            UI.MinWidth(100), UI.MaxWidth(400));
                         UI.Label("Limit", UI.Width(150));
                         UI.ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
                             (limit) => { },
                             () => { UpdateSearchResults(); },
-                            UI.Width(150));
+                            UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
                         UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
                         UI.Space(25);
                         UI.Toggle("Components", ref settings.showComponents);
-                        UI.Space(25);
-                        UI.Toggle("Elements", ref settings.showElements);
+                        //UI.Space(25);
+                        //UI.Toggle("Elements", ref settings.showElements);
                     }
                     // Search Button and Results Summary
                     using (UI.HorizontalScope()) {
