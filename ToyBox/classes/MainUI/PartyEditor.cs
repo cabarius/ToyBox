@@ -173,8 +173,10 @@ namespace ToyBox {
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 using (UI.HorizontalScope()) {
-
-                    UI.Label(ch.CharacterName.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600));
+                    if (isWide)
+                        UI.Label(ch.CharacterName.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600));
+                    else
+                        UI.Label(ch.CharacterName.orange().bold(), UI.Width(230));
                     UI.Space(5);
                     float distance = mainChar.DistanceTo(ch); ;
                     UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
@@ -247,9 +249,9 @@ namespace ToyBox {
                     else { UI.Space(180); }
                     if (isWide) ActionsGUI(ch);
                 }
-                if (!UI.IsWide) {
-                    UI.Div(20, 20);
-                }
+                //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
+                //    UI.Div(20, 20);
+                //}
                 if (selectedCharacter != spellbookEditCharacter) {
                     editSpellbooks = false;
                     spellbookEditCharacter = null;
@@ -295,7 +297,7 @@ namespace ToyBox {
                             UI.Space(23);
                             UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above".green());
                         }
-                        UI.Div(0, 25);
+                        UI.Div(100, 25);
                         using (UI.HorizontalScope()) {
                             UI.Space(100);
                             UI.Label("Mythic Level".cyan(), UI.Width(250));

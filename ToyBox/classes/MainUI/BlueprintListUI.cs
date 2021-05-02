@@ -58,6 +58,7 @@ namespace ToyBox {
             NamedTypeFilter typeFilter = null
         ) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
+            if (remainingWidth == 0) remainingWidth = UI.ummWidth - indent;
             int index = 0;
             if (needsLayout) {
                 foreach (SimpleBlueprint blueprint in blueprints) {
@@ -70,7 +71,7 @@ namespace ToyBox {
             }
             if (hasRepeatableAction) {
                 UI.BeginHorizontal();
-                UI.Space(553);
+                UI.Label("", UI.MinWidth(350 - indent), UI.MaxWidth(600));
                 UI.ActionIntTextField(
                     ref repeatCount,
                     "repeatCount",
@@ -88,6 +89,7 @@ namespace ToyBox {
                 Rect rect;
                 var description = blueprint.GetDescription();
                 using (UI.HorizontalScope()) {
+                    var remWidth = remainingWidth - indent;
                     UI.Space(indent);
                     var actions = blueprint.GetActions().Where(action => action.canPerform(blueprint, ch)).ToArray();
                     var titles = actions.Select(a => a.name);
@@ -98,15 +100,16 @@ namespace ToyBox {
                     else {
                         title = titleFormater(title);
                     }
-
-                    UI.Label(title, UI.Width(550 - indent));
+                    var titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
+                    UI.Label(title, UI.Width(titleWidth));
+                    remWidth -= titleWidth;
                     int actionCount = actions != null ? actions.Count() : 0;
                     for (int ii = 0; ii < maxActions; ii++) {
                         if (ii < actionCount) {
                             BlueprintAction action = actions[ii];
                             // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
                             if (action.name == "<" || action.name == ">") {
-                                UI.Space(164); continue;
+                                UI.Space(174); continue;
                             }
                             var actionName = action.name;
                             float extraSpace = 0;
@@ -116,13 +119,14 @@ namespace ToyBox {
                             }
                             UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
                             UI.Space(10);
+                            remWidth -= 174.0f + extraSpace;
+
                         }
                         else {
                             UI.Space(174);
                         }
                     }
-                    UI.Space(30);
-                    rect = GUILayoutUtility.GetLastRect();
+                    UI.Space(10);
                     String typeString = blueprint.GetType().Name;
                     if (typeFilter?.collator != null) {
                         var collatorString = typeFilter.collator(blueprint);
@@ -133,7 +137,7 @@ namespace ToyBox {
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {
                         if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {
-                            String componentStr = String.Join<object>(" ", bpso.ComponentsArray).grey();
+                            String componentStr = String.Join<object>(" ", bpso.ComponentsArray).color(RGBA.teal);
                             if (description.Length == 0) description = componentStr;
                             else description = componentStr + "\n" + description;
                         }
@@ -143,26 +147,17 @@ namespace ToyBox {
                             else description = elementsStr + "\n" + description;
                         }
                     }
-                    using (UI.VerticalScope(UI.Width(900))) {
+                    using (UI.VerticalScope(UI.Width(remWidth))) {
                         if (settings.showAssetIDs) {
-                            using (UI.HorizontalScope()) {
+                            using (UI.HorizontalScope(UI.Width(remWidth))) {
                                 UI.Label(typeString.cyan());
-                                GUILayout.TextField(blueprint.AssetGuid, UI.Width(450));
+                                GUILayout.TextField(blueprint.AssetGuid, UI.ExpandWidth(false));
                             }
                         }
-                        else UI.Label(typeString.cyan());
-                        if (description.Length > 0) UI.Label(description.green());
+                        else UI.Label(typeString.cyan()); // + $" {remWidth}".bold());
+                        if (description.Length > 0) UI.Label(description.green(), UI.Width(remWidth));
                     }
                 }
-#if false
-                String description = blueprint.GetDescription();
-                if (description.Length > 0) {
-                    UI.BeginHorizontal();
-                    UI.Space(684 + maxActions * 154);
-                    UI.Label($"{description.green()}");
-                    UI.EndHorizontal();
-                }
-#endif
                 UI.Div(indent);
                 index++;
             }
