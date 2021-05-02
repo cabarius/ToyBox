@@ -29,7 +29,7 @@ namespace ModKit {
             }
             options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
-                title = value ? title.bold() : title.color(RGBA.lightgrey);
+                title = value ? title.bold() : title.color(RGBA.medgrey).bold();
                 if (Private.UI.CheckBox(title, value, UI.toggleStyle, options)) { value = !value; changed = true; }
             }
             else {

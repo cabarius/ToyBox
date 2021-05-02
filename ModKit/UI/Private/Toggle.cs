@@ -6,9 +6,9 @@ using UnityEngine;
 namespace ModKit.Private {
     public static partial class UI {
         public const string ChecklyphOn = "<color=green><b>✔</b></color>";
-        public const string CheckGlyphOff = "<color=#A0A0A0E0>✖</color>";
-        const string DisclosureGlyphOn = "<color=orange><size=30><b>▲</b></size></color>";  // ▶∧⋀
-        const string DisclosureGlyphOff = "<color=white><size=30><b>▼</b></size></color>";   // ▲∨⋁
+        public const string CheckGlyphOff = "<color=#B8B8B8FF>✖</color>";                   // #A0A0A0E0
+        const string DisclosureGlyphOn = "<color=orange><b>▲</b></color>";   // ▶∧⋀
+        const string DisclosureGlyphOff = "<color=#C0C0C0FF><b>▼</b></color>";   // ▲∨⋁
 
         // Helper functionality.
 
@@ -80,7 +80,7 @@ namespace ModKit.Private {
 
                         // layout state before or after following alignment
                         var labelSize = labelStyle.CalcSize(label);
-                        x = rightAlign ? stateRect.x - stateSize.x - 10 : stateRect.xMax + 10;
+                        x = rightAlign ? stateRect.x - stateSize.x - 5 : stateRect.xMax + 5;
                         Rect labelRect = new Rect(x, rect.y, labelSize.x, labelSize.y);
 
                         stateStyle.Draw(stateRect, state, controlID);
@@ -112,7 +112,8 @@ namespace ModKit.Private {
             var lStyle = new GUIStyle(labelStyle);
             lStyle.wordWrap = false;
             var stateSize = sStyle.CalcSize(state);
-            var padding = new RectOffset(0, (int)stateSize.x + 10, 0, 0);
+            lStyle.fixedHeight = stateSize.y - 2;
+            var padding = new RectOffset(0, (int)stateSize.x + 5, 0, 0);
             lStyle.padding = padding;
             var rect = GUILayoutUtility.GetRect(label, lStyle, options);
 #if false
