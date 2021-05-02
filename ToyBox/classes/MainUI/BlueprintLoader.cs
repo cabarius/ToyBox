@@ -42,6 +42,7 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using Kingmaker.BundlesLoading;
+using System.IO;
 
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {
@@ -112,12 +113,43 @@ namespace ToyBox {
             coroutine = LoadBlueprints();
             StartCoroutine(coroutine);
         }
-        public bool IsLoading { get {
+        public bool IsLoading {
+            get {
                 if (coroutine != null) {
                     return true;
                 }
                 return false;
             }
+        }
+    }
+
+    public static class BlueprintLoaderOld {
+        public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
+
+        static AssetBundleRequest LoadRequest;
+        public static float progress = 0;
+        public static void Load(LoadBlueprintsCallback callback) {
+#if false
+            var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
+            Main.Log($"got bundle {bundle}");
+            LoadRequest = bundle.LoadAllAssetsAsync<BlueprintScriptableObject>();
+#endif
+            var bundle = BundlesLoadService.Instance.RequestBundle(AssetBundleNames.BlueprintAssets);
+            BundlesLoadService.Instance.LoadDependencies(AssetBundleNames.BlueprintAssets);
+            LoadRequest = bundle.LoadAllAssetsAsync<object>();
+            Main.Log($"created request {LoadRequest}");
+            LoadRequest.completed += (asyncOperation) => {
+                Main.Log($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
+                callback(LoadRequest.allAssets.Cast<SimpleBlueprint>());
+                LoadRequest = null;
+            };
+        }
+        public static bool LoadInProgress() {
+            if (LoadRequest != null) {
+                progress = LoadRequest.progress;
+                return true;
+            }
+            return false;
         }
     }
 }
