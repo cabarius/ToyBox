@@ -121,13 +121,13 @@ namespace ToyBox {
                 UI.Width(200));
 #endif
             UI.EndHorizontal();
-
+            var remainingWidth = UI.ummWidth;
             if (showAll) {
                 // TODO - do we need this logic or can we make blueprint filtering fast enough to do keys by key searching?
                 //if (filteredBPs == null || searchChanged) {
                     UpdateSearchResults(searchText, searchLimit, blueprints);
                 //}
-                BlueprintListUI.OnGUI(unit, filteredBPs, 100);
+                BlueprintListUI.OnGUI(unit, filteredBPs, 100, remainingWidth - 100);
                 return;
             }
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
@@ -151,6 +151,7 @@ namespace ToyBox {
             matchCount = 0;
             UI.Div(100);
             foreach (var fact in sorted) {
+                var remWidth = remainingWidth;
                 if (fact == null) continue;
                 var bp = blueprint(fact);
                 String name = title(fact);
@@ -158,33 +159,38 @@ namespace ToyBox {
                 if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => nameLower.Contains(term)))) {
                     matchCount++;
                     using (UI.HorizontalScope()) {
-                        UI.Space(100);
-                        UI.Label($"{name}".cyan().bold(), UI.Width(400));
-                        UI.Space(30);
+                        UI.Space(100); remWidth -= 100;
+                        var titleWidth = (remainingWidth / (UI.IsWide ? 3.0f : 4.0f)) - 100;
+                        UI.Label($"{name}".cyan().bold(), UI.Width(titleWidth));
+                        remWidth -= titleWidth;
+                        UI.Space(10); remWidth -= 10;
                         if (value != null) {
                             var v = value(fact);
-                            decrease.BlueprintActionButton(unit, bp, () => { toDecrease = bp; }, 50);
+                            decrease.BlueprintActionButton(unit, bp, () => { toDecrease = bp; }, 60);
                             UI.Space(10f);
                             UI.Label($"{v}".orange().bold(), UI.Width(30));
-                            increase.BlueprintActionButton(unit, bp, () => { toIncrease = bp; }, 50);
+                            increase.BlueprintActionButton(unit, bp, () => { toIncrease = bp; }, 60);
+                            remWidth -= 166;
                         }
 #if false
                     UI.Space(30);
                     add.BlueprintActionButton(unit, bp, () => { toAdd = bp; }, 150);
 #endif
-                        UI.Space(30);
-                        remove.BlueprintActionButton(unit, bp, () => { toRemove = bp; }, 150);
+                        UI.Space(10); remWidth -= 10;
+                        remove.BlueprintActionButton(unit, bp, () => { toRemove = bp; }, 175);
+                        remWidth -= 178;
 #if false
                     foreach (var action in actions) {
                         action.MutatorButton(unit, bp, () => { toValues[action.name] = bp; }, 150);
                     }
 #endif
-                        if (description != null) {
-                            UI.Space(30);
-
-                            UI.Label(description(fact).green(), UI.AutoWidth());
+                        UI.Space(20); remWidth -= 20;
+                        using (UI.VerticalScope(UI.Width(remWidth - 100))) {
                             if (settings.showAssetIDs)
-                                GUILayout.TextField(blueprint(fact).AssetGuid, UI.Width(450));
+                                GUILayout.TextField(blueprint(fact).AssetGuid, UI.AutoWidth());
+                            if (description != null) {
+                                UI.Label(description(fact).green(), UI.Width(remWidth - 100));
+                            }
                         }
                     }
                     UI.Div(100);

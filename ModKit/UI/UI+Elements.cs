@@ -49,14 +49,14 @@ namespace ModKit {
         private static GUIStyle divStyle;
         public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
             if (fillTexture == null) fillTexture = new Texture2D(1, 1);
-            if (divStyle == null) {
+            //if (divStyle == null) {
                 divStyle = new GUIStyle();
                 divStyle.fixedHeight = 1;
-            }
+            //}
             fillTexture.SetPixel(0, 0, color);
             fillTexture.Apply();
             divStyle.normal.background = fillTexture;
-            if (divStyle == null) {
+            if (divStyle.margin == null) {
                 divStyle.margin = new RectOffset((int)indent, 0, 4, 4);
             }
             else {
