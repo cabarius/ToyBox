@@ -52,8 +52,6 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.Label("increment".cyan(), UI.AutoWidth());
                 var increment = UI.IntTextField(ref settings.increment, null, UI.Width(150));
-                UI.Space(25);
-                UI.Toggle("Dividers", ref settings.showDivisions);
                 UI.EndHorizontal();
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 var kingdom = KingdomState.Instance;
