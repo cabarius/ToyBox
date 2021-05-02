@@ -120,8 +120,15 @@ namespace ToyBox {
         public static IEnumerable<SimpleBlueprint> GetBlueprints() {
             if (blueprints == null) {
 #if false
-                if (ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints != null) {
-
+                if (BlueprintLoaderOld.LoadInProgress()) { return null; }
+                else {
+                    Main.Log($"calling BlueprintLoader.Load");
+                    BlueprintLoaderOld.Load((bps) => {
+                        blueprints = bps;
+                        UpdateSearchResults();
+                        Main.Log($"success got {bps.Count()} blueprints");
+                    });
+                    return null;
                 }
 #else
                 if (BlueprintLoader.Shared.IsLoading) { return null; }
@@ -175,7 +182,7 @@ namespace ToyBox {
                     filtered.Add(blueprint);
                 }
                 else {
-                    var name = blueprint.name.ToLower();
+                    var name = blueprint.name;
                     if (terms.All(term => StringExtensions.Matches(name, term))) {
                         filtered.Add(blueprint);
                     }

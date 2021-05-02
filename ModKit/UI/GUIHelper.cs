@@ -15,8 +15,8 @@ namespace ModKit.Utility
         public const string onMark = "<color=green><b>✔</b></color>";
         public const string offMark = "<color=#A0A0A0E0>✖</color>";
 
-        public static string FormatOn = "▶".color(RGBA.white).Bold() + " {0}";
-        public static string FormatOff = "▲".color(RGBA.lime).Bold() + " {0}";
+        public static string FormatOn = "▼".color(RGBA.white).Bold() + " {0}";
+        public static string FormatOff = "▶".color(RGBA.lime).Bold() + " {0}";
         public static string FormatNone = " ▪".color(RGBA.white) + "   {0}";
 
         public static bool IsOn(this ToggleState state) { return state == ToggleState.On; }
@@ -108,7 +108,8 @@ namespace ModKit.Utility
     ) {
             bool changed = false;
             title = value ? title.Bold() : title.color(RGBA.lightgrey);
-            if (GUILayout.Button("" + (value ? onMark : offMark) + " " + title, style, options)) { value = !value; }
+            if (UI.Toggle(title, ref value, 0, options)) changed = true;
+            //if (GUILayout.Button("" + (value ? onMark : offMark) + " " + title, style, options)) { value = !value; }
             return changed;
         }
         public static bool Checkbox(

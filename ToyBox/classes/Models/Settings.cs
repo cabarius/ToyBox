@@ -42,6 +42,10 @@ namespace ToyBox {
         public UnitSelectType allowMovementThroughSelection = UnitSelectType.Off;
         public float collisionRadiusMultiplier = 1;
 
+        // char creation
+        public bool toggleAllRaceCustomizations = false;
+        public bool toggleIgnoreGenderRestrictions = false;
+
         // level up
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;

@@ -227,8 +227,7 @@ namespace ToyBox.BagOfPatches {
 #endif
             }
         }
-
-        [HarmonyPatch(typeof(PrerequisiteFeature), "Check")]
+        [HarmonyPatch(typeof(PrerequisiteFeature), "CheckInternal")]
         static class PrerequisiteFeature_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreFeaturePrerequisites) {
@@ -236,8 +235,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        [HarmonyPatch(typeof(PrerequisiteFeaturesFromList), "Check")]
+        [HarmonyPatch(typeof(PrerequisiteFeaturesFromList), "CheckInternal")]
         static class PrerequisiteFeaturesFromList_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreFeatureListPrerequisites) {
@@ -302,8 +300,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "Check")]
+        [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "CheckInternal")]
         public static class PrerequisiteCasterTypeSpellLevel_Check_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreCasterTypeSpellLevel) {
@@ -311,7 +308,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(PrerequisiteNoArchetype), "Check")]
+        [HarmonyPatch(typeof(PrerequisiteNoArchetype), "CheckInternal")]
         public static class PrerequisiteNoArchetype_Check_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreForbiddenArchetype) {
@@ -319,7 +316,8 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(PrerequisiteStatValue), "Check")]
+
+        [HarmonyPatch(typeof(PrerequisiteStatValue), "CheckInternal")]
         public static class PrerequisiteStatValue_Check_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleIgnorePrerequisiteStatValue) {
@@ -328,7 +326,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteAlignment), "Check")]
+        [HarmonyPatch(typeof(PrerequisiteAlignment), "CheckInternal")]
         public static class PrerequisiteAlignment_Check_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreAlignmentWhenChoosingClass) {
@@ -337,7 +335,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteNoFeature), "Check")]
+        [HarmonyPatch(typeof(PrerequisiteNoFeature), "CheckInternal")]
         public static class PrerequisiteNoFeature_Check_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreForbiddenFeatures) {
@@ -380,6 +378,8 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+
+//        [HarmonyPatch(typeof(BlueprintRace), nameof(BlueprintRace.FemaleOptions), new Type[] { typeof(UnitDescriptor) })]
 
 
         // stuff for fixing feat multiplier ???
