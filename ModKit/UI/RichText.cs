@@ -29,8 +29,9 @@ namespace ModKit {
         yellow = 0xffff00ff,
         black = 0x000000ff,
         darkgrey = 0x808080ff,
-        silver = 0xD0D0D0ff,
+        medgrey = 0xA8A8A8ff,
         grey = 0xC0C0C0ff,
+        silver = 0xD0D0D0ff,
         lightgrey = 0xE8E8E8ff,
         white = 0xffffffff,
     }

@@ -100,8 +100,6 @@ namespace ToyBox {
             UI.Space(25);
             UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
             UI.Space(25);
-            UI.Toggle("Dividers", ref Main.settings.showDivisions);
-            UI.Space(25);
             searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
             UI.EndHorizontal();
             UI.BeginHorizontal();

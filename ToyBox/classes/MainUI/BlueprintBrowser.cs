@@ -242,8 +242,6 @@ namespace ToyBox {
                         UI.Toggle("Components", ref settings.showComponents);
                         UI.Space(25);
                         UI.Toggle("Elements", ref settings.showElements);
-                        UI.Space(25);
-                        UI.Toggle("Dividers", ref settings.showDivisions);
                     }
                     // Search Button and Results Summary
                     using (UI.HorizontalScope()) {
