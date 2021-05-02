@@ -10,7 +10,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>ModMaker</Import_RootNamespace>
-    <Version>1.0.4</Version>
+    <Version>1.0.6</Version>
     <Description>A game agnostic toolkit for building Mod UI for unity mod manager based mods.  Builds on ModMaker (https://github.com/cabarius/WrathModMaker and all past repos it was forked from)</Description>
   </PropertyGroup>
   <ItemGroup>
@@ -30,7 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\RichTextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\GUIHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\GUIHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Logging.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\NamedTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\SerializableDictionary.cs" />
