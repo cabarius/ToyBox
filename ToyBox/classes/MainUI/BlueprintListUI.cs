@@ -85,79 +85,74 @@ namespace ToyBox {
             }
             UI.Div(indent);
             foreach (SimpleBlueprint blueprint in blueprints) {
-                UI.BeginHorizontal();
-                UI.Space(indent);
-                var actions = blueprint.GetActions().Where(action => action.canPerform(blueprint, ch)).ToArray();
-                var titles = actions.Select(a => a.name);
-                var title = blueprint.name;
-                if (titles.Contains("Remove")) {
-                    title = title.cyan().bold();
-                }
-                else {
-                    title = titleFormater(title);
-                }
-
-                UI.Label(title, UI.Width(550 - indent));
-                int actionCount = actions != null ? actions.Count() : 0;
-                for (int ii = 0; ii < maxActions; ii++) {
-                    if (ii < actionCount) {
-                        BlueprintAction action = actions[ii];
-                        // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
-                        if (action.name == "<" || action.name == ">") {
-                            UI.Space(164); continue;
-                        }
-                        var actionName = action.name;
-                        float extraSpace = 0;
-                        if (action.isRepeatable) {
-                            actionName += (action.isRepeatable ? $" {repeatCount}" : "");
-                            extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
-                        }
-                        UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
-                        UI.Space(10);
+                Rect rect;
+                var description = blueprint.GetDescription();
+                using (UI.HorizontalScope()) {
+                    UI.Space(indent);
+                    var actions = blueprint.GetActions().Where(action => action.canPerform(blueprint, ch)).ToArray();
+                    var titles = actions.Select(a => a.name);
+                    var title = blueprint.name;
+                    if (titles.Contains("Remove")) {
+                        title = title.cyan().bold();
                     }
                     else {
-                        UI.Space(174);
+                        title = titleFormater(title);
                     }
-                }
-                UI.Space(30);
-                String typeString = blueprint.GetType().Name;
-                if (typeFilter?.collator != null) {
-                    var collatorString = typeFilter.collator(blueprint);
-                    if (!typeString.Contains(collatorString))
-                        typeString += $" : {collatorString}".yellow();
-                }
-                Rect rect = GUILayoutUtility.GetLastRect();
-                var description = blueprint.GetDescription();
-                if (description != null && description.Length > 0) description = $"\n{description.green()}";
-                else description = "";
-                if (blueprint is BlueprintScriptableObject bpso) {
-                    if (settings.showComponents && bpso.ComponentsArray != null) {
-                        String componentStr = String.Join<object>(" ", bpso.ComponentsArray).grey();
-                        if (description.Length == 0) description = componentStr;
-                        else description = componentStr + description;
+
+                    UI.Label(title, UI.Width(550 - indent));
+                    int actionCount = actions != null ? actions.Count() : 0;
+                    for (int ii = 0; ii < maxActions; ii++) {
+                        if (ii < actionCount) {
+                            BlueprintAction action = actions[ii];
+                            // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
+                            if (action.name == "<" || action.name == ">") {
+                                UI.Space(164); continue;
+                            }
+                            var actionName = action.name;
+                            float extraSpace = 0;
+                            if (action.isRepeatable) {
+                                actionName += (action.isRepeatable ? $" {repeatCount}" : "");
+                                extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
+                            }
+                            UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
+                            UI.Space(10);
+                        }
+                        else {
+                            UI.Space(174);
+                        }
                     }
-                    if (settings.showElements && bpso.ElementsArray != null) {
-                        String elementsStr = String.Join<object>(" ", bpso.ElementsArray).yellow();
-                        if (description.Length == 0) description = elementsStr;
-                        else description = elementsStr + "\n" + description;
+                    UI.Space(30);
+                    rect = GUILayoutUtility.GetLastRect();
+                    String typeString = blueprint.GetType().Name;
+                    if (typeFilter?.collator != null) {
+                        var collatorString = typeFilter.collator(blueprint);
+                        if (!typeString.Contains(collatorString))
+                            typeString += $" : {collatorString}".yellow();
                     }
-                }
-                if (settings.showAssetIDs) {
-                    UI.Label(typeString.cyan());
-                    GUILayout.TextField(blueprint.AssetGuid, UI.Width(450));
-                    UI.EndHorizontal();
-                    if (description.Length > 0) {
-                        UI.BeginHorizontal();
-                        UI.Label("", UI.Width(rect.x));
-                        UI.Label(blueprint.GetDescription().green()); //, 
-                        UI.EndHorizontal();
+                    if (description != null && description.Length > 0) description = $"{description}";
+                    else description = "";
+                    if (blueprint is BlueprintScriptableObject bpso) {
+                        if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {
+                            String componentStr = String.Join<object>(" ", bpso.ComponentsArray).grey();
+                            if (description.Length == 0) description = componentStr;
+                            else description = componentStr + "\n" + description;
+                        }
+                        if (settings.showElements && bpso.ElementsArray?.Length > 0) {
+                            String elementsStr = String.Join<object>(" ", bpso.ElementsArray).magenta();
+                            if (description.Length == 0) description = elementsStr;
+                            else description = elementsStr + "\n" + description;
+                        }
                     }
-                }
-                else {
-                    float width = remainingWidth - rect.xMax;
-                    UI.Label(typeString.cyan() + " " + description, UI.Width(800));
-                    //UI.Label($"{remainingWidth} - {rect.xMax} = {width}" + typeString + " " + description, UI.Width(800));
-                    UI.EndHorizontal();
+                    using (UI.VerticalScope(UI.Width(900))) {
+                        if (settings.showAssetIDs) {
+                            using (UI.HorizontalScope()) {
+                                UI.Label(typeString.cyan());
+                                GUILayout.TextField(blueprint.AssetGuid, UI.Width(450));
+                            }
+                        }
+                        else UI.Label(typeString.cyan());
+                        if (description.Length > 0) UI.Label(description.green());
+                    }
                 }
 #if false
                 String description = blueprint.GetDescription();

@@ -174,11 +174,11 @@ namespace ToyBox {
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 using (UI.HorizontalScope()) {
 
-                    UI.Label(ch.CharacterName.orange().bold(), UI.Width(200));
-                    UI.Space(25);
+                    UI.Label(ch.CharacterName.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600));
+                    UI.Space(5);
                     float distance = mainChar.DistanceTo(ch); ;
                     UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
-                    UI.Space(25);
+                    UI.Space(5);
                     UI.Label("lvl".green() + $": {level}", UI.Width(75));
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
@@ -193,7 +193,7 @@ namespace ToyBox {
                         else { UI.Space(74); }
                     }
                     else { UI.Space(74); }
-                    UI.Space(25);
+                    UI.Space(5);
                     UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.MythicExperience < 10) {
@@ -204,9 +204,9 @@ namespace ToyBox {
                         else { UI.Label("max".cyan(), UI.Width(70)); }
                     }
                     else { UI.Space(74); }
-                    UI.Space(35);
+                    UI.Space(5);
                     if (!isWide) ActionsGUI(ch);
-                    UI.Wrap(!UI.IsWide, 303, 0);
+                    UI.Wrap(!UI.IsWide, 283, 0);
                     bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
@@ -215,29 +215,29 @@ namespace ToyBox {
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     bool showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
-                    if (UI.DisclosureToggle("Stats", ref showStats, true, isWide ? 150 : 200)) {
+                    if (UI.DisclosureToggle("Stats", ref showStats, true, 125)) {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     UI.Wrap(UI.IsNarrow, 279);
                     bool showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
-                    if (UI.DisclosureToggle("Facts", ref showFacts, true, isWide ? 150 : 200)) {
+                    if (UI.DisclosureToggle("Facts", ref showFacts, true, 125)) {
                         if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     bool showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
-                    if (UI.DisclosureToggle("Buffs", ref showBuffs, true, isWide ? 150 : 200)) {
+                    if (UI.DisclosureToggle("Buffs", ref showBuffs, true, 125)) {
                         if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     UI.Wrap(UI.IsNarrow, 304);
                     bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
-                    if (UI.DisclosureToggle("Abilities", ref showAbilities, true)) {
+                    if (UI.DisclosureToggle("Abilities", ref showAbilities, true, 125)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    UI.Space(25);
-                    if (spellCount > 0) {
+                    UI.Space(10);
+                    if (spellbooks.Count() > 0) {
                         bool showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
                         if (UI.DisclosureToggle($"{spellCount} Spells", ref showSpells, true)) {
                             if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
