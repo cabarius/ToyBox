@@ -9,6 +9,7 @@ namespace ModKit.Private {
         public const string CheckGlyphOff = "<color=#B8B8B8FF>✖</color>";      // #A0A0A0E0
         const string DisclosureGlyphOn = "<color=orange><b>▼</b></color>";      // ▼▲∧⋀
         const string DisclosureGlyphOff = "<color=#C0C0C0FF><b>▶</b></color>";  // ▶▲∨⋁
+        const string DisclosureGlyphEmpty = " <color=#B8B8B8FF>▪</color> ";
 
         // Helper functionality.
 
@@ -17,6 +18,7 @@ namespace ModKit.Private {
         public static readonly GUIContent CheckOff = new GUIContent(CheckGlyphOff);
         public static readonly GUIContent DisclosureOn = new GUIContent(DisclosureGlyphOn);
         public static readonly GUIContent DisclosureOff = new GUIContent(DisclosureGlyphOff);
+        public static readonly GUIContent DisclosureEmpty = new GUIContent(DisclosureGlyphEmpty);
         private static GUIContent LabelContent(string text) {
             _LabelContent.text = text;
             _LabelContent.image = null;
@@ -26,7 +28,7 @@ namespace ModKit.Private {
 
         private static readonly int s_ButtonHint = "MyGUI.Button".GetHashCode();
 
-        public static bool Toggle(Rect rect, GUIContent label, bool value, GUIContent on, GUIContent off, GUIStyle stateStyle, GUIStyle labelStyle) {
+        public static bool Toggle(Rect rect, GUIContent label, bool value, bool isEmpty, GUIContent on, GUIContent off, GUIStyle stateStyle, GUIStyle labelStyle) {
             int controlID = GUIUtility.GetControlID(s_ButtonHint, FocusType.Passive, rect);
             bool result = false;
             switch (Event.current.GetTypeForControl(controlID)) {
@@ -73,8 +75,8 @@ namespace ModKit.Private {
                                         || stateStyle.alignment == TextAnchor.LowerRight
                                         ;
                         // stateStyle.alignment determines position of state element
-                        var state = value ? on : off;
-                        var stateSize = stateStyle.CalcSize(state);
+                        var state = isEmpty ? DisclosureEmpty : value ? on : off;
+                        var stateSize = stateStyle.CalcSize(value ? on : off);  // don't use the empty content to calculate size so titles line up in lists
                         float x = rightAlign ? rect.xMax - stateSize.x : rect.x;
                         Rect stateRect = new Rect(x, rect.y, stateSize.x, stateSize.y);
 
@@ -106,7 +108,7 @@ namespace ModKit.Private {
             return Toggle(rect, label, value, on, off, stateStyle, style);
         }
 #else
-        public static bool Toggle(GUIContent label, bool value, GUIContent on, GUIContent off, GUIStyle stateStyle, GUIStyle labelStyle, params GUILayoutOption[] options) {
+        public static bool Toggle(GUIContent label, bool value, GUIContent on, GUIContent off, GUIStyle stateStyle, GUIStyle labelStyle, bool isEmpty = false, params GUILayoutOption[] options) {
             var state = value ? on : off;
             var sStyle = new GUIStyle(stateStyle);
             var lStyle = new GUIStyle(labelStyle);
@@ -126,26 +128,26 @@ namespace ModKit.Private {
 
             Logger.Log($"event: {eventType.ToString()} label: {label.text} w: {width} h: {height} rect: {rect} options: {options.Length}");
 #endif
-            return Toggle(rect, label, value, on, off, stateStyle, labelStyle);
+            return Toggle(rect, label, value, isEmpty, on, off, stateStyle, labelStyle);
         }
 #endif
             // Disclosure Toggles
-            public static bool DisclosureToggle(GUIContent label, bool value, params GUILayoutOption[] options) {
-            return Toggle(label, value, DisclosureOn, DisclosureOff, GUI.skin.textArea, GUI.skin.label, options);
+            public static bool DisclosureToggle(GUIContent label, bool value, bool isEmpty = false, params GUILayoutOption[] options) {
+            return Toggle(label, value, DisclosureOn, DisclosureOff, GUI.skin.textArea, GUI.skin.label, isEmpty, options);
         }
-        public static bool DisclosureToggle(string label, bool value, GUIStyle stateStyle, GUIStyle labelStyle, params GUILayoutOption[] options) {
-            return Toggle(LabelContent(label), value, DisclosureOn, DisclosureOff, stateStyle, labelStyle, options);
+        public static bool DisclosureToggle(string label, bool value, GUIStyle stateStyle, GUIStyle labelStyle, bool isEmpty = false, params GUILayoutOption[] options) {
+            return Toggle(LabelContent(label), value, DisclosureOn, DisclosureOff, stateStyle, labelStyle, isEmpty, options);
         }
-        public static bool DisclosureToggle(string label, bool value, params GUILayoutOption[] options) {
-            return DisclosureToggle(label, value, GUI.skin.box, GUI.skin.label, options);
+        public static bool DisclosureToggle(string label, bool value, bool isEmpty = false, params GUILayoutOption[] options) {
+            return DisclosureToggle(label, value, GUI.skin.box, GUI.skin.label, isEmpty, options);
         }
         // CheckBox 
         public static bool CheckBox(GUIContent label, bool value, params GUILayoutOption[] options) {
-            return Toggle(label, value, CheckOn, CheckOff, GUI.skin.textArea, GUI.skin.label, options);
+            return Toggle(label, value, CheckOn, CheckOff, GUI.skin.textArea, GUI.skin.label, false, options);
         }
 
         public static bool CheckBox(string label, bool value, GUIStyle style, params GUILayoutOption[] options) {
-            return Toggle(LabelContent(label), value, CheckOn, CheckOff, GUI.skin.box, style, options);
+            return Toggle(LabelContent(label), value, CheckOn, CheckOff, GUI.skin.box, style, false, options);
         }
 
         public static bool CheckBox(string label, bool value, params GUILayoutOption[] options) {
