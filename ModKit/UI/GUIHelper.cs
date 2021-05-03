@@ -5,11 +5,6 @@ using UnityEngine;
 using RGBA = ModKit.RGBA;
 namespace ModKit.Utility
 {
-    public enum ToggleState {
-        Off = 0,
-        On = 1,
-        None = 2
-    }
     public static class GUIHelper
     {
         public const string onMark = "<color=green><b>✔</b></color>";
@@ -19,16 +14,6 @@ namespace ModKit.Utility
         public static string FormatOff = "▶".color(RGBA.lime).Bold() + " {0}";
         public static string FormatNone = " ▪".color(RGBA.white) + "   {0}";
 
-        public static bool IsOn(this ToggleState state) { return state == ToggleState.On; }
-        public static bool IsOff(this ToggleState state) { return state == ToggleState.Off; }
-        public static ToggleState Flip(this ToggleState state) {
-            switch (state) {
-                case ToggleState.Off: return ToggleState.On;
-                case ToggleState.On: return ToggleState.Off;
-                case ToggleState.None: return ToggleState.None;
-            }
-            return ToggleState.None;
-        }
         public static string GetToggleText(ToggleState toggleState, string text)
         {
             switch (toggleState) {
@@ -119,17 +104,10 @@ namespace ModKit.Utility
                 params GUILayoutOption[] options) {
             return CheckboxPrivate(ref value, title, style, options);
         }
-
         public static ToggleState ToggleButton(ToggleState toggle, string text, GUIStyle style = null, params GUILayoutOption[] options)
         {
-            ToggleButton(ref toggle, text, style, options);
+            UI.ToggleButton(ref toggle, text, style, options);
             return toggle;
-        }
-
-        public static void ToggleButton(ref ToggleState toggle, string text, GUIStyle style = null, params GUILayoutOption[] options)
-        {
-            if (GUILayout.Button(GetToggleText(toggle, text), style ?? GUI.skin.button, options))
-                toggle = toggle.Flip();
         }
 
         public static ToggleState ToggleButton(ToggleState toggle, string text, Action on, Action off, GUIStyle style = null, params GUILayoutOption[] options)
@@ -141,7 +119,7 @@ namespace ModKit.Utility
         public static void ToggleButton(ref ToggleState toggle, string text, Action on, Action off, GUIStyle style = null, params GUILayoutOption[] options)
         {
             ToggleState old = toggle;
-            ToggleButton(ref toggle, text, style, options);
+            UI.ToggleButton(ref toggle, text, style, options);
             if (toggle != old)
             {
                 if (toggle.IsOn())
@@ -177,7 +155,7 @@ namespace ModKit.Utility
         {
             GUILayout.BeginHorizontal();
 
-            ToggleButton(ref toggle, text, style, options);
+            UI.ToggleButton(ref toggle, text, style, options);
 
             if (toggle.IsOn())
             {
