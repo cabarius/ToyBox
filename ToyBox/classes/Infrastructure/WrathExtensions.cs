@@ -93,7 +93,7 @@ namespace ToyBox {
             }
             return RGBA.grey;
         }
-        public static string GetDescription(this SimpleBlueprint bp)
+        public static string GetDescription(this SimpleBlueprint   bp)
         // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {
             try {
