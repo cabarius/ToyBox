@@ -90,7 +90,6 @@ namespace ModKit.Private {
                     }
                     break;
             }
-
             return result;
         }
 
