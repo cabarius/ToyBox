@@ -131,7 +131,7 @@ namespace ToyBox.Multiclass {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
         public static LevelUpController levelUpController { get; internal set; }
-#if DEBUG
+
         [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor)]
         [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(bool), typeof(LevelUpState.CharBuildMode) })]
         static class LevelUpController_ctor_Patch {
@@ -152,7 +152,6 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor), typeof(BlueprintProgression) })]
         static class LevelUpHelper_UpdateProgression_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] BlueprintProgression progression) {
-
                 if (!settings.toggleMulticlass) return true;
                 ProgressionData progressionData = unit.Progression.SureProgressionData(progression);
                 int level = progressionData.Level;
@@ -181,12 +180,13 @@ namespace ToyBox.Multiclass {
                 // || progression.AssetGuid != "fe9220cdc16e5f444a84d85d5fa8e3d5";
             }
         }
+
+        // TODO - figure out what the beta 2 replacement for this is
 #if false
-        // TODO - FIXME - what is the replacement for this?
         [HarmonyPatch(typeof(CharBSelectionSwitchSpells), "ParseSpellSelection")]
         static class CharBSelectionSwitchSpells_ParseSpellSelection_Patch {
             public static bool Prefix(CharBSelectionSwitchSpells __instance) {
-                if (!settings.toggleMulticlass) return false;
+                if (!settings.toggleMulticlass) return true;
                 int num = 0;
                 __instance.HasEmptyCollections = false;
                 foreach (SpellSelectionData spellsCollection in __instance.m_ShowedSpellsCollections) {
@@ -203,17 +203,17 @@ namespace ToyBox.Multiclass {
                 }
                 else
                     __instance.Hide();
-                return true;
+                return false;
             }
         }
 #endif
+
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
-                // this code copies the code from the game so we will return false as not to execute it again.  TODO - can we make this cleaner and more robust to new versions?
                 if (state.SelectedClass == null)
                     return false;
                 SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
@@ -234,7 +234,7 @@ namespace ToyBox.Multiclass {
                 int casterLevelBefore = spellbook1.CasterLevel;
                 spellbook1.AddLevelFromClass(classData.CharacterClass);
                 int casterLevelAfter = spellbook1.CasterLevel;
-                if (casterLevelBefore == casterLevelAfter) return true; // Mod line
+                if (casterLevelBefore == casterLevelAfter) return false; // Mod line
                 SpellSelectionData spellSelectionData = state.DemandSpellSelection(spellbook1.Blueprint, spellbook1.Blueprint.SpellList);
                 if (spellbook1.Blueprint.SpellsKnown != null) {
                     for (int index = 0; index <= 10; ++index) {
@@ -261,6 +261,8 @@ namespace ToyBox.Multiclass {
                 return false;
             }
         }
+
+        /*
         // Fixed new spell slots (to be calculated not only from the highest caster level when gaining more than one level of a spontaneous caster at a time)
         [HarmonyPatch(typeof(SpellSelectionData), nameof(SpellSelectionData.SetLevelSpells), new Type[] { typeof(int), typeof(int) })]
         static class SpellSelectionData_SetLevelSpells_Patch {
@@ -272,12 +274,13 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
+
         // Fixed new spell slots (to be calculated not only from the highest caster level when gaining more than one level of a memorizer at a time)
         [HarmonyPatch(typeof(SpellSelectionData), nameof(SpellSelectionData.SetExtraSpells), new Type[] { typeof(int), typeof(int) })]
         static class SpellSelectionData_SetExtraSpells_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static bool Prefix(SpellSelectionData __instance, ref int count, ref int maxLevel) {
-                if (!settings.toggleMulticlass) return false;
+                if (!settings.toggleMulticlass) return true;
                 if (__instance.ExtraSelected != null) {
                     __instance.ExtraMaxLevel = maxLevel = Math.Max(__instance.ExtraMaxLevel, maxLevel);
                     count += __instance.ExtraSelected.Length;
@@ -285,8 +288,9 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
+        */
+        // TODO - figure out what the replacement is for this in beta2
 #if false
-        // TODO - FIXME - what is the replacement for this?
         // Fixed the UI for selecting new spells (to refresh the level tabs of the spellbook correctly on toggling the spellbook)
         [HarmonyPatch(typeof(CharBPhaseSpells), "RefreshSpelbookView")]
         static class CharBPhaseSpells_RefreshSpelbookView_Patch {
@@ -302,14 +306,13 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        // TODO - FIXME - what is the replacement for this?
         // Fixed the UI for selecting new spells (to switch the spellbook correctly on selecting a spell)
         [HarmonyPatch(typeof(CharacterBuildController), nameof(CharacterBuildController.SetSpell))]
         [HarmonyPatch(new Type[] { typeof(BlueprintAbility), typeof(int), typeof(bool) })]
         static class CharacterBuildController_SetSpell_Patch {
 
             public static bool Prefix(CharacterBuildController __instance, BlueprintAbility spell, int spellLevel, bool multilevel) {
-                if (!settings.toggleMulticlass) return false;
+                if (!settings.toggleMulticlass) return true;
                 BlueprintSpellbook spellbook = __instance.Spells.CurrentSpellSelectionData.Spellbook;
                 BlueprintSpellList spellList = __instance.Spells.CurrentSpellSelectionData.SpellList;
                 int spellsCollectionIndex = __instance.Spells.CurrentSpellsCollectionIndex;
@@ -332,6 +335,7 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
+
         // Fixed the UI for selecting new spells (to switch the spellbook correctly on clicking a slot)
         [HarmonyPatch(typeof(CharBPhaseSpells), nameof(CharBPhaseSpells.OnChangeCurrentCollection))]
         static class CharBPhaseSpells_OnChangeCurrentCollection_Patch {
@@ -349,7 +353,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(SpellSelectionData), typeof(int) })]
         static class CharBFeatureSelector_FillDataAllSpells_Patch {
             public static bool Prefix(CharBFeatureSelector __instance, SpellSelectionData spellSelectionData, int maxLevel) {
-                if (!settings.toggleMulticlass) return false;
+                if (!settings.toggleMulticlass) return true;
                 __instance.Init();
                 CharBSelectorLayer selectorLayerBody = __instance.SelectorLayerBody;
                 if (selectorLayerBody.CurrentSpellSelectionData != null 
@@ -371,14 +375,13 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-#endif
-#if false
+
         // Fixed the UI for selecting new spells (to refresh the spell list correctly on clicking a slot when the selections have the same spell list) - spontaneous caster
-        [HarmonyPatch(typeof(CharBFeatureSelector), nameof(CharBFeatureSelector.FillDataSpellLevel))] 
+        [HarmonyPatch(typeof(CharBFeatureSelector), nameof(CharBFeatureSelector.FillDataSpellLevel))]
         [HarmonyPatch(new Type[] { typeof(SpellSelectionData), typeof(int) })]
         static class CharBFeatureSelector_FillDataSpellLevel_Patch {
             public static bool Prefix(CharBFeatureSelector __instance,SpellSelectionData spellSelectionData, int spellLevel) {
-                if (!settings.toggleMulticlass) return false;
+                if (!settings.toggleMulticlass) return true;
                 __instance.Init();
                 CharBSelectorLayer selectorLayerBody = __instance.SelectorLayerBody;
                 if (selectorLayerBody.CurrentSpellSelectionData != null 
@@ -403,6 +406,7 @@ namespace ToyBox.Multiclass {
             }
         }
 #endif
+
         // Fixed a vanilla PFK bug that caused dragon bloodline to be displayed in Magus' feats tree
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyProgressions")]
         static class ApplyClassMechanics_ApplyProgressions_Patch {
@@ -420,9 +424,22 @@ namespace ToyBox.Multiclass {
                             );
                     LevelUpHelper.UpdateProgression(state, unit, p);
                 }
-                return false;
+                return true;
             }
         }
-#endif
+
+        [HarmonyPatch(typeof(UnitHelper))]
+        [HarmonyPatch("CopyInternal")]
+        static class UnitProgressionData_CopyFrom_Patch {
+            static void Postfix(UnitEntityData unit, UnitEntityData __result) {
+                //升级时会用这个方法复制一个UnitEntityData，其中涉及到复制UnitProgressionData
+                //默认状况下，复制的UnitProgressionData的CharacterLevel等于所有非神话职业等级之和
+                //如果人物等级不等于这个默认值，会出问题（比如在低于默认值时，可能没到20级就升不了级了，因为非神话职业等级之和已经提前超过了20级）
+                //修正这一点。
+
+                var UnitProgressionData_CharacterLevel = AccessTools.Property(typeof(UnitProgressionData), nameof(UnitProgressionData.CharacterLevel));
+                UnitProgressionData_CharacterLevel.SetValue(__result.Descriptor.Progression, unit.Descriptor.Progression.CharacterLevel);
+            }
+        }
     }
 }
