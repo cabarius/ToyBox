@@ -75,6 +75,7 @@ using ModKit;
 
 namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
+
         public static HashSet<string> GetMulticlassSet(this UnitEntityData ch) {
             if (ch.HashKey() == null) return null;
             return Main.settings.selectedMulticlassSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
@@ -94,11 +95,13 @@ namespace ToyBox.Multiclass {
 
         public static void AddClassLevel_NotCharacterLevel(this UnitProgressionData instance, BlueprintCharacterClass characterClass) {
             //instance.SureClassData(characterClass).Level++;
-            GetMethodDel<UnitProgressionData, Func<UnitProgressionData, BlueprintCharacterClass, ClassData>>
+            Main.Log($"AddClassLevel_NotCharLevel: class = {characterClass}");
+            ReflectionCache.GetMethod<UnitProgressionData, Func<UnitProgressionData, BlueprintCharacterClass, ClassData>>
                 ("SureClassData")(instance, characterClass).Level++;
             //instance.CharacterLevel++;
+            instance.m_ClassesOrder.Add(characterClass);
             instance.Classes.Sort();
-            instance.Features.AddFact(characterClass.Progression, null);
+            instance.Features.AddFeature(characterClass.Progression, null).SetSource(characterClass, 1);
             instance.Owner.OnGainClassLevel(characterClass);
             //int[] bonuses = BlueprintRoot.Instance.Progression.XPTable.Bonuses;
             //int val = bonuses[Math.Min(bonuses.Length - 1, instance.CharacterLevel)];
@@ -106,6 +109,7 @@ namespace ToyBox.Multiclass {
         }
 
         public static void Apply_NoStatsAndHitPoints(this ApplyClassMechanics instance, LevelUpState state, UnitDescriptor unit) {
+            Main.Log($"Apply_NoStatsAndHitPoints: unit = {unit.CharacterName}, state.class = {(state.SelectedClass==null?"NULL":state.SelectedClass.Name)}");
             if (state.SelectedClass != null) {
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData != null) {
@@ -113,9 +117,9 @@ namespace ToyBox.Multiclass {
                     //    ("ApplyBaseStats")(null, state, classData, unit);
                     //GetMethodDel<ApplyClassMechanics, Action<ApplyClassMechanics, LevelUpState, ClassData, UnitDescriptor>>
                     //    ("ApplyHitPoints")(null, state, classData, unit);
-                    GetMethodDel<ApplyClassMechanics, Action<ApplyClassMechanics, ClassData, UnitDescriptor>>
+                    ReflectionCache.GetMethod<ApplyClassMechanics, Action<ApplyClassMechanics, ClassData, UnitDescriptor>>
                         ("ApplyClassSkills")(null, classData, unit);
-                    GetMethodDel<ApplyClassMechanics, Action<ApplyClassMechanics, LevelUpState, UnitDescriptor>>
+                    ReflectionCache.GetMethod<ApplyClassMechanics, Action<ApplyClassMechanics, LevelUpState, UnitDescriptor>>
                         ("ApplyProgressions")(null, state, unit);
                 }
             }
@@ -136,22 +140,26 @@ namespace ToyBox.Multiclass {
         public static bool IsChildProgressionOf(this BlueprintProgression progression, UnitDescriptor unit, BlueprintCharacterClass characterClass) {
             ClassData classData = unit.Progression.GetClassData(characterClass);
             if (classData != null) {
+                /*
                 if (progression.Classes.Contains(characterClass) &&
-                    !classData.Archetypes.Intersect(characterClass.Archetypes).Any())
+                    !progression.Archetypes.Intersect(characterClass.Archetypes).Any())
                     return true;
-                if (classData.Archetypes.Intersect(unit.Progression.GetClassData(characterClass).Archetypes).Any())
+                if (progression.Archetypes.Intersect(unit.Progression.GetClassData(characterClass).Archetypes).Any())
+                    return true;
+                    */
+                if (progression.Classes.Contains(characterClass))
                     return true;
             }
             return false;
         }
 
         public static bool IsManualPlayerUnit(this LevelUpController controller, bool allowPet = false, bool allowAutoCommit = false, bool allowPregen = false) {
+            Main.Log($"controller is null {controller == null}, controller unit is null {controller.Unit == null}");
             return controller != null &&
                 controller.Unit.IsPlayerFaction &&
                 (allowPet || !controller.Unit.IsPet) &&
-                (allowAutoCommit || !controller.AutoCommit);
-                // && (allowPregen || !controller.State.IsPreGen()
-                
+                (allowAutoCommit || !controller.AutoCommit) &&
+                (allowPregen || !controller.State.IsPreGen());
         }
 
         public static bool IsCharGen(this LevelUpState state) {
@@ -162,18 +170,16 @@ namespace ToyBox.Multiclass {
             return state.Mode == LevelUpState.CharBuildMode.LevelUp;
         }
 
-#if false
         public static bool IsPreGen(this LevelUpState state) {
-            return state.Mode == LevelUpState.CharBuildMode.;
+            return state.IsPregen;
         }
-#endif
-
+        // TODO - what is the replacement for this in beta2?
 #if false
         public static void SetSpellbook(this CharBPhaseSpells instance, BlueprintCharacterClass characterClass) {
-            LevelUpState state = Game.Instance.UI.CharacterBuildController.LevelUpController.State;
+            LevelUpState state = Game.Instance.LevelUpController.State;
             BlueprintCharacterClass selectedClass = state.SelectedClass;
             state.SelectedClass = characterClass;
-            GetMethodDel<CharBPhaseSpells, Action<CharBPhaseSpells>>("SetupSpellBookView")(instance);
+            ReflectionCache.GetMethod<CharBPhaseSpells, Action<CharBPhaseSpells>>("SetupSpellBookView")(instance);
             state.SelectedClass = selectedClass;
         }
 #endif
