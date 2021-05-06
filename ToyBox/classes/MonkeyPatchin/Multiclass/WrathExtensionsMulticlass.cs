@@ -158,8 +158,9 @@ namespace ToyBox.Multiclass {
             return controller != null &&
                 controller.Unit.IsPlayerFaction &&
                 (allowPet || !controller.Unit.IsPet) &&
-                (allowAutoCommit || !controller.AutoCommit) &&
-                (allowPregen || !controller.State.IsPreGen());
+                (allowAutoCommit || !controller.AutoCommit);
+                //&& (allowPregen || !controller.State.IsPreGen()
+                
         }
 
         public static bool IsCharGen(this LevelUpState state) {
@@ -173,7 +174,7 @@ namespace ToyBox.Multiclass {
         public static bool IsPreGen(this LevelUpState state) {
             return state.IsPregen;
         }
-        // TODO - what is the replacement for this in beta2?
+
 #if false
         public static void SetSpellbook(this CharBPhaseSpells instance, BlueprintCharacterClass characterClass) {
             LevelUpState state = Game.Instance.LevelUpController.State;
