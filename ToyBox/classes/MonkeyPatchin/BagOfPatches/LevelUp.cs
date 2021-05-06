@@ -410,6 +410,7 @@ namespace ToyBox.BagOfPatches {
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] IList<BlueprintFeatureBase> features, [CanBeNull] FeatureSource source, int level) {
                 if (!Main.IsInGame) return true;
+                if (settings.featsMultiplier == 1) return true;
 #if true
                 //Logger.Log($"feature count = {features.ToArray().Count()} ");
                 var description = source.Blueprint.GetDescription() ?? "nil";

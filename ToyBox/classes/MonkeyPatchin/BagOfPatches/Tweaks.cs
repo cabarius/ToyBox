@@ -483,13 +483,16 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(FogOfWarArea), "Active", MethodType.Getter)]
+        [HarmonyPatch(typeof(FogOfWarArea), "RevealOnStart", MethodType.Getter)]
         public static class FogOfWarArea_Active_Patch {
-            private static void Postfix(ref FogOfWarArea __result) {
-                // We need this to avoid hanging the game on launch
-                if (Main.Enabled && Main.IsInGame && __result != null && settings != null) {
-                    __result.enabled = !settings.toggleNoFogOfWar;
-                }
+            private static bool Prefix(ref bool __result) {
+                if (!settings.toggleNoFogOfWar) return true;
+                __result = true;
+                return false;
+            //    // We need this to avoid hanging the game on launch
+            //    if (Main.Enabled && Main.IsInGame && __result != null && settings != null) {
+            //        __result.enabled = !settings.toggleNoFogOfWar;
+            //    }
             }
         }
 
