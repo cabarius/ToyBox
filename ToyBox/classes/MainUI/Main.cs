@@ -55,7 +55,7 @@ namespace ToyBox {
         public static Mod multiclassMod;
         public static bool Enabled;
         public static bool freshlyLaunched = true;
-        public static bool IsInGame { get { return Game.Instance.Player.Party.Any(); } }
+        public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
         static Exception caughtException = null;
         public static void Log(string s) { if (modEntry != null) ModKit.Logger.Log(s); }

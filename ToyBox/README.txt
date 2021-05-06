@@ -4,12 +4,33 @@ Toy Box is a cute and playful mod with 230+ cheats, tweaks and quality of life i
 
 # Detailed Description
 
-Now with 230+ Cheats, Tweaks and Quality of Life Improvements
+Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Tweaks: 72 (or 113 depending on how you count)
-    Level Up & Multiclass Preview: 23 + (48 for Multiclass)
+    Level Up & Multiclass Preview: 27 + (48 for Multiclass)
     Party Editor: 67    
-    Search 'n Pick: 70 ways to view, add, remove blueprints plus a fun global teleportation feature
+    Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+Ver 1.2.1
+    Fixed disappearing doll in inventory screen and map refresh bugs due to NoFogOfWar flag
+Ver 1.2.0
+    Ported to Beta 2
+    UI improvements
+    - more beautiful check-boxes and disclosure controls
+    - much better support for mid and lower resolution screens
+    Tweaks
+    - Armies also are affected by Travel Speed Multiplier
+    Level Up Tweaks
+    - Ignore Attribute and Skill Caps
+    - Ignore Remaining Attribute and Skill Points
+    Teleportation
+    - Instant travel to global or city map (Seach 'n Pick > Global Map)
+    - Teleport to points on global map (Search 'n Pick > Map Points)
+    Other Search 'n Pick Improvements
+    - More categories have sub categories
+    - Improved layout of results
+    - Start and complete Etudes (Experimental)
+    - Start and complete quests, quest objectives (Experimental)
+
 Ver 1.1.12
     Search 'n Pick
         Teleport to GlobalMap (World or Kenabres)
