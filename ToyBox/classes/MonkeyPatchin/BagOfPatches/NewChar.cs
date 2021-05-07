@@ -167,37 +167,16 @@ namespace ToyBox.BagOfPatches {
  
             }
             public static void Postfix(ref bool __result, StatType attribute, StatsDistribution __instance) {
-                Main.Log("*****************");
-                Main.Log($"开始Can Add Postfix {attribute}，调用栈：");
-                var stackTrace = new StackTrace();
-                for (int i = 0; i < stackTrace.FrameCount; i++) {
-                    var method = stackTrace.GetFrame(i).GetMethod();
-                    Main.Log($"{method.DeclaringType.ToString()}:{method.ToString()}");
-                }
-                Main.Log($"开始获取所有Patch");
-                var patches = Harmony.GetPatchInfo(AccessTools.Method(typeof(StatsDistribution), "CanAdd"));
-                foreach(var postfix in patches.Postfixes) {
-                    Main.Log($"Postfix {postfix.owner} {postfix.priority} {postfix.PatchMethod.ToString()}");
-                }
-                foreach (var prefix in patches.Prefixes) {
-                    Main.Log($"Postfix {prefix.owner} {prefix.priority} {prefix.PatchMethod.ToString()}");
-                }
-                Main.Log("*****************");
                 int attributeMax = settings.characterCreationAbilityPointsMax;
-                Main.Log($"Attr Max = {attributeMax}");
                 if (!__instance.Available) {
                     __result = false;
-                    Main.Log($"Not Available.");
                 }
                 else {
                     if (attributeMax <= 18) {
                         attributeMax = 18;
                     }
                     int attributeValue = __instance.StatValues[attribute];
-                    Main.Log($"Attr Max ={attributeMax}, AttrVal = {attributeValue}");
                     __result = attributeValue < attributeMax && __instance.GetAddCost(attribute) <= __instance.Points;
-                    Main.Log($"GetAddCost = {__instance.GetAddCost(attribute)}, Points = {__instance.Points}");
-                    Main.Log($"REsult是{__result}");
                 }
             }
         }
@@ -234,11 +213,5 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(CharGenAbilityScoreAllocatorVM), "UpdateStatDistribution")]
-        public static class DebugStatAddPatch {
-            public static void Postfix(CharGenAbilityScoreAllocatorVM __instance) {
-                Main.Log($"CanAdd是{__instance.CanAdd.Value}，upcost是{__instance.UpCost.Value}");
-            }
-        }
     }
 }
