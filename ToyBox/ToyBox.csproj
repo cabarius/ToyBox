@@ -132,6 +132,9 @@
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\Infrastructure\UnitEntityDetails.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
@@ -175,7 +178,7 @@
   <ProjectExtensions />
   <PropertyGroup>
     <PostBuildEvent>
-</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
