@@ -124,6 +124,7 @@ using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using static ModKit.Utility.ReflectionCache;
 using ModKit.Utility;
+using ToyBox.classes.MonkeyPatchin.Multiclass.StatProgression;
 
 namespace ToyBox.Multiclass {
     static class MultipleClasses {
@@ -275,6 +276,10 @@ namespace ToyBox.Multiclass {
                             __instance.Apply_NoStatsAndHitPoints(state, unit);
                         });
                     }
+                    List<BlueprintCharacterClass> allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
+                    allAppliedClasses.Add(state.SelectedClass);
+                    SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
+                    HPDice.ApplyHPDice(unit, state, allAppliedClasses.ToArray());
                 }
             }
         }

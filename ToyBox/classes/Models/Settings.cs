@@ -166,6 +166,11 @@ namespace ToyBox {
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
 
+        public int multiClassHPDiceType = 0;
+        public int multiClassSaveType = 0;
+        public int multiClassBABType = 0;
+        public int multiClassSkillPointType = 0;
+
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);
         }

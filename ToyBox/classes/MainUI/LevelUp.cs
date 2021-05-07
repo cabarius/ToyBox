@@ -83,14 +83,14 @@ namespace ToyBox {
                     UI.Toggle("Ignore Skill Cap", ref settings.toggleIgnoreSkillCap, 0);
                     UI.Space(73);
                     UI.Toggle("Ignore Remaining Skill Points", ref settings.toggleIgnoreSkillPointsRemaining, 0);
-                    },
+                },
                 () => UI.Toggle("Always Able To Level Up", ref settings.toggleNoLevelUpRestrictions, 0),
                 () => UI.Toggle("Add Full Hit Die Value", ref settings.toggleFullHitdiceEachLevel, 0),
                 () => {
                     UI.Toggle("Ignore Class And Feat Restrictions", ref settings.toggleIgnorePrerequisites, 0);
                     UI.Space(25);
                     UI.Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
-                    },
+                },
                 () => UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref settings.toggleFeaturesIgnorePrerequisites, 0),
                 () => UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref settings.toggleIgnoreCasterTypeSpellLevel, 0),
                 () => UI.Toggle("Ignore Forbidden Archetypes", ref settings.toggleIgnoreForbiddenArchetype, 0),
@@ -118,11 +118,52 @@ namespace ToyBox {
                     UI.Space(25);
                     UI.Label("With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. Please go to Party Editor > Character > Classes to configure this".green());
                 },
-                () => UI.Toggle("Use Highest Hit Die", ref settings.toggleTakeHighestHitDie, 0),
-                () => UI.Toggle("Use Highest Skill Points", ref settings.toggleTakeHighestSkillPoints, 0),
-                () => UI.Toggle("Use Highest BAB ", ref settings.toggleTakeHighestBAB, 0),
-                () => UI.Toggle("Use Highest Save By Recalc", ref settings.toggleTakeHighestSaveByRecalculation, 0),
-                () => UI.Toggle("Use Highest Save ", ref settings.toggleTakeHighestSaveByAlways, 0),
+                () => {
+                    UI.Space(25);
+                    UI.Label("Hit Die Progression".green());
+                },
+                () => {
+                    UI.SelectionGrid(ref settings.multiClassHPDiceType, new string[] {
+                        "Sum Up All",
+                        "Use Max Hit Dice",
+                        "Only Use Primary Class's Hit Dice"
+                    }, 1);
+                },
+                () => {
+                    UI.Space(25);
+                    UI.Label("Save Progression".green());
+                },
+                () => {
+                    UI.SelectionGrid(ref settings.multiClassSaveType, new string[] {
+                        "Sum Up All",
+                        "Use Max Increment",
+                        "Use Max Accumulated",
+                        "Only Use Primary Class's Save"
+                    }, 1);
+                },
+                () => {
+                    UI.Space(25);
+                    UI.Label("BAB Progression".green());
+                },
+                () => {
+                    UI.SelectionGrid(ref settings.multiClassBABType, new string[] {
+                        "Sum Up All",
+                        "Use Max Increment",
+                        "Use Max Accumulated",
+                        "Only Use Primary Class's BAB"
+                    }, 1);
+                },
+                () => {
+                    UI.Space(25);
+                    UI.Label("Skill Points Progression".green());
+                },
+                () => {
+                    UI.SelectionGrid(ref settings.multiClassSkillPointType, new string[] {
+                        "Sum Up All",
+                        "Use Top N Level's Skill Points",
+                        "Use Average Skill Points"
+                    }, 1);
+                },
                 () => UI.Toggle("Use Recalculate Caster Levels", ref settings.toggleRecalculateCasterLevelOnLevelingUp, 0),
                 () => UI.Toggle("Restrict Caster Level To Current", ref settings.toggleRestrictCasterLevelToCharacterLevel, 0),
                 //() => { UI.Toggle("Restrict CL to Current (temp) ", ref settings.toggleRestrictCasterLevelToCharacterLevelTemporary, 0),
