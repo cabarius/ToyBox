@@ -160,13 +160,21 @@ namespace ToyBox.BagOfPatches {
         // ignoreAttributeCap
         [HarmonyPatch(typeof(StatsDistribution), "CanAdd", new Type[] { typeof(StatType) })]
         static class StatsDistribution_CanAdd_Patch {
-            public static bool Prefix(SpendSkillPoint __instance) {
+            /*
+            public static bool Prefix() {
                 return !settings.toggleIgnoreAttributeCap;
             }
+            
             private static void Postfix(ref bool __result, StatsDistribution __instance, StatType attribute) {
                __result = __instance.Available 
                     && (settings.toggleIgnoreAttributeCap || __instance.StatValues[attribute] < 18)
                     && (__instance.GetAddCost(attribute) <= __instance.Points);
+            }
+            */
+            private static void Postfix(ref bool __result, StatsDistribution __instance) {
+                if(settings.toggleIgnoreAttributeCap && __instance.Available) {
+                    __result = true;
+                }
             }
         }
         // ignoreSkillPointsRemaining
