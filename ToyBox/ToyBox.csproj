@@ -26,6 +26,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,7 +38,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <WrathInstallDir Condition=" '$(WrathInstallDir)' == '' ">C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo</WrathInstallDir>
+    <WrathInstallDir Condition=" '$(WrathInstallDir)' == '' ">G:\SteamLibrary\steamapps\common\Pathfinder Second Adventure Demo</WrathInstallDir>
   </PropertyGroup>
   <Target Name="Publicise" AfterTargets="Clean">
     <ItemGroup>
@@ -55,22 +56,18 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Owlcat.Runtime.Core">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\Owlcat.Runtime.Core.dll</HintPath>
     </Reference>
     <Reference Include="Owlcat.Runtime.UI">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Owlcat.Runtime.UI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\Owlcat.Runtime.UI.dll</HintPath>
     </Reference>
     <Reference Include="Owlcat.Runtime.Visual">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\Owlcat.Runtime.Visual.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -81,47 +78,37 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UniRx">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UniRx.dll</HintPath>
+      <HintPath>..\..\dll\UniRx.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.InputModule.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.InputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityModManager">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\dll\UnityModManager.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -186,20 +173,18 @@
   <Import Project="..\ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props'))" />
-  </Target>
   <PropertyGroup>
-    <PostBuildEvent>echo "$(TargetPath)" "&gt;C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\0$(ProjectName)0\$(ProjectName).dll*"
-xcopy /Y "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\0$(ProjectName)0\$(ProjectName).dll"
-xcopy /Y "$(TargetDir)$(TargetName).pdb" "C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods\0$(ProjectName)0\$(ProjectName).pdb"
+    <PostBuildEvent>
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props'))" />
+  </Target>
 </Project>
