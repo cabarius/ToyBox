@@ -134,7 +134,7 @@ namespace ToyBox {
                             break;
                         }
                         visited.Add(subAnswer);
-                        if (page.Answers[0] is BlueprintAnswersList) break;
+                        if (page.Answers[0].Get() is BlueprintAnswersList) break;
                     }
                     if (page.Cues.Count > 0) {
                         foreach (var c in page.Cues) if (c.Get().CanShow()) toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));

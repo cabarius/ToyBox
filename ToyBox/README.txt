@@ -11,6 +11,9 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.2.2
+    Ported to Beta 3
+
 Ver 1.2.1
     Fixed disappearing doll in inventory screen and map refresh bugs due to NoFogOfWar flag
 

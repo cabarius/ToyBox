@@ -120,8 +120,8 @@ namespace ToyBox {
         abstract public Type BlueprintType { get; }
     }
     public class BlueprintAction<BPType> : BlueprintAction where BPType : SimpleBlueprint {
-        public delegate void Perform(BPType bp, UnitEntityData ch, int count = 1);
-        public delegate bool CanPerform(BPType bp, UnitEntityData ch);
+        new public delegate void Perform(BPType bp, UnitEntityData ch, int count = 1);
+        new public delegate bool CanPerform(BPType bp, UnitEntityData ch);
 
         public BlueprintAction(
             String name,

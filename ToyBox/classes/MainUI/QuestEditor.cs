@@ -64,9 +64,7 @@ namespace ToyBox {
         }
     }
     public class QuestEditor {
-        static bool showQuests = false;
         static bool[] selectedQuests = new bool[0];
-        static String searchText = "";
         public static void ResetGUI() { }
 
         public static void OnGUI() {

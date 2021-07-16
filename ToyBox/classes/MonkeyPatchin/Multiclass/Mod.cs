@@ -53,7 +53,7 @@ namespace ToyBox.Multiclass {
 
         public BlueprintCharacterClass[] CharacterClasses => Game.Instance.BlueprintRoot.Progression.CharacterClasses.ToArray();
 
-        public LibraryScriptableObject LibraryObject => typeof(ResourcesLibrary).GetFieldValue<LibraryScriptableObject>("s_LibraryObject");
+        public BlueprintScriptableObject LibraryObject => typeof(ResourcesLibrary).GetFieldValue<BlueprintScriptableObject>("s_LoadedResources");//("s_LibraryObject");
 
         public Player Player => Game.Instance.Player;
     }

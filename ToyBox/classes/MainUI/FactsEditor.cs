@@ -59,7 +59,7 @@ namespace ToyBox {
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
             var filtered = new List<SimpleBlueprint>();
             foreach (SimpleBlueprint blueprint in blueprints) {
-                if (blueprint.AssetGuid.Contains(searchText)
+                if (blueprint.AssetGuid.ToString().Contains(searchText)
                     || blueprint.GetType().ToString().Contains(searchText)
                     ) {
                     filtered.Add(blueprint);
@@ -187,7 +187,7 @@ namespace ToyBox {
                         UI.Space(20); remWidth -= 20;
                         using (UI.VerticalScope(UI.Width(remWidth - 100))) {
                             if (settings.showAssetIDs)
-                                GUILayout.TextField(blueprint(fact).AssetGuid, UI.AutoWidth());
+                                GUILayout.TextField(blueprint(fact).AssetGuid.ToString(), UI.AutoWidth());
                             if (description != null) {
                                 UI.Label(description(fact).green(), UI.Width(remWidth - 100));
                             }

@@ -63,21 +63,21 @@ namespace ToyBox {
                 UI.Space(indent);
                 UI.ActionToggle(
                     cl.Name,
-                    () => multiclassSet.Contains(cl.AssetGuid),
-                    (v) => { if (v) multiclassSet.Add(cl.AssetGuid); else multiclassSet.Remove(cl.AssetGuid); changed = true; },
+                    () => multiclassSet.Contains(cl.AssetGuid.ToString()),
+                    (v) => { if (v) multiclassSet.Add(cl.AssetGuid.ToString()); else multiclassSet.Remove(cl.AssetGuid.ToString()); changed = true; },
                     350
                     );
                 var archetypes = cl.Archetypes;
-                if (multiclassSet.Contains(cl.AssetGuid) && archetypes.Any()) {
+                if (multiclassSet.Contains(cl.AssetGuid.ToString()) && archetypes.Any()) {
                     UI.Space(50);
                     int originalArchetype = 0;
-                    int selectedArchetype = originalArchetype = archetypes.FindIndex(archetype => multiclassSet.Contains(archetype.AssetGuid)) + 1;
+                    int selectedArchetype = originalArchetype = archetypes.FindIndex(archetype => multiclassSet.Contains(archetype.AssetGuid.ToString())) + 1;
                     var choices = new String[] { cl.Name }.Concat(archetypes.Select(a => a.Name)).ToArray();
                     UI.ActionSelectionGrid(ref selectedArchetype, choices, 6, (sel) => {
                         if (originalArchetype > 0)
-                            multiclassSet.Remove(archetypes[originalArchetype - 1].AssetGuid);
+                            multiclassSet.Remove(archetypes[originalArchetype - 1].AssetGuid.ToString());
                         if (selectedArchetype > 0)
-                            multiclassSet.Add(archetypes[selectedArchetype - 1].AssetGuid);
+                            multiclassSet.Add(archetypes[selectedArchetype - 1].AssetGuid.ToString());
                     }, UI.AutoWidth());
                 }
             }

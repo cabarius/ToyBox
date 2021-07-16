@@ -175,7 +175,9 @@ namespace ToyBox.Multiclass {
         static class SelectClass_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
-                //Logger.ModLog($"SelectClass.Apply.Postfix, is avialable  = {IsAvailable()}");
+                if (!settings.toggleMulticlass) return;
+
+                //Logger.ModLog($"SelectClass.Apply.Postfix, is available  = {IsAvailable()}");
                 if (IsAvailable()) {
                     Main.multiclassMod.AppliedMulticlassSet.Clear();
                     Main.multiclassMod.UpdatedProgressions.Clear();
@@ -183,10 +185,13 @@ namespace ToyBox.Multiclass {
                     // get multi-class setting
                     HashSet<string> selectedMulticlassSet;
                     if (!state.IsCharGen()) {
-                        if (unit.Unit.CopyOf != null) {
-                            selectedMulticlassSet = unit.Unit.CopyOf.Entity.Descriptor.GetMulticlassSet();
-                        }
-                        else {
+                        if (unit.Unit != null) {
+                            selectedMulticlassSet = unit.Unit.Descriptor.GetMulticlassSet();
+                            // FIXME - old code is this
+//                            if (unit.Unit.CopyOf != null) {
+//                                selectedMulticlassSet = unit.Unit.CopyOf.Entity.Descriptor.GetMulticlassSet();
+                            }
+                            else {
                             selectedMulticlassSet = unit.GetMulticlassSet();
                         }
                     }
@@ -201,7 +206,7 @@ namespace ToyBox.Multiclass {
                     // applying classes
                     StateReplacer stateReplacer = new StateReplacer(state);
                     foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses) {
-                        if (characterClass != stateReplacer.SelectedClass && selectedMulticlassSet.Contains(characterClass.AssetGuid)) {
+                        if (characterClass != stateReplacer.SelectedClass && selectedMulticlassSet.Contains(characterClass.AssetGuid.ToString())) {
                             stateReplacer.Replace(null, 0);
                             //Logger.ModLog($"进行{characterClass.AssetGuid}（{characterClass.Name}）的SelectClass操作");
                             //stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
@@ -225,7 +230,7 @@ namespace ToyBox.Multiclass {
                     ForEachAppliedMulticlass(state, unit, () => {
                         //Logger.ModLog($"进行{state.SelectedClass.AssetGuid}（{state.SelectedClass.Name}）的SelectClass-ForEachApplied操作");
                         foreach (BlueprintArchetype archetype in state.SelectedClass.Archetypes) {
-                            if (selectedMulticlassSet.Contains(archetype.AssetGuid)) {
+                            if (selectedMulticlassSet.Contains(archetype.AssetGuid.ToString())) {
                                 AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
                                 if (addArchetype.Check(state, unit)) {
                                     addArchetype.Apply(state, unit);
@@ -245,7 +250,9 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch("ApplyLevelup")]
         static class LevelUpController_ApplyLevelup_Patch {
             static void Prefix(LevelUpController __instance, UnitEntityData unit) {
-                if(unit == __instance.Preview) {
+                if (!settings.toggleMulticlass) return;
+
+                if (unit == __instance.Preview) {
                     Main.Log($"Unit Preview = {unit.CharacterName}");
                     Main.Log("所有的levelup action：");
                     foreach(var action in __instance.LevelUpActions) {
@@ -258,6 +265,7 @@ namespace ToyBox.Multiclass {
         static class ApplyClassMechanics_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
+                if (!settings.toggleMulticlass) return;
                 //Logger.ModLog($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()}");
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
@@ -275,6 +283,7 @@ namespace ToyBox.Multiclass {
         static class SelectFeature_Apply_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
+                if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
                     if (__instance.Item != null) {
                         FeatureSelectionState selectionState =
@@ -304,6 +313,7 @@ namespace ToyBox.Multiclass {
         static class SelectFeature_Check_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
+                if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
                     if (__instance.Item != null) {
                         FeatureSelectionState selectionState =
@@ -337,6 +347,8 @@ namespace ToyBox.Multiclass {
         static class ApplySpellbook_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(MethodBase __originalMethod, ApplySpellbook __instance, LevelUpState state, UnitDescriptor unit) {
+                if (!settings.toggleMulticlass) return;
+
                 if (IsAvailable() && !Main.multiclassMod.LockedPatchedMethods.Contains(__originalMethod)) {
                     Main.multiclassMod.LockedPatchedMethods.Add(__originalMethod);
                     ForEachAppliedMulticlass(state, unit, () => {
@@ -355,6 +367,8 @@ namespace ToyBox.Multiclass {
         static class LevelUpController_Commit_Patch {
             [HarmonyPostfix]
             static void Postfix(LevelUpController __instance) {
+                if (!settings.toggleMulticlass) return;
+
                 if (IsAvailable()) {
                     var charGenMulticlassSet = settings.charGenMulticlassSet;
                     if (__instance.State.IsCharGen() 

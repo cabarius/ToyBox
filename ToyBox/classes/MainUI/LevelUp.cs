@@ -56,11 +56,13 @@ namespace ToyBox {
                             UI.Space(25);
                             UI.Label("Allows you to choose all appearance options from any race".green());
                         },
+#if DEBUG
                         () => {
                             UI.Toggle("Gender Bending", ref settings.toggleIgnoreGenderRestrictions, 0);
                             UI.Space(25);
                             UI.Label("Removes gender restrictions from appearance options".green());
                         },
+#endif
                     () => { }
                     );
             UI.Div(0, 25);

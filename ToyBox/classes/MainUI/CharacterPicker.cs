@@ -42,7 +42,6 @@ using ModKit;
 namespace ToyBox {
     public class CharacterPicker {
         static int selectedIndex = 0;
-        static UnitEntityData selectedCharacter = null;
         static public UnitEntityData GetSelectedCharacter() {
             var characters = PartyEditor.GetCharacterList();
             if (characters == null || characters.Count == 0) {
@@ -55,7 +54,6 @@ namespace ToyBox {
         }
         public static void ResetGUI() {
             selectedIndex = 0;
-            selectedCharacter = null;
         }
 
         public static void OnGUI() {

@@ -326,7 +326,7 @@ namespace ToyBox {
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
                     UI.Div(100, 20, 755);
-                    var alignment = ch.Descriptor.Alignment.Value;
+                    var alignment = ch.Descriptor.Alignment.ValueRaw;
                     using (UI.HorizontalScope()) {
                         UI.Space(100);
                         UI.Label("Alignment", UI.Width(425));

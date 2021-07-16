@@ -379,9 +379,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-//        [HarmonyPatch(typeof(BlueprintRace), nameof(BlueprintRace.FemaleOptions), new Type[] { typeof(UnitDescriptor) })]
-
-
         // stuff for fixing feat multiplier ???
         // LevelUpState
         //     public bool CanSelectAnything(LevelUpState state, UnitEntityData unit)

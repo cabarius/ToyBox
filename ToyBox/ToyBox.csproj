@@ -131,6 +131,7 @@
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Appearance.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs" />
@@ -185,7 +186,11 @@
   </ItemGroup>
   <Import Project="..\ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ProjectExtensions />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties info_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

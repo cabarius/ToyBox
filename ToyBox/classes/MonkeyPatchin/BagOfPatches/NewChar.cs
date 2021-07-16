@@ -122,6 +122,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
+using Kingmaker.Blueprints.CharGen;
+using Kingmaker.Visual.CharacterSystem;
+using Kingmaker.ResourceLinks;
 
 namespace ToyBox.BagOfPatches {
     static class NewChar {
@@ -150,7 +153,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(StatsDistribution), "CanRemove")]
+        [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.CanRemove))]
         public static class StatsDistribution_CanRemove_Patch {
             public static void Postfix(ref bool __result, StatType attribute, StatsDistribution __instance) {
                 if (settings.characterCreationAbilityPointsMin != 7) {
@@ -159,7 +162,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(StatsDistribution), "CanAdd")]
+        [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.CanAdd))]
         public static class StatsDistribution_CanAdd_Patch {
             public static void Postfix(ref bool __result, StatType attribute, StatsDistribution __instance) {
                 int attributeMax = settings.characterCreationAbilityPointsMax;
@@ -175,7 +178,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(StatsDistribution), "GetAddCost")]
+        [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.GetAddCost))]
         public static class StatsDistribution_GetAddCost_Patch {
             public static bool Prefix(StatsDistribution __instance, StatType attribute) {
                 int attributeValue = __instance.StatValues[attribute];
@@ -191,7 +194,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(StatsDistribution), "GetRemoveCost")]
+        [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.GetRemoveCost))]
         public static class StatsDistribution_GetRemoveCost_Patch {
             public static bool Prefix(StatsDistribution __instance, StatType attribute) {
                 int attributeValue = __instance.StatValues[attribute];

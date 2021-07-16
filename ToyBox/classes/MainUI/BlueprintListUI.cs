@@ -86,7 +86,6 @@ namespace ToyBox {
             }
             UI.Div(indent);
             foreach (SimpleBlueprint blueprint in blueprints) {
-                Rect rect;
                 var description = blueprint.GetDescription();
                 using (UI.HorizontalScope()) {
                     var remWidth = remainingWidth - indent;
@@ -141,7 +140,7 @@ namespace ToyBox {
                             if (description.Length == 0) description = componentStr;
                             else description = componentStr + "\n" + description;
                         }
-                        if (settings.showElements && bpso.ElementsArray?.Length > 0) {
+                        if (settings.showElements && bpso.ElementsArray?.Count > 0) {
                             String elementsStr = String.Join<object>(" ", bpso.ElementsArray).magenta();
                             if (description.Length == 0) description = elementsStr;
                             else description = elementsStr + "\n" + description;
@@ -151,7 +150,7 @@ namespace ToyBox {
                         if (settings.showAssetIDs) {
                             using (UI.HorizontalScope(UI.Width(remWidth))) {
                                 UI.Label(typeString.cyan());
-                                GUILayout.TextField(blueprint.AssetGuid, UI.ExpandWidth(false));
+                                GUILayout.TextField(blueprint.AssetGuid.ToString(), UI.ExpandWidth(false));
                             }
                         }
                         else UI.Label(typeString.cyan()); // + $" {remWidth}".bold());

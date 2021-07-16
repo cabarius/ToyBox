@@ -20,7 +20,7 @@ namespace ToyBox.classes.MonkeyPatchin
         [HarmonyPatch(typeof(InteractionHighlightController), "HighlightOn")]
         class InteractionHighlightController_Activate_Patch
         {
-            static TimeSpan m_LastTickTime;
+            //static TimeSpan m_LastTickTime;
             static AccessTools.FieldRef<InteractionHighlightController, bool> m_IsHighlightingRef;
 
             //static FastGetter<InteractionHighlightController, bool> IsHighlightingGet;

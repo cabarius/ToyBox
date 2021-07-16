@@ -110,7 +110,7 @@ namespace ToyBox {
 
         public static String CollationName(this BlueprintIngredient bp) {
             if (bp.IsNotable) return "Notable";
-            if (bp.AllowMakeStackable) return "Stackable";
+            //if (bp.AllowMakeStackable) return "Stackable";
             if (bp.Destructible) return "Destructible";
             if (bp.FlavorText != null) return bp.FlavorText;
             return bp.NonIdentifiedName;

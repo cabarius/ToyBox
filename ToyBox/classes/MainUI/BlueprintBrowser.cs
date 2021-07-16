@@ -68,8 +68,6 @@ namespace ToyBox {
         public static String[] filteredBPNames = null;
         public static int matchCount = 0;
         public static String parameter = "";
-        static int selectedBlueprintIndex = -1;
-        static SimpleBlueprint selectedBlueprint = null;
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationName()),
@@ -160,8 +158,6 @@ namespace ToyBox {
         public static void UpdateSearchResults() {
             if (blueprints == null) return;
             selectedCollationIndex = 0;
-            selectedBlueprint = null;
-            selectedBlueprintIndex = -1;
             selectedCollatedBPs = null;
             BlueprintListUI.needsLayout = true;
             if (settings.searchText.Trim().Length == 0) {
@@ -176,7 +172,7 @@ namespace ToyBox {
             else bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
             var filtered = new List<SimpleBlueprint>();
             foreach (SimpleBlueprint blueprint in bps) {
-                if (blueprint.AssetGuid.Contains(searchText)
+                if (blueprint.AssetGuid.ToString().Contains(searchText)
                     || blueprint.GetType().ToString().Contains(searchText)
                     ) {
                     filtered.Add(blueprint);
