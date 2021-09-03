@@ -125,7 +125,7 @@ namespace ModKit {
             UI.Space(25);
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var offset = 1;
-            var places = (int)Math.Max(0, Math.Min(15, 2.01 - Math.Log10(value + offset)));
+            var places = (int)Math.Max(0, Math.Min(15, decimals + 1.01 - Math.Log10(value + offset)));
             var logMin = 100f * (float)Math.Log10(min + offset);
             var logMax = 100f * (float)Math.Log10(max + offset);
             var logValue = 100f * (float)Math.Log10(value + offset);

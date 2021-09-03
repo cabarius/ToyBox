@@ -198,6 +198,7 @@ namespace ToyBox {
                 () => UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 100, 1, 1, "", UI.AutoWidth()),
+                () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 1.5f, 1, 2, "", UI.AutoWidth()),
                 () => { }
                 );
             UI.Div(0, 25);

@@ -310,5 +310,29 @@ namespace ToyBox.BagOfPatches {
                 __result = (long)(__result * settings.vendorBuyPriceMultiplier);
             }
         }
+
+        [HarmonyPatch(typeof(CameraZoom), "TickZoom")]
+        static class CameraZoom_TickZoom {
+            static float BaseFovMin = 0;
+            static float BaseFovMax = 0;
+            public static bool Prefix(CameraZoom __instance) {
+                if (BaseFovMin == 0) {
+                    BaseFovMin = __instance.FovMin;
+                    BaseFovMax = __instance.FovMax;
+                }
+                __instance.FovMax = BaseFovMax * settings.fovMultiplier;
+                __instance.FovMin = BaseFovMin / settings.fovMultiplier;
+                if (__instance.m_ZoomRoutine != null)
+                    return true;
+                if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse)
+                    __instance.m_PlayerScrollPosition += __instance.IsOutOfScreen ? 0.0f : Input.GetAxis("Mouse ScrollWheel");
+                __instance.m_ScrollPosition = __instance.m_PlayerScrollPosition;
+                __instance.m_ScrollPosition = Mathf.Clamp(__instance.m_ScrollPosition, 0.0f, __instance.m_ZoomLenght);
+                __instance.m_SmoothScrollPosition = Mathf.Lerp(__instance.m_SmoothScrollPosition, __instance.m_ScrollPosition, Time.unscaledDeltaTime * __instance.m_Smooth);
+                __instance.m_Camera.fieldOfView = Mathf.Lerp(__instance.FovMax, __instance.FovMin, __instance.CurrentNormalizePosition);
+                __instance.m_PlayerScrollPosition = __instance.m_ScrollPosition;
+                return true;
+            }
+        }
     }
 }

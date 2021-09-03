@@ -12,6 +12,8 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.2.3
+    Added Field of View Multiplier to increase zoom range or even flip it (try a FoV Mult of 0.4)
+Ver 1.2.3
     Recompiled for game release
     Added tweak to allow achievements for modded games
 Ver 1.2.2
