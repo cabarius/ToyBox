@@ -410,7 +410,7 @@ namespace ToyBox {
                         using (UI.HorizontalScope()) {
                             UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
                             if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
-                            //                        UI.DisclosureToggle("Edit", ref editSpellbooks);
+                            UI.DisclosureToggle("Edit", ref editSpellbooks);
                         }
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         if (editSpellbooks) {

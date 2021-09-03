@@ -125,6 +125,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
+using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
@@ -243,8 +244,8 @@ namespace ToyBox.BagOfPatches {
             return this.Manager.Add<Buff>(new Buff(blueprint, context, duration));
         }
         */
-
-        [HarmonyPatch(typeof(BuffCollection), "AddBuff")]
+#if false
+        [HarmonyPatch(typeof(Buff), "AddBuff")]
         [HarmonyPatch(new Type[] { typeof(BlueprintBuff), typeof(UnitEntityData), typeof(TimeSpan?), typeof(AbilityParams) })]
         public static class Buff_AddBuff_patch {
             public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
@@ -260,6 +261,51 @@ namespace ToyBox.BagOfPatches {
                 }
 
                 Main.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+            }
+        }
+#endif
+        [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
+            typeof(BlueprintBuff),
+            typeof(UnitEntityData),
+            typeof(TimeSpan?),
+            typeof(AbilityParams)
+            })]
+        public static class BuffCollection_AddBuff_patch {
+            public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
+                try {
+                    if (!caster.IsPlayersEnemy) {
+                        if (duration != null) {
+                            duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    modLogger.Log(e.ToString());
+                }
+
+                Main.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+            }
+        }
+
+        [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
+            typeof(BlueprintBuff),
+            typeof(MechanicsContext),
+            typeof(TimeSpan?)
+            })]
+        public static class BuffCollection_AddBuff2_patch {
+            public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref TimeSpan? duration) {
+                try {
+                    if (!parentContext.MaybeCaster.IsPlayersEnemy) {
+                        if (duration != null) {
+                            duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    modLogger.Log(e.ToString());
+                }
+
+                Main.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
 
@@ -313,12 +359,21 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(CameraZoom), "TickZoom")]
         static class CameraZoom_TickZoom {
-            static float BaseFovMin = 0;
-            static float BaseFovMax = 0;
+            static bool firstCall = true;
+            static float BaseFovMin = 17.5f;
+            static float BaseFovMax = 30;
             public static bool Prefix(CameraZoom __instance) {
-                if (BaseFovMin == 0) {
-                    BaseFovMin = __instance.FovMin;
-                    BaseFovMax = __instance.FovMax;
+                if (firstCall) {
+                    modLogger.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
+                    if (__instance.FovMin != BaseFovMin) {
+                        modLogger.Log($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
+                        BaseFovMin = __instance.FovMin;
+                    }
+                    if (__instance.FovMax != BaseFovMax) {
+                        modLogger.Log($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
+                        BaseFovMax = __instance.FovMax;
+                    }
+                    firstCall = false;
                 }
                 __instance.FovMax = BaseFovMax * settings.fovMultiplier;
                 __instance.FovMin = BaseFovMin / settings.fovMultiplier;

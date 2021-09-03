@@ -148,14 +148,16 @@ namespace ToyBox {
                     foreach (var c in sequence.Cues) if (c.Get().CanShow()) toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
                     if (sequence.Exit != null) {
                         var exit = sequence.Exit;
-                        var subAnswer = exit.Answers[0];
-                        if (visited.Contains(subAnswer)) {
-                            isRecursive = true;
-                            break;
-                        }
-                        visited.Add(subAnswer);
-                        if (exit.Continue.Cues.Count > 0) {
-                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
+                        if (exit.Answers.Count > 0) {
+                            var subAnswer = exit.Answers[0];
+                            if (visited.Contains(subAnswer)) {
+                                isRecursive = true;
+                                break;
+                            }
+                            visited.Add(subAnswer);
+                            if (exit.Continue.Cues.Count > 0) {
+                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
+                            }
                         }
                     }
                 }

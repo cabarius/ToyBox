@@ -10,9 +10,13 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
-
-Ver 1.2.3
-    Added Field of View Multiplier to increase zoom range or even flip it (try a FoV Mult of 0.4)
+Ver 1.2.5
+    Improved stability of fov (zoom multiplier) when you disable and renable the mod multiple times
+    Added experimental slider to increase max FoV multiplier.  This can cause perf issues in some maps
+    Fixed out of range bug in dialog preview
+Ver 1.2.4
+    Added Field of View Multiplier to increase zoom range or even flip it (try a FoV Multiplier of 0.4)
+    Fixed bug in buff duration multiplier
 Ver 1.2.3
     Recompiled for game release
     Added tweak to allow achievements for modded games

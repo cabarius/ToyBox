@@ -82,6 +82,7 @@ namespace ToyBox {
         public float enemyBaseHitPointsMultiplier = 1;
         public float buffDurationMultiplierValue = 1;
         public float fovMultiplier = 1;
+        public float fovMultiplierMax = 1.25f;
         // Dice Rolls
         public UnitSelectType allHitsCritical = UnitSelectType.Off;
         public UnitSelectType rollWithAdvantage = UnitSelectType.Off;

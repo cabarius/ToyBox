@@ -198,7 +198,10 @@ namespace ToyBox {
                 () => UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 100, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 1.5f, 1, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.AutoWidth()),
+                () => {
+                    UI.Space(328); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth()); },
                 () => { }
                 );
             UI.Div(0, 25);
