@@ -51,11 +51,11 @@ namespace ToyBox {
                         () => UI.Slider("Build Points (Mercenary)", ref settings.characterCreationAbilityPointsMerc, 1, 200, 20, "", UI.AutoWidth()),
                         () => UI.Slider("Ability Max", ref settings.characterCreationAbilityPointsMax, 0, 50, 18, "", UI.AutoWidth()),
                         () => UI.Slider("Ability Min", ref settings.characterCreationAbilityPointsMin, 0, 50, 7, "", UI.AutoWidth()),
-                        () => {
-                            UI.Toggle("All Appearance Options", ref settings.toggleAllRaceCustomizations, 0);
-                            UI.Space(25);
-                            UI.Label("Allows you to choose all appearance options from any race".green());
-                        },
+                        //() => {
+                        //    UI.Toggle("All Appearance Options", ref settings.toggleAllRaceCustomizations, 0);
+                        //    UI.Space(25);
+                        //    UI.Label("Allows you to choose all appearance options from any race".green());
+                        //},
 #if DEBUG
                         () => {
                             UI.Toggle("Gender Bending", ref settings.toggleIgnoreGenderRestrictions, 0);

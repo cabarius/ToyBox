@@ -11,6 +11,9 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.2.3
+    Recompiled for game release
+    Added tweak to allow achievements for modded games
 Ver 1.2.2
     Ported to Beta 3
 

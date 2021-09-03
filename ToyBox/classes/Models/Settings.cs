@@ -36,6 +36,7 @@ namespace ToyBox {
         public bool toggleMetamagicIsFree = false;
         public bool toggleMaterialComponent = false;
         public bool toggleAutomaticallyLoadLastSave = false;
+        public bool toggleAllowAchievementsDuringModdedGame = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;

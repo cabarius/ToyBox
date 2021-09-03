@@ -148,6 +148,7 @@ namespace ToyBox {
             });
             UI.Div(0, 25);
             UI.HStack("Tweaks", 1,
+                () => UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0),
                 () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0),
 

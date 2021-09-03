@@ -3,11 +3,13 @@
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
+using Kingmaker.Achievements;
 using Kingmaker.AreaLogic.QuestSystem;
 using Kingmaker.AreaLogic.SummonPool;
 using Kingmaker.Assets.Controllers.GlobalMap;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
+using Kingmaker.Achievements.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
@@ -53,12 +55,15 @@ using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
+using Kingmaker.Modding;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RandomEncounters;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
 using Kingmaker.RuleSystem.Rules.Abilities;
 using Kingmaker.RuleSystem.Rules.Damage;
+using Kingmaker.Settings;
+using Kingmaker.Settings.Difficulty;
 using Kingmaker.TextTools;
 using Kingmaker.UI;
 //using Kingmaker.UI._ConsoleUI.Models;
@@ -120,10 +125,11 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
-namespace ToyBox.BagOfPatches{
+namespace ToyBox.BagOfPatches {
     static class Misc {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
@@ -179,6 +185,19 @@ namespace ToyBox.BagOfPatches{
                     actionName = GetSpellbookActionName(actionName, __instance.Item, currentCharacter);
                 }
                 __result = actionName;
+            }
+        }
+
+        [HarmonyPatch(typeof(AchievementEntity), "IsDisabled", MethodType.Getter)]
+        public static class AchievementEntity_IsDisabled_Patch {
+            private static void Postfix(ref bool __result, AchievementEntity __instance) {
+                modLogger.Log("AchievementEntity.IsDisabled");
+                if (settings.toggleAllowAchievementsDuringModdedGame) {
+                    modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
+                    __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || ((UnityEngine.Object)__instance.Data.MinDifficulty != (UnityEngine.Object)null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave);
+                    // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive)
+                    modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
+                }
             }
         }
     }
