@@ -11,9 +11,11 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 Ver 1.2.5
+    Added tweak to highlight scrolls that can be copied into your spell book (or recipes)
     Improved stability of fov (zoom multiplier) when you disable and renable the mod multiple times
     Added experimental slider to increase max FoV multiplier.  This can cause perf issues in some maps
     Fixed out of range bug in dialog preview
+    Released experimental version of 1.2.5 with multiple classes per level turned on (please download the experimental file to try this out and file bugs here: https://github.com/cabarius/ToyBox/issues)
 Ver 1.2.4
     Added Field of View Multiplier to increase zoom range or even flip it (try a FoV Multiplier of 0.4)
     Fixed bug in buff duration multiplier
@@ -199,7 +201,7 @@ Ver 1.0.4
 Ver 1.0.3
     Party picker now lets you browse Party, Party & Pets, All Characters, Active Companions. Remote Companions, Mercs, Pets
     Add/Remove party members
-    eleport Party To You
+    Teleport Party To You
     Run Perception Check
     ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
 Ver 1.0.2

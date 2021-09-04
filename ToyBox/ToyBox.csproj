@@ -119,6 +119,9 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityModManager">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
       <Private>False</Private>
@@ -146,6 +149,9 @@
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\Infrastructure\UnitEntityDetails.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />

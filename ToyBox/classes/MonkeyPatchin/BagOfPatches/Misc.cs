@@ -78,6 +78,10 @@ using Kingmaker.UI.MVVM;
 using Kingmaker.UI.MVVM._PCView.CharGen;
 using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
 using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._PCView.Slots;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._VM.Slots;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.ServiceWindow.LocalMap;
@@ -197,6 +201,20 @@ namespace ToyBox.BagOfPatches {
                     __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || ((UnityEngine.Object)__instance.Data.MinDifficulty != (UnityEngine.Object)null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave);
                     // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive)
                     modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
+                }
+            }
+        }
+
+//        [HarmonyPatch(typeof(ItemSlot), "SetupEquipPossibility")]
+        
+        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
+        static class ItemSlot_SetupEquipPossibility_Patch {
+            public static void Postfix(InventoryEquipSlotView __instance) {
+                if (__instance.SlotVM.HasItem && __instance.SlotVM.IsScroll && settings.toggleHighlightCopyableScrolls) {
+                    __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
+                }
+                else {
+                    __instance.m_Icon.canvasRenderer.SetColor(Color.white);
                 }
             }
         }

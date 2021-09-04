@@ -2,6 +2,7 @@
 using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
+using ToyBox.Multiclass;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -15,6 +16,7 @@ namespace ToyBox {
 
         // Tweaks
         public bool highlightObjectsToggle = false;
+        public bool toggleHighlightCopyableScrolls = false;
         public bool toggleSpontaneousCopyScrolls = false;
         public bool toggleInstantEvent = false;
         public bool toggleInfiniteAbilities = false;
@@ -122,6 +124,12 @@ namespace ToyBox {
         public HashSet<string> charGenMulticlassSet = new HashSet<string>();
         public SerializableDictionary<string, HashSet<string>> selectedMulticlassSets = new SerializableDictionary<string, HashSet<string>>();
 
+        public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
+        public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
+        public Multiclass.ProgressionPolicy multiclassBABPolicy = 0;
+        public Multiclass.ProgressionPolicy multiclassSkillPointPolicy = 0;
+
+
         public bool toggleTakeHighestHitDie = true;
         public bool toggleTakeHighestSkillPoints = true;
         public bool toggleTakeHighestBAB = true;
@@ -165,12 +173,6 @@ namespace ToyBox {
 
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
-
-        public int multiClassHPDiceType = 0;
-        public int multiClassSaveType = 0;
-        public int multiClassBABType = 0;
-        public int multiClassSkillPointType = 0;
-
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);
         }

@@ -10,17 +10,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToyBox.classes.MonkeyPatchin.Multiclass.StatProgression {
-    public enum MulticlassSkillPointType {
-        SimpleAdd = 0,
-        UseTopN = 1,
-        UseAverageN = 2
-    };
+namespace ToyBox.Multiclass {
     public static class SkillPoint {
-        public static MulticlassSkillPointType type => (MulticlassSkillPointType)(Main.settings.multiClassSkillPointType);
         public static int? GetTotalSkillPoints(UnitDescriptor unit, int nextLevel) {
-            if (MulticlassSkillPointType.SimpleAdd == type) return null;
-
+            List<ClassData> classes = unit.Progression.Classes;
+            var classCount = classes.Count;
+            switch (Main.settings.multiclassSkillPointPolicy) {
+                case ProgressionPolicy.Average:
+                    return classes.Sum(cl => cl.CalcSkillPoints()) / classCount;
+                case ProgressionPolicy.Largest:
+                    return classes.Max(cl => cl.CalcSkillPoints());
+                case ProgressionPolicy.Sum:
+                    return classes.Sum(cl => cl.CalcSkillPoints());
+                default:            
+                    return null;
+            }
+            // TODO - figure out the right thing to do here
+#if false
             List<ClassData> classes = unit.Progression.Classes;
             List<int> classLevelSkillPoints = new List<int>();
             foreach(ClassData classData in classes) {
@@ -44,14 +50,15 @@ namespace ToyBox.classes.MonkeyPatchin.Multiclass.StatProgression {
                     return null;
                 }
             }
+#endif
         }
 
         [HarmonyPatch(typeof(LevelUpHelper), "GetTotalSkillPoints")]
         public static class LevelUpHelper_GetTotalSkillPoints_Patch {
             public static bool Prefix(UnitDescriptor unit, int nextLevel, ref int __result) {
-                int? ans = GetTotalSkillPoints(unit, nextLevel);
-                if (ans.HasValue) {
-                    __result = ans.Value;
+                var totalSkillPoints = GetTotalSkillPoints(unit, nextLevel);
+                if (totalSkillPoints.HasValue) {
+                    __result = totalSkillPoints.Value;
                     return false;
                 }
                 else return true;

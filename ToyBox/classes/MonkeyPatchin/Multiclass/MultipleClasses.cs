@@ -124,10 +124,18 @@ using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using static ModKit.Utility.ReflectionCache;
 using ModKit.Utility;
-using ToyBox.classes.MonkeyPatchin.Multiclass.StatProgression;
+using ToyBox.Multiclass;
 
 namespace ToyBox.Multiclass {
+
+    public enum ProgressionPolicy {
+        PrimaryClass = 0,
+        Average = 1,
+        Largest = 2,
+        Sum = 3,
+    };
     static class MultipleClasses {
+
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 

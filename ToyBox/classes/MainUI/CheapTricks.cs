@@ -159,6 +159,8 @@ namespace ToyBox {
                 () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
 
                 () => UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0),
+                
+                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
                 () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
 
                 () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),

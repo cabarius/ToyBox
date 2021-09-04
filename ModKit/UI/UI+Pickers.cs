@@ -28,6 +28,13 @@ namespace ModKit {
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
             return sel != selected;
         }
+        public static bool SelectionGrid(String title, ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
+            using (UI.HorizontalScope()) {
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(25);
+               return UI.SelectionGrid(ref selected, texts, xCols, options);
+            }
+        }
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, GUIStyle style, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
             if (UI.IsNarrow) xCols = Math.Min(4, xCols);
@@ -97,11 +104,11 @@ namespace ModKit {
             }
         }
         public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
-            UI.BeginHorizontal();
-            UI.Label(title.cyan(), UI.Width(300));
-            UI.Space(25);
-            UI.EnumGrid<TEnum>(ref value, xCols, options);
-            UI.EndHorizontal();
+            using (UI.HorizontalScope()) {
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(25);
+                UI.EnumGrid<TEnum>(ref value, xCols, options);
+            }
         }
         public static void EnumerablePicker<T>(
                 String title,
