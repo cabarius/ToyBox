@@ -319,7 +319,7 @@ namespace ToyBox {
                                 var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                                 UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
                                 UI.Space(175);
-                                UI.Label(cd.CharacterClass.Description.green(), UI.AutoWidth());
+                                UI.Label(cd.CharacterClass.Description.RemoveHtmlTags().green(), UI.AutoWidth());
                             }
                         }
                     }

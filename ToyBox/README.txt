@@ -10,6 +10,8 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+Ver 1.2.6
+    Got rid of html tags from descriptions
 Ver 1.2.5
     Added tweak to highlight scrolls that can be copied into your spell book (or recipes)
     Improved stability of fov (zoom multiplier) when you disable and renable the mod multiple times
