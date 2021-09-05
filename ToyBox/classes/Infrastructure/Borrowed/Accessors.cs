@@ -7,6 +7,8 @@ using HarmonyLib;
 using System;
 using System.Linq;
 
+#pragma warning disable 618
+
 namespace ToyBox
 {
     public delegate TResult FastGetter<TClass, TResult>(TClass source);
