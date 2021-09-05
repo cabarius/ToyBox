@@ -227,11 +227,10 @@ Search results will offer you actions such as adding a feature or item.
 
 Install & Use
     - Install the Unity Mod Manager﻿.
-    - Install the mod using the Unity Mod Manager﻿ or extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure Demo\Mods').
+    - Install the mod using the Unity Mod Manager﻿ or extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure\Mods').
     - Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
     - Open the Unity Mod Manager﻿ by pressing CTRL + F10.
     - Adjust the settings in the mod's menu
-
 Acknowledgments:  
     Owlcat Games - for making fun and amazing games
     Paizo - for carrying the D20 3.5 torch
@@ -246,6 +245,14 @@ Acknowledgments:
 
 Report Bugs: https://github.com/cabarius/ToyBox/issues
 Source Code: https://github.com/cabarius/ToyBox
+
+Development Setup
+    1 - Clone the git repo
+    2 - Locate the install folder of Pathfinder Wrath of the Righteous
+    3 - Go to System Properties > Environment Variables and add WrathPath with a value that looks like this:
+        WrathPath   C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure
+
+
 License: MIT
 
 Copyright <2021> Narria (github user Cabarius)
