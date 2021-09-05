@@ -11,6 +11,10 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 Ver 1.2.6
+    Added ability to see and set your experience to match your current character level 
+        See Party Editor > Character > Classes
+    Added support for Roll Only 20s out of combat
+    Made scribable scrolls show up in containers or corpses in addition to inventory and vendors
     Got rid of html tags from descriptions
 Ver 1.2.5
     Added tweak to highlight scrolls that can be copied into your spell book (or recipes)

@@ -78,6 +78,7 @@ using Kingmaker.UI.MVVM;
 using Kingmaker.UI.MVVM._PCView.CharGen;
 using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
 using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
+using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
@@ -121,6 +122,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using Kingmaker.UI.ActionBar;
+using Owlcat.Runtime.UI.MVVM;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using TMPro;
 using TurnBased.Controllers;
@@ -205,10 +207,27 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-//        [HarmonyPatch(typeof(ItemSlot), "SetupEquipPossibility")]
-        
+        //        [HarmonyPatch(typeof(ItemSlot), "SetupEquipPossibility")]
+
+        [HarmonyPatch(typeof(LootSlotPCView), "BindViewImplementation")]
+        static class ItemSlot_IsUsable_Patch {
+            public static void Postfix(ViewBase<ItemSlotVM> __instance) {
+                if (__instance is LootSlotPCView itemSlotPCView) {
+//                        modLogger.Log($"checking  {itemSlotPCView.ViewModel.Item}");
+                        if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll &&
+                                                                settings.toggleHighlightCopyableScrolls) {
+//                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
+                            itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
+                        }
+                        else {
+                            itemSlotPCView.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
+                        }
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
-        static class ItemSlot_SetupEquipPossibility_Patch {
+        static class ItemSlotView_RefreshItem_Patch {
             public static void Postfix(InventoryEquipSlotView __instance) {
                 if (__instance.SlotVM.HasItem && __instance.SlotVM.IsScroll && settings.toggleHighlightCopyableScrolls) {
                     __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));

@@ -90,6 +90,7 @@ namespace ToyBox {
         public UnitSelectType rollWithAdvantage = UnitSelectType.Off;
         public UnitSelectType rollWithDisadvantage = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20 = UnitSelectType.Off;
+        public UnitSelectType alwaysRoll20OutOfCombat = UnitSelectType.Off;
         public UnitSelectType neverRoll20 = UnitSelectType.Off;
         public UnitSelectType alwaysRoll1 = UnitSelectType.Off;
         public UnitSelectType neverRoll1 = UnitSelectType.Off;

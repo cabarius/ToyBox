@@ -42,6 +42,7 @@
   <Target Name="Publicise" AfterTargets="Clean">
     <ItemGroup>
       <PubliciseInputAssemblies Include="$(WrathInstallDir)\Wrath_Data\Managed\Assembly-CSharp.dll" />
+      <PubliciseInputAssemblies Include="$(WrathInstallDir)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll" />
     </ItemGroup>
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
   </Target>
@@ -64,9 +65,8 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Owlcat.Runtime.UI">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.UI.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Owlcat.Runtime.UI_public">
+      <HintPath>..\lib\Owlcat.Runtime.UI_public.dll</HintPath>
     </Reference>
     <Reference Include="Owlcat.Runtime.Visual">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>

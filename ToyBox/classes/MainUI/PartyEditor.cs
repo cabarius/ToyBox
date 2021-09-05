@@ -297,6 +297,19 @@ namespace ToyBox {
                             UI.Space(23);
                             UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above".green());
                         }
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.Label("Experience".cyan(), UI.Width(250));
+                            UI.Space(82);
+                            UI.Label($"{prog.Experience}", UI.Width(150f));
+                            UI.Space(36);
+                            UI.ActionButton("Set", () => {
+                                int newXP = BlueprintRoot.Instance.Progression.XPTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
+                                prog.Experience = newXP;
+                            }, UI.Width(125));
+                            UI.Space(23);
+                            UI.Label("This sets your experience to match the current value of character level.  It does not trigger any level ups or adjusts any character features. To do a normal level up use +1 Lvl above".green());
+                        }
                         UI.Div(100, 25);
                         using (UI.HorizontalScope()) {
                             UI.Space(100);
