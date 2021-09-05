@@ -1,188 +1,70 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using HarmonyLib;
-using JetBrains.Annotations;
 using Kingmaker;
-using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.AreaLogic.SummonPool;
-using Kingmaker.Assets.Controllers.GlobalMap;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Prerequisites;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Blueprints.Items.Components;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items.Shields;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Blueprints.Root;
-using Kingmaker.Cheats;
-using Kingmaker.Controllers;
-using Kingmaker.Controllers.Clicks.Handlers;
-using Kingmaker.Controllers.Combat;
-//using Kingmaker.Controllers.GlobalMap;
-using Kingmaker.Controllers.Rest;
-using Kingmaker.Controllers.Rest.Cooking;
-using Kingmaker.Controllers.Units;
-using Kingmaker.Designers;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
-using Kingmaker.DialogSystem.Blueprints;
-using Kingmaker.Dungeon;
-using Kingmaker.Dungeon.Blueprints;
-using Kingmaker.Dungeon.Units.Debug;
-using Kingmaker.ElementsSystem;
-using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Persistence;
-using Kingmaker.EntitySystem.Persistence.JsonUtility;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.Enums;
-using Kingmaker.Enums.Damage;
-using Kingmaker.Formations;
-using DG.Tweening;
-using Kingmaker.GameModes;
-using Kingmaker.Globalmap;
-using Kingmaker.Items;
-using Kingmaker.Kingdom;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Kingdom.Settlements;
-using Kingmaker.Kingdom.Tasks;
-using Kingmaker.Kingdom.UI;
-using Kingmaker.PubSubSystem;
-using Kingmaker.RandomEncounters;
-using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules;
-using Kingmaker.RuleSystem.Rules.Abilities;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.TextTools;
-using Kingmaker.UI;
-//using Kingmaker.UI._ConsoleUI.Models;
-using Kingmaker.UI.Common;
-using Kingmaker.UI.FullScreenUITypes;
-using Kingmaker.UI.Group;
-using Kingmaker.UI.IngameMenu;
-using Kingmaker.UI.Kingdom;
-using Kingmaker.UI.Log;
-using Kingmaker.UI.MainMenuUI;
-using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM._PCView.CharGen;
-using Kingmaker.UI.MVVM._PCView.CharGen.Phases;
-using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Mythic;
-//using Kingmaker.UI.RestCamp;
-using Kingmaker.UI.ServiceWindow;
-using Kingmaker.UI.ServiceWindow.LocalMap;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.Abilities.Components;
-using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
-using Kingmaker.UnitLogic.ActivatableAbilities;
-using Kingmaker.UnitLogic.Alignments;
-using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-using Kingmaker.UnitLogic.Commands;
-using Kingmaker.UnitLogic.Commands.Base;
-using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Mechanics.Conditions;
-using Kingmaker.UnitLogic.Parts;
-using Kingmaker.Utility;
-using Kingmaker.View;
-using Kingmaker.View.MapObjects;
-using Kingmaker.View.MapObjects.InteractionRestrictions;
-using Kingmaker.View.Spawners;
-using Kingmaker.Visual;
-using Kingmaker.Visual.Animation.Kingmaker.Actions;
-using Kingmaker.Visual.HitSystem;
-using Kingmaker.Visual.LocalMap;
-using Kingmaker.Visual.Sound;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
-using Kingmaker.UI.ActionBar;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
-using TMPro;
-using TurnBased.Controllers;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
-using static ModKit.Utility.ReflectionCache;
 using ModKit.Utility;
-using ToyBox.Multiclass;
 
 namespace ToyBox.Multiclass {
     static class MultipleClasses {
-
         public static Settings settings = Main.settings;
+
         public static Player player = Game.Instance.Player;
+
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         public static bool IsAvailable() {
             return Main.Enabled &&
-                settings.toggleMulticlass &&                
-                General.levelUpController.IsManualPlayerUnit();
+                   settings.toggleMulticlass &&
+                   General.levelUpController.IsManualPlayerUnit();
         }
 
         public static bool Enabled {
             get => settings.toggleMulticlass;
+
             set => settings.toggleMulticlass = value;
         }
 
-#if false
-        public static HashSet<string> MainCharSet => settings.selectedMulticlassSet;
-
-        public static HashSet<string> CharGenSet => settings.selectedCharGenMulticlassSet;
-
-        public static SerializableDictionary<string, HashSet<string>> CompanionSets => settings.selectedCompanionMulticlassSet;
-
-        public static HashSet<string> DemandCompanionSet(string name) {
-            if (!settings.selectedCompanionMulticlassSet.TryGetValue(name, out HashSet<string> classes)) {
-                settings.selectedCompanionMulticlassSet.Add(name, classes = new HashSet<string>());
-            }
-            return classes;
-        }
-#endif
-
-#region Utilities
+        #region Utilities
 
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             StateReplacer stateReplacer = new StateReplacer(state);
+
             var unitMulticlassSet = unit.GetMulticlassSet();
+
             modLogger.Log($"hash key: {unit.HashKey()} multiclass set: {unitMulticlassSet.ToArray()}");
-            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses) {
-                if (characterClass != stateReplacer.SelectedClass && unit.GetMulticlassSet().Contains(characterClass.AssetGuid.ToString())) {
-                    stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
-                    action();
-                }
+
+            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses
+                                                                   .Where(characterClass => characterClass != stateReplacer.SelectedClass
+                                                                                            && unit.GetMulticlassSet()
+                                                                                                   .Contains(characterClass.AssetGuid.ToString()))) {
+                stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+                action();
             }
+
             stateReplacer.Restore();
         }
 
-#endregion
+        #endregion
 
-#region Class Level & Archetype
+        #region Class Level & Archetype
 
         [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class SelectClass_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
-                if (!settings.toggleMulticlass) return;
+                if (!settings.toggleMulticlass) {
+                    return;
+                }
 
                 //Logger.ModLog($"SelectClass.Apply.Postfix, is available  = {IsAvailable()}");
                 if (IsAvailable()) {
@@ -191,97 +73,102 @@ namespace ToyBox.Multiclass {
 
                     // get multi-class setting
                     HashSet<string> selectedMulticlassSet;
+
                     if (!state.IsCharGen()) {
-                        if (unit.Unit != null) {
-                            selectedMulticlassSet = unit.Unit.Descriptor.GetMulticlassSet();
-                            // FIXME - old code is this
-//                            if (unit.Unit.CopyOf != null) {
-//                                selectedMulticlassSet = unit.Unit.CopyOf.Entity.Descriptor.GetMulticlassSet();
-                            }
-                            else {
-                            selectedMulticlassSet = unit.GetMulticlassSet();
-                        }
+                        selectedMulticlassSet = unit.Unit != null ? unit.Unit.Descriptor.GetMulticlassSet() : unit.GetMulticlassSet();
                     }
                     else {
                         selectedMulticlassSet = Main.settings.charGenMulticlassSet;
                     }
 
 
-                    if (selectedMulticlassSet == null || selectedMulticlassSet.Count == 0)
+                    if (selectedMulticlassSet == null || selectedMulticlassSet.Count == 0) {
                         return;
+                    }
 
                     // applying classes
                     StateReplacer stateReplacer = new StateReplacer(state);
-                    foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses) {
-                        if (characterClass != stateReplacer.SelectedClass && selectedMulticlassSet.Contains(characterClass.AssetGuid.ToString())) {
-                            stateReplacer.Replace(null, 0);
-                            //Logger.ModLog($"进行{characterClass.AssetGuid}（{characterClass.Name}）的SelectClass操作");
-                            //stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
 
-                            if (new SelectClass(characterClass).Check(state, unit)) {
-                                Main.Debug($" - {nameof(SelectClass)}.{nameof(SelectClass.Apply)}*({characterClass}, {unit})");
+                    foreach (BlueprintCharacterClass bcc in Main.multiclassMod.CharacterClasses
+                                                                           .Where(c => c != stateReplacer.SelectedClass 
+                                                                                       && selectedMulticlassSet.Contains(c.AssetGuid.ToString()))) {
+                        stateReplacer.Replace(null, 0);
 
-                                unit.Progression.AddClassLevel_NotCharacterLevel(characterClass);
-                                //state.NextClassLevel = unit.Progression.GetClassLevel(characterClass);
-                                //state.SelectedClass = characterClass;
-                                characterClass.RestrictPrerequisites(unit, state);
-                                //EventBus.RaiseEvent<ILevelUpSelectClassHandler>(h => h.HandleSelectClass(unit, state));
+                        if (new SelectClass(bcc).Check(state, unit)) {
+                            Main.Debug(string.Format(" - {0}.{1}*({2}, {3})", nameof(SelectClass), nameof(SelectClass.Apply), bcc, unit));
 
-                                Main.multiclassMod.AppliedMulticlassSet.Add(characterClass);
-                            }
+                            unit.Progression.AddClassLevel_NotCharacterLevel(bcc);
+                            bcc.RestrictPrerequisites(unit, state);
+
+                            Main.multiclassMod.AppliedMulticlassSet.Add(bcc);
                         }
                     }
+
                     stateReplacer.Restore();
 
                     // applying archetypes
                     ForEachAppliedMulticlass(state, unit, () => {
-                        //Logger.ModLog($"进行{state.SelectedClass.AssetGuid}（{state.SelectedClass.Name}）的SelectClass-ForEachApplied操作");
-                        foreach (BlueprintArchetype archetype in state.SelectedClass.Archetypes) {
-                            if (selectedMulticlassSet.Contains(archetype.AssetGuid.ToString())) {
-                                AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
-                                if (addArchetype.Check(state, unit)) {
-                                    addArchetype.Apply(state, unit);
-                                }
-                            }
-                        }
-                    });
+                                                              foreach (BlueprintArchetype archetype in state.SelectedClass.Archetypes) {
+                                                                  if (selectedMulticlassSet.Contains(archetype.AssetGuid.ToString())) {
+                                                                      AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
+
+                                                                      if (addArchetype.Check(state, unit)) {
+                                                                          addArchetype.Apply(state, unit);
+                                                                      }
+                                                                  }
+                                                              }
+                                                          });
                 }
             }
         }
 
-#endregion
+        #endregion
 
-#region Skills & Features
+        #region Skills & Features
 
         [HarmonyPatch(typeof(LevelUpController))]
         [HarmonyPatch("ApplyLevelup")]
         static class LevelUpController_ApplyLevelup_Patch {
             static void Prefix(LevelUpController __instance, UnitEntityData unit) {
-                if (!settings.toggleMulticlass) return;
+                if (!settings.toggleMulticlass) {
+                    return;
+                }
 
                 if (unit == __instance.Preview) {
                     Main.Log($"Unit Preview = {unit.CharacterName}");
-                    Main.Log("所有的levelup action：");
-                    foreach(var action in __instance.LevelUpActions) {
-                        Main.Log($"{action.GetType().ToString()}");
+                    Main.Log("levelup action：");
+
+                    foreach (var action in __instance.LevelUpActions) {
+                        Main.Log($"{action.GetType()}");
                     }
                 }
             }
         }
+
         [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplyClassMechanics_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
-                if (!settings.toggleMulticlass) return;
+                if (!settings.toggleMulticlass) {
+                    return;
+                }
+
                 modLogger.Log($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()} unit: {unit} {unit.CharacterName}");
+
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
-                            modLogger.Log($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}[{state.NextClassLevel}], {unit})");
+                                                                  modLogger.Log(string.Format(" - {0}.{1}*({2}[{3}], {4})",
+                                                                                              nameof(ApplyClassMechanics),
+                                                                                              nameof(ApplyClassMechanics.Apply),
+                                                                                              state.SelectedClass,
+                                                                                              state.NextClassLevel,
+                                                                                              unit));
 
-                            __instance.Apply_NoStatsAndHitPoints(state, unit);
-                        });
+                                                                  __instance.Apply_NoStatsAndHitPoints(state, unit);
+                                                              });
                     }
+
                     List<BlueprintCharacterClass> allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
                     allAppliedClasses.Add(state.SelectedClass);
                     SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
@@ -294,14 +181,19 @@ namespace ToyBox.Multiclass {
         static class SelectFeature_Apply_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
-                if (!settings.toggleMulticlass) return;
+                if (!settings.toggleMulticlass) {
+                    return;
+                }
+
                 if (IsAvailable()) {
                     if (__instance.Item != null) {
                         FeatureSelectionState selectionState =
                             ReflectionCache.GetMethod<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
-                            ("GetSelectionState")(__instance, state);
+                                ("GetSelectionState")(__instance, state);
+
                         if (selectionState != null) {
                             BlueprintCharacterClass sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
+
                             if (sourceClass != null) {
                                 __state = new StateReplacer(state);
                                 __state.Replace(sourceClass, unit.Progression.GetClassLevel(sourceClass));
@@ -313,10 +205,11 @@ namespace ToyBox.Multiclass {
 
             [HarmonyPostfix, HarmonyPriority(Priority.Last)]
             static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
-                if (!settings.toggleMulticlass) return;
-                if (__state != null) {
-                    __state.Restore();
+                if (!settings.toggleMulticlass) {
+                    return;
                 }
+
+                __state?.Restore();
             }
         }
 
@@ -324,72 +217,91 @@ namespace ToyBox.Multiclass {
         static class SelectFeature_Check_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
-                if (!settings.toggleMulticlass) return;
-                if (IsAvailable()) {
-                    if (__instance.Item != null) {
-                        FeatureSelectionState selectionState =
-                            ReflectionCache.GetMethod<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
-                            ("GetSelectionState")(__instance, state);
-                        if (selectionState != null) {
-                            BlueprintCharacterClass sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
-                            if (sourceClass != null) {
-                                __state = new StateReplacer(state);
-                                __state.Replace(sourceClass, unit.Progression.GetClassLevel(sourceClass));
-                            }
-                        }
-                    }
+                if (!settings.toggleMulticlass) {
+                    return;
                 }
+
+                if (!IsAvailable()) {
+                    return;
+                }
+
+                if (__instance.Item == null) {
+                    return;
+                }
+
+                FeatureSelectionState selectionState = ReflectionCache
+                    .GetMethod<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>> ("GetSelectionState")(__instance, state);
+
+                if (selectionState == null) {
+                    return;
+                }
+
+                BlueprintCharacterClass sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
+
+                if (sourceClass == null) {
+                    return;
+                }
+
+                __state = new StateReplacer(state);
+                __state.Replace(sourceClass, unit.Progression.GetClassLevel(sourceClass));
             }
 
             [HarmonyPostfix, HarmonyPriority(Priority.Last)]
             static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
-                if (!settings.toggleMulticlass) return;
+                if (!settings.toggleMulticlass) {
+                    return;
+                }
+
                 if (__state != null) {
                     __state.Restore();
                 }
             }
         }
 
-#endregion
+        #endregion
 
-#region Spellbook
+        #region Spellbook
 
         [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(MethodBase __originalMethod, ApplySpellbook __instance, LevelUpState state, UnitDescriptor unit) {
-                if (!settings.toggleMulticlass) return;
+                if (!settings.toggleMulticlass) {
+                    return;
+                }
 
                 if (IsAvailable() && !Main.multiclassMod.LockedPatchedMethods.Contains(__originalMethod)) {
                     Main.multiclassMod.LockedPatchedMethods.Add(__originalMethod);
-                    ForEachAppliedMulticlass(state, unit, () => {
-                        __instance.Apply(state, unit);
-                    });
+
+                    ForEachAppliedMulticlass(state, unit, () => __instance.Apply(state, unit));
+
                     Main.multiclassMod.LockedPatchedMethods.Remove(__originalMethod);
                 }
             }
         }
 
-#endregion
+        #endregion
 
-#region Commit
+        #region Commit
 
         [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
         static class LevelUpController_Commit_Patch {
             [HarmonyPostfix]
             static void Postfix(LevelUpController __instance) {
-                if (!settings.toggleMulticlass) return;
+                if (!settings.toggleMulticlass) {
+                    return;
+                }
 
                 if (IsAvailable()) {
                     var charGenMulticlassSet = settings.charGenMulticlassSet;
-                    if (__instance.State.IsCharGen() 
-                        && __instance.Unit.IsCustomCompanion() 
-                        && charGenMulticlassSet.Count > 0) {
+
+                    if (__instance.State.IsCharGen() && __instance.Unit.IsCustomCompanion() && charGenMulticlassSet.Count > 0) {
                         __instance.Unit.SetMulticlassSet(charGenMulticlassSet);
                     }
                 }
             }
         }
-#endregion
+
+        #endregion
     }
 }

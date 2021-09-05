@@ -4,14 +4,13 @@ using Kingmaker.UI;
 using Kingmaker.Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace ModKit.Utility
-{
-    public static class HotkeyHelper
-    {
-        public static bool CanBeRegistered(string bindingName, KeyBindingData bindingKey, 
-            KeyboardAccess.GameModesGroup gameMode = KeyboardAccess.GameModesGroup.World)
-        {
+namespace ModKit.Utility {
+    public static class HotkeyHelper {
+        public static bool CanBeRegistered(string bindingName,
+                                           KeyBindingData bindingKey,
+                                           KeyboardAccess.GameModesGroup gameMode = KeyboardAccess.GameModesGroup.World) {
             bool result = Game.Instance.Keyboard.CanBeRegistered(
                 bindingName,
                 bindingKey.Key,
@@ -23,14 +22,11 @@ namespace ModKit.Utility
             return result;
         }
 
-        public static string GetKeyText(KeyBindingData bindingKey)
-        {
-            if (bindingKey.Key == KeyCode.None)
-            {
+        public static string GetKeyText(KeyBindingData bindingKey) {
+            if (bindingKey.Key == KeyCode.None) {
                 return "None";
             }
-            else
-            {
+            else {
                 return string.Concat(
                     bindingKey.IsCtrlDown ? "Ctrl+" : null,
                     bindingKey.IsAltDown ? "Alt+" : null,
@@ -39,67 +35,38 @@ namespace ModKit.Utility
             }
         }
 
-        public static bool ReadKey(out KeyBindingData bindingKey)
-        {
-            KeyCode keyCode = KeyCode.None;
+        public static bool ReadKey(out KeyBindingData bindingKey) {
+            KeyCode keyCode = Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(keyHeld => keyHeld != KeyCode.None && keyHeld <= KeyCode.PageDown).FirstOrDefault(Input.GetKey);
 
-            foreach (KeyCode keyHeld in Enum.GetValues(typeof(KeyCode)))
-            {
-                if (keyHeld  == KeyCode.None || keyHeld  > KeyCode.PageDown)
-                    continue;
+            bindingKey = new KeyBindingData() {
+                Key = keyCode,
+                IsCtrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl),
+                IsAltDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt),
+                IsShiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)
+            };
 
-                if (Input.GetKey(keyHeld ))
-                {
-                    keyCode = keyHeld ;
-                    break;
-                }
-            }
-
-            //if (keyCode != KeyCode.None)
-            //{
-                bindingKey = new KeyBindingData()
-                {
-                    Key = keyCode,
-                    IsCtrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl),
-                    IsAltDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt),
-                    IsShiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)
-                };
-                return true;
-            //}
-            //else
-            //{
-            //    bindingKey = null;
-            //    return false;
-            //}
+            return true;
         }
 
-        public static void RegisterKey(string bindingName, KeyBindingData bindingKey,
-            KeyboardAccess.GameModesGroup gameMode = KeyboardAccess.GameModesGroup.World)
-        {
+        public static void RegisterKey(string bindingName, KeyBindingData bindingKey, KeyboardAccess.GameModesGroup gameMode = KeyboardAccess.GameModesGroup.World) {
             Game.Instance.Keyboard.UnregisterBinding(bindingName);
 
-            if (bindingKey.Key == KeyCode.None && bindingKey.Key != KeyCode.None)
-            {
+            if (bindingKey.Key == KeyCode.None && bindingKey.Key != KeyCode.None) {
                 Game.Instance.Keyboard.RegisterBinding(bindingName, bindingKey, gameMode, false);
             }
         }
 
-        public static void UnregisterKey(string bindingName)
-        {
+        public static void UnregisterKey(string bindingName) {
             Game.Instance.Keyboard.UnregisterBinding(bindingName);
         }
 
-        public static void Bind(string bindingName, Action callback)
-        {
+        public static void Bind(string bindingName, Action callback) {
             Unbind(bindingName, callback);
             Game.Instance.Keyboard.Bind(bindingName, callback);
         }
 
-        public static void Unbind(string bindingName, Action callback)
-        {
-            if (Game.Instance.Keyboard.GetFieldValue<KeyboardAccess, Dictionary<string, List<Action>>>("m_BindingCallbacks").
-                TryGetValue(bindingName, out List<Action> value))
-            {
+        public static void Unbind(string bindingName, Action callback) {
+            if (Game.Instance.Keyboard.GetFieldValue<KeyboardAccess, Dictionary<string, List<Action>>>("m_BindingCallbacks").TryGetValue(bindingName, out List<Action> value)) {
                 while (value.Remove(callback)) { }
             }
         }

@@ -25,7 +25,7 @@ csharp_new_line_before_else = true
 #require members of object initializers to be on the same line
 csharp_new_line_before_members_in_object_initializers = false
 #require braces to be on a new line for types and methods (also known as "Allman" style)
-csharp_new_line_before_open_brace = false
+csharp_new_line_before_open_brace = unset
 
 #Formatting - organize using options
 
@@ -111,7 +111,7 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggest
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = public,private,static,readonly,new,override:suggestion
+csharp_preferred_modifier_order = public, private, static, readonly, new, override:suggestion
 
 #Style - qualification options
 

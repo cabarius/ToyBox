@@ -5,7 +5,6 @@ using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Kingdom.Settlements.BuildingComponents;
-using Kingmaker.UnitLogic.Abilities.Components.Base;
 using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using System;
@@ -18,31 +17,30 @@ using static ModKit.Utility.ReflectionCache;
 namespace ToyBox.Multiclass {
     public enum ProgressionPolicy {
         PrimaryClass = 0,
+
         Average = 1,
+
         Largest = 2,
+
         Sum = 3,
     };
 
     public class Mod {
-        //public HashSet<Type> AbilityCasterCheckerTypes { get; } =
-        //    new HashSet<Type>(Assembly.GetAssembly(typeof(IAbilityCasterChecker)).GetTypes()
-        //        .Where(type => typeof(IAbilityCasterChecker).IsAssignableFrom(type) && !type.IsInterface));
-
         public HashSet<Type> ActivatableAbilityRestrictionTypes { get; } =
             new HashSet<Type>(Assembly.GetAssembly(typeof(ActivatableAbilityRestriction)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(ActivatableAbilityRestriction))));
+                                      .Where(type => type.IsSubclassOf(typeof(ActivatableAbilityRestriction))));
 
         public HashSet<Type> BuildingRestrictionTypes { get; } =
             new HashSet<Type>(Assembly.GetAssembly(typeof(BuildingRestriction)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(BuildingRestriction))).Except(new[] { typeof(DLCRestriction) }));
+                                      .Where(type => type.IsSubclassOf(typeof(BuildingRestriction))).Except(new[] { typeof(DLCRestriction) }));
 
         public HashSet<Type> EquipmentRestrictionTypes { get; } =
             new HashSet<Type>(Assembly.GetAssembly(typeof(EquipmentRestriction)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(EquipmentRestriction))));
+                                      .Where(type => type.IsSubclassOf(typeof(EquipmentRestriction))));
 
         public HashSet<Type> PrerequisiteTypes { get; } =
             new HashSet<Type>(Assembly.GetAssembly(typeof(Prerequisite)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(Prerequisite))));
+                                      .Where(type => type.IsSubclassOf(typeof(Prerequisite))));
 
         public HashSet<BlueprintCharacterClass> AppliedMulticlassSet { get; internal set; }
             = new HashSet<BlueprintCharacterClass>();
@@ -60,7 +58,8 @@ namespace ToyBox.Multiclass {
 
         public BlueprintCharacterClass[] CharacterClasses => Game.Instance.BlueprintRoot.Progression.CharacterClasses.ToArray();
 
-        public BlueprintScriptableObject LibraryObject => typeof(ResourcesLibrary).GetFieldValue<BlueprintScriptableObject>("s_LoadedResources");//("s_LibraryObject");
+        public BlueprintScriptableObject LibraryObject =>
+            typeof(ResourcesLibrary).GetFieldValue<BlueprintScriptableObject>("s_LoadedResources");
 
         public Player Player => Game.Instance.Player;
     }
