@@ -164,11 +164,13 @@ namespace ToyBox.Multiclass {
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             StateReplacer stateReplacer = new StateReplacer(state);
             var unitMulticlassSet = unit.GetMulticlassSet();
-            modLogger.Log($"hash key: {unit.HashKey()} multiclass set: {unitMulticlassSet.ToArray()}");
+            modLogger.Log($"hash key: {unit.HashKey()} multiclass set: {unitMulticlassSet.ToArray()} mythic: {state.IsMythicClassSelected}");
             foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses) {
                 if (characterClass != stateReplacer.SelectedClass && unit.GetMulticlassSet().Contains(characterClass.AssetGuid.ToString())) {
-                    stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
-                    action();
+                    if (state.IsMythicClassSelected == characterClass.IsMythic) {
+                        stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+                        action();
+                    }
                 }
             }
             stateReplacer.Restore();
@@ -213,9 +215,12 @@ namespace ToyBox.Multiclass {
                     // applying classes
                     StateReplacer stateReplacer = new StateReplacer(state);
                     foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses) {
-                        if (characterClass != stateReplacer.SelectedClass && selectedMulticlassSet.Contains(characterClass.AssetGuid.ToString())) {
+                        if (    characterClass != stateReplacer.SelectedClass 
+                            &&  characterClass.IsMythic == state.IsMythicClassSelected
+                            &&  selectedMulticlassSet.Contains(characterClass.AssetGuid.ToString())
+                            ) {
                             stateReplacer.Replace(null, 0);
-                            //Logger.ModLog($"进行{characterClass.AssetGuid}（{characterClass.Name}）的SelectClass操作");
+                            modLogger.Log($"{characterClass.AssetGuid} {characterClass.Name}）SelectClass");
                             //stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
 
                             if (new SelectClass(characterClass).Check(state, unit)) {
@@ -277,7 +282,7 @@ namespace ToyBox.Multiclass {
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
-                            modLogger.Log($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}[{state.NextClassLevel}], {unit})");
+                            modLogger.Log($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}[{state.NextClassLevel}], {unit}) mythic: {state.IsMythicClassSelected} vs {state.SelectedClass.IsMythic}");
 
                             __instance.Apply_NoStatsAndHitPoints(state, unit);
                         });

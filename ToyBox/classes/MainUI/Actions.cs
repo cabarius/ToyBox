@@ -78,6 +78,7 @@ namespace ToyBox {
                 var info = infoRef.Get();
                 var etudeGUID = info.EtudeGuid;
                 var etudeBp = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeGUID);
+                Main.Log($"mythicInfo: {info} {etudeGUID} {etudeBp}");
                 Game.Instance.Player.EtudesSystem.StartEtude(etudeBp);
             }
 #if false

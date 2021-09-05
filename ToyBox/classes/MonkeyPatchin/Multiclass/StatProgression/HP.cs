@@ -21,7 +21,7 @@ namespace ToyBox.Multiclass {
             //Logger.ModLoggerDebug($"mainClassIndex = {mainClassIndex}");
             int mainClassHPDie = hitDies[mainClassIndex];
 
-            var currentHPIncrease = hitDies[mainClassIndex] / 2;
+            var currentHPIncrease = hitDies[mainClassIndex];
             var newIncrease = currentHPIncrease;
             switch (Main.settings.multiclassHitPointPolicy) {
                 case ProgressionPolicy.Average:
@@ -36,7 +36,7 @@ namespace ToyBox.Multiclass {
                 default:
                     return;
             }
-            unit.Stats.GetStat(StatType.HitPoints).BaseValue += newIncrease - currentHPIncrease;
+            unit.Stats.GetStat(StatType.HitPoints).BaseValue += newIncrease;
         }
     }
 }
