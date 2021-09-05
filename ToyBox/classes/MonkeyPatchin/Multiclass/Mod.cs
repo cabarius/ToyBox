@@ -16,6 +16,13 @@ using UnityEngine.SceneManagement;
 using static ModKit.Utility.ReflectionCache;
 
 namespace ToyBox.Multiclass {
+    public enum ProgressionPolicy {
+        PrimaryClass = 0,
+        Average = 1,
+        Largest = 2,
+        Sum = 3,
+    };
+
     public class Mod {
         //public HashSet<Type> AbilityCasterCheckerTypes { get; } =
         //    new HashSet<Type>(Assembly.GetAssembly(typeof(IAbilityCasterChecker)).GetTypes()

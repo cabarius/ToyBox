@@ -130,10 +130,13 @@ namespace ToyBox.Multiclass {
     static class General {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        public static LevelUpController levelUpController { get; internal set; }
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
-        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor)]
-        [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(bool), typeof(LevelUpState.CharBuildMode) })]
+        public static LevelUpController levelUpController { get; internal set; }
+        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] { 
+            typeof(UnitEntityData), 
+            typeof(bool), 
+            typeof(LevelUpState.CharBuildMode) })]
         static class LevelUpController_ctor_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static bool Prefix(LevelUpController __instance) {
@@ -143,6 +146,7 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
+#if true
         /*     public static void UpdateProgression(
                                     [NotNull] LevelUpState state,
                                     [NotNull] UnitDescriptor unit,
@@ -156,19 +160,19 @@ namespace ToyBox.Multiclass {
                 ProgressionData progressionData = unit.Progression.SureProgressionData(progression);
                 int level = progressionData.Level;
                 int nextLevel = progressionData.Blueprint.CalcLevel(unit);
+                progressionData.Level = nextLevel;
                 // TODO - this is from the mod but we need to figure out if max level 20 still makes sense with mythic levels
                 // int maxLevel = 20 // unit.Progression.CharacterLevel;
                 // if (nextLevel > maxLevel)
                 //     nextLevel = maxLevel;
-                progressionData.Level = nextLevel;
                 if (level >= nextLevel || progression.ExclusiveProgression != null && state.SelectedClass != progression.ExclusiveProgression)
                     return false;
                 if (!progression.GiveFeaturesForPreviousLevels)
                     level = nextLevel - 1;
-                for (int i = level + 1; i <= nextLevel; ++i) {
-                    if (!AllowProceed(progression)) break;
-                    LevelEntry levelEntry = progressionData.GetLevelEntry(i);
-                    LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, i);
+                for (int lvl = level + 1; lvl <= nextLevel; ++lvl) {
+//                    if (!AllowProceed(progression)) break;
+                    LevelEntry levelEntry = progressionData.GetLevelEntry(lvl);
+                    LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, lvl);
                 }
                 return false;
             }
@@ -180,6 +184,7 @@ namespace ToyBox.Multiclass {
                 // || progression.AssetGuid != "fe9220cdc16e5f444a84d85d5fa8e3d5";
             }
         }
+#endif
 
         // TODO - figure out what the beta 2 replacement for this is
 #if false

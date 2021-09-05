@@ -75,6 +75,7 @@ using ModKit;
 
 namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         public static HashSet<string> GetMulticlassSet(this UnitEntityData ch) {
             if (ch.HashKey() == null) return null;
@@ -154,7 +155,9 @@ namespace ToyBox.Multiclass {
         }
 
         public static bool IsManualPlayerUnit(this LevelUpController controller, bool allowPet = false, bool allowAutoCommit = false, bool allowPregen = false) {
-            Main.Log($"controller is null {controller == null}, controller unit is null {controller.Unit == null}");
+            //Main.Log($"controller: {controller}");
+            //Main.Log($"    unit: {controller.Unit}");
+            //Main.Log($"    levelup state: {controller.State}");
             return controller != null &&
                 controller.Unit.IsPlayerFaction &&
                 (allowPet || !controller.Unit.IsPet) &&

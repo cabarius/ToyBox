@@ -127,21 +127,15 @@ using ModKit.Utility;
 using ToyBox.Multiclass;
 
 namespace ToyBox.Multiclass {
-
-    public enum ProgressionPolicy {
-        PrimaryClass = 0,
-        Average = 1,
-        Largest = 2,
-        Sum = 3,
-    };
     static class MultipleClasses {
 
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         public static bool IsAvailable() {
             return Main.Enabled &&
-                settings.toggleMulticlass &&
+                settings.toggleMulticlass &&                
                 General.levelUpController.IsManualPlayerUnit();
         }
 
@@ -169,9 +163,13 @@ namespace ToyBox.Multiclass {
 
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             StateReplacer stateReplacer = new StateReplacer(state);
-            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AppliedMulticlassSet) {
-                stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
-                action();
+            var unitMulticlassSet = unit.GetMulticlassSet();
+            modLogger.Log($"hash key: {unit.HashKey()} multiclass set: {unitMulticlassSet.ToArray()}");
+            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.CharacterClasses) {
+                if (characterClass != stateReplacer.SelectedClass && unit.GetMulticlassSet().Contains(characterClass.AssetGuid.ToString())) {
+                    stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+                    action();
+                }
             }
             stateReplacer.Restore();
         }
@@ -275,11 +273,11 @@ namespace ToyBox.Multiclass {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
-                //Logger.ModLog($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()}");
+                modLogger.Log($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()} unit: {unit} {unit.CharacterName}");
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
-                            Main.Debug($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}[{state.NextClassLevel}], {unit})");
+                            modLogger.Log($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}[{state.NextClassLevel}], {unit})");
 
                             __instance.Apply_NoStatsAndHitPoints(state, unit);
                         });

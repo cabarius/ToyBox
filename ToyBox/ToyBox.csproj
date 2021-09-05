@@ -135,8 +135,6 @@
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Appearance.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NoFriendlyFire.cs" />
@@ -149,6 +147,8 @@
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs" />

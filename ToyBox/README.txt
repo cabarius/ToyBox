@@ -10,6 +10,9 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+Ver 1.2.7
+    Fixed a bug that broke feat selection on level up
+    Fixed bugs with multiclassing and feat selection (experimental version)
 Ver 1.2.6
     Added ability to see and set your experience to match your current character level 
         See Party Editor > Character > Classes

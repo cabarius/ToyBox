@@ -75,7 +75,7 @@ using ModKit;
 
 namespace ToyBox {
     public static class WrathExtensions {
-        public static string HashKey(this UnitEntityData ch) { return ch.CharacterName + ch.UniqueId; }
+        public static string HashKey(this UnitEntityData ch) { return ch.CharacterName; } // + ch.UniqueId; }
         public static string HashKey(this UnitDescriptor ch) { return ch.Unit?.HashKey(); }
         public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }
         public static string Acronym(this Alignment a) { return UIUtility.GetAlignmentAcronym(a); }
