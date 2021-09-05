@@ -42,7 +42,6 @@
         <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
     </Target>
     <ItemGroup>
-        <PackageReference Include="Lib.Harmony" Version="2.1.1" />
         <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
         <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
             <HintPath>$(WrathPath)\Wrath_Data\Managed\0Harmony.dll</HintPath>
