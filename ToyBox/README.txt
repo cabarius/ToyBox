@@ -252,7 +252,6 @@ Development Setup
     3 - Go to System Properties > Environment Variables and add WrathPath with a value that looks like this:
         WrathPath   C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure
 
-
 License: MIT
 
 Copyright <2021> Narria (github user Cabarius)
