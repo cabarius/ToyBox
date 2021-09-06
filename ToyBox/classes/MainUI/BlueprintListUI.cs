@@ -42,6 +42,7 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ModKit;
+using Kingmaker.Blueprints.Classes.Selection;
 
 namespace ToyBox {
     public class BlueprintListUI {
@@ -93,6 +94,13 @@ namespace ToyBox {
                     var actions = blueprint.GetActions().Where(action => action.canPerform(blueprint, ch)).ToArray();
                     var titles = actions.Select(a => a.name);
                     var title = blueprint.name;
+                    if (blueprint is BlueprintParametrizedFeature parmBP) {
+                        // string value = String.Concat(parmBP.GetFullSelectionItems().Select(o => o.Name));
+                        var feature = ch.Progression.Features.Enumerable.FirstOrDefault<Kingmaker.UnitLogic.Feature>(
+                            f => f?.Blueprint == blueprint);
+                        if (feature != null) 
+                            title += $"<{feature.Name ?? "n/a"}>";
+                    }
                     if (titles.Contains("Remove")) {
                         title = title.cyan().bold();
                     }

@@ -163,6 +163,14 @@ namespace ToyBox {
             respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
             bool isWide = UI.IsWide;
+            using (UI.HorizontalScope()) {
+                UI.Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
+                UI.Space(25);
+                var encounterCR = CheatsCombat.GetEncounterCr();
+                if (encounterCR > 0) {
+                    UI.Label($"Encounter CR ".cyan() + $"{encounterCR}".orange().bold(), UI.AutoWidth());
+                }
+            }
             foreach (UnitEntityData ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
@@ -196,7 +204,7 @@ namespace ToyBox {
                     }
                     else { UI.Space(74); }
                     UI.Space(5);
-                    UI.Label($"my".green() + $": {mythicLevel}", UI.Width(100));
+                    UI.Label($"my".green() + $": {mythicLevel}", UI.Width(80));
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.MythicExperience < 10) {
                             UI.ActionButton("+1", () => {
@@ -206,7 +214,7 @@ namespace ToyBox {
                         else { UI.Label("max".cyan(), UI.Width(70)); }
                     }
                     else { UI.Space(74); }
-                    UI.Space(5);
+                    UI.Space(30);
                     if (!isWide) ActionsGUI(ch);
                     UI.Wrap(!UI.IsWide, 283, 0);
                     bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
