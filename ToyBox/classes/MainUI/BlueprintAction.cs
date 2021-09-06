@@ -1,8 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Etudes;
@@ -14,45 +11,56 @@ using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Quests;
 using Kingmaker.Designers;
+using Kingmaker.Designers.EventConditionActionSystem.ContextData;
+using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
-using Kingmaker.UnitLogic.ActivatableAbilities;
-using Kingmaker.Designers.EventConditionActionSystem.ContextData;
-using Kingmaker.ElementsSystem;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ToyBox {
     public abstract class BlueprintAction {
         public delegate void Perform(SimpleBlueprint bp, UnitEntityData ch = null, int count = 1);
+
         public delegate bool CanPerform(SimpleBlueprint bp, UnitEntityData ch = null);
-        private static Dictionary<Type, BlueprintAction[]> actionsForType = null;
+
+        private static Dictionary<Type, BlueprintAction[]> actionsForType;
+
         public static BlueprintAction[] ActionsForType(Type type) {
             if (actionsForType == null) {
-                actionsForType = new Dictionary<Type, BlueprintAction[]> { };
+                actionsForType = new Dictionary<Type, BlueprintAction[]>();
                 BlueprintActions.InitializeActions();
             }
-            BlueprintAction[] result;
-            actionsForType.TryGetValue(type, out result);
+
+            actionsForType.TryGetValue(type, out BlueprintAction[] result);
+
             if (result == null) {
                 var baseType = type.BaseType;
-                if (baseType != null)
+
+                if (baseType != null) {
                     result = ActionsForType(baseType);
-                if (result == null) {
-                    result = new BlueprintAction[] { };
                 }
+
+                result ??= new BlueprintAction[] { };
+
                 actionsForType[type] = result;
             }
+
             return result;
         }
-        public static BlueprintAction[] ActionsForBlueprint(SimpleBlueprint bp) {
+
+        public static IEnumerable<BlueprintAction> ActionsForBlueprint(SimpleBlueprint bp) {
             return ActionsForType(bp.GetType());
         }
-        public static void Register<T>(string name, BlueprintAction<T>.Perform perform, BlueprintAction<T>.CanPerform canPerform = null, bool isRepeatable = false) where T : SimpleBlueprint
-        {
+
+        public static void Register<T>(string name, BlueprintAction<T>.Perform perform, BlueprintAction<T>.CanPerform canPerform = null, bool isRepeatable = false) where T : SimpleBlueprint {
             var action = new BlueprintAction<T>(name, perform, canPerform, isRepeatable);
             var type = action.BlueprintType;
             actionsForType.TryGetValue(type, out BlueprintAction[] existing);
@@ -62,32 +70,40 @@ namespace ToyBox {
             actionsForType[type] = list.ToArray();
         }
 
-        public String name { get; protected set; }
-        public Perform action;
-        public CanPerform canPerform;
-        protected BlueprintAction(String name, bool isRepeatable) { this.name = name; this.isRepeatable = isRepeatable; }
-        public bool isRepeatable;
-        abstract public Type BlueprintType { get; }
-    }
-    public class BlueprintAction<BPType> : BlueprintAction where BPType : SimpleBlueprint {
-        new public delegate void Perform(BPType bp, UnitEntityData ch, int count = 1);
-        new public delegate bool CanPerform(BPType bp, UnitEntityData ch);
+        public string name { get; protected set; }
 
-        public BlueprintAction(
-            String name,
-            Perform action,
-            CanPerform canPerform = null,
-            bool isRepeatable = false
-            ) : base(name, isRepeatable) {
-            this.action = (bp, ch, n) => action((BPType)bp, ch, n);
-            this.canPerform = (bp, ch) => Main.IsInGame && (bp is BPType bpt) ? (canPerform != null ? canPerform(bpt, ch) : true) : false;
+        public Perform action;
+
+        public CanPerform canPerform;
+
+        protected BlueprintAction(string name, bool isRepeatable) {
+            this.name = name;
+            this.isRepeatable = isRepeatable;
         }
-        override public Type BlueprintType { get { return typeof(BPType); } }
+
+        public bool isRepeatable;
+
+        public abstract Type BlueprintType { get; }
     }
+
+    public class BlueprintAction<BPType> : BlueprintAction where BPType : SimpleBlueprint {
+        public new delegate void Perform(BPType bp, UnitEntityData ch, int count = 1);
+
+        public new delegate bool CanPerform(BPType bp, UnitEntityData ch);
+
+        public BlueprintAction(string name, Perform action, CanPerform canPerform = null, bool isRepeatable = false) : base(name, isRepeatable) {
+            this.action = (bp, ch, n) => action((BPType)bp, ch, n);
+            this.canPerform = (bp, ch) => Main.IsInGame && bp is BPType bpt && (canPerform?.Invoke(bpt, ch) ?? true);
+        }
+
+        public override Type BlueprintType => typeof(BPType);
+    }
+
     public static class BlueprintActions {
         public static IEnumerable<BlueprintAction> GetActions(this SimpleBlueprint bp) {
             return BlueprintAction.ActionsForBlueprint(bp);
         }
+
         public static void InitializeActions() {
             BlueprintAction.Register<BlueprintItem>("Add",
                                                     (bp, ch, n) => Game.Instance.Player.Inventory.Add(bp, n), isRepeatable: true);
@@ -111,13 +127,15 @@ namespace ToyBox {
                                                        (bp, ch, n) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
                                                        (bp, ch) => {
                                                            var feature = ch.Progression.Features.GetFact(bp);
-                                                           return feature != null && feature.GetRank() > 1;
+
+                                                           return feature?.GetRank() > 1;
                                                        });
 
             BlueprintAction.Register<BlueprintFeature>(">",
                                                        (bp, ch, n) => ch.Progression.Features.GetFact(bp)?.AddRank(),
                                                        (bp, ch) => {
                                                            var feature = ch.Progression.Features.GetFact(bp);
+
                                                            return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                                                        });
 
@@ -134,8 +152,13 @@ namespace ToyBox {
                                                          (bp, ch, n) => {
                                                              try {
                                                                  var spellbook = ch.Descriptor.Spellbooks.First(sb => sb.Blueprint == bp);
-                                                                 if (spellbook.IsMythic) spellbook.AddMythicLevel();
-                                                                 else spellbook.AddBaseLevel();
+
+                                                                 if (spellbook.IsMythic) {
+                                                                     spellbook.AddMythicLevel();
+                                                                 }
+                                                                 else {
+                                                                     spellbook.AddBaseLevel();
+                                                                 }
                                                              }
                                                              catch (Exception e) { Main.Error(e); }
                                                          },
@@ -154,13 +177,15 @@ namespace ToyBox {
                                                     (bp, ch, n) => ch.Descriptor.Buffs.GetFact(bp)?.RemoveRank(),
                                                     (bp, ch) => {
                                                         var buff = ch.Descriptor.Buffs.GetFact(bp);
-                                                        return buff != null && buff.GetRank() > 1;
+
+                                                        return buff?.GetRank() > 1;
                                                     });
 
             BlueprintAction.Register<BlueprintBuff>(">",
                                                     (bp, ch, n) => ch.Descriptor.Buffs.GetFact(bp)?.AddRank(),
                                                     (bp, ch) => {
                                                         var buff = ch.Descriptor.Buffs.GetFact(bp);
+
                                                         return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
                                                     });
 
@@ -221,11 +246,13 @@ namespace ToyBox {
             BlueprintAction.Register<Cutscene>("Play", (bp, ch, n) => {
                                                            Actions.ToggleModWindow();
                                                            CutscenePlayerData cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
+
                                                            if (cutscenePlayerData != null) {
                                                                cutscenePlayerData.PreventDestruction = true;
                                                                cutscenePlayerData.Stop();
                                                                cutscenePlayerData.PreventDestruction = false;
                                                            }
+
                                                            var state = ContextData<SpawnedUnitData>.Current?.State;
                                                            CutscenePlayerView.Play(bp, null, true, state).PlayerData.PlayActionId = bp.name;
                                                        });
@@ -237,6 +264,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n) => {
                                                                     var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
                                                                     var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
+
                                                                     if (blueprint is BlueprintAreaEnterPoint enterPoint) {
                                                                         GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
                                                                     }
