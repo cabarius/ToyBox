@@ -311,11 +311,12 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "CheckInternal")]
         public static class PrerequisiteCasterTypeSpellLevel_Check_Patch {
             public static void Postfix(
-    [CanBeNull] FeatureSelectionState selectionState,
-    [NotNull] UnitDescriptor unit,
-    [CanBeNull] LevelUpState state,
-    ref bool __result) {
+                    [CanBeNull] FeatureSelectionState selectionState,
+                    [NotNull] UnitDescriptor unit,
+                    [CanBeNull] LevelUpState state,
+                    ref bool __result) {
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+
                 if (settings.toggleIgnoreCasterTypeSpellLevel) {
                     __result = true;
                 }
@@ -324,11 +325,12 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(PrerequisiteNoArchetype), "CheckInternal")]
         public static class PrerequisiteNoArchetype_Check_Patch {
             public static void Postfix(
-    [CanBeNull] FeatureSelectionState selectionState,
-    [NotNull] UnitDescriptor unit,
-    [CanBeNull] LevelUpState state,
-    ref bool __result) {
+                    [CanBeNull] FeatureSelectionState selectionState,
+                    [NotNull] UnitDescriptor unit,
+                    [CanBeNull] LevelUpState state,
+                    ref bool __result) {
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+
                 if (settings.toggleIgnoreForbiddenArchetype) {
                     __result = true;
                 }
@@ -338,11 +340,12 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(PrerequisiteStatValue), "CheckInternal")]
         public static class PrerequisiteStatValue_Check_Patch {
             public static void Postfix(
-    [CanBeNull] FeatureSelectionState selectionState,
-    [NotNull] UnitDescriptor unit,
-    [CanBeNull] LevelUpState state,
-    ref bool __result) {
+                    [CanBeNull] FeatureSelectionState selectionState,
+                    [NotNull] UnitDescriptor unit,
+                    [CanBeNull] LevelUpState state,
+                    ref bool __result) {
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+
                 if (settings.toggleIgnorePrerequisiteStatValue) {
                     __result = true;
                 }
@@ -352,11 +355,12 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(PrerequisiteAlignment), "CheckInternal")]
         public static class PrerequisiteAlignment_Check_Patch {
             public static void Postfix(
-                [CanBeNull] FeatureSelectionState selectionState,
-                [NotNull] UnitDescriptor unit,
-                [CanBeNull] LevelUpState state,
-                ref bool __result) {
+                    [CanBeNull] FeatureSelectionState selectionState,
+                    [NotNull] UnitDescriptor unit,
+                    [CanBeNull] LevelUpState state,
+                    ref bool __result) {
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+
                 if (settings.toggleIgnoreAlignmentWhenChoosingClass) {
                     __result = true;
                 }
@@ -365,11 +369,11 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(PrerequisiteNoFeature), "CheckInternal")]
         public static class PrerequisiteNoFeature_Check_Patch {
-            public static void public static void Postfix(
-    [CanBeNull] FeatureSelectionState selectionState,
-    [NotNull] UnitDescriptor unit,
-    [CanBeNull] LevelUpState state,
-    ref bool __result) {
+            public static void Postfix(
+                    [CanBeNull] FeatureSelectionState selectionState,
+                    [NotNull] UnitDescriptor unit,
+                    [CanBeNull] LevelUpState state,
+                    ref bool __result) {
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnoreForbiddenFeatures) {
                     __result = true;
@@ -405,11 +409,7 @@ namespace ToyBox.BagOfPatches {
 #endif
         [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
         public static class SpellSelectionData_CanSelectAnything_Patch {
-            public static void public static void Postfix(
-    [CanBeNull] FeatureSelectionState selectionState,
-    [NotNull] UnitDescriptor unit,
-    [CanBeNull] LevelUpState state,
-    ref bool __result) {
+            public static void Postfix(UnitDescriptor unit, bool __result) { 
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleSkipSpellSelection) {
                     __result = false;

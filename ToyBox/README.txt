@@ -11,9 +11,10 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 Ver 1.2.8
+    Fixed bug that would spawn enemies more powerful than they should
     Tweak to allow you to control summons, 
     Adjust summon duration and modify level for 2 different unit factions such as your party and enemies
-    Added ability to view (not modify yet) Archetypes and Paramterized Features to Search 'n Pick
+    Added ability to view (not modify yet) Archetypes and Parametrized Features to Search 'n Pick
     Added party stats and encounterCR (when in a fight) to party editor
 Ver 1.2.7
     Fixed a bug that broke feat selection on level up
