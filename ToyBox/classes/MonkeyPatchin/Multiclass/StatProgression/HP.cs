@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ToyBox.Multiclass {
     public static class HPDice {
         public static void ApplyHPDice(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] classes) {
-            
+
             //Logger.ModLoggerDebug($"应用对{stat}的更改");
             int[] newClassLvls = classes.Select(a => unit.Progression.GetClassLevel(a)).ToArray();
             int classCount = newClassLvls.Length;
@@ -28,7 +28,7 @@ namespace ToyBox.Multiclass {
                     newIncrease = hitDies.Sum() / classCount;
                     break;
                 case ProgressionPolicy.Largest:
-                    newIncrease = hitDies.Max();                
+                    newIncrease = hitDies.Max();
                     break;
                 case ProgressionPolicy.Sum:
                     newIncrease = hitDies.Sum();
@@ -36,7 +36,7 @@ namespace ToyBox.Multiclass {
                 default:
                     return;
             }
-            unit.Stats.GetStat(StatType.HitPoints).BaseValue += newIncrease;
+            unit.Stats.GetStat(StatType.HitPoints).BaseValue += newIncrease - currentHPIncrease;
         }
     }
 }
