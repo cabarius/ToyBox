@@ -1,197 +1,198 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToyBox</RootNamespace>
-    <AssemblyName>ToyBox</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>false</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\0ToyBox0\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>none</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\0ToyBox0\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <Target Name="Publicise" AfterTargets="Clean">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>ToyBox</RootNamespace>
+        <AssemblyName>ToyBox</AssemblyName>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <Deterministic>false</Deterministic>
+        <LangVersion>8</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\0ToyBox0\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>none</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\0ToyBox0\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <Target Name="Publicise" AfterTargets="Clean">
+        <ItemGroup>
+            <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp.dll"/>
+            <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll"/>
+        </ItemGroup>
+        <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true"/>
+    </Target>
     <ItemGroup>
-      <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp.dll" />
-      <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll" />
+        <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0"/>
+        <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\0Harmony.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.Build.Framework"/>
+        <Reference Include="Microsoft.Build.Utilities.v4.0"/>
+        <Reference Include="Owlcat.Runtime.Core">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Owlcat.Runtime.UI_public">
+            <HintPath>$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll</HintPath>
+        </Reference>
+        <Reference Include="Owlcat.Runtime.Visual">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="System"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="System.Xml.Linq"/>
+        <Reference Include="System.Data.DataSetExtensions"/>
+        <Reference Include="Microsoft.CSharp"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Net.Http"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="UniRx">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UniRx.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputModule">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UI.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityModManager">
+            <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
     </ItemGroup>
-    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
-  </Target>
-  <ItemGroup>
-    <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
-    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="Owlcat.Runtime.Core">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Owlcat.Runtime.UI_public">
-      <HintPath>$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll</HintPath>
-    </Reference>
-    <Reference Include="Owlcat.Runtime.Visual">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UniRx">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UniRx.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.InputModule">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityModManager">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
-    <Compile Include="classes\Infrastructure\HotkeyHelper.cs" />
-    <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
-    <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
-    <Compile Include="classes\MainUI\MulticlassPicker.cs" />
-    <Compile Include="classes\MainUI\LevelUp.cs" />
-    <Compile Include="classes\MainUI\BlueprintAction.cs" />
-    <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
-    <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
-    <Compile Include="classes\Infrastructure\UnitEntityDetails.cs" />
-    <Compile Include="classes\MainUI\Actions.cs" />
-    <Compile Include="classes\MainUI\BlueprintListUI.cs" />
-    <Compile Include="classes\MainUI\BlueprintLoader.cs" />
-    <Compile Include="classes\MainUI\ActionButtons.cs" />
-    <Compile Include="classes\MainUI\FactsEditor.cs" />
-    <Compile Include="classes\MainUI\Main.cs" />
-    <Compile Include="classes\MainUI\BlueprintBrowser.cs" />
-    <Compile Include="classes\MainUI\CheapTricks.cs" />
-    <Compile Include="classes\MainUI\CharacterPicker.cs" />
-    <Compile Include="classes\MainUI\QuestEditor.cs" />
-    <Compile Include="classes\MainUI\PartyEditor.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUp.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\NoFriendlyFire.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Selectors.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Summons.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs" />
-    <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
-    <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\Mod.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\WrathExtensionsMulticlass.cs" />
-    <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
-    <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="classes\Models\Settings.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".editorconfig" />
-    <None Include="Repository.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Info.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="zmisc\Snippets.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="README.txt" />
-    <Content Include="zmisc\api.txt" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+    <ItemGroup>
+        <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs"/>
+        <Compile Include="classes\Infrastructure\HotkeyHelper.cs"/>
+        <Compile Include="classes\Infrastructure\WrathExtensions.cs"/>
+        <Compile Include="classes\Infrastructure\BlueprintExtensions.cs"/>
+        <Compile Include="classes\MainUI\MulticlassPicker.cs"/>
+        <Compile Include="classes\MainUI\LevelUp.cs"/>
+        <Compile Include="classes\MainUI\BlueprintAction.cs"/>
+        <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs"/>
+        <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs"/>
+        <Compile Include="classes\Infrastructure\UnitEntityDetails.cs"/>
+        <Compile Include="classes\MainUI\Actions.cs"/>
+        <Compile Include="classes\MainUI\BlueprintListUI.cs"/>
+        <Compile Include="classes\MainUI\BlueprintLoader.cs"/>
+        <Compile Include="classes\MainUI\ActionButtons.cs"/>
+        <Compile Include="classes\MainUI\FactsEditor.cs"/>
+        <Compile Include="classes\MainUI\Main.cs"/>
+        <Compile Include="classes\MainUI\BlueprintBrowser.cs"/>
+        <Compile Include="classes\MainUI\CheapTricks.cs"/>
+        <Compile Include="classes\MainUI\CharacterPicker.cs"/>
+        <Compile Include="classes\MainUI\QuestEditor.cs"/>
+        <Compile Include="classes\MainUI\PartyEditor.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUp.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\NoFriendlyFire.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\Selectors.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\Summons.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs"/>
+        <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs"/>
+        <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs"/>
+        <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs"/>
+        <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs"/>
+        <Compile Include="classes\MonkeyPatchin\Multiclass\Mod.cs"/>
+        <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs"/>
+        <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs"/>
+        <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs"/>
+        <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs"/>
+        <Compile Include="classes\MonkeyPatchin\Multiclass\WrathExtensionsMulticlass.cs"/>
+        <Compile Include="classes\MonkeyPatchin\PreviewManager.cs"/>
+        <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs"/>
+        <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="classes\Models\Settings.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include=".editorconfig"/>
+        <None Include="Repository.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="Info.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="zmisc\Snippets.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="README.txt"/>
+        <Content Include="zmisc\api.txt"/>
+    </ItemGroup>
+    <ItemGroup/>
+    <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared"/>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+    <PropertyGroup>
+        <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
             xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll"
             xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb"
         </PostBuildEvent>
-  </PropertyGroup>
+    </PropertyGroup>
 </Project>
