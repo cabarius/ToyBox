@@ -163,12 +163,14 @@ namespace ToyBox {
             respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
             bool isWide = UI.IsWide;
-            using (UI.HorizontalScope()) {
-                UI.Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
-                UI.Space(25);
-                var encounterCR = CheatsCombat.GetEncounterCr();
-                if (encounterCR > 0) {
-                    UI.Label($"Encounter CR ".cyan() + $"{encounterCR}".orange().bold(), UI.AutoWidth());
+            if (Main.IsInGame) {
+                using (UI.HorizontalScope()) {
+                    UI.Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
+                    UI.Space(25);
+                    var encounterCR = CheatsCombat.GetEncounterCr();
+                    if (encounterCR > 0) {
+                        UI.Label($"Encounter CR ".cyan() + $"{encounterCR}".orange().bold(), UI.AutoWidth());
+                    }
                 }
             }
             foreach (UnitEntityData ch in characterList) {

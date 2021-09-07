@@ -10,6 +10,8 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+Ver 1.2.9
+    Fixed bug affecting turn based commands like Studied Target or Gather Power
 Ver 1.2.8
     Fixed bug that would spawn enemies more powerful than they should
     Tweak to allow you to control summons, 
