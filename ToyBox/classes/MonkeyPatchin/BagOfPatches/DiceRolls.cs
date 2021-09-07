@@ -160,12 +160,13 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.DiceFormula.Dice != DiceType.D20) return;
                 var initiator = __instance.Initiator;
                 int result = __instance.m_Result;
-                Main.Debug("Initial D20Roll: " + result);
+                //modLogger.Log($"initiator: {initiator.CharacterName} isInCombat: {initiator.IsInCombat} alwaysRole20OutOfCombat: {settings.alwaysRoll20OutOfCombat}");
+                Main.Debug($"initiator: {initiator.CharacterName} Initial D20Roll: " + result);
                 if (    UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)
-                    ||  (   UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat) 
-                            && !initiator.IsInCombat
-                        ) 
-                   ){
+                   || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat)
+                           && !initiator.IsInCombat
+                       )
+                   ) {
                     result = 20;
                 }
                 else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)) {

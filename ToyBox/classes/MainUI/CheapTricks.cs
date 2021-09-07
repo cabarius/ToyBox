@@ -154,12 +154,13 @@ namespace ToyBox {
 
                 () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
+                () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
 
                 () => UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0),
                 () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
 
                 () => UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0),
-                
+
                 () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
                 () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
 
@@ -170,7 +171,6 @@ namespace ToyBox {
                 () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
 
                 () => UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0),
-                () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
                 //() => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
@@ -203,7 +203,8 @@ namespace ToyBox {
                 () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
                 () => UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.AutoWidth()),
                 () => {
-                    UI.Space(328); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth()); },
+                    UI.Space(328); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
+                },
                 () => { }
                 );
             UI.Div(0, 25);
@@ -221,17 +222,42 @@ namespace ToyBox {
                 () => { }
                 );
             UI.Div(0, 25);
-            UI.HStack("Crusade", 1,
-                () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent, 0),
+            UI.HStack("Summons", 1,
+                () => UI.Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable, 0),
                 () => {
-                    UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
-                    var instance = KingdomState.Instance;
-                    if (instance != null) {
-                        instance.BuildingTimeModifier = settings.kingdomBuildingTimeModifier;
+                    using (UI.VerticalScope()) {
+                        UI.Div(0, 25);
+                        using (UI.HorizontalScope()) {
+                            UI.Label("Primary".orange(), UI.AutoWidth()); UI.Space(215); UI.Label("good for party".green());
+                        }
+                        UI.Space(25);
+                        UI.EnumGrid("Modify Summons For", ref settings.summonTweakTarget1, 0, UI.AutoWidth());
+                        UI.LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", UI.AutoWidth());
+                        UI.Slider("Level Increase/Decrease", ref settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", UI.AutoWidth());
+                        UI.Div(0, 25);
+                        using (UI.HorizontalScope()) {
+                            UI.Label("Secondary".orange(), UI.AutoWidth()); UI.Space(215); UI.Label("good for larger group or to reduce enemies".green());
+                        }
+                        UI.Space(25);
+                        UI.EnumGrid("Modify Summons For", ref settings.summonTweakTarget2, 0, UI.AutoWidth());
+                        UI.LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", UI.AutoWidth());
+                        UI.Slider("Level Increase/Decrease", ref settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", UI.AutoWidth());
                     }
                 },
                 () => { }
-                );
+             );
+            UI.Div(0, 25);
+            UI.HStack("Crusade", 1,
+                    () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent, 0),
+                    () => {
+                        UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
+                        var instance = KingdomState.Instance;
+                        if (instance != null) {
+                            instance.BuildingTimeModifier = settings.kingdomBuildingTimeModifier;
+                        }
+                    },
+                    () => { }
+                    );
             UI.Space(25);
         }
     }

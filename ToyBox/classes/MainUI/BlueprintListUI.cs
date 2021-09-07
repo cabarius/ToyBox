@@ -98,8 +98,8 @@ namespace ToyBox {
                         // string value = String.Concat(parmBP.GetFullSelectionItems().Select(o => o.Name));
                         var feature = ch.Progression.Features.Enumerable.FirstOrDefault<Kingmaker.UnitLogic.Feature>(
                             f => f?.Blueprint == blueprint);
-                        if (feature != null) 
-                            title += $"<{feature.Name ?? "n/a"}>";
+                        //if (feature != null) 
+                        //    title += $"<{feature.Name ?? "n/a"}>";
                     }
                     if (titles.Contains("Remove")) {
                         title = title.cyan().bold();

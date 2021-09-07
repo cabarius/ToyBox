@@ -77,23 +77,6 @@ namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
-        public static HashSet<string> GetMulticlassSet(this UnitEntityData ch) {
-            if (ch.HashKey() == null) return null;
-            return Main.settings.selectedMulticlassSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-        }
-        public static void SetMulticlassSet(this UnitEntityData ch, HashSet<string> multiclassSet) {
-            if (ch.HashKey() == null) return;
-            Main.settings.selectedMulticlassSets[ch.HashKey()] = multiclassSet;
-        }
-        public static HashSet<string> GetMulticlassSet(this UnitDescriptor ch) {
-            if (ch.HashKey() == null) return null;
-            return Main.settings.selectedMulticlassSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-        }
-        public static void SetMulticlassSet(this UnitDescriptor ch, HashSet<string> multiclassSet) {
-            if (ch.HashKey() == null) return;
-            Main.settings.selectedMulticlassSets[ch.HashKey()] = multiclassSet;
-        }
-
         public static void AddClassLevel_NotCharacterLevel(this UnitProgressionData instance, BlueprintCharacterClass characterClass) {
             //instance.SureClassData(characterClass).Level++;
             Main.Log($"AddClassLevel_NotCharLevel: class = {characterClass}");
@@ -164,18 +147,6 @@ namespace ToyBox.Multiclass {
                 (allowAutoCommit || !controller.AutoCommit);
                 //&& (allowPregen || !controller.State.IsPreGen()
                 
-        }
-
-        public static bool IsCharGen(this LevelUpState state) {
-            return state.Mode == LevelUpState.CharBuildMode.CharGen;
-        }
-
-        public static bool IsLevelUp(this LevelUpState state) {
-            return state.Mode == LevelUpState.CharBuildMode.LevelUp;
-        }
-
-        public static bool IsPreGen(this LevelUpState state) {
-            return state.IsPregen;
         }
 
 #if false

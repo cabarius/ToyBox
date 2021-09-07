@@ -161,24 +161,6 @@ namespace ToyBox.Multiclass {
 
         #region Utilities
 
-        public static HashSet<string> SelectedMulticlassSet(this UnitDescriptor unit, LevelUpState state) {
-            HashSet<string> selectedMulticlassSet;
-            if (!state.IsCharGen()) {
-                modLogger.Log($"SelectedMulticlassSet - in game - {unit.CharacterName}");
-                if (unit.Unit != null) {
-                    selectedMulticlassSet = unit.Unit.Descriptor.GetMulticlassSet();
-                }
-                else {
-                    selectedMulticlassSet = unit.GetMulticlassSet();
-                }
-            }
-            else {
-                modLogger.Log("SelectedMulticlassSet - chargen");
-                selectedMulticlassSet = Main.settings.charGenMulticlassSet;
-            }
-            return selectedMulticlassSet;
-        }
-
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var multiclassSet = unit.SelectedMulticlassSet(state);
             StateReplacer stateReplacer = new StateReplacer(state);

@@ -148,7 +148,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        
+
         [HarmonyPatch(typeof(SpendAttributePoint), "Check")]
         static class SpendAttributePoint_Check_Patch {
             private static void Postfix(ref bool __result) {
@@ -172,7 +172,7 @@ namespace ToyBox.BagOfPatches {
             }
             */
             private static void Postfix(ref bool __result, StatsDistribution __instance) {
-                if(settings.toggleIgnoreAttributeCap && __instance.Available) {
+                if (settings.toggleIgnoreAttributeCap && __instance.Available) {
                     __result = true;
                 }
             }
@@ -310,7 +310,12 @@ namespace ToyBox.BagOfPatches {
         }
         [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "CheckInternal")]
         public static class PrerequisiteCasterTypeSpellLevel_Check_Patch {
-            public static void Postfix(ref bool __result) {
+            public static void Postfix(
+    [CanBeNull] FeatureSelectionState selectionState,
+    [NotNull] UnitDescriptor unit,
+    [CanBeNull] LevelUpState state,
+    ref bool __result) {
+                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnoreCasterTypeSpellLevel) {
                     __result = true;
                 }
@@ -318,7 +323,12 @@ namespace ToyBox.BagOfPatches {
         }
         [HarmonyPatch(typeof(PrerequisiteNoArchetype), "CheckInternal")]
         public static class PrerequisiteNoArchetype_Check_Patch {
-            public static void Postfix(ref bool __result) {
+            public static void Postfix(
+    [CanBeNull] FeatureSelectionState selectionState,
+    [NotNull] UnitDescriptor unit,
+    [CanBeNull] LevelUpState state,
+    ref bool __result) {
+                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnoreForbiddenArchetype) {
                     __result = true;
                 }
@@ -327,7 +337,12 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(PrerequisiteStatValue), "CheckInternal")]
         public static class PrerequisiteStatValue_Check_Patch {
-            public static void Postfix(ref bool __result) {
+            public static void Postfix(
+    [CanBeNull] FeatureSelectionState selectionState,
+    [NotNull] UnitDescriptor unit,
+    [CanBeNull] LevelUpState state,
+    ref bool __result) {
+                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnorePrerequisiteStatValue) {
                     __result = true;
                 }
@@ -336,7 +351,12 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(PrerequisiteAlignment), "CheckInternal")]
         public static class PrerequisiteAlignment_Check_Patch {
-            public static void Postfix(ref bool __result) {
+            public static void Postfix(
+                [CanBeNull] FeatureSelectionState selectionState,
+                [NotNull] UnitDescriptor unit,
+                [CanBeNull] LevelUpState state,
+                ref bool __result) {
+                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnoreAlignmentWhenChoosingClass) {
                     __result = true;
                 }
@@ -345,7 +365,12 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(PrerequisiteNoFeature), "CheckInternal")]
         public static class PrerequisiteNoFeature_Check_Patch {
-            public static void Postfix(ref bool __result) {
+            public static void public static void Postfix(
+    [CanBeNull] FeatureSelectionState selectionState,
+    [NotNull] UnitDescriptor unit,
+    [CanBeNull] LevelUpState state,
+    ref bool __result) {
+                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnoreForbiddenFeatures) {
                     __result = true;
                 }
@@ -380,7 +405,12 @@ namespace ToyBox.BagOfPatches {
 #endif
         [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
         public static class SpellSelectionData_CanSelectAnything_Patch {
-            public static void Postfix(ref bool __result) {
+            public static void public static void Postfix(
+    [CanBeNull] FeatureSelectionState selectionState,
+    [NotNull] UnitDescriptor unit,
+    [CanBeNull] LevelUpState state,
+    ref bool __result) {
+                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleSkipSpellSelection) {
                     __result = false;
                 }
@@ -411,93 +441,32 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
+
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
-            public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] IList<BlueprintFeatureBase> features, [CanBeNull] FeatureSource source, int level) {
-                if (!Main.IsInGame) return false;
-#if true
-                //Logger.Log($"feature count = {features.ToArray().Count()} ");
-                var description = source.Blueprint.GetDescription() ?? "nil";
-                //Logger.Log($"source: {source.Blueprint.name} - {description}");
+            public static bool Prefix(
+                [NotNull] LevelUpState state,
+                [NotNull] UnitDescriptor unit,
+                [NotNull] IList<BlueprintFeatureBase> features,
+                FeatureSource source,
+                int level) {
+                 if (settings.featsMultiplier < 2) return true;
+                modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
                 foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
-                    if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
-                        //Logger.Log($"    name: {blueprintFeature.Name} : {blueprintFeature.GetType()}");
-                        if (blueprintFeature is IFeatureSelection selection) {
-                            // Bug Fix - due to issues in the implementation of FeatureSelectionState.CanSelectAnything we can get level up blocked so this is an attempt to work around for that
-                            var numToAdd = settings.featsMultiplier;
-                            if (selection is BlueprintFeatureSelection bpFS) {
-                                var bpFeatures = bpFS;
-                                var items = bpFS.ExtractSelectionItems(unit, null);
-                                //Logger.Log($"        items: {items.Count()}");
-                                var availableCount = 0;
-                                foreach (var item in items) {
-#if false
-                                    if (bpFS. is BlueprintParametrizedFeature bppF) {
-                                        Logger.Log($"checking parameterized feature {bppF.Name}");
-                                        if (selection.CanSelect(unit, state, null, item)) {
-                                            Logger.Log($"        {item.Feature.name}  is avaiable");
-                                            availableCount++;
-                                        }
-                                    }
-                                    else
-#endif
-                                    if (!unit.Progression.Features.HasFact(item.Feature)) {
-                                        availableCount++;
-                                        //                                        Logger.Log($"        {item.Feature.name}  is avaiable");
-                                    }
-#if false
-                                    if (selection.CanSelect(unit, state, null, item)) {
-                                        Logger.Log($"        {item.Feature.name}  is avaiable");
-                                        availableCount++;
-                                    }
-                                    else Logger.Log($"        {item.Feature.name}  is NOT avaiable");
-                                    if (!unit.Progression.Features.HasFact(item.Feature)) {
-                                        if (item.Feature.MeetsPrerequisites(null, unit, state, true)) {
-                                            Logger.Log($"        {item.Feature.name}  is avaiable");
-                                            availableCount++;
-                                        }
-                                    }
-                                    else Logger.Log($"        has Fact {item.Feature.Name}");
-#endif
-                                }
-                                if (numToAdd > availableCount) {
-                                    Main.Log($"reduced numToAdd: {numToAdd} -> {availableCount}");
-                                    numToAdd = availableCount;
-                                }
-                            }
-                            //Logger.Log($"        IFeatureSelection: {selection} adding: {numToAdd}");
-                            for (int i = 0; i < numToAdd; ++i) {
+                    for (int i = 0; i < settings.featsMultiplier; ++i) {
+                        if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
+                            if (blueprintFeature is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory()))
                                 state.AddSelection((FeatureSelectionState)null, source, selection, level);
-                            }
+                            Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
+                            if (blueprintFeature is BlueprintProgression progression)
+                                LevelUpHelper.UpdateProgression(state, unit, progression);
+                            FeatureSource source1 = source;
+                            int level1 = level;
+                            feature.SetSource(source1, level1);
                         }
-                        Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
-                        BlueprintProgression progression = blueprintFeature as BlueprintProgression;
-                        if (progression != null) {
-                            //Logger.Log($"        BlueprintProgression: {progression}");
-                            LevelUpHelper.UpdateProgression(state, unit, progression);
-                        }
-                        FeatureSource source1 = source;
-                        int level1 = level;
-                        feature.SetSource(source1, level1);
                     }
                 }
                 return false;
-#else
-                                    for (int i = 0; i < settings.featsMultiplier  ; ++i) {
-                    foreach (BlueprintFeatureSelection item in features.OfType<BlueprintFeatureSelection>()) {
-                        state.AddSelection(null, source, item, level);
-                    }
-                    foreach (BlueprintFeature item2 in features.OfType<BlueprintFeature>()) {
-                        Feature feature = (Feature)unit.AddFact(item2);
-                        BlueprintProgression blueprintProgression = item2 as BlueprintProgression;
-                        if (blueprintProgression != null) {
-                            LevelUpHelper.UpdateProgression(state, unit, blueprintProgression);
-                        }
-                        feature.SetSource(source, level);
-                    }
-                }
-                return false;
-#endif
             }
         }
     }

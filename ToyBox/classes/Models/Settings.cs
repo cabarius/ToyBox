@@ -98,6 +98,16 @@ namespace ToyBox {
         public UnitSelectType roll20Initiative = UnitSelectType.Off;
         public UnitSelectType roll1Initiative = UnitSelectType.Off;
 
+        // Summons
+        public bool toggleMakeSummmonsControllable = false;
+        public UnitSelectType summonTweakTarget1 = UnitSelectType.Off;
+        public float summonDurationMultiplier1 = 1;
+        public float summonLevelModifier1 = 0;
+        public UnitSelectType summonTweakTarget2 = UnitSelectType.Off;
+        public float summonDurationMultiplier2 = 1;
+        public float summonLevelModifier2 = 0;
+
+
         // Party Editor
         public int selectedPartyFilter = 0;
 

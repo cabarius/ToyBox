@@ -283,7 +283,7 @@ namespace ToyBox.BagOfPatches {
                     modLogger.Log(e.ToString());
                 }
 
-                Main.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+                //Main.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
 
@@ -305,7 +305,7 @@ namespace ToyBox.BagOfPatches {
                     modLogger.Log(e.ToString());
                 }
 
-                Main.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+                //Main.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
 

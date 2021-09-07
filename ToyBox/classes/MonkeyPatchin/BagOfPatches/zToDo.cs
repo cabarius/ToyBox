@@ -1,5 +1,5 @@
 ﻿// borrowed shamelessly and enchanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
-
+#if false
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
@@ -1996,3 +1996,4 @@ namespace ToyBox {
         }
 #endif
 }
+#endif
