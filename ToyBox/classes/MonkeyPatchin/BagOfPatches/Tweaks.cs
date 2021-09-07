@@ -354,11 +354,13 @@ namespace ToyBox.BagOfPatches {
                     if (settings.toggleInstantCooldown) return;
                     switch (type) {
                         case UnitCommand.CommandType.Free:
+                            break;
                         case UnitCommand.CommandType.Move:
                             cooldown.MoveAction = 3f - timeSinceCommandStart;
                             break;
                         case UnitCommand.CommandType.Standard:
                             cooldown.StandardAction = 6f - timeSinceCommandStart;
+                            cooldown.MoveAction = 3f;
                             break;
                         case UnitCommand.CommandType.Swift:
                             cooldown.SwiftAction = 6f - timeSinceCommandStart;
