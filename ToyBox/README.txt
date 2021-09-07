@@ -11,6 +11,7 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 Ver 1.2.9
+    Renamed 'Cheap Tricks' Tab to 'Bag of Tricks' in honor of m0nster and the great mod that helped make ToyBox what it is today
     Fixed bug affecting turn based commands like Studied Target or Gather Power
 Ver 1.2.8
     Fixed bug that would spawn enemies more powerful than they should
