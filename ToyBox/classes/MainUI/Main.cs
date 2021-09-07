@@ -160,7 +160,7 @@ namespace ToyBox {
                         }
                         else { UI.Space(25); }
                     },
-                    new NamedAction("Cheap Tricks", () => { CheapTricks.OnGUI(); }),
+                    new NamedAction("Bag of Tricks", () => { CheapTricks.OnGUI(); }),
 #if DEBUG
                     new NamedAction("Level Up & Multiclass", () => { LevelUp.OnGUI(); }),
 #else
