@@ -147,7 +147,6 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUp.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NoFriendlyFire.cs" />
@@ -156,6 +155,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
+    <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\Mod.cs" />
