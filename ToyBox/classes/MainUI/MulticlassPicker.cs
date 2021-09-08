@@ -64,9 +64,12 @@ namespace ToyBox {
                 UI.ActionToggle(
                     cl.Name,
                     () => multiclassSet.Contains(cl.AssetGuid.ToString()),
-                    (v) => { if (v) multiclassSet.Add(cl.AssetGuid.ToString()); else multiclassSet.Remove(cl.AssetGuid.ToString()); changed = true; },
+                    (v) => {
+                        if (v) multiclassSet.Add(cl.AssetGuid.ToString()); 
+                        else multiclassSet.Remove(cl.AssetGuid.ToString()); changed = true; 
+                    },
                     350
-                    );
+                    ); 
                 var archetypes = cl.Archetypes;
                 if (multiclassSet.Contains(cl.AssetGuid.ToString()) && archetypes.Any()) {
                     UI.Space(50);

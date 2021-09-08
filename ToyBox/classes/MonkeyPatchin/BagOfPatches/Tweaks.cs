@@ -122,6 +122,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
+using Kingmaker.Tutorial;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -354,5 +355,19 @@ namespace ToyBox.BagOfPatches {
                 Main.freshlyLaunched = false;
             }
         }
+
+        [HarmonyPatch(typeof(Tutorial), "IsBanned")]
+        static class Tutorial_IsBanned_Patch {
+            static bool Prefix(ref Tutorial __instance, ref bool __result) {
+                if (settings.toggleForceTutorialsToHonorSettings) {
+//                    __result = !__instance.HasTrigger ? __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) : __instance.Banned;
+                    __result = __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) || __instance.Banned;
+                    modLogger.Log($"hasTrigger: {__instance.HasTrigger} tag: {__instance.Blueprint.Tag} isTagBanned:{__instance.Owner.IsTagBanned(__instance.Blueprint.Tag)} this.Banned: {__instance.Banned} ==> {__result}");
+                    return false;
+                }
+                return true;
+            }
+        }
+
     }
 }

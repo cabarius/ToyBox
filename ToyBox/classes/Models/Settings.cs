@@ -39,6 +39,7 @@ namespace ToyBox {
         public bool toggleMaterialComponent = false;
         public bool toggleAutomaticallyLoadLastSave = false;
         public bool toggleAllowAchievementsDuringModdedGame = false;
+        public bool toggleForceTutorialsToHonorSettings = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
@@ -135,6 +136,9 @@ namespace ToyBox {
 
         public HashSet<string> charGenMulticlassSet = new HashSet<string>();
         public SerializableDictionary<string, HashSet<string>> selectedMulticlassSets = new SerializableDictionary<string, HashSet<string>>();
+
+        // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
+        public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new SerializableDictionary<string, HashSet<string>>();
 
         public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;

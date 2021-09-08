@@ -127,7 +127,6 @@ namespace ToyBox {
                                                        (bp, ch, n) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
                                                        (bp, ch) => {
                                                            var feature = ch.Progression.Features.GetFact(bp);
-
                                                            return feature?.GetRank() > 1;
                                                        });
 
@@ -135,9 +134,17 @@ namespace ToyBox {
                                                        (bp, ch, n) => ch.Progression.Features.GetFact(bp)?.AddRank(),
                                                        (bp, ch) => {
                                                            var feature = ch.Progression.Features.GetFact(bp);
-
                                                            return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                                                        });
+            //BlueprintAction.Register<BlueprintArchetype>(
+            //    "Add",
+            //    (bp, ch, n) => ch.Progression.AddArchetype(ch.Progression.Classes.First().CharacterClass, bp),
+            //    (bp, ch) => ch.Progression.CanAddArchetype(ch.Progression.Classes.First().CharacterClass, bp)
+            //    );
+            //BlueprintAction.Register<BlueprintArchetype>("Remove",
+            //    (bp, ch, n) => ch.Progression.AddArchetype(ch.Progression.Classes.First().CharacterClass, bp),
+            //    (bp, ch) => ch.Progression.Classes.First().Archetypes.Contains(bp)
+            //    );
 
             // Spellbooks
             BlueprintAction.Register<BlueprintSpellbook>("Add",
@@ -201,6 +208,20 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintAbility>("Remove",
                                                        (bp, ch, n) => ch.RemoveAbility(bp),
                                                        (bp, ch) => ch.HasAbility(bp));
+            // Ability Resources
+
+            BlueprintAction.Register<BlueprintAbilityResource>(
+                "Add",
+                (bp, ch, n) => ch.Resources.Add(bp, true),
+                (bp, ch) => !ch.Resources.ContainsResource(bp)
+                );
+            BlueprintAction.Register<BlueprintAbilityResource>("Remove",
+                (bp, ch, n) => ch.Resources.Remove(bp),
+                (bp, ch) => ch.Resources.ContainsResource(bp)
+                );
+
+            // Spellbooks
+
 
             // BlueprintActivatableAbility
             BlueprintAction.Register<BlueprintActivatableAbility>("Add",
@@ -244,37 +265,37 @@ namespace ToyBox {
 
             // Cutscenes
             BlueprintAction.Register<Cutscene>("Play", (bp, ch, n) => {
-                                                           Actions.ToggleModWindow();
-                                                           CutscenePlayerData cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
+                Actions.ToggleModWindow();
+                CutscenePlayerData cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
 
-                                                           if (cutscenePlayerData != null) {
-                                                               cutscenePlayerData.PreventDestruction = true;
-                                                               cutscenePlayerData.Stop();
-                                                               cutscenePlayerData.PreventDestruction = false;
-                                                           }
+                if (cutscenePlayerData != null) {
+                    cutscenePlayerData.PreventDestruction = true;
+                    cutscenePlayerData.Stop();
+                    cutscenePlayerData.PreventDestruction = false;
+                }
 
-                                                           var state = ContextData<SpawnedUnitData>.Current?.State;
-                                                           CutscenePlayerView.Play(bp, null, true, state).PlayerData.PlayActionId = bp.name;
-                                                       });
+                var state = ContextData<SpawnedUnitData>.Current?.State;
+                CutscenePlayerView.Play(bp, null, true, state).PlayerData.PlayActionId = bp.name;
+            });
 
             // Teleport
             BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (bp, ch, n) => GameHelper.EnterToArea(bp, AutoSaveMode.None));
             BlueprintAction.Register<BlueprintGlobalMap>("Teleport", (bp, ch, n) => GameHelper.EnterToArea(bp.GlobalMapEnterPoint, AutoSaveMode.None));
 
             BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n) => {
-                                                                    var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
-                                                                    var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
+                var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
+                var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
 
-                                                                    if (blueprint is BlueprintAreaEnterPoint enterPoint) {
-                                                                        GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
-                                                                    }
-                                                                });
+                if (blueprint is BlueprintAreaEnterPoint enterPoint) {
+                    GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+                }
+            });
 
             BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n) => {
-                                                                              if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
-                                                                                  Actions.TeleportToGlobalMap(() => Actions.TeleportToGlobalMapPoint(globalMapPoint));
-                                                                              }
-                                                                          });
+                if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
+                    Actions.TeleportToGlobalMap(() => Actions.TeleportToGlobalMapPoint(globalMapPoint));
+                }
+            });
         }
     }
 }

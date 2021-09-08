@@ -167,10 +167,12 @@ namespace ToyBox {
                 using (UI.HorizontalScope()) {
                     UI.Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
                     UI.Space(25);
+#if false   // disabled until we fix performance
                     var encounterCR = CheatsCombat.GetEncounterCr();
                     if (encounterCR > 0) {
                         UI.Label($"Encounter CR ".cyan() + $"{encounterCR}".orange().bold(), UI.AutoWidth());
                     }
+#endif
                 }
             }
             foreach (UnitEntityData ch in characterList) {
@@ -305,7 +307,7 @@ namespace ToyBox {
                             UI.Space(25);
                             UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
                             UI.Space(23);
-                            UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above".green());
+                            UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green() + "If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing".orange());
                         }
                         using (UI.HorizontalScope()) {
                             UI.Space(100);
@@ -318,7 +320,7 @@ namespace ToyBox {
                                 prog.Experience = newXP;
                             }, UI.Width(125));
                             UI.Space(23);
-                            UI.Label("This sets your experience to match the current value of character level.  It does not trigger any level ups or adjusts any character features. To do a normal level up use +1 Lvl above".green());
+                            UI.Label("This sets your experience to match the current value of character level.".green());
                         }
                         UI.Div(100, 25);
                         using (UI.HorizontalScope()) {
@@ -341,7 +343,17 @@ namespace ToyBox {
                                 UI.Label("level".green() + $": {cd.Level}", UI.Width(100f));
                                 var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                                 UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
-                                UI.Space(175);
+                                UI.Space(23);
+                                UI.ActionToggle(
+                                    "gestalt".grey(),
+                                    () => ch.GetClassExcludeState(cd),
+                                    (v) => {
+                                        ch.SetClassExcludeState(cd, v);
+                                        ch.Progression.UpdateLevelsForGestalt();
+                                    },
+                                    125
+                                    );
+                                UI.Space(27);
                                 UI.Label(cd.CharacterClass.Description.RemoveHtmlTags().green(), UI.AutoWidth());
                             }
                         }

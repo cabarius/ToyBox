@@ -66,6 +66,7 @@ namespace ToyBox {
         public static int selectedCollationIndex = 0;
         static bool firstSearch = true;
         public static String[] filteredBPNames = null;
+        public static int uncolatedMatchCount = 0;
         public static int matchCount = 0;
         public static String parameter = "";
 
@@ -78,6 +79,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAbility>("Actions", null, bp => bp.ActionType.ToString()),
             new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.School.ToString()),
+            new NamedTypeFilter<BlueprintAbilityResource>("Ability Rsrc", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CharacterClass.Name.ToString()),
             new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationName()),
@@ -188,6 +190,7 @@ namespace ToyBox {
             }
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
+            uncolatedMatchCount = matchCount;
             if (selectedTypeFilter.collator != null) {
                 collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key);
                 // I could do something like this but I will leave it up to the UI when a collation is selected.
@@ -274,7 +277,10 @@ namespace ToyBox {
                         CharacterPicker.OnGUI();
                         UnitReference selected = CharacterPicker.GetSelectedCharacter();
                         var bps = filteredBPs;
-                        if (selectedCollationIndex == 0) selectedCollatedBPs = null;
+                        if (selectedCollationIndex == 0) {
+                            selectedCollatedBPs = null;
+                            matchCount = uncolatedMatchCount;
+                        }
                         if (selectedCollationIndex > 0) {
                             if (collationChanged) {
                                 var key = collationKeys.ElementAt(selectedCollationIndex);
@@ -284,6 +290,7 @@ namespace ToyBox {
                                 foreach (var group in collatedBPs) {
                                     if (group.Key == selectedKey) {
                                         selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
+                                        matchCount = selectedCollatedBPs.Count();
                                     }
                                 }
                                 BlueprintListUI.needsLayout = true;

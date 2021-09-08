@@ -450,7 +450,8 @@ namespace ToyBox.BagOfPatches {
                 [NotNull] IList<BlueprintFeatureBase> features,
                 FeatureSource source,
                 int level) {
-                 if (settings.featsMultiplier < 2) return true;
+                if (settings.featsMultiplier < 2) return true;
+                if (!unit.IsPlayerFaction) return true;
                 modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
                 foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
                     for (int i = 0; i < settings.featsMultiplier; ++i) {

@@ -188,8 +188,7 @@ namespace ToyBox.Multiclass {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
-
-                modLogger.Log($"SelectClass.Apply.Postfix, is available  = {IsAvailable()}");
+                //modLogger.Log($"SelectClass.Apply.Postfix, is available  = {IsAvailable()}");
                 if (IsAvailable()) {
                     Main.multiclassMod.AppliedMulticlassSet.Clear();
                     Main.multiclassMod.UpdatedProgressions.Clear();
@@ -272,7 +271,7 @@ namespace ToyBox.Multiclass {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
-                modLogger.Log($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()} unit: {unit} {unit.CharacterName}");
+                //modLogger.Log($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()} unit: {unit} {unit.CharacterName}");
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
@@ -390,5 +389,37 @@ namespace ToyBox.Multiclass {
             }
         }
         #endregion
+
+        public static void UpdateLevelsForGestalt(this UnitProgressionData __instance) {
+            __instance.m_CharacterLevel = new int?(0);
+            __instance.m_MythicLevel = new int?(0);
+            int? nullable;
+            foreach (ClassData classData in __instance.Classes) {
+                var shouldSkip = __instance.GetClassExcludeState(classData);
+                modLogger.Log($"- owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}");
+                if (!shouldSkip) {
+                    if (classData.CharacterClass.IsMythic) {
+                        nullable = __instance.m_MythicLevel;
+                        int level = classData.Level;
+                        __instance.m_MythicLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
+                    }
+                    else {
+                        nullable = __instance.m_CharacterLevel;
+                        int level = classData.Level;
+                        __instance.m_CharacterLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
+                    }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.SetupLevelsIfNecessary))]
+        static class UnitProgressionData_SetupLevelsIfNecessary_Patch {
+            static private bool Prefix(UnitProgressionData __instance) {
+                if (__instance.m_CharacterLevel.HasValue && __instance.m_MythicLevel.HasValue)
+                    return false;
+                __instance.UpdateLevelsForGestalt();
+                return false;
+            }
+        }
     }
 }
