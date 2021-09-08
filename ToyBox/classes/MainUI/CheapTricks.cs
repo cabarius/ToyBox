@@ -212,6 +212,7 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Dice Rolls", 1,
+                () => UI.EnumGrid("All Attacks Hit", ref settings.allAttacksHit, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("All Hits Critical", ref settings.allHitsCritical, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, 0, UI.AutoWidth()),

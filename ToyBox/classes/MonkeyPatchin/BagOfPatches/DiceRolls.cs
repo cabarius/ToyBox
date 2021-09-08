@@ -132,11 +132,20 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
         static class HitPlayer_OnTriggerl_Patch {
             static void Postfix(ref bool __result, RuleAttackRoll __instance) {
-                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allHitsCritical)) {
+                if (__instance.IsHit && UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allHitsCritical)) {
                     __result = true;
                 }
             }
         }
+        [HarmonyPatch(typeof(RuleAttackRoll), "IsHit", MethodType.Getter)]
+        static class HitPlayer_OnTrigger2_Patch {
+            static void Postfix(ref bool __result, RuleAttackRoll __instance) {
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allAttacksHit)) {
+                    __result = true;
+                }
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(RuleCastSpell), "IsArcaneSpellFailed", MethodType.Getter)]
         public static class RuleCastSpell_IsArcaneSpellFailed_Patch {
