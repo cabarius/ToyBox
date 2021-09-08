@@ -15,7 +15,7 @@ Ver 1.2.10
     Search 'n Pick - Update match count when you change collation category
     Fixed Performance issue caused by showing combat challenge rating in party editor so removed it for now
     Raised max caster level to 20 for spellbook calculations (thanks Delth)
-    Made buff length multiplyer not apply to harmoful buffs (thanks Delth)
+    Made buff length multiplier not apply to harmful buffs (thanks Delth)
 Ver 1.2.9.1
     Restored some missing patches I forgot to put back in when working on 1.2.9
 Ver 1.2.9
