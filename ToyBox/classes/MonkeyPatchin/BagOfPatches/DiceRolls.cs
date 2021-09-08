@@ -132,11 +132,20 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
         static class HitPlayer_OnTriggerl_Patch {
             static void Postfix(ref bool __result, RuleAttackRoll __instance) {
-                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allHitsCritical)) {
+                if (__instance.IsHit && UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allHitsCritical)) {
                     __result = true;
                 }
             }
         }
+        [HarmonyPatch(typeof(RuleAttackRoll), "IsHit", MethodType.Getter)]
+        static class HitPlayer_OnTrigger2_Patch {
+            static void Postfix(ref bool __result, RuleAttackRoll __instance) {
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allAttacksHit)) {
+                    __result = true;
+                }
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(RuleCastSpell), "IsArcaneSpellFailed", MethodType.Getter)]
         public static class RuleCastSpell_IsArcaneSpellFailed_Patch {
@@ -197,11 +206,11 @@ namespace ToyBox.BagOfPatches {
         public static class RuleInitiativeRoll_OnTrigger_Patch {
             static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
-                    __result = 1;
+                    __result = 1 + __instance.Modifier;
                     Main.Debug("Modified InitiativeRoll: " + __result);
                 }
-                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
-                    __result = 20;
+                else if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
+                    __result = 20 + __instance.Modifier;
                     Main.Debug("Modified InitiativeRoll: " + __result);
                 }
             }

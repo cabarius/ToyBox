@@ -10,6 +10,9 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+Ver 1.2.11
+    (Delth) Fixed roll1/roll20 on initative to actually set result of the roll, not whole iniative result
+    (Delth) "All hits critical" was in fact "All attacks hit and are critical" - split into two separate options
 Ver 1.2.10
     Added feature to exclude classes in character level calculation, which helps gestalt class tinkering
     Search 'n Pick - Update match count when you change collation category
