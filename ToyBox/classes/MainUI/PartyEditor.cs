@@ -333,6 +333,8 @@ namespace ToyBox {
                             UI.Space(175);
                             UI.Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
                         }
+                        var classCount = classData.Count;
+                        var gestaltCount = classData.Count(cl => ch.GetClassExcludeState(cl));
                         foreach (var cd in classData) {
                             UI.Div(100, 20);
                             using (UI.HorizontalScope()) {
@@ -344,15 +346,18 @@ namespace ToyBox {
                                 var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                                 UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
                                 UI.Space(23);
-                                UI.ActionToggle(
-                                    "gestalt".grey(),
-                                    () => ch.GetClassExcludeState(cd),
-                                    (v) => {
-                                        ch.SetClassExcludeState(cd, v);
-                                        ch.Progression.UpdateLevelsForGestalt();
-                                    },
-                                    125
-                                    );
+                                if (classCount - gestaltCount > 1 || ch.GetClassExcludeState(cd) == true) {
+                                    UI.ActionToggle(
+                                        "gestalt".grey(),
+                                        () => ch.GetClassExcludeState(cd),
+                                        (v) => {
+                                            ch.SetClassExcludeState(cd, v);
+                                            ch.Progression.UpdateLevelsForGestalt();
+                                        },
+                                        125
+                                        );
+                                }
+                                else UI.Space(125);
                                 UI.Space(27);
                                 UI.Label(cd.CharacterClass.Description.RemoveHtmlTags().green(), UI.AutoWidth());
                             }
