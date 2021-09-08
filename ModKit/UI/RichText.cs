@@ -57,7 +57,6 @@ namespace ModKit {
         {
             return s = $"<i>{s}</i>";
         }
-
         public static string color(this string s, string color)
         {
             return s = $"<color={color}>{s}</color>";

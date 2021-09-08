@@ -115,9 +115,13 @@ namespace ToyBox {
             UI.HStack("Multiple Classes", 1,
                 () => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),
                 () => {
-                    UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
-                    UI.Space(25);
-                    UI.Label("With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. Please go to Party Editor > Character > Classes to configure this".green());
+                UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
+                UI.Space(25);
+                using (UI.VerticalScope()) {
+                        UI.Label("With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. Please go to Party Editor > Character > Classes to configure this. See the link for more information on this campaign variant.".green());
+                        UI.LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
+                        UI.Space(15);
+                    }
                 },
                 () => {
                     UI.EnumGrid<ProgressionPolicy>("Hit Point (Hit Die) Growth", ref settings.multiclassHitPointPolicy, 0, UI.AutoWidth());
