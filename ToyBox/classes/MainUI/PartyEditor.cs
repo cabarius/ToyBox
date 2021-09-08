@@ -446,19 +446,19 @@ namespace ToyBox {
                             var casterLevel = spellbook.CasterLevel;
                             using (UI.HorizontalScope()) {
                                 UI.EnumerablePicker<int>(
-                                    "Spell Level".bold() + " (count)",
+                                    "Spells known",
                                     ref selectedSpellbookLevel,
-                                    Enumerable.Range(0, casterLevel + 1),
+                                    Enumerable.Range(0, spellbook.Blueprint.MaxSpellLevel + 1),
                                     0,
                                     (lvl) => {
-                                        var levelText = lvl <= casterLevel ? $"L{lvl}".bold() : $"L{lvl}".grey();
+                                        var levelText = spellbook.Blueprint.SpellsPerDay.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
                                         var knownCount = spellbook.GetKnownSpells(lvl).Count();
                                         var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                         return levelText + countText;
                                     },
                                     UI.AutoWidth()
                                 );
-                                if (casterLevel < maxLevel) {
+                                if (casterLevel < 20) {
                                     UI.ActionButton("+1 Caster Level", () => spellbook.AddBaseLevel());
                                 }
                             }
