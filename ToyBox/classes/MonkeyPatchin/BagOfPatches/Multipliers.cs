@@ -273,7 +273,7 @@ namespace ToyBox.BagOfPatches {
         public static class BuffCollection_AddBuff_patch {
             public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
                 try {
-                    if (!caster.IsPlayersEnemy) {
+                    if (!caster.IsPlayersEnemy && !blueprint.Harmful) {
                         if (duration != null) {
                             duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
                         }
