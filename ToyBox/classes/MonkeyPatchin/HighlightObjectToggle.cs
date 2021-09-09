@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using HarmonyLib;
 using Kingmaker;
+using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.EntitySystem.Entities;
@@ -38,11 +39,9 @@ namespace ToyBox.classes.MonkeyPatchin
                 try
                 {
                     if (!Main.Enabled) return true;
-                    if (!Main.settings.highlightObjectsToggle)
-                    {
-                        return true;
-                    }
-
+                    if (!Main.settings.highlightObjectsToggle) return true;
+                    //var isInCutScene = Game.Instance.State.Cutscenes.ToList().Count() > 0;
+                    //if (isInCutScene) return true;
                     if (m_IsHighlightingRef(__instance) & !___m_Inactive)
                     {
                         m_IsHighlightingRef(__instance) =  false;

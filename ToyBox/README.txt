@@ -12,6 +12,7 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.2.11
+    Companions can now multiclass
     Your dear pets can once again get more feats with feat selection multiplier
     Fixed gestalt level up rules for hp/bab/saves/skills and crasher affecting respec mods
     Added a URL describing gestalt classes in Level Up & Multiclass section

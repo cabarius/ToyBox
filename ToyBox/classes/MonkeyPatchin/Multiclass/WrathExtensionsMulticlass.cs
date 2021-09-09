@@ -138,14 +138,16 @@ namespace ToyBox.Multiclass {
         }
 
         public static bool IsManualPlayerUnit(this LevelUpController controller, bool allowPet = false, bool allowAutoCommit = false, bool allowPregen = false) {
-            //Main.Log($"controller: {controller}");
-            //Main.Log($"    unit: {controller.Unit}");
-            //Main.Log($"    levelup state: {controller.State}");
-            return controller != null &&
-                controller.Unit.IsPlayerFaction &&
-                (allowPet || !controller.Unit.IsPet) &&
-                (allowAutoCommit || !controller.AutoCommit);
+            Main.Log($"controller: {controller} AutoCommit: {controller.AutoCommit}");
+            Main.Log($"    unit: {controller.Unit} isPlayerFaction: {controller.Unit.IsPlayerFaction} isPet: {controller.Unit.IsPet}");
+            Main.Log($"    levelup state: {controller.State}");
+           
+            return controller != null 
+                && controller.Unit.IsPlayerFaction 
+                && (allowPet || !controller.Unit.IsPet
+                //&& (allowAutoCommit || !controller.AutoCommit)
                 //&& (allowPregen || !controller.State.IsPreGen()
+                );
                 
         }
 
