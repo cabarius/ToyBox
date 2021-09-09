@@ -13,6 +13,7 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
 
 Ver 1.2.12
     (Delth) Added flag to possibly enable multiple romances (experimental and untested, volunteers welcome)
+    (Delth) Spiders Begone ported from Bag of Tricks! Spider looks changed to wolves, spider swarm looks to rat swarms. Experimental.
 Ver 1.2.11
     Unified gestalt flag in party editor with gestalt config so if you level up with a chosen set of multiclasses it will mark them as gestalt.  If you mark a class as gestalt it will get added to the multiclass set.
     Companions can now multiclass
