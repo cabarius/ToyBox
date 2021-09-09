@@ -12,12 +12,13 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.2.11
+    Unified gestalt flag in party editor with gestalt config so if you level up with a chosen set of multiclasses it will mark them as gestalt.  If you mark a class as gestalt it will get added to the multiclass set.
     Companions can now multiclass
+    Fixed calculation error in multiclass skill points - note if you choose a gestalt class to level up as primary then it treats it as if you did not gain a character level
     Your dear pets can once again get more feats with feat selection multiplier
     Fixed gestalt level up rules for hp/bab/saves/skills and crasher affecting respec mods
     Added a URL describing gestalt classes in Level Up & Multiclass section
     Multiclass skill point calculation no longer gets used when multiclass is disabled
-    Fixed calculation error in multiclass skill points
     (Delth) Fixed roll1/roll20 on initative to actually set result of the roll, not whole iniative result
     (Delth) "All hits critical" was in fact "All attacks hit and are critical" - split into two separate options
 Ver 1.2.10
