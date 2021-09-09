@@ -369,5 +369,15 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+
+        [HarmonyPatch(typeof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked), "CheckCondition")]
+        public static class RomanceLocked_CheckCondition_Patch {
+            public static void Postfix(ref bool __result) {
+                if (settings.toggleMultipleRomance) {
+                    __result = false;
+                }
+            }
+        }
+
     }
 }

@@ -40,6 +40,7 @@ namespace ToyBox {
         public bool toggleAutomaticallyLoadLastSave = false;
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
+        public bool toggleMultipleRomance = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
