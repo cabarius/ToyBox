@@ -178,9 +178,7 @@ namespace ToyBox {
                 () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
                 () => UI.Toggle("Enable multiple romance (experimental)", ref settings.toggleMultipleRomance, 0),
                 () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
-#if DEBUG
                 () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
-#endif
                 () => { }
                 );
             UI.Div(153, 25);
