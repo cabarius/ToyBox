@@ -63,6 +63,7 @@
     </Reference>
     <Reference Include="Owlcat.Runtime.UI_public">
       <HintPath>$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Owlcat.Runtime.Visual">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
@@ -78,6 +79,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UniRx">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UniRx.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Unity.TextMeshPro.dll</HintPath>
@@ -117,6 +119,7 @@
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityModManager">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
@@ -189,6 +192,7 @@
   <ItemGroup>
     <Content Include="README.txt" />
     <Content Include="zmisc\api.txt" />
+    <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
@@ -197,6 +201,8 @@
     <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
             xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll"
             xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb"
-        </PostBuildEvent>
+            cd "$(TargetDir)"
+            powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

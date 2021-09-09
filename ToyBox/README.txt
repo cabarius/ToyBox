@@ -17,6 +17,7 @@ Ver 1.2.11
     Fixed gestalt level up rules for hp/bab/saves/skills and crasher affecting respec mods
     Added a URL describing gestalt classes in Level Up & Multiclass section
     Multiclass skill point calculation no longer gets used when multiclass is disabled
+    Fixed calculation error in multiclass skill points
     (Delth) Fixed roll1/roll20 on initative to actually set result of the roll, not whole iniative result
     (Delth) "All hits critical" was in fact "All attacks hit and are critical" - split into two separate options
 Ver 1.2.10
