@@ -74,7 +74,7 @@ namespace ToyBox {
             });
             UI.Div(0, 25);
             UI.HStack("Create & Level Up", 1,
-                () => UI.Slider("Feature Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Feat Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()),
                 () => {
                     UI.Toggle("Ignore Attribute Cap", ref settings.toggleIgnoreAttributeCap, 0);
                     UI.Space(25);

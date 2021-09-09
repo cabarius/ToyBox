@@ -10,10 +10,12 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+
 Ver 1.2.11
+    Your dear pets can once again get more feats with feat selection multiplier
     Fixed gestalt level up rules for hp/bab/saves/skills and crasher affecting respec mods
     Added a URL describing gestalt classes in Level Up & Multiclass section
-    Multiclass skill point calculation no longer gets used when disabled
+    Multiclass skill point calculation no longer gets used when multiclass is disabled
     (Delth) Fixed roll1/roll20 on initative to actually set result of the roll, not whole iniative result
     (Delth) "All hits critical" was in fact "All attacks hit and are critical" - split into two separate options
 Ver 1.2.10
