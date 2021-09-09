@@ -140,7 +140,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
-
+         
         [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
         static class Spellbook_GetSpellsPerDay_Patch {
             static void Postfix(ref int __result) {
@@ -237,5 +237,151 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+
+
+
+
+        // SPIDERS
+
+        internal static class SpidersBegone {
+
+            public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
+                BlueprintUnitType type = unitEntityData.Blueprint.Type;
+                bool isASpider = SpidersBegone.IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isASpiderSwarm = SpidersBegone.IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                if (isASpider || isOtherSpiderUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
+                }
+                else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintCR2RatSwarmGUID;
+                }
+            }
+
+            public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
+                BlueprintUnitType type = blueprintUnit.Type;
+                bool isASpider = SpidersBegone.IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isASpiderSwarm = SpidersBegone.IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                if (isASpider || isOtherSpiderUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
+                }
+                else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintCR2RatSwarmGUID).Prefab;
+                }
+            }
+
+            private static bool IsSpiderType(string typeGuid) {
+                return typeGuid == spiderTypeGUID;
+            }
+
+            private static bool IsSpiderSwarmType(string typeGuid) {
+                return typeGuid == spiderSwarmTypeGUID;
+            }
+
+            private static bool IsSpiderBlueprintUnit(string blueprintUnitGuid) {
+                return SpidersBegone.spiderGuids.Contains(blueprintUnitGuid);
+            }
+            private static bool IsSpiderSwarmBlueprintUnit(string blueprintUnitGuid) {
+                return SpidersBegone.spiderSwarmGuids.Contains(blueprintUnitGuid);
+            }
+
+            private const string spiderTypeGUID = "243702bdc53e2574aaa34d1e3eafe6aa";
+            private const string spiderSwarmTypeGUID = "0fd1473096fbdda4db770cca8366c5e1"; 
+
+            private const string blueprintWolfStandardGUID = "ea610d9e540af4243b1310a3e6833d9f";
+
+            private const string blueprintCR2RatSwarmGUID = "12a5944fa27307e4e8b6f56431d5cc8c";
+
+            private static readonly string[] spiderSwarmGuids = new string[]
+             {
+                 "a28e944558ed5b64790c3701e8c89d75",
+                 "da2f152d19ce4d54e8c17da91f01fabd",
+                 "f2327e24765fb6342975b6216bfb307b"
+             };
+
+
+            private static readonly string[] spiderGuids = new string[]
+            {
+                "272f71e982166934182d51b4e03e400e",
+                "d95785c3853077a4599e0cbe8874703f",
+                "48f0c472e5cd4beda4afdb1b6c39c344",
+                "ae2806b1e73ed7b4e9e9ae966de4dad6",
+                "b048bb08e51492a4092063026282fa93",
+                "00f6b260b3727b44ba30a9e51abf3b11",
+                "6eb8f96ee587cc24ba375f082b2ecdbc",
+                "b69082d0bfe9e9446b00363d617b7473",
+                "d0e28afa4e4c0994cb6deae66612445a",
+                "c4b33e5fd3d3a6f46b2aade647b0bf25",
+                "457be920f33d9ee42b697f64a076ba98",
+                "38a5be8e3d104fa28bdb39450cf80858",
+                "63897b4df57da2f4396ca8a6f34723e7",
+                "a21493b15142420bb7623cf97ebad1c9",
+                "e9c1c68972cc4904dacdf2df9acf6730",
+                "84d46dae0fbd4dfba7d85d2bd4d6648c",
+                "f560cc7976d44bbc99c51eef867abc4a",
+                "18a3ceeb3fb44f24ea6d3035a5f05a8c",
+                "30e473f4deea1d34caac26be7836f166",
+                "ba9451623f3f13742a8bd12da4822d2b",
+                "1be1454f47c246419f0b410ab451d749",
+                "0db7fc0d547b43668d6eb9be0cb1725a",
+                "a813d907bc55e734584d99a038c9211e",
+                "51c66b0783a748c4b9538f0f0678c4d7",
+                "07467e9a29a215346ab66fec7963eb62",
+                "4622aca7715007147b26b7fc26db3df8",
+                "9e120b5e0ad3c794491c049aa24b9fde",
+                "d7af2cc1ac8611c4c9abec7be93b0e12",
+                "a027b1b189e95c64a9323da021bd7a9a",
+            };
+        }
+
+
+
+        [HarmonyPatch(typeof(UnitEntityData), "CreateView")]
+        public static class UnitEntityData_CreateView_Patch {
+            public static void Prefix(ref UnitEntityData __instance) {
+                if (settings.toggleSpiderBegone) {
+                    SpidersBegone.CheckAndReplace(ref __instance);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintUnit), "PreloadResources")]
+        public static class BlueprintUnit_PreloadResources_Patch {
+            public static void Prefix(ref BlueprintUnit __instance) {
+                if (settings.toggleSpiderBegone) {
+                    SpidersBegone.CheckAndReplace(ref __instance);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
+        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
+        public static class EntityCreationControllert_SpawnUnit_Patch1 {
+            public static void Prefix(ref BlueprintUnit unit) {
+                if (settings.toggleSpiderBegone) {
+                    SpidersBegone.CheckAndReplace(ref unit);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
+        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(UnitEntityView), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
+        public static class EntityCreationControllert_SpawnUnit_Patch2 {
+            public static void Prefix(ref BlueprintUnit unit) {
+                if (settings.toggleSpiderBegone) {
+                    SpidersBegone.CheckAndReplace(ref unit);
+                }
+            }
+
+        }
     }
+
+
+    
+
+
+
 }

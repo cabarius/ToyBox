@@ -41,6 +41,7 @@ namespace ToyBox {
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleMultipleRomance = false;
+        public bool toggleSpiderBegone = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
