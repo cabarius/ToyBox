@@ -11,6 +11,8 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.2.12
+    (Delth) Added flag to possibly enable multiple romances (experimental and untested, volunteers welcome)
 Ver 1.2.11
     Unified gestalt flag in party editor with gestalt config so if you level up with a chosen set of multiclasses it will mark them as gestalt.  If you mark a class as gestalt it will get added to the multiclass set.
     Companions can now multiclass
