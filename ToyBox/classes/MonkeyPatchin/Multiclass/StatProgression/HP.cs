@@ -10,14 +10,13 @@ using System.Threading.Tasks;
 
 namespace ToyBox.Multiclass {
     public static class HPDice {
-        public static void ApplyHPDice(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] classes) {
-
-            //Logger.ModLoggerDebug($"应用对{stat}的更改");
-            int[] newClassLvls = classes.Select(a => unit.Progression.GetClassLevel(a)).ToArray();
+        public static void ApplyHPDice(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] appliedClasses) {
+            if (appliedClasses.Count() <= 0) return;
+            int[] newClassLvls = appliedClasses.Select(cl => unit.Progression.GetClassLevel(cl)).ToArray();
             int classCount = newClassLvls.Length;
-            int[] hitDies = classes.Select(a => (int)(a.HitDie)).ToArray();
+            int[] hitDies = appliedClasses.Select(cl => (int)(cl.HitDie)).ToArray();
 
-            int mainClassIndex = classes.ToList().FindIndex(a => a == state.SelectedClass);
+            int mainClassIndex = appliedClasses.ToList().FindIndex(ch => ch == state.SelectedClass);
             //Logger.ModLoggerDebug($"mainClassIndex = {mainClassIndex}");
             int mainClassHPDie = hitDies[mainClassIndex];
 
@@ -34,7 +33,7 @@ namespace ToyBox.Multiclass {
                     newIncrease = hitDies.Sum();
                     break;
                 default:
-                    return;
+                    break; ;
             }
             unit.Stats.GetStat(StatType.HitPoints).BaseValue += newIncrease - currentHPIncrease;
         }

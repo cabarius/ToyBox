@@ -14,17 +14,31 @@ namespace ToyBox.Multiclass {
     public static class SkillPoint {
         public static int? GetTotalSkillPoints(UnitDescriptor unit, int nextLevel) {
             List<ClassData> classes = unit.Progression.Classes;
-            var classCount = classes.Count;
-            switch (Main.settings.multiclassSkillPointPolicy) {
-                case ProgressionPolicy.Average:
-                    return classes.Sum(cl => cl.CalcSkillPoints()) / classCount;
-                case ProgressionPolicy.Largest:
-                    return classes.Max(cl => cl.CalcSkillPoints());
-                case ProgressionPolicy.Sum:
-                    return classes.Sum(cl => cl.CalcSkillPoints());
-                default:            
-                    return null;
+            var split = classes.GroupBy(cd => unit.IsClassGestalt(cd.CharacterClass));
+            int total = 0;
+            foreach (var group in split) {
+                if (group.Key == false) total += group.ToList().Sum(cd => cd.CalcSkillPoints());
+                else {
+                    var gestaltClasses = group.ToList();
+                    var gestaltCount = classes.Count;
+                    if (gestaltCount > 0) {
+                        switch (Main.settings.multiclassSkillPointPolicy) {
+                            case ProgressionPolicy.Average:
+                                total += gestaltClasses.Sum(cl => cl.CalcSkillPoints()) / gestaltCount;
+                                break;
+                            case ProgressionPolicy.Largest:
+                                total += gestaltClasses.Max(cl => cl.CalcSkillPoints());
+                                break;
+                            case ProgressionPolicy.Sum:
+                                total += gestaltClasses.Sum(cl => cl.CalcSkillPoints());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
+            return total;
             // TODO - figure out the right thing to do here
 #if false
             List<ClassData> classes = unit.Progression.Classes;
@@ -56,6 +70,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(LevelUpHelper), "GetTotalSkillPoints")]
         public static class LevelUpHelper_GetTotalSkillPoints_Patch {
             public static bool Prefix(UnitDescriptor unit, int nextLevel, ref int __result) {
+                if (!MultipleClasses.IsAvailable()) return true;
                 var totalSkillPoints = GetTotalSkillPoints(unit, nextLevel);
                 if (totalSkillPoints.HasValue) {
                     __result = totalSkillPoints.Value;

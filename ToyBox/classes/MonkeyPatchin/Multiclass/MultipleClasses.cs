@@ -237,6 +237,7 @@ namespace ToyBox.Multiclass {
                         foreach (BlueprintArchetype archetype in state.SelectedClass.Archetypes) {
                             if (selectedMulticlassSet.Contains(archetype.AssetGuid.ToString())) {
                                 AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
+                                unit.SetClassIsGestalt(addArchetype.CharacterClass, true);
                                 if (addArchetype.Check(state, unit)) {
                                     addArchetype.Apply(state, unit);
                                 }
@@ -275,6 +276,7 @@ namespace ToyBox.Multiclass {
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
+                            unit.SetClassIsGestalt(state.SelectedClass, true);
                             modLogger.Log($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}{state.SelectedClass.Archetypes}[{state.NextClassLevel}], {unit}) mythic: {state.IsMythicClassSelected} vs {state.SelectedClass.IsMythic}");
 
                             __instance.Apply_NoStatsAndHitPoints(state, unit);
@@ -395,7 +397,7 @@ namespace ToyBox.Multiclass {
             __instance.m_MythicLevel = new int?(0);
             int? nullable;
             foreach (ClassData classData in __instance.Classes) {
-                var shouldSkip = __instance.GetClassExcludeState(classData);
+                var shouldSkip = __instance.IsClassGestalt(classData.CharacterClass);
                 modLogger.Log($"- owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}");
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {

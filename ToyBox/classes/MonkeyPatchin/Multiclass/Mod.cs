@@ -184,43 +184,43 @@ namespace ToyBox.Multiclass {
             return selectedMulticlassSet;
         }
 
-        static public bool GetClassExcludeState(this UnitEntityData ch, ClassData cd) {
+        static public bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-            return excludeSet.Contains(cd.CharacterClass.AssetGuid.ToString());
+            return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
-        static public void SetClassExcludeState(this UnitEntityData ch, ClassData cd, bool exclude) {
+        static public void SetClassIsGestalt(this UnitEntityData ch, BlueprintCharacterClass cl, bool isGestalt) {
             if (ch.HashKey() == null) return;
-            var classID = cd.CharacterClass.AssetGuid.ToString();
+            var classID = cl.AssetGuid.ToString();
+            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            if (isGestalt) excludeSet.Add(classID);
+            else excludeSet.Remove(classID);
+            modLogger.Log($"Set - key: {classID} -> {isGestalt} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
+            Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
+        }
+
+        static public bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
+            if (ch.HashKey() == null) return false;
+            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            return excludeSet.Contains(cl.AssetGuid.ToString());
+        }
+
+        static public void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {
+            if (ch.HashKey() == null) return;
+            var classID = cl.AssetGuid.ToString();
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (exclude) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
             modLogger.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
-
-        static public bool GetClassExcludeState(this UnitDescriptor ch, ClassData cd) {
-            if (ch.HashKey() == null) return false;
-            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-            return excludeSet.Contains(cd.CharacterClass.AssetGuid.ToString());
-        }
-
-        static public void SetClassExcludeState(this UnitDescriptor ch, ClassData cd, bool exclude) {
-            if (ch.HashKey() == null) return;
-            var classID = cd.CharacterClass.AssetGuid.ToString();
-            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-            if (exclude) excludeSet.Add(classID);
-            else excludeSet.Remove(classID);
-            modLogger.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
-            Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
-        }
-        static public bool GetClassExcludeState(this UnitProgressionData progression, ClassData cd) {
+        static public bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
             var party = Game.Instance.Player.Party;
             foreach (var ch in party) {
                 if (ch.Progression == progression) {
                     modLogger.Log($"found: {ch.HashKey()}");
-                    return ch.GetClassExcludeState(cd);
+                    return ch.IsClassGestalt(cl);
                 }
             }
             return false;
