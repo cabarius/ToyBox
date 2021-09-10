@@ -12,8 +12,13 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.2.12
+    Increased max buff duration multiplier to 999 to match original Bag of Tricks
+    Quest editor now sorts completed quests below active
+    Pets can now multiclass if you turn on ignore class and feat restrictions so make that bully thug or barbarian wardog!
+    (Fire) Tweak to block tutorials if you have them turned off in settings
     (Delth) Added flag to possibly enable multiple romances (experimental and untested, volunteers welcome)
     (Delth) Spiders Begone ported from Bag of Tricks! Spider looks changed to wolves, spider swarm looks to rat swarms. Experimental.
+
 Ver 1.2.11
     Unified gestalt flag in party editor with gestalt config so if you level up with a chosen set of multiclasses it will mark them as gestalt.  If you mark a class as gestalt it will get added to the multiclass set.
     Companions can now multiclass

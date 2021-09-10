@@ -136,7 +136,7 @@ namespace ToyBox.Multiclass {
         public static bool IsAvailable() {
             return Main.Enabled &&
                 settings.toggleMulticlass &&
-                General.levelUpController.IsManualPlayerUnit();
+                General.levelUpController.IsManualPlayerUnit(true);
         }
 
         public static bool Enabled {
