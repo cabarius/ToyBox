@@ -307,7 +307,10 @@ namespace ToyBox {
                             UI.Space(25);
                             UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
                             UI.Space(23);
-                            UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green() + "If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing".orange());
+                            using (UI.VerticalScope()) {
+                                UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green() + "If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange());
+                                UI.LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
+                            }
                         }
                         using (UI.HorizontalScope()) {
                             UI.Space(100);
