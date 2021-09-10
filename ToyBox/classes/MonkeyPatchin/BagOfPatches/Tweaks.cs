@@ -362,7 +362,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleForceTutorialsToHonorSettings) {
 //                    __result = !__instance.HasTrigger ? __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) : __instance.Banned;
                     __result = __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) || __instance.Banned;
-                    modLogger.Log($"hasTrigger: {__instance.HasTrigger} tag: {__instance.Blueprint.Tag} isTagBanned:{__instance.Owner.IsTagBanned(__instance.Blueprint.Tag)} this.Banned: {__instance.Banned} ==> {__result}");
+                    //modLogger.Log($"hasTrigger: {__instance.HasTrigger} tag: {__instance.Blueprint.Tag} isTagBanned:{__instance.Owner.IsTagBanned(__instance.Blueprint.Tag)} this.Banned: {__instance.Banned} ==> {__result}");
                     return false;
                 }
                 return true;

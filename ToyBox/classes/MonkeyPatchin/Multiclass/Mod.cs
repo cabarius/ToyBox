@@ -212,14 +212,14 @@ namespace ToyBox.Multiclass {
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (exclude) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
-            modLogger.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
+            // modLogger.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
         static public bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
             var party = Game.Instance.Player.Party;
             foreach (var ch in party) {
                 if (ch.Progression == progression) {
-                    modLogger.Log($"found: {ch.HashKey()}");
+                    // modLogger.Log($"found: {ch.HashKey()}");
                     return ch.IsClassGestalt(cl);
                 }
             }

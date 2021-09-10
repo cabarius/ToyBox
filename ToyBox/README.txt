@@ -14,6 +14,7 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
 Ver 1.2.13
     Added sliders for Crusade Morale, Max Morale and Min Morale (more improvements to crusade are on their way)
     Tweak to refill belt consumables from your inventory
+    Reduced log spam which can fill up Player.log which can grow huge so you may want to quit and delete the file from time to time.  It lives in $User\AppData\LocalLow\Owlcat Games\Pathfinder Wrath of the Righteous\
 Ver 1.2.12
     Increased max buff duration multiplier to 999 to match original Bag of Tricks
     Quest editor now sorts completed quests below active

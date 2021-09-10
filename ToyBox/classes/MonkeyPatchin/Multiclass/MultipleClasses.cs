@@ -398,7 +398,7 @@ namespace ToyBox.Multiclass {
             int? nullable;
             foreach (ClassData classData in __instance.Classes) {
                 var shouldSkip = __instance.IsClassGestalt(classData.CharacterClass);
-                modLogger.Log($"- owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}");
+                // modLogger.Log($"- owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}");
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = __instance.m_MythicLevel;

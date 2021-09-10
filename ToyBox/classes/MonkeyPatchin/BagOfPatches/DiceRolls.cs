@@ -170,7 +170,7 @@ namespace ToyBox.BagOfPatches {
                 var initiator = __instance.Initiator;
                 int result = __instance.m_Result;
                 //modLogger.Log($"initiator: {initiator.CharacterName} isInCombat: {initiator.IsInCombat} alwaysRole20OutOfCombat: {settings.alwaysRoll20OutOfCombat}");
-                Main.Debug($"initiator: {initiator.CharacterName} Initial D20Roll: " + result);
+                //Main.Debug($"initiator: {initiator.CharacterName} Initial D20Roll: " + result);
                 if (    UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)
                    || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat)
                            && !initiator.IsInCombat
@@ -197,7 +197,7 @@ namespace ToyBox.BagOfPatches {
                         result = UnityEngine.Random.Range(min, 20);
                     }
                 }
-                Main.Debug("Modified D20Roll: " + result);
+                //Main.Debug("Modified D20Roll: " + result);
                 __instance.m_Result = result;
             }
         }
