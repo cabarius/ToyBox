@@ -375,7 +375,32 @@ namespace ToyBox.BagOfPatches {
                     SpidersBegone.CheckAndReplace(ref unit);
                 }
             }
+        }
 
+        [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), "RemoveItem", new Type[] { typeof(bool), typeof(bool) })]
+        static class ItemSlot_RemoveItem_Patch {
+            static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
+                    __state = null;
+                    if (__instance.Owner.Body.QuickSlots.Any(x => x.HasItem && x.Item == __instance.m_ItemRef)) {
+                        __state = __instance.m_ItemRef;
+                    }
+                }
+            }
+            static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
+                    if (__state != null) {
+                        BlueprintItem blueprint = __state.Blueprint;
+                        foreach (ItemEntity item in Game.Instance.Player.Inventory.Items) {
+                            if (item.Blueprint.ItemType == ItemsFilter.ItemType.Usable && item.Blueprint == blueprint) {
+                                __instance.InsertItem(item);
+                                break;
+                            }
+                        }
+                        __state = null;
+                    }
+                }
+            }
         }
     }
 

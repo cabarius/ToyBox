@@ -42,6 +42,7 @@ namespace ToyBox {
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleMultipleRomance = false;
         public bool toggleSpiderBegone = false;
+        public bool togglAutoEquipConsumables = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;

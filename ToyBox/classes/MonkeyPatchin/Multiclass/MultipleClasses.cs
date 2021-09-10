@@ -272,7 +272,7 @@ namespace ToyBox.Multiclass {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
-                modLogger.Log($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()} unit: {unit} {unit.CharacterName}");
+                //modLogger.Log($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()} unit: {unit} {unit.CharacterName}");
                 if (IsAvailable()) {
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {

@@ -76,8 +76,25 @@ namespace ToyBox {
                         }, UI.AutoWidth());
                     });
                 if (kingdom != null) {
+                    var moraleState = kingdom.MoraleState;
                     UI.Div(0, 25);
-                    UI.HStack("Kingdom", 1,
+                    UI.HStack("Crusade", 1,
+                        () => {
+                            var value = moraleState.CurrentValue;
+                            UI.Slider("Morale", ref value, moraleState.MinValue, moraleState.MaxValue, 1, "", UI.AutoWidth());
+                            moraleState.CurrentValue = value;
+                        },
+                        () => {
+                            var value = moraleState.MaxValue;
+                            UI.Slider("Max Morale", ref value, -200, 200, 20, "", UI.AutoWidth());
+                            moraleState.MaxValue = value;
+                        },
+                        () => {
+                            var value = moraleState.MinValue;
+                            UI.Slider("Min Morale", ref value, -200, 200, -100, "", UI.AutoWidth());
+                            moraleState.MinValue = value;
+                        },
+
                         () => {
                             UI.Label("Finances".cyan(), UI.Width(150));
                             UI.Label(kingdom.Resources.Finances.ToString().orange().bold(), UI.Width(200));
@@ -179,6 +196,8 @@ namespace ToyBox {
                 () => UI.Toggle("Enable multiple romance (experimental)", ref settings.toggleMultipleRomance, 0),
                 () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
                 () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
+                () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+
                 () => { }
                 );
             UI.Div(153, 25);
@@ -251,9 +270,11 @@ namespace ToyBox {
                 () => { }
              );
             UI.Div(0, 25);
-            UI.HStack("Crusade", 1,
+            UI.HStack("Crusade Extras - Coming Soon", 1,
                     () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent, 0),
                     () => {
+                        UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
+
                         UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
                         var instance = KingdomState.Instance;
                         if (instance != null) {
@@ -262,7 +283,6 @@ namespace ToyBox {
                     },
                     () => { }
                     );
-            UI.Space(25);
         }
     }
 }
