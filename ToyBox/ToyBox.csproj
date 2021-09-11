@@ -43,8 +43,8 @@
   </Target>
   <ItemGroup>
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
-    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityModManager\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
