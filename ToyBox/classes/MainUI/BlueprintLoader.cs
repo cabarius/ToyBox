@@ -90,7 +90,14 @@ namespace ToyBox {
             total = allGUIDs.Count;
             UpdateProgress(loaded, total);
             foreach (var guid in allGUIDs) {
-                var bp = bpCache.Load(guid);
+                SimpleBlueprint bp;
+                try {
+                    bp = bpCache.Load(guid);
+                }
+                catch {
+                    Main.Log($"cannot load GUID: {guid}");
+                    continue;
+                }
                 blueprints.Add(bp);
                 loaded += 1;
                 UpdateProgress(loaded, total);
