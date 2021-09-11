@@ -75,6 +75,11 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => bp.ParameterType.ToString()),
+            new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.IsArcaneCaster ? "Arcane"
+                                                                              : bp.IsDivineCaster ? "Divine"
+                                                                              : bp.IsMythic ? "Mythic"
+                                                                              : bp.IsHigherMythic ? "Higher Mythic"
+                                                                              : "Standard"),
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAbility>("Actions", null, bp => bp.ActionType.ToString()),
@@ -183,7 +188,10 @@ namespace ToyBox {
                 }
                 else {
                     var name = blueprint.name;
-                    if (terms.All(term => StringExtensions.Matches(name, term))) {
+                    var description = blueprint.GetDescription() ?? "";
+                    if (    terms.All(term => StringExtensions.Matches(name, term))
+                        || settings.searchDescriptions && terms.All(term => StringExtensions.Matches(description, term))
+                        ) {
                         filtered.Add(blueprint);
                     }
                 }
@@ -247,6 +255,8 @@ namespace ToyBox {
                             () => { UpdateSearchResults(); },
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
+                        UI.Space(25);
+                        UI.Toggle("Search Descriptions", ref settings.searchDescriptions);
                         UI.Space(25);
                         UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
                         UI.Space(25);

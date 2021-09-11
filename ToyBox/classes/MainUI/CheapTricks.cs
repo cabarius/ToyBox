@@ -141,7 +141,7 @@ namespace ToyBox {
             UI.HStack("Common", 4,
                 () => UI.ActionButton("Teleport Party To You", () => Actions.TeleportPartyToPlayer()),
                 () => UI.ActionButton("Go To Global Map", () => Actions.TeleportToGlobalMap()),
-                () => UI.ActionButton("Perception Checks", () => Actions.RunPerceptionTriggers()),
+                () => UI.ActionButton("Run All Perception Checks", () => Actions.RunPerceptionTriggers()),
                 () => {
                     UI.ActionButton("Set Perception to 40", () => {
                         CheatsCommon.StatPerception();
@@ -227,8 +227,10 @@ namespace ToyBox {
                 () => {
                     UI.Space(328); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
                 },
+                () => UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.AutoWidth()),
                 () => { }
                 );
+            Game.Instance.TimeController.DebugTimeScale = settings.timeScaleMultiplier;
             UI.Div(0, 25);
             UI.HStack("Dice Rolls", 1,
                 () => UI.EnumGrid("All Attacks Hit", ref settings.allAttacksHit, 0, UI.AutoWidth()),
@@ -273,8 +275,6 @@ namespace ToyBox {
             UI.HStack("Crusade Extras - Coming Soon", 1,
                     () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent, 0),
                     () => {
-                        UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
-
                         UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
                         var instance = KingdomState.Instance;
                         if (instance != null) {

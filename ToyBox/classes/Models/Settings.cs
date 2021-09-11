@@ -67,6 +67,9 @@ namespace ToyBox {
         public bool toggleIgnoreFeatureListPrerequisites = false;
         public bool toggleFeaturesIgnorePrerequisites = false;
         public bool toggleSkipSpellSelection = false;
+        public bool toggleNextWhenNoAvailableFeatSelections = true;
+        public bool toggleOptionalFeatSelection = false;
+
 
         // Multipliers
         public int encumberanceMultiplier = 1;
@@ -89,6 +92,7 @@ namespace ToyBox {
         public float buffDurationMultiplierValue = 1;
         public float fovMultiplier = 1;
         public float fovMultiplierMax = 1.25f;
+        public float timeScaleMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
@@ -120,6 +124,7 @@ namespace ToyBox {
         public int searchLimit = 100;
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
+        public bool searchDescriptions = false;
         public bool showAssetIDs = false;
         public bool showComponents = false;
         public bool showElements = false;
@@ -137,7 +142,7 @@ namespace ToyBox {
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
-
+        public int selectedClassToConfigMulticlass = 0;
         public HashSet<string> charGenMulticlassSet = new HashSet<string>();
         public SerializableDictionary<string, HashSet<string>> selectedMulticlassSets = new SerializableDictionary<string, HashSet<string>>();
 

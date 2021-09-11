@@ -66,7 +66,10 @@ namespace ToyBox {
                     () => multiclassSet.Contains(cl.AssetGuid.ToString()),
                     (v) => {
                         if (v) multiclassSet.Add(cl.AssetGuid.ToString()); 
-                        else multiclassSet.Remove(cl.AssetGuid.ToString()); changed = true; 
+                        else multiclassSet.Remove(cl.AssetGuid.ToString());
+                        Main.Log($"multiclassSet - class: {cl.AssetGuid.ToString()}- <{String.Join(", ", multiclassSet)}>");
+
+                        changed = true; 
                     },
                     350
                     ); 
@@ -81,9 +84,11 @@ namespace ToyBox {
                             multiclassSet.Remove(archetypes[originalArchetype - 1].AssetGuid.ToString());
                         if (selectedArchetype > 0)
                             multiclassSet.Add(archetypes[selectedArchetype - 1].AssetGuid.ToString());
+                        Main.Log($"multiclassSet - archetype - <{String.Join(", ", multiclassSet)}>");
                     }, UI.AutoWidth());
                 }
             }
+
             return changed;
         }
     }

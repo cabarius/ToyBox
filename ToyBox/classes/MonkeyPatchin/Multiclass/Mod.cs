@@ -150,40 +150,59 @@ namespace ToyBox.Multiclass {
             return state.IsPregen;
         }
 
-        public static HashSet<string> GetMulticlassSet(this UnitEntityData ch) {
-            if (ch.HashKey() == null) return null;
-            return Main.settings.selectedMulticlassSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-        }
-        public static void SetMulticlassSet(this UnitEntityData ch, HashSet<string> multiclassSet) {
-            if (ch.HashKey() == null) return;
-            Main.settings.selectedMulticlassSets[ch.HashKey()] = multiclassSet;
-        }
-        public static HashSet<string> GetMulticlassSet(this UnitDescriptor ch) {
-            if (ch.HashKey() == null) return null;
-            return Main.settings.selectedMulticlassSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-        }
-        public static void SetMulticlassSet(this UnitDescriptor ch, HashSet<string> multiclassSet) {
-            if (ch.HashKey() == null) return;
-            Main.settings.selectedMulticlassSets[ch.HashKey()] = multiclassSet;
-        }
-        public static HashSet<string> SelectedMulticlassSet(this UnitDescriptor unit, LevelUpState state) {
-            HashSet<string> selectedMulticlassSet;
-            if (!state.IsCharGen()) {
-                modLogger.Log($"SelectedMulticlassSet - in game - {unit.CharacterName}");
-                if (unit.Unit != null) {
-                    selectedMulticlassSet = unit.Unit.Descriptor.GetMulticlassSet();
-                }
-                else {
-                    selectedMulticlassSet = unit.GetMulticlassSet();
-                }
+        #region Multiclass Set Accessors
+
+        // Main Set Accessors
+        public static HashSet<string> GetMulticlassSet(this UnitDescriptor? ch) {
+            modLogger.Log($"stack: {System.Environment.StackTrace}");
+            HashSet<string> multiclassSet;
+            if (ch == null) {
+                modLogger.Log("GetMulticlassSet - chargen");
+                multiclassSet = Main.settings.charGenMulticlassSet;
+                modLogger.Log($"SelectedMulticlassSet - default - set: {String.Join(" ", multiclassSet)}");
             }
             else {
-                modLogger.Log("SelectedMulticlassSet - chargen");
-                selectedMulticlassSet = Main.settings.charGenMulticlassSet;
+                if (ch.HashKey() == null) return null;
+                modLogger.Log($"GetMulticlassSet - in game - {ch.CharacterName}");
+                multiclassSet = Main.settings.selectedMulticlassSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+                // TODO - why did I do this and does it matter now?
+                //if (unit.Unit != null) {
+                //    selectedMulticlassSet = unit.Unit.Descriptor.GetMulticlassSet();
+                //}
+                //else {
+                //    selectedMulticlassSet = unit.GetMulticlassSet();
+                //}
+                modLogger.Log($"GetMulticlassSet - {ch.CharacterName} - set: {String.Join(" ", multiclassSet)}");
             }
-            return selectedMulticlassSet;
-        }
+            return multiclassSet;
 
+        }
+        public static void SetMulticlassSet(this UnitDescriptor? ch, HashSet<string> multiclassSet) {
+            //modLogger.Log($"stack: {System.Environment.StackTrace}");
+            if (ch == null) Main.settings.charGenMulticlassSet = multiclassSet;
+            else {
+                if (ch.HashKey() == null) return;
+                Main.settings.selectedMulticlassSets[ch.HashKey()] = multiclassSet;
+            }
+        }
+        // Convenience Set Accessors
+
+        public static HashSet<string> GetMulticlassSet(this UnitEntityData ch) {
+            return GetMulticlassSet(ch?.Descriptor);
+        }
+        public static void SetMulticlassSet(this UnitEntityData ch, HashSet<string> multiclassSet) {
+            SetMulticlassSet(ch?.Descriptor, multiclassSet);
+        }
+        public static HashSet<string> SelectedMulticlassSet(UnitDescriptor? ch, bool isCharGen) {
+            HashSet<string> selectedMulticlassSet;
+            if (isCharGen || ch == null) {
+                return GetMulticlassSet((UnitDescriptor?)null);
+            }
+            else {
+                return GetMulticlassSet(ch);
+            }
+        }
+        #endregion
         static public bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());

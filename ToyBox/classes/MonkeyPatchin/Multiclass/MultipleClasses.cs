@@ -162,13 +162,13 @@ namespace ToyBox.Multiclass {
         #region Utilities
 
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
-            var multiclassSet = unit.SelectedMulticlassSet(state);
+            var multiclassSet = MulticlassUtils.SelectedMulticlassSet(unit, state.IsCharGen());
             StateReplacer stateReplacer = new StateReplacer(state);
             modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
             modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
             modLogger.Log($"    multiclass set: {multiclassSet.Count}");
             foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
-                if (characterClass != stateReplacer.SelectedClass && unit.GetMulticlassSet().Contains(characterClass.AssetGuid.ToString())) {
+                if (characterClass != stateReplacer.SelectedClass && MulticlassUtils.GetMulticlassSet(unit).Contains(characterClass.AssetGuid.ToString())) {
                     modLogger.Log($"       {characterClass.GetDisplayName()} ");
                     if (state.IsMythicClassSelected == characterClass.IsMythic) {
                         stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
@@ -194,7 +194,7 @@ namespace ToyBox.Multiclass {
                     Main.multiclassMod.UpdatedProgressions.Clear();
 
                     // get multi-class setting
-                    HashSet<string> selectedMulticlassSet = unit.SelectedMulticlassSet(state);
+                    HashSet<string> selectedMulticlassSet = MulticlassUtils.SelectedMulticlassSet(unit, state.IsCharGen());
 
                     if (selectedMulticlassSet == null || selectedMulticlassSet.Count == 0)
                         return;

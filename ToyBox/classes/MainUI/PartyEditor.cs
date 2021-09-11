@@ -284,7 +284,7 @@ namespace ToyBox {
                                 multiclassEditCharacter = selectedCharacter;
                             }
                             UI.Space(50);
-                            UI.Label("Experimental Preview ".magenta() + "See 'Level Up + Multiclass' for more options".green());
+                            UI.Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
                         }
                         else { UI.Space(50);  UI.Label("Experimental Preview ".magenta());  }
                     }

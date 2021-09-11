@@ -123,6 +123,8 @@ using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
+using Kingmaker.UI.MVVM._VM.CharGen;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -409,7 +411,7 @@ namespace ToyBox.BagOfPatches {
 #endif
         [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
         public static class SpellSelectionData_CanSelectAnything_Patch {
-            public static void Postfix(UnitDescriptor unit, bool __result) { 
+            public static void Postfix(UnitDescriptor unit, bool __result) {
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
                 if (settings.toggleSkipSpellSelection) {
                     __result = false;
@@ -417,30 +419,27 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        // stuff for fixing feat multiplier ???
-        // LevelUpState
-        //     public bool CanSelectAnything(LevelUpState state, UnitEntityData unit)
-
-#if false
-        [HarmonyPatch(typeof(FeatureSelectionState), "CanSelectAnything")]
-        public static class FeatureSelectionState_CanSelectAnything_Patch {
-
-            public static bool Prefix(ref bool __result, FeatureSelectionState __instance, LevelUpState state, UnitEntityData unit) {
-                __result = false;
-                if (__instance.Selection.IsObligatory())
+        // Let user advance if no options left for feat selection
+        [HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM), "CheckIsCompleted")]
+        static class CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch {
+            private static void Postfix(CharGenFeatureSelectorPhaseVM __instance, ref bool __result) {
+                if (settings.toggleOptionalFeatSelection) {
                     __result = true;
-                else if (__instance.Selection.IsSelectionProhibited(unit.Descriptor))
-                    __result = false;
-                else {
-                    foreach (IFeatureSelectionItem featureSelectionItem in __instance.Selection.Items) {
-                        if (featureSelectionItem != __instance.SelectedItem && __instance.Selection.CanSelect(unit.Descriptor, state, __instance, featureSelectionItem))
-                            __result = true;
-                    }
                 }
-                return true;
+                else if (settings.toggleNextWhenNoAvailableFeatSelections || settings.featsMultiplier != 1) {
+                    var featureSelectorStateVM = __instance.FeatureSelectorStateVM;
+                    var selectionState = featureSelectorStateVM.SelectionState;
+                    var selectionVM = __instance.FeatureSelectorStateVM;
+                    var state = Game.Instance.LevelUpController.State;
+                    IFeatureSelection selection = (selection = (selectionVM.Feature as IFeatureSelection));
+                    var availableItems = selection?.Items
+                        .Where((IFeatureSelectionItem item) => selection.CanSelect(state.Unit, state, selectionState, item));
+                    //modLogger.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");
+                    if (availableItems.Count() == 0)
+                        __result = true;
+                }
             }
         }
-#endif
 
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {

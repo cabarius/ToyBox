@@ -11,9 +11,17 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.3.0
+    Multiple Classes On Level Up (Gestalting) is live.
+        This is a complex new feature so it is still marked experimental
+    Cleaned up Multiclass UI for releas
+    New tweak in Level up to let you hit next on any feature selector that runs out of feats. This is activated automatically if feat selection multiplier is greater than 1
+    Additional tweak to let you skip any feat selection you wish
+    Added Time Scale Multiplier which affects the whole game
 Ver 1.2.13
     Added sliders for Crusade Morale, Max Morale and Min Morale (more improvements to crusade are on their way)
     Tweak to refill belt consumables from your inventory
+    Toggle in Search 'n Pick to let you search descriptions
     Reduced log spam which can fill up Player.log which can grow huge so you may want to quit and delete the file from time to time.  It lives in $User\AppData\LocalLow\Owlcat Games\Pathfinder Wrath of the Righteous\
 Ver 1.2.12
     Increased max buff duration multiplier to 999 to match original Bag of Tricks
