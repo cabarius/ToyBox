@@ -28,6 +28,8 @@ namespace ToyBox {
         public bool toggleInstantCooldown = false;
         public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleEquipmentRestrictions = false;
+        public bool toggleIgnoreMaxDexterity = false;
+        public bool toggleIgnoreSpellFailure = false;
         public bool toggleDialogRestrictions = false;
         public bool toggleNoFriendlyFireForAOE = false;
         public bool toggleSettlementRestrictions = false;

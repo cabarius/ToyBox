@@ -344,6 +344,26 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(BlueprintArmorType), "MaxDexterityBonus", MethodType.Getter)]
+        public static class BlueprintArmorType_MaxDexterityBonus_Patch {
+            public static void Prefix(ref int ___m_MaxDexterityBonus) {
+                if (settings.toggleIgnoreMaxDexterity) {
+                    ___m_MaxDexterityBonus = 99;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintArmorType), "ArcaneSpellFailureChance", MethodType.Getter)]
+        public static class BlueprintArmorType_ArcaneSpellFailureChance_Patch {
+            public static bool Prefix(ref int __result) {
+                if (settings.toggleIgnoreSpellFailure) {
+                    __result = 0;
+                    return false;
+                }
+                return true;
+            }
+        }
+
         [HarmonyPatch(typeof(MainMenuBoard), "Update")]
         static class MainMenuButtons_Update_Patch {
             static void Postfix() {
