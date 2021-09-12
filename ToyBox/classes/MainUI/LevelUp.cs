@@ -112,7 +112,7 @@ namespace ToyBox {
 
                 () => { }
                 );
-#if DEBUG
+#if true
             UI.Div(0, 25);
             UI.HStack("Multiple Classes", 1,
                 //() => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),
@@ -152,7 +152,7 @@ namespace ToyBox {
                 UI.Div(0, 25);
                 UI.HStack("Class Selection", 1,
                     () => {
-                        var characters = PartyEditor.GetCharacterList();
+                        var characters = Game.Instance.Player.m_PartyAndPets;
                         if (characters == null) { return; }
                         UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
                             characters.Select((ch) => ch.CharacterName).Prepend("Char Gen").ToArray(),
@@ -167,11 +167,13 @@ namespace ToyBox {
                         var targetString = selectedChar == null
                         ? "creation of ".green() + "new characters".orange().bold() : $"when leveling up ".green() + selectedChar.CharacterName.orange().bold();
                         UI.Label($"Configure gestalt classes to use during {targetString}".green(), UI.AutoWidth());
+                        UI.Space(25);
+                        UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
                     }
                 );
-                var multiclassSet = MulticlassUtils.GetMulticlassSet(selectedChar);
-                MulticlassPicker.OnGUI(multiclassSet, 150);
-                MulticlassUtils.SetMulticlassSet(selectedChar, multiclassSet);
+                var options = MulticlassOptions.Get(selectedChar);
+                MulticlassPicker.OnGUI(options, 150);
+                MulticlassOptions.Set(selectedChar, options);
             }
 #endif
         }

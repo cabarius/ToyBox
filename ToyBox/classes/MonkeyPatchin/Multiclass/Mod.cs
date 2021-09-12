@@ -79,6 +79,7 @@ using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Kingdom.Settlements.BuildingComponents;
+using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 
 namespace ToyBox.Multiclass {
     public enum ProgressionPolicy {
@@ -131,6 +132,8 @@ namespace ToyBox.Multiclass {
         public BlueprintScriptableObject LibraryObject => typeof(ResourcesLibrary).GetFieldValue<BlueprintScriptableObject>("s_LoadedResources");//("s_LibraryObject");
 
         public Player Player => Game.Instance.Player;
+
+        public static bool IsCharGen() => !Main.IsInGame && Game.Instance.LevelUpController.State.Mode == CharBuildMode.CharGen;
     }
 
     public static class MulticlassUtils {
@@ -149,60 +152,6 @@ namespace ToyBox.Multiclass {
         public static bool IsPreGen(this LevelUpState state) {
             return state.IsPregen;
         }
-
-        #region Multiclass Set Accessors
-
-        // Main Set Accessors
-        public static HashSet<string> GetMulticlassSet(this UnitDescriptor? ch) {
-            modLogger.Log($"stack: {System.Environment.StackTrace}");
-            HashSet<string> multiclassSet;
-            if (ch == null) {
-                modLogger.Log("GetMulticlassSet - chargen");
-                multiclassSet = Main.settings.charGenMulticlassSet;
-                modLogger.Log($"SelectedMulticlassSet - default - set: {String.Join(" ", multiclassSet)}");
-            }
-            else {
-                if (ch.HashKey() == null) return null;
-                modLogger.Log($"GetMulticlassSet - in game - {ch.CharacterName}");
-                multiclassSet = Main.settings.selectedMulticlassSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-                // TODO - why did I do this and does it matter now?
-                //if (unit.Unit != null) {
-                //    selectedMulticlassSet = unit.Unit.Descriptor.GetMulticlassSet();
-                //}
-                //else {
-                //    selectedMulticlassSet = unit.GetMulticlassSet();
-                //}
-                modLogger.Log($"GetMulticlassSet - {ch.CharacterName} - set: {String.Join(" ", multiclassSet)}");
-            }
-            return multiclassSet;
-
-        }
-        public static void SetMulticlassSet(this UnitDescriptor? ch, HashSet<string> multiclassSet) {
-            //modLogger.Log($"stack: {System.Environment.StackTrace}");
-            if (ch == null) Main.settings.charGenMulticlassSet = multiclassSet;
-            else {
-                if (ch.HashKey() == null) return;
-                Main.settings.selectedMulticlassSets[ch.HashKey()] = multiclassSet;
-            }
-        }
-        // Convenience Set Accessors
-
-        public static HashSet<string> GetMulticlassSet(this UnitEntityData ch) {
-            return GetMulticlassSet(ch?.Descriptor);
-        }
-        public static void SetMulticlassSet(this UnitEntityData ch, HashSet<string> multiclassSet) {
-            SetMulticlassSet(ch?.Descriptor, multiclassSet);
-        }
-        public static HashSet<string> SelectedMulticlassSet(UnitDescriptor? ch, bool isCharGen) {
-            HashSet<string> selectedMulticlassSet;
-            if (isCharGen || ch == null) {
-                return GetMulticlassSet((UnitDescriptor?)null);
-            }
-            else {
-                return GetMulticlassSet(ch);
-            }
-        }
-        #endregion
         static public bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());

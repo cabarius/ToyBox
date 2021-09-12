@@ -77,6 +77,9 @@ namespace ToyBox {
     public static class WrathExtensions {
         public static string HashKey(this UnitEntityData ch) { return ch.CharacterName; } // + ch.UniqueId; }
         public static string HashKey(this UnitDescriptor ch) { return ch.CharacterName; }
+        public static string HashKey(this BlueprintCharacterClass cl) { return cl.NameSafe(); }
+        public static string HashKey(this BlueprintArchetype arch) { return arch.NameSafe(); }
+
         public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }
         public static string Acronym(this Alignment a) { return UIUtility.GetAlignmentAcronym(a); }
         public static RGBA Color(this Alignment a) {

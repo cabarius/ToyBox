@@ -14,7 +14,10 @@ Now with 240+ Cheats, Tweaks and Quality of Life Improvements
 Ver 1.3.0
     Multiple Classes On Level Up (Gestalting) is live.
         This is a complex new feature so it is still marked experimental
-    Cleaned up Multiclass UI for releas
+        Note that configuration such as which classes you will multiclass on level up has been reset. 
+        Any past results of multiclassing will remain intact however.
+    Cleaned up Multiclass UI for release
+    Archetypes now work in char gen
     New tweak in Level up to let you hit next on any feature selector that runs out of feats. This is activated automatically if feat selection multiplier is greater than 1
     Additional tweak to let you skip any feat selection you wish
     Added Time Scale Multiplier which affects the whole game

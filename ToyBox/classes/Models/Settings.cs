@@ -3,6 +3,9 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 using ToyBox.Multiclass;
+using Kingmaker.UnitLogic;
+using ModKit;
+using Kingmaker.EntitySystem.Entities;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -141,10 +144,15 @@ namespace ToyBox {
         public bool hideCompleted = true;
 
         // Multi-Class 
-        public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
+        public bool toggleMulticlass = false;
+        public bool toggleMulticlassShowClassDescriptions = false;
         public int selectedClassToConfigMulticlass = 0;
-        public HashSet<string> charGenMulticlassSet = new HashSet<string>();
-        public SerializableDictionary<string, HashSet<string>> selectedMulticlassSets = new SerializableDictionary<string, HashSet<string>>();
+
+        // schema for storing multiclass settings
+        //      Dictionary<CharacterName, 
+        //          Dictionary<ClassID, HashSet<ArchetypeIDs>
+        // For character gen config we use the following special key:
+        public SerializableDictionary<string, MulticlassOptions> multiclassSettings = new SerializableDictionary<string, MulticlassOptions>();
 
         // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
         public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new SerializableDictionary<string, HashSet<string>>();
@@ -179,7 +187,7 @@ namespace ToyBox {
         public bool toggleIgnoreSkillCap = false;
         public bool toggleIgnoreSkillPointsRemaining = false;
 
-        // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
+        // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosophy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
         // public bool toggleIgnorePrerequisites = false; 
         public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
 

@@ -273,7 +273,7 @@ namespace ToyBox {
                     multiclassEditCharacter = null;
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
-#if DEBUG
+#if true
                     UI.Div(100, 20);
                     using (UI.HorizontalScope()) {
                         UI.Space(100);
@@ -291,9 +291,9 @@ namespace ToyBox {
 #endif
                     UI.Div(100, 20);
                     if (editMultiClass) {
-                        var multiclassSet = ch.GetMulticlassSet();
-                        MulticlassPicker.OnGUI(multiclassSet);
-                        ch.SetMulticlassSet(multiclassSet);
+                        var options = MulticlassOptions.Get(ch.Descriptor);
+                        MulticlassPicker.OnGUI(options);
+                        MulticlassOptions.Set(ch.Descriptor, options);
                     }
                     else {
                         var prog = ch.Descriptor.Progression;
