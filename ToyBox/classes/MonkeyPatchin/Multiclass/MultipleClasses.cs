@@ -1,5 +1,4 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
-
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
@@ -125,6 +124,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 using static ModKit.Utility.ReflectionCache;
 using ModKit.Utility;
 using ToyBox.Multiclass;
+using ModKit;
 
 namespace ToyBox.Multiclass {
     static class MultipleClasses {
@@ -146,8 +146,9 @@ namespace ToyBox.Multiclass {
 
         #region Utilities
 
+#if true
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
-            var options = MulticlassOptions.Get( Mod.IsCharGen() ? null : unit);
+            var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
             StateReplacer stateReplacer = new StateReplacer(state);
             modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
             modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
@@ -163,32 +164,50 @@ namespace ToyBox.Multiclass {
             }
             stateReplacer.Restore();
         }
-
+#else
+        private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
+            var multiclassSet = MulticlassUtils.SelectedMulticlassSet(unit, state.IsCharGen());
+            StateReplacer stateReplacer = new StateReplacer(state);
+            modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
+            modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
+            modLogger.Log($"    multiclass set: {multiclassSet.Count}");
+            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
+                if (characterClass != stateReplacer.SelectedClass && MulticlassUtils.GetMulticlassSet(unit).Contains(characterClass.AssetGuid.ToString())) {
+                    modLogger.Log($"       {characterClass.GetDisplayName()} ");
+                    if (state.IsMythicClassSelected == characterClass.IsMythic) {
+                        stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+                        action();
+                    }
+                }
+            }
+            stateReplacer.Restore();
+        }
+#endif
         #endregion
 
         #region Class Level & Archetype
 
+#if true
         [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class SelectClass_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
-                if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
+                //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
 
-                    modLogger.Log($"SelectClass.Apply.Postfix, is available  = {IsAvailable()} isCharGen: {Mod.IsCharGen()}");
                 if (IsAvailable()) {
                     Main.multiclassMod.AppliedMulticlassSet.Clear();
                     Main.multiclassMod.UpdatedProgressions.Clear();
 
                     // get multi-class setting
-                    var options = MulticlassOptions.Get(Mod.IsCharGen() ? null : unit);
-//                    var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
+                    var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
+                    modLogger.Log($"SelectClass.Apply.Postfix, unit: {unit.CharacterName} isCharGen: {state.IsCharGen()} isPHChar: {unit.CharacterName == "Player Character"}".cyan().bold());
 
                     if (options == null || options.Count == 0)
                         return;
 
-                    modLogger.Log($"selected {options.Count} multiclass classes:");
-//                    selectedMulticlassSet.ForEach(cl => modLogger.Log($"    {cl}"));
+                    modLogger.Log($"selected options: {options}".orange());
+                    //                    selectedMulticlassSet.ForEach(cl => modLogger.Log($"    {cl}"));
 
                     // applying classes
                     StateReplacer stateReplacer = new StateReplacer(state);
@@ -201,6 +220,76 @@ namespace ToyBox.Multiclass {
                             && options.Contains(characterClass)
                             ) {
                             stateReplacer.Replace(null, 0); // TODO - figure out and document what this is doing
+                            modLogger.Log($"       {characterClass.Name} matches".cyan());
+                            //stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+
+                            if (new SelectClass(characterClass).Check(state, unit)) {
+                                Main.Debug($"         - {nameof(SelectClass)}.{nameof(SelectClass.Apply)}*({characterClass}, {unit})".cyan());
+
+                                unit.Progression.AddClassLevel_NotCharacterLevel(characterClass);
+                                //state.NextClassLevel = unit.Progression.GetClassLevel(characterClass);
+                                //state.SelectedClass = characterClass;
+                                characterClass.RestrictPrerequisites(unit, state);
+                                //EventBus.RaiseEvent<ILevelUpSelectClassHandler>(h => h.HandleSelectClass(unit, state));
+
+                                Main.multiclassMod.AppliedMulticlassSet.Add(characterClass);
+                            }
+                        }
+                    }
+                    stateReplacer.Restore();
+
+                    modLogger.Log($"    checking archetypes for {unit.CharacterName}".cyan());
+                    // applying archetypes
+                    ForEachAppliedMulticlass(state, unit, () => {
+                        modLogger.Log($"    {state.SelectedClass.HashKey()} SelectClass-ForEachApplied".cyan().bold());
+                        var selectedClass = state.SelectedClass;
+                        var archetypeOptions = options.ArchetypeOptions(selectedClass);
+                        foreach (var archetype in state.SelectedClass.Archetypes) {
+                            // here is where we need to start supporting multiple archetypes of the same class
+                            if (archetypeOptions.Contains(archetype)) {
+                                modLogger.Log($"    adding archetype: ${archetype.Name}".cyan().bold());
+                                AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
+                                unit.SetClassIsGestalt(addArchetype.CharacterClass, true);
+                                if (addArchetype.Check(state, unit)) {
+                                    addArchetype.Apply(state, unit);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+#else
+        [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        static class SelectClass_Apply_Patch {
+            [HarmonyPostfix]
+            static void Postfix(LevelUpState state, UnitDescriptor unit) {
+                if (!settings.toggleMulticlass) return;
+                modLogger.Log($"SelectClass.Apply.Postfix, is available  = {IsAvailable()} isCharGen: {state.IsCharGen()} vs Mod.isCharGen {Mod.IsCharGen()}");
+                if (IsAvailable()) {
+                    Main.multiclassMod.AppliedMulticlassSet.Clear();
+                    Main.multiclassMod.UpdatedProgressions.Clear();
+
+                    // get multi-class setting
+                    HashSet<string> selectedMulticlassSet = MulticlassUtils.SelectedMulticlassSet(unit, state.IsCharGen());
+
+                    if (selectedMulticlassSet == null || selectedMulticlassSet.Count == 0)
+                        return;
+
+                    modLogger.Log($"selected {selectedMulticlassSet.Count} multiclass classes:");
+//                    selectedMulticlassSet.ForEach(cl => modLogger.Log($"    {cl}"));
+
+                    // applying classes
+                    StateReplacer stateReplacer = new StateReplacer(state);
+                    foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
+                        if (selectedMulticlassSet.Contains(characterClass.AssetGuid.ToString())) {
+                            modLogger.Log($"   checking {characterClass.AssetGuid} {characterClass.GetDisplayName()} ");
+                        }
+                        if (characterClass != stateReplacer.SelectedClass
+                            && characterClass.IsMythic == state.IsMythicClassSelected
+                            && selectedMulticlassSet.Contains(characterClass.AssetGuid.ToString())
+                            ) {
+                            stateReplacer.Replace(null, 0);
                             modLogger.Log($"       {characterClass.Name} matches");
                             //stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
 
@@ -221,12 +310,10 @@ namespace ToyBox.Multiclass {
 
                     // applying archetypes
                     ForEachAppliedMulticlass(state, unit, () => {
-                        modLogger.Log($"    {state.SelectedClass.HashKey()} SelectClass-ForEachApplied");
-                        var selectedClass = state.SelectedClass;
-                        var archetypeOptions = options.ArchetypeOptions(selectedClass);
-                        foreach (var archetype in state.SelectedClass.Archetypes) {
-                            // here is where we need to start supporting multiple archetypes of the same class
-                            if (archetypeOptions.Contains(archetype)) {
+                        modLogger.Log($"    {state.SelectedClass.AssetGuid}（{state.SelectedClass.Name}）SelectClass-ForEachApplied");
+                        foreach (BlueprintArchetype archetype in state.SelectedClass.Archetypes) {
+                            if (selectedMulticlassSet.Contains(archetype.AssetGuid.ToString())) {
+                                modLogger.Log($"    adding archetype: ${archetype.Name}");
                                 AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
                                 unit.SetClassIsGestalt(addArchetype.CharacterClass, true);
                                 if (addArchetype.Check(state, unit)) {
@@ -238,10 +325,10 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
+#endif
+#endregion
 
-        #endregion
-
-        #region Skills & Features
+#region Skills & Features
 
         [HarmonyPatch(typeof(LevelUpController))]
         [HarmonyPatch("ApplyLevelup")]
@@ -274,6 +361,7 @@ namespace ToyBox.Multiclass {
                         });
                     }
                     List<BlueprintCharacterClass> allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
+                    modLogger.Log($"ApplyClassMechanics.Apply.Postfix - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
                     allAppliedClasses.Add(state.SelectedClass);
                     SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
                     HPDice.ApplyHPDice(unit, state, allAppliedClasses.ToArray());
@@ -341,9 +429,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Spellbook
+#region Spellbook
 
         [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
@@ -365,6 +453,27 @@ namespace ToyBox.Multiclass {
 
         #region Commit
 
+#if true
+        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
+        static class LevelUpController_Commit_Patch {
+            [HarmonyPostfix]
+            static void Postfix(LevelUpController __instance) {
+                if (!settings.toggleMulticlass) return;
+
+                if (IsAvailable()) {
+                    var isCharGen = __instance.State.IsCharGen();
+                    var ch = __instance.Unit;
+                    var options = MulticlassOptions.Get(isCharGen ? null : ch);
+                    if (isCharGen
+                            && __instance.Unit.IsCustomCompanion()
+                            && options.Count > 0) {
+                        Main.Log($"LevelUpController_Commit_Patch - {ch} - {options}");
+                        MulticlassOptions.Set(ch, options);
+                    }
+                }
+            }
+        }
+#else
         [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
         static class LevelUpController_Commit_Patch {
             [HarmonyPostfix]
@@ -384,7 +493,8 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
-        #endregion
+#endif
+#endregion
 
         public static void UpdateLevelsForGestalt(this UnitProgressionData __instance) {
             __instance.m_CharacterLevel = new int?(0);

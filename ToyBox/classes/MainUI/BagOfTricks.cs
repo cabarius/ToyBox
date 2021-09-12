@@ -169,9 +169,7 @@ namespace ToyBox {
                     UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
                     UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                     },
-            () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
-                () => UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0),
-
+                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
                 () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
@@ -220,15 +218,19 @@ namespace ToyBox {
                 () => UI.LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.Slider("Increase Carry Capacity", ref settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
+                () => {
+                    UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
+                    UI.Space(25); 
+                    UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0);
+                },
                 () => UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 999, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
-                () => UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.AutoWidth()),
                 () => {
-                    UI.Space(328); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
+                    UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.Width(600));
+                    UI.Space(25); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
                 },
                 () => UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.AutoWidth()),
                 () => { }

@@ -17,10 +17,14 @@ Ver 1.3.0
         Note that configuration such as which classes you will multiclass on level up has been reset. 
         Any past results of multiclassing will remain intact however.
     Cleaned up Multiclass UI for release
-    Archetypes now work in char gen
+    Archetypes now work in char gen and fixed other bugs with multiclass
     New tweak in Level up to let you hit next on any feature selector that runs out of feats. This is activated automatically if feat selection multiplier is greater than 1
     Additional tweak to let you skip any feat selection you wish
+    Improved run speed multiplier to work when moving and now when looting chests
+    Fixed 'Whole Team Moves At Same Speed' to only happen when it is ticked.
+    Moved 'Whole Team Moves At Same Speed' tick box to be next to the run speed multiplier slider
     Added Time Scale Multiplier which affects the whole game
+    Characters you add to the party via party editor now are fully controllable and viewable (can't add non companions permanently to party yet but working on it)    Made adding characters to party cease to be fighting and aggressive
     Blueprints now load on the mac so you can now fully use the mod
 Ver 1.2.13
     Added sliders for Crusade Morale, Max Morale and Min Morale (more improvements to crusade are on their way)

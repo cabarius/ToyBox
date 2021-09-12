@@ -1,0 +1,231 @@
+[ToyBox] SelectClass.Apply.Postfix, is available  = True isCharGen: False
+[ToyBox] ApplyClassMechanics.Apply.Postfix, Isavailable=True unit: Camelia_Companion Camellia
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+}
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+}
+[ToyBox] Unit Preview = Camellia
+[ToyBox] levelup action：
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.SelectClass
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.AddArchetype
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.ApplyClassMechanics
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.ApplySpellbook
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.ApplySkillPoints
+[ToyBox] SelectClass.Apply.Postfix, is available  = True isCharGen: False
+[ToyBox] ApplyClassMechanics.Apply.Postfix, Isavailable=True unit: Camelia_Companion Camellia
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+}
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+}
+[ToyBox] PickerRow - multiclassOptions - class: AlchemistClass - ToyBox.MulticlassOptions {
+    AlchemistClass : {}
+}>
+[ToyBox] PickerRow - archetypeOptions - {{ VivisectionistArchetype,}}
+[ToyBox] PickerRow - multiclassOptions - class: SorcererClass - ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : {}
+}>
+[ToyBox] PickerRow - archetypeOptions - {{ SylvanSorcererArchetype,}}
+[ToyBox] SelectClass.Apply.Postfix, is available  = True isCharGen: False
+[ToyBox] selected 2 multiclass classes:
+[ToyBox]    checking AlchemistClass AlchemistClass 
+[ToyBox]        Alchemist matches
+[ToyBox]          - SelectClass.Apply*(AlchemistClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = AlchemistClass
+[ToyBox]    checking SorcererClass SorcererClass 
+[ToyBox]        Sorcerer matches
+[ToyBox]          - SelectClass.Apply*(SorcererClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = SorcererClass
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]     AlchemistClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Vivisectionist
+[ToyBox]        SorcererClass 
+[ToyBox]     SorcererClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Sylvan Sorcerer
+[ToyBox] ApplyClassMechanics.Apply.Postfix, Isavailable=True unit: Camelia_Companion Camellia
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(AlchemistClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][1], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Alchemist
+[ToyBox]        SorcererClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(SorcererClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][1], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Sorcerer
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]        SorcererClass 
+[ToyBox] SelectClass.Apply.Postfix, is available  = True isCharGen: False
+[ToyBox] selected 2 multiclass classes:
+[ToyBox]    checking AlchemistClass AlchemistClass 
+[ToyBox]        Alchemist matches
+[ToyBox]          - SelectClass.Apply*(AlchemistClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = AlchemistClass
+[ToyBox]    checking SorcererClass SorcererClass 
+[ToyBox]        Sorcerer matches
+[ToyBox]          - SelectClass.Apply*(SorcererClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = SorcererClass
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]     AlchemistClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Vivisectionist
+[ToyBox]        SorcererClass 
+[ToyBox]     SorcererClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Sylvan Sorcerer
+[ToyBox] ApplyClassMechanics.Apply.Postfix, Isavailable=True unit: Camelia_Companion Camellia
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(AlchemistClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][2], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Alchemist
+[ToyBox]        SorcererClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(SorcererClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][2], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Sorcerer
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]        SorcererClass 
+[ToyBox] SelectClass.Apply.Postfix, is available  = True isCharGen: False
+[ToyBox] selected 2 multiclass classes:
+[ToyBox]    checking AlchemistClass AlchemistClass 
+[ToyBox]        Alchemist matches
+[ToyBox]          - SelectClass.Apply*(AlchemistClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = AlchemistClass
+[ToyBox]    checking SorcererClass SorcererClass 
+[ToyBox]        Sorcerer matches
+[ToyBox]          - SelectClass.Apply*(SorcererClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = SorcererClass
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]     AlchemistClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Vivisectionist
+[ToyBox]        SorcererClass 
+[ToyBox]     SorcererClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Sylvan Sorcerer
+[ToyBox] ApplyClassMechanics.Apply.Postfix, Isavailable=True unit: Camelia_Companion Camellia
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(AlchemistClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][1], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Alchemist
+[ToyBox]        SorcererClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(SorcererClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][1], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Sorcerer
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]        SorcererClass 
+[ToyBox] Unit Preview = Camellia
+[ToyBox] levelup action：
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.SelectClass
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.AddArchetype
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.ApplyClassMechanics
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.ApplySpellbook
+[ToyBox] Kingmaker.UnitLogic.Class.LevelUp.Actions.ApplySkillPoints
+[ToyBox] SelectClass.Apply.Postfix, is available  = True isCharGen: False
+[ToyBox] selected 2 multiclass classes:
+[ToyBox]    checking AlchemistClass AlchemistClass 
+[ToyBox]        Alchemist matches
+[ToyBox]          - SelectClass.Apply*(AlchemistClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = AlchemistClass
+[ToyBox]    checking SorcererClass SorcererClass 
+[ToyBox]        Sorcerer matches
+[ToyBox]          - SelectClass.Apply*(SorcererClass, Camelia_Companion)
+[ToyBox] AddClassLevel_NotCharLevel: class = SorcererClass
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]     AlchemistClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Vivisectionist
+[ToyBox]        SorcererClass 
+[ToyBox]     SorcererClass SelectClass-ForEachApplied
+[ToyBox]     adding archetype: $Sylvan Sorcerer
+[ToyBox] ApplyClassMechanics.Apply.Postfix, Isavailable=True unit: Camelia_Companion Camellia
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(AlchemistClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][2], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Alchemist
+[ToyBox]        SorcererClass 
+[ToyBox]  - ApplyClassMechanics.Apply*(SorcererClassKingmaker.Blueprints.ReferenceArrayProxy`2[[Kingmaker.Blueprints.Classes.BlueprintArchetype, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[Kingmaker.Blueprints.BlueprintArchetypeReference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]][2], Camelia_Companion) mythic: False vs False
+[ToyBox] Apply_NoStatsAndHitPoints: unit = Camellia, state.class = Sorcerer
+[ToyBox] ForEachAppliedMulticlass
+    hash key: Camellia
+[ToyBox]     mythic: False
+[ToyBox]     options: ToyBox.MulticlassOptions {
+    AlchemistClass : { VivisectionistArchetype,}
+    SorcererClass : { SylvanSorcererArchetype,}
+}
+[ToyBox]        AlchemistClass 
+[ToyBox]        SorcererClass 

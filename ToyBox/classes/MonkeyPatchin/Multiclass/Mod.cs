@@ -132,8 +132,7 @@ namespace ToyBox.Multiclass {
         public BlueprintScriptableObject LibraryObject => typeof(ResourcesLibrary).GetFieldValue<BlueprintScriptableObject>("s_LoadedResources");//("s_LibraryObject");
 
         public Player Player => Game.Instance.Player;
-
-        public static bool IsCharGen() => !Main.IsInGame && Game.Instance.LevelUpController.State.Mode == CharBuildMode.CharGen;
+        //public static bool IsCharGen() => !Main.IsInGame && Game.Instance.LevelUpController.State.Mode == CharBuildMode.CharGen;
     }
 
     public static class MulticlassUtils {
@@ -142,7 +141,7 @@ namespace ToyBox.Multiclass {
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         public static bool IsCharGen(this LevelUpState state) {
-            return state.Mode == LevelUpState.CharBuildMode.CharGen;
+            return state.Mode == LevelUpState.CharBuildMode.CharGen || state.Unit.CharacterName == "Player Character";
         }
 
         public static bool IsLevelUp(this LevelUpState state) {

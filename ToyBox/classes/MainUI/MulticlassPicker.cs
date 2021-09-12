@@ -110,10 +110,73 @@ namespace ToyBox {
             return changed;
         }
     }
+    public class MulticlassPickerOld {
+
+        public static void OnGUI(HashSet<string> multiclassSet, float indent = 100) {
+            var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
+            var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
+
+            foreach (var cl in classes) {
+                PickerRow(cl, multiclassSet, indent);
+            }
+            UI.Div(indent, 20);
+            foreach (var mycl in mythicClasses) {
+                using (UI.HorizontalScope()) {
+                    PickerRow(mycl, multiclassSet, indent);
+                }
+            }
+        }
+
+        public static bool PickerRow(BlueprintCharacterClass cl, HashSet<string> multiclassSet, float indent = 100) {
+            bool changed = false;
+            bool showDesc = settings.toggleMulticlassShowClassDescriptions;
+            if (showDesc) UI.Div(indent);
+            using (UI.HorizontalScope()) {
+                UI.Space(indent);
+                UI.ActionToggle(
+                    cl.Name,
+                    () => multiclassSet.Contains(cl.AssetGuid.ToString()),
+                    (v) => {
+                        if (v) multiclassSet.Add(cl.AssetGuid.ToString());
+                        else multiclassSet.Remove(cl.AssetGuid.ToString());
+                        Main.Log($"multiclassSet - class: {cl.AssetGuid.ToString()}- <{String.Join(", ", multiclassSet)}>");
+
+                        changed = true;
+                    },
+                    350
+                    );
+                var archetypes = cl.Archetypes;
+                if (multiclassSet.Contains(cl.AssetGuid.ToString()) && archetypes.Any()) {
+                    UI.Space(50);
+                    using (UI.VerticalScope()) {
+                        var archetypeOptions = options.ArchetypeOptions(cl);
+                        foreach (var archetype in cl.Archetypes) {
+                            if (showDesc) UI.Div();
+                            using (UI.HorizontalScope()) {
+                                UI.ActionToggle(
+                                archetype.Name,
+                                () => archetypeOptions.Contains(archetype),
+                                (v) => {
+                                    if (v) archetypeOptions.AddExclusive(archetype);
+                                    else archetypeOptions.Remove(archetype);
+                                    Main.Log($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
+                                },
+                                350
+                                );
+                                options.SetArchetypeOptions(cl, archetypeOptions);
+                                if (showDesc) UI.Label(archetype.Description.RemoveHtmlTags().green());
+                            }
+                        }
+                    }
+                }
+            }
+            return changed;
+        }
+    }
 }
 #if false
                     int originalArchetype = 0;
-                    int selectedArchetype = originalArchetype = archetypes.FindIndex(archetype => options.Contains(archetype)) + 1;
+                    int selectedArchetype = originalArchetype = archetypes.FindIndex(archetype => multiclassSet.Contains(archetype.AssetGuid.ToString())) + 1;
                     var choices = new String[] { cl.Name }.Concat(archetypes.Select(a => a.Name)).ToArray();
                     UI.ActionSelectionGrid(ref selectedArchetype, choices, 6, (sel) => {
                         if (originalArchetype > 0)
@@ -122,4 +185,11 @@ namespace ToyBox {
                             multiclassSet.Add(archetypes[selectedArchetype - 1].AssetGuid.ToString());
                         Main.Log($"multiclassSet - archetype - <{String.Join(", ", multiclassSet)}>");
                     }, UI.AutoWidth());
-#endif
+                }
+            }
+
+            return changed;
+        }
+
+    }
+}
