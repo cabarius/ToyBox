@@ -21,6 +21,7 @@ Ver 1.3.0
     New tweak in Level up to let you hit next on any feature selector that runs out of feats. This is activated automatically if feat selection multiplier is greater than 1
     Additional tweak to let you skip any feat selection you wish
     Added Time Scale Multiplier which affects the whole game
+    Blueprints now load on the mac so you can now fully use the mod
 Ver 1.2.13
     Added sliders for Crusade Morale, Max Morale and Min Morale (more improvements to crusade are on their way)
     Tweak to refill belt consumables from your inventory
