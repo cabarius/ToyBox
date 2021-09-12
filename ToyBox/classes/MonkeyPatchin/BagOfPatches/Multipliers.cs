@@ -45,6 +45,7 @@ using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.Formations;
 using DG.Tweening;
+using Kingmaker.Armies.State;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap;
 using Kingmaker.Items;
@@ -153,6 +154,33 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(Player __instance, ref int gained) {
                 gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplier, 1));
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(ArmyData))]
+        public static class ArmyData_CalculateExperience_Patch {
+            [HarmonyPatch("CalculateExperience")]
+            [HarmonyPostfix]
+            public static void Postfix(ref int __result) {
+                __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.experienceMultiplier, 1));
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch("CalculateDangerRating")]
+            public static bool PrefixCalculateDangerRating(ArmyData __instance, ref int __result) {
+                ArmyRoot armyRoot = BlueprintRoot.Instance.ArmyRoot;
+                int num1 = Mathf.FloorToInt((float)(__instance.CalculateExperience() / Math.Round(settings.experienceMultiplier, 1) + armyRoot.ArmyDangerBonus) * armyRoot.ArmyDangerMultiplier);
+                if (num1 < 0) {
+                    __result = 1;
+                    return false;
+                }
+
+                int num2 = 0;
+                int[] bonuses = BlueprintRoot.Instance.LeadersRoot.ExpTable.Bonuses;
+                for (int index = 0; index < bonuses.Length && bonuses[index] <= num1; ++index)
+                    ++num2;
+                __result = num2;
+                return false;
             }
         }
 
