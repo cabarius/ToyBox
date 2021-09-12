@@ -350,8 +350,8 @@ namespace ToyBox.Multiclass {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
-                modLogger.Log($"ApplyClassMechanics.Apply.Postfix, Isavailable={IsAvailable()} unit: {unit} {unit.CharacterName}");
                 if (IsAvailable()) {
+                    modLogger.Log($"ApplyClassMechanics.Apply.Postfix - unit: {unit} {unit.CharacterName}");
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
                             unit.SetClassIsGestalt(state.SelectedClass, true);
@@ -502,7 +502,7 @@ namespace ToyBox.Multiclass {
             int? nullable;
             foreach (ClassData classData in __instance.Classes) {
                 var shouldSkip = __instance.IsClassGestalt(classData.CharacterClass);
-                modLogger.Log($"- owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}");
+                //modLogger.Log($"- owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}");
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = __instance.m_MythicLevel;

@@ -147,21 +147,23 @@ namespace ToyBox {
                 () => { }
                 );
 
-            if (settings.toggleMulticlass && Main.IsInGame) {
+            if (settings.toggleMulticlass) {
                 UnitEntityData selectedChar = null;
                 UI.Div(0, 25);
                 UI.HStack("Class Selection", 1,
                      () => {
-                         var characters = Game.Instance.Player.m_PartyAndPets;
-                         if (characters == null) { return; }
-                         UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
-                             characters.Select((ch) => ch.CharacterName).Prepend("Char Gen").ToArray(),
-                             6,
-                             (index) => { },
-                             UI.AutoWidth()
-                             );
-                         if (settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;
-                         else selectedChar = characters[settings.selectedClassToConfigMulticlass - 1];
+                         if (Main.IsInGame) {
+                             var characters = Game.Instance.Player.m_PartyAndPets;
+                             if (characters == null) { return; }
+                             UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
+                                 characters.Select((ch) => ch.CharacterName).Prepend("Char Gen").ToArray(),
+                                 6,
+                                 (index) => { },
+                                 UI.AutoWidth()
+                                 );
+                             if (settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;
+                             else selectedChar = characters[settings.selectedClassToConfigMulticlass - 1];
+                         }
                      },
                      () => {
                          var targetString = selectedChar == null
@@ -171,17 +173,11 @@ namespace ToyBox {
                          UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
                      }
                  );
-#if false
-                var multiclassSet = MulticlassUtils.GetMulticlassSet(selectedChar);
-                MulticlassPickerOld.OnGUI(multiclassSet, 150);
-                MulticlassUtils.SetMulticlassSet(selectedChar, multiclassSet);
-                UI.Div();
-#endif
                 var options = MulticlassOptions.Get(selectedChar);
                 MulticlassPicker.OnGUI(options, 150);
                 MulticlassOptions.Set(selectedChar, options);
             }
 #endif
-            }
+        }
     }
 }

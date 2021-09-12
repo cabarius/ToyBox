@@ -110,6 +110,7 @@ namespace ToyBox {
             return changed;
         }
     }
+#if false
     public class MulticlassPickerOld {
 
         public static void OnGUI(HashSet<string> multiclassSet, float indent = 100) {
@@ -173,23 +174,5 @@ namespace ToyBox {
             return changed;
         }
     }
-}
-#if false
-                    int originalArchetype = 0;
-                    int selectedArchetype = originalArchetype = archetypes.FindIndex(archetype => multiclassSet.Contains(archetype.AssetGuid.ToString())) + 1;
-                    var choices = new String[] { cl.Name }.Concat(archetypes.Select(a => a.Name)).ToArray();
-                    UI.ActionSelectionGrid(ref selectedArchetype, choices, 6, (sel) => {
-                        if (originalArchetype > 0)
-                            multiclassSet.Remove(archetypes[originalArchetype - 1].AssetGuid.ToString());
-                        if (selectedArchetype > 0)
-                            multiclassSet.Add(archetypes[selectedArchetype - 1].AssetGuid.ToString());
-                        Main.Log($"multiclassSet - archetype - <{String.Join(", ", multiclassSet)}>");
-                    }, UI.AutoWidth());
-                }
-            }
-
-            return changed;
-        }
-
-    }
+#endif
 }
