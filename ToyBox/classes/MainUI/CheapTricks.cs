@@ -231,6 +231,7 @@ namespace ToyBox {
                     UI.Space(328); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
                 },
                 () => UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("After Army Battle Raise Multiplier", ref settings.postBattleSummonMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
                 () => { }
                 );
             Game.Instance.TimeController.DebugTimeScale = settings.timeScaleMultiplier;

@@ -45,6 +45,7 @@ using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.Formations;
 using DG.Tweening;
+using Kingmaker.Armies.TacticalCombat;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap;
 using Kingmaker.Items;
@@ -125,6 +126,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
+using Kingmaker.Kingdom.Buffs;
 using ModKit;
 
 namespace ToyBox.BagOfPatches {
@@ -328,6 +330,14 @@ namespace ToyBox.BagOfPatches {
                     Main.Debug("UnitSpawner.Spawn: " + __result.CharacterName);
                     __result.Stats.HitPoints.BaseValue = Mathf.RoundToInt(__result.Stats.HitPoints.BaseValue * settings.enemyBaseHitPointsMultiplier);
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(SummonUnitsAfterArmyBattle), "HandleArmiesBattleResultsApplied")]
+        public static class SummonUnitsAfterArmyBattle_Patch {
+            public static void Prefix(ref TacticalCombatResults results) {
+                results = new TacticalCombatResults(results.Attacker, results.Defender, Mathf.RoundToInt(results.BattleExp * settings.postBattleSummonMultiplier),
+                    results.CrusadeStatsBonus, results.Winner, results.ToResurrect, results.Units, results.Retreat);
             }
         }
 

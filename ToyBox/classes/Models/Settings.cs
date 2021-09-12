@@ -96,6 +96,7 @@ namespace ToyBox {
         public float fovMultiplier = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
+        public float postBattleSummonMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
