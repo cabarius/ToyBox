@@ -48,6 +48,7 @@ using Kingmaker.GameModes;
 using Kingmaker.Globalmap;
 using Kingmaker.Items;
 using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Armies;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Kingdom.Tasks;
@@ -353,6 +354,22 @@ namespace ToyBox.BagOfPatches {
                     mainMenuVM.EnterGame(new Action(mainMenuVM.LoadLastSave));
                 }
                 Main.freshlyLaunched = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(ArmyMercenariesManager), "Reroll")]
+        public static class ArmyMercenariesManager_Reroll_Patch {
+            public static void Prefix(ref ArmyMercenariesManager __instance, ref int __state) {
+                if (settings.toggleInfiniteArmyRerolls) {
+                     __state = __instance.FreeRerollsLeftCount;
+                     __instance.FreeRerollsLeftCount = 99;
+                }
+            }
+
+            public static void Postfix(ref ArmyMercenariesManager __instance, int __state) {
+                if (settings.toggleInfiniteArmyRerolls) {
+                    __instance.FreeRerollsLeftCount = __state;
+                }
             }
         }
 

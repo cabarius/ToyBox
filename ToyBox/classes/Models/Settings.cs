@@ -46,6 +46,7 @@ namespace ToyBox {
         public bool toggleMultipleRomance = false;
         public bool toggleSpiderBegone = false;
         public bool togglAutoEquipConsumables = false;
+        public bool toggleInfiniteArmyRerolls = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
@@ -96,6 +97,8 @@ namespace ToyBox {
         public float fovMultiplier = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
+        public float recruitmentCost = 1;
+        public float recruitmentMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
