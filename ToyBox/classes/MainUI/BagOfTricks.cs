@@ -202,6 +202,7 @@ namespace ToyBox {
                 () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => UI.Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
+                () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
 
                 () => { }
                 );
