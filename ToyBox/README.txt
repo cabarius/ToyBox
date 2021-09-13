@@ -10,7 +10,11 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
-
+Ver 1.3.1
+    (ArcaneTrixter) Added sliders for increased recruitment amounts and modifiable recruitment costs
+    (ArcaneTrixter) Added max dex and arcane spell failure toggles requested in issue #106
+    (ArcaneTrixter) Added a multiplier ('After Army Battle Raise Multiplier') for the number of units raised by Lich's Necromancy and similar effects. This code only gets triggered when players win, so shouldn't have any additional side effects.
+    (ArcaneTrixter) This increases the speed at which generals level up and the amount of units spawned by features like Necromancy after battles. I pegged it to the existing experience multiplier to be consistent, but it could be its own multiplier if others prefer.
 Ver 1.3.0
     Multiple Classes On Level Up (Gestalting) is live.
         This is a complex new feature so it is still marked experimental
