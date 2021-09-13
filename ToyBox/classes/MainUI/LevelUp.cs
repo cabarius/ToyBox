@@ -155,6 +155,7 @@ namespace ToyBox {
                          if (Main.IsInGame) {
                              var characters = Game.Instance.Player.m_PartyAndPets;
                              if (characters == null) { return; }
+                             settings.selectedClassToConfigMulticlass = Math.Min(characters.Count, settings.selectedClassToConfigMulticlass);
                              UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
                                  characters.Select((ch) => ch.CharacterName).Prepend("Char Gen").ToArray(),
                                  6,

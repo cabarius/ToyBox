@@ -10,6 +10,9 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+
+Ver 1.3.1.2
+    Fixed crash on loading into a game that can sometimes happen due to multiclass config being set to a party member higher than the number available in the game you are loading.
 Ver 1.3.1.1
     Fixed slow movement speed when movement modifiers are off or when move as one is turned on with no change to speed multiplier
 Ver 1.3.1
