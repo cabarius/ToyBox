@@ -147,7 +147,7 @@ namespace ToyBox {
         public bool hideCompleted = true;
 
         // Multi-Class 
-        public bool toggleMulticlass = false;
+        public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
         public bool toggleMulticlassShowClassDescriptions = false;
         public int selectedClassToConfigMulticlass = 0;
 
@@ -190,7 +190,7 @@ namespace ToyBox {
         public bool toggleIgnoreSkillCap = false;
         public bool toggleIgnoreSkillPointsRemaining = false;
 
-        // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosophy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
+        // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
         // public bool toggleIgnorePrerequisites = false; 
         public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
 
