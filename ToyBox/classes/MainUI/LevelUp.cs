@@ -117,9 +117,9 @@ namespace ToyBox {
             UI.HStack("Multiple Classes", 1,
                 //() => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),
                 () => {
-                UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
-                UI.Space(25);
-                using (UI.VerticalScope()) {
+                    UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
+                    UI.Space(25);
+                    using (UI.VerticalScope()) {
                         UI.Label("Experimental - With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. See the link for more information on this campaign variant.".green());
                         UI.LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
                         UI.Space(15);
@@ -151,26 +151,28 @@ namespace ToyBox {
                 UnitEntityData selectedChar = null;
                 UI.Div(0, 25);
                 UI.HStack("Class Selection", 1,
-                    () => {
-                        var characters = Game.Instance.Player.m_PartyAndPets;
-                        if (characters == null) { return; }
-                        UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
-                            characters.Select((ch) => ch.CharacterName).Prepend("Char Gen").ToArray(),
-                            6,
-                            (index) => { },
-                            UI.AutoWidth()
-                            );
-                        if (settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;
-                        else selectedChar = characters[settings.selectedClassToConfigMulticlass - 1];
-                    },
-                    () => {
-                        var targetString = selectedChar == null
-                        ? "creation of ".green() + "new characters".orange().bold() : $"when leveling up ".green() + selectedChar.CharacterName.orange().bold();
-                        UI.Label($"Configure gestalt classes to use during {targetString}".green(), UI.AutoWidth());
-                        UI.Space(25);
-                        UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
-                    }
-                );
+                     () => {
+                         if (Main.IsInGame) {
+                             var characters = Game.Instance.Player.m_PartyAndPets;
+                             if (characters == null) { return; }
+                             UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
+                                 characters.Select((ch) => ch.CharacterName).Prepend("Char Gen").ToArray(),
+                                 6,
+                                 (index) => { },
+                                 UI.AutoWidth()
+                                 );
+                             if (settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;
+                             else selectedChar = characters[settings.selectedClassToConfigMulticlass - 1];
+                         }
+                     },
+                     () => {
+                         var targetString = selectedChar == null
+                         ? "creation of ".green() + "new characters".orange().bold() : $"when leveling up ".green() + selectedChar.CharacterName.orange().bold();
+                         UI.Label($"Configure gestalt classes to use during {targetString}".green(), UI.AutoWidth());
+                         UI.Space(25);
+                         UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
+                     }
+                 );
                 var options = MulticlassOptions.Get(selectedChar);
                 MulticlassPicker.OnGUI(options, 150);
                 MulticlassOptions.Set(selectedChar, options);

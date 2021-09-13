@@ -48,6 +48,7 @@ using Kingmaker.GameModes;
 using Kingmaker.Globalmap;
 using Kingmaker.Items;
 using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Armies;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.Kingdom.Tasks;
@@ -236,6 +237,17 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(UnitEntityData), "CalculateSpeedModifier")]
+
+        public static class UnitEntityData_CalculateSpeedModifier_Patch {
+            private static void Postfix(UnitEntityData __instance, ref float __result) {
+                if (settings.partyMovementSpeedMultiplier == 1.0f || __instance.IsPlayersEnemy)
+                    return;
+                __result *= settings.partyMovementSpeedMultiplier;
+            }
+        }
+
+
         // public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
         // old: public static bool Prefix(UnitEntityData unit, Vector3 p, float? speedLimit, float orientation, float delay, bool showTargetMarker) {
         [HarmonyPatch(typeof(ClickGroundHandler), "RunCommand")]
@@ -243,6 +255,7 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
                 var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
+                Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
                 UnitMoveTo unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
@@ -256,11 +269,9 @@ namespace ToyBox.BagOfPatches {
                     }
                     unitMoveTo.MovementType = (UnitAnimationActionLocoMotion.WalkSpeedType)CheatsAnimation.MoveType.Get();
                 }
-                if (Main.settings.partyMovementSpeedMultiplier > 1) {
-                    unitMoveTo.OverrideSpeed = speedLimit;
-                }
                 unitMoveTo.SpeedLimit = speedLimit;
                 unitMoveTo.ApplySpeedLimitInCombat = settings.ApplySpeedLimitInCombat;
+                unitMoveTo.OverrideSpeed = speedLimit;
                 unit.Commands.Run(unitMoveTo);
                 if (unit.Commands.Queue.FirstOrDefault((UnitCommand c) => c is UnitMoveTo) == unitMoveTo || Game.Instance.IsPaused) {
                     ClickGroundHandler.ShowDestination(unit, unitMoveTo.Target, false);
@@ -344,6 +355,26 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(BlueprintArmorType), "MaxDexterityBonus", MethodType.Getter)]
+        public static class BlueprintArmorType_MaxDexterityBonus_Patch {
+            public static void Prefix(ref int ___m_MaxDexterityBonus) {
+                if (settings.toggleIgnoreMaxDexterity) {
+                    ___m_MaxDexterityBonus = 99;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintArmorType), "ArcaneSpellFailureChance", MethodType.Getter)]
+        public static class BlueprintArmorType_ArcaneSpellFailureChance_Patch {
+            public static bool Prefix(ref int __result) {
+                if (settings.toggleIgnoreSpellFailure) {
+                    __result = 0;
+                    return false;
+                }
+                return true;
+            }
+        }
+
         [HarmonyPatch(typeof(MainMenuBoard), "Update")]
         static class MainMenuButtons_Update_Patch {
             static void Postfix() {
@@ -353,6 +384,22 @@ namespace ToyBox.BagOfPatches {
                     mainMenuVM.EnterGame(new Action(mainMenuVM.LoadLastSave));
                 }
                 Main.freshlyLaunched = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(ArmyMercenariesManager), "Reroll")]
+        public static class ArmyMercenariesManager_Reroll_Patch {
+            public static void Prefix(ref ArmyMercenariesManager __instance, ref int __state) {
+                if (settings.toggleInfiniteArmyRerolls) {
+                     __state = __instance.FreeRerollsLeftCount;
+                     __instance.FreeRerollsLeftCount = 99;
+                }
+            }
+
+            public static void Postfix(ref ArmyMercenariesManager __instance, int __state) {
+                if (settings.toggleInfiniteArmyRerolls) {
+                    __instance.FreeRerollsLeftCount = __state;
+                }
             }
         }
 

@@ -134,6 +134,8 @@ using UnityEngine.UI;
 
 using static Kingmaker.UnitLogic.Class.LevelUp.LevelUpState;
 using UnityModManager = UnityModManagerNet.UnityModManager;
+using Steamworks;
+using Kingmaker.Achievements.Platforms;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
@@ -402,11 +404,25 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+        // To eliminate some log spam
+        [HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", new Type[] { typeof(UserStatsStored_t) })]
+        public static class SteamAchievementsManager_OnUserStatsStored_Patch {
+            public static bool Prefix(ref SteamAchievementsManager __instance, UserStatsStored_t pCallback) {
+                if ((long)(ulong)__instance.m_GameId != (long)pCallback.m_nGameID)
+                    return false;
+                if (EResult.k_EResultOK == pCallback.m_eResult) { }
+                //Debug.Log((object)"StoreStats - success");
+                else if (EResult.k_EResultInvalidParam == pCallback.m_eResult) {
+                    Debug.Log((object)"StoreStats - some failed to validate");
+                    __instance.OnUserStatsReceived(new UserStatsReceived_t() {
+                        m_eResult = EResult.k_EResultOK,
+                        m_nGameID = (ulong)__instance.m_GameId
+                    });
+                }
+                else
+                    Debug.Log((object)("StoreStats - failed, " + (object)pCallback.m_eResult));
+                return false;
+            }
+        }
     }
-
-
-    
-
-
-
 }
