@@ -210,15 +210,13 @@ namespace ToyBox {
                                                        (bp, ch) => ch.HasAbility(bp));
             // Ability Resources
 
-            BlueprintAction.Register<BlueprintAbilityResource>(
-                "Add",
+            BlueprintAction.Register<BlueprintAbilityResource>("Add",
                 (bp, ch, n) => ch.Resources.Add(bp, true),
-                (bp, ch) => !ch.Resources.ContainsResource(bp)
-                );
+                (bp, ch) => !ch.Resources.ContainsResource(bp));
+
             BlueprintAction.Register<BlueprintAbilityResource>("Remove",
                 (bp, ch, n) => ch.Resources.Remove(bp),
-                (bp, ch) => ch.Resources.ContainsResource(bp)
-                );
+                (bp, ch) => ch.Resources.ContainsResource(bp));
 
             // Spellbooks
 
@@ -262,6 +260,14 @@ namespace ToyBox {
                                                      (bp, ch, n) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
                                                      (bp, ch) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&
                                                                  !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp));
+            // Flags
+            BlueprintAction.Register<BlueprintUnlockableFlag>("Unlock",
+                (bp, ch, n) => Game.Instance.Player.UnlockableFlags.Unlock(bp),
+                (bp, ch) => !Game.Instance.Player.UnlockableFlags.IsUnlocked(bp));
+
+            BlueprintAction.Register<BlueprintUnlockableFlag>("Lock",
+                (bp, ch, n) => Game.Instance.Player.UnlockableFlags.Lock(bp),
+                (bp, ch) => Game.Instance.Player.UnlockableFlags.IsUnlocked(bp));
 
             // Cutscenes
             BlueprintAction.Register<Cutscene>("Play", (bp, ch, n) => {

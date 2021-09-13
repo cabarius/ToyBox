@@ -11,6 +11,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 Ver 1.3.1
+    You can now view, unlock and lock UnlockableFlags in Search 'n Pick
     (ArcaneTrixter) Added sliders for increased recruitment amounts and modifiable recruitment costs
     (ArcaneTrixter) Added max dex and arcane spell failure toggles requested in issue #106
     (ArcaneTrixter) Added a multiplier ('After Army Battle Raise Multiplier') for the number of units raised by Lich's Necromancy and similar effects. This code only gets triggered when players win, so shouldn't have any additional side effects.

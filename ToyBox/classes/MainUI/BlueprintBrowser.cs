@@ -115,6 +115,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.m_Type.ToString()),
             new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp => bp.m_Type.ToString()),
             new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp => bp.Parent?.GetBlueprint().NameSafe() ?? ""),
+            new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
             //new NamedTypeFilter<SimpleBlueprint>("In Memory", null, bp => bp.CollationName(), () => ResourcesLibrary.s_LoadedBlueprints.Values.Where(bp => bp != null)),
