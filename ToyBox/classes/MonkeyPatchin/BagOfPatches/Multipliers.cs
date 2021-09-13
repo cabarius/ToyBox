@@ -45,6 +45,7 @@ using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.Formations;
 using DG.Tweening;
+using Kingmaker.Armies.Components;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap;
 using Kingmaker.Items;
@@ -125,6 +126,8 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
+using Kingmaker.Kingdom.Armies;
+using Kingmaker.Kingdom.Rules;
 using ModKit;
 
 namespace ToyBox.BagOfPatches {
@@ -354,6 +357,41 @@ namespace ToyBox.BagOfPatches {
         static class VendorLogic_GetItemBuyPrice_Patc2h {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorBuyPriceMultiplier);
+            }
+        }
+
+        [HarmonyPatch(typeof(MercenarySlot), "Price", MethodType.Getter)]
+        static class MercenarySlot_Price_Patch {
+            private static void Postfix(ref KingdomResourcesAmount __result) {
+                __result *= settings.recruitmentCost;
+                if (!__result.IsPositive) {
+                    __result = KingdomResourcesAmount.Zero;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleCalculateUnitRecruitingCost), "ResultCost", MethodType.Getter)]
+        static class RuleCalculateUnitRecruitingCost_ResultCost_Patch {
+            private static void Postfix(ref KingdomResourcesAmount __result) {
+                int finances = __result.m_Finances > 0 ? Mathf.RoundToInt(Math.Max(1, settings.recruitmentCost * __result.m_Finances)) : 0;
+                int materials = __result.m_Materials > 0 ? Mathf.RoundToInt(Math.Max(1, settings.recruitmentCost * __result.m_Materials)) : 0;
+                int favors = __result.m_Favors > 0 ? Mathf.RoundToInt(Math.Max(1, settings.recruitmentCost * __result.m_Favors)) : 0;
+
+                __result = new KingdomResourcesAmount {m_Favors = favors, m_Finances = finances, m_Materials = materials};
+            }
+        }
+
+        [HarmonyPatch(typeof(ArmyRecruitsManager), "Increase")]
+        static class ArmyRecruitsManager_Patch {
+            private static void Prefix(ref int count) {
+                count = Mathf.RoundToInt(count * settings.recruitmentMultiplier);
+            }
+        }
+
+        [HarmonyPatch(typeof(ArmyMercenariesManager), "Recruit")]
+        static class ArmyMercenariesManager_Recruit_Patch {
+            private static void Prefix(ref MercenarySlot slot) {
+                slot.Recruits.Count = Mathf.RoundToInt(slot.Recruits.Count * settings.recruitmentMultiplier);
             }
         }
 
