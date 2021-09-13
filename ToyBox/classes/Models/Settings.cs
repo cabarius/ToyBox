@@ -49,6 +49,7 @@ namespace ToyBox {
         public bool toggleSpiderBegone = false;
         public bool togglAutoEquipConsumables = false;
         public bool toggleInfiniteArmyRerolls = false;
+        public bool toggleInstantChangeParty = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;

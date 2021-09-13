@@ -427,5 +427,14 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(GlobalMapPathManager), nameof(GlobalMapPathManager.GetTimeToCapital))]
+        public static class GlobalMapPathManager_GetTimeToCapital_Patch {
+            public static void Postfix(bool andBack, ref TimeSpan? __result) {
+                if (settings.toggleInstantChangeParty && andBack && __result != null) {
+                    __result = TimeSpan.Zero;
+                }
+            }
+        }
+
     }
 }
