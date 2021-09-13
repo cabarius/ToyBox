@@ -10,8 +10,10 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
+Ver 1.3.1.1
+    Fixed slow movement speed when movement modifiers are off or when move as one is turned on with no change to speed multiplier
 Ver 1.3.1
-    You can now view, unlock and lock UnlockableFlags in Search 'n Pick
+    You can now view, lock, unlock, increment and decrement UnlockableFlags in Search 'n Pick - be careful as there are 1400+ of these and we don't know what most of them do.
     (ArcaneTrixter) Added sliders for increased recruitment amounts and modifiable recruitment costs
     (ArcaneTrixter) Added max dex and arcane spell failure toggles requested in issue #106
     (ArcaneTrixter) Added a multiplier ('After Army Battle Raise Multiplier') for the number of units raised by Lich's Necromancy and similar effects. This code only gets triggered when players win, so shouldn't have any additional side effects.

@@ -86,6 +86,7 @@ namespace ToyBox {
         public float fatigueHoursModifierMultiplier = 1;
         public float spellsPerDayMultiplier = 1;
         public int featsMultiplier = 1;
+        public float partyMovementSpeedMultiplier = 1;
         public float travelSpeedMultiplier = 1;
         public int characterCreationAbilityPointsMax = 18;
         public int characterCreationAbilityPointsMin = 7;
@@ -93,7 +94,6 @@ namespace ToyBox {
         public int characterCreationAbilityPointsMerc = 20;
         public float companionCostMultiplier = 1;
         public float kingdomBuildingTimeModifier = 0;
-        public float partyMovementSpeedMultiplier = 1;
         public float enemyBaseHitPointsMultiplier = 1;
         public float buffDurationMultiplierValue = 1;
         public float fovMultiplier = 1;

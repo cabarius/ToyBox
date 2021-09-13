@@ -254,6 +254,7 @@ namespace ToyBox.BagOfPatches {
         public static class ClickGroundHandler_RunCommand_Patch {
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
                 var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
+                if (!moveAsOne) return true;
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
                 Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
@@ -271,7 +272,7 @@ namespace ToyBox.BagOfPatches {
                 }
                 unitMoveTo.SpeedLimit = speedLimit;
                 unitMoveTo.ApplySpeedLimitInCombat = settings.ApplySpeedLimitInCombat;
-                unitMoveTo.OverrideSpeed = speedLimit;
+                unitMoveTo.OverrideSpeed = speedLimit*1.5f;
                 unit.Commands.Run(unitMoveTo);
                 if (unit.Commands.Queue.FirstOrDefault((UnitCommand c) => c is UnitMoveTo) == unitMoveTo || Game.Instance.IsPaused) {
                     ClickGroundHandler.ShowDestination(unit, unitMoveTo.Target, false);

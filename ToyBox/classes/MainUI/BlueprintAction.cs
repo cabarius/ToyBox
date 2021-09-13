@@ -105,6 +105,7 @@ namespace ToyBox {
         }
 
         public static void InitializeActions() {
+            var flags = Game.Instance.Player.UnlockableFlags;
             BlueprintAction.Register<BlueprintItem>("Add",
                                                     (bp, ch, n) => Game.Instance.Player.Inventory.Add(bp, n), isRepeatable: true);
 
@@ -262,12 +263,20 @@ namespace ToyBox {
                                                                  !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp));
             // Flags
             BlueprintAction.Register<BlueprintUnlockableFlag>("Unlock",
-                (bp, ch, n) => Game.Instance.Player.UnlockableFlags.Unlock(bp),
-                (bp, ch) => !Game.Instance.Player.UnlockableFlags.IsUnlocked(bp));
+                (bp, ch, n) => flags.Unlock(bp),
+                (bp, ch) => !flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>("Lock",
-                (bp, ch, n) => Game.Instance.Player.UnlockableFlags.Lock(bp),
-                (bp, ch) => Game.Instance.Player.UnlockableFlags.IsUnlocked(bp));
+                (bp, ch, n) => flags.Lock(bp),
+                (bp, ch) =>flags.IsUnlocked(bp));
+
+            BlueprintAction.Register<BlueprintUnlockableFlag>(">",
+                (bp, ch, n) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) + n),
+                (bp, ch) => flags.IsUnlocked(bp) );
+
+            BlueprintAction.Register<BlueprintUnlockableFlag>("<",
+                (bp, ch, n) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n),
+                (bp, ch) => flags.IsUnlocked(bp));
 
             // Cutscenes
             BlueprintAction.Register<Cutscene>("Play", (bp, ch, n) => {

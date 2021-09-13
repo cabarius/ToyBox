@@ -91,7 +91,9 @@ namespace ToyBox {
                 using (UI.HorizontalScope()) {
                     var remWidth = remainingWidth - indent;
                     UI.Space(indent);
-                    var actions = blueprint.GetActions().Where(action => action.canPerform(blueprint, ch)).ToArray();
+                    var actions = blueprint.GetActions()
+                        .Where(action => action.canPerform(blueprint, ch))
+                        .ToArray();
                     var titles = actions.Select(a => a.name);
                     var title = blueprint.name;
                     if (blueprint is BlueprintParametrizedFeature parmBP) {
@@ -101,7 +103,7 @@ namespace ToyBox {
                         //if (feature != null) 
                         //    title += $"<{feature.Name ?? "n/a"}>";
                     }
-                    if (titles.Contains("Remove")) {
+                    if (titles.Contains("Remove") || titles.Contains("Lock")) {
                         title = title.cyan().bold();
                     }
                     else {
@@ -111,26 +113,50 @@ namespace ToyBox {
                     UI.Label(title, UI.Width(titleWidth));
                     remWidth -= titleWidth;
                     int actionCount = actions != null ? actions.Count() : 0;
-                    for (int ii = 0; ii < maxActions; ii++) {
-                        if (ii < actionCount) {
-                            BlueprintAction action = actions[ii];
-                            // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
-                            if (action.name == "<" || action.name == ">") {
-                                UI.Space(174); continue;
-                            }
-                            var actionName = action.name;
-                            float extraSpace = 0;
-                            if (action.isRepeatable) {
-                                actionName += (action.isRepeatable ? $" {repeatCount}" : "");
-                                extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
-                            }
-                            UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
-                            UI.Space(10);
-                            remWidth -= 174.0f + extraSpace;
-
+                    var lockIndex = titles.IndexOf("Lock");
+                    if (blueprint is BlueprintUnlockableFlag flagBP) {
+                        // special case this for now
+                        if (lockIndex >= 0) {
+                            var flags = Game.Instance.Player.UnlockableFlags;
+                            var lockAction = actions[lockIndex];
+                            UI.ActionButton("<", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) - 1); }, UI.Width(50));
+                            UI.Space(25);
+                            UI.Label($"{flags.GetFlagValue(flagBP)}".orange().bold(), UI.MinWidth(50));
+                            UI.ActionButton(">", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) + 1); }, UI.Width(50));
+                            UI.Space(50);
+                            UI.ActionButton(lockAction.name, () => { lockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
+                            UI.Space(100);
                         }
                         else {
-                            UI.Space(174);
+                            var unlockIndex = titles.IndexOf("Unlock");
+                            var unlockAction = actions[unlockIndex];
+                            UI.Space(240);
+                            UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
+                            UI.Space(100);
+                        }
+                    }
+                    else {
+                        for (int ii = 0; ii < maxActions; ii++) {
+                            if (ii < actionCount) {
+                                BlueprintAction action = actions[ii];
+                                // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
+                                if (action.name == "<" || action.name == ">") {
+                                    UI.Space(174); continue;
+                                }
+                                var actionName = action.name;
+                                float extraSpace = 0;
+                                if (action.isRepeatable) {
+                                    actionName += (action.isRepeatable ? $" {repeatCount}" : "");
+                                    extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
+                                }
+                                UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
+                                UI.Space(10);
+                                remWidth -= 174.0f + extraSpace;
+
+                            }
+                            else {
+                                UI.Space(174);
+                            }
                         }
                     }
                     UI.Space(10);
