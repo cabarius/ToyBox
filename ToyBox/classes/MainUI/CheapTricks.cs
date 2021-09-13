@@ -169,12 +169,11 @@ namespace ToyBox {
                     UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
                     UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                     },
-            () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
-                () => UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0),
-
+                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
                 () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
+                () => UI.Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure, 0),
 
                 () => UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0),
                 () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
@@ -185,6 +184,8 @@ namespace ToyBox {
                 () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
 
                 () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
+                () => UI.Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity, 0),
+
                 () => UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0),
 
                 () => UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0),
@@ -200,6 +201,7 @@ namespace ToyBox {
                 () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
                 () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+                () => UI.Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
 
                 () => { }
                 );
@@ -220,18 +222,40 @@ namespace ToyBox {
                 () => UI.LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.Slider("Increase Carry Capacity", ref settings.encumberanceMultiplier, 1, 100, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()),
+                () => {
+                    UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
+                    UI.Space(25); 
+                    UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0);
+                    UI.Space(25);
+                    UI.Label("Adjusts the movement speed of your party in area maps".green());
+                },
+                () => {
+                    UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
+                    UI.Space(25);
+                    UI.Label("Adjusts the movement speed of your party on world maps".green());
+                },
+                () => {
+                    UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.Width(600));
+                    UI.Space(25);
+                    UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
+                },
+                () => {
+                    UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.Width(600));
+                    UI.Space(25);
+                    UI.Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".green());
+
+                },
                 () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 999, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
-                () => UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.AutoWidth()),
                 () => {
-                    UI.Space(328); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
+                    UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.Width(600));
+                    UI.Space(25); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
                 },
                 () => UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.AutoWidth()),
                 () => UI.LogSlider("After Army Battle Raise Multiplier", ref settings.postBattleSummonMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Recruitment Cost", ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("Number of Recruits", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
                 () => { }
                 );
             Game.Instance.TimeController.DebugTimeScale = settings.timeScaleMultiplier;

@@ -28,6 +28,8 @@ namespace ToyBox {
         public bool toggleInstantCooldown = false;
         public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleEquipmentRestrictions = false;
+        public bool toggleIgnoreMaxDexterity = false;
+        public bool toggleIgnoreSpellFailure = false;
         public bool toggleDialogRestrictions = false;
         public bool toggleNoFriendlyFireForAOE = false;
         public bool toggleSettlementRestrictions = false;
@@ -46,6 +48,7 @@ namespace ToyBox {
         public bool toggleMultipleRomance = false;
         public bool toggleSpiderBegone = false;
         public bool togglAutoEquipConsumables = false;
+        public bool toggleInfiniteArmyRerolls = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
@@ -97,6 +100,8 @@ namespace ToyBox {
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
         public float postBattleSummonMultiplier = 1;
+        public float recruitmentCost = 1;
+        public float recruitmentMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
@@ -145,7 +150,7 @@ namespace ToyBox {
         public bool hideCompleted = true;
 
         // Multi-Class 
-        public bool toggleMulticlass = false;
+        public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
         public bool toggleMulticlassShowClassDescriptions = false;
         public int selectedClassToConfigMulticlass = 0;
 
@@ -188,7 +193,7 @@ namespace ToyBox {
         public bool toggleIgnoreSkillCap = false;
         public bool toggleIgnoreSkillPointsRemaining = false;
 
-        // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosophy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
+        // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
         // public bool toggleIgnorePrerequisites = false; 
         public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
 

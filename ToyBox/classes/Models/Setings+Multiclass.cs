@@ -20,6 +20,7 @@ namespace ToyBox {
         public override string ToString() {
             var result = "{";
             foreach (var arch in this) result += " " + arch + ",";
+            result += "}";
             return result;
         }
 
@@ -31,12 +32,12 @@ namespace ToyBox {
             MulticlassOptions options;
             if (ch == null) {
                 options = Main.settings.multiclassSettings.GetValueOrDefault(CharGenKey, new MulticlassOptions());
-                Main.Debug($"MulticlassOptions.Get - chargen - options: {options}");
+                //Main.Debug($"MulticlassOptions.Get - chargen - options: {options}");
             }
             else {
                 if (ch.HashKey() == null) return null;
                 options = Main.settings.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
-                Main.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
+                //Main.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
             }
             return options;
         }
@@ -61,7 +62,7 @@ namespace ToyBox {
         public override string ToString() {
             string result = base.ToString() + " {\n";
             foreach (var classEntry in this) {
-                result += $"    {classEntry.Key} : {classEntry.Value}";
+                result += $"    {classEntry.Key} : {classEntry.Value}\n";
             }
             result += "}";
             return result;

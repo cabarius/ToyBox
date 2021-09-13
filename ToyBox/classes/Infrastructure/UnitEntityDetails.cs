@@ -40,6 +40,7 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
+using Kingmaker.UnitLogic.Parts;
 
 namespace ToyBox 
 {
@@ -109,9 +110,8 @@ namespace ToyBox
         }
         public static void Charm(UnitEntityData unit)
         {
-            if (unit != null)
-            {
-                unit.Descriptor.SwitchFactions(Game.Instance.BlueprintRoot.PlayerFaction, true);
+            if (unit != null) {
+                 unit.Descriptor.SwitchFactions(Game.Instance.BlueprintRoot.PlayerFaction, true);
             }
             else
             {
@@ -133,6 +133,13 @@ namespace ToyBox
                 var pets = unit.Pets;
                 unit.IsInGame = true;
                 unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                unit.LeaveCombat();
+                Charm(unit);
+                UnitPartCompanion unitPartCompanion = unit.Get<UnitPartCompanion>();
+                unitPartCompanion.State = CompanionState.InParty;
+                if (unit.IsDetached) {
+                    Game.Instance.Player.AttachPartyMember(unit);
+                }
                 foreach (var pet in pets)
                 {
                     pet.Entity.Position = unit.Position;
