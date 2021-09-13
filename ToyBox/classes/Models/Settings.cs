@@ -99,6 +99,7 @@ namespace ToyBox {
         public float fovMultiplier = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
+        public float postBattleSummonMultiplier = 1;
         public float recruitmentCost = 1;
         public float recruitmentMultiplier = 1;
 
