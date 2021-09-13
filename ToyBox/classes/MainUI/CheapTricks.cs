@@ -173,6 +173,7 @@ namespace ToyBox {
                 () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
                 () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
+                () => UI.Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure, 0),
 
                 () => UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0),
                 () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
@@ -183,6 +184,8 @@ namespace ToyBox {
                 () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
 
                 () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
+                () => UI.Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity, 0),
+
                 () => UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0),
 
                 () => UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0),
