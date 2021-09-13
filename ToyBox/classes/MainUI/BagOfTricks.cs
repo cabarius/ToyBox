@@ -222,9 +222,25 @@ namespace ToyBox {
                     UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
                     UI.Space(25); 
                     UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0);
+                    UI.Space(25);
+                    UI.Label("Adjusts the movement speed of your party in area maps".green());
                 },
-                () => UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.AutoWidth()),
+                () => {
+                    UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
+                    UI.Space(25);
+                    UI.Label("Adjusts the movement speed of your party on world maps".green());
+                },
+                () => {
+                    UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.Width(600));
+                    UI.Space(25);
+                    UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
+                },
+                () => {
+                    UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.Width(600));
+                    UI.Space(25);
+                    UI.Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".green());
+
+                },
                 () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 999, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
@@ -232,7 +248,6 @@ namespace ToyBox {
                     UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.Width(600));
                     UI.Space(25); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
                 },
-                () => UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.AutoWidth()),
                 () => { }
                 );
             Game.Instance.TimeController.DebugTimeScale = settings.timeScaleMultiplier;

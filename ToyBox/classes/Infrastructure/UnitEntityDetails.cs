@@ -137,7 +137,9 @@ namespace ToyBox
                 Charm(unit);
                 UnitPartCompanion unitPartCompanion = unit.Get<UnitPartCompanion>();
                 unitPartCompanion.State = CompanionState.InParty;
-                Game.Instance.Player.AttachPartyMember(unit);
+                if (unit.IsDetached) {
+                    Game.Instance.Player.AttachPartyMember(unit);
+                }
                 foreach (var pet in pets)
                 {
                     pet.Entity.Position = unit.Position;
