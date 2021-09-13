@@ -311,10 +311,14 @@ Report Bugs: https://github.com/cabarius/ToyBox/issues
 Source Code: https://github.com/cabarius/ToyBox
 
 Development Setup
-    1 - Clone the git repo
-    2 - Locate the install folder of Pathfinder Wrath of the Righteous
-    3 - Go to System Properties > Environment Variables and add WrathPath with a value that looks like this:
+    1 - Install ToyBox mod into your game via Unity Mod Manager
+    2 - Clone the git repo
+    3 - Locate the install folder of Pathfinder Wrath of the Righteous
+    4 - Go to System Properties > Environment Variables and add WrathPath with a value that looks like this:
         WrathPath   C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure
+    5 - First time and when the game updates make sure you clean the solution to trigger the publicize step
+    6 - build the solution debug and it will automatically build and install into the mod folder in the game
+    7 - when you rebuild you can go to the mod and hit the reload button at the top to make it use the latest
 
 License: MIT
 
