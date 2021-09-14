@@ -379,7 +379,7 @@ namespace ToyBox {
                             String key = $"{ch.CharacterName}-{statType.ToString()}";
                             var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
                             var statName = statType.ToString();
-                            if (statName == "BaseAttackBonus" || statName == "SkillAthletics") {
+                            if (statName is "BaseAttackBonus" or "SkillAthletics") {
                                 UI.Div(100, 20, 755);
                             }
                             using (UI.HorizontalScope()) {

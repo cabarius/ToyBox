@@ -74,7 +74,7 @@ namespace ToyBox {
                                         }
                                         else if (questObjective.State == QuestObjectiveState.Failed && (questObjective.Blueprint.IsFinishParent || quest.State == QuestState.Started)) {
                                             UI.ActionButton("Restart", () => {
-                                                if (quest.State == QuestState.Completed || quest.State == QuestState.Failed) {
+                                                if (quest.State is QuestState.Completed or QuestState.Failed) {
                                                     Traverse.Create(quest).Field("m_State").SetValue(QuestState.Started);
                                                 }
                                                 questObjective.Reset();

@@ -59,7 +59,7 @@ namespace ToyBox.BagOfPatches {
 
                                 targets = targets.Where(target => {
                                                             if (target.IsPlayerFaction && !healDamage) {
-                                                                bool forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
+                                                                bool forUndead = componentType is AbilityUseOnRestType.HealMassUndead or AbilityUseOnRestType.HealSelfUndead or AbilityUseOnRestType.HealUndead;
 
                                                                 return forUndead == target.Descriptor.IsUndead;
                                                             }
