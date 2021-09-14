@@ -109,6 +109,12 @@
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
@@ -129,6 +135,7 @@
   <ItemGroup>
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\HotkeyHelper.cs" />
+    <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
     <Compile Include="classes\MainUI\CrusadeEditor.cs" />

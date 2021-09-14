@@ -11,6 +11,10 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.3.2
+    Moved Crusade stuff to a new Crusade tab
+    Initial teleport to party and main character support
+    Move party together is now disabled for turn based combat (it broke it before)
 Ver 1.3.1.2
     Fixed crash on loading into a game that can sometimes happen due to multiclass config being set to a party member higher than the number available in the game you are loading.
 Ver 1.3.1.1
