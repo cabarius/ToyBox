@@ -3,15 +3,11 @@ using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Items;
 using Kingmaker.Kingdom.Settlements;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {

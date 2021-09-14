@@ -2,13 +2,9 @@
 
 using HarmonyLib;
 using Kingmaker;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {

@@ -1,11 +1,7 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using HarmonyLib;
-//using Kingmaker.Controllers.GlobalMap;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using System.Collections.Generic;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using ModKit;

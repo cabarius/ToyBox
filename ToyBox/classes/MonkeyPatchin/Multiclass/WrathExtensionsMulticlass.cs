@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
-//using Kingmaker.UI.LevelUp.Phase;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
@@ -80,14 +79,14 @@ namespace ToyBox.Multiclass {
             //Main.Log($"controller: {controller} AutoCommit: {controller.AutoCommit}");
             //Main.Log($"    unit: {controller.Unit} isPlayerFaction: {controller.Unit.IsPlayerFaction} isPet: {controller.Unit.IsPet}");
             //Main.Log($"    levelup state: {controller.State}");
-           
-            return controller != null 
-                && controller.Unit.IsPlayerFaction 
+
+            return controller != null
+                && controller.Unit.IsPlayerFaction
                 && (allowPet || !controller.Unit.IsPet
                 //&& (allowAutoCommit || !controller.AutoCommit)
                 //&& (allowPregen || !controller.State.IsPreGen()
                 );
-                
+
         }
 
 #if false

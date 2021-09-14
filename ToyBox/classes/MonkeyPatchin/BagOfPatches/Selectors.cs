@@ -3,11 +3,7 @@
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Controllers.Combat;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {

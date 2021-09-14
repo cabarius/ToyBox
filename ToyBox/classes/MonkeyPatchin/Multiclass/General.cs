@@ -6,10 +6,7 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Class.LevelUp;
@@ -18,8 +15,6 @@ using Kingmaker.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
-//using Kingmaker.UI.LevelUp.Phase;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.Multiclass {
@@ -29,9 +24,9 @@ namespace ToyBox.Multiclass {
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         public static LevelUpController levelUpController { get; internal set; }
-        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] { 
-            typeof(UnitEntityData), 
-            typeof(bool), 
+        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] {
+            typeof(UnitEntityData),
+            typeof(bool),
             typeof(LevelUpState.CharBuildMode) })]
         static class LevelUpController_ctor_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
@@ -225,7 +220,7 @@ namespace ToyBox.Multiclass {
                     return true;
                 // Begin Mod Lines
                 BlueprintCharacterClass selectedClass = __instance.LevelUpController.State.SelectedClass;
-                __instance.LevelUpController.State.SelectedClass = spellbook.CharacterClass; 
+                __instance.LevelUpController.State.SelectedClass = spellbook.CharacterClass;
                 // End Mod Lines
                 __instance.DefineAvailibleData();
                 __instance.Spells.IsDirty = true;
@@ -257,7 +252,7 @@ namespace ToyBox.Multiclass {
                 if (!settings.toggleMulticlass) return true;
                 __instance.Init();
                 CharBSelectorLayer selectorLayerBody = __instance.SelectorLayerBody;
-                if (selectorLayerBody.CurrentSpellSelectionData != null 
+                if (selectorLayerBody.CurrentSpellSelectionData != null
                     && spellSelectionData.SpellList == selectorLayerBody.CurrentSpellSelectionData.SpellList
                     && spellSelectionData.Spellbook == selectorLayerBody.CurrentSpellSelectionData.Spellbook // Mod Line
                     ) {
@@ -285,7 +280,7 @@ namespace ToyBox.Multiclass {
                 if (!settings.toggleMulticlass) return true;
                 __instance.Init();
                 CharBSelectorLayer selectorLayerBody = __instance.SelectorLayerBody;
-                if (selectorLayerBody.CurrentSpellSelectionData != null 
+                if (selectorLayerBody.CurrentSpellSelectionData != null
                     && spellSelectionData.SpellList == selectorLayerBody.CurrentSpellSelectionData.SpellList
                     && spellSelectionData.Spellbook == selectorLayerBody.CurrentSpellSelectionData.Spellbook // Mod Line
                     && spellLevel == selectorLayerBody.CurrentLevel) {
@@ -317,7 +312,7 @@ namespace ToyBox.Multiclass {
                 foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
                     BlueprintProgression p = blueprintProgression;
                     if (blueprintCharacterClass != null
-                        // && p.Classes.Contains<BlueprintCharacterClass>(blueprintCharacterClass)) 
+                        // && p.Classes.Contains<BlueprintCharacterClass>(blueprintCharacterClass))
                         && p.IsChildProgressionOf(unit, blueprintCharacterClass) // Mod Line replacing above
                         )
                         unit.Progression.Features.Enumerable.FirstItem<Feature>(

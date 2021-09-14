@@ -2,15 +2,11 @@
 
 using HarmonyLib;
 using Kingmaker;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {

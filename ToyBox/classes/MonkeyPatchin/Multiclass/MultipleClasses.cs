@@ -2,10 +2,7 @@
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Classes;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
@@ -13,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using ModKit.Utility;
 using ModKit;

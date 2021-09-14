@@ -1,16 +1,12 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 using HarmonyLib;
 using Kingmaker;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.RuleSystem.Rules;
-//using Kingmaker.UI._ConsoleUI.Models;
 using Kingmaker.UI.MainMenuUI;
-//using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.FactLogic;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {

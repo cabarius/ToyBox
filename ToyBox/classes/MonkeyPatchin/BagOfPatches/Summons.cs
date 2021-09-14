@@ -4,15 +4,11 @@ using HarmonyLib;
 using Kingmaker;
 using Kingmaker.AreaLogic.SummonPool;
 using Kingmaker.Blueprints;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem.Rules;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using Kingmaker.UI.ActionBar;
 using TurnBased.Controllers;
 using UnityEngine;
@@ -59,11 +55,11 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleSummonUnit), MethodType.Constructor, new Type[] { 
-            typeof(UnitEntityData), 
-            typeof(BlueprintUnit), 
-            typeof(Vector3), 
-            typeof(Rounds), 
+        [HarmonyPatch(typeof(RuleSummonUnit), MethodType.Constructor, new Type[] {
+            typeof(UnitEntityData),
+            typeof(BlueprintUnit),
+            typeof(Vector3),
+            typeof(Rounds),
             typeof(int) }
         )]
         public static class RuleSummonUnit_Constructor_Patch {

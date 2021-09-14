@@ -6,7 +6,6 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
-//using Kingmaker.UI.LevelUp.Phase;
 using Kingmaker.UnitLogic;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
