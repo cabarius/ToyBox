@@ -40,7 +40,7 @@ namespace ToyBox.classes.MainUI {
             var moraleState = kingdom.MoraleState;
             UI.HStack("Morale", 1,
                 () => {
-                    UI.Toggle("Flags always green", ref Settings.toggleFlagsStayGreen);
+                    UI.Toggle("Flags always green", ref Settings.toggleCrusadeFlagsStayGreen);
                     KingdomCheats.AddMorale();
                 },
                 () => {
