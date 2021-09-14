@@ -30,7 +30,7 @@ namespace ToyBox {
         }
     }
     public class QuestEditor {
-        static bool[] selectedQuests = new bool[0];
+        static bool[] selectedQuests = Array.Empty<bool>();
         public static void ResetGUI() { }
 
         public static void OnGUI() {
