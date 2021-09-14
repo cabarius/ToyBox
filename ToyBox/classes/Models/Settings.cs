@@ -16,6 +16,7 @@ namespace ToyBox {
         // Cheap Tricks
 
         public int increment = 10000;
+        public int kineticistBurnReduction = 0;
 
         // Tweaks
         public bool highlightObjectsToggle = false;
@@ -51,7 +52,7 @@ namespace ToyBox {
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
         public bool toggleAllowAllActivatable = false;
-        public bool toggleFlagsStayGreen = false;
+        public bool toggleKineticistGatherPower = false;
 
         //Crusade
         public bool toggleInfiniteArmyRerolls = false;

@@ -36,6 +36,8 @@ using Kingmaker.Armies;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.UnitLogic.ActivatableAbilities;
+using Kingmaker.UnitLogic.Class.Kineticist;
+using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -389,6 +391,25 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 }
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RestrictionCanGatherPower), "IsAvailable")]
+        public static class RestrictionCanGatherPower_IsAvailable_Patch {
+            public static bool Prefix(ref bool __result) {
+                if (!settings.toggleKineticistGatherPower) {
+                    return true;
+                }
+
+                __result = true;
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(KineticistAbilityBurnCost), "GetTotal")]
+        public static class KineticistAbilityBurnCost_GetTotal_Patch {
+            public static void Postfix(ref int __result) {
+                __result -= settings.kineticistBurnReduction;
             }
         }
 
