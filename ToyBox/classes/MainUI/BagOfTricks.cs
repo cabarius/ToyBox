@@ -116,6 +116,13 @@ namespace ToyBox {
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
                 () => { }
                 );
+            UI.Div(0, 25);
+            UI.HStack("Tweaks - Class specific", 1,
+                () => UI.Toggle("Witch/Shaman: cackling/shanting extends hexes by 10 minutes while out of combat", ref settings.toggleExtendHexes),
+                () => UI.Toggle("Misc: allow all activatable simultaneously (like judgements)", ref settings.toggleAllowAllActivatable),
+                () => { }
+                );
+
             UI.Div(153, 25);
             UI.HStack("", 1,
                 () => UI.EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth()),
