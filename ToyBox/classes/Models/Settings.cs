@@ -49,7 +49,9 @@ namespace ToyBox {
         public bool toggleSpiderBegone = false;
         public bool togglAutoEquipConsumables = false;
         public bool toggleInstantChangeParty = false;
-
+        public bool toggleExtendHexes = false;
+        public bool toggleAllowAllActivatable = false;
+        public bool toggleFlagsStayGreen = false;
 
         //Crusade
         public bool toggleInfiniteArmyRerolls = false;
