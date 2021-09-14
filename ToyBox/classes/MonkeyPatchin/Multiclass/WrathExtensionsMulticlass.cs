@@ -81,12 +81,7 @@ namespace ToyBox.Multiclass {
             //Main.Log($"    unit: {controller.Unit} isPlayerFaction: {controller.Unit.IsPlayerFaction} isPet: {controller.Unit.IsPet}");
             //Main.Log($"    levelup state: {controller.State}");
 
-            return controller != null
-                && controller.Unit.IsPlayerFaction
-                && (allowPet || !controller.Unit.IsPet
-                //&& (allowAutoCommit || !controller.AutoCommit)
-                //&& (allowPregen || !controller.State.IsPreGen()
-                );
+            return controller?.Unit.IsPlayerFaction == true && (allowPet || !controller.Unit.IsPet);
 
         }
 
