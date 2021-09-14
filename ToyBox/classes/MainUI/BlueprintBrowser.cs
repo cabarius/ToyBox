@@ -31,15 +31,15 @@ namespace ToyBox {
         public static Settings settings => Main.settings;
 
         public static IEnumerable<SimpleBlueprint> filteredBPs;
-        public static IEnumerable<IGrouping<String, SimpleBlueprint>> collatedBPs;
+        public static IEnumerable<IGrouping<string, SimpleBlueprint>> collatedBPs;
         public static IEnumerable<SimpleBlueprint> selectedCollatedBPs;
-        public static List<String> collationKeys;
+        public static List<string> collationKeys;
         public static int selectedCollationIndex;
         static bool firstSearch = true;
-        public static String[] filteredBPNames;
+        public static string[] filteredBPNames;
         public static int uncolatedMatchCount;
         public static int matchCount;
-        public static String parameter = "";
+        public static string parameter = "";
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationName()),
@@ -174,7 +174,7 @@ namespace ToyBox {
                 collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key);
                 // I could do something like this but I will leave it up to the UI when a collation is selected.
                 // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
-                collationKeys = new List<String> { "All" };
+                collationKeys = new List<string> { "All" };
                 collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
             }
             filteredBPs = filteredBPs.Take(settings.searchLimit).ToArray();
@@ -243,7 +243,7 @@ namespace ToyBox {
                             UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
                         }
                         else if (matchCount > 0) {
-                            String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                            string title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
                             UI.Label(title, UI.ExpandWidth(false));
                         }

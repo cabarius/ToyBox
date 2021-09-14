@@ -15,17 +15,17 @@ using UnityEngine;
 
 namespace ToyBox {
     public static class QuestExensions {
-        private static String[] questColors = {
+        private static string[] questColors = {
             "gray",
             "yellow",
             "green",
             "red"
         };
-        public static String stateColored(this String text, Quest quest) { return text.color(questColors[(int)quest.State]); }
-        public static String stateColored(this String text, QuestObjective objective) { return text.color(questColors[(int)objective.State]); }
+        public static string stateColored(this string text, Quest quest) { return text.color(questColors[(int)quest.State]); }
+        public static string stateColored(this string text, QuestObjective objective) { return text.color(questColors[(int)objective.State]); }
 
-        public static String stateString(this Quest quest) { return quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest); }
-        public static String stateString(this QuestObjective objective) {
+        public static string stateString(this Quest quest) { return quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest); }
+        public static string stateString(this QuestObjective objective) {
             return objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective);
         }
     }

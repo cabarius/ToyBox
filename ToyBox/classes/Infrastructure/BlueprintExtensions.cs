@@ -18,13 +18,13 @@ namespace ToyBox {
 
     public static class BlueprintExensions {
         private static ConditionalWeakTable<object, string> cachedCollationNames = new();
-        public static String GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
-        public static String GetDisplayName(this BlueprintSpellbook bp) {
+        public static string GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
+        public static string GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
             if (string.IsNullOrEmpty(name)) name = bp.name.Replace("Spellbook", "");
             return name;
         }
-        public static String CollationName(this SimpleBlueprint bp) {
+        public static string CollationName(this SimpleBlueprint bp) {
             string collationName;
             cachedCollationNames.TryGetValue(bp, out collationName);
             if (collationName != null) return collationName;
@@ -34,7 +34,7 @@ namespace ToyBox {
             cachedCollationNames.Add(bp, typeName);
             return typeName;
         }
-        public static String CollationName(this BlueprintSpellbook bp) {
+        public static string CollationName(this BlueprintSpellbook bp) {
             if (bp.IsMythic) return "Mythic";
             if (bp.IsAlchemist) return "Alchemist";
             if (bp.IsArcane) return "Arcane";
@@ -42,7 +42,7 @@ namespace ToyBox {
             if (bp.CharacterClass.IsDivineCaster) return "Divine";
             return bp.GetType().ToString();
         }
-        public static String CollationName(this BlueprintBuff bp) {
+        public static string CollationName(this BlueprintBuff bp) {
             if (bp.IsClassFeature) return "Class Feature";
             if (bp.IsFromSpell) return "From Spell";
             if (bp.Harmful) return "Harmful";
@@ -52,14 +52,14 @@ namespace ToyBox {
             return bp.GetType().ToString();
         }
 
-        public static String CollationName(this BlueprintIngredient bp) {
+        public static string CollationName(this BlueprintIngredient bp) {
             if (bp.IsNotable) return "Notable";
             //if (bp.AllowMakeStackable) return "Stackable";
             if (bp.Destructible) return "Destructible";
             if (bp.FlavorText != null) return bp.FlavorText;
             return bp.NonIdentifiedName;
         }
-        public static String CollationName(this BlueprintArea bp) {
+        public static string CollationName(this BlueprintArea bp) {
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
             if (typeName == "Area") return $"Area CR{bp.CR}";
             if (bp.IsGlobalMap) return "GlobalMap";

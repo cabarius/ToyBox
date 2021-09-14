@@ -46,7 +46,7 @@ namespace ToyBox {
                     Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
                     Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
         };
-        static Dictionary<String, int> statEditorStorage = new();
+        static Dictionary<string, int> statEditorStorage = new();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices;
         private static Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
@@ -376,7 +376,7 @@ namespace ToyBox {
                         StatType statType = obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
                         if (modifiableValue != null) {
-                            String key = $"{ch.CharacterName}-{statType.ToString()}";
+                            string key = $"{ch.CharacterName}-{statType.ToString()}";
                             var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
                             var statName = statType.ToString();
                             if (statName is "BaseAttackBonus" or "SkillAthletics") {

@@ -53,7 +53,7 @@ namespace ToyBox {
         static Exception caughtException;
         public static void Log(string s) { if (modEntry != null) Logger.Log(s); }
         public static void Log(int indent, string s) { Log("    ".Repeat(indent) + s); }
-        public static void Debug(String s) { if (modEntry != null) Logger.ModLoggerDebug(s); }
+        public static void Debug(string s) { if (modEntry != null) Logger.ModLoggerDebug(s); }
         public static void Error(Exception e) { if (modEntry != null) Logger.Log(e); }
 
         static bool Load(UnityModManager.ModEntry modEntry) {

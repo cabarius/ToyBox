@@ -21,14 +21,14 @@ namespace ToyBox {
         public static Settings settings => Main.settings;
 
         public static IEnumerable<SimpleBlueprint> filteredBPs;
-        static String prevCallerKey = "";
-        static String searchText = "";
+        static string prevCallerKey = "";
+        static string searchText = "";
         static int searchLimit = 100;
         static int repeatCount = 1;
         public static int matchCount;
 
         static bool showAll;
-        public static void UpdateSearchResults(String searchText, int limit, IEnumerable<SimpleBlueprint> blueprints) {
+        public static void UpdateSearchResults(string searchText, int limit, IEnumerable<SimpleBlueprint> blueprints) {
             if (blueprints == null) return;
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
             var filtered = new List<SimpleBlueprint>();
@@ -49,13 +49,13 @@ namespace ToyBox {
             filteredBPs = filtered.Take(searchLimit).OrderBy(bp => bp.name).ToArray();
             BlueprintListUI.needsLayout = true;
         }
-        public static void OnGUI<T>(String callerKey,
+        public static void OnGUI<T>(string callerKey,
                                     UnitEntityData unit,
                                     List<T> facts,
                                     Func<T, SimpleBlueprint> blueprint,
                                     IEnumerable<SimpleBlueprint> blueprints,
-                                    Func<T, String> title,
-                                    Func<T, String> description = null,
+                                    Func<T, string> title,
+                                    Func<T, string> description = null,
                                     Func<T, int> value = null,
                                     IEnumerable<BlueprintAction> actions = null
                 ) {
@@ -81,7 +81,7 @@ namespace ToyBox {
             UI.ActionButton("Search", () => searchChanged = true, UI.AutoWidth());
             UI.Space(25);
             if (matchCount > 0 && searchText.Length > 0) {
-                String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                string matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                 if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
                 UI.Label(matchesText, UI.ExpandWidth(false));
             }
@@ -120,7 +120,7 @@ namespace ToyBox {
             SimpleBlueprint toRemove = null;
             SimpleBlueprint toIncrease = null;
             SimpleBlueprint toDecrease = null;
-            var toValues = new Dictionary<String, SimpleBlueprint>();
+            var toValues = new Dictionary<string, SimpleBlueprint>();
             var sorted = facts.OrderBy(title);
             matchCount = 0;
             UI.Div(100);
@@ -128,8 +128,8 @@ namespace ToyBox {
                 var remWidth = remainingWidth;
                 if (fact == null) continue;
                 var bp = blueprint(fact);
-                String name = title(fact);
-                String nameLower = name.ToLower();
+                string name = title(fact);
+                string nameLower = name.ToLower();
                 if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => nameLower.Contains(term)))) {
                     matchCount++;
                     using (UI.HorizontalScope()) {

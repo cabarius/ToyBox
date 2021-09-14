@@ -22,7 +22,7 @@ namespace ToyBox {
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
-            Func<String, String> titleFormater = null,
+            Func<string, string> titleFormater = null,
             NamedTypeFilter typeFilter = null
         ) {
             if (titleFormater == null) titleFormater = t => t.orange().bold();
@@ -127,7 +127,7 @@ namespace ToyBox {
                         }
                     }
                     UI.Space(10);
-                    String typeString = blueprint.GetType().Name;
+                    string typeString = blueprint.GetType().Name;
                     if (typeFilter?.collator != null) {
                         var collatorString = typeFilter.collator(blueprint);
                         if (!typeString.Contains(collatorString))
@@ -137,12 +137,12 @@ namespace ToyBox {
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {
                         if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {
-                            String componentStr = String.Join<object>(" ", bpso.ComponentsArray).color(RGBA.teal);
+                            string componentStr = string.Join<object>(" ", bpso.ComponentsArray).color(RGBA.teal);
                             if (description.Length == 0) description = componentStr;
                             else description = componentStr + "\n" + description;
                         }
                         if (settings.showElements && bpso.ElementsArray?.Count > 0) {
-                            String elementsStr = String.Join<object>(" ", bpso.ElementsArray).magenta();
+                            string elementsStr = string.Join<object>(" ", bpso.ElementsArray).magenta();
                             if (description.Length == 0) description = elementsStr;
                             else description = elementsStr + "\n" + description;
                         }
