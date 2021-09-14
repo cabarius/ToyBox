@@ -1,12 +1,12 @@
 ﻿{
-    "Id": "ToyBox",
-    "DisplayName": "ToyBox (a bag of tricks)",
-    "Author": "Narria",
-    "Version": "1.3.2",
-    "ManagerVersion": "0.23.0",
-    "Requirements": [],
-    "AssemblyName": "ToyBox.dll",
-    "EntryMethod": "ToyBox.Main.Load",
-    "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8?tab=posts&BH=0",
-    "Repository": "https://raw.githubusercontent.com/cabarius/ToyBox/master/ToyBox/Repository.json"
+  "Id": "ToyBox",
+  "DisplayName": "ToyBox (a bag of tricks)",
+  "Author": "Narria",
+  "Version": "1.3.2",
+  "ManagerVersion": "0.23.0",
+  "Requirements": [],
+  "AssemblyName": "ToyBox.dll",
+  "EntryMethod": "ToyBox.Main.Load",
+  "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8?tab=posts&BH=0",
+  "Repository": "https://raw.githubusercontent.com/cabarius/ToyBox/master/ToyBox/Repository.json"
 }
