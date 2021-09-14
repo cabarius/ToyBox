@@ -44,6 +44,7 @@ using ToyBox.Multiclass;
 using GL = UnityEngine.GUILayout;
 using ModKit;
 using ModKit.Utility;
+using ToyBox.classes.MainUI;
 
 namespace ToyBox {
 #if DEBUG
@@ -100,6 +101,7 @@ namespace ToyBox {
 
                 modEntry.OnToggle = OnToggle;
                 modEntry.OnGUI = OnGUI;
+                modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
                 multiclassMod = new Multiclass.Mod();
             }
@@ -120,6 +122,11 @@ namespace ToyBox {
             return true;
         }
 
+        // temporary teleport keys
+        private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
+            Teleport.OnUpdate();
+        }
+
         static void ResetSearch() {
             BlueprintBrowser.ResetSearch();
         }
@@ -131,6 +138,7 @@ namespace ToyBox {
             CheapTricks.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
+            CrusadeEditor.ResetGUI();
             CharacterPicker.ResetGUI();
             BlueprintBrowser.ResetGUI();
             QuestEditor.ResetGUI();
@@ -150,7 +158,6 @@ namespace ToyBox {
                 Event e = Event.current;
                 UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();
-
                 if (caughtException != null) {
                     UI.Label("ERROR".red().bold() + $": caught exception {caughtException}");
                     UI.ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, UI.AutoWidth());
@@ -169,9 +176,10 @@ namespace ToyBox {
 #else
                     new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
 #endif
-                    new NamedAction("Party Editor", () => { PartyEditor.OnGUI(); }),
+                    new NamedAction("Party", () => { PartyEditor.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
-                    new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); })
+                    new NamedAction("Crusade", () => { CrusadeEditor.OnGUI(); }),
+                    new NamedAction("Quests", () => { QuestEditor.OnGUI(); })
                     );
             }
             catch (Exception e) {

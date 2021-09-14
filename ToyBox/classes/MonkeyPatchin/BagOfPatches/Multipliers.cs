@@ -162,33 +162,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ArmyData))]
-        public static class ArmyData_CalculateExperience_Patch {
-            [HarmonyPatch("CalculateExperience")]
-            [HarmonyPostfix]
-            public static void Postfix(ref int __result) {
-                __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.experienceMultiplier, 1));
-            }
-
-            [HarmonyPrefix]
-            [HarmonyPatch("CalculateDangerRating")]
-            public static bool PrefixCalculateDangerRating(ArmyData __instance, ref int __result) {
-                ArmyRoot armyRoot = BlueprintRoot.Instance.ArmyRoot;
-                int num1 = Mathf.FloorToInt((float)(__instance.CalculateExperience() / Math.Round(settings.experienceMultiplier, 1) + armyRoot.ArmyDangerBonus) * armyRoot.ArmyDangerMultiplier);
-                if (num1 < 0) {
-                    __result = 1;
-                    return false;
-                }
-
-                int num2 = 0;
-                int[] bonuses = BlueprintRoot.Instance.LeadersRoot.ExpTable.Bonuses;
-                for (int index = 0; index < bonuses.Length && bonuses[index] <= num1; ++index)
-                    ++num2;
-                __result = num2;
-                return false;
-            }
-        }
-
         [HarmonyPatch(typeof(Player), "GainMoney")]
         public static class Player_GainMoney_Patch {
             [HarmonyPrefix]
@@ -364,14 +337,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(SummonUnitsAfterArmyBattle), "HandleArmiesBattleResultsApplied")]
-        public static class SummonUnitsAfterArmyBattle_Patch {
-            public static void Prefix(ref TacticalCombatResults results) {
-                results = new TacticalCombatResults(results.Attacker, results.Defender, Mathf.RoundToInt(results.BattleExp * settings.postBattleSummonMultiplier),
-                    results.CrusadeStatsBonus, results.Winner, results.ToResurrect, results.Units, results.Retreat);
-            }
-        }
-
         [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(ItemEntity) })]
         static class VendorLogic_GetItemSellPrice_Patch {
             private static void Postfix(ref long __result) {
@@ -395,41 +360,6 @@ namespace ToyBox.BagOfPatches {
         static class VendorLogic_GetItemBuyPrice_Patc2h {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorBuyPriceMultiplier);
-            }
-        }
-
-        [HarmonyPatch(typeof(MercenarySlot), "Price", MethodType.Getter)]
-        static class MercenarySlot_Price_Patch {
-            private static void Postfix(ref KingdomResourcesAmount __result) {
-                __result *= settings.recruitmentCost;
-                if (!__result.IsPositive) {
-                    __result = KingdomResourcesAmount.Zero;
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(RuleCalculateUnitRecruitingCost), "ResultCost", MethodType.Getter)]
-        static class RuleCalculateUnitRecruitingCost_ResultCost_Patch {
-            private static void Postfix(ref KingdomResourcesAmount __result) {
-                int finances = __result.m_Finances > 0 ? Mathf.RoundToInt(Math.Max(1, settings.recruitmentCost * __result.m_Finances)) : 0;
-                int materials = __result.m_Materials > 0 ? Mathf.RoundToInt(Math.Max(1, settings.recruitmentCost * __result.m_Materials)) : 0;
-                int favors = __result.m_Favors > 0 ? Mathf.RoundToInt(Math.Max(1, settings.recruitmentCost * __result.m_Favors)) : 0;
-
-                __result = new KingdomResourcesAmount {m_Favors = favors, m_Finances = finances, m_Materials = materials};
-            }
-        }
-
-        [HarmonyPatch(typeof(ArmyRecruitsManager), "Increase")]
-        static class ArmyRecruitsManager_Patch {
-            private static void Prefix(ref int count) {
-                count = Mathf.RoundToInt(count * settings.recruitmentMultiplier);
-            }
-        }
-
-        [HarmonyPatch(typeof(ArmyMercenariesManager), "Recruit")]
-        static class ArmyMercenariesManager_Recruit_Patch {
-            private static void Prefix(ref MercenarySlot slot) {
-                slot.Recruits.Count = Mathf.RoundToInt(slot.Recruits.Count * settings.recruitmentMultiplier);
             }
         }
 

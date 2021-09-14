@@ -109,6 +109,12 @@
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
@@ -129,8 +135,10 @@
   <ItemGroup>
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\HotkeyHelper.cs" />
+    <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
+    <Compile Include="classes\MainUI\CrusadeEditor.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
@@ -151,6 +159,7 @@
     <Compile Include="classes\Models\Setings+Multiclass.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUp.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
@@ -200,8 +209,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
-            xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll"
-            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb"
+            xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb*"
             cd "$(TargetDir)"
             powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
 </PostBuildEvent>
