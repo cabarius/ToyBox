@@ -3,10 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Rider
-.idea/
-
 # User-specific files
+*.dll
+*.hash
 *.rsuser
 *.suo
 *.user
@@ -18,6 +17,12 @@
 
 # Mono auto generated files
 mono_crash.*
+
+# Rider
+.idea/
+
+# Publicised assemblies
+lib/
 
 # Build results
 [Dd]ebug/
