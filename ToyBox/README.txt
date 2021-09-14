@@ -13,6 +13,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
 
 Ver 1.3.3
     (ArcaneTrixter) Added an experimental "Large Player Armies" toggle to the Crusade tab, which will enable players to have up to 14 units in their army. This might have unintended side effects if reloading a game with large armies without this setting enabled.
+    (ArcaneTrixter) Enabled initial parameterized feat support.
 Ver 1.3.2
     Enemy armies no longer speed up with movement speed multiplier. Only your armies become speedsters ^_^
     Initial teleport to cursor for party and main character support.  Use comma ',' to teleport the party and '.' to teleport the main char
