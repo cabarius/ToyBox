@@ -119,6 +119,7 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Tweaks - Class specific", 1,
                 () => UI.Toggle("Witch/Shaman: cackling/shanting extends hexes by 10 minutes while out of combat", ref settings.toggleExtendHexes),
+                () => UI.Toggle("Misc: allow all activatable simultaneously (like judgements)", ref settings.toggleAllowAllActivatable),
                 () => { }
                 );
 

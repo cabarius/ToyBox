@@ -34,6 +34,8 @@ using Kingmaker.Tutorial;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Armies;
 using Kingmaker.UnitLogic.Mechanics.Actions;
+using Kingmaker.UnitLogic.Parts;
+using Kingmaker.UnitLogic.ActivatableAbilities;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -150,7 +152,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitEntityData), "CalculateSpeedModifier")]
         public static class UnitEntityData_CalculateSpeedModifier_Patch {
             private static void Postfix(UnitEntityData __instance, ref float __result) {
-                    if (settings.partyMovementSpeedMultiplier == 1.0f || __instance.IsPlayersEnemy)
+                if (settings.partyMovementSpeedMultiplier == 1.0f || __instance.IsPlayersEnemy)
                     return;
                 UnitPartTacticalCombat partTacticalCombat = __instance.Get<UnitPartTacticalCombat>();
                 if (partTacticalCombat?.Faction != ArmyFaction.Crusaders) return;
@@ -166,7 +168,7 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
                 Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()}");
                 if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return true;
-                    var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
+                var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
                 if (!moveAsOne) return true;
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
                 Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
@@ -185,7 +187,7 @@ namespace ToyBox.BagOfPatches {
                 }
                 unitMoveTo.SpeedLimit = speedLimit;
                 unitMoveTo.ApplySpeedLimitInCombat = settings.ApplySpeedLimitInCombat;
-                unitMoveTo.OverrideSpeed = speedLimit*1.5f;
+                unitMoveTo.OverrideSpeed = speedLimit * 1.5f;
                 unit.Commands.Run(unitMoveTo);
                 if (unit.Commands.Queue.FirstOrDefault((UnitCommand c) => c is UnitMoveTo) == unitMoveTo || Game.Instance.IsPaused) {
                     ClickGroundHandler.ShowDestination(unit, unitMoveTo.Target, false);
@@ -200,10 +202,10 @@ namespace ToyBox.BagOfPatches {
                 if (!settings.toggleNoFogOfWar) return true;
                 __result = true;
                 return false;
-            //    // We need this to avoid hanging the game on launch
-            //    if (Main.Enabled && Main.IsInGame && __result != null && settings != null) {
-            //        __result.enabled = !settings.toggleNoFogOfWar;
-            //    }
+                //    // We need this to avoid hanging the game on launch
+                //    if (Main.Enabled && Main.IsInGame && __result != null && settings != null) {
+                //        __result.enabled = !settings.toggleNoFogOfWar;
+                //    }
             }
         }
 
@@ -305,7 +307,7 @@ namespace ToyBox.BagOfPatches {
         static class Tutorial_IsBanned_Patch {
             static bool Prefix(ref Tutorial __instance, ref bool __result) {
                 if (settings.toggleForceTutorialsToHonorSettings) {
-//                    __result = !__instance.HasTrigger ? __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) : __instance.Banned;
+                    //                    __result = !__instance.HasTrigger ? __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) : __instance.Banned;
                     __result = __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) || __instance.Banned;
                     //modLogger.Log($"hasTrigger: {__instance.HasTrigger} tag: {__instance.Blueprint.Tag} isTagBanned:{__instance.Owner.IsTagBanned(__instance.Blueprint.Tag)} this.Banned: {__instance.Banned} ==> {__result}");
                     return false;
@@ -330,6 +332,60 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleExtendHexes && !Game.Instance.Player.IsInCombat
                     && (__instance.TargetBuff.name.StartsWith("WitchHex") || __instance.TargetBuff.name.StartsWith("ShamanHex"))) {
                     __instance.Target.Unit.Buffs.GetBuff(__instance.TargetBuff).IncreaseDuration(new TimeSpan(0, 10, 0));
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitPartActivatableAbility), nameof(UnitPartActivatableAbility.GetGroupSize))]
+        public static class UnitPartActivatableAbility_GetGroupSize_Patch {
+            public static ActivatableAbilityGroup[] groups = new ActivatableAbilityGroup[] {
+                ActivatableAbilityGroup.AeonGaze,
+                ActivatableAbilityGroup.ArcaneArmorProperty,
+                ActivatableAbilityGroup.ArcaneWeaponProperty,
+                ActivatableAbilityGroup.AzataMythicPerformance,
+                ActivatableAbilityGroup.BarbarianStance,
+                ActivatableAbilityGroup.BardicPerformance,
+                ActivatableAbilityGroup.ChangeShape,
+                ActivatableAbilityGroup.ChangeShapeKitsune,
+                ActivatableAbilityGroup.CombatManeuverStrike,
+                ActivatableAbilityGroup.CombatStyle,
+                ActivatableAbilityGroup.CriticalFeat,
+                ActivatableAbilityGroup.DebilitatingStrike,
+                ActivatableAbilityGroup.DemonMajorAspect,
+                ActivatableAbilityGroup.DivineWeaponProperty,
+                ActivatableAbilityGroup.DrovierAspect,
+                ActivatableAbilityGroup.DuelistCripplingCritical,
+                ActivatableAbilityGroup.ElementalOverflow,
+                ActivatableAbilityGroup.FeralTransformation,
+                ActivatableAbilityGroup.FormInfusion,
+                ActivatableAbilityGroup.GatherPower,
+                ActivatableAbilityGroup.HellknightEnchantment,
+                ActivatableAbilityGroup.HunterAnimalFocus,
+                ActivatableAbilityGroup.Judgment,
+                ActivatableAbilityGroup.MagicArrows,
+                ActivatableAbilityGroup.MagicalItems,
+                ActivatableAbilityGroup.MasterHealingTechnique,
+                ActivatableAbilityGroup.MetamagicRod,
+                ActivatableAbilityGroup.RagingTactician,
+                ActivatableAbilityGroup.RingOfCircumstances,
+                ActivatableAbilityGroup.SacredArmorProperty,
+                ActivatableAbilityGroup.SacredWeaponProperty,
+                ActivatableAbilityGroup.SerpentsFang,
+                ActivatableAbilityGroup.ShroudOfWaterMode,
+                ActivatableAbilityGroup.SpiritWeaponProperty,
+                ActivatableAbilityGroup.StyleStrike,
+                ActivatableAbilityGroup.SubstanceInfusion,
+                ActivatableAbilityGroup.TransmutationPhysicalEnhancement,
+                ActivatableAbilityGroup.TrueMagus,
+                ActivatableAbilityGroup.Wings,
+                ActivatableAbilityGroup.WitheringLife,
+                ActivatableAbilityGroup.WizardDivinationAura,
+            };
+            public static bool Prefix(ActivatableAbilityGroup group, ref int __result) {
+                if (settings.toggleAllowAllActivatable && groups.Any(group)) {
+                    __result = 99;
                     return false;
                 }
                 return true;

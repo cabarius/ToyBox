@@ -51,6 +51,7 @@ namespace ToyBox {
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
+        public bool toggleAllowAllActivatable = false;
         public bool toggleFlagsStayGreen = false;
 
 
