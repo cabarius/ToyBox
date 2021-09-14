@@ -20,7 +20,7 @@ namespace ModKit {
         public NamedAction(String name, Action<T> action, Func<T, bool> canPerform = null) {
             this.name = name;
             this.action = action;
-            this.canPerform = canPerform != null ? canPerform : (T) => { return true; };
+            this.canPerform = canPerform != null ? canPerform : T => { return true; };
         }
     }
 

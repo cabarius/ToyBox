@@ -31,38 +31,42 @@ namespace ModKit
         private TDefaultLanguage _local;
 
         public string Language {
-            get {
+            get
+            {
                 if (IsDefault)
                     return _localDefault.Language;
-                else
-                    return _local.Language;
+
+                return _local.Language;
             }
         }
 
         public Version Version {
-            get {
+            get
+            {
                 if (IsDefault)
                     return _localDefault.Version;
-                else
-                    return _local.Version;
+
+                return _local.Version;
             }
         }
 
         public string Contributors {
-            get {
+            get
+            {
                 if (IsDefault)
                     return _localDefault.Contributors;
-                else
-                    return _local.Contributors;
+
+                return _local.Contributors;
             }
         }
 
         public string HomePage {
-            get {
+            get
+            {
                 if (IsDefault)
                     return _localDefault.HomePage;
-                else
-                    return _local.HomePage;
+
+                return _local.HomePage;
             }
         }
 
@@ -71,13 +75,14 @@ namespace ModKit
         public string FileName { get; private set; }
 
         public string this[string key] {
-            get {
+            get
+            {
                 if (IsDefault ?
                     _localDefault.Strings.TryGetValue(key, out string text) :
                     _local.Strings.TryGetValue(key, out text))
                     return text;
-                else
-                    return "$Missing$" + key;
+
+                return "$Missing$" + key;
             }
         }
 

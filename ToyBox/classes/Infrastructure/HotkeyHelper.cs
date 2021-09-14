@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using Kingmaker;
-using Kingmaker.UI;
+﻿using Kingmaker;
 using Kingmaker.Settings;
+using Kingmaker.UI;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace ModKit.Utility
 {
@@ -23,20 +23,17 @@ namespace ModKit.Utility
             return result;
         }
 
-        public static string GetKeyText(KeyBindingData bindingKey)
-        {
+        public static string GetKeyText(KeyBindingData bindingKey) {
             if (bindingKey.Key == KeyCode.None)
             {
                 return "None";
             }
-            else
-            {
-                return string.Concat(
-                    bindingKey.IsCtrlDown ? "Ctrl+" : null,
-                    bindingKey.IsAltDown ? "Alt+" : null,
-                    bindingKey.IsShiftDown ? "Shift+" : null,
-                    bindingKey.Key.ToString());
-            }
+
+            return string.Concat(
+                bindingKey.IsCtrlDown ? "Ctrl+" : null,
+                bindingKey.IsAltDown ? "Alt+" : null,
+                bindingKey.IsShiftDown ? "Shift+" : null,
+                bindingKey.Key.ToString());
         }
 
         public static bool ReadKey(out KeyBindingData bindingKey)
@@ -57,8 +54,7 @@ namespace ModKit.Utility
 
             //if (keyCode != KeyCode.None)
             //{
-                bindingKey = new KeyBindingData()
-                {
+                bindingKey = new KeyBindingData {
                     Key = keyCode,
                     IsCtrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl),
                     IsAltDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt),

@@ -6,22 +6,23 @@ using Kingmaker.AreaLogic.SummonPool;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem.Rules;
+using Kingmaker.UI.ActionBar;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
 using System;
-using Kingmaker.UI.ActionBar;
 using TurnBased.Controllers;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using UnityModManagerNet;
+using Logger = ModKit.Logger;
 
 namespace ToyBox.BagOfPatches {
     static class Summons {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
 
-        static bool SummonedByPlayerFaction = false;
+        static bool SummonedByPlayerFaction;
 
         [HarmonyPatch(typeof(SummonPool), "Register")]
         static class SummonPool_Register_Patch {
@@ -55,13 +56,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleSummonUnit), MethodType.Constructor, new Type[] {
-            typeof(UnitEntityData),
-            typeof(BlueprintUnit),
-            typeof(Vector3),
-            typeof(Rounds),
-            typeof(int) }
-        )]
+        [HarmonyPatch(typeof(RuleSummonUnit), MethodType.Constructor, typeof(UnitEntityData), typeof(BlueprintUnit), typeof(Vector3), typeof(Rounds), typeof(int))]
         public static class RuleSummonUnit_Constructor_Patch {
             public static void Prefix(UnitEntityData initiator, BlueprintUnit blueprint, Vector3 position, ref Rounds duration, ref int level, RuleSummonUnit __instance) {
                 modLogger.Log($"old duration: {duration} level: {level} \n mult: {settings.summonDurationMultiplier1} levelInc: {settings.summonLevelModifier1}\n initiatior: {initiator} tweakTarget: {settings.summonTweakTarget1} shouldTweak: {UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget1)}");
@@ -94,7 +89,7 @@ namespace ToyBox.BagOfPatches {
         internal static class ActionBarManager_CheckTurnPanelView_Patch {
             private static void Postfix(ActionBarManager __instance) {
                 if (settings.toggleMakeSummmonsControllable && CombatController.IsInTurnBasedCombat()) {
-                    Traverse.Create((object)__instance).Method("ShowTurnPanel", Array.Empty<object>()).GetValue();
+                    Traverse.Create(__instance).Method("ShowTurnPanel", Array.Empty<object>()).GetValue();
                 }
             }
         }

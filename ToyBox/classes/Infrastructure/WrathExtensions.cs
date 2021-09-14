@@ -1,14 +1,14 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using System;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Enums;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
-using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
+using System;
 
 namespace ToyBox {
     public static class WrathExtensions {

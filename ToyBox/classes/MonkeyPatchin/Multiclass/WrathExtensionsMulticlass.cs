@@ -1,19 +1,20 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using UnityModManagerNet;
-using System;
-using System.Linq;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
+using ModKit;
 using ModKit.Utility;
+using System;
+using System.Linq;
+using UnityModManagerNet;
 
 namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
 
         public static void AddClassLevel_NotCharacterLevel(this UnitProgressionData instance, BlueprintCharacterClass characterClass) {
             //instance.SureClassData(characterClass).Level++;
@@ -23,7 +24,7 @@ namespace ToyBox.Multiclass {
             //instance.CharacterLevel++;
             instance.m_ClassesOrder.Add(characterClass);
             instance.Classes.Sort();
-            instance.Features.AddFeature(characterClass.Progression, null).SetSource(characterClass, 1);
+            instance.Features.AddFeature(characterClass.Progression).SetSource(characterClass, 1);
             instance.Owner.OnGainClassLevel(characterClass);
             //int[] bonuses = BlueprintRoot.Instance.Progression.XPTable.Bonuses;
             //int val = bonuses[Math.Min(bonuses.Length - 1, instance.CharacterLevel)];

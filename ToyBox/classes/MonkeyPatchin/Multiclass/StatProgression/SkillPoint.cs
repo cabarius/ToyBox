@@ -31,8 +31,6 @@ namespace ToyBox.Multiclass {
                             case ProgressionPolicy.Sum:
                                 total += gestaltClasses.Sum(cl => cl.CalcTotalSkillPointsNonMythic());
                                 break;
-                            default:
-                                break;
                         }
                     }
                 }
@@ -49,7 +47,8 @@ namespace ToyBox.Multiclass {
                     __result = totalSkillPoints.Value;
                     return false;
                 }
-                else return true;
+
+                return true;
             }
         }
     }

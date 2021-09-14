@@ -4,13 +4,15 @@ using HarmonyLib;
 using Kingmaker;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
+using ModKit;
 using System;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using UnityModManagerNet;
+using Random = UnityEngine.Random;
 
 namespace ToyBox.BagOfPatches {
     static class DiceRolls {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
@@ -67,18 +69,18 @@ namespace ToyBox.BagOfPatches {
                 }
                 else {
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
-                        result = Math.Max(result, UnityEngine.Random.Range(1, 21));
+                        result = Math.Max(result, Random.Range(1, 21));
                     }
                     else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
-                        result = Math.Min(result, UnityEngine.Random.Range(1, 21));
+                        result = Math.Min(result, Random.Range(1, 21));
                     }
                     int min = 1;
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
-                        result = UnityEngine.Random.Range(2, 21);
+                        result = Random.Range(2, 21);
                         min = 2;
                     }
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll20) && result == 20) {
-                        result = UnityEngine.Random.Range(min, 20);
+                        result = Random.Range(min, 20);
                     }
                 }
                 //Main.Debug("Modified D20Roll: " + result);

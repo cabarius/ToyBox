@@ -105,7 +105,8 @@ namespace ModKit.Utility
 
                 if (Info == null || Info.PropertyType != typeof(TProperty))
                     throw new InvalidOperationException();
-                else if (Info.DeclaringType != type)
+
+                if (Info.DeclaringType != type)
                     Info = Info.DeclaringType.GetProperties(ALL_FLAGS).FirstOrDefault(item => item.Name == name);
             }
 
@@ -131,10 +132,8 @@ namespace ModKit.Utility
                     il.Emit(OpCodes.Ret);
                     return method.CreateDelegate(delType);
                 }
-                else
-                {
-                    return Delegate.CreateDelegate(delType, getter);
-                }
+
+                return Delegate.CreateDelegate(delType, getter);
             }
 
             protected Delegate CreateSetter(Type delType, MethodInfo setter, bool isInstByRef)
@@ -155,10 +154,8 @@ namespace ModKit.Utility
                     il.Emit(OpCodes.Ret);
                     return method.CreateDelegate(delType);
                 }
-                else
-                {
-                    return Delegate.CreateDelegate(delType, setter);
-                }
+
+                return Delegate.CreateDelegate(delType, setter);
             }
         }
 
@@ -167,7 +164,7 @@ namespace ModKit.Utility
             private delegate TProperty Getter(ref T instance);
             private delegate void Setter(ref T instance, TProperty value);
 
-            private T _dummy = default;
+            private T _dummy;
             private Getter _getter;
             private Setter _setter;
 

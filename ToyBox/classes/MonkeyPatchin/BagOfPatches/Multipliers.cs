@@ -3,9 +3,12 @@
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
+using Kingmaker.Armies;
 using Kingmaker.Assets.Controllers.GlobalMap;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Globalmap.State;
+using Kingmaker.Globalmap.View;
 using Kingmaker.Items;
 using Kingmaker.RandomEncounters;
 using Kingmaker.UnitLogic;
@@ -16,18 +19,17 @@ using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.View;
 using Kingmaker.View.Spawners;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.Globalmap.State;
-using Kingmaker.Globalmap.View;
-using ModKit;
+using UnityModManagerNet;
+using Logger = ModKit.Logger;
 
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EncumbranceHelper), "GetHeavy")]
@@ -88,7 +90,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", new Type[] { typeof(Vector3) })]
+        [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", typeof(Vector3))]
         public static class MovementSpeed_GetRegionalModifier_Patch2 {
             public static void Postfix(ref float __result) {
                 float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
@@ -102,9 +104,7 @@ namespace ToyBox.BagOfPatches {
             IGlobalMapTraveler traveler,
             float visualStepDistance)
         */
-        [HarmonyPatch(typeof(GlobalMapMovementUtility), "MoveAlongEdge", new Type[] {
-            typeof(GlobalMapState), typeof(GlobalMapView), typeof(IGlobalMapTraveler), typeof(float)
-            })]
+        [HarmonyPatch(typeof(GlobalMapMovementUtility), "MoveAlongEdge", typeof(GlobalMapState), typeof(GlobalMapView), typeof(IGlobalMapTraveler), typeof(float))]
         public static class GlobalMapMovementUtility_MoveAlongEdge_Patch {
             public static void Prefix(
                 GlobalMapState state,
@@ -112,17 +112,17 @@ namespace ToyBox.BagOfPatches {
                 IGlobalMapTraveler traveler,
                 ref float visualStepDistance) {
                 // TODO - can we get rid of the other map movement multipliers and do them all here?
-                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
+                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == ArmyFaction.Crusaders) {
                     float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                     visualStepDistance = speedMultiplier * visualStepDistance;
                 }
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapArmyState), "SpendMovementPoints", new Type[] { typeof(float) })]
+        [HarmonyPatch(typeof(GlobalMapArmyState), "SpendMovementPoints", typeof(float))]
         public static class GlobalMapArmyState_SpendMovementPoints_Patch {
             public static void Prefix(GlobalMapArmyState __instance, ref float points) {
-                if (__instance.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
+                if (__instance.Data.Faction == ArmyFaction.Crusaders) {
                     float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                     points = points / speedMultiplier;
                 }
@@ -161,12 +161,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-        [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
-            typeof(BlueprintBuff),
-            typeof(UnitEntityData),
-            typeof(TimeSpan?),
-            typeof(AbilityParams)
-            })]
+        [HarmonyPatch(typeof(BuffCollection), "AddBuff", typeof(BlueprintBuff), typeof(UnitEntityData), typeof(TimeSpan?), typeof(AbilityParams))]
         public static class BuffCollection_AddBuff_patch {
             public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
                 try {
@@ -184,11 +179,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
-            typeof(BlueprintBuff),
-            typeof(MechanicsContext),
-            typeof(TimeSpan?)
-            })]
+        [HarmonyPatch(typeof(BuffCollection), "AddBuff", typeof(BlueprintBuff), typeof(MechanicsContext), typeof(TimeSpan?))]
         public static class BuffCollection_AddBuff2_patch {
             public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref TimeSpan? duration) {
                 try {
@@ -228,26 +219,26 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(ItemEntity) })]
+        [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", typeof(ItemEntity))]
         static class VendorLogic_GetItemSellPrice_Patch {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorSellPriceMultiplier);
             }
         }
-        [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(BlueprintItem) })]
+        [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", typeof(BlueprintItem))]
         static class VendorLogic_GetItemSellPrice_Patch2 {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorSellPriceMultiplier);
             }
         }
 
-        [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", new Type[] { typeof(ItemEntity) })]
+        [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", typeof(ItemEntity))]
         static class VendorLogic_GetItemBuyPrice_Patch {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorBuyPriceMultiplier);
             }
         }
-        [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", new Type[] { typeof(BlueprintItem) })]
+        [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", typeof(BlueprintItem))]
         static class VendorLogic_GetItemBuyPrice_Patc2h {
             private static void Postfix(ref long __result) {
                 __result = (long)(__result * settings.vendorBuyPriceMultiplier);

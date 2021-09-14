@@ -1,9 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints.Classes;
 using ModKit;
+using System.Linq;
 
 namespace ToyBox {
     public class MulticlassPicker {
@@ -36,7 +36,7 @@ namespace ToyBox {
                 UI.ActionToggle(
                     cl.Name,
                     () => options.Contains(cl),
-                    (v) => {
+                    v => {
                         if (v) options.Add(cl);
                         else options.Remove(cl);
                         Main.Debug($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
@@ -59,7 +59,7 @@ namespace ToyBox {
                                 UI.ActionToggle(
                                 archetype.Name,
                                 () => archetypeOptions.Contains(archetype),
-                                (v) => {
+                                v => {
                                     if (v) archetypeOptions.AddExclusive(archetype);
                                     else archetypeOptions.Remove(archetype);
                                     Main.Log($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");

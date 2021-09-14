@@ -43,7 +43,7 @@ namespace ModKit.Utility
 
         private static TypeBuilder RequestTypeBuilder()
         {
-            AssemblyName asmName = new AssemblyName(nameof(ReflectionCache) + "." + Guid.NewGuid().ToString());
+            AssemblyName asmName = new AssemblyName(nameof(ReflectionCache) + "." + Guid.NewGuid());
             AssemblyBuilder asmBuilder = AssemblyBuilder.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndCollect);
             ModuleBuilder moduleBuilder = asmBuilder.DefineDynamicModule("<Module>");
             return moduleBuilder.DefineType("<Type>");

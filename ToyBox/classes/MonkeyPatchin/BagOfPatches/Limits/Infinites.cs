@@ -1,4 +1,5 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Items.Equipment;
@@ -13,13 +14,13 @@ using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-using System;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using ModKit;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class Infinites {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(AbilityResourceLogic), "Spend")]
@@ -62,7 +63,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ItemEntity), "SpendCharges", new Type[] { typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(ItemEntity), "SpendCharges", typeof(UnitDescriptor))]
         public static class ItemEntity_SpendCharges_Patch {
             public static bool Prefix(ref bool __state) {
                 __state = settings.toggleInfiniteItems;

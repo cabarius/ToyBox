@@ -88,7 +88,7 @@ namespace ToyBox.classes.MainUI {
                     }, UI.AutoWidth());
                 },
                 () => { },
-                () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent, 0),
+                () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent),
                 () => {
                     UI.Slider("Build Time Modifer", ref Settings.kingdomBuildingTimeModifier, -2, 2, 0, 2, "", UI.AutoWidth());
                     var instance = KingdomState.Instance;

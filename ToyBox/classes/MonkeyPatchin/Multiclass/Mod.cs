@@ -1,23 +1,23 @@
-﻿using System;
+﻿using Kingmaker;
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Prerequisites;
+using Kingmaker.Blueprints.Items.Components;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Kingdom.Settlements;
+using Kingmaker.Kingdom.Settlements.BuildingComponents;
+using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
+using Kingmaker.UnitLogic.Class.LevelUp;
+using Kingmaker.Utility;
+using ModKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Kingmaker;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Items.Components;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Class.LevelUp;
-using Kingmaker.Utility;
 using UnityEngine.SceneManagement;
+using UnityModManagerNet;
 using static ModKit.Utility.ReflectionCache;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using ModKit;
-using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
-using Kingmaker.Kingdom.Settlements;
-using Kingmaker.Blueprints.Classes.Prerequisites;
-using Kingmaker.Kingdom.Settlements.BuildingComponents;
 
 namespace ToyBox.Multiclass {
     public enum ProgressionPolicy {
@@ -25,7 +25,7 @@ namespace ToyBox.Multiclass {
         Average = 1,
         Largest = 2,
         Sum = 3,
-    };
+    }
     public class Mod {
         //public HashSet<Type> AbilityCasterCheckerTypes { get; } =
         //    new HashSet<Type>(Assembly.GetAssembly(typeof(IAbilityCasterChecker)).GetTypes()
@@ -76,7 +76,7 @@ namespace ToyBox.Multiclass {
     public static class MulticlassUtils {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
 
         public static bool IsCharGen(this LevelUpState state) {
             return state.Mode == LevelUpState.CharBuildMode.CharGen || state.Unit.CharacterName == "Player Character";

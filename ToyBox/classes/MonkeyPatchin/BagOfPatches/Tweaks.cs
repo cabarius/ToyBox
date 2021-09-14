@@ -1,19 +1,24 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
+using Kingmaker.Armies;
+using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
 using Kingmaker.PubSubSystem;
+using Kingmaker.Tutorial;
 using Kingmaker.UI.FullScreenUITypes;
 using Kingmaker.UI.Group;
 using Kingmaker.UI.Kingdom;
@@ -22,28 +27,25 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Commands;
-using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
+using ModKit;
+using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.Tutorial;
-using Kingmaker.Armies.TacticalCombat.Parts;
-using Kingmaker.Armies;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         //     private static bool CanCopySpell([NotNull] BlueprintAbility spell, [NotNull] Spellbook spellbook) => spellbook.Blueprint.CanCopyScrolls && !spellbook.IsKnown(spell) && spellbook.Blueprint.SpellList.Contains(spell);
 
         [HarmonyPatch(typeof(CopyScroll), "CanCopySpell")]
-        [HarmonyPatch(new Type[] { typeof(BlueprintAbility), typeof(Spellbook) })]
+        [HarmonyPatch(new[] { typeof(BlueprintAbility), typeof(Spellbook) })]
         public static class CopyScroll_CanCopySpell_Patch {
             static bool Prefix() {
                 return false;
@@ -173,12 +175,12 @@ namespace ToyBox.BagOfPatches {
 
                 UnitMoveTo unitMoveTo = new(settings.Destination, 0.3f) {
                     MovementDelay = settings.Delay,
-                    Orientation = new float?(settings.Orientation),
+                    Orientation = settings.Orientation,
                     CreatedByPlayer = true
                 };
                 if (BuildModeUtility.IsDevelopment) {
                     if (CheatsAnimation.SpeedForce > 0f) {
-                        unitMoveTo.OverrideSpeed = new float?(CheatsAnimation.SpeedForce);
+                        unitMoveTo.OverrideSpeed = CheatsAnimation.SpeedForce;
                     }
                     unitMoveTo.MovementType = (UnitAnimationActionLocoMotion.WalkSpeedType)CheatsAnimation.MoveType.Get();
                 }
@@ -186,7 +188,7 @@ namespace ToyBox.BagOfPatches {
                 unitMoveTo.ApplySpeedLimitInCombat = settings.ApplySpeedLimitInCombat;
                 unitMoveTo.OverrideSpeed = speedLimit*1.5f;
                 unit.Commands.Run(unitMoveTo);
-                if (unit.Commands.Queue.FirstOrDefault((UnitCommand c) => c is UnitMoveTo) == unitMoveTo || Game.Instance.IsPaused) {
+                if (unit.Commands.Queue.FirstOrDefault(c => c is UnitMoveTo) == unitMoveTo || Game.Instance.IsPaused) {
                     ClickGroundHandler.ShowDestination(unit, unitMoveTo.Target, false);
                 }
                 return false;
@@ -294,7 +296,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
                     var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
-                    mainMenuVM.EnterGame(new Action(mainMenuVM.LoadLastSave));
+                    mainMenuVM.EnterGame(mainMenuVM.LoadLastSave);
                 }
                 Main.freshlyLaunched = false;
             }
@@ -314,7 +316,7 @@ namespace ToyBox.BagOfPatches {
         }
 
 
-        [HarmonyPatch(typeof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked), "CheckCondition")]
+        [HarmonyPatch(typeof(RomanceLocked), "CheckCondition")]
         public static class RomanceLocked_CheckCondition_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleMultipleRomance) {

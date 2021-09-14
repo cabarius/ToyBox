@@ -1,11 +1,11 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using HarmonyLib;
 
 namespace ModKit {
     public static class Utilties {
@@ -48,9 +48,8 @@ namespace ModKit {
                     info.SetValue(obj, value);
                     return value;
                 }
-                else {
-                    obj = info.GetValue(obj, null);
-                }
+
+                obj = info.GetValue(obj, null);
             }
             return null;
         }
@@ -87,7 +86,7 @@ namespace ModKit {
             foreach (string property in Traverse.Create(o).Properties()) {
                 properties = properties + property + ", ";
             }
-            return new string[] { fields, methods, properties };
+            return new[] { fields, methods, properties };
         }
     }
     public static class MK {

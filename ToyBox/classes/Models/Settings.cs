@@ -1,6 +1,8 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
+
 using ModKit.Utility;
 using System.Collections.Generic;
+using ToyBox.Multiclass;
 using UnityModManagerNet;
 
 namespace ToyBox {
@@ -163,10 +165,10 @@ namespace ToyBox {
         // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
         public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new();
 
-        public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
-        public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
-        public Multiclass.ProgressionPolicy multiclassBABPolicy = 0;
-        public Multiclass.ProgressionPolicy multiclassSkillPointPolicy = 0;
+        public ProgressionPolicy multiclassHitPointPolicy = 0;
+        public ProgressionPolicy multiclassSavingThrowPolicy = 0;
+        public ProgressionPolicy multiclassBABPolicy = 0;
+        public ProgressionPolicy multiclassSkillPointPolicy = 0;
 
 
         public bool toggleTakeHighestHitDie = true;

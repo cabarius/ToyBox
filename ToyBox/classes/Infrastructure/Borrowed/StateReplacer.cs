@@ -1,7 +1,6 @@
 ﻿using Kingmaker.Blueprints.Classes;
 using Kingmaker.UnitLogic.Class.LevelUp;
 
-
 namespace ToyBox {
     // https://github.com/paxchristos/pk_multiple_classes_per_level_fork
     public class StateReplacer {

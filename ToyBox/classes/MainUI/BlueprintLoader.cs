@@ -1,23 +1,24 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
-using UnityEngine;
+
+using Kingmaker.Blueprints;
+using Kingmaker.BundlesLoading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.Blueprints;
-using Kingmaker.BundlesLoading;
+using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
         LoadBlueprintsCallback callback;
         List<SimpleBlueprint> blueprints;
-        public float progress = 0;
+        public float progress;
         private static BlueprintLoader _shared;
         public static BlueprintLoader Shared {
             get {
                 if (_shared == null) {
                     _shared = new GameObject().AddComponent<BlueprintLoader>();
-                    UnityEngine.Object.DontDestroyOnLoad(_shared.gameObject);
+                    DontDestroyOnLoad(_shared.gameObject);
                 }
                 return _shared;
             }
@@ -28,7 +29,7 @@ namespace ToyBox {
                 progress = 0.0f;
                 return;
             }
-            progress = (float)loaded / (float)total;
+            progress = loaded / (float)total;
         }
         private IEnumerator LoadBlueprints() {
             int loaded = 0;
@@ -39,13 +40,13 @@ namespace ToyBox {
                 yield return null;
                 bpCache = ResourcesLibrary.BlueprintsCache;
             }
-            blueprints = new List<SimpleBlueprint> { };
+            blueprints = new List<SimpleBlueprint>();
             var toc = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints;
             while (toc == null) {
                 yield return null;
                 toc = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints;
             }
-            var allGUIDs = new List<BlueprintGuid> { };
+            var allGUIDs = new List<BlueprintGuid>();
             foreach (var key in toc.Keys) {
                 allGUIDs.Add(key);
             }
@@ -96,7 +97,7 @@ namespace ToyBox {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
 
         static AssetBundleRequest LoadRequest;
-        public static float progress = 0;
+        public static float progress;
         public static void Load(LoadBlueprintsCallback callback) {
 #if false
             var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
@@ -107,7 +108,7 @@ namespace ToyBox {
             BundlesLoadService.Instance.LoadDependencies(AssetBundleNames.BlueprintAssets);
             LoadRequest = bundle.LoadAllAssetsAsync<object>();
             Main.Log($"created request {LoadRequest}");
-            LoadRequest.completed += (asyncOperation) => {
+            LoadRequest.completed += asyncOperation => {
                 Main.Log($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
                 callback(LoadRequest.allAssets.Cast<SimpleBlueprint>());
                 LoadRequest = null;

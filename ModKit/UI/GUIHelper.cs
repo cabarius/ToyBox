@@ -218,14 +218,12 @@ namespace ModKit.Utility
                 float num = (float)Math.Pow(10d, -digits);
                 return (float)Math.Round(GUILayout.HorizontalSlider(value, leftValue, rightValue, options) / num, 0) * num;
             }
-            else
-            {
-                return (float)Math.Round(GUILayout.HorizontalSlider(value, leftValue, rightValue, options), digits);
-            }
+
+            return (float)Math.Round(GUILayout.HorizontalSlider(value, leftValue, rightValue, options), digits);
         }
 
-        private static Texture2D fillTexture = null;
-        private static GUIStyle fillStyle = null;
+        private static Texture2D fillTexture;
+        private static GUIStyle fillStyle;
         private static Color fillColor = new(1f, 1f, 1f, 0.65f);
         private static Color fillColor2 = new(1f, 1f, 1f, 0.35f);
 

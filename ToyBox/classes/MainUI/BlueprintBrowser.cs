@@ -1,9 +1,7 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+
+using Kingmaker.AreaLogic.Cutscenes;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
@@ -20,27 +18,30 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
 using ModKit.Utility;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintBrowser {
         public static Settings settings { get { return Main.settings; } }
 
-        public static IEnumerable<SimpleBlueprint> filteredBPs = null;
-        public static IEnumerable<IGrouping<String, SimpleBlueprint>> collatedBPs = null;
-        public static IEnumerable<SimpleBlueprint> selectedCollatedBPs = null;
-        public static List<String> collationKeys = null;
-        public static int selectedCollationIndex = 0;
+        public static IEnumerable<SimpleBlueprint> filteredBPs;
+        public static IEnumerable<IGrouping<String, SimpleBlueprint>> collatedBPs;
+        public static IEnumerable<SimpleBlueprint> selectedCollatedBPs;
+        public static List<String> collationKeys;
+        public static int selectedCollationIndex;
         static bool firstSearch = true;
-        public static String[] filteredBPNames = null;
-        public static int uncolatedMatchCount = 0;
-        public static int matchCount = 0;
+        public static String[] filteredBPNames;
+        public static int uncolatedMatchCount;
+        public static int matchCount;
         public static String parameter = "";
 
-        static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
+        static readonly NamedTypeFilter[] blueprintTypeFilters = {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationName()),
@@ -58,12 +59,12 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CharacterClass.Name.ToString()),
             new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintItem>("Item", null,  (bp) => {
+            new NamedTypeFilter<BlueprintItem>("Item", null,  bp => {
                 if (bp.m_NonIdentifiedNameText?.ToString().Length > 0) return bp.m_NonIdentifiedNameText;
                 return bp.ItemType.ToString();
             }),
-            new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) => bp.ItemType.ToString()),
-            new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
+            new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, bp => bp.ItemType.ToString()),
+            new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, bp => {
                 var type = bp.Type;
                 var category = type?.Category;
                 if (category != null) return category.ToString();
@@ -92,9 +93,9 @@ namespace ToyBox {
 
         };
 
-        public static NamedTypeFilter selectedTypeFilter = null;
+        public static NamedTypeFilter selectedTypeFilter;
 
-        public static IEnumerable<SimpleBlueprint> blueprints = null;
+        public static IEnumerable<SimpleBlueprint> blueprints;
         public static IEnumerable<SimpleBlueprint> GetBlueprints() {
             if (blueprints == null) {
 #if false
@@ -110,15 +111,14 @@ namespace ToyBox {
                 }
 #else
                 if (BlueprintLoader.Shared.IsLoading) { return null; }
-                else {
-                    Main.Log($"calling BlueprintLoader.Load");
-                    BlueprintLoader.Shared.Load((bps) => {
-                        blueprints = bps;
-                        UpdateSearchResults();
-                        Main.Log($"success got {bps.Count()} bluerints");
-                    });
-                    return null;
-                }
+
+                Main.Log("calling BlueprintLoader.Load");
+                BlueprintLoader.Shared.Load(bps => {
+                                                blueprints = bps;
+                                                UpdateSearchResults();
+                                                Main.Log($"success got {bps.Count()} bluerints");
+                                            });
+                return null;
 #endif
             }
             return blueprints;
@@ -149,7 +149,7 @@ namespace ToyBox {
             var selectedType = selectedTypeFilter.type;
             IEnumerable<SimpleBlueprint> bps = null;
             if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
-            else bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
+            else bps = BlueprintExensions.BlueprintsOfType(selectedType).Where(bp => selectedTypeFilter.filter(bp));
             var filtered = new List<SimpleBlueprint>();
             foreach (SimpleBlueprint blueprint in bps) {
                 if (blueprint.AssetGuid.ToString().Contains(searchText)
@@ -174,7 +174,7 @@ namespace ToyBox {
                 collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key);
                 // I could do something like this but I will leave it up to the UI when a collation is selected.
                 // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
-                collationKeys = new List<String>() { "All" };
+                collationKeys = new List<String> { "All" };
                 collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
             }
             filteredBPs = filteredBPs.Take(settings.searchLimit).ToArray();
@@ -182,7 +182,7 @@ namespace ToyBox {
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
-            if (blueprints == null) BlueprintBrowser.GetBlueprints();
+            if (blueprints == null) GetBlueprints();
             // Stackable browser
             using (UI.HorizontalScope(UI.Width(350))) {
                 float remainingWidth = UI.ummWidth;
@@ -191,7 +191,7 @@ namespace ToyBox {
                     UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
                         blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                         1,
-                        (selected) => { UpdateSearchResults(); },
+                        selected => { UpdateSearchResults(); },
                         UI.buttonStyle,
                         UI.Width(200));
                 }
@@ -201,7 +201,7 @@ namespace ToyBox {
                     using (UI.VerticalScope(GUI.skin.box)) {
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(),
                             1,
-                            (selected) => { collationChanged = true; BlueprintListUI.needsLayout = true; },
+                            selected => { collationChanged = true; BlueprintListUI.needsLayout = true; },
                             UI.buttonStyle,
                             UI.Width(200));
                     }
@@ -215,14 +215,14 @@ namespace ToyBox {
                         UI.ActionTextField(
                             ref settings.searchText,
                             "searhText",
-                            (text) => { },
+                            text => { },
                             () => { UpdateSearchResults(); },
                             UI.MinWidth(100), UI.MaxWidth(400));
                         UI.Label("Limit", UI.Width(150));
                         UI.ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
-                            (limit) => { },
+                            limit => { },
                             () => { UpdateSearchResults(); },
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
@@ -250,7 +250,7 @@ namespace ToyBox {
                             UI.Label(title, UI.ExpandWidth(false));
                         }
                         UI.Space(50);
-                        UI.Label($"".green(), UI.AutoWidth());
+                        UI.Label("".green(), UI.AutoWidth());
                     }
                     UI.Space(10);
 

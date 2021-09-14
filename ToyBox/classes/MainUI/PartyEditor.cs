@@ -1,8 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using Kingmaker;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -10,10 +7,14 @@ using Kingmaker.Blueprints.Root;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.Enums;
 using Kingmaker.UnitLogic;
-using ToyBox.Multiclass;
-using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToyBox.Multiclass;
+using UnityEngine;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -26,26 +27,26 @@ namespace ToyBox {
             Abilities,
             Spells,
             None,
-        };
+        }
         static ToggleChoice selectedToggle = ToggleChoice.None;
-        static int selectedCharacterIndex = 0;
-        static UnitEntityData charToAdd = null;
-        static UnitEntityData charToRemove = null;
-        static bool editMultiClass = false;
-        static UnitEntityData multiclassEditCharacter = null;
-        static int respecableCount = 0;
-        static int selectedSpellbook = 0;
-        static int selectedSpellbookLevel = 0;
-        static bool editSpellbooks = false;
-        static UnitEntityData spellbookEditCharacter = null;
+        static int selectedCharacterIndex;
+        static UnitEntityData charToAdd;
+        static UnitEntityData charToRemove;
+        static bool editMultiClass;
+        static UnitEntityData multiclassEditCharacter;
+        static int respecableCount;
+        static int selectedSpellbook;
+        static int selectedSpellbookLevel;
+        static bool editSpellbooks;
+        static UnitEntityData spellbookEditCharacter;
         static float nearbyRange = 25;
-        static Alignment[] alignments = new Alignment[] {
+        static Alignment[] alignments = {
                     Alignment.LawfulGood,       Alignment.NeutralGood,      Alignment.ChaoticGood,
                     Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
                     Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
         };
         static Dictionary<String, int> statEditorStorage = new();
-        private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
+        private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices;
         private static Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             if (partyFilterPlayer != Game.Instance.Player) partyFilterChoices = null;
@@ -61,10 +62,10 @@ namespace ToyBox {
                     new("Nearby", () => {
                                       var player = GameHelper.GetPlayerCharacter();
                                       if (player == null) return new List<UnitEntityData> ();
-                                      return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearbyRange , false, false).ToList();
+                                      return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearbyRange , false).ToList();
                                   }),
-                    new("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new("Friendly", () => Game.Instance.State.Units.Where(u => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new("Enemies", () => Game.Instance.State.Units.Where(u => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
                     new("All Units", () => Game.Instance.State.Units.ToList()),
                };
             }
@@ -105,7 +106,7 @@ namespace ToyBox {
             }
             if (player.Party.Contains(ch)) {
                 respecableCount++;
-                UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
+                UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); ch.Respec(); }, UI.Width(150));
             }
             else {
                 UI.Space(170);
@@ -118,7 +119,7 @@ namespace ToyBox {
 
             charToAdd = null;
             charToRemove = null;
-            var characterListFunc = UI.TypePicker<List<UnitEntityData>>(
+            var characterListFunc = UI.TypePicker(
                 null,
                 ref Main.settings.selectedPartyFilter,
                 filterChoices
@@ -127,7 +128,7 @@ namespace ToyBox {
             var mainChar = GameHelper.GetPlayerCharacter();
             if (characterListFunc.name == "Nearby") {
                 UI.Slider("Nearby Distance", ref nearbyRange, 1f, 200, 25, 0, " meters", UI.Width(250));
-                characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
+                characterList = characterList.OrderBy(ch => ch.DistanceTo(mainChar)).ToList();
             }
             UI.Space(20);
             int chIndex = 0;
@@ -136,7 +137,7 @@ namespace ToyBox {
             bool isWide = UI.IsWide;
             if (Main.IsInGame) {
                 using (UI.HorizontalScope()) {
-                    UI.Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
+                    UI.Label("Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
                     UI.Space(25);
 #if false   // disabled until we fix performance
                     var encounterCR = CheatsCombat.GetEncounterCr();
@@ -154,7 +155,7 @@ namespace ToyBox {
                 int level = progression.CharacterLevel;
                 int mythicLevel = progression.MythicExperience;
                 var spellbooks = ch.Spellbooks;
-                var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
+                var spellCount = spellbooks.Sum(sb => sb.GetAllKnownSpells().Count());
                 using (UI.HorizontalScope()) {
                     if (isWide)
                         UI.Label(ch.CharacterName.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600));
@@ -169,7 +170,7 @@ namespace ToyBox {
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
                             UI.ActionButton("+1", () => {
-                                progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
+                                progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1));
                             }, UI.Width(70));
                         }
                         else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
@@ -179,11 +180,11 @@ namespace ToyBox {
                     }
                     else { UI.Space(74); }
                     UI.Space(5);
-                    UI.Label($"my".green() + $": {mythicLevel}", UI.Width(80));
+                    UI.Label("my".green() + $": {mythicLevel}", UI.Width(80));
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.MythicExperience < 10) {
                             UI.ActionButton("+1", () => {
-                                progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
+                                progression.AdvanceMythicExperience(progression.MythicExperience + 1);
                             }, UI.Width(70));
                         }
                         else { UI.Label("max".cyan(), UI.Width(70)); }
@@ -248,7 +249,7 @@ namespace ToyBox {
                     UI.Div(100, 20);
                     using (UI.HorizontalScope()) {
                         UI.Space(100);
-                        UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
+                        UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass);
                         if (settings.toggleMulticlass) {
                             UI.Space(40);
                             if (UI.DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
@@ -320,11 +321,11 @@ namespace ToyBox {
                                 var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                                 UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
                                 UI.Space(23);
-                                if (classCount - gestaltCount > 1 || ch.IsClassGestalt(cd.CharacterClass) == true) {
+                                if (classCount - gestaltCount > 1 || ch.IsClassGestalt(cd.CharacterClass)) {
                                     UI.ActionToggle(
                                         "gestalt".grey(),
                                         () => ch.IsClassGestalt(cd.CharacterClass),
-                                        (v) => {
+                                        v => {
                                             ch.SetClassIsGestalt(cd.CharacterClass, v);
                                             ch.Progression.UpdateLevelsForGestalt();
                                         },
@@ -366,7 +367,7 @@ namespace ToyBox {
                         UI.Space(528);
                         UI.EnumGrid(
                             () => ch.Descriptor.State.Size,
-                            (s) => ch.Descriptor.State.Size = s,
+                            s => ch.Descriptor.State.Size = s,
                             3, UI.Width(600));
                     }
                     using (UI.HorizontalScope()) {
@@ -375,7 +376,7 @@ namespace ToyBox {
                     }
                     UI.Div(100, 20, 755);
                     foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
-                        StatType statType = (StatType)obj;
+                        StatType statType = obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
                         if (modifiableValue != null) {
                             String key = $"{ch.CharacterName}-{statType.ToString()}";
@@ -399,7 +400,7 @@ namespace ToyBox {
                                     storedValue = modifiableValue.BaseValue;
                                 }, UI.AutoWidth());
                                 UI.Space(25);
-                                UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
+                                UI.ActionIntTextField(ref storedValue, statType.ToString(), v => {
                                     modifiableValue.BaseValue = v;
                                 }, null, UI.Width(75));
                                 statEditorStorage[key] = storedValue;
@@ -418,7 +419,7 @@ namespace ToyBox {
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     UI.Space(20);
-                    var names = spellbooks.Select((sb) => sb.Blueprint.GetDisplayName()).ToArray();
+                    var names = spellbooks.Select(sb => sb.Blueprint.GetDisplayName()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
                         using (UI.HorizontalScope()) {
@@ -429,19 +430,19 @@ namespace ToyBox {
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         if (editSpellbooks) {
                             spellbookEditCharacter = ch;
-                            var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
+                            var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy(bp => bp.GetDisplayName());
                             BlueprintListUI.OnGUI(ch, blueprints, 100);
                         }
                         else {
                             var maxLevel = spellbook.Blueprint.MaxSpellLevel;
                             var casterLevel = spellbook.CasterLevel;
                             using (UI.HorizontalScope()) {
-                                UI.EnumerablePicker<int>(
+                                UI.EnumerablePicker(
                                     "Spells known",
                                     ref selectedSpellbookLevel,
                                     Enumerable.Range(0, spellbook.Blueprint.MaxSpellLevel + 1),
                                     0,
-                                    (lvl) => {
+                                    lvl => {
                                         var levelText = spellbook.Blueprint.SpellsPerDay.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
                                         var knownCount = spellbook.GetKnownSpells(lvl).Count();
                                         var countText = knownCount > 0 ? $" ({knownCount})".white() : "";

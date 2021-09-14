@@ -12,22 +12,19 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
+using ModKit;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using UnityModManagerNet;
 
 namespace ToyBox.Multiclass {
     static class General {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
 
         public static LevelUpController levelUpController { get; internal set; }
-        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] {
-            typeof(UnitEntityData),
-            typeof(bool),
-            typeof(LevelUpState.CharBuildMode) })]
+        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, typeof(UnitEntityData), typeof(bool), typeof(LevelUpState.CharBuildMode))]
         static class LevelUpController_ctor_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static bool Prefix(LevelUpController __instance) {
@@ -44,7 +41,7 @@ namespace ToyBox.Multiclass {
                                     [NotNull] BlueprintProgression progression)
         */
         [HarmonyPatch(typeof(LevelUpHelper), "UpdateProgression")]
-        [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor), typeof(BlueprintProgression) })]
+        [HarmonyPatch(new[] { typeof(LevelUpState), typeof(UnitDescriptor), typeof(BlueprintProgression) })]
         static class LevelUpHelper_UpdateProgression_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] BlueprintProgression progression) {
                 if (!settings.toggleMulticlass) return true;
@@ -106,21 +103,21 @@ namespace ToyBox.Multiclass {
 
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
-        [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(new[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
                 if (state.SelectedClass == null)
                     return false;
                 SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
-                if (component1 != null && ((IEnumerable<int>)component1.Levels).Contains<int>(state.NextClassLevel))
+                if (component1 != null && component1.Levels.Contains(state.NextClassLevel))
                     return false;
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData == null || !(classData.Spellbook != null))
                     return false;
                 Spellbook spellbook1 = unit.DemandSpellbook(classData.Spellbook);
                 if ((bool)state.SelectedClass.Spellbook && state.SelectedClass.Spellbook != classData.Spellbook) {
-                    Spellbook spellbook2 = unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(s => s.Blueprint == state.SelectedClass.Spellbook));
+                    Spellbook spellbook2 = unit.Spellbooks.FirstOrDefault(s => s.Blueprint == state.SelectedClass.Spellbook);
                     if (spellbook2 != null) {
                         foreach (AbilityData allKnownSpell in spellbook2.GetAllKnownSpells())
                             spellbook1.AddKnown(allKnownSpell.SpellLevel, allKnownSpell.Blueprint);
@@ -308,14 +305,14 @@ namespace ToyBox.Multiclass {
         static class ApplyClassMechanics_ApplyProgressions_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
-                BlueprintCharacterClass blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
-                foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
+                BlueprintCharacterClass blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : null;
+                foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select(f => f.Blueprint).OfType<BlueprintProgression>().ToList()) {
                     BlueprintProgression p = blueprintProgression;
                     if (blueprintCharacterClass != null
                         // && p.Classes.Contains<BlueprintCharacterClass>(blueprintCharacterClass))
                         && p.IsChildProgressionOf(unit, blueprintCharacterClass) // Mod Line replacing above
                         )
-                        unit.Progression.Features.Enumerable.FirstItem<Feature>(
+                        unit.Progression.Features.Enumerable.FirstItem(
                             (f => f.Blueprint == p))?.SetSource((FeatureSource)blueprintCharacterClass, 1
                             );
                     LevelUpHelper.UpdateProgression(state, unit, p);

@@ -1,7 +1,8 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
+
 using System;
 using System.Linq;
+using UnityEngine;
 using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
@@ -60,33 +61,33 @@ namespace ModKit {
         public static void HStack(String title = null, int stride = 0, params Action[] actions) {
             var length = actions.Length;
             if (stride < 1) { stride = length; }
-            if (UI.IsNarrow) stride = Math.Min(3, stride);
+            if (IsNarrow) stride = Math.Min(3, stride);
             for (int ii = 0; ii < actions.Length; ii += stride) {
                 bool hasTitle = title != null;
-                UI.BeginHorizontal();
+                BeginHorizontal();
                 if (hasTitle) {
-                    if (ii == 0) { UI.Label(title.bold(), UI.Width(150f)); }
-                    else { UI.Space(153); }
+                    if (ii == 0) { Label(title.bold(), Width(150f)); }
+                    else { Space(153); }
                 }
                 var filteredActions = actions.Skip(ii).Take(stride);
                 foreach (var action in filteredActions) {
                     action();
                 }
-                UI.EndHorizontal();
+                EndHorizontal();
             }
         }
         public static void VStack(String title = null, params Action[] actions) {
-            UI.BeginVertical();
-            if (title != null) { UI.Label(title); }
-            UI.Group(actions);
-            UI.EndVertical();
+            BeginVertical();
+            if (title != null) { Label(title); }
+            Group(actions);
+            EndVertical();
         }
         public static void Section(String title, params Action[] actions) {
-            UI.Space(25);
-            UI.Label($"====== {title} ======".bold(), GL.ExpandWidth(true));
-            UI.Space(25);
+            Space(25);
+            Label($"====== {title} ======".bold(), GL.ExpandWidth(true));
+            Space(25);
             foreach (Action action in actions) { action(); }
-            UI.Space(10);
+            Space(10);
         }
 
         public static void TabBar(ref int selected, Action header = null, params NamedAction[] actions) {

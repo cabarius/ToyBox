@@ -1,12 +1,13 @@
 ﻿// Copyright (c) 2018 fireundubh <fireundubh@gmail.com>
 // This code is licensed under MIT license (see LICENSE for details)
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
+
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.PubSubSystem;
+using System;
 
 namespace ToyBox.classes.MonkeyPatchin
 {
@@ -47,7 +48,7 @@ namespace ToyBox.classes.MonkeyPatchin
                         {
                             unitEntityData.View.UpdateHighlight(false);
                         }
-                        EventBus.RaiseEvent<IInteractionHighlightUIHandler>(delegate (IInteractionHighlightUIHandler h)
+                        EventBus.RaiseEvent(delegate (IInteractionHighlightUIHandler h)
                         {
                             h.HandleHighlightChange(false);
                         });

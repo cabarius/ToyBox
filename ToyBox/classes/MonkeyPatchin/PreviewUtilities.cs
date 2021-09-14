@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
-using UnityEngine;
+﻿using HarmonyLib;
+using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Blueprints;
-using System.Diagnostics;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     class PreviewUtilities {
@@ -39,10 +39,10 @@ namespace ToyBox {
                 if (m_YellowBoxLabel == null) {
                     m_YellowBoxLabel = new GUIStyle(GUI.skin.box) {
                         alignment = TextAnchor.LowerLeft,
-                        normal = new GUIStyleState() { textColor = Color.yellow },
-                        active = new GUIStyleState() { textColor = Color.cyan },
-                        focused = new GUIStyleState() { textColor = Color.magenta },
-                        hover = new GUIStyleState() { textColor = Color.green },
+                        normal = new GUIStyleState { textColor = Color.yellow },
+                        active = new GUIStyleState { textColor = Color.cyan },
+                        focused = new GUIStyleState { textColor = Color.magenta },
+                        hover = new GUIStyleState { textColor = Color.green },
                     };
                 }
                 return m_YellowBoxLabel;

@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ModKit.Utility;
 using UnityEngine;
 using UnityModManagerNet;
-using ModKit.Utility;
 
 namespace ModKit
 {
@@ -39,13 +39,13 @@ namespace ModKit
         #region Fields
         private int _tabIndex;
         public int tabIndex {
-            get { return this._tabIndex; }
+            get { return _tabIndex; }
             set { _tabIndex = value; NotifyPropertyChanged(); }
         }
         private List<IMenuTopPage> _topPages = new();
         private List<IMenuSelectablePage> _selectablePages = new();
         private List<IMenuBottomPage> _bottomPages = new();
-        static Exception caughtException = null;
+        static Exception caughtException;
 
         #endregion
 

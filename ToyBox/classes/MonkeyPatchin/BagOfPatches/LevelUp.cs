@@ -6,22 +6,21 @@ using Kingmaker;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Facts;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-using System;
+using ModKit;
 using System.Collections.Generic;
 using System.Linq;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
-using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(LevelUpController), "CanLevelUp")]
@@ -52,7 +51,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         // ignoreAttributeCap
-        [HarmonyPatch(typeof(StatsDistribution), "CanAdd", new Type[] { typeof(StatType) })]
+        [HarmonyPatch(typeof(StatsDistribution), "CanAdd", typeof(StatType))]
         static class StatsDistribution_CanAdd_Patch {
             /*
             public static bool Prefix() {
@@ -81,13 +80,13 @@ namespace ToyBox.BagOfPatches {
             }
         }
         // ignoreSkillPointsRemaing, ignoreSkillCap
-        [HarmonyPatch(typeof(SpendSkillPoint), "Check", new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SpendSkillPoint), "Check", typeof(LevelUpState), typeof(UnitDescriptor))]
         static class SpendSkillPoint_Check_Patch {
             public static bool Prefix(SpendSkillPoint __instance) {
                 return !(settings.toggleIgnoreSkillCap || settings.toggleIgnoreSkillPointsRemaining);
             }
             private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) {
-                __result = (StatTypeHelper.Skills).Contains<StatType>(__instance.Skill)
+                __result = (StatTypeHelper.Skills).Contains(__instance.Skill)
                     && (settings.toggleIgnoreSkillCap || unit.Stats.GetStat(__instance.Skill).BaseValue < state.NextCharacterLevel)
                     && (settings.toggleIgnoreSkillPointsRemaining || state.SkillPointsRemaining > 0);
             }
@@ -109,7 +108,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         // full HD
-        [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyHitPoints", new Type[] { typeof(LevelUpState), typeof(ClassData), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyHitPoints", typeof(LevelUpState), typeof(ClassData), typeof(UnitDescriptor))]
         static class ApplyClassMechanics_ApplyHitPoints_Patch {
             private static void Postfix(LevelUpState state, ClassData classData, ref UnitDescriptor unit) {
                 if (settings.toggleFullHitdiceEachLevel && unit.IsPlayerFaction && state.NextClassLevel > 1) {
@@ -301,7 +300,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-        [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", typeof(UnitDescriptor))]
         public static class SpellSelectionData_CanSelectAnything_Patch {
             public static void Postfix(UnitDescriptor unit, bool __result) {
                 if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
@@ -325,7 +324,7 @@ namespace ToyBox.BagOfPatches {
                     var state = Game.Instance.LevelUpController.State;
                     IFeatureSelection selection = (selection = (selectionVM.Feature as IFeatureSelection));
                     var availableItems = selection?.Items
-                        .Where((IFeatureSelectionItem item) => selection.CanSelect(state.Unit, state, selectionState, item));
+                        .Where(item => selection.CanSelect(state.Unit, state, selectionState, item));
                     //modLogger.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");
                     if (availableItems.Count() == 0)
                         __result = true;
@@ -346,10 +345,10 @@ namespace ToyBox.BagOfPatches {
                 modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
                 foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
                     for (int i = 0; i < settings.featsMultiplier; ++i) {
-                        if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
+                        if (blueprintFeature.MeetsPrerequisites(null, unit, state, true)) {
                             if (blueprintFeature is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory()))
-                                state.AddSelection((FeatureSelectionState)null, source, selection, level);
-                            Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
+                                state.AddSelection(null, source, selection, level);
+                            Feature feature = (Feature)unit.AddFact(blueprintFeature);
                             if (blueprintFeature is BlueprintProgression progression)
                                 LevelUpHelper.UpdateProgression(state, unit, progression);
                             FeatureSource source1 = source;

@@ -1,24 +1,23 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Craft;
-using Kingmaker.Blueprints.Facts;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
-using System.Runtime.CompilerServices;
 using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ToyBox {
 
     public static class BlueprintExensions {
-        private static ConditionalWeakTable<object, string> cachedCollationNames = new() { };
+        private static ConditionalWeakTable<object, string> cachedCollationNames = new();
         public static String GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
         public static String GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
@@ -63,7 +62,7 @@ namespace ToyBox {
         public static String CollationName(this BlueprintArea bp) {
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
             if (typeName == "Area") return $"Area CR{bp.CR}";
-            if (bp.IsGlobalMap) return $"GlobalMap";
+            if (bp.IsGlobalMap) return "GlobalMap";
             if (bp.IsIndoor) return "Indoor";
             return typeName;
         }
@@ -73,7 +72,7 @@ namespace ToyBox {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
-            var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
+            var filtered = blueprints.Where(bp => bp.GetType().IsKindOf(type)).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }
@@ -83,7 +82,7 @@ namespace ToyBox {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
-            var filtered = blueprints.Where((bp) => (bp is BPType) ? true : false).ToList();
+            var filtered = blueprints.Where(bp => (bp is BPType) ? true : false).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }
@@ -98,13 +97,13 @@ namespace ToyBox {
                 return count;
             if (component.AnyFeatureFromSelection) {
                 foreach (BlueprintFeature allFeature in selection.AllFeatures) {
-                    if (!unit.Progression.Features.HasFact((BlueprintFact)allFeature)) {
+                    if (!unit.Progression.Features.HasFact(allFeature)) {
                         count++;
                     }
                 }
             }
             foreach (BlueprintFeature feature in component.Features) {
-                if (!unit.Progression.Features.HasFact((BlueprintFact)feature)) {
+                if (!unit.Progression.Features.HasFact(feature)) {
                     count++;
                 }
             }

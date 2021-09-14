@@ -5,19 +5,19 @@ using Kingmaker;
 using Kingmaker.Controllers.Combat;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic.Commands.Base;
-using System;
+using ModKit;
 using TurnBased.Controllers;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class ACtions {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
 
         [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
-        [HarmonyPatch(new Type[] { typeof(UnitCommand) })]
+        [HarmonyPatch(new[] { typeof(UnitCommand) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch1 {
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
                 if (settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
@@ -30,7 +30,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
-        [HarmonyPatch(new Type[] { typeof(UnitCommand.CommandType) })]
+        [HarmonyPatch(new[] { typeof(UnitCommand.CommandType) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch2 {
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
                 if (settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
@@ -69,7 +69,8 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(UnitCommand.CommandType type, bool isFullRound, float timeSinceCommandStart, UnitEntityData __instance) {
                 if (!__instance.IsInCombat) return true;
                 if (!settings.toggleUnlimitedActionsPerTurn) return true;
-                else if (CombatController.IsInTurnBasedCombat()) {
+
+                if (CombatController.IsInTurnBasedCombat()) {
                     return false;
                 }
                 return true;

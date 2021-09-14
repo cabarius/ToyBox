@@ -13,15 +13,16 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class NoFriendlyFire {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(AbilityTargetsAround), "Select")]
@@ -91,7 +92,7 @@ namespace ToyBox.BagOfPatches {
 
 //        public bool IsSuccessRoll(int d20, int successBonus = 0) => d20 + this.TotalBonus + successBonus >= this.DC;
         [HarmonyPatch(typeof(RuleSkillCheck), "IsSuccessRoll")]
-        [HarmonyPatch(new Type[] { typeof(int), typeof(int) })]
+        [HarmonyPatch(new[] { typeof(int), typeof(int) })]
 
         public static class RuleSkillCheck_IsSuccessRoll_Patch {
             private static void Postfix(ref bool __result, RuleSkillCheck __instance) {

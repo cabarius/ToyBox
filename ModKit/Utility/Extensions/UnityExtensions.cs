@@ -8,7 +8,7 @@ namespace ModKit.Utility
         {
             obj.transform.SetParent(null, false);
             obj.SetActive(false);
-            UnityEngine.Object.Destroy(obj);
+            Object.Destroy(obj);
         }
 
         public static void SafeDestroy(this GameObject obj)

@@ -4,8 +4,8 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Achievements;
+using Kingmaker.Achievements.Platforms;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
@@ -23,23 +23,24 @@ using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._VM.Slots;
+using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.Utility;
 using Kingmaker.View;
+using Owlcat.Runtime.UI.MVVM;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Owlcat.Runtime.UI.MVVM;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Steamworks;
-using Kingmaker.Achievements.Platforms;
+using UnityModManagerNet;
+using Logger = ModKit.Logger;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
@@ -81,10 +82,10 @@ namespace ToyBox.BagOfPatches {
         }
 
 
-        [HarmonyPatch(typeof(Kingmaker.UI.ServiceWindow.ItemSlot), "ScrollContent", MethodType.Getter)]
+        [HarmonyPatch(typeof(ItemSlot), "ScrollContent", MethodType.Getter)]
         public static class ItemSlot_ScrollContent_Patch {
             [HarmonyPostfix]
-            static void Postfix(Kingmaker.UI.ServiceWindow.ItemSlot __instance, ref string __result) {
+            static void Postfix(ItemSlot __instance, ref string __result) {
                 UnitEntityData currentCharacter = UIUtility.GetCurrentCharacter();
                 CopyItem component = __instance.Item.Blueprint.GetComponent<CopyItem>();
                 string actionName = component?.GetActionName(currentCharacter) ?? string.Empty;
@@ -101,7 +102,7 @@ namespace ToyBox.BagOfPatches {
                 //modLogger.Log("AchievementEntity.IsDisabled");
                 if (settings.toggleAllowAchievementsDuringModdedGame) {
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
-                    __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || ((UnityEngine.Object)__instance.Data.MinDifficulty != (UnityEngine.Object)null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave);
+                    __result = Game.Instance.Player.StartPreset.Or(null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or(null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || (__instance.Data.MinDifficulty != null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave);
                     // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive)
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
                 }
@@ -148,10 +149,10 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 BlueprintUnitType type = unitEntityData.Blueprint.Type;
-                bool isASpider = SpidersBegone.IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isASpiderSwarm = SpidersBegone.IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
-                bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                bool isASpider = IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isASpiderSwarm = IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isOtherSpiderUnit = IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                bool isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
                 }
@@ -162,10 +163,10 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
                 BlueprintUnitType type = blueprintUnit.Type;
-                bool isASpider = SpidersBegone.IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isASpiderSwarm = SpidersBegone.IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
-                bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                bool isASpider = IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isASpiderSwarm = IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isOtherSpiderUnit = IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                bool isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
                 }
@@ -183,10 +184,10 @@ namespace ToyBox.BagOfPatches {
             }
 
             private static bool IsSpiderBlueprintUnit(string blueprintUnitGuid) {
-                return SpidersBegone.spiderGuids.Contains(blueprintUnitGuid);
+                return spiderGuids.Contains(blueprintUnitGuid);
             }
             private static bool IsSpiderSwarmBlueprintUnit(string blueprintUnitGuid) {
-                return SpidersBegone.spiderSwarmGuids.Contains(blueprintUnitGuid);
+                return spiderSwarmGuids.Contains(blueprintUnitGuid);
             }
 
             private const string spiderTypeGUID = "243702bdc53e2574aaa34d1e3eafe6aa";
@@ -196,16 +197,14 @@ namespace ToyBox.BagOfPatches {
 
             private const string blueprintCR2RatSwarmGUID = "12a5944fa27307e4e8b6f56431d5cc8c";
 
-            private static readonly string[] spiderSwarmGuids = new string[]
-             {
+            private static readonly string[] spiderSwarmGuids = {
                  "a28e944558ed5b64790c3701e8c89d75",
                  "da2f152d19ce4d54e8c17da91f01fabd",
                  "f2327e24765fb6342975b6216bfb307b"
              };
 
 
-            private static readonly string[] spiderGuids = new string[]
-            {
+            private static readonly string[] spiderGuids = {
                 "272f71e982166934182d51b4e03e400e",
                 "d95785c3853077a4599e0cbe8874703f",
                 "48f0c472e5cd4beda4afdb1b6c39c344",
@@ -259,7 +258,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
-        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
+        [HarmonyPatch(new[] { typeof(BlueprintUnit), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
         public static class EntityCreationControllert_SpawnUnit_Patch1 {
             public static void Prefix(ref BlueprintUnit unit) {
                 if (settings.toggleSpiderBegone) {
@@ -269,7 +268,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
-        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(UnitEntityView), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
+        [HarmonyPatch(new[] { typeof(BlueprintUnit), typeof(UnitEntityView), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
         public static class EntityCreationControllert_SpawnUnit_Patch2 {
             public static void Prefix(ref BlueprintUnit unit) {
                 if (settings.toggleSpiderBegone) {
@@ -278,7 +277,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), "RemoveItem", new Type[] { typeof(bool), typeof(bool) })]
+        [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), "RemoveItem", typeof(bool), typeof(bool))]
         static class ItemSlot_RemoveItem_Patch {
             static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
                 if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
@@ -304,7 +303,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         // To eliminate some log spam
-        [HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", new Type[] { typeof(UserStatsStored_t) })]
+        [HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", typeof(UserStatsStored_t))]
         public static class SteamAchievementsManager_OnUserStatsStored_Patch {
             public static bool Prefix(ref SteamAchievementsManager __instance, UserStatsStored_t pCallback) {
                 if ((long)(ulong)__instance.m_GameId != (long)pCallback.m_nGameID)
@@ -312,14 +311,14 @@ namespace ToyBox.BagOfPatches {
                 if (EResult.k_EResultOK == pCallback.m_eResult) { }
                 //Debug.Log((object)"StoreStats - success");
                 else if (EResult.k_EResultInvalidParam == pCallback.m_eResult) {
-                    Debug.Log((object)"StoreStats - some failed to validate");
-                    __instance.OnUserStatsReceived(new UserStatsReceived_t() {
+                    Debug.Log("StoreStats - some failed to validate");
+                    __instance.OnUserStatsReceived(new UserStatsReceived_t {
                         m_eResult = EResult.k_EResultOK,
                         m_nGameID = (ulong)__instance.m_GameId
                     });
                 }
                 else
-                    Debug.Log((object)("StoreStats - failed, " + (object)pCallback.m_eResult));
+                    Debug.Log("StoreStats - failed, " + pCallback.m_eResult);
                 return false;
             }
         }

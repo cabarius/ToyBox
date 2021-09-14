@@ -8,7 +8,8 @@ namespace ModKit.Utility
     [XmlRoot("SerializableDictionary")]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {
-        public SerializableDictionary() : base() { }
+        public SerializableDictionary()
+        { }
 
         public SerializableDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
 
@@ -28,7 +29,7 @@ namespace ModKit.Utility
             if (wasEmpty)
                 return;
 
-            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            while (reader.NodeType != XmlNodeType.EndElement)
             {
                 reader.ReadStartElement("item");
 
@@ -40,7 +41,7 @@ namespace ModKit.Utility
                 TValue value = (TValue)valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
-                this.Add(key, value);
+                Add(key, value);
 
                 reader.ReadEndElement();
                 reader.MoveToContent();
@@ -53,7 +54,7 @@ namespace ModKit.Utility
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
 
-            foreach (TKey key in this.Keys)
+            foreach (TKey key in Keys)
             {
                 writer.WriteStartElement("item");
 

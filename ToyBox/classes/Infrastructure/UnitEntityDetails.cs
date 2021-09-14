@@ -1,18 +1,16 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT Licenseusing Kingmaker;
 
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Facts;
 using Kingmaker.Cheats;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Parts;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ToyBox 
 {
@@ -78,7 +76,7 @@ namespace ToyBox
         }
         public static void Buff(UnitEntityData unit, string buffGuid)
         {
-            unit.Descriptor.AddFact((BlueprintUnitFact)Utilities.GetBlueprintByGuid<BlueprintBuff>(buffGuid), (MechanicsContext)null, new FeatureParam());
+            unit.Descriptor.AddFact(Utilities.GetBlueprintByGuid<BlueprintBuff>(buffGuid), null, new FeatureParam());
         }
         public static void Charm(UnitEntityData unit)
         {

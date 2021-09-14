@@ -1,9 +1,10 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using ModKit.Utility;
-using System.Collections.Generic;
+
+using Kingmaker.Blueprints.Classes;
 using Kingmaker.UnitLogic;
 using ModKit;
-using Kingmaker.Blueprints.Classes;
+using ModKit.Utility;
+using System.Collections.Generic;
 
 namespace ToyBox {
     public class ArchetypeOptions : HashSet<string> {

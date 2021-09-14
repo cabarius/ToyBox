@@ -1,4 +1,5 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.RuleSystem.Rules;
@@ -6,13 +7,14 @@ using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.FactLogic;
+using ModKit;
 using System;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class MetamagicPatches {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(MetamagicHelper), "DefaultCost")]
@@ -33,7 +35,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMetamagicIsFree) {
                     AddMetamagicFeat component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
-                        Main.Debug(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
+                        Main.Debug(String.Format("Trying to add metamagic feature without metamagic component: {0}", metamagicFeature));
                     }
                     else {
                         __instance.KnownMetamagics.Add(metamagicFeature);
@@ -51,7 +53,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
                     var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
-                    mainMenuVM.EnterGame(new Action(mainMenuVM.LoadLastSave));
+                    mainMenuVM.EnterGame(mainMenuVM.LoadLastSave);
                 }
                 Main.freshlyLaunched = false;
             }

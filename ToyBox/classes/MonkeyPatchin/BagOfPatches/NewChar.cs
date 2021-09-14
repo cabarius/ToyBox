@@ -6,18 +6,19 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
+using ModKit;
 using System;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class NewChar {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         //     public LevelUpState([NotNull] UnitEntityData unit, LevelUpState.CharBuildMode mode, bool isPregen)
         [HarmonyPatch(typeof(LevelUpState), MethodType.Constructor)]
-        [HarmonyPatch(new Type[] { typeof(UnitEntityData), typeof(LevelUpState.CharBuildMode), typeof(bool) })]
+        [HarmonyPatch(new[] { typeof(UnitEntityData), typeof(LevelUpState.CharBuildMode), typeof(bool) })]
         public static class LevelUpState_Patch {
             [HarmonyPriority(Priority.Low)]
             public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance, bool isPregen) {

@@ -1,8 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -14,18 +11,22 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using ModKit;
 using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public class FactsEditor {
         public static Settings settings { get { return Main.settings; } }
-        public static IEnumerable<SimpleBlueprint> filteredBPs = null;
+        public static IEnumerable<SimpleBlueprint> filteredBPs;
         static String prevCallerKey = "";
         static String searchText = "";
         static int searchLimit = 100;
         static int repeatCount = 1;
-        public static int matchCount = 0;
+        public static int matchCount;
 
-        static bool showAll = false;
+        static bool showAll;
         public static void UpdateSearchResults(String searchText, int limit, IEnumerable<SimpleBlueprint> blueprints) {
             if (blueprints == null) return;
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
@@ -104,10 +105,10 @@ namespace ToyBox {
             }
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
 
-            BlueprintAction add = mutatorLookup.GetValueOrDefault("Add", null);
-            BlueprintAction remove = mutatorLookup.GetValueOrDefault("Remove", null);
-            BlueprintAction decrease = mutatorLookup.GetValueOrDefault("<", null);
-            BlueprintAction increase = mutatorLookup.GetValueOrDefault(">", null);
+            BlueprintAction add = mutatorLookup.GetValueOrDefault("Add");
+            BlueprintAction remove = mutatorLookup.GetValueOrDefault("Remove");
+            BlueprintAction decrease = mutatorLookup.GetValueOrDefault("<");
+            BlueprintAction increase = mutatorLookup.GetValueOrDefault(">");
 
             mutatorLookup.Remove("Add");
             mutatorLookup.Remove("Remove");
@@ -119,7 +120,7 @@ namespace ToyBox {
             SimpleBlueprint toIncrease = null;
             SimpleBlueprint toDecrease = null;
             var toValues = new Dictionary<String, SimpleBlueprint>();
-            var sorted = facts.OrderBy((f) => title(f));
+            var sorted = facts.OrderBy(f => title(f));
             matchCount = 0;
             UI.Div(100);
             foreach (var fact in sorted) {
@@ -183,36 +184,36 @@ namespace ToyBox {
         static public void OnGUI(UnitEntityData ch, List<Feature> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<Feature>("Features", ch, facts,
-                (fact) => fact.Blueprint,
+            OnGUI("Features", ch, facts,
+                fact => fact.Blueprint,
                 BlueprintExensions.GetBlueprints<BlueprintFeature>(),
-                (fact) => fact.Name,
-                (fact) => fact.Description,
-                (fact) => fact.GetRank(),
+                fact => fact.Name,
+                fact => fact.Description,
+                fact => fact.GetRank(),
                 BlueprintAction.ActionsForType(typeof(BlueprintFeature))
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Buff> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<Buff>("Features", ch, facts,
-                (fact) => fact.Blueprint,
+            OnGUI("Features", ch, facts,
+                fact => fact.Blueprint,
                 BlueprintExensions.GetBlueprints<BlueprintBuff>(),
-                (fact) => fact.Name,
-                (fact) => fact.Description,
-                (fact) => fact.GetRank(),
+                fact => fact.Name,
+                fact => fact.Description,
+                fact => fact.GetRank(),
                BlueprintAction.ActionsForType(typeof(BlueprintBuff))
                 );
         }
         static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<Ability>("Abilities", ch, facts,
-                (fact) => fact.Blueprint,
-                BlueprintExensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
-                (fact) => fact.Name,
-                (fact) => fact.Description,
-                (fact) => fact.GetRank(),
+            OnGUI("Abilities", ch, facts,
+                fact => fact.Blueprint,
+                BlueprintExensions.GetBlueprints<BlueprintAbility>().Where(bp => !((BlueprintAbility)bp).IsSpell),
+                fact => fact.Name,
+                fact => fact.Description,
+                fact => fact.GetRank(),
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
@@ -222,11 +223,11 @@ namespace ToyBox {
             var learnable = spellbookBP.SpellList.GetSpells(level);
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
-                (fact) => fact.Blueprint,
+            OnGUI($"Spells.{spellbookBP.Name}", ch, spells,
+                fact => fact.Blueprint,
                 learnable,
-                (fact) => fact.Name,
-                (fact) => fact.Description,
+                fact => fact.Name,
+                fact => fact.Description,
                 null,
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
@@ -234,11 +235,11 @@ namespace ToyBox {
         static public void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
-                (sb) => sb.Blueprint,
+            OnGUI("Spellbooks", ch, spellbooks,
+                sb => sb.Blueprint,
                 BlueprintExensions.GetBlueprints<BlueprintSpellbook>(),
-                (sb) => sb.Blueprint.GetDisplayName(),
-                (sb) => sb.Blueprint.GetDescription(),
+                sb => sb.Blueprint.GetDisplayName(),
+                sb => sb.Blueprint.GetDescription(),
                 null,
                 BlueprintAction.ActionsForType(typeof(BlueprintSpellbook))
                 );

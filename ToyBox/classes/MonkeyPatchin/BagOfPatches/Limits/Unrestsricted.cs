@@ -1,4 +1,5 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Items.Components;
@@ -7,13 +8,13 @@ using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Items;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.UnitLogic;
-using System;
-using UnityModManager = UnityModManagerNet.UnityModManager;
+using ModKit;
+using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     static class Unrestricted {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EquipmentRestrictionAlignment), "CanBeEquippedBy")]
@@ -78,7 +79,7 @@ namespace ToyBox.BagOfPatches {
         }
 
 
-        [HarmonyPatch(typeof(BlueprintSettlementBuilding), "CheckRestrictions", new Type[] { typeof(SettlementState) })]
+        [HarmonyPatch(typeof(BlueprintSettlementBuilding), "CheckRestrictions", typeof(SettlementState))]
         public static class BlueprintSettlementBuilding_CheckRestrictions_Patch1 {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleSettlementRestrictions) {
@@ -87,7 +88,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintSettlementBuilding), "CheckRestrictions", new Type[] { typeof(SettlementState), typeof(SettlementGridTopology.Slot) })]
+        [HarmonyPatch(typeof(BlueprintSettlementBuilding), "CheckRestrictions", typeof(SettlementState), typeof(SettlementGridTopology.Slot))]
         public static class BlueprintSettlementBuilding_CheckRestrictions_Patch2 {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleSettlementRestrictions) {

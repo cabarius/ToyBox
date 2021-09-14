@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using HarmonyLib;
 
 namespace ModKit.Utility
 {
@@ -56,7 +56,7 @@ namespace ModKit.Utility
 
             return codes
                 .ReplaceAll(new CodeInstruction(OpCodes.Ret), new CodeInstruction(OpCodes.Leave, ret), true)
-                .AddRange(new CodeInstruction[] {
+                .AddRange(new[] {
                     //new CodeInstruction(OpCodes.Pop) { blocks = Blocks(ExceptionBlockType.BeginCatchBlock) },
                     //new CodeInstruction(OpCodes.Rethrow),
                     new CodeInstruction(OpCodes.Ldloc, state).BeginFinallyBlock(),
@@ -64,11 +64,11 @@ namespace ModKit.Utility
                     new CodeInstruction(OpCodes.Endfinally).EndExceptionBlock(),
                     new CodeInstruction(OpCodes.Ret).MarkLabel(ret)
                 })
-                .InsertRange(0, new CodeInstruction[] {
+                .InsertRange(0, new[] {
                     new(OpCodes.Call, prefix.Method),
                     new(OpCodes.Stloc, state),
                     new CodeInstruction(OpCodes.Nop).BeginExceptionBlock()
-                }, false);
+                });
         }
 
         public static IEnumerable<CodeInstruction> Patch<TInstance, TState>(this IEnumerable<CodeInstruction> codes, ILGenerator il,
@@ -89,7 +89,7 @@ namespace ModKit.Utility
 
             return codes
                 .ReplaceAll(new CodeInstruction(OpCodes.Ret), new CodeInstruction(OpCodes.Leave, ret), true)
-                .AddRange(new CodeInstruction[] {
+                .AddRange(new[] {
                     //new CodeInstruction(OpCodes.Pop) { blocks = Blocks(ExceptionBlockType.BeginCatchBlock) },
                     //new CodeInstruction(OpCodes.Rethrow),
                     new CodeInstruction(OpCodes.Ldarg_0).BeginFinallyBlock(),
@@ -98,12 +98,12 @@ namespace ModKit.Utility
                     new CodeInstruction(OpCodes.Endfinally).EndExceptionBlock(),
                     new CodeInstruction(OpCodes.Ret).MarkLabel(ret)
                 })
-                .InsertRange(0, new CodeInstruction[] {
+                .InsertRange(0, new[] {
                     new(OpCodes.Ldarg_0),
                     new(OpCodes.Call, prefix.Method),
                     new(OpCodes.Stloc, state),
                     new CodeInstruction(OpCodes.Nop).BeginExceptionBlock()
-                }, false);
+                });
         }
 
         #endregion
@@ -113,7 +113,7 @@ namespace ModKit.Utility
         public static IEnumerable<CodeInstruction> Add(this IEnumerable<CodeInstruction> codes,
             CodeInstruction newCode)
         {
-            return codes.Concat(new CodeInstruction[] { newCode });
+            return codes.Concat(new[] { newCode });
         }
 
         public static IEnumerable<CodeInstruction> AddRange(this IEnumerable<CodeInstruction> codes, 
@@ -125,7 +125,7 @@ namespace ModKit.Utility
         public static IEnumerable<CodeInstruction> Insert(this IEnumerable<CodeInstruction> codes, 
             int index, CodeInstruction newCode, bool moveLabelsAtIndex = false)
         {
-            return codes.InsertRange(index, new CodeInstruction[] { newCode }, moveLabelsAtIndex);
+            return codes.InsertRange(index, new[] { newCode }, moveLabelsAtIndex);
         }
 
         public static IEnumerable<CodeInstruction> InsertRange(this IEnumerable<CodeInstruction> codes, 
@@ -153,7 +153,7 @@ namespace ModKit.Utility
         public static IEnumerable<CodeInstruction> Replace(this IEnumerable<CodeInstruction> codes, 
             int index, CodeInstruction newCode, bool moveLabelsFromIndex = false)
         {
-            return codes.ReplaceRange(index, 1, new CodeInstruction[] { newCode }, moveLabelsFromIndex);
+            return codes.ReplaceRange(index, 1, new[] { newCode }, moveLabelsFromIndex);
         }
 
         public static IEnumerable<CodeInstruction> ReplaceRange(this IEnumerable<CodeInstruction> codes,
@@ -175,7 +175,7 @@ namespace ModKit.Utility
             CodeInstruction findingCode, CodeInstruction newCode,
             out int replaced, bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction> comparer = null)
         {
-            return codes.ReplaceAll(new CodeInstruction[] { findingCode }, new CodeInstruction[] { newCode }, out replaced, moveLabelsFromIndex, comparer);
+            return codes.ReplaceAll(new[] { findingCode }, new[] { newCode }, out replaced, moveLabelsFromIndex, comparer);
         }
 
         public static IEnumerable<CodeInstruction> ReplaceAll(this IEnumerable<CodeInstruction> codes,
@@ -203,7 +203,7 @@ namespace ModKit.Utility
                     {
                         codes = (newCodesCount > 0) ?
                             codes.ReplaceRange(i, findingCodesCount, (moveLabelsFromIndex && replaced > 0) ?
-                                new CodeInstruction[] { newCodes.First().Clone() }.Concat(newCodes.Skip(1)) : newCodes, 
+                                new[] { newCodes.First().Clone() }.Concat(newCodes.Skip(1)) : newCodes, 
                                 moveLabelsFromIndex):
                             codes.RemoveRange(i, findingCodesCount, moveLabelsFromIndex);
                         replaced++;
@@ -394,14 +394,16 @@ namespace ModKit.Utility
             {
                 if (y == null)
                     return true;
-                else if (x == null)
+
+                if (x == null)
                     return false;
-                else if ((y.opcode == null || OpCodeEquals(y.opcode, x.opcode)) &&
-                        (y.operand == null || (y.operand is ValueType ? y.operand.Equals(x.operand) : y.operand == x.operand)) &&
-                        (y.labels.Count == 0 || y.labels.TrueForAll(label => x.labels.Contains(label))))
+
+                if ((y.opcode == null || OpCodeEquals(y.opcode, x.opcode)) &&
+                    (y.operand == null || (y.operand is ValueType ? y.operand.Equals(x.operand) : y.operand == x.operand)) &&
+                    (y.labels.Count == 0 || y.labels.TrueForAll(label => x.labels.Contains(label))))
                     return true;
-                else
-                    return false;
+
+                return false;
             }
 
             public int GetHashCode(CodeInstruction obj)
@@ -413,12 +415,14 @@ namespace ModKit.Utility
             {
                 if (x == OpCodes.Br || x == OpCodes.Br_S)
                     return y == OpCodes.Br || y == OpCodes.Br_S;
-                else if (x == OpCodes.Brtrue || x == OpCodes.Brtrue_S)
+
+                if (x == OpCodes.Brtrue || x == OpCodes.Brtrue_S)
                     return y == OpCodes.Brtrue || y == OpCodes.Brtrue_S;
-                else if (x == OpCodes.Brfalse || x == OpCodes.Brfalse_S)
+
+                if (x == OpCodes.Brfalse || x == OpCodes.Brfalse_S)
                     return y == OpCodes.Brfalse || y == OpCodes.Brfalse_S;
-                else
-                    return x == y;
+
+                return x == y;
             }
         }
 

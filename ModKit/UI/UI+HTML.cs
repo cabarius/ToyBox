@@ -1,15 +1,16 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
+
 using System;
+using UnityEngine;
 using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
 
-        static GUIStyle linkStyle = null;
+        static GUIStyle linkStyle;
 
         public static bool LinkButton(String title, String url, Action action = null, params GUILayoutOption[] options) {
-            if (options.Length == 0) { options = new GUILayoutOption[] { UI.AutoWidth() }; }
+            if (options.Length == 0) { options = new[] { AutoWidth() }; }
             if (linkStyle == null) {
                 linkStyle = new GUIStyle(GUI.skin.label);
                 linkStyle.wordWrap = false;
@@ -20,7 +21,7 @@ namespace ModKit {
             }
             var result = GL.Button(title, linkStyle, options);
             var rect = GUILayoutUtility.GetLastRect();
-            UI.Div(linkStyle.normal.textColor, 4, 0, rect.width);
+            Div(linkStyle.normal.textColor, 4, 0, rect.width);
             if (result) {
                 Application.OpenURL(url);
                 if (action != null) action(); 

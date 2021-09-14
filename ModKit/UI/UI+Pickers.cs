@@ -1,8 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
@@ -17,7 +18,7 @@ namespace ModKit {
         }
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
-            if (UI.IsNarrow) xCols = Math.Min(4, xCols);
+            if (IsNarrow) xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0) xCols = texts.Count();
@@ -25,15 +26,15 @@ namespace ModKit {
             return sel != selected;
         }
         public static bool SelectionGrid(String title, ref int selected, String[] texts, int xCols, params GUILayoutOption[] options) {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-               return UI.SelectionGrid(ref selected, texts, xCols, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+               return SelectionGrid(ref selected, texts, xCols, options);
             }
         }
         public static bool SelectionGrid(ref int selected, String[] texts, int xCols, GUIStyle style, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = texts.Count();
-            if (UI.IsNarrow) xCols = Math.Min(4, xCols);
+            if (IsNarrow) xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0) xCols = texts.Count();
@@ -42,7 +43,7 @@ namespace ModKit {
         }
         public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = items.Count();
-            if (UI.IsNarrow) xCols = Math.Min(4, xCols);
+            if (IsNarrow) xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
             if (xCols <= 0) xCols = items.Count();
@@ -51,7 +52,7 @@ namespace ModKit {
         }
         public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, GUIStyle style, params GUILayoutOption[] options) {
             if (xCols <= 0) xCols = items.Count();
-            if (UI.IsNarrow) xCols = Math.Min(4, xCols);
+            if (IsNarrow) xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
             if (xCols <= 0) xCols = items.Count();
@@ -82,7 +83,7 @@ namespace ModKit {
             var value = get();
             var names = Enum.GetNames(typeof(TEnum));
             int index = Array.IndexOf(names, value.ToString());
-            if (UI.SelectionGrid(ref index, names, xCols, options)) {
+            if (SelectionGrid(ref index, names, xCols, options)) {
                 TEnum newValue;
                 if (Enum.TryParse(names[index], out newValue)) {
                     set(newValue);
@@ -92,7 +93,7 @@ namespace ModKit {
         public static void EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             var names = Enum.GetNames(typeof(TEnum));
             int index = Array.IndexOf(names, value.ToString());
-            if (UI.SelectionGrid(ref index, names, xCols, options)) {
+            if (SelectionGrid(ref index, names, xCols, options)) {
                 TEnum newValue;
                 if (Enum.TryParse(names[index], out newValue)) {
                     value = newValue;
@@ -100,10 +101,10 @@ namespace ModKit {
             }
         }
         public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-                UI.EnumGrid<TEnum>(ref value, xCols, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+                EnumGrid(ref value, xCols, options);
             }
         }
         public static void EnumerablePicker<T>(
@@ -114,14 +115,14 @@ namespace ModKit {
                 Func<T, String> titleFormater = null,
                 params GUILayoutOption[] options
             ) {
-            if (titleFormater == null) titleFormater = (a) => $"{a}";
+            if (titleFormater == null) titleFormater = a => $"{a}";
             if (selected > range.Count()) selected = 0;
             int sel = selected;
             var titles = range.Select((a, i) => i == sel ? titleFormater(a).orange().bold() : titleFormater(a));
             if (xCols > range.Count()) xCols = range.Count();
             if (xCols <= 0) xCols = range.Count();
-            UI.Label(title, UI.AutoWidth());
-            UI.Space(25);
+            Label(title, AutoWidth());
+            Space(25);
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
         public static NamedFunc<T> TypePicker<T>(String title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {

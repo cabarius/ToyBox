@@ -1,8 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
@@ -10,8 +7,11 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Designers.EventConditionActionSystem.Events;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.GameModes;
+using Kingmaker.Globalmap;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
@@ -19,10 +19,13 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityModManagerNet;
-using Kingmaker.Globalmap.State;
-using Kingmaker.EntitySystem.Persistence;
-using Kingmaker.Globalmap;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace ToyBox {
     public static class Actions {
@@ -95,8 +98,8 @@ namespace ToyBox {
                 pointState.EdgesOpened = true;
                 pointState.Reveal();
                 GlobalMapPointView pointView = globalMapView.GetPointView(destination);
-                if ((bool)(UnityEngine.Object)globalMapView) {
-                    if ((bool)(UnityEngine.Object)pointView)
+                if ((bool)(Object)globalMapView) {
+                    if ((bool)(Object)pointView)
                         globalMapView.RevealLocation(pointView);
                 }
                 foreach (var edge in pointState.Edges) {
@@ -105,12 +108,12 @@ namespace ToyBox {
 
                 }
                 globalMapController.StartTravels();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStarted((IGlobalMapTraveler)globalMapView.State.Player, false)));
+                EventBus.RaiseEvent((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStarted(globalMapView.State.Player, false)));
                 globalMapView.State.Player.SetCurrentPosition(new GlobalMapPosition(destination));
-                globalMapView.GetPointView(destination)?.OpenOutgoingEdges((GlobalMapPointView)null);
+                globalMapView.GetPointView(destination)?.OpenOutgoingEdges(null);
                 globalMapView.UpdatePawnPosition();
                 globalMapController.Stop();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped((IGlobalMapTraveler)globalMapView.State.Player)));
+                EventBus.RaiseEvent((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped(globalMapView.State.Player)));
                 globalMapView.PlayerPawn.m_Compass.TryClear();
                 globalMapView.PlayerPawn.m_Compass.TrySet();
 #if false
@@ -145,7 +148,7 @@ namespace ToyBox {
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
                 for (int i = 0; i < count; i++) {
-                    Vector3 offset = 5f*UnityEngine.Random.insideUnitSphere;
+                    Vector3 offset = 5f*Random.insideUnitSphere;
                     Vector3 spawnPosition = new(
                         worldPosition.x + offset.x,
                         worldPosition.y,

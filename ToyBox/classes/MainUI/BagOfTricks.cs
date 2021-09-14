@@ -1,10 +1,10 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using System;
 using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
 using ModKit;
+using System;
 
 namespace ToyBox {
     public static class CheapTricks {
@@ -67,50 +67,50 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Preview", 0, () => {
-                UI.Toggle("Dialog Results", ref settings.previewDialogResults, 0);
+                UI.Toggle("Dialog Results", ref settings.previewDialogResults);
                 UI.Space(25);
-                UI.Toggle("Dialog Alignment", ref settings.previewAlignmentRestrictedDialog, 0);
+                UI.Toggle("Dialog Alignment", ref settings.previewAlignmentRestrictedDialog);
                 UI.Space(25);
-                UI.Toggle("Random Encounters", ref settings.previewRandomEncounters, 0);
+                UI.Toggle("Random Encounters", ref settings.previewRandomEncounters);
                 UI.Space(25);
-                UI.Toggle("Events", ref settings.previewEventResults, 0);
+                UI.Toggle("Events", ref settings.previewEventResults);
             });
             UI.Div(0, 25);
             UI.HStack("Tweaks", 1,
                 () => {
-                    UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
+                    UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);
                     UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                     },
-                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
-                () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
-                () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
-                () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
-                () => UI.Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure, 0),
+                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
+                () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities),
+                () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts),
+                () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent),
+                () => UI.Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure),
 
-                () => UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0),
-                () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
+                () => UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn),
+                () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems),
 
-                () => UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0),
+                () => UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown),
 
-                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
-                () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
+                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
+                () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls),
 
-                () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
-                () => UI.Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity, 0),
+                () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions),
+                () => UI.Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity),
 
-                () => UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0),
+                () => UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions),
 
-                () => UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0),
-                () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
+                () => UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE),
+                () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree),
 
-                () => UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0),
+                () => UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar),
                 //() => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
-                () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
-                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
-                () => UI.Toggle("Enable multiple romance (experimental)", ref settings.toggleMultipleRomance, 0),
-                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
+                () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat),
+                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave),
+                () => UI.Toggle("Enable multiple romance (experimental)", ref settings.toggleMultipleRomance),
+                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone),
                 () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
@@ -136,7 +136,7 @@ namespace ToyBox {
                 () => {
                     UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
                     UI.Space(25); 
-                    UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0);
+                    UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne);
                     UI.Space(25);
                     UI.Label("Adjusts the movement speed of your party in area maps".green());
                 },
@@ -183,7 +183,7 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Summons", 1,
-                () => UI.Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable, 0),
+                () => UI.Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable),
                 () => {
                     using (UI.VerticalScope()) {
                         UI.Div(0, 25);

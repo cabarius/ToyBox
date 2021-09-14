@@ -1,18 +1,20 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // Special thanks to @SpaceHampster and @Velk17 from Pathfinder: Wrath of the Rightous Discord server for teaching me how to mod Unity games
-using UnityEngine;
-using UnityModManagerNet;
+
 using HarmonyLib;
-using System;
-using System.Reflection;
 using Kingmaker;
 using Kingmaker.Utility;
-using Owlcat.Runtime.Core.Logging;
-using ToyBox.Multiclass;
-using GL = UnityEngine.GUILayout;
 using ModKit;
 using ModKit.Utility;
+using Owlcat.Runtime.Core.Logging;
+using System;
+using System.Reflection;
 using ToyBox.classes.MainUI;
+using ToyBox.Multiclass;
+using UnityEngine;
+using UnityModManagerNet;
+using GL = UnityEngine.GUILayout;
+using Logger = ModKit.Logger;
 
 namespace ToyBox {
 #if DEBUG
@@ -41,18 +43,18 @@ namespace ToyBox {
         //    }
         //}        // UMM
         static string modId;
-        public static UnityModManager.ModEntry modEntry = null;
+        public static UnityModManager.ModEntry modEntry;
         public static Settings settings;
         public static Mod multiclassMod;
         public static bool Enabled;
         public static bool freshlyLaunched = true;
         public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
-        static Exception caughtException = null;
-        public static void Log(string s) { if (modEntry != null) ModKit.Logger.Log(s); }
+        static Exception caughtException;
+        public static void Log(string s) { if (modEntry != null) Logger.Log(s); }
         public static void Log(int indent, string s) { Log("    ".Repeat(indent) + s); }
-        public static void Debug(String s) { if (modEntry != null) ModKit.Logger.ModLoggerDebug(s); }
-        public static void Error(Exception e) { if (modEntry != null) ModKit.Logger.Log(e); }
+        public static void Debug(String s) { if (modEntry != null) Logger.ModLoggerDebug(s); }
+        public static void Error(Exception e) { if (modEntry != null) Logger.Log(e); }
 
         static bool Load(UnityModManager.ModEntry modEntry) {
             try {
@@ -60,9 +62,9 @@ namespace ToyBox {
                 modEntry.OnUnload = Unload;
 #endif
                 modId = modEntry.Info.Id;
-                ModKit.Logger.modLogger = modEntry.Logger;
+                Logger.modLogger = modEntry.Logger;
                 settings = Settings.Load<Settings>(modEntry);
-                ModKit.Logger.modEntryPath = modEntry.Path;
+                Logger.modEntryPath = modEntry.Path;
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
@@ -71,10 +73,10 @@ namespace ToyBox {
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
-                multiclassMod = new Multiclass.Mod();
+                multiclassMod = new Mod();
             }
             catch (Exception e) {
-                Main.Error(e);
+                Error(e);
                 throw e;
             }
             return true;

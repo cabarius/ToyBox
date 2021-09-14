@@ -212,7 +212,7 @@ namespace ModKit.Utility
             private delegate ref TField RefGetter(ref T instance);
             private delegate void Setter(ref T instance, TField value);
 
-            private T _dummy = default;
+            private T _dummy;
             private Getter _getter;
             private RefGetter _refGetter;
             private Setter _setter;

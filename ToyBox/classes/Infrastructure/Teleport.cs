@@ -1,5 +1,7 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // based on code by hambeard (thank you ^_^)
+
+using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
@@ -7,7 +9,6 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.View;
 using System;
 using UnityEngine;
-using JetBrains.Annotations;
 
 namespace ToyBox {
 
@@ -47,7 +48,7 @@ namespace ToyBox {
 
             foreach (var fam in unit.Familiars) {
                 if (fam)
-                    fam.TeleportToMaster(false);
+                    fam.TeleportToMaster();
             }
         }
 

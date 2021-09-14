@@ -1,22 +1,23 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Utility;
 using ModKit;
-using Kingmaker.Blueprints.Classes.Selection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintListUI {
         public static Settings settings { get { return Main.settings; } }
 
         public static int repeatCount = 1;
-        public static bool hasRepeatableAction = false;
-        public static int maxActions = 0;
+        public static bool hasRepeatableAction;
+        public static int maxActions;
         public static bool needsLayout = true;
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<SimpleBlueprint> blueprints,
@@ -24,7 +25,7 @@ namespace ToyBox {
             Func<String, String> titleFormater = null,
             NamedTypeFilter typeFilter = null
         ) {
-            if (titleFormater == null) titleFormater = (t) => t.orange().bold();
+            if (titleFormater == null) titleFormater = t => t.orange().bold();
             if (remainingWidth == 0) remainingWidth = UI.ummWidth - indent;
             int index = 0;
             if (needsLayout) {
@@ -42,7 +43,7 @@ namespace ToyBox {
                 UI.ActionIntTextField(
                     ref repeatCount,
                     "repeatCount",
-                    (limit) => { },
+                    limit => { },
                     () => { },
                     UI.Width(160));
                 UI.Space(40);
@@ -64,7 +65,7 @@ namespace ToyBox {
                     var title = blueprint.name;
                     if (blueprint is BlueprintParametrizedFeature parmBP) {
                         // string value = String.Concat(parmBP.GetFullSelectionItems().Select(o => o.Name));
-                        var feature = ch.Progression.Features.Enumerable.FirstOrDefault<Kingmaker.UnitLogic.Feature>(
+                        var feature = ch.Progression.Features.Enumerable.FirstOrDefault(
                             f => f?.Blueprint == blueprint);
                         //if (feature != null) 
                         //    title += $"<{feature.Name ?? "n/a"}>";
@@ -113,7 +114,7 @@ namespace ToyBox {
                                 float extraSpace = 0;
                                 if (action.isRepeatable) {
                                     actionName += (action.isRepeatable ? $" {repeatCount}" : "");
-                                    extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
+                                    extraSpace = 20 * (float)Math.Ceiling(Math.Log10(repeatCount));
                                 }
                                 UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
                                 UI.Space(10);

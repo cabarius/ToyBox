@@ -114,31 +114,31 @@ namespace ToyBox
             var resultType = typeof(TResult);
             var args = new Type[] { };
             var invoker = CreateInvoker(classType, name, resultType, args);
-            return new FastInvoker<TClass, TResult>((instance) => (TResult)invoker.Invoke(instance));
+            return instance => (TResult)invoker.Invoke(instance);
         }
         public static FastInvoker<TClass, T1, TResult> CreateInvoker<TClass, T1, TResult>(string name)
         {
             var classType = typeof(TClass);
             var resultType = typeof(TResult);
-            var args = new Type[] { typeof(T1) };
+            var args = new[] { typeof(T1) };
             var invoker = CreateInvoker(classType, name, resultType, args);
-            return new FastInvoker<TClass, T1, TResult>((instance, arg1) => (TResult)invoker.Invoke(instance, new object[] { arg1 }));
+            return (instance, arg1) => (TResult)invoker.Invoke(instance, arg1);
         }
         public static FastInvoker<TClass, T1, T2, TResult> CreateInvoker<TClass, T1, T2, TResult>(string name)
         {
             var classType = typeof(TClass);
             var resultType = typeof(TResult);
-            var args = new Type[] { typeof(T1), typeof(T2) };
+            var args = new[] { typeof(T1), typeof(T2) };
             var invoker = CreateInvoker(classType, name, resultType, args);
-            return new FastInvoker<TClass, T1, T2, TResult>((instance, arg1, arg2) => (TResult)invoker.Invoke(instance, new object[] { arg1, arg2 }));
+            return (instance, arg1, arg2) => (TResult)invoker.Invoke(instance, arg1, arg2);
         }
         public static FastInvoker<TClass, T1, T2, T3, TResult> CreateInvoker<TClass, T1, T2, T3, TResult>(string name)
         {
             var classType = typeof(TClass);
             var resultType = typeof(TResult);
-            var args = new Type[] { typeof(T1), typeof(T2), typeof(T3) };
+            var args = new[] { typeof(T1), typeof(T2), typeof(T3) };
             var invoker = CreateInvoker(classType, name, resultType, args);
-            return new FastInvoker<TClass, T1, T2, T3, TResult>((instance, arg1, arg2, arg3) => (TResult)invoker.Invoke(instance, new object[] { arg1, arg2, arg3 }));
+            return (instance, arg1, arg2, arg3) => (TResult)invoker.Invoke(instance, arg1, arg2, arg3);
         }
         private class StaticFastInvokeHandler
         {

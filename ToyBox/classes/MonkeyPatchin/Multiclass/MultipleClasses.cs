@@ -1,4 +1,5 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Classes;
@@ -6,20 +7,20 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
+using ModKit;
+using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using ModKit.Utility;
-using ModKit;
+using UnityModManagerNet;
 
 namespace ToyBox.Multiclass {
     static class MultipleClasses {
 
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static UnityModManager.ModEntry.ModLogger modLogger = Logger.modLogger;
 
         public static bool IsAvailable() {
             return Main.Enabled &&
@@ -76,7 +77,7 @@ namespace ToyBox.Multiclass {
         #region Class Level & Archetype
 
 #if true
-        [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), typeof(LevelUpState), typeof(UnitDescriptor))]
         static class SelectClass_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
@@ -228,12 +229,12 @@ namespace ToyBox.Multiclass {
                     Main.Log($"Unit Preview = {unit.CharacterName}");
                     Main.Log("levelup action：");
                     foreach (var action in __instance.LevelUpActions) {
-                        Main.Log($"{action.GetType().ToString()}");
+                        Main.Log($"{action.GetType()}");
                     }
                 }
             }
         }
-        [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.Apply), typeof(LevelUpState), typeof(UnitDescriptor))]
         static class ApplyClassMechanics_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
@@ -257,7 +258,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        [HarmonyPatch(typeof(SelectFeature), nameof(SelectFeature.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SelectFeature), nameof(SelectFeature.Apply), typeof(LevelUpState), typeof(UnitDescriptor))]
         static class SelectFeature_Apply_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
@@ -287,7 +288,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        [HarmonyPatch(typeof(SelectFeature), nameof(SelectFeature.Check), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SelectFeature), nameof(SelectFeature.Check), typeof(LevelUpState), typeof(UnitDescriptor))]
         static class SelectFeature_Check_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
@@ -321,7 +322,7 @@ namespace ToyBox.Multiclass {
 
 #region Spellbook
 
-        [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), typeof(LevelUpState), typeof(UnitDescriptor))]
         static class ApplySpellbook_Apply_Patch {
             [HarmonyPostfix]
             static void Postfix(MethodBase __originalMethod, ApplySpellbook __instance, LevelUpState state, UnitDescriptor unit) {
@@ -385,8 +386,8 @@ namespace ToyBox.Multiclass {
 #endregion
 
         public static void UpdateLevelsForGestalt(this UnitProgressionData __instance) {
-            __instance.m_CharacterLevel = new int?(0);
-            __instance.m_MythicLevel = new int?(0);
+            __instance.m_CharacterLevel = 0;
+            __instance.m_MythicLevel = 0;
             int? nullable;
             foreach (ClassData classData in __instance.Classes) {
                 var shouldSkip = __instance.IsClassGestalt(classData.CharacterClass);
@@ -395,12 +396,12 @@ namespace ToyBox.Multiclass {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = __instance.m_MythicLevel;
                         int level = classData.Level;
-                        __instance.m_MythicLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
+                        __instance.m_MythicLevel = nullable.HasValue ? nullable.GetValueOrDefault() + level : new int?();
                     }
                     else {
                         nullable = __instance.m_CharacterLevel;
                         int level = classData.Level;
-                        __instance.m_CharacterLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
+                        __instance.m_CharacterLevel = nullable.HasValue ? nullable.GetValueOrDefault() + level : new int?();
                     }
                 }
             }

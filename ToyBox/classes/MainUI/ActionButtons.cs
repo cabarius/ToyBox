@@ -1,10 +1,10 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using System;
-using System.Collections.Generic;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
+using System;
+using System.Collections.Generic;
 
 namespace ToyBox {
     public class NamedTypeFilter {
@@ -16,7 +16,7 @@ namespace ToyBox {
         protected NamedTypeFilter(String name, Type type, Func<SimpleBlueprint, bool> filter = null, Func<SimpleBlueprint, String> collator = null, Func<IEnumerable<SimpleBlueprint>> blueprintSource = null) {
             this.name = name;
             this.type = type;
-            this.filter = filter != null ? filter : (bp) => true;
+            this.filter = filter != null ? filter : bp => true;
             this.collator = collator;
             this.blueprintSource = blueprintSource;
         }
@@ -24,8 +24,8 @@ namespace ToyBox {
     public class NamedTypeFilter<TBlueprint> : NamedTypeFilter where TBlueprint : SimpleBlueprint {
         public NamedTypeFilter(String name, Func<TBlueprint, bool> filter = null, Func<TBlueprint, String> collator = null, Func<IEnumerable<SimpleBlueprint>> blueprintSource = null)
             : base(name, typeof(TBlueprint), null, null, blueprintSource) {
-            if (filter != null) this.filter = (bp) => filter((TBlueprint)bp);
-            if (collator != null) this.collator = (bp) => collator((TBlueprint)bp);
+            if (filter != null) this.filter = bp => filter((TBlueprint)bp);
+            if (collator != null) this.collator = bp => collator((TBlueprint)bp);
         }
     }
     public static class ActionButtons {

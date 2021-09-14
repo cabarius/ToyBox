@@ -1,4 +1,5 @@
 ﻿// some stuff borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+
 using System;
 using System.IO;
 using HarmonyLib;
@@ -27,20 +28,20 @@ namespace ModKit {
         }
 
         public static void Log(string str) {
-            Logger.modLogger.Log(str);
+            modLogger.Log(str);
         }
 
         public static void Log(Exception ex) {
-            Logger.modLogger.Log(ex.ToString().red().bold() + "\n" + ex.StackTrace);
+            modLogger.Log(ex.ToString().red().bold() + "\n" + ex.StackTrace);
         }
 
         public static void Error(Exception ex) {
-            Logger.modLogger.Log(ex.ToString() + "\n" + ex.StackTrace);
+            modLogger.Log(ex + "\n" + ex.StackTrace);
         }
 
         public void LogToFiles(string str) {
             if (removeHtmlTags) {
-                str = Utilties.RemoveHtmlTags(str);
+                str = str.RemoveHtmlTags();
             }
             if (UseTimeStamp) {
                 ToFile(TimeStamp() + " " + str);
@@ -79,38 +80,38 @@ namespace ModKit {
             }
         }
         public static void ModLog(string message) {
-            Logger.modLogger.Log(message);
+            modLogger.Log(message);
         }
         public static void ModLoggerDebug(string message) {
             //if (Main.settings.settingShowDebugInfo) {
-                Logger.modLogger.Log(message);
+                modLogger.Log(message);
             //}
         }
         public static void ModLoggerDebug(int message) {
             //if (Main.settings.settingShowDebugInfo) {
-                Logger.modLogger.Log(message.ToString());
+                modLogger.Log(message.ToString());
             //}
         }
         public static void ModLoggerDebug(bool message) {
             //if (Main.settings.settingShowDebugInfo) {
-                Logger.modLogger.Log(message.ToString());
+                modLogger.Log(message.ToString());
             //}
         }
     }
 
     public class HtmlLogger : Logger {
 
-        public HtmlLogger() : this(Logger.logFile) {
+        public HtmlLogger() : this(logFile) {
         }
 
         public HtmlLogger(String fileName) : base(fileName, ".html") {
-            this.RemoveHtmlTags = false;
-            this.UseTimeStamp = false;
+            RemoveHtmlTags = false;
+            UseTimeStamp = false;
         }
 
         public new void Log(string str) {
             str = Utilties.UnityRichTextToHtml(str);
-            base.LogToFiles(str);
+            LogToFiles(str);
         }
 
         public static string[] getObjectInfo(object o) {
@@ -127,7 +128,7 @@ namespace ModKit {
             foreach (string property in Traverse.Create(o).Properties()) {
                 properties = properties + property + ", ";
             }
-            return new string[] { fields, methods, properties };
+            return new[] { fields, methods, properties };
         }
     }
 
