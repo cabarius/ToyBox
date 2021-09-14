@@ -120,6 +120,8 @@ namespace ToyBox {
             UI.HStack("Tweaks - Class specific", 1,
                 () => UI.Toggle("Witch/Shaman: cackling/shanting extends hexes by 10 minutes while out of combat", ref settings.toggleExtendHexes),
                 () => UI.Toggle("Misc: allow all activatable simultaneously (like judgements)", ref settings.toggleAllowAllActivatable),
+                () => UI.Toggle("Allow Gather Power Without Hands Free", ref settings.toggleKineticistGatherPower),
+                () => UI.Slider("Kineticist Burn Reduction", ref settings.kineticistBurnReduction, 0, 10, 1, "", UI.AutoWidth()),
                 () => { }
                 );
 
