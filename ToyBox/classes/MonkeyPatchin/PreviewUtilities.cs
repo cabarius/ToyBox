@@ -11,43 +11,28 @@ using UnityEngine;
 
 namespace ToyBox {
     class PreviewUtilities {
-        static private GUIStyle m_BoldLabel;
-        static public GUIStyle BoldLabel {
-            get {
-                if (m_BoldLabel == null) {
-                    m_BoldLabel = new GUIStyle(GUI.skin.label) {
-                        fontStyle = FontStyle.Bold
-                    };
-                }
-                return m_BoldLabel;
-            }
-        }
-        static private GUIStyle m_BoxLabel;
-        static public GUIStyle BoxLabel {
-            get {
-                if (m_BoxLabel == null) {
-                    m_BoxLabel = new GUIStyle(GUI.skin.box) {
-                        alignment = TextAnchor.LowerLeft
-                    };
-                }
-                return m_BoxLabel;
-            }
-        }
-        static private GUIStyle m_YellowBoxLabel;
-        static public GUIStyle YellowBoxLabel {
-            get {
-                if (m_YellowBoxLabel == null) {
-                    m_YellowBoxLabel = new GUIStyle(GUI.skin.box) {
-                        alignment = TextAnchor.LowerLeft,
-                        normal = new GUIStyleState { textColor = Color.yellow },
-                        active = new GUIStyleState { textColor = Color.cyan },
-                        focused = new GUIStyleState { textColor = Color.magenta },
-                        hover = new GUIStyleState { textColor = Color.green },
-                    };
-                }
-                return m_YellowBoxLabel;
-            }
-        }
+        private static GUIStyle m_BoldLabel;
+        public static GUIStyle BoldLabel =>
+            m_BoldLabel ??= new GUIStyle(GUI.skin.label) {
+                fontStyle = FontStyle.Bold
+            };
+
+        private static GUIStyle m_BoxLabel;
+        public static GUIStyle BoxLabel =>
+            m_BoxLabel ??= new GUIStyle(GUI.skin.box) {
+                alignment = TextAnchor.LowerLeft
+            };
+
+        private static GUIStyle m_YellowBoxLabel;
+        public static GUIStyle YellowBoxLabel =>
+            m_YellowBoxLabel ??= new GUIStyle(GUI.skin.box) {
+                alignment = TextAnchor.LowerLeft,
+                normal = new GUIStyleState { textColor = Color.yellow },
+                active = new GUIStyleState { textColor = Color.cyan },
+                focused = new GUIStyleState { textColor = Color.magenta },
+                hover = new GUIStyleState { textColor = Color.green },
+            };
+
         public static List<string> ResolveConditional(Conditional conditional) {
             var actionList = conditional.ConditionsChecker.Check(null) ? conditional.IfTrue : conditional.IfFalse;
             var result = new List<string>();
@@ -57,12 +42,12 @@ namespace ToyBox {
             return result;
         }
         public static List<string> FormatActionAsList(GameAction action) {
-            if (action is Conditional) {
-                return ResolveConditional(action as Conditional);
+            if (action is Conditional conditional) {
+                return ResolveConditional(conditional);
             }
             var result = new List<string>();
             var caption = action.GetCaption();
-            caption = caption == "" || caption == null ? action.GetType().Name : caption;
+            caption = string.IsNullOrEmpty(caption) ? action.GetType().Name : caption;
             result.Add(caption);
             return result;
         }
@@ -71,7 +56,7 @@ namespace ToyBox {
         }
         public static string FormatActions(GameAction[] actions) {
             return actions
-                .SelectMany(action => FormatActionAsList(action))
+                .SelectMany(FormatActionAsList)
                 .Select(actionText => actionText == "" ? "EmptyAction" : actionText)
                 .Join();
         }
@@ -85,12 +70,8 @@ namespace ToyBox {
         public static bool CausesGameOver(BlueprintKingdomEventBase blueprint) {
             var results = blueprint.GetComponent<EventFinalResults>();
             if (results == null) return false;
-            foreach (var result in results.Results) {
-                foreach (var action in result.Actions.Actions) {
-                    if (action is GameOver) return true;
-                }
-            }
-            return false;
+
+            return results.Results.SelectMany(result => result.Actions.Actions).OfType<GameOver>().Any();
         }
         public class CodeTimer : IDisposable {
             private readonly Stopwatch m_Stopwatch;

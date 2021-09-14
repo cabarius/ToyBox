@@ -27,11 +27,7 @@ namespace ToyBox.BagOfPatches {
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
                 UnitEntityData unit = ability.Caster.Unit;
-                if (unit?.IsPlayerFaction == true && settings.toggleInfiniteAbilities) {
-                    return false;
-                }
-
-                return true;
+                return unit?.IsPlayerFaction != true || !settings.toggleInfiniteAbilities;
             }
         }
 

@@ -89,12 +89,12 @@ namespace ToyBox.BagOfPatches {
             }
             public static void Postfix(StatsDistribution __instance, ref int __result, StatType attribute) {
                 int attributeValue = __instance.StatValues[attribute];
-                if (attributeValue <= 7) {
-                    __result = -2;
-                }
-                else if (attributeValue >= 17) {
-                    __result = -4;
-                }
+
+                __result = attributeValue switch {
+                    <= 7 => -2,
+                    >= 17 => -4,
+                    var _ => __result
+                };
             }
         }
 

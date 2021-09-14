@@ -16,7 +16,7 @@ namespace ToyBox {
         protected NamedTypeFilter(String name, Type type, Func<SimpleBlueprint, bool> filter = null, Func<SimpleBlueprint, String> collator = null, Func<IEnumerable<SimpleBlueprint>> blueprintSource = null) {
             this.name = name;
             this.type = type;
-            this.filter = filter != null ? filter : bp => true;
+            this.filter = filter ?? (_ => true);
             this.collator = collator;
             this.blueprintSource = blueprintSource;
         }
@@ -29,12 +29,13 @@ namespace ToyBox {
         }
     }
     public static class ActionButtons {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
+
         public static void ResetGUI() { }
 
         // convenience extensions for constructing UI for special types
         public static void ActionButton<T>(this NamedAction<T> namedAction, T value, Action buttonAction, float width = 0) {
-            if (namedAction != null && namedAction.canPerform(value)) {
+            if (namedAction?.canPerform(value) == true) {
                 UI.ActionButton(namedAction.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {
@@ -42,7 +43,7 @@ namespace ToyBox {
             }
         }
         public static void MutatorButton<U, T>(this NamedMutator<U, T> mutator, U unit, T value, Action buttonAction, float width = 0) {
-            if (mutator != null && mutator.canPerform(unit, value)) {
+            if (mutator?.canPerform(unit, value) == true) {
                 UI.ActionButton(mutator.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {
@@ -50,7 +51,7 @@ namespace ToyBox {
             }
         }
         public static void BlueprintActionButton(this BlueprintAction action, UnitEntityData unit, SimpleBlueprint bp, Action buttonAction, float width) {
-            if (action != null && action.canPerform(bp, unit)) {
+            if (action?.canPerform(bp, unit) == true) {
                 UI.ActionButton(action.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {

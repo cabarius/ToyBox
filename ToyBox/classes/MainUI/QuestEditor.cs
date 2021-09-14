@@ -2,7 +2,7 @@
 //   "Author": "spacehamster",
 //   "HomePage": "https://www.nexusmods.com/pathfinderkingmaker/mods/36",
 //   "Repository": "https://raw.githubusercontent.com/spacehamster/KingmakerKingdomResolutionMod/master/KingdomResolution/Repository.json"
-// Copyright < 2018 > Spacehamster 
+// Copyright < 2018 > Spacehamster
 // Copyright < 2021 > Ported version - Narria (github user Cabarius) - License: MIT
 
 using HarmonyLib;
@@ -64,16 +64,12 @@ namespace ToyBox {
                                         UI.Space(25);
                                         UI.Label(questObjective.stateString(), UI.Width(150));
                                         if (questObjective.State == QuestObjectiveState.None && quest.State == QuestState.Started) {
-                                            UI.ActionButton("Start", () => { questObjective.Start(); }, UI.AutoWidth());
+                                            UI.ActionButton("Start", () => questObjective.Start(), UI.AutoWidth());
                                         }
                                         else if (questObjective.State == QuestObjectiveState.Started) {
-                                            UI.ActionButton(questObjective.Blueprint.IsFinishParent ? "Complete (Final)" : "Complete", () => {
-                                                questObjective.Complete();
-                                            }, UI.AutoWidth());
+                                            UI.ActionButton(questObjective.Blueprint.IsFinishParent ? "Complete (Final)" : "Complete", () => questObjective.Complete(), UI.AutoWidth());
                                             if (questObjective.Blueprint.AutoFailDays > 0) {
-                                                UI.ActionButton("Reset Time", () => {
-                                                    Traverse.Create(questObjective).Field("m_ObjectiveStartTime").SetValue(Game.Instance.Player.GameTime);
-                                                }, UI.AutoWidth());
+                                                UI.ActionButton("Reset Time", () => Traverse.Create(questObjective).Field("m_ObjectiveStartTime").SetValue(Game.Instance.Player.GameTime), UI.AutoWidth());
                                             }
                                         }
                                         else if (questObjective.State == QuestObjectiveState.Failed && (questObjective.Blueprint.IsFinishParent || quest.State == QuestState.Started)) {
@@ -97,12 +93,10 @@ namespace ToyBox {
                                                     UI.Space(25);
                                                     UI.Label(childObjective.stateString(), UI.Width(150));
                                                     if (childObjective.State == QuestObjectiveState.None) {
-                                                        UI.ActionButton("Start", () => { childObjective.Start(); }, UI.AutoWidth());
+                                                        UI.ActionButton("Start", () => childObjective.Start(), UI.AutoWidth());
                                                     }
                                                     else if (childObjective.State == QuestObjectiveState.Started) {
-                                                        UI.ActionButton(childObjective.Blueprint.IsFinishParent ? "Complete (Final)" : "Complete", () => {
-                                                            childObjective.Complete();
-                                                        }, UI.AutoWidth());
+                                                        UI.ActionButton(childObjective.Blueprint.IsFinishParent ? "Complete (Final)" : "Complete", () => childObjective.Complete(), UI.AutoWidth());
 
                                                     }
                                                 });

@@ -253,11 +253,11 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(CameraZoom __instance) {
                 if (firstCall) {
                     //modLogger.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
-                    if (__instance.FovMin != BaseFovMin) {
+                    if (!Mathf.Approximately(__instance.FovMin, BaseFovMin)) {
                         modLogger.Log($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMin = __instance.FovMin;
                     }
-                    if (__instance.FovMax != BaseFovMax) {
+                    if (!Mathf.Approximately(__instance.FovMax, BaseFovMax)) {
                         modLogger.Log($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMax = __instance.FovMax;
                     }

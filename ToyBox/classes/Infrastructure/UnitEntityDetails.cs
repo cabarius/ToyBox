@@ -12,7 +12,7 @@ using Kingmaker.UnitLogic.Parts;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ToyBox 
+namespace ToyBox
 {
     public enum UnitSelectType
     {
@@ -30,37 +30,17 @@ namespace ToyBox
             return (data.Select((u => u.ModifiedSpeedMps)).Max());
         }
 
-        public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType)
-        {
+        public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType) {
             if (unitEntityData == null) return false;
-            switch (selectType)
-            {
-                case UnitSelectType.Everyone:
-                    return true;
-                case UnitSelectType.Party:
-                    if (unitEntityData.IsPlayerFaction)
-                    {
-                        return true;
-                    }
-                    return false;
-                case UnitSelectType.You:
-                    if (unitEntityData.IsMainCharacter)
-                    {
-                        return true;
-                    }
-                    return false;
-                case UnitSelectType.Friendly:
-                    return !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter());
-                case UnitSelectType.Enemies:
-                    // TODO - should this be IsEnemy instead?
-                    if (!unitEntityData.IsPlayerFaction && unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction))
-                    {
-                        return true;
-                    }
-                    return false;
-                default:
-                    return false;
-            }
+
+            return selectType switch {
+                UnitSelectType.Everyone => true,
+                UnitSelectType.Party => unitEntityData.IsPlayerFaction,
+                UnitSelectType.You => unitEntityData.IsMainCharacter,
+                UnitSelectType.Friendly => !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter()),
+                UnitSelectType.Enemies => !unitEntityData.IsPlayerFaction && unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction),
+                var _ => false
+            };
         }
         public static void Kill(UnitEntityData unit)
         {

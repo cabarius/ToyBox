@@ -32,7 +32,7 @@ namespace ToyBox.Multiclass {
         }
 
         public static void Apply_NoStatsAndHitPoints(this ApplyClassMechanics instance, LevelUpState state, UnitDescriptor unit) {
-            Main.Log($"Apply_NoStatsAndHitPoints: unit = {unit.CharacterName}, state.class = {(state.SelectedClass==null?"NULL":state.SelectedClass.Name)}");
+            Main.Log($"Apply_NoStatsAndHitPoints: unit = {unit.CharacterName}, state.class = {state.SelectedClass?.Name ?? "NULL"}");
             if (state.SelectedClass != null) {
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData != null) {

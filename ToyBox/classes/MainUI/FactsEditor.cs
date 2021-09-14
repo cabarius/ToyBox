@@ -18,7 +18,8 @@ using UnityEngine;
 
 namespace ToyBox {
     public class FactsEditor {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
+
         public static IEnumerable<SimpleBlueprint> filteredBPs;
         static String prevCallerKey = "";
         static String searchText = "";
@@ -48,7 +49,7 @@ namespace ToyBox {
             filteredBPs = filtered.Take(searchLimit).OrderBy(bp => bp.name).ToArray();
             BlueprintListUI.needsLayout = true;
         }
-        static public void OnGUI<T>(String callerKey,
+        public static void OnGUI<T>(String callerKey,
                                     UnitEntityData unit,
                                     List<T> facts,
                                     Func<T, SimpleBlueprint> blueprint,
@@ -65,10 +66,10 @@ namespace ToyBox {
             var mutatorLookup = actions.Distinct().ToDictionary(a => a.name, a => a);
             UI.BeginHorizontal();
             UI.Space(100);
-            UI.ActionTextField(ref searchText, "searhText", null, () => { searchChanged = true; }, UI.Width(320));
+            UI.ActionTextField(ref searchText, "searhText", null, () => searchChanged = true, UI.Width(320));
             UI.Space(25);
             UI.Label("Limit", UI.ExpandWidth(false));
-            UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
+            UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => searchChanged = true, UI.Width(175));
             if (searchLimit > 1000) { searchLimit = 1000; }
             UI.Space(25);
             UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
@@ -77,7 +78,7 @@ namespace ToyBox {
             UI.EndHorizontal();
             UI.BeginHorizontal();
             UI.Space(100);
-            UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
+            UI.ActionButton("Search", () => searchChanged = true, UI.AutoWidth());
             UI.Space(25);
             if (matchCount > 0 && searchText.Length > 0) {
                 String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
@@ -120,7 +121,7 @@ namespace ToyBox {
             SimpleBlueprint toIncrease = null;
             SimpleBlueprint toDecrease = null;
             var toValues = new Dictionary<String, SimpleBlueprint>();
-            var sorted = facts.OrderBy(f => title(f));
+            var sorted = facts.OrderBy(title);
             matchCount = 0;
             UI.Div(100);
             foreach (var fact in sorted) {
@@ -139,10 +140,10 @@ namespace ToyBox {
                         UI.Space(10); remWidth -= 10;
                         if (value != null) {
                             var v = value(fact);
-                            decrease.BlueprintActionButton(unit, bp, () => { toDecrease = bp; }, 60);
+                            decrease.BlueprintActionButton(unit, bp, () => toDecrease = bp, 60);
                             UI.Space(10f);
                             UI.Label($"{v}".orange().bold(), UI.Width(30));
-                            increase.BlueprintActionButton(unit, bp, () => { toIncrease = bp; }, 60);
+                            increase.BlueprintActionButton(unit, bp, () => toIncrease = bp, 60);
                             remWidth -= 166;
                         }
 #if false
@@ -150,7 +151,7 @@ namespace ToyBox {
                     add.BlueprintActionButton(unit, bp, () => { toAdd = bp; }, 150);
 #endif
                         UI.Space(10); remWidth -= 10;
-                        remove.BlueprintActionButton(unit, bp, () => { toRemove = bp; }, 175);
+                        remove.BlueprintActionButton(unit, bp, () => toRemove = bp, 175);
                         remWidth -= 178;
 #if false
                     foreach (var action in actions) {
@@ -181,7 +182,7 @@ namespace ToyBox {
             }
             toValues.Clear();
         }
-        static public void OnGUI(UnitEntityData ch, List<Feature> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Feature> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI("Features", ch, facts,
@@ -193,7 +194,7 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintFeature))
                 );
         }
-        static public void OnGUI(UnitEntityData ch, List<Buff> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Buff> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI("Features", ch, facts,
@@ -205,7 +206,7 @@ namespace ToyBox {
                BlueprintAction.ActionsForType(typeof(BlueprintBuff))
                 );
         }
-        static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Ability> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI("Abilities", ch, facts,
@@ -217,7 +218,7 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
-        static public void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
+        public static void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
             var learnable = spellbookBP.SpellList.GetSpells(level);
@@ -232,7 +233,7 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
-        static public void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
+        public static void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI("Spellbooks", ch, spellbooks,

@@ -21,7 +21,7 @@ namespace ToyBox {
         public static String GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
         public static String GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
-            if (name == null || name.Length == 0) name = bp.name.Replace("Spellbook", "");
+            if (string.IsNullOrEmpty(name)) name = bp.name.Replace("Spellbook", "");
             return name;
         }
         public static String CollationName(this SimpleBlueprint bp) {
@@ -29,7 +29,7 @@ namespace ToyBox {
             cachedCollationNames.TryGetValue(bp, out collationName);
             if (collationName != null) return collationName;
             var typeName = bp.GetType().ToString();
-            var stripIndex = typeName.LastIndexOf("Blueprint");
+            var stripIndex = typeName.LastIndexOf("Blueprint", StringComparison.Ordinal);
             if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
             cachedCollationNames.Add(bp, typeName);
             return typeName;

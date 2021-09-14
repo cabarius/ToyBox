@@ -9,7 +9,7 @@ namespace ModKit.Utility
 {
     public static class HotkeyHelper
     {
-        public static bool CanBeRegistered(string bindingName, KeyBindingData bindingKey, 
+        public static bool CanBeRegistered(string bindingName, KeyBindingData bindingKey,
             KeyboardAccess.GameModesGroup gameMode = KeyboardAccess.GameModesGroup.World)
         {
             bool result = Game.Instance.Keyboard.CanBeRegistered(
@@ -42,7 +42,7 @@ namespace ModKit.Utility
 
             foreach (KeyCode keyHeld in Enum.GetValues(typeof(KeyCode)))
             {
-                if (keyHeld  == KeyCode.None || keyHeld  > KeyCode.PageDown)
+                if (keyHeld is KeyCode.None or > KeyCode.PageDown)
                     continue;
 
                 if (Input.GetKey(keyHeld ))

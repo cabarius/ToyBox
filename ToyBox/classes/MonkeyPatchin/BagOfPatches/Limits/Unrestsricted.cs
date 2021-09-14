@@ -46,7 +46,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityArmor __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
                     var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint == null ? false : blueprint.CanBeEquippedBy(owner);
+                    __result = blueprint?.CanBeEquippedBy(owner) ?? false;
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityShield __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
                     var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint == null ? false : blueprint.CanBeEquippedBy(owner);
+                    __result = blueprint?.CanBeEquippedBy(owner) ?? false;
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityWeapon __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
                     var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint == null ? false : blueprint.CanBeEquippedBy(owner);
+                    __result = blueprint?.CanBeEquippedBy(owner) ?? false;
                 }
             }
         }

@@ -20,18 +20,18 @@ namespace ToyBox {
         public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }
         public static string Acronym(this Alignment a) { return UIUtility.GetAlignmentAcronym(a); }
         public static RGBA Color(this Alignment a) {
-            switch (a) {
-                case Alignment.LawfulGood: return RGBA.aqua;
-                case Alignment.NeutralGood: return RGBA.lime;
-                case Alignment.ChaoticGood: return RGBA.yellow;
-                case Alignment.LawfulNeutral: return RGBA.blue;
-                case Alignment.TrueNeutral: return RGBA.white;
-                case Alignment.ChaoticNeutral: return RGBA.orange;
-                case Alignment.LawfulEvil: return RGBA.purple;
-                case Alignment.NeutralEvil: return RGBA.fuchsia;
-                case Alignment.ChaoticEvil: return RGBA.red;
-            }
-            return RGBA.grey;
+            return a switch {
+                Alignment.LawfulGood => RGBA.aqua,
+                Alignment.NeutralGood => RGBA.lime,
+                Alignment.ChaoticGood => RGBA.yellow,
+                Alignment.LawfulNeutral => RGBA.blue,
+                Alignment.TrueNeutral => RGBA.white,
+                Alignment.ChaoticNeutral => RGBA.orange,
+                Alignment.LawfulEvil => RGBA.purple,
+                Alignment.NeutralEvil => RGBA.fuchsia,
+                Alignment.ChaoticEvil => RGBA.red,
+                var _ => RGBA.grey
+            };
         }
         public static string GetDescription(this SimpleBlueprint   bp)
         // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License

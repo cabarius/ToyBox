@@ -70,10 +70,7 @@ namespace ToyBox.BagOfPatches {
                 if (!__instance.IsInCombat) return true;
                 if (!settings.toggleUnlimitedActionsPerTurn) return true;
 
-                if (CombatController.IsInTurnBasedCombat()) {
-                    return false;
-                }
-                return true;
+                return !CombatController.IsInTurnBasedCombat();
             }
         }
     }

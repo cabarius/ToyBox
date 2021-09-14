@@ -61,7 +61,7 @@ namespace ToyBox.BagOfPatches {
             public static void Prefix(UnitEntityData initiator, BlueprintUnit blueprint, Vector3 position, ref Rounds duration, ref int level, RuleSummonUnit __instance) {
                 modLogger.Log($"old duration: {duration} level: {level} \n mult: {settings.summonDurationMultiplier1} levelInc: {settings.summonLevelModifier1}\n initiatior: {initiator} tweakTarget: {settings.summonTweakTarget1} shouldTweak: {UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget1)}");
                 if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget1)) {
-                    if (settings.summonDurationMultiplier1 != 1) {
+                    if (!Mathf.Approximately(settings.summonDurationMultiplier1, 1)) {
                         duration = new Rounds(Convert.ToInt32(duration.Value * settings.summonDurationMultiplier1));
                     }
                     if (settings.summonLevelModifier1 != 0) {
@@ -69,7 +69,7 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
                 else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget2)) {
-                    if (settings.summonDurationMultiplier2 != 1) {
+                    if (!Mathf.Approximately(settings.summonDurationMultiplier2, 1)) {
                         duration = new Rounds(Convert.ToInt32(duration.Value * settings.summonDurationMultiplier2));
                     }
                     if (settings.summonLevelModifier2 >= 0) {

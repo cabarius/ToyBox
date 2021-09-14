@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ToyBox {
     public class MulticlassPicker {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         public static void OnGUI(MulticlassOptions options, float indent = 100) {
             var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;

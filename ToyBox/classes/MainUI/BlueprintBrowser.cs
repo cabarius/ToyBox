@@ -28,7 +28,7 @@ using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintBrowser {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         public static IEnumerable<SimpleBlueprint> filteredBPs;
         public static IEnumerable<IGrouping<String, SimpleBlueprint>> collatedBPs;
@@ -191,7 +191,7 @@ namespace ToyBox {
                     UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
                         blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                         1,
-                        selected => { UpdateSearchResults(); },
+                        selected => UpdateSearchResults(),
                         UI.buttonStyle,
                         UI.Width(200));
                 }
@@ -216,14 +216,14 @@ namespace ToyBox {
                             ref settings.searchText,
                             "searhText",
                             text => { },
-                            () => { UpdateSearchResults(); },
+                            UpdateSearchResults,
                             UI.MinWidth(100), UI.MaxWidth(400));
                         UI.Label("Limit", UI.Width(150));
                         UI.ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
                             limit => { },
-                            () => { UpdateSearchResults(); },
+                            UpdateSearchResults,
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
@@ -237,9 +237,7 @@ namespace ToyBox {
                     }
                     // Search Button and Results Summary
                     using (UI.HorizontalScope()) {
-                        UI.ActionButton("Search", () => {
-                            UpdateSearchResults();
-                        }, UI.AutoWidth());
+                        UI.ActionButton("Search", UpdateSearchResults, UI.AutoWidth());
                         UI.Space(25);
                         if (firstSearch) {
                             UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());

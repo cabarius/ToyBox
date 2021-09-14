@@ -14,7 +14,7 @@ namespace ToyBox.Multiclass {
     //};
     public static class SavesBAB {
         public static void ApplySingleStat(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] appliedClasses, StatType stat, BlueprintStatProgression[] statProgs, ProgressionPolicy policy = ProgressionPolicy.Largest) {
-            if (appliedClasses.Count() <= 0) return;
+            if (appliedClasses.Length <= 0) return;
             //Main.Debug($"stat: {stat}  baseValue: {unit.Stats.GetStat(stat).BaseValue}");
             int[] newClassLvls = appliedClasses.Select(cd => unit.Progression.GetClassLevel(cd)).ToArray();
             int appliedClassCount = newClassLvls.Length;
@@ -25,7 +25,7 @@ namespace ToyBox.Multiclass {
                 newBonuses[i] = statProgs[i].GetBonus(newClassLvls[i]);
                 oldBonuses[i] = statProgs[i].GetBonus(newClassLvls[i] - 1);
             }
-            
+
             int mainClassIndex = appliedClasses.ToList().FindIndex(cd => cd == state.SelectedClass);
             //v($"mainClassIndex = {mainClassIndex}");
             int mainClassInc = newBonuses[mainClassIndex] - oldBonuses[mainClassIndex];
@@ -54,35 +54,35 @@ namespace ToyBox.Multiclass {
 
         public static void ApplySaveBAB(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] classes) {
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.BaseAttackBonus, 
-                classes.Select(a => a.BaseAttackBonus).ToArray(), 
+                unit,
+                state,
+                classes,
+                StatType.BaseAttackBonus,
+                classes.Select(a => a.BaseAttackBonus).ToArray(),
                 Main.settings.multiclassBABPolicy
                 );
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.SaveFortitude, 
-                classes.Select(a => a.FortitudeSave).ToArray(), 
+                unit,
+                state,
+                classes,
+                StatType.SaveFortitude,
+                classes.Select(a => a.FortitudeSave).ToArray(),
                 Main.settings.multiclassSavingThrowPolicy
                 );
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.SaveReflex, 
+                unit,
+                state,
+                classes,
+                StatType.SaveReflex,
                 classes.Select(a => a.ReflexSave).ToArray(),
                 Main.settings.multiclassSavingThrowPolicy
                 );
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.SaveWill, 
-                classes.Select(a => a.WillSave).ToArray(), 
+                unit,
+                state,
+                classes,
+                StatType.SaveWill,
+                classes.Select(a => a.WillSave).ToArray(),
                 Main.settings.multiclassSavingThrowPolicy
                 );
 

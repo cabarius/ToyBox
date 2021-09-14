@@ -78,7 +78,7 @@ namespace ToyBox.BagOfPatches {
                     if (___m_KingdomEventView != null) {
                         EventBus.RaiseEvent((IEventSceneHandler h) => h.OnEventSelected(null, ___m_Cart));
 
-                        if (___m_KingdomEventView.IsFinished || ___m_KingdomEventView.m_Event.AssociatedTask?.AssignedLeader == null || ___m_KingdomEventView.Blueprint.NeedToVisitTheThroneRoom) {
+                        if (___m_KingdomEventView.IsFinished || ___m_KingdomEventView.m_Event?.AssociatedTask?.AssignedLeader == null || ___m_KingdomEventView.Blueprint.NeedToVisitTheThroneRoom) {
                             return;
                         }
 

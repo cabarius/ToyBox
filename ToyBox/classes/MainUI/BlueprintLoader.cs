@@ -42,10 +42,7 @@ namespace ToyBox {
             }
             blueprints = new List<SimpleBlueprint>();
             var toc = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints;
-            while (toc == null) {
-                yield return null;
-                toc = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints;
-            }
+
             var allGUIDs = new List<BlueprintGuid>();
             foreach (var key in toc.Keys) {
                 allGUIDs.Add(key);
@@ -83,14 +80,7 @@ namespace ToyBox {
             coroutine = LoadBlueprints();
             StartCoroutine(coroutine);
         }
-        public bool IsLoading {
-            get {
-                if (coroutine != null) {
-                    return true;
-                }
-                return false;
-            }
-        }
+        public bool IsLoading => coroutine != null;
     }
 
     public static class BlueprintLoaderOld {
@@ -108,7 +98,7 @@ namespace ToyBox {
             BundlesLoadService.Instance.LoadDependencies(AssetBundleNames.BlueprintAssets);
             LoadRequest = bundle.LoadAllAssetsAsync<object>();
             Main.Log($"created request {LoadRequest}");
-            LoadRequest.completed += asyncOperation => {
+            LoadRequest.completed += _ => {
                 Main.Log($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
                 callback(LoadRequest.allAssets.Cast<SimpleBlueprint>());
                 LoadRequest = null;

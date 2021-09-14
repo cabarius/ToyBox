@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace ToyBox {
     public class LevelUp {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
+
         public static void ResetGUI() { }
         public static void OnGUI() {
             UI.HStack("Character Creation", 1,
@@ -30,7 +31,7 @@ namespace ToyBox {
                     );
             UI.Div(0, 25);
             UI.HStack("Unlocks", 4, () => {
-                UI.ActionButton("All Mythic Paths", () => Actions.UnlockAllMythicPaths());
+                UI.ActionButton("All Mythic Paths", Actions.UnlockAllMythicPaths);
                 UI.Space(25);
                 UI.Label("Warning! Using this might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".green());
             });
@@ -87,18 +88,10 @@ namespace ToyBox {
                         UI.Space(15);
                     }
                 },
-                () => {
-                    UI.EnumGrid("Hit Point (Hit Die) Growth", ref settings.multiclassHitPointPolicy, 0, UI.AutoWidth());
-                },
-                () => {
-                    UI.EnumGrid("Basic Attack Growth Pr", ref settings.multiclassBABPolicy, 0, UI.AutoWidth());
-                },
-                () => {
-                    UI.EnumGrid("Saving Throw Growth", ref settings.multiclassSavingThrowPolicy, 0, UI.AutoWidth());
-                },
-                () => {
-                    UI.EnumGrid("Skill Point Growth", ref settings.multiclassSkillPointPolicy, 0, UI.AutoWidth());
-                },
+                () => UI.EnumGrid("Hit Point (Hit Die) Growth", ref settings.multiclassHitPointPolicy, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Basic Attack Growth Pr", ref settings.multiclassBABPolicy, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Saving Throw Growth", ref settings.multiclassSavingThrowPolicy, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Skill Point Growth", ref settings.multiclassSkillPointPolicy, 0, UI.AutoWidth()),
                 () => UI.Toggle("Use Recalculate Caster Levels", ref settings.toggleRecalculateCasterLevelOnLevelingUp),
                 () => UI.Toggle("Restrict Caster Level To Current", ref settings.toggleRestrictCasterLevelToCharacterLevel),
                 //() => { UI.Toggle("Restrict CL to Current (temp) ", ref settings.toggleRestrictCasterLevelToCharacterLevelTemporary, 0),
@@ -121,7 +114,7 @@ namespace ToyBox {
                              UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
                                  characters.Select(ch => ch.CharacterName).Prepend("Char Gen").ToArray(),
                                  6,
-                                 index => { },
+                                 _ => { },
                                  UI.AutoWidth()
                                  );
                              if (settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;

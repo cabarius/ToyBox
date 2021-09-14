@@ -72,13 +72,7 @@ namespace ToyBox.BagOfPatches {
 
             int count = spellbooks.Count;
 
-            if (count <= 0) {
-                return actionName;
-            }
-
-            string actionFormat = "{0} <{1}>";
-
-            return string.Format(actionFormat, actionName, count == 1 ? spellbooks.First().Blueprint.Name : "Multiple");
+            return count <= 0 ? actionName : string.Format("{0} <{1}>", actionName, count == 1 ? spellbooks.First().Blueprint.Name : "Multiple");
         }
 
 
@@ -149,8 +143,8 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 BlueprintUnitType type = unitEntityData.Blueprint.Type;
-                bool isASpider = IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isASpiderSwarm = IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
+                bool isASpiderSwarm = IsSpiderSwarmType(type?.AssetGuidThreadSafe);
                 bool isOtherSpiderUnit = IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 bool isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
@@ -163,8 +157,8 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
                 BlueprintUnitType type = blueprintUnit.Type;
-                bool isASpider = IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isASpiderSwarm = IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
+                bool isASpiderSwarm = IsSpiderSwarmType(type?.AssetGuidThreadSafe);
                 bool isOtherSpiderUnit = IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 bool isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {

@@ -18,7 +18,8 @@ using UnityEngine;
 
 namespace ToyBox {
     public class PartyEditor {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
+
         enum ToggleChoice {
             Classes,
             Stats,
@@ -94,11 +95,11 @@ namespace ToyBox {
             var player = Game.Instance.Player;
             UI.Space(25);
             if (!player.PartyAndPets.Contains(ch)) {
-                UI.ActionButton("Add", () => { charToAdd = ch; }, UI.Width(150));
+                UI.ActionButton("Add", () => charToAdd = ch, UI.Width(150));
                 UI.Space(25);
             }
             else if (player.ActiveCompanions.Contains(ch)) {
-                UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.Width(150));
+                UI.ActionButton("Remove", () => charToRemove = ch, UI.Width(150));
                 UI.Space(25);
             }
             else {
@@ -169,9 +170,7 @@ namespace ToyBox {
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
-                            UI.ActionButton("+1", () => {
-                                progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1));
-                            }, UI.Width(70));
+                            UI.ActionButton("+1", () => progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1)), UI.Width(70));
                         }
                         else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
                             UI.Label("LvUp".cyan().italic(), UI.Width(70));
@@ -183,9 +182,7 @@ namespace ToyBox {
                     UI.Label("my".green() + $": {mythicLevel}", UI.Width(80));
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.MythicExperience < 10) {
-                            UI.ActionButton("+1", () => {
-                                progression.AdvanceMythicExperience(progression.MythicExperience + 1);
-                            }, UI.Width(70));
+                            UI.ActionButton("+1", () => progression.AdvanceMythicExperience(progression.MythicExperience + 1), UI.Width(70));
                         }
                         else { UI.Label("max".cyan(), UI.Width(70)); }
                     }
@@ -372,7 +369,7 @@ namespace ToyBox {
                     }
                     using (UI.HorizontalScope()) {
                         UI.Space(528);
-                        UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
+                        UI.ActionButton("Reset", () => ch.Descriptor.State.Size = ch.Descriptor.OriginalSize, UI.Width(197));
                     }
                     UI.Div(100, 20, 755);
                     foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
@@ -400,9 +397,7 @@ namespace ToyBox {
                                     storedValue = modifiableValue.BaseValue;
                                 }, UI.AutoWidth());
                                 UI.Space(25);
-                                UI.ActionIntTextField(ref storedValue, statType.ToString(), v => {
-                                    modifiableValue.BaseValue = v;
-                                }, null, UI.Width(75));
+                                UI.ActionIntTextField(ref storedValue, statType.ToString(), v => modifiableValue.BaseValue = v, null, UI.Width(75));
                                 statEditorStorage[key] = storedValue;
                             }
                         }

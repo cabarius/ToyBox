@@ -8,7 +8,7 @@ using System.Linq;
 namespace ToyBox {
     public class CharacterPicker {
         static int selectedIndex;
-        static public UnitEntityData GetSelectedCharacter() {
+        public static UnitEntityData GetSelectedCharacter() {
             var characters = PartyEditor.GetCharacterList();
             if (characters == null || characters.Count == 0) {
                 return Game.Instance.Player.MainCharacter;
@@ -29,7 +29,7 @@ namespace ToyBox {
             UI.ActionSelectionGrid(ref selectedIndex,
                 characters.Select(ch => ch.CharacterName).ToArray(),
                 8,
-                index => {  BlueprintBrowser.UpdateSearchResults(); },
+                index => BlueprintBrowser.UpdateSearchResults(),
                 UI.MinWidth(200));
             var selectedCharacter = GetSelectedCharacter();
             if (selectedCharacter != null) {

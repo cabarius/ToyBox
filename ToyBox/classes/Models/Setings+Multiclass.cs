@@ -10,11 +10,19 @@ namespace ToyBox {
     public class ArchetypeOptions : HashSet<string> {
         public const string NoArchetype = "$NoArchetype";
 
-        public bool Contains(BlueprintArchetype arch) => Contains(arch == null ? NoArchetype : arch.HashKey());
+        public bool Contains(BlueprintArchetype arch) {
+            return Contains(arch == null ? NoArchetype : arch.HashKey());
+        }
 
-        public void Add(BlueprintArchetype arch) => Add(arch == null ? NoArchetype : arch.HashKey());
+        public void Add(BlueprintArchetype arch) {
+            Add(arch == null ? NoArchetype : arch.HashKey());
+        }
+
         public void AddExclusive(BlueprintArchetype arch) { Clear(); Add(arch); }
-        public void Remove(BlueprintArchetype arch) => Remove(arch == null ? NoArchetype : arch.HashKey());
+        public void Remove(BlueprintArchetype arch) {
+            Remove(arch == null ? NoArchetype : arch.HashKey());
+        }
+
         public override string ToString() {
             var result = "{";
             foreach (var arch in this) result += " " + arch + ",";
@@ -54,9 +62,18 @@ namespace ToyBox {
         public void SetArchetypeOptions(BlueprintCharacterClass cl, ArchetypeOptions archOptions) {
             this[cl.HashKey()] = archOptions;
         }
-        public bool Contains(BlueprintCharacterClass cl) => base.ContainsKey(cl.HashKey());
-        public void Add(BlueprintCharacterClass cl) => this.Add(cl.HashKey(), new ArchetypeOptions());
-        public void Remove(BlueprintCharacterClass cl) => this.Remove(cl.HashKey());
+        public bool Contains(BlueprintCharacterClass cl) {
+            return base.ContainsKey(cl.HashKey());
+        }
+
+        public void Add(BlueprintCharacterClass cl) {
+            this.Add(cl.HashKey(), new ArchetypeOptions());
+        }
+
+        public void Remove(BlueprintCharacterClass cl) {
+            this.Remove(cl.HashKey());
+        }
+
         public override string ToString() {
             string result = base.ToString() + " {\n";
             foreach (var classEntry in this) {

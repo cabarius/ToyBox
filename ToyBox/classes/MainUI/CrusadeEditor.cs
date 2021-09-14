@@ -60,32 +60,20 @@ namespace ToyBox.classes.MainUI {
                 () => {
                     UI.Label("Finances".cyan(), UI.Width(150));
                     UI.Label(kingdom.Resources.Finances.ToString().orange().bold(), UI.Width(200));
-                    UI.ActionButton($"Gain {Settings.increment}", () => {
-                        kingdom.Resources += KingdomResourcesAmount.FromFinances(Settings.increment);
-                    }, UI.AutoWidth());
-                    UI.ActionButton($"Lose {Settings.increment}", () => {
-                        kingdom.Resources -= KingdomResourcesAmount.FromFinances(Settings.increment);
-                    }, UI.AutoWidth());
+                    UI.ActionButton($"Gain {Settings.increment}", () => kingdom.Resources += KingdomResourcesAmount.FromFinances(Settings.increment), UI.AutoWidth());
+                    UI.ActionButton($"Lose {Settings.increment}", () => kingdom.Resources -= KingdomResourcesAmount.FromFinances(Settings.increment), UI.AutoWidth());
                 },
                 () => {
                     UI.Label("Materials".cyan(), UI.Width(150));
                     UI.Label(kingdom.Resources.Materials.ToString().orange().bold(), UI.Width(200));
-                    UI.ActionButton($"Gain {Settings.increment}", () => {
-                        kingdom.Resources += KingdomResourcesAmount.FromMaterials(Settings.increment);
-                    }, UI.AutoWidth());
-                    UI.ActionButton($"Lose {Settings.increment}", () => {
-                        kingdom.Resources -= KingdomResourcesAmount.FromMaterials(Settings.increment);
-                    }, UI.AutoWidth());
+                    UI.ActionButton($"Gain {Settings.increment}", () => kingdom.Resources += KingdomResourcesAmount.FromMaterials(Settings.increment), UI.AutoWidth());
+                    UI.ActionButton($"Lose {Settings.increment}", () => kingdom.Resources -= KingdomResourcesAmount.FromMaterials(Settings.increment), UI.AutoWidth());
                 },
                 () => {
                     UI.Label("Favors".cyan(), UI.Width(150));
                     UI.Label(kingdom.Resources.Favors.ToString().orange().bold(), UI.Width(200));
-                    UI.ActionButton($"Gain {Settings.increment}", () => {
-                        kingdom.Resources += KingdomResourcesAmount.FromFavors(Settings.increment);
-                    }, UI.AutoWidth());
-                    UI.ActionButton($"Lose {Settings.increment}", () => {
-                        kingdom.Resources -= KingdomResourcesAmount.FromFavors(Settings.increment);
-                    }, UI.AutoWidth());
+                    UI.ActionButton($"Gain {Settings.increment}", () => kingdom.Resources += KingdomResourcesAmount.FromFavors(Settings.increment), UI.AutoWidth());
+                    UI.ActionButton($"Lose {Settings.increment}", () => kingdom.Resources -= KingdomResourcesAmount.FromFavors(Settings.increment), UI.AutoWidth());
                 },
                 () => { },
                 () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent),

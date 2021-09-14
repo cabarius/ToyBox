@@ -85,7 +85,7 @@ namespace ToyBox {
         public static void TeleportToGlobalMap(Action callback = null) {
             var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
             var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
-            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback != null ? callback : () => { });
+            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback ?? (() => { }));
         }
         public static bool TeleportToGlobalMapPoint(BlueprintGlobalMapPoint destination) {
             if (GlobalMapView.Instance != null) {
@@ -146,7 +146,7 @@ namespace ToyBox {
         public static void SpawnUnit(BlueprintUnit unit, int count) {
             Vector3 worldPosition = Game.Instance.ClickEventsController.WorldPosition;
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
-            if (!(unit == null)) {
+            if (unit != null) {
                 for (int i = 0; i < count; i++) {
                     Vector3 offset = 5f*Random.insideUnitSphere;
                     Vector3 spawnPosition = new(
@@ -218,7 +218,7 @@ namespace ToyBox {
                 ch.Descriptor.AddFact(ability);
             }
         }
-        static public bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
+        public static bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
             return ability.IsSpell && !ch.Descriptor.HasFact(ability);
         }
         public static void AddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {

@@ -89,13 +89,13 @@ namespace ToyBox.Multiclass {
         public static bool IsPreGen(this LevelUpState state) {
             return state.IsPregen;
         }
-        static public bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
+        public static bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
-        static public void SetClassIsGestalt(this UnitEntityData ch, BlueprintCharacterClass cl, bool isGestalt) {
+        public static void SetClassIsGestalt(this UnitEntityData ch, BlueprintCharacterClass cl, bool isGestalt) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
@@ -105,13 +105,13 @@ namespace ToyBox.Multiclass {
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
 
-        static public bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
+        public static bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
-        static public void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {
+        public static void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
@@ -120,7 +120,7 @@ namespace ToyBox.Multiclass {
             // modLogger.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
-        static public bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
+        public static bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
             var party = Game.Instance.Player.Party;
             foreach (var ch in party) {
                 if (ch.Progression == progression) {

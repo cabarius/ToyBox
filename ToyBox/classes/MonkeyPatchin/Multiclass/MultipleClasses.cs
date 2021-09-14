@@ -396,12 +396,12 @@ namespace ToyBox.Multiclass {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = __instance.m_MythicLevel;
                         int level = classData.Level;
-                        __instance.m_MythicLevel = nullable.HasValue ? nullable.GetValueOrDefault() + level : new int?();
+                        __instance.m_MythicLevel = nullable + level;
                     }
                     else {
                         nullable = __instance.m_CharacterLevel;
                         int level = classData.Level;
-                        __instance.m_CharacterLevel = nullable.HasValue ? nullable.GetValueOrDefault() + level : new int?();
+                        __instance.m_CharacterLevel = nullable + level;
                     }
                 }
             }
@@ -409,7 +409,7 @@ namespace ToyBox.Multiclass {
 
         [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.SetupLevelsIfNecessary))]
         static class UnitProgressionData_SetupLevelsIfNecessary_Patch {
-            static private bool Prefix(UnitProgressionData __instance) {
+            private static bool Prefix(UnitProgressionData __instance) {
                 if (__instance.m_CharacterLevel.HasValue && __instance.m_MythicLevel.HasValue)
                     return false;
                 __instance.UpdateLevelsForGestalt();

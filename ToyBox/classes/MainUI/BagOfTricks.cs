@@ -8,7 +8,8 @@ using System;
 
 namespace ToyBox {
     public static class CheapTricks {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
+
         public static void ResetGUI() { }
         public static void OnGUI() {
             if (Main.IsInGame) {
@@ -34,32 +35,28 @@ namespace ToyBox {
                         var exp = mainChar.Progression.Experience;
                         UI.Label("Experience".cyan(), UI.Width(150));
                         UI.Label(exp.ToString().orange().bold(), UI.Width(200));
-                        UI.ActionButton($"Gain {increment}", () => {
-                            Game.Instance.Player.GainPartyExperience(increment);
-                        }, UI.AutoWidth());
+                        UI.ActionButton($"Gain {increment}", () => Game.Instance.Player.GainPartyExperience(increment), UI.AutoWidth());
                     });
             }
             UI.Div(0, 25);
             UI.HStack("Combat", 4,
-                () => UI.ActionButton("Rest All", () => CheatsCombat.RestAll()),
+                () => UI.ActionButton("Rest All", CheatsCombat.RestAll),
                 () => UI.ActionButton("Empowered", () => CheatsCombat.Empowered("")),
                 () => UI.ActionButton("Full Buff Please", () => CheatsCombat.FullBuffPlease("")),
-                () => UI.ActionButton("Remove Buffs", () => Actions.RemoveAllBuffs()),
-                () => UI.ActionButton("Remove Death's Door", () => CheatsCombat.DetachDebuff()),
-                () => UI.ActionButton("Kill All Enemies", () => CheatsCombat.KillAll()),
+                () => UI.ActionButton("Remove Buffs", Actions.RemoveAllBuffs),
+                () => UI.ActionButton("Remove Death's Door", CheatsCombat.DetachDebuff),
+                () => UI.ActionButton("Kill All Enemies", CheatsCombat.KillAll),
                 () => UI.ActionButton("Summon Zoo", () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""))
                 );
             UI.Div(0, 25);
             UI.HStack("Common", 4,
-                () => UI.ActionButton("Teleport Party To You", () => Actions.TeleportPartyToPlayer()),
+                () => UI.ActionButton("Teleport Party To You", Actions.TeleportPartyToPlayer),
                 () => UI.ActionButton("Go To Global Map", () => Actions.TeleportToGlobalMap()),
-                () => UI.ActionButton("Run All Perception Checks", () => Actions.RunPerceptionTriggers()),
-                () => {
-                    UI.ActionButton("Set Perception to 40", () => {
-                        CheatsCommon.StatPerception();
-                        Actions.RunPerceptionTriggers();
-                    });
-                },
+                () => UI.ActionButton("Run All Perception Checks", Actions.RunPerceptionTriggers),
+                () => UI.ActionButton("Set Perception to 40", () => {
+                                                                  CheatsCommon.StatPerception();
+                                                                  Actions.RunPerceptionTriggers();
+                                                              }),
                 () => UI.ActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
                 () => UI.ActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
                 //                    () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
@@ -135,7 +132,7 @@ namespace ToyBox {
                 () => UI.LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => {
                     UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
-                    UI.Space(25); 
+                    UI.Space(25);
                     UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne);
                     UI.Space(25);
                     UI.Label("Adjusts the movement speed of your party in area maps".green());

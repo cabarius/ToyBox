@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintListUI {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         public static int repeatCount = 1;
         public static bool hasRepeatableAction;
@@ -67,7 +67,7 @@ namespace ToyBox {
                         // string value = String.Concat(parmBP.GetFullSelectionItems().Select(o => o.Name));
                         var feature = ch.Progression.Features.Enumerable.FirstOrDefault(
                             f => f?.Blueprint == blueprint);
-                        //if (feature != null) 
+                        //if (feature != null)
                         //    title += $"<{feature.Name ?? "n/a"}>";
                     }
                     if (titles.Contains("Remove") || titles.Contains("Lock")) {
@@ -79,26 +79,26 @@ namespace ToyBox {
                     var titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
                     UI.Label(title, UI.Width(titleWidth));
                     remWidth -= titleWidth;
-                    int actionCount = actions != null ? actions.Count() : 0;
+                    int actionCount = actions?.Count() ?? 0;
                     var lockIndex = titles.IndexOf("Lock");
                     if (blueprint is BlueprintUnlockableFlag flagBP) {
                         // special case this for now
                         if (lockIndex >= 0) {
                             var flags = Game.Instance.Player.UnlockableFlags;
                             var lockAction = actions[lockIndex];
-                            UI.ActionButton("<", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) - 1); }, UI.Width(50));
+                            UI.ActionButton("<", () => flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) - 1), UI.Width(50));
                             UI.Space(25);
                             UI.Label($"{flags.GetFlagValue(flagBP)}".orange().bold(), UI.MinWidth(50));
-                            UI.ActionButton(">", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) + 1); }, UI.Width(50));
+                            UI.ActionButton(">", () => flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) + 1), UI.Width(50));
                             UI.Space(50);
-                            UI.ActionButton(lockAction.name, () => { lockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
+                            UI.ActionButton(lockAction.name, () => lockAction.action(blueprint, ch, repeatCount), UI.Width(120));
                             UI.Space(100);
                         }
                         else {
                             var unlockIndex = titles.IndexOf("Unlock");
                             var unlockAction = actions[unlockIndex];
                             UI.Space(240);
-                            UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
+                            UI.ActionButton(unlockAction.name, () => unlockAction.action(blueprint, ch, repeatCount), UI.Width(120));
                             UI.Space(100);
                         }
                     }
@@ -116,7 +116,7 @@ namespace ToyBox {
                                     actionName += (action.isRepeatable ? $" {repeatCount}" : "");
                                     extraSpace = 20 * (float)Math.Ceiling(Math.Log10(repeatCount));
                                 }
-                                UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
+                                UI.ActionButton(actionName, () => action.action(blueprint, ch, repeatCount), UI.Width(160 + extraSpace));
                                 UI.Space(10);
                                 remWidth -= 174.0f + extraSpace;
 
@@ -133,7 +133,7 @@ namespace ToyBox {
                         if (!typeString.Contains(collatorString))
                             typeString += $" : {collatorString}".yellow();
                     }
-                    if (description != null && description.Length > 0) description = $"{description}";
+                    if (description?.Length > 0) description = $"{description}";
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {
                         if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {

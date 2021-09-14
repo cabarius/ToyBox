@@ -48,7 +48,7 @@ namespace ToyBox {
         public static Mod multiclassMod;
         public static bool Enabled;
         public static bool freshlyLaunched = true;
-        public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
+        public static bool IsInGame => Game.Instance.Player?.Party.Any() ?? false;
 
         static Exception caughtException;
         public static void Log(string s) { if (modEntry != null) Logger.Log(s); }
@@ -130,7 +130,7 @@ namespace ToyBox {
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();
                 if (caughtException != null) {
                     UI.Label("ERROR".red().bold() + $": caught exception {caughtException}");
-                    UI.ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, UI.AutoWidth());
+                    UI.ActionButton("Reset".orange().bold(), () => ResetGUI(modEntry), UI.AutoWidth());
                     return;
                 }
                 UI.TabBar(ref settings.selectedTab,
@@ -140,16 +140,16 @@ namespace ToyBox {
                         }
                         else { UI.Space(25); }
                     },
-                    new NamedAction("Bag of Tricks", () => { CheapTricks.OnGUI(); }),
+                    new NamedAction("Bag of Tricks", CheapTricks.OnGUI),
 #if DEBUG
-                    new NamedAction("Level Up & Multiclass", () => { LevelUp.OnGUI(); }),
+                    new NamedAction("Level Up & Multiclass", LevelUp.OnGUI),
 #else
-                    new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
+                    new NamedAction("Level Up", LevelUp.OnGUI),
 #endif
-                    new NamedAction("Party", () => { PartyEditor.OnGUI(); }),
-                    new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
-                    new NamedAction("Crusade", () => { CrusadeEditor.OnGUI(); }),
-                    new NamedAction("Quests", () => { QuestEditor.OnGUI(); })
+                    new NamedAction("Party", PartyEditor.OnGUI),
+                    new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
+                    new NamedAction("Crusade", CrusadeEditor.OnGUI),
+                    new NamedAction("Quests", QuestEditor.OnGUI)
                     );
             }
             catch (Exception e) {

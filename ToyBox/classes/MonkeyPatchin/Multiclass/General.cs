@@ -110,10 +110,10 @@ namespace ToyBox.Multiclass {
                 if (state.SelectedClass == null)
                     return false;
                 SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
-                if (component1 != null && component1.Levels.Contains(state.NextClassLevel))
+                if (component1?.Levels.Contains(state.NextClassLevel) == true)
                     return false;
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
-                if (classData == null || !(classData.Spellbook != null))
+                if (classData?.Spellbook == null)
                     return false;
                 Spellbook spellbook1 = unit.DemandSpellbook(classData.Spellbook);
                 if ((bool)state.SelectedClass.Spellbook && state.SelectedClass.Spellbook != classData.Spellbook) {

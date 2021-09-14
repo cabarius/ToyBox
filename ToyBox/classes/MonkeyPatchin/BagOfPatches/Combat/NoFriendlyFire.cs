@@ -52,16 +52,21 @@ namespace ToyBox.BagOfPatches {
                     }
                     if (caster.IsPlayerFaction && ((context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                         if (context.AbilityBlueprint.HasLogic<AbilityUseOnRest>()) {
-                            AbilityUseOnRestType componentType = context.AbilityBlueprint.GetComponent<AbilityUseOnRest>().Type;
-                            //bool healDamage = componentType == AbilityUseOnRestType.HealDamage || componentType == AbilityUseOnRestType.HealDamage;
-                            bool healDamage = componentType == AbilityUseOnRestType.HealDamage;
-                            targets = targets.Where(target => {
-                                if (target.IsPlayerFaction && !healDamage) {
-                                    bool forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
-                                    return (forUndead == target.Descriptor.IsUndead);
-                                }
-                                return true;
-                            });
+                            var component = context.AbilityBlueprint.GetComponent<AbilityUseOnRest>();
+                            if (component != null) {
+                                AbilityUseOnRestType componentType = component.Type;
+                                bool healDamage = componentType == AbilityUseOnRestType.HealDamage;
+
+                                targets = targets.Where(target => {
+                                                            if (target.IsPlayerFaction && !healDamage) {
+                                                                bool forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
+
+                                                                return (forUndead == target.Descriptor.IsUndead);
+                                                            }
+
+                                                            return true;
+                                                        });
+                            }
                         }
                         else {
                             targets = targets.Where(target => !target.IsPlayerFaction);
@@ -77,7 +82,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ref int __result, RuleDealDamage __instance, int damage) {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     SimpleBlueprint blueprint = __instance.Reason.Context?.AssociatedBlueprint;
-                    if (!(blueprint is BlueprintBuff)) {
+                    if (blueprint is not BlueprintBuff) {
                         BlueprintAbility blueprintAbility = __instance.Reason.Context?.SourceAbility;
                         if (blueprintAbility != null &&
                             __instance.Initiator.IsPlayerFaction &&
@@ -96,13 +101,9 @@ namespace ToyBox.BagOfPatches {
 
         public static class RuleSkillCheck_IsSuccessRoll_Patch {
             private static void Postfix(ref bool __result, RuleSkillCheck __instance) {
-                if (settings.toggleNoFriendlyFireForAOE) {
-                    if (__instance.Reason != null) {
-                        if (__instance.Reason.Ability != null) {
-                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
-                                __result = true;
-                            }
-                        }
+                if (settings.toggleNoFriendlyFireForAOE && __instance.Reason?.Ability != null) {
+                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                        __result = true;
                     }
                 }
             }
@@ -111,13 +112,9 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RulePartySkillCheck), "Success", MethodType.Getter)]
         public static class RulePartySkillCheck_IsPassed_Patch {
             private static void Postfix(ref bool __result, RulePartySkillCheck __instance) {
-                if (settings.toggleNoFriendlyFireForAOE) {
-                    if (__instance.Reason != null) {
-                        if (__instance.Reason.Ability != null) {
-                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
-                                __result = true;
-                            }
-                        }
+                if (settings.toggleNoFriendlyFireForAOE && __instance.Reason?.Ability != null) {
+                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                        __result = true;
                     }
                 }
 #if false
@@ -145,13 +142,9 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RuleSavingThrow), "IsPassed", MethodType.Getter)]
         public static class RuleSavingThrow_IsPassed_Patch {
             static void Postfix(ref bool __result, RuleSavingThrow __instance) {
-                if (settings.toggleNoFriendlyFireForAOE) {
-                    if (__instance.Reason != null) {
-                        if (__instance.Reason.Ability != null) {
-                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
-                                __result = true;
-                            }
-                        }
+                if (settings.toggleNoFriendlyFireForAOE && __instance.Reason?.Ability != null) {
+                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                        __result = true;
                     }
                 }
 #if false
