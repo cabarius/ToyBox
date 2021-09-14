@@ -125,11 +125,11 @@ namespace ToyBox {
                                                        (bp, ch, n, l) => ch.Progression.Features.RemoveFact(bp),
                                                        (bp, ch, l) => ch.Progression.Features.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Add", (bp, ch, n, l) => ch.Descriptor.AddFact<UnitFact>(bp, null, bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param),
-                                                       (bp, ch, l) => ch.Descriptor.Unit.Facts.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param) == null);
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Add", (bp, ch, n, l) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param),
+                                                       (bp, ch, l) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param) == null);
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove", (bp, ch, n, l) => ch.Progression.Features.RemoveFact(ch.Descriptor.Unit.Facts.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param)),
-                                                       (bp, ch, l) => ch.Descriptor.Unit.Facts.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param) != null);
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove", (bp, ch, n, l) => ch?.Progression?.Features?.RemoveFact(ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param)),
+                                                       (bp, ch, l) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param) != null);
 
             BlueprintAction.Register<BlueprintFeature>("<",
                                                        (bp, ch, n, l) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
