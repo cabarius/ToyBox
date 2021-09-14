@@ -1,4 +1,5 @@
-﻿using Kingmaker.Kingdom;
+﻿using Kingmaker.Blueprints.Root;
+using Kingmaker.Kingdom;
 using ModKit;
 
 namespace ToyBox.classes.MainUI {
@@ -16,6 +17,17 @@ namespace ToyBox.classes.MainUI {
             UI.Div(0, 25);
             UI.HStack("Army Edits", 1,
                 () => UI.Toggle("Infinite Mercenary Rerolls", ref Settings.toggleInfiniteArmyRerolls),
+                () => {
+                    UI.Toggle("Experimental - Enable Large Player Armies", ref Settings.toggleLargeArmies);
+                    if (Settings.toggleLargeArmies) {
+                        BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
+                        BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
+                    }
+                    else {
+                        BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 4;
+                        BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
+                    }
+                },
                 () => UI.Slider("Recruitment Cost", ref Settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
                 () => UI.LogSlider("Number of Recruits", ref Settings.recruitmentMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
 
