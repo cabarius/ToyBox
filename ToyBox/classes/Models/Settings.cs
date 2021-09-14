@@ -56,7 +56,7 @@ namespace ToyBox {
         //Crusade
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleLargeArmies = false;
-        public bool toggleFlagsStayGreen = false;
+        public bool toggleCrusadeFlagsStayGreen = false;
         public float postBattleSummonMultiplier = 1;
         public float recruitmentCost = 1;
         public float recruitmentMultiplier = 1;

@@ -119,7 +119,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
         [HarmonyPatch(typeof(KingdomMoraleFlag), "ChangeDaysLeft")]
         static class KingdomMoraleFlag_Patch {
             private static void Prefix(ref int daysDelta) {
-                if (Settings.toggleFlagsStayGreen && daysDelta < 0) {
+                if (Settings.toggleCrusadeFlagsStayGreen && daysDelta < 0) {
                     daysDelta = 0;
                 }
             }
