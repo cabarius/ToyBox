@@ -1,45 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using UnityModManagerNet;
-using UnityEngine.UI;
-using HarmonyLib;
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using Kingmaker;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Blueprints.Items.Components;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items.Shields;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Blueprints.Quests;
-using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
-using Kingmaker.Controllers.Rest;
-using Kingmaker.Designers;
-using Kingmaker.EntitySystem;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.GameModes;
-using Kingmaker.Items;
 using Kingmaker.Kingdom;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Kingdom.Settlements;
-using Kingmaker.PubSubSystem;
-using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.UI;
-using Kingmaker.UI.Common;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.Utility;
 using ModKit;
 
 namespace ToyBox {
@@ -55,7 +19,6 @@ namespace ToyBox {
                 UI.EndHorizontal();
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 var kingdom = KingdomState.Instance;
-                UI.Div(0, 25);
                 UI.HStack("Resources", 1,
                     () => {
                         var money = Game.Instance.Player.Money;
@@ -75,57 +38,6 @@ namespace ToyBox {
                             Game.Instance.Player.GainPartyExperience(increment);
                         }, UI.AutoWidth());
                     });
-                if (kingdom != null) {
-                    var moraleState = kingdom.MoraleState;
-                    UI.Div(0, 25);
-                    UI.HStack("Crusade", 1,
-                        () => {
-                            var value = moraleState.CurrentValue;
-                            UI.Slider("Morale", ref value, moraleState.MinValue, moraleState.MaxValue, 1, "", UI.AutoWidth());
-                            moraleState.CurrentValue = value;
-                        },
-                        () => {
-                            var value = moraleState.MaxValue;
-                            UI.Slider("Max Morale", ref value, -200, 200, 20, "", UI.AutoWidth());
-                            moraleState.MaxValue = value;
-                        },
-                        () => {
-                            var value = moraleState.MinValue;
-                            UI.Slider("Min Morale", ref value, -200, 200, -100, "", UI.AutoWidth());
-                            moraleState.MinValue = value;
-                        },
-
-                        () => {
-                            UI.Label("Finances".cyan(), UI.Width(150));
-                            UI.Label(kingdom.Resources.Finances.ToString().orange().bold(), UI.Width(200));
-                            UI.ActionButton($"Gain {increment}", () => {
-                                kingdom.Resources += KingdomResourcesAmount.FromFinances(increment);
-                            }, UI.AutoWidth());
-                            UI.ActionButton($"Lose {increment}", () => {
-                                kingdom.Resources -= KingdomResourcesAmount.FromFinances(increment);
-                            }, UI.AutoWidth());
-                        },
-                        () => {
-                            UI.Label("Materials".cyan(), UI.Width(150));
-                            UI.Label(kingdom.Resources.Materials.ToString().orange().bold(), UI.Width(200));
-                            UI.ActionButton($"Gain {increment}", () => {
-                                kingdom.Resources += KingdomResourcesAmount.FromMaterials(increment);
-                            }, UI.AutoWidth());
-                            UI.ActionButton($"Lose {increment}", () => {
-                                kingdom.Resources -= KingdomResourcesAmount.FromMaterials(increment);
-                            }, UI.AutoWidth());
-                        },
-                        () => {
-                            UI.Label("Favors".cyan(), UI.Width(150));
-                            UI.Label(kingdom.Resources.Favors.ToString().orange().bold(), UI.Width(200));
-                            UI.ActionButton($"Gain {increment}", () => {
-                                kingdom.Resources += KingdomResourcesAmount.FromFavors(increment);
-                            }, UI.AutoWidth());
-                            UI.ActionButton($"Lose {increment}", () => {
-                                kingdom.Resources -= KingdomResourcesAmount.FromFavors(increment);
-                            }, UI.AutoWidth());
-                        });
-                }
             }
             UI.Div(0, 25);
             UI.HStack("Combat", 4,
@@ -201,9 +113,7 @@ namespace ToyBox {
                 () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
                 () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
-                () => UI.Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
-
                 () => { }
                 );
             UI.Div(153, 25);
@@ -253,9 +163,6 @@ namespace ToyBox {
                     UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.Width(600));
                     UI.Space(25); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
                 },
-                () => UI.LogSlider("After Army Battle Raise Multiplier", ref settings.postBattleSummonMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
-                () => UI.Slider("Recruitment Cost", ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
-                () => UI.LogSlider("Number of Recruits", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
                 () => { }
                 );
             Game.Instance.TimeController.DebugTimeScale = settings.timeScaleMultiplier;
@@ -299,18 +206,6 @@ namespace ToyBox {
                 },
                 () => { }
              );
-            UI.Div(0, 25);
-            UI.HStack("Crusade Extras - Coming Soon", 1,
-                    () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent, 0),
-                    () => {
-                        UI.Slider("Build Time Modifer", ref settings.kingdomBuildingTimeModifier, -10, 10, 0, 1, "", UI.AutoWidth());
-                        var instance = KingdomState.Instance;
-                        if (instance != null) {
-                            instance.BuildingTimeModifier = settings.kingdomBuildingTimeModifier;
-                        }
-                    },
-                    () => { }
-                    );
         }
     }
 }
