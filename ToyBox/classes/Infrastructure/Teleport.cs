@@ -7,12 +7,6 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.View;
 using System;
 using UnityEngine;
-using UnityModManagerNet;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using JetBrains.Annotations;
 
 namespace ToyBox {

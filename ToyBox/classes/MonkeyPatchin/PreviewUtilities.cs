@@ -2,7 +2,6 @@
 using System.Linq;
 using HarmonyLib;
 using UnityEngine;
-using UnityEngine.UI;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Kingdom.Blueprints;

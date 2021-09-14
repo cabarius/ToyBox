@@ -2,10 +2,6 @@
 using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
-using ToyBox.Multiclass;
-using Kingmaker.UnitLogic;
-using ModKit;
-using Kingmaker.EntitySystem.Entities;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -153,13 +149,13 @@ namespace ToyBox {
         // Quests
         public bool hideCompleted = true;
 
-        // Multi-Class 
+        // Multi-Class
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
         public bool toggleMulticlassShowClassDescriptions = false;
         public int selectedClassToConfigMulticlass = 0;
 
         // schema for storing multiclass settings
-        //      Dictionary<CharacterName, 
+        //      Dictionary<CharacterName,
         //          Dictionary<ClassID, HashSet<ArchetypeIDs>
         // For character gen config we use the following special key:
         public SerializableDictionary<string, MulticlassOptions> multiclassSettings = new SerializableDictionary<string, MulticlassOptions>();
@@ -198,7 +194,7 @@ namespace ToyBox {
         public bool toggleIgnoreSkillPointsRemaining = false;
 
         // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
-        // public bool toggleIgnorePrerequisites = false; 
+        // public bool toggleIgnorePrerequisites = false;
         public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
 
         public bool toggleIgnoreSpellbookAlignmentRestriction = false;

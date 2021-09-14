@@ -1,12 +1,6 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
-using UnityModManagerNet;
-using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-
 using GL = UnityEngine.GUILayout;
 
 namespace ModKit {

@@ -1,14 +1,8 @@
 ﻿using HarmonyLib;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ToyBox.Multiclass {

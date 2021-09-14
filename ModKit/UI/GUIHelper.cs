@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using RGBA = ModKit.RGBA;
+
 namespace ModKit.Utility
 {
     public static class GUIHelper
