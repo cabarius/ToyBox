@@ -48,12 +48,19 @@ namespace ToyBox {
         public bool toggleMultipleRomance = false;
         public bool toggleSpiderBegone = false;
         public bool togglAutoEquipConsumables = false;
-        public bool toggleInfiniteArmyRerolls = false;
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
         public bool toggleAllowAllActivatable = false;
         public bool toggleFlagsStayGreen = false;
 
+        //Crusade
+        public bool toggleInfiniteArmyRerolls = false;
+        public bool toggleLargeArmies = false;
+        public bool toggleFlagsStayGreen = false;
+        public float postBattleSummonMultiplier = 1;
+        public float recruitmentCost = 1;
+        public float recruitmentMultiplier = 1;
+        public float armyExperienceMultiplier = 1;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
@@ -85,7 +92,6 @@ namespace ToyBox {
         // Multipliers
         public int encumberanceMultiplier = 1;
         public float experienceMultiplier = 1;
-        public float armyExperienceMultiplier = 1;
         public float moneyMultiplier = 1;
         public float vendorSellPriceMultiplier = 1;
         public float vendorBuyPriceMultiplier = 1;
@@ -105,9 +111,6 @@ namespace ToyBox {
         public float fovMultiplier = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
-        public float postBattleSummonMultiplier = 1;
-        public float recruitmentCost = 1;
-        public float recruitmentMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;

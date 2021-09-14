@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Kingmaker.Armies;
 using Kingmaker.Armies.State;
 using Kingmaker.Armies.TacticalCombat;
 using Kingmaker.Blueprints.Root;
@@ -27,6 +28,20 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             public static void Postfix(ref ArmyMercenariesManager __instance, int __state) {
                 if (Settings.toggleInfiniteArmyRerolls) {
                     __instance.FreeRerollsLeftCount = __state;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(ArmyData), "MaxSquadsCount", MethodType.Getter)]
+        public static class ArmyData_MaxSquadsCount_Patch {
+            public static void Postfix(ref ArmyModifiableValue __result, ArmyData __instance) {
+                if (Settings.toggleLargeArmies && __result != null && __result.ModifiedValue != 0 && __instance.Faction == ArmyFaction.Crusaders) {
+                    __result.MaxValue = ArmyData.PositionsCount;
+                    __result.MinValue = ArmyData.PositionsCount;
+                    __result.m_BaseValue = __result.MaxValue;
+                    __result.ModifiedValue = __result.MaxValue;
+                    BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = ArmyData.PositionsCount;
+                    BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = ArmyData.PositionsCount;
                 }
             }
         }
