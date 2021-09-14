@@ -131,6 +131,7 @@
     <Compile Include="classes\Infrastructure\HotkeyHelper.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
+    <Compile Include="classes\MainUI\CrusadeEditor.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="classes\Models\Setings+Multiclass.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUp.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />

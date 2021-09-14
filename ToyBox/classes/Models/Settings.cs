@@ -50,6 +50,8 @@ namespace ToyBox {
         public bool togglAutoEquipConsumables = false;
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleInstantChangeParty = false;
+        public bool toggleFlagsStayGreen = false;
+
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
@@ -81,6 +83,7 @@ namespace ToyBox {
         // Multipliers
         public int encumberanceMultiplier = 1;
         public float experienceMultiplier = 1;
+        public float armyExperienceMultiplier = 1;
         public float moneyMultiplier = 1;
         public float vendorSellPriceMultiplier = 1;
         public float vendorBuyPriceMultiplier = 1;

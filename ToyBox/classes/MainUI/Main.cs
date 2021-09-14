@@ -44,6 +44,7 @@ using ToyBox.Multiclass;
 using GL = UnityEngine.GUILayout;
 using ModKit;
 using ModKit.Utility;
+using ToyBox.classes.MainUI;
 
 namespace ToyBox {
 #if DEBUG
@@ -131,6 +132,7 @@ namespace ToyBox {
             CheapTricks.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
+            CrusadeEditor.ResetGUI();
             CharacterPicker.ResetGUI();
             BlueprintBrowser.ResetGUI();
             QuestEditor.ResetGUI();
@@ -170,6 +172,7 @@ namespace ToyBox {
                     new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
 #endif
                     new NamedAction("Party Editor", () => { PartyEditor.OnGUI(); }),
+                    new NamedAction("Crusade Editor", () => { CrusadeEditor.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
                     new NamedAction("Quest Editor", () => { QuestEditor.OnGUI(); })
                     );
