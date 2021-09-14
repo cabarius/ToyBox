@@ -134,7 +134,7 @@ namespace ToyBox {
                     matchCount++;
                     using (UI.HorizontalScope()) {
                         UI.Space(100); remWidth -= 100;
-                        var titleWidth = (remainingWidth / (UI.IsWide ? 3.0f : 4.0f)) - 100;
+                        var titleWidth = remainingWidth / (UI.IsWide ? 3.0f : 4.0f) - 100;
                         UI.Label($"{name}".cyan().bold(), UI.Width(titleWidth));
                         remWidth -= titleWidth;
                         UI.Space(10); remWidth -= 10;

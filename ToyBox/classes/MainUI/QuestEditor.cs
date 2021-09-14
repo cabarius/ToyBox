@@ -37,7 +37,7 @@ namespace ToyBox {
             UI.Toggle("Hide Completed", ref Main.settings.hideCompleted);
             GUILayout.Space(5f);
             Quest[] quests = Game.Instance.Player.QuestBook.Quests.ToArray();
-            selectedQuests = ((selectedQuests.Length != quests.Length) ? new bool[quests.Length] : selectedQuests);
+            selectedQuests = selectedQuests.Length != quests.Length ? new bool[quests.Length] : selectedQuests;
             int index = 0;
             Color contentColor = GUI.contentColor;
             var split = quests.GroupBy(q => q.State == QuestState.Completed).OrderBy(g => g.Key);

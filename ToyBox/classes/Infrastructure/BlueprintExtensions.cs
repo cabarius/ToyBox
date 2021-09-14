@@ -82,7 +82,7 @@ namespace ToyBox {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
-            var filtered = blueprints.Where(bp => (bp is BPType) ? true : false).ToList();
+            var filtered = blueprints.Where(bp => bp is BPType ? true : false).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }

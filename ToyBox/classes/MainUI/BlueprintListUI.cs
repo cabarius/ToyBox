@@ -76,7 +76,7 @@ namespace ToyBox {
                     else {
                         title = titleFormater(title);
                     }
-                    var titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
+                    var titleWidth = remainingWidth / (UI.IsWide ? 3 : 4) - indent;
                     UI.Label(title, UI.Width(titleWidth));
                     remWidth -= titleWidth;
                     int actionCount = actions?.Count() ?? 0;
@@ -113,7 +113,7 @@ namespace ToyBox {
                                 var actionName = action.name;
                                 float extraSpace = 0;
                                 if (action.isRepeatable) {
-                                    actionName += (action.isRepeatable ? $" {repeatCount}" : "");
+                                    actionName += action.isRepeatable ? $" {repeatCount}" : "";
                                     extraSpace = 20 * (float)Math.Ceiling(Math.Log10(repeatCount));
                                 }
                                 UI.ActionButton(actionName, () => action.action(blueprint, ch, repeatCount), UI.Width(160 + extraSpace));

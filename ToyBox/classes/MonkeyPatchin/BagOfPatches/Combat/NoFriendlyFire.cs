@@ -50,7 +50,7 @@ namespace ToyBox.BagOfPatches {
                     if (___m_Condition.HasConditions) {
                         targets = targets.Where(u => { using (context.GetDataScope(u)) { return ___m_Condition.Check(); } }).ToList();
                     }
-                    if (caster.IsPlayerFaction && ((context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                    if (caster.IsPlayerFaction && (context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful || context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful)) {
                         if (context.AbilityBlueprint.HasLogic<AbilityUseOnRest>()) {
                             var component = context.AbilityBlueprint.GetComponent<AbilityUseOnRest>();
                             if (component != null) {
@@ -61,7 +61,7 @@ namespace ToyBox.BagOfPatches {
                                                             if (target.IsPlayerFaction && !healDamage) {
                                                                 bool forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
 
-                                                                return (forUndead == target.Descriptor.IsUndead);
+                                                                return forUndead == target.Descriptor.IsUndead;
                                                             }
 
                                                             return true;
@@ -87,7 +87,7 @@ namespace ToyBox.BagOfPatches {
                         if (blueprintAbility != null &&
                             __instance.Initiator.IsPlayerFaction &&
                             __instance.Target.IsPlayerFaction &&
-                            ((blueprintAbility.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (blueprintAbility.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                            (blueprintAbility.EffectOnAlly == AbilityEffectOnUnit.Harmful || blueprintAbility.EffectOnEnemy == AbilityEffectOnUnit.Harmful)) {
                             __result = 0;
                         }
                     }
@@ -102,7 +102,7 @@ namespace ToyBox.BagOfPatches {
         public static class RuleSkillCheck_IsSuccessRoll_Patch {
             private static void Postfix(ref bool __result, RuleSkillCheck __instance) {
                 if (settings.toggleNoFriendlyFireForAOE && __instance.Reason?.Ability != null) {
-                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && (__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful || __instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful)) {
                         __result = true;
                     }
                 }
@@ -113,7 +113,7 @@ namespace ToyBox.BagOfPatches {
         public static class RulePartySkillCheck_IsPassed_Patch {
             private static void Postfix(ref bool __result, RulePartySkillCheck __instance) {
                 if (settings.toggleNoFriendlyFireForAOE && __instance.Reason?.Ability != null) {
-                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && (__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful || __instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful)) {
                         __result = true;
                     }
                 }
@@ -143,7 +143,7 @@ namespace ToyBox.BagOfPatches {
         public static class RuleSavingThrow_IsPassed_Patch {
             static void Postfix(ref bool __result, RuleSavingThrow __instance) {
                 if (settings.toggleNoFriendlyFireForAOE && __instance.Reason?.Ability != null) {
-                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                    if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && (__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful || __instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful)) {
                         __result = true;
                     }
                 }

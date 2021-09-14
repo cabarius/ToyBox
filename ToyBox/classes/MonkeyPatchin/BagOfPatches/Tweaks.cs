@@ -57,7 +57,7 @@ namespace ToyBox.BagOfPatches {
                 }
                 bool spellListContainsSpell = spellbook.Blueprint.SpellList.Contains(spell);
 
-                if ((settings.toggleSpontaneousCopyScrolls) && spellbook.Blueprint.Spontaneous && spellListContainsSpell) {
+                if (settings.toggleSpontaneousCopyScrolls && spellbook.Blueprint.Spontaneous && spellListContainsSpell) {
                     __result = true;
                     return;
                 }

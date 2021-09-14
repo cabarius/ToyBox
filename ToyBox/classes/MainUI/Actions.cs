@@ -249,7 +249,7 @@ namespace ToyBox {
 
                 Main.Log(i + ": " + xpBonus + " | " + xp);
 
-                if ((xp - xpBonus) >= 0) {
+                if (xp - xpBonus >= 0) {
                     Main.Log(i + ": " + (xp - xpBonus));
                     level = i;
                     break;

@@ -165,7 +165,7 @@ namespace ToyBox {
         }
         public static string GetFixedAnswerString(BlueprintAnswer answer, string bind, int index) {
             bool flag = Game.Instance.DialogController.Dialog.Type == DialogType.Book;
-            string checkFormat = (!flag) ? UIDialog.Instance.AnswerStringWithCheckFormat : UIDialog.Instance.AnswerStringWithCheckBeFormat;
+            string checkFormat = !flag ? UIDialog.Instance.AnswerStringWithCheckFormat : UIDialog.Instance.AnswerStringWithCheckBeFormat;
             string text = string.Empty;
             if (DialogSettings.ShowSkillcheckDC) {
                 text = answer.SkillChecksDC.Aggregate(string.Empty, (string current, SkillCheckDC skillCheck) => current + string.Format(checkFormat, UIUtility.PackKeys(new object[]
@@ -185,8 +185,8 @@ namespace ToyBox {
             }
             string stringByBinding = UIKeyboardTexts.Instance.GetStringByBinding(Game.Instance.Keyboard.GetBindingByName(bind));
             return string.Format(UIDialog.Instance.AnswerDialogueFormat,
-                (!stringByBinding.Empty()) ? stringByBinding : index.ToString(),
-                text + ((!text.Empty()) ? " " : string.Empty) + answer.DisplayText);
+                !stringByBinding.Empty() ? stringByBinding : index.ToString(),
+                text + (!text.Empty() ? " " : string.Empty) + answer.DisplayText);
         }
         [HarmonyPatch(typeof(UIConsts), "GetAnswerString")]
         static class UIConsts_GetAnswerString_Patch {
