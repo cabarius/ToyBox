@@ -183,8 +183,7 @@ namespace ToyBox {
             var filtered = new List<SimpleBlueprint>();
             foreach (SimpleBlueprint blueprint in bps) {
                 if (blueprint.AssetGuid.ToString().Contains(searchText)
-                    || blueprint.GetType().ToString().Contains(searchText)
-                    ) {
+                    || blueprint.GetType().ToString().Contains(searchText)) {
                     filtered.Add(blueprint);
                 }
                 else {
@@ -199,6 +198,9 @@ namespace ToyBox {
             }
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
+            for (int i = 0; i < BlueprintListUI.ParamSelected.Length; i++) {
+                BlueprintListUI.ParamSelected[i] = 0;
+            }
             uncolatedMatchCount = matchCount;
             if (selectedTypeFilter.collator != null) {
                 collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key);

@@ -43,6 +43,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ModKit;
 using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.JsonSystem;
 
 namespace ToyBox {
     public class BlueprintListUI {
@@ -52,6 +53,8 @@ namespace ToyBox {
         public static bool hasRepeatableAction = false;
         public static int maxActions = 0;
         public static bool needsLayout = true;
+        public static int[] ParamSelected = new int[1000];
+
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
@@ -61,8 +64,9 @@ namespace ToyBox {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             if (remainingWidth == 0) remainingWidth = UI.ummWidth - indent;
             int index = 0;
+            IEnumerable<SimpleBlueprint> simpleBlueprints = blueprints.ToList();
             if (needsLayout) {
-                foreach (SimpleBlueprint blueprint in blueprints) {
+                foreach (SimpleBlueprint blueprint in simpleBlueprints) {
                     var actions = blueprint.GetActions();
                     if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
                     int actionCount = actions.Sum(action => action.canPerform(blueprint, ch) ? 1 : 0);
@@ -86,7 +90,9 @@ namespace ToyBox {
                 UI.EndHorizontal();
             }
             UI.Div(indent);
-            foreach (SimpleBlueprint blueprint in blueprints) {
+            int count = 0;
+            foreach (SimpleBlueprint blueprint in simpleBlueprints) {
+                int currentCount = count++;
                 var description = blueprint.GetDescription();
                 using (UI.HorizontalScope()) {
                     var remWidth = remainingWidth - indent;
@@ -97,11 +103,8 @@ namespace ToyBox {
                     var titles = actions.Select(a => a.name);
                     var title = blueprint.name;
                     if (blueprint is BlueprintParametrizedFeature parmBP) {
-                        // string value = String.Concat(parmBP.GetFullSelectionItems().Select(o => o.Name));
-                        var feature = ch.Progression.Features.Enumerable.FirstOrDefault<Kingmaker.UnitLogic.Feature>(
-                            f => f?.Blueprint == blueprint);
-                        //if (feature != null) 
-                        //    title += $"<{feature.Name ?? "n/a"}>";
+                        string[] nameStrings = parmBP.Items.Select(x => x.Name).ToArray();
+                        UI.SelectionGrid(parmBP.Name, ref ParamSelected[currentCount], nameStrings,4,UI.AutoWidth());
                     }
                     if (titles.Contains("Remove") || titles.Contains("Lock")) {
                         title = title.cyan().bold();
@@ -110,7 +113,13 @@ namespace ToyBox {
                         title = titleFormater(title);
                     }
                     var titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
-                    UI.Label(title, UI.Width(titleWidth));
+                    if (!(blueprint is BlueprintParametrizedFeature)) {
+                        UI.Label(title, UI.Width(titleWidth));
+                    }
+                    else {
+                        UI.Space(25);
+                    }
+
                     remWidth -= titleWidth;
                     int actionCount = actions != null ? actions.Count() : 0;
                     var lockIndex = titles.IndexOf("Lock");
@@ -149,7 +158,7 @@ namespace ToyBox {
                                     actionName += (action.isRepeatable ? $" {repeatCount}" : "");
                                     extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
                                 }
-                                UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount); }, UI.Width(160 + extraSpace));
+                                UI.ActionButton(actionName, () => { action.action(blueprint, ch, repeatCount, currentCount); }, UI.Width(160 + extraSpace));
                                 UI.Space(10);
                                 remWidth -= 174.0f + extraSpace;
 
@@ -180,6 +189,7 @@ namespace ToyBox {
                             else description = elementsStr + "\n" + description;
                         }
                     }
+
                     using (UI.VerticalScope(UI.Width(remWidth))) {
                         if (settings.showAssetIDs) {
                             using (UI.HorizontalScope(UI.Width(remWidth))) {
@@ -188,6 +198,7 @@ namespace ToyBox {
                             }
                         }
                         else UI.Label(typeString.cyan()); // + $" {remWidth}".bold());
+
                         if (description.Length > 0) UI.Label(description.green(), UI.Width(remWidth));
                     }
                 }
