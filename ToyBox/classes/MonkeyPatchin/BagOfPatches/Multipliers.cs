@@ -124,7 +124,7 @@ namespace ToyBox.BagOfPatches {
             public static void Prefix(GlobalMapArmyState __instance, ref float points) {
                 if (__instance.Data.Faction == ArmyFaction.Crusaders) {
                     float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
-                    points = points / speedMultiplier;
+                    points /= speedMultiplier;
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace ToyBox.BagOfPatches {
         public static class BuffCollection_AddBuff2_patch {
             public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref TimeSpan? duration) {
                 try {
-                    if (!parentContext.MaybeCaster.IsPlayersEnemy) {
+                    if (parentContext.MaybeCaster?.IsPlayersEnemy == false) {
                         if (duration != null) {
                             duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
                         }

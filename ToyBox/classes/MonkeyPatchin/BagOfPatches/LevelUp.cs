@@ -86,7 +86,7 @@ namespace ToyBox.BagOfPatches {
                 return !(settings.toggleIgnoreSkillCap || settings.toggleIgnoreSkillPointsRemaining);
             }
             private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) {
-                __result = (StatTypeHelper.Skills).Contains(__instance.Skill)
+                __result = StatTypeHelper.Skills.Contains(__instance.Skill)
                     && (settings.toggleIgnoreSkillCap || unit.Stats.GetStat(__instance.Skill).BaseValue < state.NextCharacterLevel)
                     && (settings.toggleIgnoreSkillPointsRemaining || state.SkillPointsRemaining > 0);
             }
@@ -96,7 +96,8 @@ namespace ToyBox.BagOfPatches {
         static class CharGenSkillAllocatorVM_UpdateSkillAllocator_Patch {
             public static bool Prefix(CharGenSkillAllocatorVM __instance) {
                 if (settings.toggleIgnoreSkillCap) {
-                    __instance.IsClassSkill.Value = (bool)__instance.Skill?.ClassSkill;
+                    __instance.IsClassSkill.Value = __instance.Skill?.ClassSkill == true;
+
                     ModifiableValue stat1 = __instance.m_LevelUpController.Unit.Stats.GetStat(__instance.StatType);
                     ModifiableValue stat2 = __instance.m_LevelUpController.Preview.Stats.GetStat(__instance.StatType);
                     __instance.CanAdd.Value = !__instance.m_LevelUpController.State.IsSkillPointsComplete() && __instance.m_LevelUpController.State.SkillPointsRemaining > 0;
@@ -113,7 +114,7 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(LevelUpState state, ClassData classData, ref UnitDescriptor unit) {
                 if (settings.toggleFullHitdiceEachLevel && unit.IsPlayerFaction && state.NextClassLevel > 1) {
 
-                    int newHitDie = ((int)classData.CharacterClass.HitDie / 2) - 1;
+                    int newHitDie = (int)classData.CharacterClass.HitDie / 2 - 1;
                     unit.Stats.HitPoints.BaseValue += newHitDie;
                 }
 #if false
@@ -322,11 +323,11 @@ namespace ToyBox.BagOfPatches {
                     var selectionState = featureSelectorStateVM.SelectionState;
                     var selectionVM = __instance.FeatureSelectorStateVM;
                     var state = Game.Instance.LevelUpController.State;
-                    IFeatureSelection selection = (selection = (selectionVM.Feature as IFeatureSelection));
+                    IFeatureSelection selection = selection = selectionVM.Feature as IFeatureSelection;
                     var availableItems = selection?.Items
                         .Where(item => selection.CanSelect(state.Unit, state, selectionState, item));
                     //modLogger.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");
-                    if (availableItems.Count() == 0)
+                    if (availableItems?.Any() == false)
                         __result = true;
                 }
             }
@@ -351,9 +352,8 @@ namespace ToyBox.BagOfPatches {
                             Feature feature = (Feature)unit.AddFact(blueprintFeature);
                             if (blueprintFeature is BlueprintProgression progression)
                                 LevelUpHelper.UpdateProgression(state, unit, progression);
-                            FeatureSource source1 = source;
-                            int level1 = level;
-                            feature.SetSource(source1, level1);
+
+                            feature.SetSource(source, level);
                         }
                     }
                 }

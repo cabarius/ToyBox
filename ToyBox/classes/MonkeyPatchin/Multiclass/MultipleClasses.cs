@@ -133,14 +133,18 @@ namespace ToyBox.Multiclass {
                         modLogger.Log($"    {state.SelectedClass.HashKey()} SelectClass-ForEachApplied".cyan().bold());
                         var selectedClass = state.SelectedClass;
                         var archetypeOptions = options.ArchetypeOptions(selectedClass);
-                        foreach (var archetype in state.SelectedClass.Archetypes) {
-                            // here is where we need to start supporting multiple archetypes of the same class
-                            if (archetypeOptions.Contains(archetype)) {
-                                modLogger.Log($"    adding archetype: ${archetype.Name}".cyan().bold());
-                                AddArchetype addArchetype = new(state.SelectedClass, archetype);
-                                unit.SetClassIsGestalt(addArchetype.CharacterClass, true);
-                                if (addArchetype.Check(state, unit)) {
-                                    addArchetype.Apply(state, unit);
+
+                        if (state.SelectedClass != null) {
+                            foreach (var archetype in state.SelectedClass.Archetypes) {
+                                // here is where we need to start supporting multiple archetypes of the same class
+                                if (archetypeOptions.Contains(archetype)) {
+                                    modLogger.Log($"    adding archetype: ${archetype.Name}".cyan().bold());
+                                    AddArchetype addArchetype = new(state.SelectedClass, archetype);
+                                    unit.SetClassIsGestalt(addArchetype.CharacterClass, true);
+
+                                    if (addArchetype.Check(state, unit)) {
+                                        addArchetype.Apply(state, unit);
+                                    }
                                 }
                             }
                         }
@@ -330,9 +334,7 @@ namespace ToyBox.Multiclass {
 
                 if (IsAvailable() && !Main.multiclassMod.LockedPatchedMethods.Contains(__originalMethod)) {
                     Main.multiclassMod.LockedPatchedMethods.Add(__originalMethod);
-                    ForEachAppliedMulticlass(state, unit, () => {
-                        __instance.Apply(state, unit);
-                    });
+                    ForEachAppliedMulticlass(state, unit, () => __instance.Apply(state, unit));
                     Main.multiclassMod.LockedPatchedMethods.Remove(__originalMethod);
                 }
             }

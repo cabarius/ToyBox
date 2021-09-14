@@ -68,7 +68,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(bool __state, ItemEntity __instance, ref bool __result, UnitDescriptor user) {
                 if (__state) {
                     BlueprintItemEquipment blueprintItemEquipment = __instance.Blueprint as BlueprintItemEquipment;
-                    if (!blueprintItemEquipment || !blueprintItemEquipment.GainAbility) {
+                    if (blueprintItemEquipment?.GainAbility != true) {
                         __result = false;
                         return;
                     }

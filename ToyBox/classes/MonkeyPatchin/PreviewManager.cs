@@ -35,7 +35,7 @@ namespace ToyBox {
             var m_TriggerChange = Traverse.Create(kingdomEvent).Field("m_TriggerChange").GetValue<KingdomStats.Changes>();
             var m_SuccessCount = Traverse.Create(kingdomEvent).Field("m_SuccessCount").GetValue<int>();
             BlueprintKingdomEvent blueprintKingdomEvent = kingdomEvent.EventBlueprint as BlueprintKingdomEvent;
-            if (blueprintKingdomEvent && blueprintKingdomEvent.UnapplyTriggerOnResolve && m_TriggerChange != null) {
+            if (blueprintKingdomEvent?.UnapplyTriggerOnResolve == true && m_TriggerChange != null) {
                 result.Accumulate(m_TriggerChange.Opposite(), 1);
             }
             var resolutions = kingdomEvent.EventBlueprint.Solutions.GetResolutions(leaderType);
@@ -51,12 +51,12 @@ namespace ToyBox {
                 result.Accumulate((KingdomStats.Type)leaderType, Game.Instance.BlueprintRoot.Kingdom.StatIncreaseOnEvent);
             }
             bool willBeFinished = true;
-            if (blueprintKingdomEvent != null && blueprintKingdomEvent.IsRecurrent) {
+            if (blueprintKingdomEvent?.IsRecurrent == true) {
                 willBeFinished = m_SuccessCount >= blueprintKingdomEvent.Solutions.GetSuccessCount(leaderType);
             }
             if (willBeFinished) {
                 var eventFinalResults = kingdomEvent.EventBlueprint.GetComponent<EventFinalResults>();
-                if (eventFinalResults != null && eventFinalResults.Results != null) {
+                if (eventFinalResults?.Results != null) {
                     foreach (var eventResult in eventFinalResults.Results) {
                         var validConditions = eventResult.Condition == null; // || eventResult.Condition.Check(kingdomEvent.EventBlueprint);
                         if (eventResult.MatchesMargin(checkMargin) && (alignment & eventResult.LeaderAlignment) != AlignmentMaskType.None && validConditions) {
@@ -144,18 +144,16 @@ namespace ToyBox {
                 }
                 else if (cueBase is BlueprintCueSequence sequence) {
                     foreach (var c in sequence.Cues) if (c.Get().CanShow()) toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
-                    if (sequence.Exit != null) {
-                        var exit = sequence.Exit;
-                        if (exit.Answers.Count > 0) {
-                            var subAnswer = exit.Answers[0];
-                            if (visited.Contains(subAnswer)) {
-                                isRecursive = true;
-                                break;
-                            }
-                            visited.Add(subAnswer);
-                            if (exit.Continue.Cues.Count > 0) {
-                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
-                            }
+                    var exit = sequence.Exit;
+                    if (exit?.Answers.Count > 0) {
+                        var subAnswer = exit.Answers[0];
+                        if (visited.Contains(subAnswer)) {
+                            isRecursive = true;
+                            break;
+                        }
+                        visited.Add(subAnswer);
+                        if (exit.Continue.Cues.Count > 0) {
+                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
                         }
                     }
                 }
@@ -261,7 +259,7 @@ namespace ToyBox {
                 try {
                     if (!Main.Enabled) return;
                     if (!Main.settings.previewEventResults) return;
-                    if (kingdomEventView.Task == null || kingdomEventView.Task.Event == null) {
+                    if (kingdomEventView.Task?.Event == null) {
                         return; //Task is null on event results;
                     }
                     //Calculate results for current leader
