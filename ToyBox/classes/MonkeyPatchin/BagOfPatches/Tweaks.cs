@@ -33,6 +33,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Tutorial;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Armies;
+using Kingmaker.UnitLogic.Mechanics.Actions;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -320,6 +321,18 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMultipleRomance) {
                     __result = false;
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(ContextActionReduceBuffDuration), nameof(ContextActionReduceBuffDuration.RunAction))]
+        public static class ContextActionReduceBuffDuration_RunAction_Patch {
+            public static bool Prefix(ContextActionReduceBuffDuration __instance) {
+                if (settings.toggleExtendHexes && !Game.Instance.Player.IsInCombat
+                    && (__instance.TargetBuff.name.StartsWith("WitchHex") || __instance.TargetBuff.name.StartsWith("ShamanHex"))) {
+                    __instance.Target.Unit.Buffs.GetBuff(__instance.TargetBuff).IncreaseDuration(new TimeSpan(0, 10, 0));
+                    return false;
+                }
+                return true;
             }
         }
 
