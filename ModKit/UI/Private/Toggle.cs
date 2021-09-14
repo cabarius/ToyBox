@@ -10,12 +10,12 @@ namespace ModKit.Private {
 
         // Helper functionality.
 
-        private static readonly GUIContent _LabelContent = new GUIContent();
-        public static readonly GUIContent CheckOn = new GUIContent(ChecklyphOn);
-        public static readonly GUIContent CheckOff = new GUIContent(CheckGlyphOff);
-        public static readonly GUIContent DisclosureOn = new GUIContent(DisclosureGlyphOn);
-        public static readonly GUIContent DisclosureOff = new GUIContent(DisclosureGlyphOff);
-        public static readonly GUIContent DisclosureEmpty = new GUIContent(DisclosureGlyphEmpty);
+        private static readonly GUIContent _LabelContent = new();
+        public static readonly GUIContent CheckOn = new(ChecklyphOn);
+        public static readonly GUIContent CheckOff = new(CheckGlyphOff);
+        public static readonly GUIContent DisclosureOn = new(DisclosureGlyphOn);
+        public static readonly GUIContent DisclosureOff = new(DisclosureGlyphOff);
+        public static readonly GUIContent DisclosureEmpty = new(DisclosureGlyphEmpty);
         private static GUIContent LabelContent(string text) {
             _LabelContent.text = text;
             _LabelContent.image = null;

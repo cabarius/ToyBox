@@ -146,7 +146,7 @@ namespace ToyBox {
             if (!(unit == null)) {
                 for (int i = 0; i < count; i++) {
                     Vector3 offset = 5f*UnityEngine.Random.insideUnitSphere;
-                    Vector3 spawnPosition = new Vector3(
+                    Vector3 spawnPosition = new(
                         worldPosition.x + offset.x,
                         worldPosition.y,
                         worldPosition.z + offset.z);

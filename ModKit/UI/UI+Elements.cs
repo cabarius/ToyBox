@@ -9,8 +9,8 @@ namespace ModKit {
 
         private static Texture2D fillTexture = null;
         private static GUIStyle fillStyle = null;
-        private static Color fillColor = new Color(1f, 1f, 1f, 0.65f);
-        private static Color fillColor2 = new Color(1f, 1f, 1f, 0.35f);
+        private static Color fillColor = new(1f, 1f, 1f, 0.65f);
+        private static Color fillColor2 = new(1f, 1f, 1f, 0.35f);
 
         public static GUIStyle FillStyle(Color color) {
             if (fillTexture == null) fillTexture = new Texture2D(1, 1);

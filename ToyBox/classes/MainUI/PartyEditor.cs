@@ -44,28 +44,28 @@ namespace ToyBox {
                     Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
                     Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
         };
-        static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
+        static Dictionary<String, int> statEditorStorage = new();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
         private static Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             if (partyFilterPlayer != Game.Instance.Player) partyFilterChoices = null;
             if (Game.Instance.Player != null && partyFilterChoices == null) {
                 partyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
-                    new NamedFunc<List<UnitEntityData>>("Party", () => Game.Instance.Player.Party),
-                    new NamedFunc<List<UnitEntityData>>("Party & Pets", () => Game.Instance.Player.m_PartyAndPets),
-                    new NamedFunc<List<UnitEntityData>>("All", () => Game.Instance.Player.AllCharacters),
-                    new NamedFunc<List<UnitEntityData>>("Active", () => Game.Instance.Player.ActiveCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Remote", () => Game.Instance.Player.m_RemoteCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Custom", PartyUtils.GetCustomCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets),
-                    new NamedFunc<List<UnitEntityData>>("Nearby", () => {
-                        var player = GameHelper.GetPlayerCharacter();
-                        if (player == null) return new List<UnitEntityData> ();
-                        return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearbyRange , false, false).ToList();
-                    }),
-                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
+                    new("Party", () => Game.Instance.Player.Party),
+                    new("Party & Pets", () => Game.Instance.Player.m_PartyAndPets),
+                    new("All", () => Game.Instance.Player.AllCharacters),
+                    new("Active", () => Game.Instance.Player.ActiveCompanions),
+                    new("Remote", () => Game.Instance.Player.m_RemoteCompanions),
+                    new("Custom", PartyUtils.GetCustomCompanions),
+                    new("Pets", PartyUtils.GetPets),
+                    new("Nearby", () => {
+                                      var player = GameHelper.GetPlayerCharacter();
+                                      if (player == null) return new List<UnitEntityData> ();
+                                      return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearbyRange , false, false).ToList();
+                                  }),
+                    new("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new("All Units", () => Game.Instance.State.Units.ToList()),
                };
             }
             return partyFilterChoices;

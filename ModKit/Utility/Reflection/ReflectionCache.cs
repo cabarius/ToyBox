@@ -15,7 +15,7 @@ namespace ModKit.Utility
     {
         private const BindingFlags ALL_FLAGS = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic /*| BindingFlags.FlattenHierarchy*/;
 
-        private static readonly Queue _cache = new Queue();
+        private static readonly Queue _cache = new();
 
         public static int Count => _cache.Count;
 

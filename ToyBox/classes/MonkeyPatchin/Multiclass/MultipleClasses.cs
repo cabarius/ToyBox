@@ -37,7 +37,7 @@ namespace ToyBox.Multiclass {
 #if true
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
-            StateReplacer stateReplacer = new StateReplacer(state);
+            StateReplacer stateReplacer = new(state);
             modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
             modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
             modLogger.Log($"    options: {options}");
@@ -98,7 +98,7 @@ namespace ToyBox.Multiclass {
                     //                    selectedMulticlassSet.ForEach(cl => modLogger.Log($"    {cl}"));
 
                     // applying classes
-                    StateReplacer stateReplacer = new StateReplacer(state);
+                    StateReplacer stateReplacer = new(state);
                     foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
                         if (options.Contains(characterClass)) {
                             modLogger.Log($"   checking {characterClass.HashKey()} {characterClass.GetDisplayName()} ");
@@ -136,7 +136,7 @@ namespace ToyBox.Multiclass {
                             // here is where we need to start supporting multiple archetypes of the same class
                             if (archetypeOptions.Contains(archetype)) {
                                 modLogger.Log($"    adding archetype: ${archetype.Name}".cyan().bold());
-                                AddArchetype addArchetype = new AddArchetype(state.SelectedClass, archetype);
+                                AddArchetype addArchetype = new(state.SelectedClass, archetype);
                                 unit.SetClassIsGestalt(addArchetype.CharacterClass, true);
                                 if (addArchetype.Check(state, unit)) {
                                     addArchetype.Apply(state, unit);

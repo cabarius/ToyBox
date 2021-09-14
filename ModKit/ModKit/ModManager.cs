@@ -226,7 +226,7 @@ namespace ModKit {
         #endregion
 
         private class ProcessLogger : IDisposable {
-            Stopwatch _stopWatch = new Stopwatch();
+            Stopwatch _stopWatch = new();
             UnityModManager.ModEntry.ModLogger _logger;
 
             public ProcessLogger(UnityModManager.ModEntry.ModLogger logger) {

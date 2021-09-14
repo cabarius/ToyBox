@@ -81,9 +81,9 @@ namespace ToyBox.BagOfPatches {
                     }
                     bool hasNoCharges = false;
                     if (__instance.Charges > 0) {
-                        ItemEntityUsable itemEntityUsable = new ItemEntityUsable((BlueprintItemEquipmentUsable)__instance.Blueprint);
+                        ItemEntityUsable itemEntityUsable = new((BlueprintItemEquipmentUsable)__instance.Blueprint);
                         if (user.State.Features.HandOfMagusDan && itemEntityUsable.Blueprint.Type == UsableItemType.Scroll) {
-                            RuleRollDice ruleRollDice = new RuleRollDice(user.Unit, new DiceFormula(1, DiceType.D100));
+                            RuleRollDice ruleRollDice = new(user.Unit, new DiceFormula(1, DiceType.D100));
                             Rulebook.Trigger(ruleRollDice);
                             if (ruleRollDice.Result <= 25) {
                                 __result = true;

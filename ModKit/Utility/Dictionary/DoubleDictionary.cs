@@ -6,7 +6,7 @@ namespace ModKit.Utility
     public class DoubleDictionary<TKey1, TKey2, TValue>
     {
         private readonly Dictionary<TKey1, Dictionary<TKey2, TValue>> _dictionary
-            = new Dictionary<TKey1, Dictionary<TKey2, TValue>>();
+            = new();
 
         public TValue this[TKey1 key1, TKey2 key2] {
             get {

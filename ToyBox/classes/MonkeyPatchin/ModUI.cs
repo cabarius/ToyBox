@@ -10,7 +10,7 @@ namespace ToyBox.BagOfPatches {
     static class ModUI {
         [HarmonyPatch(typeof(UnityModManager.UI), "Update")]
         internal static class UnityModManager_UI_Update_Patch {
-            static Dictionary<int, float> scrollOffsets = new Dictionary<int, float> { };
+            static Dictionary<int, float> scrollOffsets = new() { };
             private static void Postfix(UnityModManager.UI __instance, ref Rect ___mWindowRect, ref Vector2[] ___mScrollPosition, ref int ___tabId) {
 #if false
                 // hack to fix mouse wheel which seems to gets de-magnified when the cursor is on the right side of the screen

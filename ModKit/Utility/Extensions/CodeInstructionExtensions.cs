@@ -60,13 +60,13 @@ namespace ModKit.Utility
                     //new CodeInstruction(OpCodes.Pop) { blocks = Blocks(ExceptionBlockType.BeginCatchBlock) },
                     //new CodeInstruction(OpCodes.Rethrow),
                     new CodeInstruction(OpCodes.Ldloc, state).BeginFinallyBlock(),
-                    new CodeInstruction(OpCodes.Call, postfix.Method),
+                    new(OpCodes.Call, postfix.Method),
                     new CodeInstruction(OpCodes.Endfinally).EndExceptionBlock(),
                     new CodeInstruction(OpCodes.Ret).MarkLabel(ret)
                 })
                 .InsertRange(0, new CodeInstruction[] {
-                    new CodeInstruction(OpCodes.Call, prefix.Method),
-                    new CodeInstruction(OpCodes.Stloc, state),
+                    new(OpCodes.Call, prefix.Method),
+                    new(OpCodes.Stloc, state),
                     new CodeInstruction(OpCodes.Nop).BeginExceptionBlock()
                 }, false);
         }
@@ -93,15 +93,15 @@ namespace ModKit.Utility
                     //new CodeInstruction(OpCodes.Pop) { blocks = Blocks(ExceptionBlockType.BeginCatchBlock) },
                     //new CodeInstruction(OpCodes.Rethrow),
                     new CodeInstruction(OpCodes.Ldarg_0).BeginFinallyBlock(),
-                    new CodeInstruction(OpCodes.Ldloc, state),
-                    new CodeInstruction(OpCodes.Call, postfix.Method),
+                    new(OpCodes.Ldloc, state),
+                    new(OpCodes.Call, postfix.Method),
                     new CodeInstruction(OpCodes.Endfinally).EndExceptionBlock(),
                     new CodeInstruction(OpCodes.Ret).MarkLabel(ret)
                 })
                 .InsertRange(0, new CodeInstruction[] {
-                    new CodeInstruction(OpCodes.Ldarg_0),
-                    new CodeInstruction(OpCodes.Call, prefix.Method),
-                    new CodeInstruction(OpCodes.Stloc, state),
+                    new(OpCodes.Ldarg_0),
+                    new(OpCodes.Call, prefix.Method),
+                    new(OpCodes.Stloc, state),
                     new CodeInstruction(OpCodes.Nop).BeginExceptionBlock()
                 }, false);
         }

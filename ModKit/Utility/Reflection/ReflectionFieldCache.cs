@@ -7,7 +7,7 @@ namespace ModKit.Utility
 {
     public static partial class ReflectionCache
     {
-        private static readonly DoubleDictionary<Type, string, WeakReference> _fieldCache = new DoubleDictionary<Type, string, WeakReference>();
+        private static readonly DoubleDictionary<Type, string, WeakReference> _fieldCache = new();
 
         private static CachedField<TField> GetFieldCache<T, TField>(string name)
         {

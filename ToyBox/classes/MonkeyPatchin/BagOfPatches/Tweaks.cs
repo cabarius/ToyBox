@@ -171,7 +171,7 @@ namespace ToyBox.BagOfPatches {
                 Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
-                UnitMoveTo unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
+                UnitMoveTo unitMoveTo = new(settings.Destination, 0.3f) {
                     MovementDelay = settings.Delay,
                     Orientation = new float?(settings.Orientation),
                     CreatedByPlayer = true

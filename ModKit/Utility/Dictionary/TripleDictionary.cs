@@ -6,7 +6,7 @@ namespace ModKit.Utility
     public class TripleDictionary<TKey1, TKey2, TKey3, TValue>
     {
         private readonly Dictionary<TKey1, Dictionary<TKey2, Dictionary<TKey3, TValue>>> _dictionary
-            = new Dictionary<TKey1, Dictionary<TKey2, Dictionary<TKey3, TValue>>>();
+            = new();
 
         public TValue this[TKey1 key1, TKey2 key2, TKey3 key3] {
             get {

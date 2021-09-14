@@ -32,30 +32,30 @@ namespace ToyBox.Multiclass {
         //        .Where(type => typeof(IAbilityCasterChecker).IsAssignableFrom(type) && !type.IsInterface));
 
         public HashSet<Type> ActivatableAbilityRestrictionTypes { get; } =
-            new HashSet<Type>(Assembly.GetAssembly(typeof(ActivatableAbilityRestriction)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(ActivatableAbilityRestriction))));
+            new(Assembly.GetAssembly(typeof(ActivatableAbilityRestriction)).GetTypes()
+                        .Where(type => type.IsSubclassOf(typeof(ActivatableAbilityRestriction))));
 
         public HashSet<Type> BuildingRestrictionTypes { get; } =
-            new HashSet<Type>(Assembly.GetAssembly(typeof(BuildingRestriction)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(BuildingRestriction))).Except(new[] { typeof(DLCRestriction) }));
+            new(Assembly.GetAssembly(typeof(BuildingRestriction)).GetTypes()
+                        .Where(type => type.IsSubclassOf(typeof(BuildingRestriction))).Except(new[] { typeof(DLCRestriction) }));
 
         public HashSet<Type> EquipmentRestrictionTypes { get; } =
-            new HashSet<Type>(Assembly.GetAssembly(typeof(EquipmentRestriction)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(EquipmentRestriction))));
+            new(Assembly.GetAssembly(typeof(EquipmentRestriction)).GetTypes()
+                        .Where(type => type.IsSubclassOf(typeof(EquipmentRestriction))));
 
         public HashSet<Type> PrerequisiteTypes { get; } =
-            new HashSet<Type>(Assembly.GetAssembly(typeof(Prerequisite)).GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(Prerequisite))));
+            new(Assembly.GetAssembly(typeof(Prerequisite)).GetTypes()
+                        .Where(type => type.IsSubclassOf(typeof(Prerequisite))));
 
         public HashSet<BlueprintCharacterClass> AppliedMulticlassSet { get; internal set; }
-            = new HashSet<BlueprintCharacterClass>();
+            = new();
 
         public HashSet<BlueprintProgression> UpdatedProgressions { get; internal set; }
-            = new HashSet<BlueprintProgression>();
+            = new();
 
         public LevelUpController LevelUpController { get; internal set; }
 
-        public HashSet<MethodBase> LockedPatchedMethods { get; internal set; } = new HashSet<MethodBase>();
+        public HashSet<MethodBase> LockedPatchedMethods { get; internal set; } = new();
 
         public bool IsLevelLocked { get; internal set; }
 

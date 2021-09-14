@@ -12,7 +12,7 @@ using JetBrains.Annotations;
 namespace ToyBox {
 
     public static class Teleport {
-        private static HoverHandler _hover = new HoverHandler();
+        private static HoverHandler _hover = new();
         public static void OnUpdate() {
             if ((Game.Instance.CurrentMode != GameModeType.Default || Game.Instance.CurrentMode != GameModeType.Pause) && Main.IsInGame) {
                 if (Input.GetKeyDown(KeyCode.Period))
@@ -27,7 +27,7 @@ namespace ToyBox {
     }
 
     private static Vector3 PointerPosition() {
-            Vector3 result = new Vector3();
+            Vector3 result = new();
 
             Camera camera = Game.GetCamera();
             RaycastHit raycastHit = default(RaycastHit);
