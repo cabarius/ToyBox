@@ -31,6 +31,8 @@ using System.Linq;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Tutorial;
+using Kingmaker.Armies.TacticalCombat.Parts;
+using Kingmaker.Armies;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -145,15 +147,16 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(UnitEntityData), "CalculateSpeedModifier")]
-
         public static class UnitEntityData_CalculateSpeedModifier_Patch {
             private static void Postfix(UnitEntityData __instance, ref float __result) {
-                if (settings.partyMovementSpeedMultiplier == 1.0f || __instance.IsPlayersEnemy)
+                    if (settings.partyMovementSpeedMultiplier == 1.0f || __instance.IsPlayersEnemy)
                     return;
+                UnitPartTacticalCombat partTacticalCombat = __instance.Get<UnitPartTacticalCombat>();
+                if (partTacticalCombat?.Faction != ArmyFaction.Crusaders) return;
+
                 __result *= settings.partyMovementSpeedMultiplier;
             }
         }
-
 
         // public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
         // old: public static bool Prefix(UnitEntityData unit, Vector3 p, float? speedLimit, float orientation, float delay, bool showTargetMarker) {

@@ -12,9 +12,10 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.2
-    Moved Crusade stuff to a new Crusade tab
-    Initial teleport to party and main character support
+    Enemy armies no longer speed up with movement speed multiplier. Only your armies become speedsters ^_^
+    Initial teleport to cursor for party and main character support.  Use comma ',' to teleport the party and '.' to teleport the main char
     Move party together is now disabled for turn based combat (it broke it before)
+    (ArcaneTrixter) Moved Crusade stuff to a new Crusade tab (more like army editing coming soon)
 Ver 1.3.1.2
     Fixed crash on loading into a game that can sometimes happen due to multiclass config being set to a party member higher than the number available in the game you are loading.
 Ver 1.3.1.1
