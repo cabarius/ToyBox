@@ -175,7 +175,6 @@ namespace ToyBox {
                 () => UI.LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
                 () => {
                     UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 5f, 1, 2, "", UI.Width(600));
-                    UI.Space(25); UI.Label("Experimental: Increasing this may cause performance issues when rotating unless you disable shadows in settings".green(), UI.AutoWidth());
                 },
                 () => { }
                 );
