@@ -81,6 +81,7 @@ namespace ToyBox {
                     UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
                     UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                     },
+                () => UI.Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0),
                 () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),

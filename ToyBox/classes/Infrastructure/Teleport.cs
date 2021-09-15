@@ -7,20 +7,15 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.View;
 using System;
 using UnityEngine;
-using UnityModManagerNet;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using JetBrains.Annotations;
 
 namespace ToyBox {
 
     public static class Teleport {
+        public static Settings Settings => Main.settings;
         private static HoverHandler _hover = new HoverHandler();
         public static void OnUpdate() {
-            if ((Game.Instance.CurrentMode != GameModeType.Default || Game.Instance.CurrentMode != GameModeType.Pause) && Main.IsInGame) {
+            if ((Game.Instance.CurrentMode != GameModeType.Default || Game.Instance.CurrentMode != GameModeType.Pause) && Main.IsInGame && Settings.toggleTeleportKeysEnabled) {
                 if (Input.GetKeyDown(KeyCode.Period))
                     TeleportUnit(Game.Instance.Player.MainCharacter.Value, PointerPosition());
                 else if (Input.GetKeyDown(KeyCode.Comma))
@@ -30,9 +25,9 @@ namespace ToyBox {
                 else if (Input.GetKeyDown(KeyCode.Semicolon))
                     if (_hover.Unit != null) TeleportUnit(_hover.Unit, PointerPosition());
             }
-    }
+        }
 
-    private static Vector3 PointerPosition() {
+        private static Vector3 PointerPosition() {
             Vector3 result = new Vector3();
 
             Camera camera = Game.GetCamera();
