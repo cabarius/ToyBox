@@ -3,6 +3,7 @@ using Kingmaker.Armies;
 using Kingmaker.Armies.State;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.Globalmap.State;
 using Kingmaker.Kingdom;
 using ModKit;
 using System.Linq;
@@ -12,6 +13,8 @@ public static class CrusadeEditor {
     public static void ResetGUI() { }
     public static Settings Settings => Main.settings;
 
+    private static GlobalMapArmyState selectedArmy = null;
+
     public static void OnGUI() {
         var kingdom = KingdomState.Instance;
         if (kingdom == null) {
@@ -19,42 +22,6 @@ public static class CrusadeEditor {
             return;
         }
 
-        var armies = Game.Instance.Player.GlobalMap.LastActivated.Armies;
-
-        var playerArmies = armies.Where(army => army.Data.Faction == ArmyFaction.Crusaders);
-
-        UI.Div(0, 25);
-        UI.HStack("Player Armies", 1,
-            () => {
-                UI.Label("Name".yellow(), UI.MinWidth(100), UI.MaxWidth(200));
-                UI.Label("Type".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
-                UI.Label("Squad Count".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
-            },
-            () => {
-                using (UI.VerticalScope()) {
-                    foreach (var army in playerArmies) {
-                        using (UI.HorizontalScope()) {
-                            UI.Label(army.Data.ArmyName.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(200));
-                            UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
-                            UI.Label(army.Data.Squads.Count.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
-                        }
-                    }
-                }
-            },
-            () => {
-                var squads = playerArmies.First().Data;
-                using (UI.VerticalScope()) {
-                    foreach (SquadState squad in squads.m_Squads) {
-                        UI.BeginHorizontal();
-                        UI.Label(squad.Unit.NameSafe(), UI.Width(100));
-                        UI.Label(squad.Count.ToString(), UI.Width(100));
-                        UI.Label(squad.Morale.m_Value.ToString(), UI.Width(100));
-                        UI.EndHorizontal();
-                    }    
-                }
-                
-            }
-        );
 
         UI.Div(0, 25);
         UI.HStack("Army Edits", 1,
@@ -160,7 +127,142 @@ public static class CrusadeEditor {
                 },
                 () => UI.Label("Multiplies build time by (1 + modifier). -1 will make new buildings instant.".cyan()),
             () => { }
-            );
-        }
+        );
+
+        var armies = Game.Instance.Player.GlobalMap.LastActivated.Armies;
+
+        var playerArmies = armies.Where(army => army.Data.Faction == ArmyFaction.Crusaders);
+        var demonArmies = armies.Where(army => army.Data.Faction == ArmyFaction.Demons);
+
+        UI.Div(0, 25);
+        UI.HStack("Player Armies", 1,
+            () => {
+                UI.Label("Name".yellow(), UI.MinWidth(100), UI.MaxWidth(200));
+                UI.Label("Type".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+                UI.Label("Squad Count".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+            },
+            () => {
+                using (UI.VerticalScope()) {
+                    foreach (var army in playerArmies) {
+                        bool showSquads = false;
+                        using (UI.HorizontalScope()) {
+                            UI.Label(army.Data.ArmyName.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(200));
+                            UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            UI.Label(army.Data.Squads.Count.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            showSquads = army == selectedArmy;
+                            if (UI.DisclosureToggle("Squads", ref showSquads, 125)) {
+                                selectedArmy = army;
+                            }
+                        }
+
+                        if (showSquads) {
+                            UI.Div(0, 10);
+
+                            using (UI.VerticalScope()) {
+                                UI.BeginHorizontal();
+                                UI.Label("Squad Name".yellow(), UI.Width(200));
+                                UI.Label("Unit Count".yellow(), UI.Width(150));
+                                UI.EndHorizontal();
+                            }
+
+                            using (UI.VerticalScope()) {
+                                var squads = selectedArmy.Data.m_Squads;
+                                SquadState squadToRemove = null;
+                                foreach (var squad in squads) {
+                                    UI.BeginHorizontal();
+                                    
+                                    UI.Label(squad.Unit.NameSafe(), UI.Width(200));
+                                    var count = squad.Count;
+                                    UI.ActionIntTextField(ref count, null,
+                                        (value) => {
+                                            squad.SetCount(value);
+                                        },
+                                        null, UI.Width(150)
+                                    );
+
+                                    UI.ActionButton("Remove", () => {
+                                        squadToRemove = squad;
+                                    }, UI.Width(100));
+
+
+                                    UI.EndHorizontal();
+                                }
+
+                                if (squadToRemove != null) {
+                                    squadToRemove.Army.RemoveSquad(squadToRemove);
+                                }
+                            }
+                            UI.Div(0, 10);
+                        }
+                    }
+                }
+            }
+        );
+        
+         UI.Div(0, 25);
+        UI.HStack("Demon Armies", 1,
+            () => {
+                UI.Label("Name".yellow(), UI.MinWidth(100), UI.MaxWidth(200));
+                UI.Label("Type".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+                UI.Label("Squad Count".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+            },
+            () => {
+                using (UI.VerticalScope()) {
+                    foreach (var army in demonArmies) {
+                        bool showSquads = false;
+                        using (UI.HorizontalScope()) {
+                            UI.Label(army.Data.ArmyName.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(200));
+                            UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            UI.Label(army.Data.Squads.Count.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            showSquads = army == selectedArmy;
+                            if (UI.DisclosureToggle("Squads", ref showSquads, 125)) {
+                                selectedArmy = army;
+                            }
+                        }
+
+                        if (showSquads) {
+                            UI.Div(0, 10);
+
+                            using (UI.VerticalScope()) {
+                                UI.BeginHorizontal();
+                                UI.Label("Squad Name".yellow(), UI.Width(200));
+                                UI.Label("Unit Count".yellow(), UI.Width(150));
+                                UI.EndHorizontal();
+                            }
+
+                            using (UI.VerticalScope()) {
+                                var squads = selectedArmy.Data.m_Squads;
+                                SquadState squadToRemove = null;
+                                foreach (var squad in squads) {
+                                    UI.BeginHorizontal();
+                                    
+                                    UI.Label(squad.Unit.NameSafe(), UI.Width(200));
+                                    var count = squad.Count;
+                                    UI.ActionIntTextField(ref count, null,
+                                        (value) => {
+                                            squad.SetCount(value);
+                                        },
+                                        null, UI.Width(150)
+                                    );
+
+                                    UI.ActionButton("Remove", () => {
+                                        squadToRemove = squad;
+                                    }, UI.Width(100));
+
+
+                                    UI.EndHorizontal();
+                                }
+
+                                if (squadToRemove != null) {
+                                    squadToRemove.Army.RemoveSquad(squadToRemove);
+                                }
+                            }
+                            UI.Div(0, 10);
+                        }
+                    }
+                }
+            }
+        );
     }
+}
 }
