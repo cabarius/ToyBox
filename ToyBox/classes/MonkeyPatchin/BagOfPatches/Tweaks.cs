@@ -170,12 +170,12 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ClickGroundHandler), "RunCommand")]
         public static class ClickGroundHandler_RunCommand_Patch {
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
-                Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()}");
+                //Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()}");
                 if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return true;
                 var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
                 if (!moveAsOne) return true;
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
-                Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
+                //Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
                 UnitMoveTo unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {

@@ -396,11 +396,12 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(CameraZoom), "ZoomToImmediate", new Type[] { typeof(float) })]
-        static class CameraZoom_ZoomToImmediate_Apply {
-            public static void Prefix(CameraZoom __instance, ref float position) {
-                if (settings.fovMultiplierCutScenes != 1.0) {
-                    position *= settings.fovMultiplierCutScenes;
+        [HarmonyPatch(typeof(CameraRig), "SetMode")]
+        static class CameraRig_SetMode_Apply {
+            public static void Postfix(CameraRig __instance, CameraMode mode) {
+                if (settings.fovMultiplierCutScenes == 1 && settings.fovMultiplier == 1) return;
+                if (mode == CameraMode.Default && Game.Instance.CurrentMode == GameModeType.Cutscene) {
+                    __instance.Camera.fieldOfView = __instance.CameraZoom.FovMax * settings.fovMultiplierCutScenes / settings.fovMultiplier ;
                 }
             }
         }
