@@ -11,6 +11,8 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.3.4
+    (ArcaneTrixter) Added multipliers for Army Leader Power. Remember that power is squared for most abilities!
 Ver 1.3.3
     Added separate zoom multiplier for cut scenes
     Increased MaxFov to 5

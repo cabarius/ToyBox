@@ -37,6 +37,12 @@ namespace ToyBox.classes.MainUI {
             );
 
             UI.Div(0, 25);
+            UI.HStack("Army Edits", 1,
+                () => UI.Slider("Player Leader Ability Strength", ref Settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", UI.AutoWidth()),
+                () => UI.Slider("Enemy Leader Ability Strength", ref Settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
+            );
+
+            UI.Div(0, 25);
             var moraleState = kingdom.MoraleState;
             UI.HStack("Morale", 1,
                 () => {

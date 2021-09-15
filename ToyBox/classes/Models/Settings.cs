@@ -64,6 +64,8 @@ namespace ToyBox {
         public float recruitmentCost = 1;
         public float recruitmentMultiplier = 1;
         public float armyExperienceMultiplier = 1;
+        public float playerLeaderPowerMultiplier = 1;
+        public float enemyLeaderPowerMultiplier = 1;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
