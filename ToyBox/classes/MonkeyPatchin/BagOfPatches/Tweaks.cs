@@ -409,7 +409,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(KineticistAbilityBurnCost), "GetTotal")]
         public static class KineticistAbilityBurnCost_GetTotal_Patch {
             public static void Postfix(ref int __result) {
-                __result -= settings.kineticistBurnReduction;
+                __result = Math.Max(0, __result -settings.kineticistBurnReduction);
             }
         }
 
