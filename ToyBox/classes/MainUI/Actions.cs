@@ -12,6 +12,7 @@ using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Armies;
+using Kingmaker.Armies.Blueprints;
 using Kingmaker.Armies.TacticalCombat;
 using Kingmaker.Armies.TacticalCombat.Blueprints;
 using Kingmaker.Armies.TacticalCombat.Brain;
@@ -308,6 +309,11 @@ namespace ToyBox {
                 }
             }
             ch.Descriptor.Progression.CharacterLevel = level;
+        }
+        
+        public static void CreateArmy(BlueprintArmyPreset bp) {
+            var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
+            Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
         }
     }
 }
