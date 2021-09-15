@@ -3,6 +3,7 @@ using Kingmaker.Armies;
 using Kingmaker.Armies.State;
 using Kingmaker.Armies.TacticalCombat;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Armies;
 using Kingmaker.Kingdom.Blueprints;
@@ -29,6 +30,17 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 if (Settings.toggleInfiniteArmyRerolls) {
                     __instance.FreeRerollsLeftCount = __state;
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(TacticalCombatHelper), "GetSpellPower")]
+        public static class TacticalCombatHelper_GetSpellPower_Patch {
+            public static void Postfix(ref int __result, UnitEntityData leader) {
+                float leaderPowerMultiplier = TacticalCombatHelper.IsDemon(leader)
+                    ? Settings.enemyLeaderPowerMultiplier
+                    : Settings.playerLeaderPowerMultiplier;
+
+                __result = Mathf.RoundToInt(__result * leaderPowerMultiplier);
             }
         }
 
