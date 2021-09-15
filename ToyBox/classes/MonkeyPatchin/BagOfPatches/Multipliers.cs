@@ -395,5 +395,14 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
+
+        [HarmonyPatch(typeof(CameraZoom), "ZoomToImmediate", new Type[] { typeof(float) })]
+        static class CameraZoom_ZoomToImmediate_Apply {
+            public static void Prefix(CameraZoom __instance, ref float position) {
+                if (settings.fovMultiplierCutScenes != 1.0) {
+                    position *= settings.fovMultiplierCutScenes;
+                }
+            }
+        }
     }
 }

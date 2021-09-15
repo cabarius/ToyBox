@@ -121,15 +121,6 @@ namespace ToyBox {
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
                 () => { }
                 );
-            UI.Div(0, 25);
-            UI.HStack("Tweaks - Class specific", 1,
-                () => UI.Toggle("Witch/Shaman: cackling/shanting extends hexes by 10 minutes while out of combat", ref settings.toggleExtendHexes),
-                () => UI.Toggle("Misc: allow all activatable simultaneously (like judgements)", ref settings.toggleAllowAllActivatable),
-                () => UI.Toggle("Allow Gather Power Without Hands Free", ref settings.toggleKineticistGatherPower),
-                () => UI.Slider("Kineticist Burn Reduction", ref settings.kineticistBurnReduction, 0, 10, 1, "", UI.AutoWidth()),
-                () => { }
-                );
-
             UI.Div(153, 25);
             UI.HStack("", 1,
                 () => UI.EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth()),
@@ -139,7 +130,15 @@ namespace ToyBox {
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
 #endif
                 );
-
+            UI.Div(0, 25);
+            UI.HStack("Class Specific", 1,
+                () => UI.Slider("Kineticist Burn Reduction", ref settings.kineticistBurnReduction, 0, 10, 1, "", UI.AutoWidth()),
+                () => UI.Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)", ref settings.toggleExtendHexes),
+                () => UI.Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)", ref settings.toggleAllowAllActivatable),
+                () => UI.Toggle("Allow Gather Power Without Hands Free", ref settings.toggleKineticistGatherPower),
+                () => { }
+                );
+            UI.Div(0, 25);
             UI.HStack("Multipliers", 1,
                 () => UI.LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
@@ -173,9 +172,10 @@ namespace ToyBox {
                 () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 999, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("Field Of View (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
                 () => {
-                    UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 3f, 1, 2, "", UI.Width(600));
-                    UI.Space(25); UI.Label("Experimental: Increasing this may cause performance issues when rotating".green(), UI.AutoWidth());
+                    UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 5f, 1, 2, "", UI.Width(600));
+                    UI.Space(25); UI.Label("Experimental: Increasing this may cause performance issues when rotating unless you disable shadows in settings".green(), UI.AutoWidth());
                 },
                 () => { }
                 );

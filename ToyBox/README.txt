@@ -12,12 +12,18 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.3
+    Added additional zoom multiplier for cut scenes
+    Increased MaxFov to 5
     Toggle to not charge campaign time when changing chars
     (ArcaneTrixter & Narria) Added button to show the group editor anywhere
     (ArcaneTrixter) Added an experimental "Large Player Armies" toggle to the Crusade tab, which will enable players to have up to 14 units in their army. This might have unintended side effects if reloading a game with large armies without this setting enabled.
     (ArcaneTrixter) Added Kineticist class cheats to gather power with hands full and to allow additional burn reduction.
     (ArcaneTrixter) Enabled initial parameterized feat support.
     (ArcaneTrixter) Added a toggle for teleport keys being active in the Tweaks section of Bag of Tricks.
+    (Truinto) Kineticist Burn Reduction
+    (Truinto) Witch/Shaman: Cackling/Shanting Extends Hexes By 10 min (out of combat)
+    (Truinto) Allow Simultaneous Activatable Abilities  (like judgements)
+    (Truinto) Allow Gather Power Without Hands Free
 Ver 1.3.2
     Enemy armies no longer speed up with movement speed multiplier. Only your armies become speedsters ^_^
     Initial teleport to cursor for party and main character support.  Use comma ',' to teleport the party and '.' to teleport the main char

@@ -112,6 +112,7 @@ namespace ToyBox {
         public float enemyBaseHitPointsMultiplier = 1;
         public float buffDurationMultiplierValue = 1;
         public float fovMultiplier = 1;
+        public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
 
