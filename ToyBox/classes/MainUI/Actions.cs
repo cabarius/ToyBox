@@ -69,6 +69,7 @@ using UnityModManagerNet;
 using Kingmaker.Globalmap.State;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap;
+using Kingmaker.UI.MVVM._PCView.InGame;
 
 namespace ToyBox {
     public static class Actions {
@@ -191,7 +192,7 @@ namespace ToyBox {
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
                 for (int i = 0; i < count; i++) {
-                    Vector3 offset = 5f*UnityEngine.Random.insideUnitSphere;
+                    Vector3 offset = 5f * UnityEngine.Random.insideUnitSphere;
                     Vector3 spawnPosition = new Vector3(
                         worldPosition.x + offset.x,
                         worldPosition.y,
@@ -200,12 +201,20 @@ namespace ToyBox {
                 }
             }
         }
+
+        public static void HandleChangeParty() {
+            List<UnitReference> partyCharacters = Game.Instance.Player.Party.Select<UnitEntityData, UnitReference>((Func<UnitEntityData, UnitReference>)(u => (UnitReference)u)).ToList<UnitReference>(); ;
+            if ((partyCharacters != null ? (partyCharacters.Select<UnitReference, UnitEntityData>((Func<UnitReference, UnitEntityData>)(r => r.Value)).SequenceEqual<UnitEntityData>((IEnumerable<UnitEntityData>)Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
+                return;
+            GlobalMapView.Instance.ChangePartyOnMap();
+        }
+
         public static void ChangeParty() {
             GameModeType currentMode = Game.Instance.CurrentMode;
 
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 UnityModManager.UI.Instance.ToggleWindow();
-                GlobalMapView.Instance.ChangePartyOnMap();
+                EventBus.RaiseEvent<IGroupChangerHandler>((Action<IGroupChangerHandler>)(h => h.HandleCall(new Action(Actions.HandleChangeParty), (Action)null, true)));
             }
         }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
@@ -226,7 +235,7 @@ namespace ToyBox {
                     for (int level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         if (learnable.Contains(ability)) {
-//                            Logger.Log($"found spell {ability.Name} in {learnable.Count()} level {level} spells");
+                            //                            Logger.Log($"found spell {ability.Name} in {learnable.Count()} level {level} spells");
                             return true; ;
                         }
                     }
@@ -279,7 +288,7 @@ namespace ToyBox {
             if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
         }
         public static void ResetMythicPath(this UnitEntityData ch) {
-//            ch.Descriptor.Progression.RemoveMythicLevel
+            //            ch.Descriptor.Progression.RemoveMythicLevel
         }
         public static void resetClassLevel(this UnitEntityData ch) {
             // TODO - this doesn't seem to work in BoT either...

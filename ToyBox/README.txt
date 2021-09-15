@@ -12,6 +12,8 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.3
+    Toggle to not charge campaign time when changing chars
+    (ArcaneTrixter & Narria) Added button to show the group editor anywhere
     (ArcaneTrixter) Added an experimental "Large Player Armies" toggle to the Crusade tab, which will enable players to have up to 14 units in their army. This might have unintended side effects if reloading a game with large armies without this setting enabled.
     (ArcaneTrixter) Added Kineticist class cheats to gather power with hands full and to allow additional burn reduction.
     (ArcaneTrixter) Enabled initial parameterized feat support.

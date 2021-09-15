@@ -27,7 +27,7 @@ namespace ToyBox {
     }
     public class MulticlassOptions : SerializableDictionary<string, ArchetypeOptions> {
         public const string CharGenKey = @"$CharacterGeneration";
-        public static MulticlassOptions Get(UnitDescriptor? ch) {
+        public static MulticlassOptions Get(UnitDescriptor ch) {
             //Main.Log($"stack: {System.Environment.StackTrace}");
             MulticlassOptions options;
             if (ch == null) {
@@ -41,7 +41,7 @@ namespace ToyBox {
             }
             return options;
         }
-        public static void Set(UnitDescriptor? ch, MulticlassOptions options) {
+        public static void Set(UnitDescriptor ch, MulticlassOptions options) {
             //modLogger.Log($"stack: {System.Environment.StackTrace}");
             if (ch == null) Main.settings.multiclassSettings[CharGenKey] = options;
             else {

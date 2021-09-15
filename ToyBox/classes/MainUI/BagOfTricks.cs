@@ -62,7 +62,7 @@ namespace ToyBox {
                 },
                 () => UI.ActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
                 () => UI.ActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
-                //                    () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
+                () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
                 () => { }
                 );
             UI.Div(0, 25);

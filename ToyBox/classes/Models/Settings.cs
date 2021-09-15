@@ -53,6 +53,7 @@ namespace ToyBox {
         public bool toggleExtendHexes = false;
         public bool toggleAllowAllActivatable = false;
         public bool toggleKineticistGatherPower = false;
+        public bool toggleInstantPartyChange = false;
 
         //Crusade
         public bool toggleInfiniteArmyRerolls = false;

@@ -38,6 +38,8 @@ using Kingmaker.UnitLogic.Parts;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
+using Kingmaker.UI.IngameMenu;
+using System.Reflection;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -422,5 +424,16 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(IngameMenuManager), "OpenGroupManager")]
+        static class IngameMenuManager_OpenGroupManager_Patch {
+            static bool Prefix(IngameMenuManager __instance) {
+                if (settings.toggleInstantPartyChange) {
+                    MethodInfo startChangedPartyOnGlobalMap = __instance.GetType().GetMethod("StartChangedPartyOnGlobalMap", BindingFlags.NonPublic | BindingFlags.Instance);
+                    startChangedPartyOnGlobalMap.Invoke(__instance, new object[] { });
+                    return false;
+                }
+                return true;
+            }
+        }
     }
 }

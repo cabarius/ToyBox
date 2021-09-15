@@ -193,6 +193,7 @@ namespace ToyBox.Multiclass {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
+                if (!unit.IsPlayerFaction) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
 
                 if (IsAvailable()) {
