@@ -4,6 +4,7 @@ using Kingmaker;
 using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.QuestSystem;
+using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
@@ -317,6 +318,11 @@ namespace ToyBox {
                 if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
                     Actions.TeleportToGlobalMap(() => Actions.TeleportToGlobalMapPoint(globalMapPoint));
                 }
+            });
+            
+            //Army
+            BlueprintAction.Register<BlueprintArmyPreset>("Add", (bp, ch, n, l) => {
+                Actions.CreateArmy(bp);
             });
         }
     }
