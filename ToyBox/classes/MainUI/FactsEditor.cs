@@ -52,8 +52,10 @@ namespace ToyBox {
         static int searchLimit = 100;
         static int repeatCount = 1;
         public static int matchCount = 0;
-
         static bool showAll = false;
+        static bool showTree = false;
+        static FeaturesTreeEditor treeEditor = new FeaturesTreeEditor();
+
         public static void UpdateSearchResults(String searchText, int limit, IEnumerable<SimpleBlueprint> blueprints) {
             if (blueprints == null) return;
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
@@ -86,41 +88,40 @@ namespace ToyBox {
                                     IEnumerable<BlueprintAction> actions = null
                 ) {
             bool searchChanged = false;
+            bool refreshTree = false;
             if (actions == null) actions = new List<BlueprintAction>();
             if (callerKey != prevCallerKey) { searchChanged = true; showAll = false; }
             prevCallerKey = callerKey;
             var mutatorLookup = actions.Distinct().ToDictionary(a => a.name, a => a);
-            UI.BeginHorizontal();
-            UI.Space(100);
-            UI.ActionTextField(ref searchText, "searhText", null, () => { searchChanged = true; }, UI.Width(320));
-            UI.Space(25);
-            UI.Label("Limit", UI.ExpandWidth(false));
-            UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
-            if (searchLimit > 1000) { searchLimit = 1000; }
-            UI.Space(25);
-            UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
-            UI.Space(25);
-            searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
-            UI.EndHorizontal();
-            UI.BeginHorizontal();
-            UI.Space(100);
-            UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
-            UI.Space(25);
-            if (matchCount > 0 && searchText.Length > 0) {
-                String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
-                UI.Label(matchesText, UI.ExpandWidth(false));
-            }
-#if false
-            UI.Label("Repeat Count", UI.ExpandWidth(false));
-            UI.ActionIntTextField(
-                ref repeatCount,
-                "repeatCount",
-                (limit) => { },
-                () => { },
-                UI.Width(200));
+            using (UI.HorizontalScope()) {
+                UI.Space(100);
+                UI.ActionTextField(ref searchText, "searhText", null, () => { searchChanged = true; }, UI.Width(320));
+                UI.Space(25);
+                UI.Label("Limit", UI.ExpandWidth(false));
+                UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
+                if (searchLimit > 1000) { searchLimit = 1000; }
+                UI.Space(25);
+                UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
+                UI.Space(25);
+                searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
+#if DEBUG
+                refreshTree |= UI.DisclosureToggle("Show Tree".orange().bold(), ref showTree);
 #endif
-            UI.EndHorizontal();
+            }
+            if (showTree) {
+                treeEditor.OnGUI(unit, refreshTree);
+                return;
+            }
+            using (UI.HorizontalScope()) {
+                UI.Space(100);
+                UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
+                UI.Space(25);
+                if (matchCount > 0 && searchText.Length > 0) {
+                    String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                    if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
+                    UI.Label(matchesText, UI.ExpandWidth(false));
+                }
+            }
             var remainingWidth = UI.ummWidth;
             if (showAll) {
                 // TODO - do we need this logic or can we make blueprint filtering fast enough to do keys by key searching?

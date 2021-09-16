@@ -260,7 +260,7 @@ namespace ToyBox {
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
-                        UI.Toggle("Search Descriptions", ref settings.searchDescriptions);
+                        if (UI.Toggle("Search Descriptions", ref settings.searchDescriptions)) UpdateSearchResults();
                         UI.Space(25);
                         UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
                         UI.Space(25);

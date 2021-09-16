@@ -12,7 +12,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.5
-    
+    Toggling search descriptions now updates search results
 Ver 1.3.4
     Teleport Keys are now rebindable and shouldn't interfere with other windows that you might type in
     Cleaned up the UI for parameterized feats. Values now are sorted and the layout is improved

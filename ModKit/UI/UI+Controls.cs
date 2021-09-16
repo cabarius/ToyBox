@@ -44,6 +44,11 @@ namespace ModKit {
             }
             return value;
         }
+        public static bool Button(String title, ref bool pressed, params GUILayoutOption[] options) {
+            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
+            if (GL.Button(title, options)) { pressed = true; }
+            return pressed;
+        }
         public static void ActionButton(String title, Action action, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, options)) { action(); }
