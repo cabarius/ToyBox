@@ -179,10 +179,11 @@ namespace ToyBox.Multiclass {
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
         static public bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
-            var party = Game.Instance.Player.Party;
-            foreach (var ch in party) {
-                if (ch.Progression == progression) {
-                    // modLogger.Log($"found: {ch.HashKey()}");
+            var chars = Game.Instance.Player.AllCharacters;
+            foreach (var ch in chars) {
+                //Main.Log($"   {ch.Progression.Owner} vs { progression.Owner}");
+                if (ch.Progression.Owner == progression.Owner) {
+                    modLogger.Log($"   found: {ch.HashKey()} - {ch.Progression.Owner}");
                     return ch.IsClassGestalt(cl);
                 }
             }

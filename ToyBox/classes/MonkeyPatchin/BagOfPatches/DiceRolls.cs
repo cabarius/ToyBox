@@ -150,7 +150,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RuleCastSpell), "IsArcaneSpellFailed", MethodType.Getter)]
         public static class RuleCastSpell_IsArcaneSpellFailed_Patch {
             static void Postfix(RuleCastSpell __instance, ref bool __result) {
-                if ((__instance.Spell.Caster?.Unit?.IsPlayerFaction ?? false) && (StringUtils.ToToggleBool(settings.toggleArcaneSpellFailureRoll))) {
+                if ((__instance.Spell.Caster?.Unit?.IsPartyMemberOrPet() ?? false) && (StringUtils.ToToggleBool(settings.toggleArcaneSpellFailureRoll))) {
                     if (!StringUtils.ToToggleBool(settings.toggleArcaneSpellFailureRollOutOfCombatOnly)) {
                         __result = false;
                     }

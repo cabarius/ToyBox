@@ -125,6 +125,8 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
 using Kingmaker.UI.MVVM._VM.CharGen;
+using ModKit.Utility;
+using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -220,13 +222,13 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyHitPoints", new Type[] { typeof(LevelUpState), typeof(ClassData), typeof(UnitDescriptor) })]
         static class ApplyClassMechanics_ApplyHitPoints_Patch {
             private static void Postfix(LevelUpState state, ClassData classData, ref UnitDescriptor unit) {
-                if (settings.toggleFullHitdiceEachLevel && unit.IsPlayerFaction && state.NextClassLevel > 1) {
+                if (settings.toggleFullHitdiceEachLevel && unit.IsPartyMemberOrPet() && state.NextClassLevel > 1) {
 
                     int newHitDie = ((int)classData.CharacterClass.HitDie / 2) - 1;
                     unit.Stats.HitPoints.BaseValue += newHitDie;
                 }
 #if false
-                else if (StringUtils.ToToggleBool(settings.toggleRollHitDiceEachLevel) && unit.IsPlayerFaction && state.NextLevel > 1) {
+                else if (StringUtils.ToToggleBool(settings.toggleRollHitDiceEachLevel) && unit.IsPartyMemberOrPet() && state.NextLevel > 1) {
                     int oldHitDie = ((int)classData.CharacterClass.HitDie / 2) + 1;
                     DiceFormula diceFormula = new DiceFormula(1, classData.CharacterClass.HitDie);
                     int roll = RuleRollDice.Dice.D(diceFormula);
@@ -265,7 +267,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(IgnorePrerequisites), "Ignore", MethodType.Getter)]
         static class IgnorePrerequisites_Ignore_Patch {
             private static void Postfix(ref bool __result) {
-                if (settings.toggleIgnorePrerequisites) {
+                if (settings.toggleIgnoreClassAndFeatRestrictions) {
                     __result = true;
                 }
             }
@@ -275,7 +277,7 @@ namespace ToyBox.BagOfPatches {
         static class CharGenMythicPhaseVM_IsClassVisible_Patch {
             private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
                 Logger.Log("IsClassVisible");
-                if (settings.toggleIgnorePrerequisites) {
+                if (settings.toggleIgnoreClassAndFeatRestrictions) {
                     __result = true;
                 }
             }
@@ -285,7 +287,7 @@ namespace ToyBox.BagOfPatches {
         static class CharGenMythicPhaseVM_IsClassAvailableToSelect_Patch {
             private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
                 Logger.Log("CharGenMythicPhaseVM.IsClassAvailableToSelect");
-                if (settings.toggleIgnorePrerequisites) {
+                if (settings.toggleIgnoreClassAndFeatRestrictions) {
                     __result = true;
                 }
             }
@@ -294,7 +296,7 @@ namespace ToyBox.BagOfPatches {
         static class CharGenMythicPhaseVM_IsPossibleMythicSelection_Patch {
             private static void Postfix(ref bool __result) {
                 Logger.Log("CharGenMythicPhaseVM.IsPossibleMythicSelection");
-                if (settings.toggleIgnorePrerequisites) {
+                if (settings.toggleIgnoreClassAndFeatRestrictions) {
                     __result = true;
                 }
             }
@@ -304,8 +306,8 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LevelUpController), "IsPossibleMythicSelection", MethodType.Getter)]
         static class LevelUpControllerIsPossibleMythicSelection_Patch {
             private static void Postfix(ref bool __result) {
-                //Logger.Log($"LevelUpController.IsPossibleMythicSelection {settings.toggleIgnorePrerequisites}");
-                if (settings.toggleIgnorePrerequisites) {
+                //Logger.Log($"LevelUpController.IsPossibleMythicSelection {settings.toggleIgnoreClassAndFeatRestrictions}");
+                if (settings.toggleIgnoreClassAndFeatRestrictions) {
                     __result = true;
                 }
             }
@@ -317,7 +319,7 @@ namespace ToyBox.BagOfPatches {
                     [NotNull] UnitDescriptor unit,
                     [CanBeNull] LevelUpState state,
                     ref bool __result) {
-                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+                if (!unit.IsPartyMemberOrPet()) return; // don't give extra feats to NPCs
 
                 if (settings.toggleIgnoreCasterTypeSpellLevel) {
                     __result = true;
@@ -331,7 +333,7 @@ namespace ToyBox.BagOfPatches {
                     [NotNull] UnitDescriptor unit,
                     [CanBeNull] LevelUpState state,
                     ref bool __result) {
-                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+                if (!unit.IsPartyMemberOrPet()) return; // don't give extra feats to NPCs
 
                 if (settings.toggleIgnoreForbiddenArchetype) {
                     __result = true;
@@ -346,8 +348,7 @@ namespace ToyBox.BagOfPatches {
                     [NotNull] UnitDescriptor unit,
                     [CanBeNull] LevelUpState state,
                     ref bool __result) {
-                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
-
+                if (!unit.IsPartyMemberOrPet()) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnorePrerequisiteStatValue) {
                     __result = true;
                 }
@@ -361,7 +362,7 @@ namespace ToyBox.BagOfPatches {
                     [NotNull] UnitDescriptor unit,
                     [CanBeNull] LevelUpState state,
                     ref bool __result) {
-                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+                if (!unit.IsPartyMemberOrPet()) return; // don't give extra feats to NPCs
 
                 if (settings.toggleIgnoreAlignmentWhenChoosingClass) {
                     __result = true;
@@ -376,7 +377,7 @@ namespace ToyBox.BagOfPatches {
                     [NotNull] UnitDescriptor unit,
                     [CanBeNull] LevelUpState state,
                     ref bool __result) {
-                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+                if (!unit.IsPartyMemberOrPet()) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnoreForbiddenFeatures) {
                     __result = true;
                 }
@@ -412,7 +413,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
         public static class SpellSelectionData_CanSelectAnything_Patch {
             public static void Postfix(UnitDescriptor unit, bool __result) {
-                if (!unit.IsPlayerFaction) return; // don't give extra feats to NPCs
+                if (!unit.IsPartyMemberOrPet()) return; // don't give extra feats to NPCs
                 if (settings.toggleSkipSpellSelection) {
                     __result = false;
                 }
@@ -450,7 +451,8 @@ namespace ToyBox.BagOfPatches {
                 FeatureSource source,
                 int level) {
                 if (settings.featsMultiplier < 2) return true;
-                if (!unit.Unit.IsPlayerFaction) return true;
+                //modLogger.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
+                if (!unit.IsPartyMemberOrPet()) return true;
                 modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
                 foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
                     for (int i = 0; i < settings.featsMultiplier; ++i) {
