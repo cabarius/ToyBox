@@ -11,8 +11,10 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.3.5
+    
 Ver 1.3.4
-    Telport Keys are now rebindable and shouldn't interfere with other windows that you might type in
+    Teleport Keys are now rebindable and shouldn't interfere with other windows that you might type in
     Cleaned up the UI for parameterized feats. Values now are sorted and the layout is improved
     Got rid of Max FoV and increased standard max to 5
     (ArcaneTrixter) Added multipliers for Army Leader Power. Remember that power is squared for most abilities!
