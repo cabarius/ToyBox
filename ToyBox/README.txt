@@ -13,6 +13,8 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
 
 Ver 1.3.5
     Toggling search descriptions now updates search results
+    (ArcaneTrixter) Allies should no longer get piles of (sometimes contradictory) starting feats when initially recruited (Looking at you, Nenio!).
+    (ArcaneTrixter) Party and pets should once again be affected by feat multiplier in town.
 Ver 1.3.4
     Teleport Keys are now rebindable and shouldn't interfere with other windows that you might type in
     Cleaned up the UI for parameterized feats. Values now are sorted and the layout is improved
