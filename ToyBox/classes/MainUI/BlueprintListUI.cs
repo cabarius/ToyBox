@@ -112,14 +112,8 @@ namespace ToyBox {
                     else {
                         title = titleFormater(title);
                     }
-                    var titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
-                    if (!(blueprint is BlueprintParametrizedFeature)) {
-                        UI.Label(title, UI.Width(titleWidth));
-                    }
-                    else {
-                        UI.Space(25);
-                    }
-
+                    titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
+                    UI.Label(title, UI.Width(titleWidth));
                     remWidth -= titleWidth;
                     int actionCount = actions != null ? actions.Count() : 0;
                     var lockIndex = titles.IndexOf("Lock");
