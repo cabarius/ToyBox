@@ -415,6 +415,15 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(UnitPartMagus), "IsSpellCombatThisRoundAllowed")]
+        public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
+            public static void Postfix(ref bool __result, UnitPartMagus __instance) {
+                if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner.IsPartyOrPet()) {
+                    __result = true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(GlobalMapPathManager), nameof(GlobalMapPathManager.GetTimeToCapital))]
         public static class GlobalMapPathManager_GetTimeToCapital_Patch {
             public static void Postfix(bool andBack, ref TimeSpan? __result) {

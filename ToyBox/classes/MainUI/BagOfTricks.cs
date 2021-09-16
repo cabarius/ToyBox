@@ -141,7 +141,8 @@ namespace ToyBox {
                 () => UI.Slider("Kineticist Burn Reduction", ref settings.kineticistBurnReduction, 0, 10, 1, "", UI.AutoWidth()),
                 () => UI.Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)", ref settings.toggleExtendHexes),
                 () => UI.Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)", ref settings.toggleAllowAllActivatable),
-                () => UI.Toggle("Allow Gather Power Without Hands Free", ref settings.toggleKineticistGatherPower),
+                () => UI.Toggle("Kineticist: Allow Gather Power Without Hands", ref settings.toggleKineticistGatherPower),
+                () => UI.Toggle("Magus: Always Allow Spell Combat", ref settings.toggleAlwaysAllowSpellCombat),
                 () => { }
                 );
             UI.Div(0, 25);
