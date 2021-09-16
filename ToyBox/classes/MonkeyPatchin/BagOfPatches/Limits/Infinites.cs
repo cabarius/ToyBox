@@ -133,7 +133,7 @@ namespace ToyBox.BagOfPatches {
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
                 UnitEntityData unit = ability.Caster.Unit;
-                if (unit?.IsPartyMemberOrPet() == true && settings.toggleInfiniteAbilities) {
+                if (unit?.Descriptor.IsPartyOrPet() == true && settings.toggleInfiniteAbilities) {
                     return false;
                 }
 
@@ -198,7 +198,7 @@ namespace ToyBox.BagOfPatches {
                             }
                         }
 
-                        if (user.IsPartyMemberOrPet()) {
+                        if (user.IsPartyOrPet()) {
                             __result = true;
                             return;
                         }
