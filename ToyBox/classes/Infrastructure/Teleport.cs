@@ -15,15 +15,20 @@ namespace ToyBox {
         public static Settings Settings => Main.settings;
         private static HoverHandler _hover = new HoverHandler();
         public static void OnUpdate() {
-            if ((Game.Instance.CurrentMode != GameModeType.Default || Game.Instance.CurrentMode != GameModeType.Pause) && Main.IsInGame && Settings.toggleTeleportKeysEnabled) {
-                if (Input.GetKeyDown(KeyCode.Period))
+            if (Main.IsInGame 
+                && Settings.toggleTeleportKeysEnabled
+                && (    Game.Instance.CurrentMode == GameModeType.Default 
+                    ||  Game.Instance.CurrentMode == GameModeType.Pause
+                    )
+                ) {
+                if (Input.GetKeyDown(Settings.teleportMainHotKey))
                     TeleportUnit(Game.Instance.Player.MainCharacter.Value, PointerPosition());
-                else if (Input.GetKeyDown(KeyCode.Comma))
+                else if (Input.GetKeyDown(Settings.teleportSelectedHotKey))
                     TeleportSelected();
-                else if (Input.GetKeyDown(KeyCode.Slash))
-                    _hover.LockUnit();
-                else if (Input.GetKeyDown(KeyCode.Semicolon))
-                    if (_hover.Unit != null) TeleportUnit(_hover.Unit, PointerPosition());
+                else if (Input.GetKeyDown(Settings.teleportPartyHotKey))
+                    TeleportParty();
+                //else if (Input.GetKeyDown(KeyCode.Semicolon))
+                //    if (_hover.Unit != null) TeleportUnit(_hover.Unit, PointerPosition());
             }
         }
 
@@ -54,6 +59,12 @@ namespace ToyBox {
 
         private static void TeleportSelected() {
             foreach (var unit in Game.Instance.UI.SelectionManager.SelectedUnits) {
+                TeleportUnit(unit, PointerPosition());
+            }
+        }
+
+        private static void TeleportParty() {
+            foreach (var unit in Game.Instance.Player.m_PartyAndPets) {
                 TeleportUnit(unit, PointerPosition());
             }
         }

@@ -6,6 +6,7 @@ using ToyBox.Multiclass;
 using Kingmaker.UnitLogic;
 using ModKit;
 using Kingmaker.EntitySystem.Entities;
+using UnityEngine;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -93,7 +94,6 @@ namespace ToyBox {
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
 
-
         // Multipliers
         public int encumberanceMultiplier = 1;
         public float experienceMultiplier = 1;
@@ -140,6 +140,10 @@ namespace ToyBox {
         public float summonDurationMultiplier2 = 1;
         public float summonLevelModifier2 = 0;
 
+        // HotKeys
+        public KeyCode teleportMainHotKey = KeyCode.Comma;
+        public KeyCode teleportSelectedHotKey = KeyCode.Period;
+        public KeyCode teleportPartyHotKey = KeyCode.Slash;
 
         // Party Editor
         public int selectedPartyFilter = 0;

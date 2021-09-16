@@ -12,11 +12,12 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.4
+    Telport Keys are now rebindable and shouldn't interfere with other windows that you might type in
     Cleaned up the UI for parameterized feats. Values now are sorted and the layout is improved
     Got rid of Max FoV and increased standard max to 5
     (ArcaneTrixter) Added multipliers for Army Leader Power. Remember that power is squared for most abilities!
-    (SonicZentropy) Added ability to spawn new Crusade armies from Search n Pick and squad editor in Crusade tab
     (ArcaneTrixter) Fixed enemy HP multiplier slider
+    (SonicZentropy) Added ability to spawn new Crusade armies from Search n Pick and squad editor in Crusade tab
 Ver 1.3.3
     Added separate zoom multiplier for cut scenes
     Increased MaxFov to 5

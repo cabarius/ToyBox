@@ -84,8 +84,14 @@ namespace ToyBox {
                 () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => {
                     UI.Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0);
-                    UI.Space(25);
-                    UI.Label("Teleports to cursor for party and main character support.  Use comma ',' to teleport selected members and '.' to teleport the main char".green());
+                    if (settings.toggleTeleportKeysEnabled) {
+                        UI.Space(100);
+                        using (UI.VerticalScope()) {
+                            Keys.SetKeyBinding("Main Character", ref settings.teleportMainHotKey, 0, 200);
+                            Keys.SetKeyBinding("Selected Chars.", ref settings.teleportSelectedHotKey, 0, 200);
+                            Keys.SetKeyBinding("Whole Party", ref settings.teleportPartyHotKey, 0, 200);
+                        }
+                    }
                 },
                 () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
