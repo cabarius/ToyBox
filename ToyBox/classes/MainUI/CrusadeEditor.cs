@@ -1,46 +1,52 @@
-﻿using Kingmaker.Blueprints.Root;
+﻿using Kingmaker;
+using Kingmaker.Armies;
+using Kingmaker.Armies.State;
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Root;
+using Kingmaker.Globalmap.State;
 using Kingmaker.Kingdom;
 using ModKit;
+using System.Linq;
 
 namespace ToyBox.classes.MainUI {
-    public static class CrusadeEditor {
-        public static void ResetGUI() { }
-        public static Settings Settings => Main.settings;
+public static class CrusadeEditor {
+    public static void ResetGUI() { }
+    public static Settings Settings => Main.settings;
 
-        public static void OnGUI() {
-            var kingdom = KingdomState.Instance;
-            if (kingdom == null) {
-                UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());
-                return;
-            }
+    private static GlobalMapArmyState selectedArmy = null;
 
-            UI.Div(0, 25);
-            UI.HStack("Army Edits", 1,
-                () => UI.Toggle("Infinite Mercenary Rerolls", ref Settings.toggleInfiniteArmyRerolls),
-                () => {
-                    UI.Toggle("Experimental - Enable Large Player Armies", ref Settings.toggleLargeArmies);
-                    if (Settings.toggleLargeArmies) {
-                        BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
-                        BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
-                    }
-                    else {
-                        BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 4;
-                        BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
-                    }
-                },
-                () => UI.Slider("Recruitment Cost", ref Settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
-                () => UI.LogSlider("Number of Recruits", ref Settings.recruitmentMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
+    public static void OnGUI() {
+        var kingdom = KingdomState.Instance;
+        if (kingdom == null) {
+            UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());
+            return;
+        }
 
-                () => UI.LogSlider("Army Experience Multiplier", ref Settings.armyExperienceMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("After Army Battle Raise Multiplier", ref Settings.postBattleSummonMultiplier, 0f, 100, 1, 1, "", UI.AutoWidth()),
-                () => { }
-            );
 
-            UI.Div(0, 25);
-            UI.HStack("Army Edits", 1,
-                () => UI.Slider("Player Leader Ability Strength", ref Settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", UI.AutoWidth()),
-                () => UI.Slider("Enemy Leader Ability Strength", ref Settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
-            );
+        UI.Div(0, 25);
+        UI.HStack("Army Edits", 1,
+            () => UI.Toggle("Infinite Mercenary Rerolls", ref Settings.toggleInfiniteArmyRerolls),
+            () => {
+                UI.Toggle("Experimental - Enable Large Player Armies", ref Settings.toggleLargeArmies);
+                if (Settings.toggleLargeArmies) {
+                    BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
+                    BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
+                }
+                else {
+                    BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 4;
+                    BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
+                }
+            },
+            () => UI.Slider("Recruitment Cost", ref Settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
+            () => UI.LogSlider("Number of Recruits", ref Settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
+                UI.AutoWidth()),
+            () => UI.LogSlider("Army Experience Multiplier", ref Settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
+                UI.AutoWidth()),
+            () => UI.LogSlider("After Army Battle Raise Multiplier", ref Settings.postBattleSummonMultiplier, 0f, 100,
+                1, 1, "", UI.AutoWidth()),
+            () => UI.Slider("Player Leader Ability Strength", ref Settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", UI.AutoWidth()),
+            () => UI.Slider("Enemy Leader Ability Strength", ref Settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
+        );
 
             UI.Div(0, 25);
             var moraleState = kingdom.MoraleState;
@@ -116,7 +122,142 @@ namespace ToyBox.classes.MainUI {
                 },
                 () => UI.Label("Multiplies build time by (1 + modifier). -1 will make new buildings instant.".cyan()),
             () => { }
-            );
-        }
+        );
+
+        var armies = Game.Instance.Player.GlobalMap.LastActivated.Armies;
+
+        var playerArmies = armies.Where(army => army.Data.Faction == ArmyFaction.Crusaders);
+        var demonArmies = armies.Where(army => army.Data.Faction == ArmyFaction.Demons);
+
+        UI.Div(0, 25);
+        UI.HStack("Player Armies", 1,
+            () => {
+                UI.Label("Name".yellow(), UI.MinWidth(100), UI.MaxWidth(200));
+                UI.Label("Type".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+                UI.Label("Squad Count".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+            },
+            () => {
+                using (UI.VerticalScope()) {
+                    foreach (var army in playerArmies) {
+                        bool showSquads = false;
+                        using (UI.HorizontalScope()) {
+                            UI.Label(army.Data.ArmyName.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(200));
+                            UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            UI.Label(army.Data.Squads.Count.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            showSquads = army == selectedArmy;
+                            if (UI.DisclosureToggle("Squads", ref showSquads, 125)) {
+                                selectedArmy = army;
+                            }
+                        }
+
+                        if (showSquads) {
+                            UI.Div(0, 10);
+
+                            using (UI.VerticalScope()) {
+                                UI.BeginHorizontal();
+                                UI.Label("Squad Name".yellow(), UI.Width(200));
+                                UI.Label("Unit Count".yellow(), UI.Width(150));
+                                UI.EndHorizontal();
+                            }
+
+                            using (UI.VerticalScope()) {
+                                var squads = selectedArmy.Data.m_Squads;
+                                SquadState squadToRemove = null;
+                                foreach (var squad in squads) {
+                                    UI.BeginHorizontal();
+                                    
+                                    UI.Label(squad.Unit.NameSafe(), UI.Width(200));
+                                    var count = squad.Count;
+                                    UI.ActionIntTextField(ref count, null,
+                                        (value) => {
+                                            squad.SetCount(value);
+                                        },
+                                        null, UI.Width(150)
+                                    );
+
+                                    UI.ActionButton("Remove", () => {
+                                        squadToRemove = squad;
+                                    }, UI.Width(100));
+
+
+                                    UI.EndHorizontal();
+                                }
+
+                                if (squadToRemove != null) {
+                                    squadToRemove.Army.RemoveSquad(squadToRemove);
+                                }
+                            }
+                            UI.Div(0, 10);
+                        }
+                    }
+                }
+            }
+        );
+        
+         UI.Div(0, 25);
+        UI.HStack("Demon Armies", 1,
+            () => {
+                UI.Label("Name".yellow(), UI.MinWidth(100), UI.MaxWidth(200));
+                UI.Label("Type".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+                UI.Label("Squad Count".yellow(), UI.MinWidth(100), UI.MaxWidth(100));
+            },
+            () => {
+                using (UI.VerticalScope()) {
+                    foreach (var army in demonArmies) {
+                        bool showSquads = false;
+                        using (UI.HorizontalScope()) {
+                            UI.Label(army.Data.ArmyName.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(200));
+                            UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            UI.Label(army.Data.Squads.Count.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(100));
+                            showSquads = army == selectedArmy;
+                            if (UI.DisclosureToggle("Squads", ref showSquads, 125)) {
+                                selectedArmy = army;
+                            }
+                        }
+
+                        if (showSquads) {
+                            UI.Div(0, 10);
+
+                            using (UI.VerticalScope()) {
+                                UI.BeginHorizontal();
+                                UI.Label("Squad Name".yellow(), UI.Width(200));
+                                UI.Label("Unit Count".yellow(), UI.Width(150));
+                                UI.EndHorizontal();
+                            }
+
+                            using (UI.VerticalScope()) {
+                                var squads = selectedArmy.Data.m_Squads;
+                                SquadState squadToRemove = null;
+                                foreach (var squad in squads) {
+                                    UI.BeginHorizontal();
+                                    
+                                    UI.Label(squad.Unit.NameSafe(), UI.Width(200));
+                                    var count = squad.Count;
+                                    UI.ActionIntTextField(ref count, null,
+                                        (value) => {
+                                            squad.SetCount(value);
+                                        },
+                                        null, UI.Width(150)
+                                    );
+
+                                    UI.ActionButton("Remove", () => {
+                                        squadToRemove = squad;
+                                    }, UI.Width(100));
+
+
+                                    UI.EndHorizontal();
+                                }
+
+                                if (squadToRemove != null) {
+                                    squadToRemove.Army.RemoveSquad(squadToRemove);
+                                }
+                            }
+                            UI.Div(0, 10);
+                        }
+                    }
+                }
+            }
+        );
     }
+}
 }
