@@ -13,8 +13,9 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
 
 Ver 1.3.5
     Toggling search descriptions now updates search results
-    (ArcaneTrixter) Allies should no longer get piles of (sometimes contradictory) starting feats when initially recruited (Looking at you, Nenio!).
-    (ArcaneTrixter) Party and pets should once again be affected by feat multiplier in town.
+    No friendly fire toggle should work better with pets
+    (ArcaneTrixter, Narria) Allies should no longer get piles of (sometimes contradictory) starting feats when initially recruited (Looking at you, Nenio!).
+    (ArcaneTrixter, Narria) Party and pets should once again be affected by feat multiplier in town.
     (ArcaneTrixter) Added requested flag to allow Magus Spell Combat even in situations where their hands are full.
 Ver 1.3.4
     Teleport Keys are now rebindable and shouldn't interfere with other windows that you might type in
