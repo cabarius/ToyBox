@@ -194,7 +194,6 @@ namespace ToyBox.Multiclass {
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (!unit.IsPartyOrPet()) return;
-// ???                if (!unit.IsPartyMemberOrPet()) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
 
                 if (IsAvailable()) {
