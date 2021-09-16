@@ -215,6 +215,7 @@ namespace ToyBox {
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                             }
+                            UI.Space(15);
                         }
                     }
                 }
