@@ -21,7 +21,8 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Save Files**
-To help us reproduce your issue, please attach a named *save file* using these [instructions](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files)
+To help us reproduce your issue, please attach a named *save file*
+Please zip it or GitHub will not accept it.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
