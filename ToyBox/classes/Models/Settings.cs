@@ -80,7 +80,8 @@ namespace ToyBox {
         // level up
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
-        public bool toggleIgnorePrerequisites = false;
+        public bool toggleIgnoreClassAndFeatRestrictions = false;
+        public bool toggleIgnorePrerequisites = false; 
         public bool toggleIgnoreCasterTypeSpellLevel = false;
         public bool toggleIgnoreForbiddenArchetype = false;
         public bool toggleIgnorePrerequisiteStatValue = false;
@@ -213,7 +214,7 @@ namespace ToyBox {
         public bool toggleIgnoreSkillPointsRemaining = false;
 
         // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
-        // public bool toggleIgnorePrerequisites = false; 
+        // public bool toggleIgnoreClassAndFeatRestrictions = false; 
         public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
 
         public bool toggleIgnoreSpellbookAlignmentRestriction = false;

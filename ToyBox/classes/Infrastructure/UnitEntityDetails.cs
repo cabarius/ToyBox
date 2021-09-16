@@ -92,6 +92,12 @@ namespace ToyBox
                     return false;
             }
         }
+        public static bool IsPartyMemberOrPet(this UnitEntityData unit) {
+            return unit.IsPlayerFaction || unit.IsPet;
+        }
+        public static bool IsPartyMemberOrPet(this UnitDescriptor unit) {
+            return unit.IsPlayerFaction || (unit.Unit?.IsPet ?? false);
+        }
         public static void Kill(UnitEntityData unit)
         {
             unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue + unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;

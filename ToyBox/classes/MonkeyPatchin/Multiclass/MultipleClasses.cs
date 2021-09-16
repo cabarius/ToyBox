@@ -193,7 +193,7 @@ namespace ToyBox.Multiclass {
             [HarmonyPostfix]
             static void Postfix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
-                if (!unit.IsPlayerFaction) return;
+                if (!unit.IsPartyMemberOrPet()) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
 
                 if (IsAvailable()) {
@@ -503,7 +503,7 @@ namespace ToyBox.Multiclass {
             int? nullable;
             foreach (ClassData classData in __instance.Classes) {
                 var shouldSkip = __instance.IsClassGestalt(classData.CharacterClass);
-                //modLogger.Log($"- owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}");
+                modLogger.Log($"UpdateLevelsForGestalt - owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}".cyan().bold());
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = __instance.m_MythicLevel;

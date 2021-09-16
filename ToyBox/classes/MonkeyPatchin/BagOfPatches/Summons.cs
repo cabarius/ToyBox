@@ -223,7 +223,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitEntityData), "IsDirectlyControllable", MethodType.Getter)]
         public static class UnitEntityData_IsDirectlyControllable_Patch {
             public static void Postfix(UnitEntityData __instance, ref bool __result) {
-                if (settings.toggleMakeSummmonsControllable && __instance.IsPlayerFaction && !__result && __instance.Get<UnitPartSummonedMonster>() != null && !__instance.Descriptor.State.IsFinallyDead && !__instance.Descriptor.State.IsPanicked && !__instance.IsDetached && !__instance.PreventDirectControl) {
+                if (settings.toggleMakeSummmonsControllable && __instance.IsPartyMemberOrPet() && !__result && __instance.Get<UnitPartSummonedMonster>() != null && !__instance.Descriptor.State.IsFinallyDead && !__instance.Descriptor.State.IsPanicked && !__instance.IsDetached && !__instance.PreventDirectControl) {
                     __result = true;
                 }
             }
