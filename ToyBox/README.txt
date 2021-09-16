@@ -12,6 +12,8 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.4
+    Cleaned up the UI for parameterized feats. Values now are sorted and the layout is improved
+    Got rid of Max FoV and increased standard max to 5
     (ArcaneTrixter) Added multipliers for Army Leader Power. Remember that power is squared for most abilities!
 Ver 1.3.3
     Added separate zoom multiplier for cut scenes
