@@ -119,8 +119,12 @@ namespace ToyBox
         }
 
         public static bool IsPartyOrPet(this UnitDescriptor unit) {
+            if (unit?.Unit?.OriginalBlueprint == null || Game.Instance.Player?.AllCharacters == null || Game.Instance.Player?.AllCharacters.Count == 0) {
+                return false;
+            }
+
             return Game.Instance.Player.AllCharacters
-                .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null ||
+                .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null ||
                     Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
         }
     }
