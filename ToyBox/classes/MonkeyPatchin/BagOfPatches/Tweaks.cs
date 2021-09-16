@@ -418,7 +418,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitPartMagus), "IsSpellCombatThisRoundAllowed")]
         public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
             public static void Postfix(ref bool __result, UnitPartMagus __instance) {
-                if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner.IsPartyOrPet()) {
+                if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null &&__instance.Owner.IsPartyOrPet()) {
                     __result = true;
                 }
             }
