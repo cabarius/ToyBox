@@ -154,13 +154,13 @@ namespace ToyBox.BagOfPatches {
                     if (___m_Condition.HasConditions) {
                         targets = targets.Where(u => { using (context.GetDataScope(u)) { return ___m_Condition.Check(); } }).ToList();
                     }
-                    if (caster.IsPlayerFaction && ((context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                    if (caster.IsPartyMemberOrPet() && ((context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                         if (context.AbilityBlueprint.HasLogic<AbilityUseOnRest>()) {
                             AbilityUseOnRestType componentType = context.AbilityBlueprint.GetComponent<AbilityUseOnRest>().Type;
                             //bool healDamage = componentType == AbilityUseOnRestType.HealDamage || componentType == AbilityUseOnRestType.HealDamage;
                             bool healDamage = componentType == AbilityUseOnRestType.HealDamage;
                             targets = targets.Where(target => {
-                                if (target.IsPlayerFaction && !healDamage) {
+                                if (target.IsPartyMemberOrPet() && !healDamage) {
                                     bool forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
                                     return (forUndead == target.Descriptor.IsUndead);
                                 }
@@ -168,7 +168,7 @@ namespace ToyBox.BagOfPatches {
                             });
                         }
                         else {
-                            targets = targets.Where(target => !target.IsPlayerFaction);
+                            targets = targets.Where(target => !target.IsPartyMemberOrPet());
                         }
                     }
                     __result = targets.Select(target => new TargetWrapper(target));
@@ -184,8 +184,8 @@ namespace ToyBox.BagOfPatches {
                     if (!(blueprint is BlueprintBuff)) {
                         BlueprintAbility blueprintAbility = __instance.Reason.Context?.SourceAbility;
                         if (blueprintAbility != null &&
-                            __instance.Initiator.IsPlayerFaction &&
-                            __instance.Target.IsPlayerFaction &&
+                            __instance.Initiator.IsPartyMemberOrPet() &&
+                            __instance.Target.IsPartyMemberOrPet() &&
                             ((blueprintAbility.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (blueprintAbility.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                             __result = 0;
                         }
@@ -203,7 +203,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     if (__instance.Reason != null) {
                         if (__instance.Reason.Ability != null) {
-                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPartyMemberOrPet() && __instance.Initiator.IsPartyMemberOrPet() && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                                 __result = true;
                             }
                         }
@@ -218,7 +218,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     if (__instance.Reason != null) {
                         if (__instance.Reason.Ability != null) {
-                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPartyMemberOrPet() && __instance.Initiator.IsPartyMemberOrPet() && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                                 __result = true;
                             }
                         }
@@ -252,7 +252,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     if (__instance.Reason != null) {
                         if (__instance.Reason.Ability != null) {
-                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPlayerFaction && __instance.Initiator.IsPlayerFaction && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                            if (__instance.Reason.Caster != null && __instance.Reason.Caster.IsPartyMemberOrPet() && __instance.Initiator.IsPartyMemberOrPet() && __instance.Reason.Ability.Blueprint != null && ((__instance.Reason.Ability.Blueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (__instance.Reason.Ability.Blueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                                 __result = true;
                             }
                         }

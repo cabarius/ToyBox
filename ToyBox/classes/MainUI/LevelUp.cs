@@ -1,44 +1,7 @@
-﻿using UnityEngine;
-using UnityModManagerNet;
-using UnityEngine.UI;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Linq;
-using System.Reflection;
 using Kingmaker;
-using Kingmaker.AreaLogic.Cutscenes;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Blueprints.Items.Components;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items.Shields;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Blueprints.Quests;
-using Kingmaker.Blueprints.Root;
-using Kingmaker.Cheats;
-using Kingmaker.Controllers.Rest;
-using Kingmaker.Designers;
-using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.GameModes;
-using Kingmaker.Items;
-using Kingmaker.PubSubSystem;
-using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.UI;
-using Kingmaker.UI.Common;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.Utility;
 using ModKit;
 using ToyBox.Multiclass;
 
@@ -48,24 +11,24 @@ namespace ToyBox {
         public static void ResetGUI() { }
         public static void OnGUI() {
             UI.HStack("Character Creation", 1,
-                        () => UI.Slider("Build Points (Main)", ref settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", UI.AutoWidth()),
-                        () => UI.Slider("Build Points (Mercenary)", ref settings.characterCreationAbilityPointsMerc, 1, 200, 20, "", UI.AutoWidth()),
-                        () => UI.Slider("Ability Max", ref settings.characterCreationAbilityPointsMax, 0, 50, 18, "", UI.AutoWidth()),
-                        () => UI.Slider("Ability Min", ref settings.characterCreationAbilityPointsMin, 0, 50, 7, "", UI.AutoWidth()),
-                        //() => {
-                        //    UI.Toggle("All Appearance Options", ref settings.toggleAllRaceCustomizations, 0);
-                        //    UI.Space(25);
-                        //    UI.Label("Allows you to choose all appearance options from any race".green());
-                        //},
+                () => UI.Slider("Build Points (Main)", ref settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", UI.AutoWidth()),
+                () => UI.Slider("Build Points (Mercenary)", ref settings.characterCreationAbilityPointsMerc, 1, 200, 20, "", UI.AutoWidth()),
+                () => UI.Slider("Ability Max", ref settings.characterCreationAbilityPointsMax, 0, 50, 18, "", UI.AutoWidth()),
+                () => UI.Slider("Ability Min", ref settings.characterCreationAbilityPointsMin, 0, 50, 7, "", UI.AutoWidth()),
+                //() => {
+                //    UI.Toggle("All Appearance Options", ref settings.toggleAllRaceCustomizations, 0);
+                //    UI.Space(25);
+                //    UI.Label("Allows you to choose all appearance options from any race".green());
+                //},
 #if DEBUG
-                        () => {
-                            UI.Toggle("Gender Bending", ref settings.toggleIgnoreGenderRestrictions, 0);
-                            UI.Space(25);
-                            UI.Label("Removes gender restrictions from appearance options".green());
-                        },
+                () => {
+                    UI.Toggle("Gender Bending", ref settings.toggleIgnoreGenderRestrictions, 0);
+                    UI.Space(25);
+                    UI.Label("Removes gender restrictions from appearance options".green());
+                },
 #endif
-                    () => { }
-                    );
+                () => { }
+                );
             UI.Div(0, 25);
             UI.HStack("Unlocks", 4, () => {
                 UI.ActionButton("All Mythic Paths", () => Actions.UnlockAllMythicPaths());
@@ -89,11 +52,11 @@ namespace ToyBox {
                 },
                 () => UI.Toggle("Always Able To Level Up", ref settings.toggleNoLevelUpRestrictions, 0),
                 () => UI.Toggle("Add Full Hit Die Value", ref settings.toggleFullHitdiceEachLevel, 0),
-                () => {
-                    UI.Toggle("Ignore Class And Feat Restrictions", ref settings.toggleIgnorePrerequisites, 0);
+                (Action)(() => {
+                    UI.Toggle((string)"Ignore Class And Feat Restrictions", ref settings.toggleIgnoreClassAndFeatRestrictions, (float)0);
                     UI.Space(25);
                     UI.Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
-                },
+                }),
                 () => UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref settings.toggleFeaturesIgnorePrerequisites, 0),
                 () => UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref settings.toggleIgnoreCasterTypeSpellLevel, 0),
                 () => UI.Toggle("Ignore Forbidden Archetypes", ref settings.toggleIgnoreForbiddenArchetype, 0),

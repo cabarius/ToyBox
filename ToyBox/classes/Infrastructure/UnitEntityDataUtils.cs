@@ -1,5 +1,4 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT Licenseusing Kingmaker;
-
 using System.Collections.Generic;
 using System.Linq;
 using Kingmaker;
@@ -47,7 +46,6 @@ namespace ToyBox
                     if (unitEntityData.IsMainCharacter) {
                         return true;
                     }
-
                     return false;
                 case UnitSelectType.Friendly:
                     return !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter());
@@ -57,13 +55,12 @@ namespace ToyBox
                         unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
                         return true;
                     }
-
                     return false;
                 default:
                     return false;
             }
         }
-
+        
         public static void Kill(UnitEntityData unit) {
             unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue +
                                      unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
@@ -110,7 +107,6 @@ namespace ToyBox
                 if (unit.IsDetached) {
                     Game.Instance.Player.AttachPartyMember(unit);
                 }
-
                 foreach (var pet in pets) {
                     pet.Entity.Position = unit.Position;
                 }
