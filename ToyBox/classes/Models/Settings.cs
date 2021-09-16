@@ -54,6 +54,7 @@ namespace ToyBox {
         public bool toggleExtendHexes = false;
         public bool toggleAllowAllActivatable = false;
         public bool toggleKineticistGatherPower = false;
+        public bool toggleAlwaysAllowSpellCombat = false;
         public bool toggleInstantPartyChange = false;
         public bool toggleTeleportKeysEnabled = false;
 
