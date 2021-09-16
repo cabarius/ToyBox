@@ -12,6 +12,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.4
+    (SonicZentropy) Added ability to spawn new Crusade armies from Search n Pick and squad editor in Crusade tab
     (ArcaneTrixter) Added multipliers for Army Leader Power. Remember that power is squared for most abilities!
 Ver 1.3.3
     Added separate zoom multiplier for cut scenes
