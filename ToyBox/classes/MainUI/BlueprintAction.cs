@@ -94,8 +94,8 @@ namespace ToyBox {
         public new delegate bool CanPerform(BPType bp, UnitEntityData ch, int listValue = 0);
 
         public BlueprintAction(string name, Perform action, CanPerform canPerform = null, bool isRepeatable = false) : base(name, isRepeatable) {
-            this.action = (bp, ch, n, l) => action((BPType)bp, ch, n, l);
-            this.canPerform = (bp, ch, l) => Main.IsInGame && bp is BPType bpt && (canPerform?.Invoke(bpt, ch, l) ?? true);
+            this.action = (bp, ch, n, index) => action((BPType)bp, ch, n, index);
+            this.canPerform = (bp, ch, index) => Main.IsInGame && bp is BPType bpt && (canPerform?.Invoke(bpt, ch, index) ?? true);
         }
 
         public override Type BlueprintType => typeof(BPType);
@@ -109,63 +109,63 @@ namespace ToyBox {
         public static void InitializeActions() {
             var flags = Game.Instance.Player.UnlockableFlags;
             BlueprintAction.Register<BlueprintItem>("Add",
-                                                    (bp, ch, n, l) => Game.Instance.Player.Inventory.Add(bp, n), isRepeatable: true);
+                                                    (bp, ch, n, index) => Game.Instance.Player.Inventory.Add(bp, n), isRepeatable: true);
 
             BlueprintAction.Register<BlueprintItem>("Remove",
-                                                    (bp, ch, n, l) => Game.Instance.Player.Inventory.Remove(bp, n),
-                                                    (bp, ch, l) => Game.Instance.Player.Inventory.Contains(bp), true);
+                                                    (bp, ch, n, index) => Game.Instance.Player.Inventory.Remove(bp, n),
+                                                    (bp, ch, index) => Game.Instance.Player.Inventory.Contains(bp), true);
 
             BlueprintAction.Register<BlueprintUnit>("Spawn",
-                                                    (bp, ch, n, l) => Actions.SpawnUnit(bp, n), isRepeatable: true);
+                                                    (bp, ch, n, index) => Actions.SpawnUnit(bp, n), isRepeatable: true);
 
             BlueprintAction.Register<BlueprintFeature>("Add",
-                                                       (bp, ch, n, l) => ch.Descriptor.AddFact(bp),
-                                                       (bp, ch, l) => !ch.Progression.Features.HasFact(bp));
+                                                       (bp, ch, n, index) => ch.Descriptor.AddFact(bp),
+                                                       (bp, ch, index) => !ch.Progression.Features.HasFact(bp));
 
             BlueprintAction.Register<BlueprintFeature>("Remove",
-                                                       (bp, ch, n, l) => ch.Progression.Features.RemoveFact(bp),
-                                                       (bp, ch, l) => ch.Progression.Features.HasFact(bp));
+                                                       (bp, ch, n, index) => ch.Progression.Features.RemoveFact(bp),
+                                                       (bp, ch, index) => ch.Progression.Features.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Add", (bp, ch, n, l) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param),
-                                                       (bp, ch, l) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param) == null);
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Add", (bp, ch, n, index) => ch?.Descriptor?.AddFact<UnitFact>(bp, null,bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param),
+                                                       (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param ==bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param) == null);
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove", (bp, ch, n, l) => ch?.Progression?.Features?.RemoveFact(ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param)),
-                                                       (bp, ch, l) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.ToArray()[BlueprintListUI.ParamSelected[l]].Param) != null);
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove", (bp, ch, n, index) => ch?.Progression?.Features?.RemoveFact(ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param ==bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param)),
+                                                       (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param ==bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param) != null);
 
             BlueprintAction.Register<BlueprintFeature>("<",
-                                                       (bp, ch, n, l) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
-                                                       (bp, ch, l) => {
+                                                       (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
+                                                       (bp, ch, index) => {
                                                            var feature = ch.Progression.Features.GetFact(bp);
                                                            return feature?.GetRank() > 1;
                                                        });
 
             BlueprintAction.Register<BlueprintFeature>(">",
-                                                       (bp, ch, n, l) => ch.Progression.Features.GetFact(bp)?.AddRank(),
-                                                       (bp, ch, l) => {
+                                                       (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.AddRank(),
+                                                       (bp, ch, index) => {
                                                            var feature = ch.Progression.Features.GetFact(bp);
                                                            return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                                                        });
             //BlueprintAction.Register<BlueprintArchetype>(
             //    "Add",
-            //    (bp, ch, n, l) => ch.Progression.AddArchetype(ch.Progression.Classes.First().CharacterClass, bp),
-            //    (bp, ch, l) => ch.Progression.CanAddArchetype(ch.Progression.Classes.First().CharacterClass, bp)
+            //    (bp, ch, n, index) => ch.Progression.AddArchetype(ch.Progression.Classes.First().CharacterClass, bp),
+            //    (bp, ch, index) => ch.Progression.CanAddArchetype(ch.Progression.Classes.First().CharacterClass, bp)
             //    );
             //BlueprintAction.Register<BlueprintArchetype>("Remove",
-            //    (bp, ch, n, l) => ch.Progression.AddArchetype(ch.Progression.Classes.First().CharacterClass, bp),
-            //    (bp, ch, l) => ch.Progression.Classes.First().Archetypes.Contains(bp)
+            //    (bp, ch, n, index) => ch.Progression.AddArchetype(ch.Progression.Classes.First().CharacterClass, bp),
+            //    (bp, ch, index) => ch.Progression.Classes.First().Archetypes.Contains(bp)
             //    );
 
             // Spellbooks
             BlueprintAction.Register<BlueprintSpellbook>("Add",
-                                                         (bp, ch, n, l) => ch.Descriptor.DemandSpellbook(bp.CharacterClass),
-                                                         (bp, ch, l) => ch.Descriptor.Spellbooks.All(sb => sb.Blueprint != bp));
+                                                         (bp, ch, n, index) => ch.Descriptor.DemandSpellbook(bp.CharacterClass),
+                                                         (bp, ch, index) => ch.Descriptor.Spellbooks.All(sb => sb.Blueprint != bp));
 
             BlueprintAction.Register<BlueprintSpellbook>("Remove",
-                                                         (bp, ch, n, l) => ch.Descriptor.DeleteSpellbook(bp),
-                                                         (bp, ch, l) => ch.Descriptor.Spellbooks.Any(sb => sb.Blueprint == bp));
+                                                         (bp, ch, n, index) => ch.Descriptor.DeleteSpellbook(bp),
+                                                         (bp, ch, index) => ch.Descriptor.Spellbooks.Any(sb => sb.Blueprint == bp));
 
             BlueprintAction.Register<BlueprintSpellbook>(">",
-                                                         (bp, ch, n, l) => {
+                                                         (bp, ch, n, index) => {
                                                              try {
                                                                  var spellbook = ch.Descriptor.Spellbooks.First(sb => sb.Blueprint == bp);
 
@@ -178,28 +178,28 @@ namespace ToyBox {
                                                              }
                                                              catch (Exception e) { Main.Error(e); }
                                                          },
-                                                         (bp, ch, l) => ch.Descriptor.Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
+                                                         (bp, ch, index) => ch.Descriptor.Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
 
             // Buffs
             BlueprintAction.Register<BlueprintBuff>("Add",
-                                                    (bp, ch, n, l) => GameHelper.ApplyBuff(ch, bp),
-                                                    (bp, ch, l) => !ch.Descriptor.Buffs.HasFact(bp));
+                                                    (bp, ch, n, index) => GameHelper.ApplyBuff(ch, bp),
+                                                    (bp, ch, index) => !ch.Descriptor.Buffs.HasFact(bp));
 
             BlueprintAction.Register<BlueprintBuff>("Remove",
-                                                    (bp, ch, n, l) => ch.Descriptor.RemoveFact(bp),
-                                                    (bp, ch, l) => ch.Descriptor.Buffs.HasFact(bp));
+                                                    (bp, ch, n, index) => ch.Descriptor.RemoveFact(bp),
+                                                    (bp, ch, index) => ch.Descriptor.Buffs.HasFact(bp));
 
             BlueprintAction.Register<BlueprintBuff>("<",
-                                                    (bp, ch, n, l) => ch.Descriptor.Buffs.GetFact(bp)?.RemoveRank(),
-                                                    (bp, ch, l) => {
+                                                    (bp, ch, n, index) => ch.Descriptor.Buffs.GetFact(bp)?.RemoveRank(),
+                                                    (bp, ch, index) => {
                                                         var buff = ch.Descriptor.Buffs.GetFact(bp);
 
                                                         return buff?.GetRank() > 1;
                                                     });
 
             BlueprintAction.Register<BlueprintBuff>(">",
-                                                    (bp, ch, n, l) => ch.Descriptor.Buffs.GetFact(bp)?.AddRank(),
-                                                    (bp, ch, l) => {
+                                                    (bp, ch, n, index) => ch.Descriptor.Buffs.GetFact(bp)?.AddRank(),
+                                                    (bp, ch, index) => {
                                                         var buff = ch.Descriptor.Buffs.GetFact(bp);
 
                                                         return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
@@ -207,87 +207,87 @@ namespace ToyBox {
 
             // Abilities
             BlueprintAction.Register<BlueprintAbility>("Add",
-                                                       (bp, ch, n, l) => ch.AddAbility(bp),
-                                                       (bp, ch, l) => ch.CanAddAbility(bp));
+                                                       (bp, ch, n, index) => ch.AddAbility(bp),
+                                                       (bp, ch, index) => ch.CanAddAbility(bp));
 
             BlueprintAction.Register<BlueprintAbility>("At Will",
-                                                       (bp, ch, n, l) => ch.AddSpellAsAbility(bp),
-                                                       (bp, ch, l) => ch.CanAddSpellAsAbility(bp));
+                                                       (bp, ch, n, index) => ch.AddSpellAsAbility(bp),
+                                                       (bp, ch, index) => ch.CanAddSpellAsAbility(bp));
 
             BlueprintAction.Register<BlueprintAbility>("Remove",
-                                                       (bp, ch, n, l) => ch.RemoveAbility(bp),
-                                                       (bp, ch, l) => ch.HasAbility(bp));
+                                                       (bp, ch, n, index) => ch.RemoveAbility(bp),
+                                                       (bp, ch, index) => ch.HasAbility(bp));
             // Ability Resources
 
             BlueprintAction.Register<BlueprintAbilityResource>("Add",
-                (bp, ch, n, l) => ch.Resources.Add(bp, true),
-                (bp, ch, l) => !ch.Resources.ContainsResource(bp));
+                (bp, ch, n, index) => ch.Resources.Add(bp, true),
+                (bp, ch, index) => !ch.Resources.ContainsResource(bp));
 
             BlueprintAction.Register<BlueprintAbilityResource>("Remove",
-                (bp, ch, n, l) => ch.Resources.Remove(bp),
-                (bp, ch, l) => ch.Resources.ContainsResource(bp));
+                (bp, ch, n, index) => ch.Resources.Remove(bp),
+                (bp, ch, index) => ch.Resources.ContainsResource(bp));
 
             // Spellbooks
 
 
             // BlueprintActivatableAbility
             BlueprintAction.Register<BlueprintActivatableAbility>("Add",
-                                                                  (bp, ch, n, l) => ch.Descriptor.AddFact(bp),
-                                                                  (bp, ch, l) => !ch.Descriptor.HasFact(bp));
+                                                                  (bp, ch, n, index) => ch.Descriptor.AddFact(bp),
+                                                                  (bp, ch, index) => !ch.Descriptor.HasFact(bp));
 
             BlueprintAction.Register<BlueprintActivatableAbility>("Remove",
-                                                                  (bp, ch, n, l) => ch.Descriptor.RemoveFact(bp),
-                                                                  (bp, ch, l) => ch.Descriptor.HasFact(bp));
+                                                                  (bp, ch, n, index) => ch.Descriptor.RemoveFact(bp),
+                                                                  (bp, ch, index) => ch.Descriptor.HasFact(bp));
 
             // Quests
             BlueprintAction.Register<BlueprintQuest>("Start",
-                                                     (bp, ch, n, l) => Game.Instance.Player.QuestBook.GiveObjective(bp.Objectives.First()),
-                                                     (bp, ch, l) => Game.Instance.Player.QuestBook.GetQuest(bp) == null);
+                                                     (bp, ch, n, index) => Game.Instance.Player.QuestBook.GiveObjective(bp.Objectives.First()),
+                                                     (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp) == null);
 
             BlueprintAction.Register<BlueprintQuest>("Complete",
-                                                     (bp, ch, n, l) => {
+                                                     (bp, ch, n, index) => {
                                                          foreach (var objective in bp.Objectives) {
                                                              Game.Instance.Player.QuestBook.CompleteObjective(objective);
                                                          }
-                                                     }, (bp, ch, l) => Game.Instance.Player.QuestBook.GetQuest(bp)?.State == QuestState.Started);
+                                                     }, (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp)?.State == QuestState.Started);
 
             // Quests Objectives
             BlueprintAction.Register<BlueprintQuestObjective>("Start",
-                                                              (bp, ch, n, l) => Game.Instance.Player.QuestBook.GiveObjective(bp),
-                                                              (bp, ch, l) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest) == null);
+                                                              (bp, ch, n, index) => Game.Instance.Player.QuestBook.GiveObjective(bp),
+                                                              (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest) == null);
 
             BlueprintAction.Register<BlueprintQuestObjective>("Complete",
-                                                              (bp, ch, n, l) => Game.Instance.Player.QuestBook.CompleteObjective(bp),
-                                                              (bp, ch, l) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest)?.State == QuestState.Started);
+                                                              (bp, ch, n, index) => Game.Instance.Player.QuestBook.CompleteObjective(bp),
+                                                              (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest)?.State == QuestState.Started);
 
             // Etudes
             BlueprintAction.Register<BlueprintEtude>("Start",
-                                                     (bp, ch, n, l) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
-                                                     (bp, ch, l) => Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
+                                                     (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
+                                                     (bp, ch, index) => Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
 
             BlueprintAction.Register<BlueprintEtude>("Complete",
-                                                     (bp, ch, n, l) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
-                                                     (bp, ch, l) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&
+                                                     (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
+                                                     (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&
                                                                  !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp));
             // Flags
             BlueprintAction.Register<BlueprintUnlockableFlag>("Unlock",
-                (bp, ch, n, l) => flags.Unlock(bp),
-                (bp, ch, l) => !flags.IsUnlocked(bp));
+                (bp, ch, n, index) => flags.Unlock(bp),
+                (bp, ch, index) => !flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>("Lock",
-                (bp, ch, n, l) => flags.Lock(bp),
-                (bp, ch, l) =>flags.IsUnlocked(bp));
+                (bp, ch, n, index) => flags.Lock(bp),
+                (bp, ch, index) =>flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>(">",
-                (bp, ch, n, l) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) + n),
-                (bp, ch, l) => flags.IsUnlocked(bp) );
+                (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) + n),
+                (bp, ch, index) => flags.IsUnlocked(bp) );
 
             BlueprintAction.Register<BlueprintUnlockableFlag>("<",
-                (bp, ch, n, l) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n),
-                (bp, ch, l) => flags.IsUnlocked(bp));
+                (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n),
+                (bp, ch, index) => flags.IsUnlocked(bp));
 
             // Cutscenes
-            BlueprintAction.Register<Cutscene>("Play", (bp, ch, n, l) => {
+            BlueprintAction.Register<Cutscene>("Play", (bp, ch, n, index) => {
                 Actions.ToggleModWindow();
                 CutscenePlayerData cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
 
@@ -302,10 +302,10 @@ namespace ToyBox {
             });
 
             // Teleport
-            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (bp, ch, n, l) => GameHelper.EnterToArea(bp, AutoSaveMode.None));
-            BlueprintAction.Register<BlueprintGlobalMap>("Teleport", (bp, ch, n, l) => GameHelper.EnterToArea(bp.GlobalMapEnterPoint, AutoSaveMode.None));
+            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (bp, ch, n, index) => GameHelper.EnterToArea(bp, AutoSaveMode.None));
+            BlueprintAction.Register<BlueprintGlobalMap>("Teleport", (bp, ch, n, index) => GameHelper.EnterToArea(bp.GlobalMapEnterPoint, AutoSaveMode.None));
 
-            BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n, l) => {
+            BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n, index) => {
                 var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
                 var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
 
@@ -314,7 +314,7 @@ namespace ToyBox {
                 }
             });
 
-            BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, l) => {
+            BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, index) => {
                 if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
                     Actions.TeleportToGlobalMap(() => Actions.TeleportToGlobalMapPoint(globalMapPoint));
                 }

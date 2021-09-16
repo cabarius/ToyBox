@@ -94,32 +94,23 @@ namespace ToyBox {
             foreach (SimpleBlueprint blueprint in simpleBlueprints) {
                 int currentCount = count++;
                 var description = blueprint.GetDescription();
+                float titleWidth = 0;
+                var remWidth = remainingWidth - indent;
                 using (UI.HorizontalScope()) {
-                    var remWidth = remainingWidth - indent;
                     UI.Space(indent);
                     var actions = blueprint.GetActions()
                         .Where(action => action.canPerform(blueprint, ch))
                         .ToArray();
                     var titles = actions.Select(a => a.name);
                     var title = blueprint.name;
-                    if (blueprint is BlueprintParametrizedFeature parmBP) {
-                        string[] nameStrings = parmBP.Items.Select(x => x.Name).ToArray();
-                        UI.SelectionGrid(parmBP.Name, ref ParamSelected[currentCount], nameStrings,4,UI.AutoWidth());
-                    }
                     if (titles.Contains("Remove") || titles.Contains("Lock")) {
                         title = title.cyan().bold();
                     }
                     else {
                         title = titleFormater(title);
                     }
-                    var titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
-                    if (!(blueprint is BlueprintParametrizedFeature)) {
-                        UI.Label(title, UI.Width(titleWidth));
-                    }
-                    else {
-                        UI.Space(25);
-                    }
-
+                    titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
+                    UI.Label(title, UI.Width(titleWidth));
                     remWidth -= titleWidth;
                     int actionCount = actions != null ? actions.Count() : 0;
                     var lockIndex = titles.IndexOf("Lock");
@@ -200,6 +191,32 @@ namespace ToyBox {
                         else UI.Label(typeString.cyan()); // + $" {remWidth}".bold());
 
                         if (description.Length > 0) UI.Label(description.green(), UI.Width(remWidth));
+                    }
+                }
+                if (blueprint is BlueprintParametrizedFeature paramBP) {
+                    using (UI.HorizontalScope()) {
+                        UI.Space(titleWidth);
+                        using (UI.VerticalScope()) {
+                            using (UI.HorizontalScope(GUI.skin.button)) {
+                                var content = new GUIContent($"{paramBP.Name.yellow()}");
+                                var labelWidth = GUI.skin.label.CalcSize(content).x;
+                                UI.Space(indent);
+                                //UI.Space(indent + titleWidth - labelWidth - 25);
+                                UI.Label(content, UI.Width(labelWidth));
+                                UI.Space(25);
+                                string[] nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray();
+                                UI.ActionSelectionGrid(
+                                    ref ParamSelected[currentCount],
+                                    nameStrings,
+                                    6,
+                                    (selected) => { },
+                                    GUI.skin.toggle,
+                                    UI.Width(remWidth)
+                                );
+                                //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
+                            }
+                            UI.Space(15);
+                        }
                     }
                 }
                 UI.Div(indent);

@@ -80,6 +80,7 @@ namespace ToyBox {
                                                                               : bp.IsMythic ? "Mythic"
                                                                               : bp.IsHigherMythic ? "Higher Mythic"
                                                                               : "Standard"),
+            new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => String.Join(" ", bp.Classes.Select(cl => cl.Name))),
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAbility>("Actions", null, bp => bp.ActionType.ToString()),

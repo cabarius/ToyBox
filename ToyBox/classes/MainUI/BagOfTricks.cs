@@ -81,12 +81,12 @@ namespace ToyBox {
                     UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
                     UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                     },
+                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => {
                     UI.Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0);
                     UI.Space(25);
                     UI.Label("Teleports to cursor for party and main character support.  Use comma ',' to teleport selected members and '.' to teleport the main char".green());
                 },
-                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => UI.Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
                 () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
@@ -171,11 +171,8 @@ namespace ToyBox {
                 },
                 () => UI.LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => UI.LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 999, 1, 1, "", UI.AutoWidth()),
-                () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
-                () => UI.LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, settings.fovMultiplierMax, 1, 2, "", UI.AutoWidth()),
-                () => {
-                    UI.LogSlider("Max Field Of View", ref settings.fovMultiplierMax, 1.5f, 5f, 1, 2, "", UI.Width(600));
-                },
+                () => UI.LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", UI.AutoWidth()),
                 () => { }
                 );
             Game.Instance.TimeController.DebugTimeScale = settings.timeScaleMultiplier;
