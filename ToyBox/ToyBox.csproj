@@ -145,7 +145,7 @@
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
-    <Compile Include="classes\Infrastructure\UnitEntityDetails.cs" />
+    <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\BlueprintListUI.cs" />
     <Compile Include="classes\MainUI\BlueprintLoader.cs" />
