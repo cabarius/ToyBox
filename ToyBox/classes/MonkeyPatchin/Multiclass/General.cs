@@ -133,9 +133,9 @@ namespace ToyBox.Multiclass {
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         public static LevelUpController levelUpController { get; internal set; }
-        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] { 
-            typeof(UnitEntityData), 
-            typeof(bool), 
+        [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] {
+            typeof(UnitEntityData),
+            typeof(bool),
             typeof(LevelUpState.CharBuildMode) })]
         static class LevelUpController_ctor_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
@@ -170,7 +170,7 @@ namespace ToyBox.Multiclass {
                 if (!progression.GiveFeaturesForPreviousLevels)
                     level = nextLevel - 1;
                 for (int lvl = level + 1; lvl <= nextLevel; ++lvl) {
-//                    if (!AllowProceed(progression)) break;
+                    //                    if (!AllowProceed(progression)) break;
                     LevelEntry levelEntry = progressionData.GetLevelEntry(lvl);
                     LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, lvl);
                 }
