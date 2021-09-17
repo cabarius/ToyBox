@@ -40,6 +40,7 @@ using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
 using Kingmaker.UI.IngameMenu;
 using System.Reflection;
+using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -153,32 +154,42 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        // TODO - WoTR ver 1.03c changed movement speed again and now this is not needed.  leaving it here in case we need it later WTF???
+#if false
         [HarmonyPatch(typeof(UnitEntityData), "CalculateSpeedModifier")]
         public static class UnitEntityData_CalculateSpeedModifier_Patch {
             private static void Postfix(UnitEntityData __instance, ref float __result) {
-                if (settings.partyMovementSpeedMultiplier == 1.0f || __instance.IsPlayersEnemy)
+                //Main.Log($"UnitEntityData_CalculateSpeedModifier_Patch: isInParty:{__instance.Descriptor.IsPartyOrPet()} result:{__result}".cyan());
+                if (settings.partyMovementSpeedMultiplier == 1.0f || !__instance.Descriptor.IsPartyOrPet())
                     return;
                 UnitPartTacticalCombat partTacticalCombat = __instance.Get<UnitPartTacticalCombat>();
-                if (partTacticalCombat?.Faction != ArmyFaction.Crusaders) return;
-
+                if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return;
                 __result *= settings.partyMovementSpeedMultiplier;
+                //Main.Log($"finalREsult: {__result}".cyan());
+
             }
         }
-
-        // public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
-        // old: public static bool Prefix(UnitEntityData unit, Vector3 p, float? speedLimit, float orientation, float delay, bool showTargetMarker) {
+#endif
         [HarmonyPatch(typeof(ClickGroundHandler), "RunCommand")]
         public static class ClickGroundHandler_RunCommand_Patch {
+            static UnitMoveTo unitMoveTo = null;
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
-                //Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()}");
-                if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return true;
                 var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
-                if (!moveAsOne) return true;
+                //Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()} moveAsOne:{moveAsOne}");
+                if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return true;
+
+                // As of WoTR 1.03c RunCommand is once again the main place to adjust movement speed.  The following was needed when we used UnitEntityData_CalculateSpeedModifier_Patch above to adjust speed in non move as one cases.  
+                //if (!moveAsOne) {
+                //    return true;
+                //}
+                UnitPartTacticalCombat partTacticalCombat = unit.Get<UnitPartTacticalCombat>();
+                if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return true;
+
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
-                //Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
+                Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
-                UnitMoveTo unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
+                unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
                     MovementDelay = settings.Delay,
                     Orientation = new float?(settings.Orientation),
                     CreatedByPlayer = true
@@ -198,6 +209,19 @@ namespace ToyBox.BagOfPatches {
                 }
                 return false;
             }
+
+            //public static void Postfix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
+            //    var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
+            //    var speedMultiplier = Main.settings.partyMovementSpeedMultiplier;
+            //    if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return;
+            //    if (moveAsOne || speedMultiplier == 1) return;
+
+            //    var speedLimit = unit.ModifiedSpeedMps;
+            //    speedLimit *= Main.settings.partyMovementSpeedMultiplier;
+            //    Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
+            //    unitMoveTo.SpeedLimit = speedLimit;
+            //    unitMoveTo.OverrideSpeed = speedLimit * 1.5f;
+            //}
         }
 
         [HarmonyPatch(typeof(FogOfWarArea), "RevealOnStart", MethodType.Getter)]
@@ -411,14 +435,14 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(KineticistAbilityBurnCost), "GetTotal")]
         public static class KineticistAbilityBurnCost_GetTotal_Patch {
             public static void Postfix(ref int __result) {
-                __result = Math.Max(0, __result -settings.kineticistBurnReduction);
+                __result = Math.Max(0, __result - settings.kineticistBurnReduction);
             }
         }
 
         [HarmonyPatch(typeof(UnitPartMagus), "IsSpellCombatThisRoundAllowed")]
         public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
             public static void Postfix(ref bool __result, UnitPartMagus __instance) {
-                if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null &&__instance.Owner.IsPartyOrPet()) {
+                if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
                     __result = true;
                 }
             }
