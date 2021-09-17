@@ -20,6 +20,10 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
 - create a branch in your fork with a short description of your contribution (e.g. `git checkout -b my-contribution-descriptor`)
 
 ![alt text](./documentation-assets/github-new-branch.jpg "git checkout -b example")
-- do your magic with the code
-- push to your fork
-- open a pull-request from your fork to the main repository
+- Go to system and set add an environment variable $(WrathPath) and point it to your game directory
+- Run clean solution (this pulls the game assemblies into toybox's build enviroment)
+- Now build and it will build and install the mod into your game folder
+- Write new patches... ??? SUCCESS!!!
+- Push to your fork
+- Open a pull-request from your fork to the main repository and Narria will approve and land for you
+- For questions join our [discord](https://discord.gg/wotr) and ask in #mod-dev-technical. For urgent stuff you can reach out to mod owner Narria who is available to help ^_^
