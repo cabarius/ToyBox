@@ -23,3 +23,19 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
 - do your magic with the code
 - push to your fork
 - open a pull-request from your fork to the main repository
+
+# Development Setup
+1. Install ToyBox mod into your game via Unity Mod Manager
+1. Clone the git repo
+1. Locate the install folder of Pathfinder Wrath of the Righteous
+1. Go to System Properties > Environment Variables and add WrathPath with a value that looks like this:
+        `WrathPath`   `C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure`
+1.  First time and when the game updates make sure you clean the solution to trigger the publicize step
+1. build the solution debug and it will automatically build and install into the mod folder in the game
+1.  when you rebuild you can go to the mod and hit the reload button at the top to make it use the latest
+
+**PS**: 
+
+[Learn to mod Kingmaker Games here here](https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide)
+        
+[Join our discord](https://discord.gg/bQVwsP7cky)
