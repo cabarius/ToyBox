@@ -13,7 +13,7 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
 # How to contribute
 
 - on the [main repository page](https://github.com/cabarius/ToyBox) click on "fork" in the upper-right corner
-![alt text](.\documentation-assets\github-fork.jpg "github fork button position")
+![alt text](./documentation-assets/github-fork.jpg "github fork button position")
 - on your personal fork of the repository clone to your computer ([multiple method avaiable, chose the one you prefeer](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository))
 ![alt text](./documentation-assets/github-clone-1.jpg "github code button position")
 ![alt text](./documentation-assets/github-clone-2.jpg "github code button preview")
