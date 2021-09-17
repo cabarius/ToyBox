@@ -180,6 +180,9 @@ namespace ToyBox {
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
                     new NamedAction("Crusade", () => { CrusadeEditor.OnGUI(); }),
                     new NamedAction("Quests", () => { QuestEditor.OnGUI(); })
+#if DEBUG
+                    , new NamedAction("Enchantments", () => { QuestEditor.OnGUI(); })
+#endif
                     );
             }
             catch (Exception e) {
