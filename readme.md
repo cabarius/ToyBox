@@ -36,6 +36,6 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
 
 **PS**: 
 
-[Learn to mod Kingmaker Games here here](https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide)
+[Learn to mod Owlcat Games (Kingmaker and Wrath of the Rightoust) here here](https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide)
         
 [Join our discord](https://discord.gg/bQVwsP7cky)
