@@ -13,6 +13,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
 
 Ver 1.3.6
     Fixed party speed multipliers to work with latest update of the game
+    (ArcaneTrixter) Added requested multiplier for Arcanist spell slots.
 Ver 1.3.5
     Toggling search descriptions now updates search results
     No friendly fire toggle should work better with pets

@@ -119,6 +119,7 @@ namespace ToyBox {
         public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
+        public float arcanistSpellslotMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;

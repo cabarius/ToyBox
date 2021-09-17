@@ -4,6 +4,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Assets.Controllers.GlobalMap;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
@@ -59,6 +60,16 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(Player __instance, ref long amount) {
                 amount = Mathf.RoundToInt(amount * (float)Math.Round(settings.moneyMultiplier, 1));
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Spellbook), "GetSpellSlotsCount")]
+        public static class BlueprintSpellsTable_GetCount_Patch {
+            static void Postfix(ref int __result, Spellbook __instance, int spellLevel) {
+                if (__result > 0 && __instance.Blueprint.IsArcanist) {
+                    var spellsKnown = __instance.m_KnownSpells[spellLevel].Count;
+                    __result = Math.Min(Mathf.RoundToInt(__result * settings.arcanistSpellslotMultiplier), spellsKnown);
+                }
             }
         }
 
