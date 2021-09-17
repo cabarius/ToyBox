@@ -183,6 +183,7 @@
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\WrathExtensionsMulticlass.cs" />
+    <Compile Include="classes\MonkeyPatchin\PartyView.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
