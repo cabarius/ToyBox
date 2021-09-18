@@ -94,6 +94,19 @@ namespace ModKit {
             }
             return new string[] { fields, methods, properties };
         }
+        public static string SubstringBetweenCharacters(this string input, char charFrom, char charTo) {
+            int posFrom = input.IndexOf(charFrom);
+            if (posFrom != -1) //if found char
+            {
+                int posTo = input.IndexOf(charTo, posFrom + 1);
+                if (posTo != -1) //if found char
+                {
+                    return input.Substring(posFrom + 1, posTo - posFrom - 1);
+                }
+            }
+
+            return string.Empty;
+        }
     }
     public static class MK {
         public static bool IsKindOf(this Type type, Type baseType) {

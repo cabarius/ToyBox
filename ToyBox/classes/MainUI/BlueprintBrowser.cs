@@ -54,6 +54,7 @@ using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
 using ModKit.Utility;
 using Kingmaker.DialogSystem.Blueprints;
+using System.Text.RegularExpressions;
 
 namespace ToyBox {
     public class BlueprintBrowser {
@@ -117,6 +118,14 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp => bp.m_Type.ToString()),
             new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp => bp.Parent?.GetBlueprint().NameSafe() ?? ""),
             new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CollationName()),
+            new NamedTypeFilter<BlueprintDialog>("Dialog", null, bp => bp.Type.ToString()),
+            new NamedTypeFilter<BlueprintCue>("Cues", null, bp => {
+                if (bp.Conditions.HasConditions) {
+                    return bp.Conditions.Conditions.First().NameSafe().SubstringBetweenCharacters('$', '$');
+                }
+                return "-";
+                }),
+            new NamedTypeFilter<BlueprintAnswer>("Answer", null),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
             //new NamedTypeFilter<SimpleBlueprint>("In Memory", null, bp => bp.CollationName(), () => ResourcesLibrary.s_LoadedBlueprints.Values.Where(bp => bp != null)),
@@ -265,8 +274,8 @@ namespace ToyBox {
                         UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
                         UI.Space(25);
                         UI.Toggle("Components", ref settings.showComponents);
-                        //UI.Space(25);
-                        //UI.Toggle("Elements", ref settings.showElements);
+                        UI.Space(25);
+                        UI.Toggle("Elements", ref settings.showElements);
                     }
                     // Search Button and Results Summary
                     using (UI.HorizontalScope()) {
