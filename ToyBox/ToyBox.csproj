@@ -139,6 +139,7 @@
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
     <Compile Include="classes\MainUI\CrusadeEditor.cs" />
+    <Compile Include="classes\MainUI\EnchantmentEditor.cs" />
     <Compile Include="classes\MainUI\FeaturesTreeEditor.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />

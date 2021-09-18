@@ -45,6 +45,9 @@ namespace ToyBox {
                 yield return null;
                 toc = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints;
             }
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+#if false    // TODO - Truinto for evaluation; my result improved from 2689 to 17 milliseconds
             var allGUIDs = new List<BlueprintGuid> { };
             foreach (var key in toc.Keys) {
                 allGUIDs.Add(key);
@@ -67,7 +70,12 @@ namespace ToyBox {
                     yield return null;
                 }
             }
-            Main.Log($"loaded {blueprints.Count} blueprints");
+#else
+            blueprints = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints.Values.Select(s => s.Blueprint).ToList();
+#endif
+            watch.Stop();
+
+            Main.Log($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             this.callback(blueprints);
             yield return null;
             StopCoroutine(coroutine);
