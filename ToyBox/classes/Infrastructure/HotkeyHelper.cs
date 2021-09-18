@@ -4,7 +4,6 @@ using Kingmaker.UI;
 using Kingmaker.Settings;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using GL = UnityEngine.GUILayout;
 using ModKit;
 using ModKit.Utility;

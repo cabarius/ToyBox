@@ -1,11 +1,8 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using ModKit.Utility;
 using System.Collections.Generic;
-using UnityModManagerNet;
-using ToyBox.Multiclass;
 using Kingmaker.UnitLogic;
 using ModKit;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Blueprints.Classes;
 
 namespace ToyBox {

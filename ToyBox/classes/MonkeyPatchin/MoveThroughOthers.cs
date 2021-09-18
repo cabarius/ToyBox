@@ -1,18 +1,8 @@
 ﻿// This code is licensed under MIT license (see LICENSE for details)
 // Based on work in https://github.com/hsinyuhcan/KingmakerTurnBasedMod by Hsinyu Chan 
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using HarmonyLib;
-using Kingmaker;
-using Kingmaker.Controllers;
-using Kingmaker.Controllers.MapObjects;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.PubSubSystem;
 using Kingmaker.View;
-using UnityEngine;
 
 namespace ToyBox {
     // TODO - do we really need this?  Someone requested it but I don't observe any movement restrictions

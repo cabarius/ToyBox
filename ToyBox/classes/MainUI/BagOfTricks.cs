@@ -51,8 +51,8 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Common", 4,
-                () => UI.ActionButton("Teleport Party To You", () => Actions.TeleportPartyToPlayer()),
-                () => UI.ActionButton("Go To Global Map", () => Actions.TeleportToGlobalMap()),
+                () => UI.ActionButton("Teleport Party To You", () => Teleport.TeleportPartyToPlayer()),
+                () => UI.ActionButton("Go To Global Map", () => Teleport.TeleportToGlobalMap()),
                 () => UI.ActionButton("Run All Perception Checks", () => Actions.RunPerceptionTriggers()),
                 () => {
                     UI.ActionButton("Set Perception to 40", () => {

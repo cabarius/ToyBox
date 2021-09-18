@@ -315,8 +315,8 @@ namespace ToyBox {
             });
 
             BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, index) => {
-                if (!Actions.TeleportToGlobalMapPoint(globalMapPoint)) {
-                    Actions.TeleportToGlobalMap(() => Actions.TeleportToGlobalMapPoint(globalMapPoint));
+                if (!Teleport.TeleportToGlobalMapPoint(globalMapPoint)) {
+                    Teleport.TeleportToGlobalMap(() => Teleport.TeleportToGlobalMapPoint(globalMapPoint));
                 }
             });
             

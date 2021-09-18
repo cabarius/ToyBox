@@ -2,20 +2,13 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using HarmonyLib;
 using Kingmaker;
-using Kingmaker.AreaLogic.Cutscenes;
-using Kingmaker.Controllers;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.PubSubSystem;
-using UnityEngine;
 
-namespace ToyBox.classes.MonkeyPatchin
-{
+namespace ToyBox.classes.MonkeyPatchin {
     public class HighlightObjectToggle
     {
         [HarmonyPatch(typeof(InteractionHighlightController), "HighlightOn")]

@@ -4,7 +4,6 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Assets.Controllers.GlobalMap;
-using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;

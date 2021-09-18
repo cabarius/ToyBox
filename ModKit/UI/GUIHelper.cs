@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using RGBA = ModKit.RGBA;
-namespace ModKit.Utility
-{
+namespace ModKit.Utility {
     public static class GUIHelper
     {
         public const string onMark = "<color=green><b>✔</b></color>";

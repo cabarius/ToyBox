@@ -8,6 +8,12 @@ using Kingmaker.View;
 using System;
 using UnityEngine;
 using JetBrains.Annotations;
+using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.State;
+using Kingmaker.Globalmap.View;
+using Kingmaker.Globalmap;
+using Kingmaker.Utility;
+using Kingmaker.EntitySystem.Persistence;
 
 namespace ToyBox {
 
@@ -15,20 +21,25 @@ namespace ToyBox {
         public static Settings Settings => Main.settings;
         private static HoverHandler _hover = new HoverHandler();
         public static void OnUpdate() {
+            var currentMode = Game.Instance.CurrentMode;
             if (Main.IsInGame 
                 && Settings.toggleTeleportKeysEnabled
-                && (    Game.Instance.CurrentMode == GameModeType.Default 
-                    ||  Game.Instance.CurrentMode == GameModeType.Pause
+                && (currentMode == GameModeType.Default 
+                    || currentMode == GameModeType.Pause
+                    || currentMode == GameModeType.GlobalMap
                     )
                 ) {
-                if (Input.GetKeyDown(Settings.teleportMainHotKey))
+                
+                if (currentMode == GameModeType.GlobalMap) {
+                    if (Input.GetKeyDown(Settings.teleportPartyHotKey))
+                        TeleportPartyOnGlobalMap();
+                }
+                else if (Input.GetKeyDown(Settings.teleportMainHotKey))
                     TeleportUnit(Game.Instance.Player.MainCharacter.Value, PointerPosition());
                 else if (Input.GetKeyDown(Settings.teleportSelectedHotKey))
                     TeleportSelected();
                 else if (Input.GetKeyDown(Settings.teleportPartyHotKey))
                     TeleportParty();
-                //else if (Input.GetKeyDown(KeyCode.Semicolon))
-                //    if (_hover.Unit != null) TeleportUnit(_hover.Unit, PointerPosition());
             }
         }
 
@@ -67,6 +78,94 @@ namespace ToyBox {
             foreach (var unit in Game.Instance.Player.m_PartyAndPets) {
                 TeleportUnit(unit, PointerPosition());
             }
+        }
+        public static void TeleportPartyToPlayer() {
+            GameModeType currentMode = Game.Instance.CurrentMode;
+            var partyMembers = Game.Instance.Player.m_PartyAndPets;
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                foreach (var unit in partyMembers) {
+                    if (unit != Game.Instance.Player.MainCharacter.Value) {
+                        unit.Commands.InterruptMove();
+                        unit.Commands.InterruptMove();
+                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                    }
+                }
+            }
+        }
+        public static void TeleportEveryoneToPlayer() {
+            GameModeType currentMode = Game.Instance.CurrentMode;
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                foreach (var unit in Game.Instance.State.Units) {
+                    if (unit != Game.Instance.Player.MainCharacter.Value) {
+                        unit.Commands.InterruptMove();
+                        unit.Commands.InterruptMove();
+                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                    }
+                }
+            }
+        }
+        private static void TeleportPartyOnGlobalMap() {
+            GlobalMapView mapView = GlobalMapView.Instance;
+            var pointerPos = PointerPosition();
+            var pointerTransform = (new GameObject()).transform;
+            pointerTransform.position = pointerPos;
+            var locationToObject = GlobalMapView.Instance.GetNearestLocationToObject(pointerTransform);
+            locationToObject.Blueprint.TeleportToGlobalMapPoint();
+        }
+
+        public static void TeleportToGlobalMap(Action callback = null) {
+            var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
+            var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
+            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback != null ? callback : () => { });
+        }
+        public static bool TeleportToGlobalMapPoint(this BlueprintGlobalMapPoint destination) {
+            if (GlobalMapView.Instance != null) {
+                var globalMapController = Game.Instance.GlobalMapController;
+                GlobalMapUI globalMapUI = Game.Instance.UI.GlobalMapUI;
+                GlobalMapView globalMapView = GlobalMapView.Instance;
+                GlobalMapState globalMapState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap);
+
+                GlobalMapPointState pointState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap).GetPointState(destination);
+                pointState.EdgesOpened = true;
+                pointState.Reveal();
+                GlobalMapPointView pointView = globalMapView.GetPointView(destination);
+                if ((bool)(UnityEngine.Object)globalMapView) {
+                    if ((bool)(UnityEngine.Object)pointView)
+                        globalMapView.RevealLocation(pointView);
+                }
+                foreach (var edge in pointState.Edges) {
+                    edge.UpdateExplored(1f, 1);
+                    globalMapView.GetEdgeView(edge.Blueprint).UpdateRenderers();
+
+                }
+                globalMapController.StartTravels();
+                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStarted((IGlobalMapTraveler)globalMapView.State.Player, false)));
+                globalMapView.State.Player.SetCurrentPosition(new GlobalMapPosition(destination));
+                globalMapView.GetPointView(destination)?.OpenOutgoingEdges((GlobalMapPointView)null);
+                globalMapView.UpdatePawnPosition();
+                globalMapController.Stop();
+                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped((IGlobalMapTraveler)globalMapView.State.Player)));
+                globalMapView.PlayerPawn.m_Compass.TryClear();
+                globalMapView.PlayerPawn.m_Compass.TrySet();
+#if false
+                globalMapView.TeleportParty(globalMapPoint);
+                globalMapUI.HandleGlobalMapPlayerTravelStopped(globalMapState.Player);
+                     GlobalMapPointState pointState = Game.Instance.Player.GlobalMap.GetPointState(globalMapPoint);
+                pointState.EdgesOpened = true;
+                pointState.Reveal();
+                GlobalMapPointView pointView = globalMapView.GetPointView(globalMapPoint);
+                pointView?.OpenOutgoingEdges((GlobalMapPointView)null);
+                globalMapView.RevealLocation(pointView);
+                if ((bool)(UnityEngine.Object)globalMapView) {
+                    if ((bool)(UnityEngine.Object)pointView)
+                        globalMapView.RevealLocation(pointView);
+                }
+                globalMapView.UpdatePawnPosition();
+                pointState.LastVisited = Game.Instance.TimeController.GameTime;
+#endif
+                return true;
+            }
+            return false;
         }
 
         internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {

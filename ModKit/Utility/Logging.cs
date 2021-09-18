@@ -1,14 +1,8 @@
 ﻿// some stuff borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
-using UnityEngine;
 using UnityModManagerNet;
-using ModKit;
 
 namespace ModKit {
     public class Logger {

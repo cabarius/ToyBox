@@ -1,76 +1,26 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
-using UnityEngine.UI;
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Kingmaker;
-using Kingmaker.AI.Blueprints;
-using Kingmaker.AI.Blueprints.Considerations;
-using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
-using Kingmaker.Armies.TacticalCombat;
-using Kingmaker.Armies.TacticalCombat.Blueprints;
-using Kingmaker.Armies.TacticalCombat.Brain;
-using Kingmaker.Armies.TacticalCombat.Brain.Considerations;
-using Kingmaker.BarkBanters;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.CharGen;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Blueprints.Credits;
-using Kingmaker.Blueprints.Encyclopedia;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Blueprints.Items.Components;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items.Shields;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Kingdom.Settlements;
-using Kingmaker.Blueprints.Quests;
 using Kingmaker.Blueprints.Root;
-using Kingmaker.Cheats;
-using Kingmaker.Blueprints.Console;
-using Kingmaker.Controllers.Rest;
-using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Events;
-using Kingmaker.DialogSystem.Blueprints;
-using Kingmaker.Dungeon.Blueprints;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
 using Kingmaker.GameModes;
-using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Globalmap.View;
-using Kingmaker.Interaction;
-using Kingmaker.Items;
 using Kingmaker.PubSubSystem;
-using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.Tutorial;
-using Kingmaker.UI;
 using Kingmaker.UI.Common;
-using Kingmaker.UI.IngameMenu;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Customization;
 using Kingmaker.Utility;
-using Kingmaker.Visual.Sound;
 using UnityModManagerNet;
-using Kingmaker.Globalmap.State;
-using Kingmaker.EntitySystem.Persistence;
-using Kingmaker.Globalmap;
-using Kingmaker.UI.MVVM._PCView.InGame;
 
 namespace ToyBox {
     public static class Actions {
@@ -101,85 +51,6 @@ namespace ToyBox {
                     pt.OnSpotted.Run();
                 }
             }
-        }
-        public static void TeleportPartyToPlayer() {
-            GameModeType currentMode = Game.Instance.CurrentMode;
-            var partyMembers = Game.Instance.Player.m_PartyAndPets;
-            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-                foreach (var unit in partyMembers) {
-                    if (unit != Game.Instance.Player.MainCharacter.Value) {
-                        unit.Commands.InterruptMove();
-                        unit.Commands.InterruptMove();
-                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
-                    }
-                }
-            }
-        }
-        public static void TeleportEveryoneToPlayer() {
-            GameModeType currentMode = Game.Instance.CurrentMode;
-            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-                foreach (var unit in Game.Instance.State.Units) {
-                    if (unit != Game.Instance.Player.MainCharacter.Value) {
-                        unit.Commands.InterruptMove();
-                        unit.Commands.InterruptMove();
-                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
-                    }
-                }
-            }
-        }
-        public static void TeleportToGlobalMap(Action callback = null) {
-            var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
-            var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
-            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback != null ? callback : () => { });
-        }
-        public static bool TeleportToGlobalMapPoint(BlueprintGlobalMapPoint destination) {
-            if (GlobalMapView.Instance != null) {
-                var globalMapController = Game.Instance.GlobalMapController;
-                GlobalMapUI globalMapUI = Game.Instance.UI.GlobalMapUI;
-                GlobalMapView globalMapView = GlobalMapView.Instance;
-                GlobalMapState globalMapState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap);
-
-                GlobalMapPointState pointState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap).GetPointState(destination);
-                pointState.EdgesOpened = true;
-                pointState.Reveal();
-                GlobalMapPointView pointView = globalMapView.GetPointView(destination);
-                if ((bool)(UnityEngine.Object)globalMapView) {
-                    if ((bool)(UnityEngine.Object)pointView)
-                        globalMapView.RevealLocation(pointView);
-                }
-                foreach (var edge in pointState.Edges) {
-                    edge.UpdateExplored(1f, 1);
-                    globalMapView.GetEdgeView(edge.Blueprint).UpdateRenderers();
-
-                }
-                globalMapController.StartTravels();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStarted((IGlobalMapTraveler)globalMapView.State.Player, false)));
-                globalMapView.State.Player.SetCurrentPosition(new GlobalMapPosition(destination));
-                globalMapView.GetPointView(destination)?.OpenOutgoingEdges((GlobalMapPointView)null);
-                globalMapView.UpdatePawnPosition();
-                globalMapController.Stop();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped((IGlobalMapTraveler)globalMapView.State.Player)));
-                globalMapView.PlayerPawn.m_Compass.TryClear();
-                globalMapView.PlayerPawn.m_Compass.TrySet();
-#if false
-                globalMapView.TeleportParty(globalMapPoint);
-                globalMapUI.HandleGlobalMapPlayerTravelStopped(globalMapState.Player);
-                     GlobalMapPointState pointState = Game.Instance.Player.GlobalMap.GetPointState(globalMapPoint);
-                pointState.EdgesOpened = true;
-                pointState.Reveal();
-                GlobalMapPointView pointView = globalMapView.GetPointView(globalMapPoint);
-                pointView?.OpenOutgoingEdges((GlobalMapPointView)null);
-                globalMapView.RevealLocation(pointView);
-                if ((bool)(UnityEngine.Object)globalMapView) {
-                    if ((bool)(UnityEngine.Object)pointView)
-                        globalMapView.RevealLocation(pointView);
-                }
-                globalMapView.UpdatePawnPosition();
-                pointState.LastVisited = Game.Instance.TimeController.GameTime;
-#endif
-                return true;
-            }
-            return false;
         }
         public static void RemoveAllBuffs() {
             foreach (UnitEntityData target in Game.Instance.Player.Party) {

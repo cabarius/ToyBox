@@ -89,7 +89,7 @@ dotnet_style_object_initializer = true:suggestion
 #prefer var over explicit type in all cases, unless overridden by another code style rule
 csharp_style_var_elsewhere = true:suggestion
 #prefer explicit type over var to declare variables with built-in system types such as int
-csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_for_built_in_types =false:suggestion
 #prefer explicit type over var when the type is already mentioned on the right-hand side of a declaration
 csharp_style_var_when_type_is_apparent = false:suggestion
 

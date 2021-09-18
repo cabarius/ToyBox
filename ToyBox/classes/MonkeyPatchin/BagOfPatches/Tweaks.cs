@@ -40,7 +40,6 @@ using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
 using Kingmaker.UI.IngameMenu;
 using System.Reflection;
-using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {

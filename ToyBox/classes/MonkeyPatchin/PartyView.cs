@@ -1,23 +1,5 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using Kingmaker;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Prerequisites;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Class.LevelUp;
-using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Kingmaker;
 using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.UI.MVVM._VM.Party;
-using Kingmaker.PubSubSystem;
-using UniRx;
-using UnityEngine;
-using Kingmaker.EntitySystem.Entities;
 
 namespace ToyBox.BagOfPatches {
     static class PartyView {
