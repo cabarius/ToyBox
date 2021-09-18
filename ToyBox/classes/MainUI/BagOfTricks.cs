@@ -53,7 +53,7 @@ namespace ToyBox {
             UI.HStack("Common", 4,
                 () => UI.ActionButton("Teleport Party To You", () => Teleport.TeleportPartyToPlayer()),
                 () => UI.ActionButton("Go To Global Map", () => Teleport.TeleportToGlobalMap()),
-                () => UI.ActionButton("Run All Perception Checks", () => Actions.RunPerceptionTriggers()),
+                () => UI.ActionButton("Reroll Perception", () => Actions.RunPerceptionTriggers()),
                 () => {
                     UI.ActionButton("Set Perception to 40", () => {
                         CheatsCommon.StatPerception();
