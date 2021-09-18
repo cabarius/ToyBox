@@ -7,9 +7,8 @@ namespace ToyBox.BagOfPatches {
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
-        static int SlotsInParty = 6;
-
 #if false
+        static int SlotsInParty = 6;
         [HarmonyPatch(typeof(PartyVM), MethodType.Constructor)]
         public static class PartyVM_Construtor_Patch {
             public static void PostFix(PartyVM __instance) {
