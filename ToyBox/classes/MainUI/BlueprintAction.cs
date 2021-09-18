@@ -264,7 +264,9 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintEtude>("Start",
                                                      (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
                                                      (bp, ch, index) => Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
-
+            BlueprintAction.Register<BlueprintEtude>("Unstart",
+                                                     (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.UnstartEtude(bp),
+                                                     (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
             BlueprintAction.Register<BlueprintEtude>("Complete",
                                                      (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
                                                      (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&

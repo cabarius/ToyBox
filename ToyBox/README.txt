@@ -13,6 +13,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
 
 Ver 1.3.7
     Teleport Party Key now works on Global or City Map
+    Search 'n Pick - You can now Unstart Etudes which can help fix broken progression
     Added search 'n pick categories for Dialog, Cues and Answers
 Ver 1.3.6
     Fixed party speed multipliers to work with latest update of the game
