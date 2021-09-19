@@ -153,9 +153,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        // TODO - WoTR ver 1.03c changed movement speed again and now this is not needed.  leaving it here in case we need it later WTF???
-#if false
-        [HarmonyPatch(typeof(UnitEntityData), "CalculateSpeedModifier")]
+        [HarmonyPatch(typeof(UnitEntityData), "ModifiedSpeedMps", MethodType.Getter)]
         public static class UnitEntityData_CalculateSpeedModifier_Patch {
             private static void Postfix(UnitEntityData __instance, ref float __result) {
                 //Main.Log($"UnitEntityData_CalculateSpeedModifier_Patch: isInParty:{__instance.Descriptor.IsPartyOrPet()} result:{__result}".cyan());
@@ -168,7 +166,7 @@ namespace ToyBox.BagOfPatches {
 
             }
         }
-#endif
+
         [HarmonyPatch(typeof(ClickGroundHandler), "RunCommand")]
         public static class ClickGroundHandler_RunCommand_Patch {
             static UnitMoveTo unitMoveTo = null;
@@ -178,9 +176,9 @@ namespace ToyBox.BagOfPatches {
                 if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return true;
 
                 // As of WoTR 1.03c RunCommand is once again the main place to adjust movement speed.  The following was needed when we used UnitEntityData_CalculateSpeedModifier_Patch above to adjust speed in non move as one cases.  
-                //if (!moveAsOne) {
-                //    return true;
-                //}
+                if (!moveAsOne) {
+                    return true;
+                }
                 UnitPartTacticalCombat partTacticalCombat = unit.Get<UnitPartTacticalCombat>();
                 if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return true;
 

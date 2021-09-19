@@ -15,6 +15,7 @@ Ver 1.3.7
     Teleport Party Key now works on Global or City Map
     Search 'n Pick - You can now Unstart Etudes which can help fix broken progression
     Added search 'n pick categories for Dialog, Cues and Answers
+    Movement speed multiplier now affects when you interact with a map object or npc
 Ver 1.3.6
     Fixed party speed multipliers to work with latest update of the game
     (ArcaneTrixter) Added requested multiplier for Arcanist spell slots.
