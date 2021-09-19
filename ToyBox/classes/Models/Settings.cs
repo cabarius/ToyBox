@@ -7,11 +7,9 @@ using UnityEngine;
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
         // Main
-
         public int selectedTab = 0;
 
         // Cheap Tricks
-
         public int increment = 10000;
         public int kineticistBurnReduction = 0;
 
@@ -139,7 +137,9 @@ namespace ToyBox {
         public float summonDurationMultiplier2 = 1;
         public float summonLevelModifier2 = 0;
 
-        // HotKeys
+        // Key Bindings
+        //public SerializableDictionary<string, KeyCode>
+
         public KeyCode teleportMainHotKey = KeyCode.Comma;
         public KeyCode teleportSelectedHotKey = KeyCode.Period;
         public KeyCode teleportPartyHotKey = KeyCode.Slash;
@@ -216,7 +216,7 @@ namespace ToyBox {
         public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
 
         public bool toggleIgnoreSpellbookAlignmentRestriction = false;
-        public bool toggleIgnoreAbilityCasterCheckers = false;
+        public bool toggleIgnoreAolityCasterCheckers = false;
         public HashSet<string> ignoredAbilityCasterCheckerSet = new HashSet<string>();
         public bool toggleIgnoreActivatableAbilityRestrictions = false;
         public HashSet<string> ignoredActivatableAbilityRestrictionSet = new HashSet<string>();

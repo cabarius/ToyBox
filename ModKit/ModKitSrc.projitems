@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\GUIHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+KeyBindings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Logging.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\NamedTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\SerializableDictionary.cs" />
