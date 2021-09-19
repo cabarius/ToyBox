@@ -31,8 +31,6 @@ namespace ToyBox {
             progress = (float)loaded / (float)total;
         }
         private IEnumerator LoadBlueprints() {
-            int loaded = 0;
-            int total = 1;
             yield return null;
             var bpCache = ResourcesLibrary.BlueprintsCache;
             while (bpCache == null) {
@@ -48,6 +46,8 @@ namespace ToyBox {
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 #if false    // TODO - Truinto for evaluation; my result improved from 2689 to 17 milliseconds
+            int loaded = 0;
+            int total = 1;
             var allGUIDs = new List<BlueprintGuid> { };
             foreach (var key in toc.Keys) {
                 allGUIDs.Add(key);

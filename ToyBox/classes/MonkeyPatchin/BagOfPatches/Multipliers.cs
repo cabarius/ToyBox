@@ -90,55 +90,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", new Type[] { })]
-        public static class MovementSpeed_GetRegionalModifier_Patch1 {
-            public static void Postfix(ref float __result) {
-                float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
-                __result = speedMultiplier * __result;
-            }
-        }
-
-        [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", new Type[] { typeof(Vector3) })]
-        public static class MovementSpeed_GetRegionalModifier_Patch2 {
-            public static void Postfix(ref float __result) {
-                float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
-                __result = speedMultiplier * __result;
-            }
-        }
-
-        /**
-            GlobalMapState state,
-            GlobalMapView view,
-            IGlobalMapTraveler traveler,
-            float visualStepDistance)
-        */
-        [HarmonyPatch(typeof(GlobalMapMovementUtility), "MoveAlongEdge", new Type[] {
-            typeof(GlobalMapState), typeof(GlobalMapView), typeof(IGlobalMapTraveler), typeof(float)
-            })]
-        public static class GlobalMapMovementUtility_MoveAlongEdge_Patch {
-            public static void Prefix(
-                GlobalMapState state,
-                GlobalMapView view,
-                IGlobalMapTraveler traveler,
-                ref float visualStepDistance) {
-                // TODO - can we get rid of the other map movement multipliers and do them all here?
-                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
-                    float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
-                    visualStepDistance = speedMultiplier * visualStepDistance;
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(GlobalMapArmyState), "SpendMovementPoints", new Type[] { typeof(float) })]
-        public static class GlobalMapArmyState_SpendMovementPoints_Patch {
-            public static void Prefix(GlobalMapArmyState __instance, ref float points) {
-                if (__instance.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
-                    float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
-                    points = points / speedMultiplier;
-                }
-            }
-        }
-
         /**
         public Buff AddBuff(
           BlueprintBuff blueprint,

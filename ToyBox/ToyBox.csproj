@@ -168,6 +168,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Metamagic.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestsricted.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Movement.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Selectors.cs" />
