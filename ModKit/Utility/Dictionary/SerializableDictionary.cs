@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -6,8 +7,7 @@ using System.Xml.Serialization;
 namespace ModKit.Utility
 {
     [XmlRoot("SerializableDictionary")]
-    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
-    {
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable, IUpdatableSettings {
         public SerializableDictionary() : base() { }
 
         public SerializableDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
@@ -16,7 +16,11 @@ namespace ModKit.Utility
         {
             return null;
         }
-
+        public void AddMissingKeys(IUpdatableSettings from) {
+            if (from is SerializableDictionary<TKey, TValue> fromDict) {
+                this.Union(fromDict.Where(k => !this.ContainsKey(k.Key))).ToDictionary(k => k.Key, v => v.Value);
+            }
+        }
         public void ReadXml(XmlReader reader)
         {
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));

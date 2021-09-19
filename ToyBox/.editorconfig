@@ -21,7 +21,7 @@ csharp_indent_switch_labels = true
 #place catch statements on a new line
 csharp_new_line_before_catch = true
 #place else statements on a new line
-csharp_new_line_before_else = true
+csharp_new_line_before_else =false
 #require members of object initializers to be on the same line
 csharp_new_line_before_members_in_object_initializers = false
 #require braces to be on a new line for types and methods (also known as "Allman" style)
@@ -121,3 +121,4 @@ dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 #prefer properties to be prefaced with this. in C# or Me. in Visual Basic
 dotnet_style_qualification_for_property = true:suggestion
+csharp_space_after_semicolon_in_for_statement=false

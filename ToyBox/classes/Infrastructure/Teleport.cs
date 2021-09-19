@@ -14,6 +14,7 @@ using Kingmaker.Globalmap.View;
 using Kingmaker.Globalmap;
 using Kingmaker.Utility;
 using Kingmaker.EntitySystem.Persistence;
+using ModKit;
 
 namespace ToyBox {
 
@@ -29,16 +30,15 @@ namespace ToyBox {
                     || currentMode == GameModeType.GlobalMap
                     )
                 ) {
-                
                 if (currentMode == GameModeType.GlobalMap) {
-                    if (Input.GetKeyDown(Settings.teleportPartyHotKey))
+                    if (UI.KeyBindings.IsActive("TeleportParty"))
                         TeleportPartyOnGlobalMap();
                 }
-                else if (Input.GetKeyDown(Settings.teleportMainHotKey))
+                if (UI.KeyBindings.IsActive("TeleportMain"))
                     TeleportUnit(Game.Instance.Player.MainCharacter.Value, PointerPosition());
-                else if (Input.GetKeyDown(Settings.teleportSelectedHotKey))
+                if (UI.KeyBindings.IsActive("TeleportSelected"))
                     TeleportSelected();
-                else if (Input.GetKeyDown(Settings.teleportPartyHotKey))
+                if (UI.KeyBindings.IsActive("TeleportParty"))
                     TeleportParty();
             }
         }

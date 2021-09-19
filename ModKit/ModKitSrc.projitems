@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Pickers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Toggles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Wrappers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\EmbeddedResourceUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\CodeInstructionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\DoubleDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\RichTextExtensions.cs" />
@@ -34,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\GUIHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+KeyBindings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Logging.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\ModSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\NamedTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\SerializableDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\TripleDictionary.cs" />

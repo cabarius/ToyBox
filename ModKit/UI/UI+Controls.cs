@@ -17,7 +17,6 @@ namespace ModKit {
         }
 
         // Controls
-
         public static String TextField(ref String text, String name = null, params GUILayoutOption[] options) {
             if (name != null) { GUI.SetNextControlName(name); }
             text = GL.TextField(text, options);

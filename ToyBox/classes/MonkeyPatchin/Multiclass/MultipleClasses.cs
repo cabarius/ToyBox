@@ -219,9 +219,9 @@ namespace ToyBox.Multiclass {
             }
         }
 #endif
-#endregion
+        #endregion
 
-#region Skills & Features
+        #region Skills & Features
 
         [HarmonyPatch(typeof(LevelUpController))]
         [HarmonyPatch("ApplyLevelup")]
@@ -244,17 +244,17 @@ namespace ToyBox.Multiclass {
             static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
-                    modLogger.Log($"ApplyClassMechanics.Apply.Postfix - unit: {unit} {unit.CharacterName}");
+                    //modLogger.Log($"ApplyClassMechanics.Apply.Postfix - unit: {unit} {unit.CharacterName}");
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
                             unit.SetClassIsGestalt(state.SelectedClass, true);
-                            modLogger.Log($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}{state.SelectedClass.Archetypes}[{state.NextClassLevel}], {unit}) mythic: {state.IsMythicClassSelected} vs {state.SelectedClass.IsMythic}");
+                            //modLogger.Log($" - {nameof(ApplyClassMechanics)}.{nameof(ApplyClassMechanics.Apply)}*({state.SelectedClass}{state.SelectedClass.Archetypes}[{state.NextClassLevel}], {unit}) mythic: {state.IsMythicClassSelected} vs {state.SelectedClass.IsMythic}");
 
                             __instance.Apply_NoStatsAndHitPoints(state, unit);
                         });
                     }
                     List<BlueprintCharacterClass> allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
-                    modLogger.Log($"ApplyClassMechanics.Apply.Postfix - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
+                    //modLogger.Log($"ApplyClassMechanics.Apply.Postfix - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
                     allAppliedClasses.Add(state.SelectedClass);
                     SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
                     HPDice.ApplyHPDice(unit, state, allAppliedClasses.ToArray());
@@ -322,9 +322,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#endregion
+        #endregion
 
-#region Spellbook
+        #region Spellbook
 
         [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         static class ApplySpellbook_Apply_Patch {
@@ -387,7 +387,7 @@ namespace ToyBox.Multiclass {
             }
         }
 #endif
-#endregion
+        #endregion
 
         public static void UpdateLevelsForGestalt(this UnitProgressionData __instance) {
             __instance.m_CharacterLevel = new int?(0);
@@ -401,8 +401,7 @@ namespace ToyBox.Multiclass {
                         nullable = __instance.m_MythicLevel;
                         int level = classData.Level;
                         __instance.m_MythicLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
-                    }
-                    else {
+                    } else {
                         nullable = __instance.m_CharacterLevel;
                         int level = classData.Level;
                         __instance.m_CharacterLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();

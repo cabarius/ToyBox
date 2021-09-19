@@ -8,42 +8,7 @@ using GL = UnityEngine.GUILayout;
 using ModKit;
 using ModKit.Utility;
 
-namespace ToyBox {
-
-    static class Keys {
-        static private KeyCode[] mouseButtonsValid = { KeyCode.Mouse3, KeyCode.Mouse4, KeyCode.Mouse5, KeyCode.Mouse6 };
-        public static void SetKeyBinding(string title, ref KeyCode keyCode, float indent = 0, float titleWidth = 0) {
-            string label = (keyCode == KeyCode.None) ? "Press Key" : keyCode.ToString();
-            using (UI.HorizontalScope()) {
-                UI.Space(indent);
-                UI.Label(title.bold(), titleWidth == 0 ? UI.ExpandWidth(false) : UI.Width(titleWidth));
-                UI.Space(25);
-                if (GL.Button(label, UI.Width(200))) {
-                    keyCode = KeyCode.None;
-                }
-                // Having this be conditionally rendered causes a race condition with it being frequently evaluated on state changes
-                // Ideal fix is probably to change how we're capturing mouse input instead, but this is a quick fix.
-                UI.Space(25);
-                UI.Label(keyCode != KeyCode.None ? "press to reassign".green() : "");
-
-                if (keyCode == KeyCode.None && Event.current != null) {
-                    if (Event.current.isKey) {
-                        keyCode = Event.current.keyCode;
-                        Input.ResetInputAxes();
-                        return;
-                    }
-
-                    foreach (var mouseButton in mouseButtonsValid) {
-                        if (Input.GetKey(mouseButton)) {
-                            keyCode = mouseButton;
-                            Input.ResetInputAxes();
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }
+namespace ToyBox { 
     public static class HotkeyHelper {
         public static bool CanBeRegistered(string bindingName, KeyBindingData bindingKey,
             KeyboardAccess.GameModesGroup gameMode = KeyboardAccess.GameModesGroup.World) {

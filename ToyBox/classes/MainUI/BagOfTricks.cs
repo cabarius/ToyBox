@@ -87,9 +87,9 @@ namespace ToyBox {
                     if (settings.toggleTeleportKeysEnabled) {
                         UI.Space(100);
                         using (UI.VerticalScope()) {
-                            Keys.SetKeyBinding("Main Character", ref settings.teleportMainHotKey, 0, 200);
-                            Keys.SetKeyBinding("Selected Chars.", ref settings.teleportSelectedHotKey, 0, 200);
-                            Keys.SetKeyBinding("Whole Party", ref settings.teleportPartyHotKey, 0, 200);
+                            UI.KeyBindPicker("TeleportMain", "Main Character", 0, 200);
+                            UI.KeyBindPicker("TeleportSelected", "Selected Chars.", 0, 200);
+                            UI.KeyBindPicker("TeleportParty", "Whole Party", 0, 200);
                         }
                     }
                 },

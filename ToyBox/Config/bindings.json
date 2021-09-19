@@ -1,0 +1,30 @@
+{
+  "$id": "1",
+  "TeleportMain": {
+    "$id": "2",
+    "ID": "TeleportMain",
+    "Key": "Comma",
+    "Ctrl": false,
+    "Alt": false,
+    "Cmd": false,
+    "Shift": false
+  },
+  "TeleportSelected": {
+    "$id": "3",
+    "ID": "TeleportSelected",
+    "Key": "Period",
+    "Ctrl": false,
+    "Alt": false,
+    "Cmd": false,
+    "Shift": false
+  },
+  "TeleportParty": {
+    "$id": "4",
+    "ID": "TeleportParty",
+    "Key": "Slash",
+    "Ctrl": false,
+    "Alt": false,
+    "Cmd": false,
+    "Shift": false
+  }
+}
