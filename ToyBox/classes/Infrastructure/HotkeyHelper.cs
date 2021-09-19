@@ -21,21 +21,23 @@ namespace ToyBox {
                 if (GL.Button(label, UI.Width(200))) {
                     keyCode = KeyCode.None;
                 }
-                if (keyCode != KeyCode.None) {
-                    UI.Space(25);
-                    UI.Label("press to reassign".green());
-                }
+                // Having this be conditionally rendered causes a race condition with it being frequently evaluated on state changes
+                // Ideal fix is probably to change how we're capturing mouse input instead, but this is a quick fix.
+                UI.Space(25);
+                UI.Label(keyCode != KeyCode.None ? "press to reassign".green() : "");
+
                 if (keyCode == KeyCode.None && Event.current != null) {
                     if (Event.current.isKey) {
                         keyCode = Event.current.keyCode;
                         Input.ResetInputAxes();
+                        return;
                     }
-                    else {
-                        foreach (KeyCode mouseButton in mouseButtonsValid) {
-                            if (Input.GetKey(mouseButton)) {
-                                keyCode = mouseButton;
-                                Input.ResetInputAxes();
-                            }
+
+                    foreach (var mouseButton in mouseButtonsValid) {
+                        if (Input.GetKey(mouseButton)) {
+                            keyCode = mouseButton;
+                            Input.ResetInputAxes();
+                            return;
                         }
                     }
                 }
