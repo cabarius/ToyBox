@@ -18,6 +18,7 @@ Ver 1.3.7
     Added search 'n pick categories for Dialog, Cues and Answers
     Movement speed multiplier now affects when you interact with a map object or npc
     Coming soon - quick key support on Cheat Buttons in Bag of Tricks Tab
+    (ArcaneTrixter) Added option to use legendary hero leveling as non-legends.
 Ver 1.3.6
     Fixed party speed multipliers to work with latest update of the game
     (ArcaneTrixter) Added requested multiplier for Arcanist spell slots.
