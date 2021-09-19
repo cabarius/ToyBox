@@ -54,6 +54,7 @@ namespace ModKit {
             public bool IsEmpty { get { return Key == KeyCode.None && !Ctrl && !Alt && !Shift; } }
             public bool IsActive {
                 get {
+                    if (Event.current == null) return false;
                     var keyCode = Event.current.keyCode;
                     var ctrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
                     var altDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
