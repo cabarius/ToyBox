@@ -89,6 +89,7 @@ namespace ToyBox {
         public bool toggleSkipSpellSelection = false;
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
+        public bool toggleLegendaryLeveling = false;
 
         // Multipliers
         public int encumberanceMultiplier = 1;

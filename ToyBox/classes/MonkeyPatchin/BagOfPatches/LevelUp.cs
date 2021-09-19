@@ -3,10 +3,12 @@
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
@@ -29,6 +31,33 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleNoLevelUpRestrictions) {
                     __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitProgressionData))]
+        static class UnitProgressionData_LegendaryHero_Patch {
+            [HarmonyPatch("ExperienceTable", MethodType.Getter)]
+            private static void Postfix(ref BlueprintStatProgression __result) {
+                __result = !settings.toggleLegendaryLeveling
+                        ? Game.Instance.BlueprintRoot.Progression.XPTable
+                        : Game.Instance.BlueprintRoot.Progression.LegendXPTable.Or(null)
+                          ?? Game.Instance.BlueprintRoot.Progression.XPTable;
+            }
+
+            [HarmonyPatch("MaxCharacterLevel", MethodType.Getter)]
+            private static void Postfix(ref int __result) {
+                if (settings.toggleLegendaryLeveling) {
+                    __result = 40;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(ProgressionRoot), "XPTable", MethodType.Getter)]
+        static class ProgressionRoot_FixExperienceBar_Patch {
+            public static void Postfix(ref BlueprintStatProgression __result, ProgressionRoot __instance) {
+                if (settings.toggleLegendaryLeveling) {
+                    __result = __instance.LegendXPTable;
                 }
             }
         }
