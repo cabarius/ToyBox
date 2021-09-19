@@ -45,7 +45,7 @@ namespace ToyBox {
             }
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
-#if false    // TODO - Truinto for evaluation; my result improved from 2689 to 17 milliseconds
+#if true    // TODO - Truinto for evaluation; my result improved from 2689 to 17 milliseconds
             int loaded = 0;
             int total = 1;
             var allGUIDs = new List<BlueprintGuid> { };
