@@ -96,12 +96,15 @@ namespace ModKit {
                 bindings[identifier] = binding;
                 ModSettings.SaveSettings(modEntry, "bindings.json", bindings);
             }
-            public static void OnGUI(ModEntry modEntry) {
+            public static void OnLoad(ModEntry modEntry) {
                 if (KeyBindings.modEntry == null)
                     KeyBindings.modEntry = modEntry;
                 if (bindings == null) {
                     ModSettings.LoadSettings(modEntry, "bindings.json", ref bindings);
                 }
+            }
+            public static void OnGUI() {
+
                 foreach (var item in bindings) {
                     var identifier = item.Key;
                     var binding = item.Value;
@@ -111,6 +114,8 @@ namespace ModKit {
                         action();
                     }
                 }
+                if (Event.current.type != EventType.Layout)
+                    return;
                 // actions are registered on each render loop by BindableActionButton so we clear them here so to support disabling keybindings in the UI
                 actions.Clear();
             }
@@ -179,7 +184,8 @@ namespace ModKit {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, options)) { action(); }
             EditKeyBind(title);
-            KeyBindings.RegisterAction(title, action);
+            if (Event.current.type == EventType.Layout)
+                KeyBindings.RegisterAction(title, action);
         }
     }
 }

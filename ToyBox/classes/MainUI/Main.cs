@@ -71,6 +71,7 @@ namespace ToyBox {
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
+                UI.KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.Mod();
             }
             catch (Exception e) {
@@ -123,7 +124,7 @@ namespace ToyBox {
                 UI.Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
             }
             try {
-                UI.KeyBindings.OnGUI(modEntry);
+                UI.KeyBindings.OnGUI();
                 Event e = Event.current;
                 UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();

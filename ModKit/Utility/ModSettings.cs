@@ -25,7 +25,7 @@ namespace ModKit {
             try {
                 foreach (var res in assembly.GetManifestResourceNames()) {
                     //Logger.Log("found resource: " + res);
-                    if (res.Contains("fileName")) {
+                    if (res.Contains(fileName)) {
                         var stream = assembly.GetManifestResourceStream(res);
                         using (StreamReader reader = new StreamReader(stream)) {
                             var text = reader.ReadToEnd();
