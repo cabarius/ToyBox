@@ -46,6 +46,7 @@ namespace ToyBox {
         public static Settings settings;
         public static Mod multiclassMod;
         public static bool Enabled;
+        public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
         public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
@@ -69,6 +70,8 @@ namespace ToyBox {
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
                 modEntry.OnToggle = OnToggle;
+                modEntry.OnShowGUI = OnShowGUI;
+                modEntry.OnHideGUI = OnHideGUI;
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
@@ -156,8 +159,17 @@ namespace ToyBox {
         static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
             settings.Save(modEntry);
         }
+        static void OnShowGUI(UnityModManager.ModEntry modEntry) {
+            IsModGUIShown = true;
+        }
+
+        static void OnHideGUI(UnityModManager.ModEntry modEntry) {
+            IsModGUIShown = false;
+        }
+
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
             var currentMode = Game.Instance.CurrentMode;
+            if (IsModGUIShown) return;
             UI.KeyBindings.OnUpdate();
             if (Main.IsInGame
                 && settings.toggleTeleportKeysEnabled

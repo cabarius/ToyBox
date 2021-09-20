@@ -17,7 +17,6 @@ using Kingmaker.EntitySystem.Persistence;
 using ModKit;
 
 namespace ToyBox {
-
     public static class Teleport {
         public static Settings Settings => Main.settings;
         private static HoverHandler _hover = new HoverHandler();
