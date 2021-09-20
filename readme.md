@@ -38,7 +38,7 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
     1. Usually it is 0.0.1 higher than the current release but please check on Nexus.  If not please add a new Version entry at the top for the next release. 
     1. Don't worry too much about getting this right as Narria Cabarius will clean this up on merge so when in doubt add a new version.
     1. format your release note like like this:
-    >```(Jane/JoeCoolCollaborator) added a Coolness Multiplier tweak in Bag of Tricks that lets you raise the coolness of your gameplay```
+    >```(Jane/JoeCoolCollaborator) added a Coolness Multiplier in Bag of Tricks that makes your main character more cool```
 
 **PS**: 
 
