@@ -33,7 +33,7 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
 1.  First time and when the game updates make sure you clean the solution to trigger the publicize step
 1. build the solution debug and it will automatically build and install into the mod folder in the game
 1.  when you rebuild you can go to the mod and hit the reload button at the top to make it use the latest
-1. If you are adding a feature or fixing a bug please add a reloase note to the *readme.txt* 
+1. **Important** If you are adding a feature or fixing a bug please add a release note entry to the *readme.txt*.  This is how we tell our the world about your great work^_^
     1. Find the highest release name near the top. It will look something like `Ver 1.3.7`. 
     1. Usually it is 0.0.1 higher than the current release but please check on Nexus.  If not please add a new line for the next release
     1. don't worry too much about getting this right as Narria Cabarius will clean this up on merge
