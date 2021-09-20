@@ -19,7 +19,7 @@ namespace ModKit {
         public static GUILayoutOption[] Height(float min, float max) {
             return new GUILayoutOption[] { GL.MinHeight(min), GL.MaxHeight(max) };
         }
-        public static GUILayoutOption Height(float v) { return GL.Width(v); }
+        public static GUILayoutOption Height(float v) { return GL.Height(v); }
         public static GUILayoutOption MaxWidth(float v) { return GL.MaxWidth(v); }
         public static GUILayoutOption MaxHeight(float v) { return GL.MaxHeight(v); }
         public static GUILayoutOption MinWidth(float v) { return GL.MinWidth(v); }
@@ -41,6 +41,5 @@ namespace ModKit {
         public static void BeginVertical(GUIStyle style, params GUILayoutOption[] options) { GL.BeginHorizontal(style, options); }
 
         public static void EndVertical() { GL.BeginHorizontal(); }
-
     }
 }

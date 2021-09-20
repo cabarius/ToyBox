@@ -40,29 +40,29 @@ namespace ToyBox {
                     });
             }
             UI.Div(0, 25);
-            UI.HStack("Combat", 4,
-                () => UI.ActionButton("Rest All", () => CheatsCombat.RestAll()),
-                () => UI.ActionButton("Empowered", () => CheatsCombat.Empowered("")),
-                () => UI.ActionButton("Full Buff Please", () => CheatsCombat.FullBuffPlease("")),
-                () => UI.ActionButton("Remove Buffs", () => Actions.RemoveAllBuffs()),
-                () => UI.ActionButton("Remove Death's Door", () => CheatsCombat.DetachDebuff()),
-                () => UI.ActionButton("Kill All Enemies", () => CheatsCombat.KillAll()),
-                () => UI.ActionButton("Summon Zoo", () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""))
+            UI.HStack("Combat",2,
+                () => UI.BindableActionButton("Rest All", () => CheatsCombat.RestAll()),
+                () => UI.BindableActionButton("Empowered", () => CheatsCombat.Empowered("")),
+                () => UI.BindableActionButton("Full Buff Please", () => CheatsCombat.FullBuffPlease("")),
+                () => UI.BindableActionButton("Remove Buffs", () => Actions.RemoveAllBuffs()),
+                () => UI.BindableActionButton("Remove Death's Door", () => CheatsCombat.DetachDebuff()),
+                () => UI.BindableActionButton("Kill All Enemies", () => CheatsCombat.KillAll()),
+                () => UI.BindableActionButton("Summon Zoo", () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""))
                 );
             UI.Div(0, 25);
-            UI.HStack("Common", 4,
-                () => UI.ActionButton("Teleport Party To You", () => Teleport.TeleportPartyToPlayer()),
-                () => UI.ActionButton("Go To Global Map", () => Teleport.TeleportToGlobalMap()),
-                () => UI.ActionButton("Reroll Perception", () => Actions.RunPerceptionTriggers()),
+            UI.HStack("Common", 2,
+                () => UI.BindableActionButton("Teleport Party To You", () => Teleport.TeleportPartyToPlayer()),
+                () => UI.BindableActionButton("Go To Global Map", () => Teleport.TeleportToGlobalMap()),
+                () => UI.BindableActionButton("Reroll Perception", () => Actions.RunPerceptionTriggers()),
+                () => { UI.BindableActionButton("Change Party", () => { Actions.ChangeParty(); }); },
                 () => {
-                    UI.ActionButton("Set Perception to 40", () => {
+                    UI.NonBindableActionButton("Set Perception to 40", () => {
                         CheatsCommon.StatPerception();
                         Actions.RunPerceptionTriggers();
                     });
                 },
-                () => UI.ActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
-                () => UI.ActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
-                () => { UI.ActionButton("Change Party", () => { Actions.ChangeParty(); }); },
+                () => UI.NonBindableActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
+                () => UI.NonBindableActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
                 () => { }
                 );
             UI.Div(0, 25);

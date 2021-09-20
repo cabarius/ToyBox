@@ -12,6 +12,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.7
+    You can know add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 
     HotKeys now recognize shift, alt, ctrl, alt and command key combos
     Teleport Party Key now works on Global or City Map
     Search 'n Pick - You can now Unstart Etudes which can help fix broken progression

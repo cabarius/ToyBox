@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 namespace ModKit {
 
     static partial class UI {
+        private const float V = 10f;
         static private KeyCode[] mouseButtonsValid = { KeyCode.Mouse3, KeyCode.Mouse4, KeyCode.Mouse5, KeyCode.Mouse6 };
         public static bool IsModifier(this KeyCode code)
             => code == KeyCode.LeftControl || code == KeyCode.RightControl
@@ -21,13 +22,27 @@ namespace ModKit {
             || code == KeyCode.LeftShift || code == KeyCode.RightShift
             || code == KeyCode.LeftCommand || code == KeyCode.RightCommand;
         public static bool IsControl(this KeyCode code)
+            => code == KeyCode.LeftControl || code == KeyCode.RightControl;
+        public static bool IsAlt(this KeyCode code)
             => code == KeyCode.LeftAlt || code == KeyCode.RightAlt;
         public static bool IsCommand(this KeyCode code)
             => code == KeyCode.LeftCommand || code == KeyCode.RightCommand;
-        public static bool IsAlt(this KeyCode code)
-            => code == KeyCode.LeftControl || code == KeyCode.RightControl;
         public static bool IsShift(this KeyCode code)
             => code == KeyCode.LeftShift || code == KeyCode.RightShift;
+
+        private static GUIStyle _hotkeyStyle;
+        public static GUIStyle hotkeyStyle {
+            get {
+                if (_hotkeyStyle == null)
+                    _hotkeyStyle = new GUIStyle(GUI.skin.textArea) {
+                        fixedHeight = 35,
+                        margin = new RectOffset(3, 3, 3, 3),
+                        fontSize = 25,
+                        richText = true
+                    };
+                return _hotkeyStyle;
+            }
+        }
 
         [Serializable]
         public class KeyBind {
@@ -54,7 +69,8 @@ namespace ModKit {
             public bool IsEmpty { get { return Key == KeyCode.None && !Ctrl && !Alt && !Shift; } }
             public bool IsActive {
                 get {
-                    if (Event.current == null) return false;
+                    if (Event.current == null)
+                        return false;
                     var keyCode = Event.current.keyCode;
                     var ctrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
                     var altDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
@@ -67,17 +83,15 @@ namespace ModKit {
                         && shiftDown == Shift;
                 }
             }
-            public override string ToString() {
+            public override string ToString() { // Why can't Unity display these ⌥⌃⇧⌘ ???  ⌗⌃⌥⇧⇑⌂©ăåâÂ
                 var result = "";
                 if (Ctrl)
-                    result += "Ctrl+";
-                if (Alt)
-                    result += "Alt+";
-                if (Cmd)
-                    result += "Cmd+";
+                    result += "^".cyan();
                 if (Shift)
-                    result += "Shift+";
-                return result + Key.ToString();
+                    result += "⇑".cyan();
+                if (Alt || Cmd)
+                    result += "Alt".cyan();
+                return result + (Ctrl || Shift || Alt ? "+".cyan() : "") + Key.ToString();
             }
         }
         public static class KeyBindings {
@@ -104,8 +118,7 @@ namespace ModKit {
                     ModSettings.LoadSettings(modEntry, "bindings.json", ref bindings);
                 }
             }
-            public static void OnGUI() {
-
+            public static void OnUpdate() {
                 foreach (var item in bindings) {
                     var identifier = item.Key;
                     var binding = item.Value;
@@ -115,35 +128,46 @@ namespace ModKit {
                         action();
                     }
                 }
+            }
+            public static void OnGUI() {
                 if (Event.current.type != EventType.Layout)
                     return;
                 // actions are registered on each render loop by BindableActionButton so we clear them here so to support disabling keybindings in the UI
                 actions.Clear();
             }
         }
+
         static string selectedIdentifier = null;
         static KeyBind oldValue = null;
-        public static KeyBind EditKeyBind(string identifier) {
+        public static KeyBind EditKeyBind(string identifier, bool showHint = true, params GUILayoutOption[] options) {
             var keyBind = KeyBindings.GetBinding(identifier);
             bool isEditing = identifier == selectedIdentifier;
             bool isEditingOther = selectedIdentifier != null && identifier != selectedIdentifier && oldValue != null;
-            string label = keyBind.IsEmpty ? (isEditing ? "Cancel" : "Bind") : "Hotkey:".cyan() + " " + keyBind.ToString().orange().bold();
-            if (GL.Button(label, UI.AutoWidth())) {
-                if (isEditing  || isEditingOther) {
-                    KeyBindings.SetBinding(selectedIdentifier, oldValue);
-                    if (isEditing) {
-                        selectedIdentifier = null;
-                        oldValue = null;
-                        return KeyBindings.GetBinding(identifier);
+            string label = keyBind.IsEmpty ? (isEditing ? "Cancel" : "Bind") : keyBind.ToString().orange().bold();
+            showHint = showHint && isEditing;
+            using (UI.VerticalScope(options)) {
+                UI.Space(10);
+                if (GL.Button(label, hotkeyStyle, UI.AutoWidth())) {
+                    if (isEditing || isEditingOther) {
+                        KeyBindings.SetBinding(selectedIdentifier, oldValue);
+                        if (isEditing) {
+                            selectedIdentifier = null;
+                            oldValue = null;
+                            return KeyBindings.GetBinding(identifier);
+                        }
                     }
+                    selectedIdentifier = identifier;
+                    oldValue = keyBind;
+                    keyBind = new KeyBind(identifier);
+                    KeyBindings.SetBinding(identifier, keyBind);
                 }
-                selectedIdentifier = identifier;
-                oldValue = keyBind;
-                keyBind = new KeyBind(identifier);
-                KeyBindings.SetBinding(identifier, keyBind);
+                if (showHint) {
+                    var hint = "";
+                    if (keyBind.IsEmpty)
+                        hint = oldValue == null ? "set key binding".green() : "press key".green();
+                    UI.Label(hint);
+                }
             }
-            UI.Space(25);
-            UI.Label(keyBind.IsEmpty ? (oldValue == null ? "push to pick key binding".green() : "type key combo to assign".cyan()) : "");
             if (isEditing && keyBind.IsEmpty && Event.current != null) {
                 var IsCtrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
                 var IsAltDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
@@ -162,7 +186,7 @@ namespace ModKit {
                 foreach (var mouseButton in mouseButtonsValid) {
                     if (Input.GetKey(mouseButton)) {
                         var mouseCode = mouseButton;
-                        keyBind = new KeyBind(identifier, mouseCode, IsCtrlDown, IsAltDown, IsShiftDown);
+                        keyBind = new KeyBind(identifier, keyCode, IsCtrlDown, IsAltDown, IsCmdDown, IsShiftDown);
                         KeyBindings.SetBinding(identifier, keyBind);
                         selectedIdentifier = null;
                         oldValue = null;
@@ -178,15 +202,27 @@ namespace ModKit {
                 UI.Space(indent);
                 UI.Label(title.bold(), titleWidth == 0 ? UI.ExpandWidth(false) : UI.Width(titleWidth));
                 UI.Space(25);
-                var keyBind = EditKeyBind(identifier);
+                var keyBind = EditKeyBind(identifier, true);
             }
         }
-        public static void BindableActionButton(String title, Action action, params GUILayoutOption[] options) {
-            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
+
+        // One stop shop for making an instant button that you want to let a player bind to a key in game
+        public static void BindableActionButton(String title, Action action, bool showHint = false, params GUILayoutOption[] options) {
+            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             if (GL.Button(title, options)) { action(); }
-            EditKeyBind(title);
+            EditKeyBind(title, true, UI.Width(200));
             if (Event.current.type == EventType.Layout)
                 KeyBindings.RegisterAction(title, action);
         }
+
+        // Action button designed to live in a collection with a BindableActionButton
+        public static void NonBindableActionButton(String title, Action action, bool showHint = false, params GUILayoutOption[] options) {
+            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
+            if (GL.Button(title, options)) { action(); }
+            UI.Space(204);
+            if (Event.current.type == EventType.Layout)
+                KeyBindings.RegisterAction(title, action);
+        }
+
     }
 }

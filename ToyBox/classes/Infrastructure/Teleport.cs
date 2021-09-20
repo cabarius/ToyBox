@@ -21,38 +21,6 @@ namespace ToyBox {
     public static class Teleport {
         public static Settings Settings => Main.settings;
         private static HoverHandler _hover = new HoverHandler();
-        public static void OnUpdate() {
-            var currentMode = Game.Instance.CurrentMode;
-            if (Main.IsInGame 
-                && Settings.toggleTeleportKeysEnabled
-                && (currentMode == GameModeType.Default 
-                    || currentMode == GameModeType.Pause
-                    || currentMode == GameModeType.GlobalMap
-                    )
-                ) {
-                if (currentMode == GameModeType.GlobalMap) {
-                    if (UI.KeyBindings.IsActive("TeleportParty"))
-                        TeleportPartyOnGlobalMap();
-                }
-                if (UI.KeyBindings.IsActive("TeleportMain"))
-                    TeleportUnit(Game.Instance.Player.MainCharacter.Value, PointerPosition());
-                if (UI.KeyBindings.IsActive("TeleportSelected"))
-                    TeleportSelected();
-                if (UI.KeyBindings.IsActive("TeleportParty"))
-                    TeleportParty();
-            }
-        }
-
-        private static Vector3 PointerPosition() {
-            Vector3 result = new Vector3();
-
-            Camera camera = Game.GetCamera();
-            RaycastHit raycastHit = default(RaycastHit);
-            if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out raycastHit, camera.farClipPlane, 21761)) {
-                result = raycastHit.point;
-            }
-            return result;
-        }
 
         private static void TeleportUnit(UnitEntityData unit, Vector3 position) {
             UnitEntityView view = unit.View;
@@ -68,15 +36,15 @@ namespace ToyBox {
             }
         }
 
-        private static void TeleportSelected() {
+        public static void TeleportSelected() {
             foreach (var unit in Game.Instance.UI.SelectionManager.SelectedUnits) {
-                TeleportUnit(unit, PointerPosition());
+                TeleportUnit(unit, Utils.PointerPosition());
             }
         }
 
-        private static void TeleportParty() {
+        public static void TeleportParty() {
             foreach (var unit in Game.Instance.Player.m_PartyAndPets) {
-                TeleportUnit(unit, PointerPosition());
+                TeleportUnit(unit, Utils.PointerPosition());
             }
         }
         public static void TeleportPartyToPlayer() {
@@ -104,9 +72,9 @@ namespace ToyBox {
                 }
             }
         }
-        private static void TeleportPartyOnGlobalMap() {
+        public static void TeleportPartyOnGlobalMap() {
             GlobalMapView mapView = GlobalMapView.Instance;
-            var pointerPos = PointerPosition();
+            var pointerPos = Utils.PointerPosition();
             var pointerTransform = (new GameObject()).transform;
             pointerTransform.position = pointerPos;
             var locationToObject = GlobalMapView.Instance.GetNearestLocationToObject(pointerTransform);
@@ -187,6 +155,10 @@ namespace ToyBox {
                 if (_currentUnit != null)
                     Unit = _currentUnit;
             }
+        }
+
+        internal static void TeleportUnit(UnitEntityData value, object p) {
+            throw new NotImplementedException();
         }
     }
 }

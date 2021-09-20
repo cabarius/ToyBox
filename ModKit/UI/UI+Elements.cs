@@ -23,7 +23,6 @@ namespace ModKit {
 
             GUI.Box(position, GUIContent.none, FillStyle(color));
         }
-
         private static GUIStyle _buttonStyle;
         public static GUIStyle buttonStyle { get { 
                 if (_buttonStyle == null) _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft };

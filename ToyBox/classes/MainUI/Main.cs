@@ -13,6 +13,7 @@ using ToyBox.Multiclass;
 using ModKit;
 using ModKit.Utility;
 using ToyBox.classes.MainUI;
+using Kingmaker.GameModes;
 
 namespace ToyBox {
 #if DEBUG
@@ -90,12 +91,6 @@ namespace ToyBox {
             Enabled = value;
             return true;
         }
-
-        // temporary teleport keys
-        private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
-            Teleport.OnUpdate();
-        }
-
         static void ResetSearch() {
             BlueprintBrowser.ResetSearch();
         }
@@ -160,6 +155,28 @@ namespace ToyBox {
 
         static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
             settings.Save(modEntry);
+        }
+        private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
+            var currentMode = Game.Instance.CurrentMode;
+            UI.KeyBindings.OnUpdate();
+            if (Main.IsInGame
+                && settings.toggleTeleportKeysEnabled
+                && (currentMode == GameModeType.Default
+                    || currentMode == GameModeType.Pause
+                    || currentMode == GameModeType.GlobalMap
+                    )
+                ) {
+                if (currentMode == GameModeType.GlobalMap) {
+                    if (UI.KeyBindings.IsActive("TeleportParty"))
+                        Teleport.TeleportPartyOnGlobalMap();
+                }
+                if (UI.KeyBindings.IsActive("TeleportMain"))
+                    Teleport.TeleportUnit(Game.Instance.Player.MainCharacter.Value, Utils.PointerPosition());
+                if (UI.KeyBindings.IsActive("TeleportSelected"))
+                    Teleport.TeleportSelected();
+                if (UI.KeyBindings.IsActive("TeleportParty"))
+                    Teleport.TeleportParty();
+            }
         }
     }
 }
