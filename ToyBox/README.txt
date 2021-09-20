@@ -19,7 +19,7 @@ Ver 1.3.7
     Added search 'n pick categories for Dialog, Cues and Answers
     Movement speed multiplier now affects when you interact with a map object or npc
     (ArcaneTrixter) Added option to use legendary hero leveling as non-legends.
-    (ArcaneTrixter) Added a number of things around caster levels and spellbooks, including a +1/-1 caster level for any spellbook.
+    (ArcaneTrixter) Added a number of things around caster levels and spellbooks, including a +1/-1 caster level for any spellbook - Experimental
 Ver 1.3.6
     Fixed party speed multipliers to work with latest update of the game
     (ArcaneTrixter) Added requested multiplier for Arcanist spell slots.
