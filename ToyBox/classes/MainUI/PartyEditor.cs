@@ -15,6 +15,7 @@ using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
+using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -111,6 +112,10 @@ namespace ToyBox {
             else {
                 UI.Space(170);
             }
+#if DEBUG
+            UI.ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
+                UI.AutoWidth());
+#endif
         }
         public static void OnGUI() {
             var player = Game.Instance.Player;
@@ -450,8 +455,12 @@ namespace ToyBox {
                                     },
                                     UI.AutoWidth()
                                 );
+                                UI.Space(20);
+                                if (casterLevel > 0) {
+                                    UI.ActionButton("-1 CL", () => CasterHelpers.LowerCasterLevel(spellbook), UI.AutoWidth());
+                                }
                                 if (casterLevel < 20) {
-                                    UI.ActionButton("+1 Caster Level", () => spellbook.AddBaseLevel());
+                                    UI.ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), UI.AutoWidth());
                                 }
                             }
                             FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
