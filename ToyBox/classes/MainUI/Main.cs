@@ -115,6 +115,7 @@ namespace ToyBox {
         static void OnGUI(UnityModManager.ModEntry modEntry) {
             Main.modEntry = modEntry;
             if (!Enabled) return;
+            IsModGUIShown = true;
             if (!IsInGame) {
                 UI.Label("ToyBox has limited functionality from the main menu".yellow().bold());
             }

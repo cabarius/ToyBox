@@ -29,7 +29,7 @@ namespace ModKit {
                         var stream = assembly.GetManifestResourceStream(res);
                         using (StreamReader reader = new StreamReader(stream)) {
                             var text = reader.ReadToEnd();
-                            Logger.Log($"read: {text}");
+                            //Logger.Log($"read: {text}");
                             settings = JsonConvert.DeserializeObject<T>(text);
                             //Logger.Log($"read settings: {string.Join(Environment.NewLine, settings)}");
                         }

@@ -12,10 +12,14 @@ using static UnityModManagerNet.UnityModManager;
 using Newtonsoft.Json;
 
 namespace ModKit {
-
     static partial class UI {
+#if DEBUG
+        private const bool debugKeyBind = true;
+#else
+        private const bool debugKeyBind = false;
+#endif
         private const float V = 10f;
-        static private KeyCode[] mouseButtonsValid = { KeyCode.Mouse3, KeyCode.Mouse4, KeyCode.Mouse5, KeyCode.Mouse6 };
+        static private HashSet<KeyCode> allowedMouseButtons = new HashSet<KeyCode> { KeyCode.Mouse3, KeyCode.Mouse4, KeyCode.Mouse5, KeyCode.Mouse6 };
         public static bool IsModifier(this KeyCode code)
             => code == KeyCode.LeftControl || code == KeyCode.RightControl
             || code == KeyCode.LeftAlt || code == KeyCode.RightAlt
@@ -43,8 +47,6 @@ namespace ModKit {
                 return _hotkeyStyle;
             }
         }
-
-        [Serializable]
         public class KeyBind {
             [JsonProperty]
             public string ID;
@@ -66,18 +68,40 @@ namespace ModKit {
                 Cmd = cmd;
                 Shift = shift;
             }
-            public bool IsEmpty { get { return Key == KeyCode.None && !Ctrl && !Alt && !Shift; } }
+            public bool IsEmpty { get { return Key == KeyCode.None; } }
+            public bool IsKeyCodeActive {get {
+                    if (Key == KeyCode.None) {
+                        if (debugKeyBind) Logger.Log($"        keyCode: {Key} --> not active");
+                        return false;
+                    }
+                    if (allowedMouseButtons.Contains(Key)) {
+                        if (Input.GetKey(Key))
+                            if (debugKeyBind) Logger.Log($"        mouseKey: {Key} --> active");
+                        return Input.GetKey(Key);
+                    }
+                    if (Key == Event.current.keyCode && Input.GetKey(Key))
+                        if (debugKeyBind) Logger.Log($"        keyCode: {Key} --> active");
+                    return Key == Event.current.keyCode && Input.GetKey(Key);
+                }
+            }
             public bool IsActive {
                 get {
                     if (Event.current == null)
                         return false;
-                    var keyCode = Event.current.keyCode;
+                    if (!IsKeyCodeActive)
+                        return false;
                     var ctrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
                     var altDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
                     var cmdDown = Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
                     var shiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-                    return keyCode == Key
+                    // note we already checked Key above
+                    if (debugKeyBind 
                         && ctrlDown == Ctrl
+                        && altDown == Alt
+                        && cmdDown == Cmd
+                        && shiftDown == Shift)
+                        Logger.Log($"        ctrl: {Ctrl} shift: {Shift} cmd: {Cmd} Alt: {Alt} --> ACTIVE");
+                    return ctrlDown == Ctrl
                         && altDown == Alt
                         && cmdDown == Cmd
                         && shiftDown == Shift;
@@ -118,14 +142,27 @@ namespace ModKit {
                     ModSettings.LoadSettings(modEntry, "bindings.json", ref bindings);
                 }
             }
+            static KeyBind lastTriggered = null;
             public static void OnUpdate() {
+                if (lastTriggered != null) {
+                    if (debugKeyBind) Logger.Log($"    lastTriggered: {lastTriggered} - IsActive: {lastTriggered.IsActive}");
+                    if (!lastTriggered.IsActive) {
+                        if (debugKeyBind) Logger.Log($"    lastTriggered: {lastTriggered} - Finished".green());
+                        lastTriggered = null;
+                    }
+                }
                 foreach (var item in bindings) {
                     var identifier = item.Key;
                     var binding = item.Value;
                     if (binding.IsActive && actions.ContainsKey(identifier)) {
-                        Action action;
-                        actions.TryGetValue(identifier, out action);
-                        action();
+                        if (debugKeyBind) Logger.Log($"    binding: {binding.ToString()} - lastTriggered: {lastTriggered}");
+                        if (binding != lastTriggered) {
+                            if (debugKeyBind) Logger.Log($"    firing action: {identifier}".cyan());
+                            Action action;
+                            actions.TryGetValue(identifier, out action);
+                            action();
+                            lastTriggered = binding;
+                        }
                     }
                 }
             }
@@ -169,13 +206,21 @@ namespace ModKit {
                 }
             }
             if (isEditing && keyBind.IsEmpty && Event.current != null) {
-                var IsCtrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-                var IsAltDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
-                var IsCmdDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
-                var IsShiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+                var isCtrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+                var isAltDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+                var isCmdDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+                var isShiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
                 var keyCode = Event.current.keyCode;
+                //Logger.Log($"    {keyCode.ToString()} ctrl:{isCtrlDown} alt:{isAltDown} cmd: {isCmdDown} shift: {isShiftDown}");
+                if (keyCode == KeyCode.Escape || keyCode == KeyCode.Backspace) {
+                    selectedIdentifier = null;
+                    oldValue = null;
+                    //Logger.Log("   unbound");
+                    return KeyBindings.GetBinding(identifier);
+                }
                 if (Event.current.isKey && !keyCode.IsModifier()) {
-                    keyBind = new KeyBind(identifier, keyCode, IsCtrlDown, IsAltDown, IsCmdDown, IsShiftDown);
+                    keyBind = new KeyBind(identifier, keyCode, isCtrlDown, isAltDown, isCmdDown, isShiftDown);
+                    Logger.Log($"    currentEvent isKey - bind: {keyBind}");
                     KeyBindings.SetBinding(identifier, keyBind);
                     selectedIdentifier = null;
                     oldValue = null;
@@ -183,10 +228,9 @@ namespace ModKit {
                     return keyBind;
                 }
 
-                foreach (var mouseButton in mouseButtonsValid) {
+                foreach (var mouseButton in allowedMouseButtons) {
                     if (Input.GetKey(mouseButton)) {
-                        var mouseCode = mouseButton;
-                        keyBind = new KeyBind(identifier, keyCode, IsCtrlDown, IsAltDown, IsCmdDown, IsShiftDown);
+                        keyBind = new KeyBind(identifier, mouseButton, isCtrlDown, isAltDown, isCmdDown, isShiftDown);
                         KeyBindings.SetBinding(identifier, keyBind);
                         selectedIdentifier = null;
                         oldValue = null;
