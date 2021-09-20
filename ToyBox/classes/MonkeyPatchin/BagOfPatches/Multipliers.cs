@@ -23,6 +23,8 @@ using Kingmaker.Globalmap.View;
 using Kingmaker.Settings;
 using Kingmaker.Settings.Difficulty;
 using ModKit;
+using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Utility;
 
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
@@ -164,6 +166,26 @@ namespace ToyBox.BagOfPatches {
                 }
 
                 //Main.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemEntity), "AddEnchantment", new Type[] {
+            typeof(BlueprintItemEnchantment),
+            typeof(MechanicsContext),
+            typeof(Rounds?)
+            })]
+        public static class ItemEntity_AddEnchantment_Patch {
+            public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref Rounds? duration) {
+                try {
+                    if (!parentContext?.MaybeCaster?.IsPlayersEnemy ?? false) {
+                        if (duration != null) {
+                            duration = new Rounds((int)(duration.Value.Value * settings.buffDurationMultiplierValue));
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    modLogger.Log(e.ToString());
+                }
             }
         }
 
