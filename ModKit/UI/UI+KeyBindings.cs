@@ -70,45 +70,45 @@ namespace ModKit {
                 Shift = shift;
             }
             [JsonIgnore]
-            public bool IsEmpty { get { return Key == KeyCode.None; } }
+            public bool IsEmpty => Key == KeyCode.None;
             [JsonIgnore]
-            public bool IsKeyCodeActive {get {
+            public bool IsKeyCodeActive {
+                get {
                     if (Key == KeyCode.None) {
-                        if (debugKeyBind) Logger.Log($"        keyCode: {Key} --> not active");
+                        //if (debugKeyBind) Logger.Log($"        keyCode: {Key} --> not active");
                         return false;
                     }
                     if (allowedMouseButtons.Contains(Key)) {
-                        if (Input.GetKey(Key))
-                            if (debugKeyBind) Logger.Log($"        mouseKey: {Key} --> active");
+                        //if (debugKeyBind && Input.GetKey(Key)) Logger.Log($"        mouseKey: {Key} --> active");
                         return Input.GetKey(Key);
                     }
-                    if (Key == Event.current.keyCode && Input.GetKey(Key))
-                        if (debugKeyBind) Logger.Log($"        keyCode: {Key} --> active");
-                    return Key == Event.current.keyCode && Input.GetKey(Key);
+                    bool active = Key == Event.current.keyCode; // && Input.GetKey(Key);
+                        //if (debugKeyBind) Logger.Log($"        keyCode: {Key} --> {active}");
+                    return active;
                 }
             }
             [JsonIgnore]
             public bool IsActive {
                 get {
-                    if (Event.current == null)
+                    if (Event.current == null) {
+                        //Logger.Log("        Event.current == null -> inactive");
                         return false;
-                    if (!IsKeyCodeActive)
+                    }
+                    if (!IsKeyCodeActive) {
+                        //Logger.Log("        IsKeyCodeActive == false -> inactive");
                         return false;
+                    }
                     var ctrlDown = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
                     var altDown = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
                     var cmdDown = Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
                     var shiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
                     // note we already checked Key above
-                    if (debugKeyBind 
-                        && ctrlDown == Ctrl
-                        && altDown == Alt
-                        && cmdDown == Cmd
-                        && shiftDown == Shift)
-                        Logger.Log($"        ctrl: {Ctrl} shift: {Shift} cmd: {Cmd} Alt: {Alt} --> ACTIVE");
-                    return ctrlDown == Ctrl
-                        && altDown == Alt
-                        && cmdDown == Cmd
-                        && shiftDown == Shift;
+                    bool active = ctrlDown == Ctrl
+                                && altDown == Alt
+                                && cmdDown == Cmd
+                                && shiftDown == Shift;
+                    //if (debugKeyBind) Logger.Log($"        ctrl: {ctrlDown == Ctrl} shift: {altDown == Alt} cmd: {cmdDown == Cmd} Alt: {shiftDown == Shift} --> {(ctrlDown ? "Active".cyan() : "inactive")}");
+                    return active;
                 }
             }
             public override string ToString() { // Why can't Unity display these ⌥⌃⇧⌘ ???  ⌗⌃⌥⇧⇑⌂©ăåâÂ
@@ -129,7 +129,10 @@ namespace ModKit {
             public static bool IsActive(string identifier) {
                 return GetBinding(identifier).IsActive;
             }
-            internal static void RegisterAction(string identifier, Action action) {
+            public static Action GetAction(string identifier) {
+                return actions.GetValueOrDefault(identifier, null);
+            }
+            public static void RegisterAction(string identifier, Action action) {
                 actions[identifier] = action;
             }
             internal static KeyBind GetBinding(string identifier) {
@@ -149,19 +152,28 @@ namespace ModKit {
             static KeyBind lastTriggered = null;
             public static void OnUpdate() {
                 if (lastTriggered != null) {
-                    if (debugKeyBind) Logger.Log($"    lastTriggered: {lastTriggered} - IsActive: {lastTriggered.IsActive}");
+                    if (debugKeyBind)
+                        Logger.Log($"    lastTriggered: {lastTriggered} - IsActive: {lastTriggered.IsActive}");
                     if (!lastTriggered.IsActive) {
-                        if (debugKeyBind) Logger.Log($"    lastTriggered: {lastTriggered} - Finished".green());
+                        if (debugKeyBind)
+                            Logger.Log($"    lastTriggered: {lastTriggered} - Finished".green());
                         lastTriggered = null;
                     }
                 }
+                if (debugKeyBind)
+                    Logger.Log($"looking for {Event.current.keyCode}");
                 foreach (var item in bindings) {
                     var identifier = item.Key;
                     var binding = item.Value;
-                    if (binding.IsActive && actions.ContainsKey(identifier)) {
-                        if (debugKeyBind) Logger.Log($"    binding: {binding.ToString()} - lastTriggered: {lastTriggered}");
+                    var active = binding.IsActive;
+                    if (debugKeyBind)
+                        Logger.Log($"    checking: {binding.ToString()} - IsActive: {(active ? "True".cyan() : "False")} action: {actions.ContainsKey(identifier)}");
+                    if (active && actions.ContainsKey(identifier)) {
+                        if (debugKeyBind)
+                            Logger.Log($"    binding: {binding.ToString()} - lastTriggered: {lastTriggered}");
                         if (binding != lastTriggered) {
-                            if (debugKeyBind) Logger.Log($"    firing action: {identifier}".cyan());
+                            if (debugKeyBind)
+                                Logger.Log($"    firing action: {identifier}".cyan());
                             Action action;
                             actions.TryGetValue(identifier, out action);
                             action();
@@ -169,12 +181,6 @@ namespace ModKit {
                         }
                     }
                 }
-            }
-            public static void OnGUI() {
-                if (Event.current.type != EventType.Layout)
-                    return;
-                // actions are registered on each render loop by BindableActionButton so we clear them here so to support disabling keybindings in the UI
-                actions.Clear();
             }
         }
 
@@ -255,22 +261,20 @@ namespace ModKit {
         }
 
         // One stop shop for making an instant button that you want to let a player bind to a key in game
-        public static void BindableActionButton(String title, Action action, bool showHint = false, params GUILayoutOption[] options) {
+        public static void BindableActionButton(String title, bool showHint = false, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
+            var action = KeyBindings.GetAction(title);
             if (GL.Button(title, options)) { action(); }
             EditKeyBind(title, true, UI.Width(200));
-            if (Event.current.type == EventType.Layout)
-                KeyBindings.RegisterAction(title, action);
         }
 
         // Action button designed to live in a collection with a BindableActionButton
-        public static void NonBindableActionButton(String title, Action action, bool showHint = false, params GUILayoutOption[] options) {
+        public static void NonBindableActionButton(String title, Action action, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             if (GL.Button(title, options)) { action(); }
             UI.Space(204);
             if (Event.current.type == EventType.Layout)
                 KeyBindings.RegisterAction(title, action);
         }
-
     }
 }

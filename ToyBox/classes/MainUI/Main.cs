@@ -48,6 +48,7 @@ namespace ToyBox {
         public static bool Enabled;
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
+        public static bool NeedsActionInit = true;
         public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
         static Exception caughtException = null;
@@ -87,6 +88,7 @@ namespace ToyBox {
 #if DEBUG
         static bool Unload(UnityModManager.ModEntry modEntry) {
             HarmonyInstance.UnpatchAll(modId);
+            NeedsActionInit = true;
             return true;
         }
 #endif
@@ -102,7 +104,7 @@ namespace ToyBox {
             settings = Settings.Load<Settings>(modEntry);
             settings.searchText = "";
             settings.searchLimit = 100;
-            CheapTricks.ResetGUI();
+            BagOfTricks.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
             CrusadeEditor.ResetGUI();
@@ -123,7 +125,6 @@ namespace ToyBox {
                 UI.Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
             }
             try {
-                UI.KeyBindings.OnGUI();
                 Event e = Event.current;
                 UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();
@@ -139,7 +140,7 @@ namespace ToyBox {
                         }
                         else { UI.Space(25); }
                     },
-                    new NamedAction("Bag of Tricks", () => { CheapTricks.OnGUI(); }),
+                    new NamedAction("Bag of Tricks", () => { BagOfTricks.OnGUI(); }),
 #if DEBUG
                     new NamedAction("Level Up & Multiclass", () => { LevelUp.OnGUI(); }),
 #else
@@ -169,8 +170,12 @@ namespace ToyBox {
         }
 
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
+            if (NeedsActionInit) {
+                BagOfTricks.OnLoad();
+                NeedsActionInit = false;
+            }
             var currentMode = Game.Instance.CurrentMode;
-            if (IsModGUIShown) return;
+            if (IsModGUIShown || Event.current == null || !Event.current.isKey) return;
             UI.KeyBindings.OnUpdate();
             if (Main.IsInGame
                 && settings.toggleTeleportKeysEnabled

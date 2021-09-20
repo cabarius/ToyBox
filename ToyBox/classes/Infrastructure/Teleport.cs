@@ -21,7 +21,7 @@ namespace ToyBox {
         public static Settings Settings => Main.settings;
         private static HoverHandler _hover = new HoverHandler();
 
-        private static void TeleportUnit(UnitEntityData unit, Vector3 position) {
+        public static void TeleportUnit(UnitEntityData unit, Vector3 position) {
             UnitEntityView view = unit.View;
 
             if (view != null) view.StopMoving();
@@ -154,10 +154,6 @@ namespace ToyBox {
                 if (_currentUnit != null)
                     Unit = _currentUnit;
             }
-        }
-
-        internal static void TeleportUnit(UnitEntityData value, object p) {
-            throw new NotImplementedException();
         }
     }
 }

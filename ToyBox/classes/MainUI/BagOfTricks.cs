@@ -5,10 +5,42 @@ using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
 using ModKit;
+using static ModKit.UI;
 
 namespace ToyBox {
-    public static class CheapTricks {
+    public static class BagOfTricks {
         public static Settings settings { get { return Main.settings; } }
+
+        // cheats combat
+        const string RestAll = "Rest All";
+        const string Empowered = "Empowered";
+        const string FullBuffPlease = "Full Buff Please";
+        const string RemoveBuffs = "Remove Buffs";
+        const string RemoveDeathsDoor = "Remove Deaths Door";
+        const string KillAllEnemies = "Kill All Enemies";
+        const string SummonZoo = "Summon Zoo";
+
+        // cheats common
+        const string TeleportPartyToYou = "Teleport Party To You";
+        const string GoToGlobalMap = "Go To Global Map";
+        const string RerollPerception = "Reroll Perception";
+        const string ChangeParty = "Change Party";
+
+        public static void OnLoad() {
+            // Combat
+            KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
+            KeyBindings.RegisterAction(Empowered, () => CheatsCombat.Empowered(""));
+            KeyBindings.RegisterAction(FullBuffPlease, () => CheatsCombat.FullBuffPlease(""));
+            KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
+            KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
+            KeyBindings.RegisterAction(KillAllEnemies, () => CheatsCombat.KillAll());
+            KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
+            // Common
+            KeyBindings.RegisterAction(TeleportPartyToYou, () => Teleport.TeleportPartyToPlayer());
+            KeyBindings.RegisterAction(GoToGlobalMap, () => Teleport.TeleportToGlobalMap());
+            KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
+            KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
+        }
         public static void ResetGUI() { }
         public static void OnGUI() {
             if (Main.IsInGame) {
@@ -40,21 +72,22 @@ namespace ToyBox {
                     });
             }
             UI.Div(0, 25);
-            UI.HStack("Combat",2,
-                () => UI.BindableActionButton("Rest All", () => CheatsCombat.RestAll()),
-                () => UI.BindableActionButton("Empowered", () => CheatsCombat.Empowered("")),
-                () => UI.BindableActionButton("Full Buff Please", () => CheatsCombat.FullBuffPlease("")),
-                () => UI.BindableActionButton("Remove Buffs", () => Actions.RemoveAllBuffs()),
-                () => UI.BindableActionButton("Remove Death's Door", () => CheatsCombat.DetachDebuff()),
-                () => UI.BindableActionButton("Kill All Enemies", () => CheatsCombat.KillAll()),
-                () => UI.BindableActionButton("Summon Zoo", () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""))
+            UI.HStack("Combat", 2,
+                () => UI.BindableActionButton(RestAll),
+                () => UI.BindableActionButton(Empowered),
+                () => UI.BindableActionButton(FullBuffPlease),
+                () => UI.BindableActionButton(RemoveBuffs),
+                () => UI.BindableActionButton(RemoveDeathsDoor),
+                () => UI.BindableActionButton(KillAllEnemies),
+                () => UI.BindableActionButton(SummonZoo),
+                () => { }
                 );
             UI.Div(0, 25);
             UI.HStack("Common", 2,
-                () => UI.BindableActionButton("Teleport Party To You", () => Teleport.TeleportPartyToPlayer()),
-                () => UI.BindableActionButton("Go To Global Map", () => Teleport.TeleportToGlobalMap()),
-                () => UI.BindableActionButton("Reroll Perception", () => Actions.RunPerceptionTriggers()),
-                () => { UI.BindableActionButton("Change Party", () => { Actions.ChangeParty(); }); },
+                () => UI.BindableActionButton(TeleportPartyToYou),
+                () => UI.BindableActionButton(GoToGlobalMap),
+                () => UI.BindableActionButton(RerollPerception),
+                () => UI.BindableActionButton(ChangeParty),
                 () => {
                     UI.NonBindableActionButton("Set Perception to 40", () => {
                         CheatsCommon.StatPerception();
@@ -80,7 +113,7 @@ namespace ToyBox {
                 () => {
                     UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
                     UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
-                    },
+                },
                 () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => {
                     UI.Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0);
@@ -156,7 +189,7 @@ namespace ToyBox {
                 () => UI.LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", UI.AutoWidth()),
                 () => {
                     UI.LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
-                    UI.Space(25); 
+                    UI.Space(25);
                     UI.Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0);
                     UI.Space(25);
                     UI.Label("Adjusts the movement speed of your party in area maps".green());
