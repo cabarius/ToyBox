@@ -34,10 +34,10 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
 1. build the solution debug and it will automatically build and install into the mod folder in the game
 1.  when you rebuild you can go to the mod and hit the reload button at the top to make it use the latest
 1. If you are adding a feature or fixing a bug please add a reloase note to the *readme.txt* 
-  1. Find the highest release name near the top. It will look something like `Ver 1.3.7`. 
-  1. Usually it is 1 higher than the current release, if not add a new line for the next release
-  1. don't worry too much about getting this right as Narria Cabarius will clean this up on merge
-  1. format your release note like like this:```
+  * Find the highest release name near the top. It will look something like `Ver 1.3.7`. 
+  * Usually it is 1 higher than the current release, if not add a new line for the next release
+  * don't worry too much about getting this right as Narria Cabarius will clean this up on merge
+  * format your release note like like this:```
     (Jane/JoeCoolCollaborator) added a Coolness Multiplier tweak in Bag of Tricks that lets you raise the coolness of your gameplay```
 
 **PS**: 
