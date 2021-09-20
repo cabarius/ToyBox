@@ -47,6 +47,7 @@ namespace ModKit {
                 return _hotkeyStyle;
             }
         }
+        [JsonObject(MemberSerialization.OptIn)]
         public class KeyBind {
             [JsonProperty]
             public string ID;
@@ -68,7 +69,9 @@ namespace ModKit {
                 Cmd = cmd;
                 Shift = shift;
             }
+            [JsonIgnore]
             public bool IsEmpty { get { return Key == KeyCode.None; } }
+            [JsonIgnore]
             public bool IsKeyCodeActive {get {
                     if (Key == KeyCode.None) {
                         if (debugKeyBind) Logger.Log($"        keyCode: {Key} --> not active");
@@ -84,6 +87,7 @@ namespace ModKit {
                     return Key == Event.current.keyCode && Input.GetKey(Key);
                 }
             }
+            [JsonIgnore]
             public bool IsActive {
                 get {
                     if (Event.current == null)
