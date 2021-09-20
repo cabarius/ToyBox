@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
+    <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
