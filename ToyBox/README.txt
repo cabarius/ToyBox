@@ -12,6 +12,7 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.8
+    Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
 Ver 1.3.7
     You can now add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 

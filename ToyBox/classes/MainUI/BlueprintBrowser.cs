@@ -171,7 +171,7 @@ namespace ToyBox {
                     var name = blueprint.name;
                     var description = blueprint.GetDescription() ?? "";
                     if (    terms.All(term => StringExtensions.Matches(name, term))
-                        || settings.searchDescriptions && terms.All(term => StringExtensions.Matches(description, term))
+                        || settings.searchesDescriptions && terms.All(term => StringExtensions.Matches(description, term))
                         ) {
                         filtered.Add(blueprint);
                     }
@@ -240,7 +240,7 @@ namespace ToyBox {
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
-                        if (UI.Toggle("Search Descriptions", ref settings.searchDescriptions)) UpdateSearchResults();
+                        if (UI.Toggle("Search Descriptions", ref settings.searchesDescriptions)) UpdateSearchResults();
                         UI.Space(25);
                         UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
                         UI.Space(25);
