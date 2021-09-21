@@ -155,7 +155,7 @@ namespace ToyBox.BagOfPatches {
                 } else if (__instance.SlotVM.IsScroll) {
                     __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
                 }
-                if (settings.toggleColorLootByRarity) {
+                if (settings.toggleColorLootByRarity && __instance.Item != null) {
                     var magicGO = __instance.m_MagicLayer.gameObject;
                     var color = __instance.Item.Blueprint.Rarity().Color();
                     var colorOpaque = new Color(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a * 0.9f);

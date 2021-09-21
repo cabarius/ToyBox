@@ -170,12 +170,11 @@ namespace ToyBox {
             //            ch.Descriptor.Progression.RemoveMythicLevel
         }
         public static void resetClassLevel(this UnitEntityData ch) {
-            // TODO - this doesn't seem to work in BoT either...
-            int level = 21;
+            int level = ch.Descriptor.Progression.MaxCharacterLevel;
             int xp = ch.Descriptor.Progression.Experience;
-            BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
+            BlueprintStatProgression xpTable = ch.Descriptor.Progression.ExperienceTable;
 
-            for (int i = 20; i >= 1; i--) {
+            for (int i = ch.Descriptor.Progression.MaxCharacterLevel; i >= 1; i--) {
                 int xpBonus = xpTable.GetBonus(i);
 
                 Main.Log(i + ": " + xpBonus + " | " + xp);

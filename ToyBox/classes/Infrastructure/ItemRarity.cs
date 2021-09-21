@@ -38,9 +38,11 @@ namespace ToyBox {
 
         public static RarityType Rarity(this BlueprintItem bp) {
             var rating = 0;
+            var enchantValue = 0;
             try {
                 var enchants = bp.CollectEnchantments();
-                rating = 10 * enchants.Sum((e) => e.EnchantmentCost);
+                enchantValue = 10 * enchants.Sum((e) => e.EnchantmentCost);
+                rating = enchantValue;
             }
             catch {
             }
@@ -66,7 +68,9 @@ namespace ToyBox {
             else if (rating >= 20) rarity = RarityType.Rare;
             else if (rating >= 10) rarity = RarityType.Uncommon;
             else if (rating > 5) rarity = RarityType.Common;
-            //Main.Log($"{item.Name.color(rgba)} : {bp.GetType().Name.orange()} -  enchantValue: {item.EnchantmentValue * 10} logCost: {logCost} - rating: {rating}");
+#if false
+            Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");
+#endif
             return rarity ;
 
         }
@@ -76,5 +80,6 @@ namespace ToyBox {
         public static string Rarity(this string s, RarityType rarity) {
             return s.color(RarityColors[(int)rarity]);
         }
+        public static string GetString(this RarityType rarity) => rarity.ToString().Rarity(rarity);
     }
 }

@@ -32,13 +32,13 @@ namespace ModKit {
         silver = 0xD0D0D0ff,
         lightgrey = 0xE8E8E8ff,
         white = 0xffffffff,
-        trash = grey,
+        trash = darkgrey,
         notable = silver,
         common = silver,
         uncommon = 0x50d30cff,
-        rare = 0x0020F0ff,
+        rare = 0x2060FFff,
         epic = 0xc860FFff,
-        legendary = 0xED8B1Aff,
+        legendary = 0xEDCB1Aff,
         mythic = cyan,
         godly = red
     }
