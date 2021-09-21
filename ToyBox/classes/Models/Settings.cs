@@ -52,6 +52,11 @@ namespace ToyBox {
         public bool toggleInstantPartyChange = false;
         public bool toggleTeleportKeysEnabled = false;
 
+        // Loot Coloring & Filtering
+        public bool toggleColorLootByRarity = false;
+        public RarityType lootFilterIgnore = RarityType.None;
+        public RarityType lootFilterAutoSell = RarityType.None;
+
         //Crusade
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleLargeArmies = false;

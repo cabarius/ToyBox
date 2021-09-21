@@ -11,6 +11,7 @@ using Kingmaker.RuleSystem;
 using Kingmaker.Utility;
 using ModKit;
 using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Items;
 
 namespace ToyBox {
     public class BlueprintListUI {
@@ -130,6 +131,10 @@ namespace ToyBox {
                     String typeString = blueprint.GetType().Name;
                     if (typeFilter?.collator != null) {
                         var collatorString = typeFilter.collator(blueprint);
+                        if (blueprint is BlueprintItem itemBP) {
+                            var rarity = itemBP.Rarity();
+                            typeString = $"{typeString} - {rarity.ToString()}".Rarity(rarity);    
+                        }
                         if (!typeString.Contains(collatorString))
                             typeString += $" : {collatorString}".yellow();
                     }
@@ -151,11 +156,11 @@ namespace ToyBox {
                     using (UI.VerticalScope(UI.Width(remWidth))) {
                         if (settings.showAssetIDs) {
                             using (UI.HorizontalScope(UI.Width(remWidth))) {
-                                UI.Label(typeString.cyan());
+                                UI.Label(typeString);
                                 GUILayout.TextField(blueprint.AssetGuid.ToString(), UI.ExpandWidth(false));
                             }
                         }
-                        else UI.Label(typeString.cyan()); // + $" {remWidth}".bold());
+                        else UI.Label(typeString); // + $" {remWidth}".bold());
 
                         if (description.Length > 0) UI.Label(description.green(), UI.Width(remWidth));
                     }

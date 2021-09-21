@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace ModKit {
     static partial class UI {
 #if DEBUG
-        private const bool debugKeyBind = true;
+        private const bool debugKeyBind = false;
 #else
         private const bool debugKeyBind = false;
 #endif

@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\LocalizationManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\MenuManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\ColorUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Toggle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\RichText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Builders.cs" />

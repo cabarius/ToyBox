@@ -28,6 +28,19 @@ using ModKit.Utility;
 using Kingmaker.DialogSystem.Blueprints;
 
 namespace ToyBox {
+    public class KeyComparer : IComparer<string>
+{
+
+    public int Compare(string left, string right) {
+            int l;
+            int r;
+            if (int.TryParse(left, out l) && int.TryParse(right, out r))
+                return l.CompareTo(r);
+            else
+                return left.CompareTo(right);
+    }
+
+}
     public class BlueprintBrowser {
         public static Settings settings { get { return Main.settings; } }
 
@@ -66,6 +79,18 @@ namespace ToyBox {
                 return bp.ItemType.ToString();
             }),
             new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) => bp.ItemType.ToString()),
+            new NamedTypeFilter<BlueprintItemEquipment>("Equip (cost)", null, (bp) => bp.Cost.ToString()),  // > 1 ? $"{(int)Math.Floor(Math.Log(bp.Cost))}" : "0"),
+
+            new NamedTypeFilter<BlueprintItemEquipment>("Equip (ench)", null, (bp) => {
+                try {
+                    var enchants = bp.CollectEnchantments();
+                    int value = enchants.Sum((e) => e.EnchantmentCost);
+                    return value.ToString();
+                }
+                catch {
+                    return "0";
+                }
+            }),
             new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
                 var type = bp.Type;
                 var category = type?.Category;
@@ -120,8 +145,7 @@ namespace ToyBox {
                     return null;
                 }
 #else
-                if (BlueprintLoader.Shared.IsLoading) { return null; }
-                else {
+                if (BlueprintLoader.Shared.IsLoading) { return null; } else {
                     Main.Log($"calling BlueprintLoader.Load");
                     BlueprintLoader.Shared.Load((bps) => {
                         blueprints = bps;
@@ -166,11 +190,10 @@ namespace ToyBox {
                 if (blueprint.AssetGuid.ToString().Contains(searchText)
                     || blueprint.GetType().ToString().Contains(searchText)) {
                     filtered.Add(blueprint);
-                }
-                else {
+                } else {
                     var name = blueprint.name;
                     var description = blueprint.GetDescription() ?? "";
-                    if (    terms.All(term => StringExtensions.Matches(name, term))
+                    if (terms.All(term => StringExtensions.Matches(name, term))
                         || settings.searchesDescriptions && terms.All(term => StringExtensions.Matches(description, term))
                         ) {
                         filtered.Add(blueprint);
@@ -179,12 +202,12 @@ namespace ToyBox {
             }
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
-            for (int i = 0; i < BlueprintListUI.ParamSelected.Length; i++) {
+            for (int i = 0;i < BlueprintListUI.ParamSelected.Length;i++) {
                 BlueprintListUI.ParamSelected[i] = 0;
             }
             uncolatedMatchCount = matchCount;
             if (selectedTypeFilter.collator != null) {
-                collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key);
+                collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key, new KeyComparer());
                 // I could do something like this but I will leave it up to the UI when a collation is selected.
                 // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
                 collationKeys = new List<String>() { "All" };
@@ -256,8 +279,7 @@ namespace ToyBox {
                         UI.Space(25);
                         if (firstSearch) {
                             UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
-                        }
-                        else if (matchCount > 0) {
+                        } else if (matchCount > 0) {
                             String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
                             UI.Label(title, UI.ExpandWidth(false));

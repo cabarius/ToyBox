@@ -96,6 +96,7 @@ namespace ToyBox {
                 },
                 () => UI.NonBindableActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
                 () => UI.NonBindableActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
+                () => UI.NonBindableActionButton("Identify All", () => Actions.IdentifyAll()),
                 () => { }
                 );
             UI.Div(0, 25);
@@ -108,6 +109,19 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.Toggle("Events", ref settings.previewEventResults, 0);
             });
+#if DEBUG
+            UI.Div(0, 25);
+            UI.HStack("Loot", 1,
+                () => {
+                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
+                    UI.Space(25);
+                    UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()} The following options let you configure loot filtering and auto sell levels:".green());
+                },
+                () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
+                () => { }
+            );
+#endif
             UI.Div(0, 25);
             UI.HStack("Tweaks", 1,
                 () => {

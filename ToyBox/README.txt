@@ -12,6 +12,12 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.8
+    Loot Colors and Filters
+        ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
+        Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
+        Pickers to let you specifiy loot levels to ignore and/or auto sell.
+    "Identify All" added to Bag of Tricks > Common
+    New categories for collating items by cost and enchant value
     Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
 Ver 1.3.7
