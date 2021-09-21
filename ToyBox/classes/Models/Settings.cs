@@ -94,7 +94,6 @@ namespace ToyBox {
         public bool toggleSkipSpellSelection = false;
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
-        public bool toggleLegendaryLeveling = false;
 
         // Multipliers
         public int encumberanceMultiplier = 1;
@@ -187,6 +186,9 @@ namespace ToyBox {
 
         // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
         public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new SerializableDictionary<string, HashSet<string>>();
+
+        // Dictionary of Name/IsLegendaryHero for configuration per party member
+        public SerializableDictionary<string, bool> charIsLegendaryHero = new SerializableDictionary<string, bool>();
 
         public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;

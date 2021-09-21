@@ -63,7 +63,6 @@ namespace ToyBox {
                 () => UI.Toggle("Ignore Required Stat Values", ref settings.toggleIgnorePrerequisiteStatValue, 0),
                 () => UI.Toggle("Ignore Alignment When Choosing A Class", ref settings.toggleIgnoreAlignmentWhenChoosingClass, 0),
                 () => UI.Toggle("Skip Spell Selection", ref settings.toggleSkipSpellSelection, 0),
-                () => UI.Toggle("Always Use Legendary Hero Leveling", ref settings.toggleLegendaryLeveling, 0),
 #if DEBUG
                     () => UI.Toggle("Lock Character Level", ref settings.toggleLockCharacterLevel, 0),
                 //                    () => UI.Toggle("Ignore Alignment Restrictions", ref settings.toggleIgnoreAlignmentRestriction, 0),
