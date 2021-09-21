@@ -79,8 +79,7 @@ namespace ToyBox {
                 return bp.ItemType.ToString();
             }),
             new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) => bp.ItemType.ToString()),
-            new NamedTypeFilter<BlueprintItemEquipment>("Equip (cost)", null, (bp) => bp.Cost.ToString()),  // > 1 ? $"{(int)Math.Floor(Math.Log(bp.Cost))}" : "0"),
-
+            new NamedTypeFilter<BlueprintItemEquipment>("Equip (rarity)", null, (bp) => bp.Rarity().GetString()),
             new NamedTypeFilter<BlueprintItemEquipment>("Equip (ench)", null, (bp) => {
                 try {
                     var enchants = bp.CollectEnchantments();
@@ -91,6 +90,8 @@ namespace ToyBox {
                     return "0";
                 }
             }),
+            new NamedTypeFilter<BlueprintItemEquipment>("Equip (cost)", null, (bp) => bp.Cost.ToString()),  // > 1 ? $"{(int)Math.Floor(Math.Log(bp.Cost))}" : "0"),
+
             new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
                 var type = bp.Type;
                 var category = type?.Category;

@@ -68,7 +68,7 @@ namespace ToyBox {
             else if (rating >= 20) rarity = RarityType.Rare;
             else if (rating >= 10) rarity = RarityType.Uncommon;
             else if (rating > 5) rarity = RarityType.Common;
-#if DEBUG
+#if false
             Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");
 #endif
             return rarity ;
@@ -80,5 +80,6 @@ namespace ToyBox {
         public static string Rarity(this string s, RarityType rarity) {
             return s.color(RarityColors[(int)rarity]);
         }
+        public static string GetString(this RarityType rarity) => rarity.ToString().Rarity(rarity);
     }
 }

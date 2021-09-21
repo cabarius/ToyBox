@@ -17,7 +17,7 @@ Ver 1.3.8
         Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
         Pickers to let you specifiy loot levels to ignore and/or auto sell.
     "Identify All" added to Bag of Tricks > Common
-    New categories for collating items by cost and enchant value
+    New categories for collating items by rarity, cost, enchant value
     Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
 Ver 1.3.7
