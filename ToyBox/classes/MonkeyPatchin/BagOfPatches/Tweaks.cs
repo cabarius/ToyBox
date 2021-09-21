@@ -6,7 +6,6 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Cheats;
-using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap;
@@ -21,18 +20,13 @@ using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.Commands;
-using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.Utility;
-using Kingmaker.Visual.Animation.Kingmaker.Actions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Tutorial;
-using Kingmaker.Armies.TacticalCombat.Parts;
-using Kingmaker.Armies;
+using Kingmaker.RuleSystem.Rules;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.UnitLogic.ActivatableAbilities;
@@ -263,6 +257,24 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 }
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleDrainEnergy), "TargetIsImmune", MethodType.Getter)]
+        static class RuleDrainEnergy_Immune_Patch {
+            public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
+                if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyNegativeLevelImmunity) {
+                    __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleDealStatDamage), "Immune", MethodType.Getter)]
+        static class RuleDealStatDamage_Immune_Patch {
+            public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
+                if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyAbilityDamageImmunity) {
+                    __result = true;
+                }
             }
         }
 
