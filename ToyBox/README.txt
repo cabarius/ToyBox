@@ -20,6 +20,7 @@ Ver 1.3.8
     New categories for collating items by rarity, cost, enchant value
     Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
+    (ArcaneTrixter) Added support for Legendary Heroes throughout Toybox, made fake legendary flag per character.
 Ver 1.3.7
     You can now add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 
     HotKeys now recognize shift, alt, ctrl, alt and command key combos

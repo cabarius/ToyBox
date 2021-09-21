@@ -156,7 +156,7 @@ namespace ToyBox {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
                 UnitProgressionData progression = ch.Descriptor.Progression;
-                BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
+                BlueprintStatProgression xpTable = progression.ExperienceTable;
                 int level = progression.CharacterLevel;
                 int mythicLevel = progression.MythicExperience;
                 var spellbooks = ch.Spellbooks;
@@ -173,12 +173,12 @@ namespace ToyBox {
                     UI.Label("lvl".green() + $": {level}", UI.Width(75));
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
-                        if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
+                        if (progression.Experience < xpTable.GetBonus(level + 1) && level < xpTable.Bonuses.Length) {
                             UI.ActionButton("+1", () => {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
                             }, UI.Width(70));
                         }
-                        else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
+                        else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < xpTable.Bonuses.Length) {
                             UI.Label("LvUp".cyan().italic(), UI.Width(70));
                         }
                         else { UI.Space(74); }
@@ -280,7 +280,7 @@ namespace ToyBox {
                             UI.ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), UI.AutoWidth());
                             UI.Space(25);
                             UI.Label("level".green() + $": {prog.CharacterLevel}", UI.Width(100f));
-                            UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(20, prog.CharacterLevel + 1), UI.AutoWidth());
+                            UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), UI.AutoWidth());
                             UI.Space(25);
                             UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
                             UI.Space(23);
@@ -296,11 +296,30 @@ namespace ToyBox {
                             UI.Label($"{prog.Experience}", UI.Width(150f));
                             UI.Space(36);
                             UI.ActionButton("Set", () => {
-                                int newXP = BlueprintRoot.Instance.Progression.XPTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
+                                int newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
                                 prog.Experience = newXP;
                             }, UI.Width(125));
                             UI.Space(23);
                             UI.Label("This sets your experience to match the current value of character level.".green());
+                        }
+
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.ActionToggle("Levels like a Legendary Hero",
+                                () => {
+                                    bool hasValue = settings.charIsLegendaryHero.TryGetValue(ch.HashKey(), out bool isLegendaryHero);
+                                    return hasValue && isLegendaryHero;
+                                },
+                                (val) => {
+                                    if (settings.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
+                                        settings.charIsLegendaryHero[ch.HashKey()] = val;
+                                    } else {
+                                        settings.charIsLegendaryHero.Add(ch.HashKey(), val);
+                                    }
+                                },
+                                0f,
+                                UI.AutoWidth()
+                            );
                         }
                         UI.Div(100, 25);
                         using (UI.HorizontalScope()) {
