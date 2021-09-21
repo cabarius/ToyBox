@@ -38,7 +38,7 @@ namespace ModKit {
         uncommon = 0x50d30cff,
         rare = 0x0020F0ff,
         epic = 0xc860FFff,
-        legendary = 0xED8B1Aff,
+        legendary = 0xEDCB1Aff,
         mythic = cyan,
         godly = red
     }

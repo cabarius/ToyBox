@@ -113,12 +113,14 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
                 () => {
-                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
-                    UI.Space(25);
-                    UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()} The following options let you configure loot filtering and auto sell levels:".green());
+                UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
+                UI.Space(25);
+                UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}"); // The following options let you configure loot filtering and auto sell levels:".green());
                 },
+#if false
                 () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
+#endif
                 () => { }
             );
 #endif
