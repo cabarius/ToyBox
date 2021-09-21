@@ -50,6 +50,10 @@ namespace ToyBox {
         public bool toggleKineticistGatherPower = false;
         public bool toggleAlwaysAllowSpellCombat = false;
         public bool toggleInstantPartyChange = false;
+        public bool toggleEnterCombatAutoRage = false;
+        public bool toggleMassLootEverything = false;
+        public bool toggleEquipmentNoWeight = false;
+        public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
 
         // Loot Coloring & Filtering

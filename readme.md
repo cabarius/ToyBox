@@ -10,6 +10,8 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
   - Items
   - etc.
 
+Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8)
+
 # How to contribute
 
 - on the [main repository page](https://github.com/cabarius/ToyBox) click on "fork" in the upper-right corner

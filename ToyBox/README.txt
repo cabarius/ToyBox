@@ -5,7 +5,7 @@ Toy Box is a cute and playful mod with 240+ cheats, tweaks and quality of life i
 # Detailed Description
 
 Now with 260+ Cheats, Tweaks and Quality of Life Improvements
-    Tweaks: 84 (or 125 depending on how you count)
+    Tweaks: 88 (or 129 depending on how you count)
     Level Up & Multiclass: 34
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
@@ -20,6 +20,10 @@ Ver 1.3.8
     New categories for collating items by cost and enchant value
     Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
+    (Truinto) Added tweak: Auto Start Rage When Entering Combat
+    (Truinto) Added tweak: Mass Loot Shows Everything When Leaving Map
+    (Truinto) Added tweak: Equipment No Weight
+    (Truinto) Added tweak: Allow Item Use From Inventory During Combat
 Ver 1.3.7
     You can now add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 
     HotKeys now recognize shift, alt, ctrl, alt and command key combos
