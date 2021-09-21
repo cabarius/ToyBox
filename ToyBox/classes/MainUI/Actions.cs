@@ -89,6 +89,13 @@ namespace ToyBox {
                 EventBus.RaiseEvent<IGroupChangerHandler>((Action<IGroupChangerHandler>)(h => h.HandleCall(new Action(Actions.HandleChangeParty), (Action)null, true)));
             }
         }
+        public static void IdentifyAll() {
+            var inventory = Game.Instance?.Player?.Inventory;
+            if (inventory == null) return;
+            foreach (var item in inventory) {
+                item.Identify();
+            }
+        }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
                 foreach (var spellbook in ch.Spellbooks) {

@@ -96,6 +96,7 @@ namespace ToyBox {
                 },
                 () => UI.NonBindableActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
                 () => UI.NonBindableActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
+                () => UI.NonBindableActionButton("Identify All", () => Actions.IdentifyAll()),
                 () => { }
                 );
             UI.Div(0, 25);
@@ -108,6 +109,37 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.Toggle("Events", ref settings.previewEventResults, 0);
             });
+#if DEBUG
+            UI.Div(0, 25);
+            UI.HStack("Loot", 1,
+                () => {
+                UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
+                UI.Space(25);
+                using (UI.VerticalScope()) {
+                    UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
+                    UI.Label("The coloring of rarity goes as follows:".green());
+                    UI.HStack("Rarity".orange(), 1,
+                        () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
+                        () => UI.Label("Common".Rarity(RarityType.Common).bold()),
+                        () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
+                        () => UI.Label("Rare".Rarity(RarityType.Rare).bold()),
+                        () => UI.Label("Epic".Rarity(RarityType.Epic).bold()),
+                        () => UI.Label("Legendary".Rarity(RarityType.Legendary).bold()),
+                        () => UI.Label("Mythic".Rarity(RarityType.Mythic).bold()),
+                        () => UI.Label("Godly".Rarity(RarityType.Godly)),
+                        () => { }
+                    );
+                }
+
+                    // The following options let you configure loot filtering and auto sell levels:".green());
+                },
+#if true
+                () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
+#endif
+                () => { }
+            );
+#endif
             UI.Div(0, 25);
             UI.HStack("Tweaks", 1,
                 () => {

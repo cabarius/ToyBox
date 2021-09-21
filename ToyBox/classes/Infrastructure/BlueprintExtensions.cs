@@ -16,7 +16,7 @@ using ModKit;
 
 namespace ToyBox {
 
-    public static class BlueprintExensions {
+    public static partial class BlueprintExensions {
         private static ConditionalWeakTable<object, string> cachedCollationNames = new ConditionalWeakTable<object, string> { };
         public static String GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
         public static String GetDisplayName(this BlueprintSpellbook bp) {

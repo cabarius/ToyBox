@@ -105,9 +105,9 @@ namespace ToyBox {
             else {
                 UI.Space(178);
             }
-            if (player.Party.Contains(ch)) {
+            if (RespecHelper.GetRespecableUnits().Contains(ch)) {
                 respecableCount++;
-                UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); UnitHelper.Respec(ch); }, UI.Width(150));
+                UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, UI.Width(150));
             }
             else {
                 UI.Space(170);
@@ -483,6 +483,7 @@ namespace ToyBox {
             UI.Space(25);
             if (respecableCount > 0) {
                 UI.Label($"{respecableCount} characters".yellow().bold() + " can be respecced. Pressing Respec will close the mod window and take you to character level up".orange());
+                UI.Label("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange());
                 UI.Label("WARNING".yellow().bold() + " this feature is ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange());
                 UI.Label("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange());
 

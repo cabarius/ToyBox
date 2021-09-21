@@ -43,13 +43,15 @@ using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Steamworks;
 using Kingmaker.Achievements.Platforms;
+using Kingmaker.UI.Common.Animations;
+using UnityEngine.UI;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
-         
+
         [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
         static class Spellbook_GetSpellsPerDay_Patch {
             static void Postfix(ref int __result) {
@@ -122,19 +124,50 @@ namespace ToyBox.BagOfPatches {
         static class ItemSlot_IsUsable_Patch {
             public static void Postfix(ViewBase<ItemSlotVM> __instance) {
                 if (__instance is LootSlotPCView itemSlotPCView) {
-//                        modLogger.Log($"checking  {itemSlotPCView.ViewModel.Item}");
-                        if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll &&
-                                                                settings.toggleHighlightCopyableScrolls) {
-//                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
-                            itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
-                        }
-                        else {
-                            itemSlotPCView.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
-                        }
+                    //                        modLogger.Log($"checking  {itemSlotPCView.ViewModel.Item}");
+                    if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll && settings.toggleHighlightCopyableScrolls) {
+                        //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
+                        itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
+                    } else {
+                        itemSlotPCView.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
+                    }
+                    if (settings.toggleColorLootByRarity) {
+                        // TODO - figure this out for loot containers
+#if false
+                        var magicGO = __instance.m_MagicLayer.gameObject;
+                        var color = __instance.Item.Blueprint.Rarity().Color();
+                        var colorOpaque = new Color(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a * 0.9f);
+                        var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
+                        magicGO.GetComponent<Image>().color = colorTranslucent;
+                        var magicFXGO = __instance.m_MagicLayer.FindChild("MagicLayerFX");
+                        magicFXGO.GetComponent<Image>().color = color;
+#endif
+                    }
                 }
             }
         }
 
+        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
+        static class ItemSlotView_RefreshItem_Patch {
+            public static void Postfix(InventoryEquipSlotView __instance) {
+                if (!__instance.SlotVM.HasItem || !__instance.SlotVM.IsScroll) {
+                    __instance.m_Icon.canvasRenderer.SetColor(Color.white);
+                } else if (__instance.SlotVM.IsScroll) {
+                    __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
+                }
+                if (settings.toggleColorLootByRarity && __instance.Item != null) {
+                    var magicGO = __instance.m_MagicLayer.gameObject;
+                    var color = __instance.Item.Blueprint.Rarity().Color();
+                    var colorOpaque = new Color(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a * 0.9f);
+                    var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
+                    magicGO.GetComponent<Image>().color = colorTranslucent;
+                    var magicFXGO = __instance.m_MagicLayer.FindChild("MagicLayerFX");
+                    magicFXGO.GetComponent<Image>().color = color;
+                }
+            }
+        }
+
+#if false
         [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
         static class ItemSlotView_RefreshItem_Patch {
             public static void Postfix(InventoryEquipSlotView __instance) {
@@ -144,9 +177,21 @@ namespace ToyBox.BagOfPatches {
                 else {
                     __instance.m_Icon.canvasRenderer.SetColor(Color.white);
                 }
+                __instance.m_MagicLayer.gameObject.SetActive(true);
+                __instance.m_MagicLayer.parent.Find('MagicLayer').gameObject.SetActive(true);
+                //item.GetComponent<Image>().color = Color.red;
+
+                //Main.Log($"ml: {__instance.m_MagicLayer}");
+#if false
+                if (__instance.m_Highlighter.m_Animation != null &&
+                        __instance.m_Highlighter.m_Animation is SwitchLoopAnimator animator) {
+                    animator.m_Image.color = Color.green;
+                    Main.Log("Has a highlighter");
+                }
+#endif
             }
         }
-
+#endif
 
 
 
@@ -162,8 +207,7 @@ namespace ToyBox.BagOfPatches {
                 bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
-                }
-                else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                } else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintCR2RatSwarmGUID;
                 }
             }
@@ -176,8 +220,7 @@ namespace ToyBox.BagOfPatches {
                 bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
-                }
-                else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                } else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintCR2RatSwarmGUID).Prefab;
                 }
             }
@@ -198,7 +241,7 @@ namespace ToyBox.BagOfPatches {
             }
 
             private const string spiderTypeGUID = "243702bdc53e2574aaa34d1e3eafe6aa";
-            private const string spiderSwarmTypeGUID = "0fd1473096fbdda4db770cca8366c5e1"; 
+            private const string spiderSwarmTypeGUID = "0fd1473096fbdda4db770cca8366c5e1";
 
             private const string blueprintWolfStandardGUID = "ea610d9e540af4243b1310a3e6833d9f";
 
@@ -325,8 +368,7 @@ namespace ToyBox.BagOfPatches {
                         m_eResult = EResult.k_EResultOK,
                         m_nGameID = (ulong)__instance.m_GameId
                     });
-                }
-                else
+                } else
                     Debug.Log((object)("StoreStats - failed, " + (object)pCallback.m_eResult));
                 return false;
             }

@@ -43,9 +43,6 @@
   </Target>
   <ItemGroup>
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
-    </PackageReference>
     <Reference Include="0Harmony">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityModManager\0Harmony.dll</HintPath>
       <Private>False</Private>
@@ -60,6 +57,10 @@
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Owlcat.Runtime.Core">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
       <Private>False</Private>
@@ -138,6 +139,7 @@
   <ItemGroup>
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
+    <Compile Include="classes\Infrastructure\ItemRarity.cs" />
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="classes\MainUI\CharacterPicker.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor.cs" />
+    <Compile Include="classes\Infrastructure\RespecHelper.cs" />
     <Compile Include="classes\Models\Setings+Multiclass.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
@@ -226,7 +229,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
