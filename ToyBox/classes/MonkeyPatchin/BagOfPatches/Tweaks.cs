@@ -40,12 +40,20 @@ using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
 using Kingmaker.UI.IngameMenu;
 using System.Reflection;
+using Kingmaker.View.MapObjects;
+using Owlcat.Runtime.Core.Utils;
+using Kingmaker.Items;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Shields;
+using Kingmaker.Blueprints.Items.Weapons;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
+        private static BlueprintGuid rage = BlueprintGuid.Parse("df6a2cce8e3a9bd4592fb1968b83f730");
 
         //     private static bool CanCopySpell([NotNull] BlueprintAbility spell, [NotNull] Spellbook spellbook) => spellbook.Blueprint.CanCopyScrolls && !spellbook.IsKnown(spell) && spellbook.Blueprint.SpellList.Contains(spell);
 
@@ -182,6 +190,16 @@ namespace ToyBox.BagOfPatches {
                 if (!inCombat && settings.toggleInstantRestAfterCombat) {
                     CheatsCombat.RestAll();
                 }
+                if (inCombat && settings.toggleEnterCombatAutoRage) {
+                    foreach (var unit in Game.Instance.Player.Party) {
+                        foreach (var activatable in unit.ActivatableAbilities) {
+                            if (activatable.Blueprint.AssetGuid == rage) {
+                                activatable.IsOn = true;
+                                break;
+                            }
+                        }
+                    }
+                }
 #if false
                 if (!inCombat && settings.toggleRestoreItemChargesAfterCombat) {
                     Cheats.RestoreAllItemCharges();
@@ -273,6 +291,90 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(MassLootHelper), nameof(MassLootHelper.GetMassLootFromCurrentArea))]
+        public static class PatchLootEverythingOnLeave_Patch {
+            public static bool Prefix(ref IEnumerable<LootWrapper> __result) {
+                if (!settings.toggleMassLootEverything) return true;
+
+                var all_units = Game.Instance.State.Units.All.Where(w => w.IsInGame);
+                var result_units = all_units.Where(unit => unit.HasLoot).Select(unit => new LootWrapper { Unit = unit }); //unit.IsRevealed && unit.IsDeadAndHasLoot
+
+                var all_entities = Game.Instance.State.Entities.All.Where(w => w.IsInGame);
+                var all_chests = all_entities.Select(s => s.Get<InteractionLootPart>()).Where(i => i?.Loot != Game.Instance.Player.SharedStash).NotNull();
+
+                List<InteractionLootPart> tmp = TempList.Get<InteractionLootPart>();
+
+                foreach (InteractionLootPart i in all_chests) {
+                    //if (i.Owner.IsRevealed
+                    //    && i.Loot.HasLoot
+                    //    && (i.LootViewed
+                    //        || (i.View is DroppedLoot && !i.Owner.Get<DroppedLoot.EntityPartBreathOfMoney>())
+                    //        || i.View.GetComponent<SkinnedMeshRenderer>()))
+                    if (i.Loot.HasLoot) {
+                        tmp.Add(i);
+                    }
+                }
+
+                var result_chests = tmp.Distinct(new MassLootHelper.LootDuplicateCheck()).Select(i => new LootWrapper { InteractionLoot = i });
+
+                __result = result_units.Concat(result_chests);
+#if false   
+                foreach (var loot in __result) // showing inventories from living enemies makes the items invisible (also they can still be looted with the Get All option)
+                {
+                    if (loot.Unit != null)
+                    ;
+                    if (loot.InteractionLoot != null)
+                    ;
+                }
+#endif
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintItem), nameof(BlueprintItem.Weight), MethodType.Getter)]
+        public static class BlueprintItem_NoWeight_Patch1 {
+            public static void Postfix(ref float __result) {
+                if (!settings.toggleEquipmentNoWeight) return;
+
+                __result = 0f;
+            }
+        }
+        [HarmonyPatch(typeof(BlueprintItemArmor), nameof(BlueprintItemArmor.Weight), MethodType.Getter)]
+        public static class BlueprintItem_NoWeight_Patch2 {
+            public static void Postfix(ref float __result) {
+                if (!settings.toggleEquipmentNoWeight) return;
+
+                __result = 0f;
+            }
+        }
+        [HarmonyPatch(typeof(BlueprintItemShield), nameof(BlueprintItemShield.Weight), MethodType.Getter)]
+        public static class BlueprintItem_NoWeight_Patch3 {
+            public static void Postfix(ref float __result) {
+                if (!settings.toggleEquipmentNoWeight) return;
+
+                __result = 0f;
+            }
+        }
+        [HarmonyPatch(typeof(BlueprintItemWeapon), nameof(BlueprintItemWeapon.Weight), MethodType.Getter)]
+        public static class BlueprintItem_NoWeight_Patch4 {
+            public static void Postfix(ref float __result) {
+                if (!settings.toggleEquipmentNoWeight) return;
+
+                __result = 0f;
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.IsUsableFromInventory), MethodType.Getter)]
+        public static class ItemEntity_IsUsableFromInventory_Patch {
+            // Allow Item Use From Inventory During Combat
+            public static bool Prefix(ItemEntity __instance, ref bool __result) {
+                if (!settings.toggleUseItemsDuringCombat) return true;
+
+                BlueprintItemEquipment item = __instance.Blueprint as BlueprintItemEquipment;
+                __result = item?.Ability != null;
+                return false;
+            }
+        }
 
         [HarmonyPatch(typeof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked), "CheckCondition")]
         public static class RomanceLocked_CheckCondition_Patch {
