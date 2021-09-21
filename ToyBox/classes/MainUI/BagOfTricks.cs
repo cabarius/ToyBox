@@ -115,7 +115,23 @@ namespace ToyBox {
                 () => {
                 UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
                 UI.Space(25);
-                UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}"); // The following options let you configure loot filtering and auto sell levels:".green());
+                using (UI.VerticalScope()) {
+                    UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
+                    UI.Label("The coloring of rarity goes as follows:".green());
+                    UI.HStack("Rarity", 1,
+                        () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
+                        () => UI.Label("Common".Rarity(RarityType.Common).bold()),
+                        () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
+                        () => UI.Label("Rare".Rarity(RarityType.Rare).bold()),
+                        () => UI.Label("Epic".Rarity(RarityType.Epic).bold()),
+                        () => UI.Label("Legendary".Rarity(RarityType.Legendary).bold()),
+                        () => UI.Label("Mythic".Rarity(RarityType.Mythic).bold()),
+                        () => UI.Label("Godly".Rarity(RarityType.Godly)),
+                        () => { }
+                    );
+                }
+
+                    // The following options let you configure loot filtering and auto sell levels:".green());
                 },
 #if false
                 () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
