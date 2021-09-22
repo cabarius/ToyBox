@@ -118,7 +118,7 @@ namespace ToyBox {
                     using (UI.VerticalScope()) {
                         UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
                         UI.Label("The coloring of rarity goes as follows:".green());
-                        UI.HStack("Rarity".orange(), 5,
+                        UI.HStack("Rarity".orange(), 1,
                             () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
                             () => UI.Label("Common".Rarity(RarityType.Common).bold()),
                             () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
