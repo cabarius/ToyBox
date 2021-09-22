@@ -109,28 +109,42 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.Toggle("Events", ref settings.previewEventResults, 0);
             });
-#if DEBUG
+            UI.Div(0, 25);
+            UI.HStack("Quality of Life", 1,
+                () => {
+                    UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
+                    UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
+                },
+                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
+                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
+                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
+                () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
+                () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
+                () => UI.Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
+                () => { }
+            );
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
                 () => {
-                UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
-                UI.Space(25);
-                using (UI.VerticalScope()) {
-                    UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
-                    UI.Label("The coloring of rarity goes as follows:".green());
-                    UI.HStack("Rarity".orange(), 1,
-                        () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
-                        () => UI.Label("Common".Rarity(RarityType.Common).bold()),
-                        () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
-                        () => UI.Label("Rare".Rarity(RarityType.Rare).bold()),
-                        () => UI.Label("Epic".Rarity(RarityType.Epic).bold()),
-                        () => UI.Label("Legendary".Rarity(RarityType.Legendary).bold()),
-                        () => UI.Label("Mythic".Rarity(RarityType.Mythic).bold()),
-                        () => UI.Label("Godly".Rarity(RarityType.Godly)),
-                        () => UI.Label("Notable".Rarity(RarityType.Notable).bold()),
-                        () => { }
-                    );
-                }
+                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
+                    UI.Space(25);
+                    using (UI.VerticalScope()) {
+                        UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
+                        UI.Label("The coloring of rarity goes as follows:".green());
+                        UI.HStack("Rarity".orange(), 1,
+                            () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
+                            () => UI.Label("Common".bold()),
+                            () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
+                            () => UI.Label("Rare".Rarity(RarityType.Rare).bold()),
+                            () => UI.Label("Epic".Rarity(RarityType.Epic).bold()),
+                            () => UI.Label("Legendary".Rarity(RarityType.Legendary).bold()),
+                            () => UI.Label("Mythic".Rarity(RarityType.Mythic).bold()),
+                            () => UI.Label("Godly".Rarity(RarityType.Godly)),
+                            () => UI.Label("Notable".Rarity(RarityType.Notable).bold()),
+                            () => { }
+                        );
+                    }
 
                     // The following options let you configure loot filtering and auto sell levels:".green());
                 },
@@ -140,14 +154,8 @@ namespace ToyBox {
 #endif
                 () => { }
             );
-#endif
             UI.Div(0, 25);
-            UI.HStack("Tweaks", 1,
-                () => {
-                    UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
-                    UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
-                },
-                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
+            UI.HStack("Cheats", 1,
                 () => {
                     UI.Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0);
                     if (settings.toggleTeleportKeysEnabled) {
@@ -171,7 +179,6 @@ namespace ToyBox {
 
                 () => UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0),
 
-                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
                 () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
 
                 () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
@@ -187,12 +194,8 @@ namespace ToyBox {
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
-                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
                 () => UI.Toggle("Disallow Companions Leaving Party (experimental; only enable while needed)", ref settings.toggleBlockUnrecruit, 0),
-                () => UI.Toggle("Enable multiple romance (experimental)", ref settings.toggleMultipleRomance, 0),
-                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
-                () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
-                () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+                () => UI.Toggle("Disable Romance IsLocked Flag (experimental)", ref settings.toggleMultipleRomance, 0),
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
                 () => UI.Toggle("Mass Loot Shows Everything When Leaving Map (some items might be invisible until looted)", ref settings.toggleMassLootEverything),
                 () => UI.ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),

@@ -37,6 +37,9 @@ using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Steamworks;
 using Kingmaker.Achievements.Platforms;
+using Kingmaker.UI.ServiceWindow;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._PCView.Slots;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
@@ -286,6 +289,26 @@ namespace ToyBox.BagOfPatches {
                 } else
                     Debug.Log((object)("StoreStats - failed, " + (object)pCallback.m_eResult));
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(InventorySlotPCView), nameof(InventorySlotPCView.OnClick))]
+        public static class InventorySlotPCView_OnClick_Patch {
+            public static bool Prefix(InventorySlotPCView __instance) {
+                if (__instance.UsableSource != UsableSourceType.Inventory) return true;
+                if (!settings.toggleShiftClickToUseInventorySlot) return true;
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    var item = __instance.Item;
+                    Main.Log($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
+                    try {
+                        item.TryUseFromInventory(item.GetBestAvailableUser(), (TargetWrapper)UIUtility.GetCurrentCharacter());
+                    }
+                    catch (Exception e) {
+                        Main.Log($"InventorySlotPCView_OnClick_Patch - {e}");
+                    }
+                    return false;
+                }
+                return true;
             }
         }
     }

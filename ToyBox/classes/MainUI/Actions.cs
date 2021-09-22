@@ -21,6 +21,8 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
 using UnityModManagerNet;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.UI.ServiceWindow;
 
 namespace ToyBox {
     public static class Actions {

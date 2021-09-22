@@ -58,6 +58,7 @@ namespace ToyBox {
         public bool toggleEquipmentNoWeight = false;
         public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
+        public bool toggleShiftClickToUseInventorySlot = false;
 
         // Loot Coloring & Filtering
         public bool toggleColorLootByRarity = false;
@@ -102,7 +103,6 @@ namespace ToyBox {
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
         public bool toggleUniversalSpellbookd = false;
-
 
         // Multipliers
         public int encumberanceMultiplier = 1;
