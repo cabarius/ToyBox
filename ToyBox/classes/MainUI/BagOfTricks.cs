@@ -196,7 +196,7 @@ namespace ToyBox {
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
-                () => UI.Toggle("Enable multiple romance (experimental)", ref settings.toggleMultipleRomance, 0),
+                () => UI.Toggle("Disable Romance IsLocked Flag (experimental)", ref settings.toggleMultipleRomance, 0),
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
                 () => UI.Toggle("Mass Loot Shows Everything When Leaving Map (some items might be invisible until looted)", ref settings.toggleMassLootEverything),
                 () => UI.Toggle("Equipment No Weight (turning this off requires you to reload for it to take full effect)", ref settings.toggleEquipmentNoWeight),
