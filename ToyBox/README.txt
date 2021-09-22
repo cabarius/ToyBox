@@ -20,12 +20,12 @@ Ver 1.3.8
     New categories for collating items by rarity, cost, enchant value
     Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
     (ArcaneTrixter) Added support for Legendary Heroes throughout Toybox, made fake legendary flag per character.
+    (ArcaneTrixter) Added toggles for immunity to negative levels and ability drain.
     (Truinto) Added tweak: Auto Start Rage When Entering Combat
     (Truinto) Added tweak: Mass Loot Shows Everything When Leaving Map
     (Truinto) Added tweak: Equipment No Weight
     (Truinto) Added tweak: Allow Item Use From Inventory During Combat
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
-    (ArcaneTrixter) Added toggles for immunity to negative levels and ability drain.
 Ver 1.3.7
     You can now add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 
     HotKeys now recognize shift, alt, ctrl, alt and command key combos

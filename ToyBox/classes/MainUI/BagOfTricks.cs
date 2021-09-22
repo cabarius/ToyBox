@@ -134,7 +134,7 @@ namespace ToyBox {
 
                     // The following options let you configure loot filtering and auto sell levels:".green());
                 },
-#if true
+#if false
                 () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
 #endif
