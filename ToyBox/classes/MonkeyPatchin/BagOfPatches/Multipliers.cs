@@ -124,6 +124,14 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
+
+
+        private static readonly string[] badBuffs = new string[]
+             {
+                 "24cf3deb078d3df4d92ba24b176bda97", //Prone
+                 "e6f2fc5d73d88064583cb828801212f4" //Fatigued
+             };
+
         [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
             typeof(BlueprintBuff),
             typeof(UnitEntityData),
@@ -133,7 +141,7 @@ namespace ToyBox.BagOfPatches {
         public static class BuffCollection_AddBuff_patch {
             public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
                 try {
-                    if (!caster.IsPlayersEnemy && !blueprint.Harmful) {
+                    if (!caster.IsPlayersEnemy && !blueprint.Harmful && !Array.Exists(badBuffs, x => x == blueprint.AssetGuidThreadSafe)) {
                         if (duration != null) {
                             duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
                         }
