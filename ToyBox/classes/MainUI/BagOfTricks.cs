@@ -109,7 +109,21 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.Toggle("Events", ref settings.previewEventResults, 0);
             });
-#if DEBUG
+            UI.Div(0, 25);
+            UI.HStack("Quality of Life", 1,
+                () => {
+                    UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
+                    UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
+                },
+                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
+                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
+                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
+                () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
+                () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
+                () => UI.Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
+                () => { }
+            );
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
                 () => {
@@ -120,7 +134,7 @@ namespace ToyBox {
                         UI.Label("The coloring of rarity goes as follows:".green());
                         UI.HStack("Rarity".orange(), 1,
                             () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
-                            () => UI.Label("Common".Rarity(RarityType.Common).bold()),
+                            () => UI.Label("Common".bold()),
                             () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
                             () => UI.Label("Rare".Rarity(RarityType.Rare).bold()),
                             () => UI.Label("Epic".Rarity(RarityType.Epic).bold()),
@@ -138,22 +152,6 @@ namespace ToyBox {
                 () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
 #endif
-                () => { }
-            );
-#endif
-            UI.Div(0, 25);
-            UI.HStack("Quality of Life", 1,
-                () => {
-                    UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
-                    UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
-                },
-                () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
-                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
-                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
-                () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
-                () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
-                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
-                () => UI.Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
                 () => { }
             );
             UI.Div(0, 25);
