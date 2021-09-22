@@ -42,6 +42,7 @@ using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
 using System.Linq;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -344,36 +345,32 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintItem), nameof(BlueprintItem.Weight), MethodType.Getter)]
-        public static class BlueprintItem_NoWeight_Patch1 {
-            public static void Postfix(ref float __result) {
-                if (!settings.toggleEquipmentNoWeight) return;
+        [HarmonyPatch(typeof(ItemsCollection), nameof(ItemsCollection.DeltaWeight))]
+        public static class NoWeight_Patch1 {
+            public static void Refresh(bool value) {
+                if (value)
+                    Game.Instance.Player.Inventory.Weight = 0f;
+                else
+                    Game.Instance.Player.Inventory.UpdateWeight();
+            }
 
-                __result = 0f;
+            public static bool Prefix(ItemsCollection __instance) {
+                if (!settings.toggleEquipmentNoWeight) return true;
+
+                if (__instance.IsPlayerInventory) {
+                    __instance.Weight = 0f;
+                }
+                return false;
             }
         }
-        [HarmonyPatch(typeof(BlueprintItemArmor), nameof(BlueprintItemArmor.Weight), MethodType.Getter)]
-        public static class BlueprintItem_NoWeight_Patch2 {
-            public static void Postfix(ref float __result) {
-                if (!settings.toggleEquipmentNoWeight) return;
+
+        [HarmonyPatch(typeof(UnitBody), nameof(UnitBody.EquipmentWeight), MethodType.Getter)]
+        public static class NoWeight_Patch2 {
+            public static bool Prefix(ref float __result) {
+                if (!settings.toggleEquipmentNoWeight) return true;
 
                 __result = 0f;
-            }
-        }
-        [HarmonyPatch(typeof(BlueprintItemShield), nameof(BlueprintItemShield.Weight), MethodType.Getter)]
-        public static class BlueprintItem_NoWeight_Patch3 {
-            public static void Postfix(ref float __result) {
-                if (!settings.toggleEquipmentNoWeight) return;
-
-                __result = 0f;
-            }
-        }
-        [HarmonyPatch(typeof(BlueprintItemWeapon), nameof(BlueprintItemWeapon.Weight), MethodType.Getter)]
-        public static class BlueprintItem_NoWeight_Patch4 {
-            public static void Postfix(ref float __result) {
-                if (!settings.toggleEquipmentNoWeight) return;
-
-                __result = 0f;
+                return false;
             }
         }
 
@@ -386,6 +383,13 @@ namespace ToyBox.BagOfPatches {
                 BlueprintItemEquipment item = __instance.Blueprint as BlueprintItemEquipment;
                 __result = item?.Ability != null;
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(Unrecruit), nameof(Unrecruit.RunAction))]
+        public class Unrecruit_RunAction_Patch {
+            public static bool Prefix() {
+                return !settings.toggleBlockUnrecruit;
             }
         }
 

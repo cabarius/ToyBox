@@ -82,6 +82,21 @@ namespace ModKit {
             }
             return value;
         }
+
+        public static bool ToggleCallback(
+                String title,
+                ref bool value,
+                Action<bool> callback,
+                float width = 0,
+                params GUILayoutOption[] options) {
+            bool result = TogglePrivate(title, ref value, false, false, width, options);
+            if (result) {
+                callback(value);
+            }
+
+            return result;
+        }
+
         public static bool BitFieldToggle(
                 String title,
                 ref int bitfield,

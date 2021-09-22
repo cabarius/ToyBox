@@ -41,6 +41,7 @@ namespace ToyBox {
         public bool toggleMetamagicIsFree = false;
         public bool toggleMaterialComponent = false;
         public bool toggleAutomaticallyLoadLastSave = false;
+        public bool toggleBlockUnrecruit = false;
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleMultipleRomance = false;
