@@ -16,6 +16,7 @@ using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.View;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Globalmap.State;
@@ -132,6 +133,10 @@ namespace ToyBox.BagOfPatches {
                  "e6f2fc5d73d88064583cb828801212f4" //Fatigued
              };
 
+        private static bool isGoodBuff(BlueprintBuff blueprint) {
+            return !blueprint.Harmful && !badBuffs.Contains(blueprint.AssetGuidThreadSafe);
+        }
+
         [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
             typeof(BlueprintBuff),
             typeof(UnitEntityData),
@@ -141,7 +146,7 @@ namespace ToyBox.BagOfPatches {
         public static class BuffCollection_AddBuff_patch {
             public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
                 try {
-                    if (!caster.IsPlayersEnemy && !blueprint.Harmful && !Array.Exists(badBuffs, x => x == blueprint.AssetGuidThreadSafe)) {
+                    if (!caster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
                             duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
                         }
@@ -163,7 +168,7 @@ namespace ToyBox.BagOfPatches {
         public static class BuffCollection_AddBuff2_patch {
             public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref TimeSpan? duration) {
                 try {
-                    if (!parentContext.MaybeCaster.IsPlayersEnemy) {
+                    if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
                             duration = TimeSpan.FromTicks(Convert.ToInt64(duration.Value.Ticks * settings.buffDurationMultiplierValue));
                         }
@@ -185,7 +190,7 @@ namespace ToyBox.BagOfPatches {
         public static class ItemEntity_AddEnchantment_Patch {
             public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref Rounds? duration) {
                 try {
-                    if (!parentContext?.MaybeCaster?.IsPlayersEnemy ?? false) {
+                    if (!parentContext?.MaybeCaster?.IsPlayersEnemy ?? false && isGoodBuff(blueprint)) {
                         if (duration != null) {
                             duration = new Rounds((int)(duration.Value.Value * settings.buffDurationMultiplierValue));
                         }
