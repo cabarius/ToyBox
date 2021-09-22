@@ -42,6 +42,7 @@ using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
 using System.Linq;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -382,6 +383,13 @@ namespace ToyBox.BagOfPatches {
                 BlueprintItemEquipment item = __instance.Blueprint as BlueprintItemEquipment;
                 __result = item?.Ability != null;
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(Unrecruit), nameof(Unrecruit.RunAction))]
+        public class Unrecruit_RunAction_Patch {
+            public static bool Prefix() {
+                return !settings.toggleBlockUnrecruit;
             }
         }
 
