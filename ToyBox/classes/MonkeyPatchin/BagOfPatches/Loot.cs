@@ -85,7 +85,7 @@ namespace ToyBox.BagOfPatches {
                     if (__instance is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) return;
                     var rarity = __instance.Rarity();
                     var result = __result.Rarity(rarity);
-                    Main.Log($"BlueprintItem - Name: {__result} - {rarity.ToString()} -> {result}");
+                    //Main.Log($"BlueprintItem - Name: {__result} - {rarity.ToString()} -> {result}");
                     __result = result;
                 }
             }

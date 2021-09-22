@@ -17,6 +17,8 @@ Ver 1.3.8
         Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
         Pickers to let you specifiy loot levels to ignore and/or auto sell.
     "Identify All" added to Bag of Tricks > Common
+    Added quality of life tweak to let you shift click to use items in your inventory
+    Split Tweaks into Quality of Life and Cheats to make it less huge
     New categories for collating items by rarity, cost, enchant value
     Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
     (ArcaneTrixter) Added support for Legendary Heroes throughout Toybox, made fake legendary flag per character.
