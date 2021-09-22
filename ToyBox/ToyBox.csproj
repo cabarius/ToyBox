@@ -174,6 +174,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Metamagic.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestsricted.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Loot.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Movement.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />

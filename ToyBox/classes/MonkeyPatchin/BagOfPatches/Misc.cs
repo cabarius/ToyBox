@@ -23,11 +23,6 @@ using Kingmaker.RuleSystem;
 using Kingmaker.Settings;
 //using Kingmaker.UI._ConsoleUI.Models;
 using Kingmaker.UI.Common;
-using Kingmaker.UI.MVVM._PCView.Loot;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
-using Kingmaker.UI.MVVM._PCView.Slots;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
-using Kingmaker.UI.MVVM._VM.Slots;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -38,13 +33,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
-using Owlcat.Runtime.UI.MVVM;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Steamworks;
 using Kingmaker.Achievements.Platforms;
-using Kingmaker.UI.Common.Animations;
-using UnityEngine.UI;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
@@ -117,83 +109,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        //        [HarmonyPatch(typeof(ItemSlot), "SetupEquipPossibility")]
-
-        [HarmonyPatch(typeof(LootSlotPCView), "BindViewImplementation")]
-        static class ItemSlot_IsUsable_Patch {
-            public static void Postfix(ViewBase<ItemSlotVM> __instance) {
-                if (__instance is LootSlotPCView itemSlotPCView) {
-                    //                        modLogger.Log($"checking  {itemSlotPCView.ViewModel.Item}");
-                    if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll && settings.toggleHighlightCopyableScrolls) {
-                        //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
-                        itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
-                    } else {
-                        itemSlotPCView.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
-                    }
-                    if (settings.toggleColorLootByRarity) {
-                        // TODO - figure this out for loot containers
-#if false
-                        var magicGO = __instance.m_MagicLayer.gameObject;
-                        var color = __instance.Item.Blueprint.Rarity().Color();
-                        var colorOpaque = new Color(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a * 0.9f);
-                        var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
-                        magicGO.GetComponent<Image>().color = colorTranslucent;
-                        var magicFXGO = __instance.m_MagicLayer.FindChild("MagicLayerFX");
-                        magicFXGO.GetComponent<Image>().color = color;
-#endif
-                    }
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
-        static class ItemSlotView_RefreshItem_Patch {
-            public static void Postfix(InventoryEquipSlotView __instance) {
-                if (!__instance.SlotVM.HasItem || !__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.canvasRenderer.SetColor(Color.white);
-                } else if (__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
-                }
-                if (settings.toggleColorLootByRarity && __instance.Item != null) {
-                    var magicGO = __instance.m_MagicLayer.gameObject;
-                    var color = __instance.Item.Blueprint.Rarity().Color();
-                    var colorOpaque = new Color(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a * 0.9f);
-                    var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
-                    magicGO.GetComponent<Image>().color = colorTranslucent;
-                    var magicFXGO = __instance.m_MagicLayer.FindChild("MagicLayerFX");
-                    magicFXGO.GetComponent<Image>().color = color;
-                }
-            }
-        }
-
-#if false
-        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
-        static class ItemSlotView_RefreshItem_Patch {
-            public static void Postfix(InventoryEquipSlotView __instance) {
-                if (__instance.SlotVM.HasItem && __instance.SlotVM.IsScroll && settings.toggleHighlightCopyableScrolls) {
-                    __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
-                }
-                else {
-                    __instance.m_Icon.canvasRenderer.SetColor(Color.white);
-                }
-                __instance.m_MagicLayer.gameObject.SetActive(true);
-                __instance.m_MagicLayer.parent.Find('MagicLayer').gameObject.SetActive(true);
-                //item.GetComponent<Image>().color = Color.red;
-
-                //Main.Log($"ml: {__instance.m_MagicLayer}");
-#if false
-                if (__instance.m_Highlighter.m_Animation != null &&
-                        __instance.m_Highlighter.m_Animation is SwitchLoopAnimator animator) {
-                    animator.m_Image.color = Color.green;
-                    Main.Log("Has a highlighter");
-                }
-#endif
-            }
-        }
-#endif
-
-
 
         // SPIDERS
 

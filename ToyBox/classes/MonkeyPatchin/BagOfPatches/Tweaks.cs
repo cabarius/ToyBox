@@ -41,6 +41,7 @@ using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
+using System.Linq;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {

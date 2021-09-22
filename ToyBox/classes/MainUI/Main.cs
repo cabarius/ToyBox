@@ -133,12 +133,20 @@ namespace ToyBox {
                     UI.ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, UI.AutoWidth());
                     return;
                 }
+#if false
+                using (UI.HorizontalScope()) {
+                    UI.Label("Suggestions or issues click ".green(), UI.AutoWidth());
+                    UI.LinkButton("here", "https://github.com/cabarius/ToyBox/issues");
+                    UI.Space(50);
+                    UI.Label("Chat with the Authors, Narria et all on the ".green(), UI.AutoWidth());
+                    UI.LinkButton("WoTR Discord", "https://discord.gg/wotr");
+                }
+#endif
                 UI.TabBar(ref settings.selectedTab,
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
-                        }
-                        else { UI.Space(25); }
+                        } else UI.Space(25);
                     },
                     new NamedAction("Bag of Tricks", () => { BagOfTricks.OnGUI(); }),
 #if DEBUG

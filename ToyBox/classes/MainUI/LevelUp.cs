@@ -62,6 +62,10 @@ namespace ToyBox {
                 () => UI.Toggle("Ignore Forbidden Archetypes", ref settings.toggleIgnoreForbiddenArchetype, 0),
                 () => UI.Toggle("Ignore Required Stat Values", ref settings.toggleIgnorePrerequisiteStatValue, 0),
                 () => UI.Toggle("Ignore Alignment When Choosing A Class", ref settings.toggleIgnoreAlignmentWhenChoosingClass, 0),
+#if DEBUG
+                () => UI.Toggle("Ignore Spellbook Restrictions When Choosing Spells", ref settings.toggleUniversalSpellbookd, 0),
+#endif
+
                 () => UI.Toggle("Skip Spell Selection", ref settings.toggleSkipSpellSelection, 0),
 #if DEBUG
                     () => UI.Toggle("Lock Character Level", ref settings.toggleLockCharacterLevel, 0),

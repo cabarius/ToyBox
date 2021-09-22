@@ -100,6 +100,8 @@ namespace ToyBox {
         public bool toggleSkipSpellSelection = false;
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
+        public bool toggleUniversalSpellbookd = false;
+
 
         // Multipliers
         public int encumberanceMultiplier = 1;
@@ -168,6 +170,8 @@ namespace ToyBox {
         public bool showComponents = false;
         public bool showElements = false;
         public bool showDivisions = true;
+        public bool showFromAllSpellbooks = false;
+
 
         // Previews (Dialogs, Events ,etc)
 

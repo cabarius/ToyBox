@@ -24,7 +24,7 @@ namespace ToyBox {
     }
     public static partial class BlueprintExensions {
         public static RGBA[] RarityColors = {
-            RGBA.white,
+            RGBA.none,
             RGBA.trash,
             RGBA.common,
             RGBA.notable,
@@ -37,6 +37,7 @@ namespace ToyBox {
         };
 
         public static RarityType Rarity(this BlueprintItem bp) {
+            if (bp == null) return RarityType.None;
             var rating = 0;
             var enchantValue = 0;
             try {
