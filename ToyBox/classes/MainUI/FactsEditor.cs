@@ -225,9 +225,11 @@ namespace ToyBox {
         static public void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
-            var learnable = spellbookBP.SpellList.GetSpells(level);
+            var learnable = settings.showFromAllSpellbooks ? BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level)).Distinct() : spellbookBP.SpellList.GetSpells(level);
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
+
             OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
                 (fact) => fact.Blueprint,
                 learnable,

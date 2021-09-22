@@ -11,7 +11,6 @@ using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
-using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
@@ -19,7 +18,8 @@ using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
     public class PartyEditor {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
+
         enum ToggleChoice {
             Classes,
             Stats,
@@ -37,7 +37,7 @@ namespace ToyBox {
         static UnitEntityData multiclassEditCharacter = null;
         static int respecableCount = 0;
         static int selectedSpellbook = 0;
-        static int selectedSpellbookLevel = 0;
+        public static int selectedSpellbookLevel = 0;
         static bool editSpellbooks = false;
         static UnitEntityData spellbookEditCharacter = null;
         static float nearbyRange = 25;
@@ -47,6 +47,7 @@ namespace ToyBox {
                     Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
         };
         static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
+        public static Dictionary<string, Spellbook> SelectedSpellbook = new Dictionary<string, Spellbook>();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
         private static Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
@@ -89,6 +90,11 @@ namespace ToyBox {
             selectedSpellbookLevel = 0;
             partyFilterChoices = null;
             Main.settings.selectedPartyFilter = 0;
+        }
+
+        // This bit of kludge is added in order to tell whether our generic actions are being accessed from this screen or the Search n' Pick
+        public static bool IsOnPartyEditor() {
+            return Main.settings.selectedTab == 2;
         }
 
         public static void ActionsGUI(UnitEntityData ch) {
@@ -448,7 +454,7 @@ namespace ToyBox {
                     if (spellbooks.Any()) {
                         using (UI.HorizontalScope()) {
                             UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
-                            if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
+                            if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                             UI.DisclosureToggle("Edit", ref editSpellbooks);
                         }
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
@@ -468,7 +474,7 @@ namespace ToyBox {
                                     0,
                                     (lvl) => {
                                         var levelText = spellbook.Blueprint.SpellsPerDay.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
-                                        var knownCount = spellbook.GetKnownSpells(lvl).Count();
+                                        var knownCount = spellbook.GetKnownSpells(lvl).Count;
                                         var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                         return levelText + countText;
                                     },
@@ -482,6 +488,7 @@ namespace ToyBox {
                                     UI.ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), UI.AutoWidth());
                                 }
                             }
+                            SelectedSpellbook[ch.HashKey()] = spellbook;
                             FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
                         }
                     }

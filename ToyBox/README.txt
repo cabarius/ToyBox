@@ -24,6 +24,7 @@ Ver 1.3.8
     Renamed the tweak 'Enable multiple romance (experimental)' to 'Disable Romance IsLocked Flag (experimental)' which is more accurate because we don't know what this does but it doesn't unlock multiple romances. That is under investigation.
     (ArcaneTrixter) Added support for Legendary Heroes throughout Toybox, made fake legendary flag per character.
     (ArcaneTrixter) Added toggles for immunity to negative levels and ability drain.
+    (ArcaneTrixter) Revised + added functionality to spellbook tab in party editor. Can now add/remove from specific spellbooks, and can select spells from any spellbook based on toggle.
     (Truinto) Added tweak: Auto Start Rage When Entering Combat
     (Truinto) Added tweak: Mass Loot Shows Everything When Leaving Map
     (Truinto) Added tweak: Equipment No Weight
