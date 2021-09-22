@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Armors;
+using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Items;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
@@ -56,13 +58,21 @@ namespace ToyBox.BagOfPatches {
                     __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
                 }
                 if (settings.toggleColorLootByRarity && __instance.Item != null) {
-                    var magicGO = __instance.m_MagicLayer.gameObject;
-                    var color = __instance.Item.Blueprint.Rarity().Color();
-                    var colorOpaque = new Color(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a * 0.9f);
+                    var rarity = __instance.Item.Blueprint.Rarity();
+                    var color = rarity.Color();
                     var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
-                    magicGO.GetComponent<Image>().color = colorTranslucent;
-                    var magicFXGO = __instance.m_MagicLayer.FindChild("MagicLayerFX");
-                    magicFXGO.GetComponent<Image>().color = color;
+                    if (rarity == RarityType.Notable) {
+                        //var obj = __instance.m_NotableLayer.gameObject;
+                        //obj.GetComponent<Image>().color = colorTranslucent;
+                        var objFX = __instance.m_NotableLayer.FindChild("NotableLayerFX");
+                        objFX.GetComponent<Image>().color = color;
+                    }
+                    else {
+                        var obj = __instance.m_MagicLayer.gameObject;
+                        obj.GetComponent<Image>().color = colorTranslucent;
+                        var objFX = __instance.m_MagicLayer.FindChild("MagicLayerFX");
+                        objFX.GetComponent<Image>().color = color;
+                    }
                 }
             }
         }
@@ -71,6 +81,8 @@ namespace ToyBox.BagOfPatches {
         static class BlueprintItem_Name_Patch {
             public static void Postfix(BlueprintItem __instance, ref string __result) {
                 if (settings.toggleColorLootByRarity && __result != null && __result.Length > 0) {
+                    if (__instance is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) return;
+                    if (__instance is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) return;
                     var rarity = __instance.Rarity();
                     var result = __result.Rarity(rarity);
                     Main.Log($"BlueprintItem - Name: {__result} - {rarity.ToString()} -> {result}");

@@ -127,6 +127,7 @@ namespace ToyBox {
                         () => UI.Label("Legendary".Rarity(RarityType.Legendary).bold()),
                         () => UI.Label("Mythic".Rarity(RarityType.Mythic).bold()),
                         () => UI.Label("Godly".Rarity(RarityType.Godly)),
+                        () => UI.Label("Notable".Rarity(RarityType.Notable).bold()),
                         () => { }
                     );
                 }
