@@ -31,6 +31,7 @@ Ver 1.3.8
     (Truinto) Added tweak: Allow Item Use From Inventory During Combat
     (Truinto) Added tweak: Disallow Companions Leaving Party
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
+    (Delth) Explicitly removed certain negative buffs (Prone, Fatigued) that the game does not mark as harmful from buff duration multiplier
 Ver 1.3.7
     You can now add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 
     HotKeys now recognize shift, alt, ctrl, alt and command key combos
