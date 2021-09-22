@@ -194,7 +194,7 @@ namespace ToyBox {
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
                 () => UI.Toggle("Mass Loot Shows Everything When Leaving Map (some items might be invisible until looted)", ref settings.toggleMassLootEverything),
-                () => UI.Toggle("Equipment No Weight (turning this off requires you to reload for it to take full effect)", ref settings.toggleEquipmentNoWeight),
+                () => UI.ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => UI.Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => { }
                 );
