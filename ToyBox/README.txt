@@ -16,7 +16,6 @@ Ver 1.3.8
     Loot Colors and Filters
         ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
         Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
-        Pickers to let you specifiy loot levels to ignore and/or auto sell.
     "Identify All" added to Bag of Tricks > Common
     Added quality of life tweak to let you shift click to use items in your inventory
     Split Tweaks into Quality of Life and Cheats to make it less huge
