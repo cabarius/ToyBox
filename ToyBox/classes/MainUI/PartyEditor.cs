@@ -41,11 +41,6 @@ namespace ToyBox {
         static bool editSpellbooks = false;
         static UnitEntityData spellbookEditCharacter = null;
         static float nearbyRange = 25;
-        static Alignment[] alignments = new Alignment[] {
-                    Alignment.LawfulGood,       Alignment.NeutralGood,      Alignment.ChaoticGood,
-                    Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
-                    Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
-        };
         static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
         public static Dictionary<string, Spellbook> SelectedSpellbook = new Dictionary<string, Spellbook>();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
@@ -379,11 +374,29 @@ namespace ToyBox {
                     }
                     using (UI.HorizontalScope()) {
                         UI.Space(528);
-                        int alignmentIndex = Array.IndexOf(alignments, alignment);
-                        var titles = alignments.Select(
+                        int alignmentIndex = Array.IndexOf(WrathExtensions.Alignments, alignment);
+                        var titles = WrathExtensions.Alignments.Select(
                             a => a.Acronym().color(a.Color()).bold()).ToArray();
                         if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
-                            ch.Descriptor.Alignment.Set(alignments[alignmentIndex]);
+                            ch.Descriptor.Alignment.Set(WrathExtensions.Alignments[alignmentIndex]);
+                        }
+                    }
+                    UI.Div(100, 20, 755);
+                    var alignmentMask = ch.Descriptor.Alignment.m_LockedAlignmentMask;
+                    using (UI.HorizontalScope()) {
+                        UI.Space(100);
+                        UI.Label("Alignment Lock", UI.Width(425));
+                        //UI.Label($"{alignmentMask.ToString()}".color(alignmentMask.Color()).bold(), UI.Width(325));
+                        UI.Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
+                    }
+
+                    using (UI.HorizontalScope()) {
+                        UI.Space(528);
+                        int maskIndex = Array.IndexOf(WrathExtensions.AlignmentMasks, alignmentMask);
+                        var titles = WrathExtensions.AlignmentMasks.Select(
+                            a => a.ToString().color(a.Color()).bold()).ToArray();
+                        if (UI.SelectionGrid(ref maskIndex, titles, 3, UI.Width(800))) {
+                            ch.Descriptor.Alignment.LockAlignment(WrathExtensions.AlignmentMasks[maskIndex], new Alignment?());
                         }
                     }
                     UI.Div(100, 20, 755);

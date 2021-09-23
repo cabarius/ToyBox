@@ -26,6 +26,7 @@ using Kingmaker.Settings.Difficulty;
 using ModKit;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
+using Kingmaker.Blueprints.Area;
 
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
@@ -280,9 +281,19 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(CameraRig __instance, CameraMode mode) {
                 if (settings.fovMultiplierCutScenes == 1 && settings.fovMultiplier == 1) return;
                 if (mode == CameraMode.Default && Game.Instance.CurrentMode == GameModeType.Cutscene) {
-                    __instance.Camera.fieldOfView = __instance.CameraZoom.FovMax * settings.fovMultiplierCutScenes / settings.fovMultiplier ;
+                    __instance.Camera.fieldOfView = __instance.CameraZoom.FovMax * settings.fovMultiplierCutScenes / settings.fovMultiplier;
                 }
             }
         }
+
+#if false
+        [HarmonyPatch(typeof(BlueprintArea), nameof(BlueprintArea.CameraMode), MethodType.Getter)]
+        static class BlueprintArea_CameraMode_Patch {
+            public static void Postfix(BlueprintArea __instance, CameraMode __result) {
+                Main.Log("hi");
+                __result = CameraMode.Default;
+            }
+        }
+#endif
     }
 }

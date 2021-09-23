@@ -166,6 +166,7 @@
     <Compile Include="classes\MainUI\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
     <Compile Include="classes\Models\Setings+Multiclass.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Alignment.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />

@@ -70,7 +70,7 @@ namespace ToyBox {
                         .Where(action => action.canPerform(blueprint, ch))
                         .ToArray();
                     var titles = actions.Select(a => a.name);
-                    var title = blueprint.name;
+                    var title = blueprint.NameSafe();
                     if (titles.Contains("Remove") || titles.Contains("Lock")) {
                         title = title.cyan().bold();
                     }

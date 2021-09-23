@@ -3,6 +3,7 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 using UnityEngine;
+using Kingmaker.UnitLogic.Alignments;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -59,7 +60,8 @@ namespace ToyBox {
         public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
         public bool toggleShiftClickToUseInventorySlot = false;
-
+        public bool toggleAlignmentFix = false;
+        public bool togglePreventAlignmentChanges = false;
         // Loot Coloring & Filtering
         public bool toggleColorLootByRarity = false;
         public RarityType lootFilterIgnore = RarityType.None;
@@ -250,6 +252,8 @@ namespace ToyBox {
 
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
+        internal bool toggleSpellbookAbilityAlignmentChecks = false;
+
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);
         }

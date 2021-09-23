@@ -8,6 +8,7 @@ using Kingmaker.Items;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Items.Components;
 
 namespace ToyBox {
     public enum RarityType {
@@ -56,11 +57,12 @@ namespace ToyBox {
             } else if (rating == 0 && bp is BlueprintItemEquipment equipBP) {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
             }
-            //if (item.HasUniqueOriginArea) rating += 5;
-            //if (item.HasUniqueVendor) rating += 5;
-            //if (item.Ability != null) rating += 10;
-            //if (item.ActivatableAbility != null) rating += 10;
-            //rating = Math.Max(rating, );
+            else if (rating == 0 && bp is BlueprintItemNote noteBP) {
+                var component = noteBP.GetComponent<AddItemShowInfoCallback>();
+                if (component != null) {
+                    return RarityType.Notable;
+                }
+            }
             RarityType rarity = RarityType.Trash;
             if (rating > 100) rarity = RarityType.Godly;
             else if (rating >= 60) rarity = RarityType.Mythic;

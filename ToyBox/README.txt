@@ -1,23 +1,31 @@
 ﻿    
 # Brief Description
-Toy Box is a cute and playful mod with 240+ cheats, tweaks and quality of life improvements for Pathfinder: WoTR. It was created in the spirit of Bag of Tricks & Cheat Menu but with a little different focus . It of a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members.
+Toy Box is a cute and playful mod with 300+ cheats, tweaks and quality of life improvements for Pathfinder: WoTR. It was created in the spirit of Bag of Tricks & Cheat Menu but with a little different focus . It of a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members.
 
 # Detailed Description
 
-Now with 260+ Cheats, Tweaks and Quality of Life Improvements
-    Tweaks: 89 (or 130 depending on how you count)
+Now with 300+ Cheats, Tweaks and Quality of Life Improvements
+    Tweaks: 98 (or 139 depending on how you count)
     Level Up & Multiclass: 34
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
+    Crusade: 25
     Quest Resolution: 1
 
 Ver 1.3.9
+    Made Alignment section in Bag of Tricks
+        Fixing alignment shifts for neutral good and similar alignments
+        Prevent alignment shifts
+    Added per character alignment locking in Party Editor > Char > Stats
+    Books and other items that have info triggers are flagged as notable and show a circle around it
+    Changed coloring for notable items to be a distinct lime green
+    (Romances note from nexus forums - Freemantr80 - Regarding romance, I've played twice now with 3 romances to the end. All you need to do is change the FLAG romance count value to 1 before coming back from abyss, and you won't get harassed by your lovers over having multiple partners.)
+    (ArcaneTrixter) Added mythic spellbooks to the new spellbook management section of Party Editor.
     (ArcaneTrixter) Added 'Ignore Alignment Requirement for Abilities' to Cheats menu for those struggling paladins and others.
 Ver 1.3.8
     Loot Colors and Filters
         ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
         Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
-        Pickers to let you specifiy loot levels to ignore and/or auto sell.
     "Identify All" added to Bag of Tricks > Common
     Added quality of life tweak to let you shift click to use items in your inventory
     Split Tweaks into Quality of Life and Cheats to make it less huge

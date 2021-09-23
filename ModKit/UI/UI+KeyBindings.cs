@@ -152,28 +152,28 @@ namespace ModKit {
             static KeyBind lastTriggered = null;
             public static void OnUpdate() {
                 if (lastTriggered != null) {
-                    if (debugKeyBind)
-                        Logger.Log($"    lastTriggered: {lastTriggered} - IsActive: {lastTriggered.IsActive}");
+                    //if (debugKeyBind)
+                    //    Logger.Log($"    lastTriggered: {lastTriggered} - IsActive: {lastTriggered.IsActive}");
                     if (!lastTriggered.IsActive) {
-                        if (debugKeyBind)
-                            Logger.Log($"    lastTriggered: {lastTriggered} - Finished".green());
+                        //if (debugKeyBind)
+                        //    Logger.Log($"    lastTriggered: {lastTriggered} - Finished".green());
                         lastTriggered = null;
                     }
                 }
-                if (debugKeyBind)
-                    Logger.Log($"looking for {Event.current.keyCode}");
+                //if (debugKeyBind)
+                //    Logger.Log($"looking for {Event.current.keyCode}");
                 foreach (var item in bindings) {
                     var identifier = item.Key;
                     var binding = item.Value;
                     var active = binding.IsActive;
-                    if (debugKeyBind)
-                        Logger.Log($"    checking: {binding.ToString()} - IsActive: {(active ? "True".cyan() : "False")} action: {actions.ContainsKey(identifier)}");
+                    //if (debugKeyBind)
+                    //    Logger.Log($"    checking: {binding.ToString()} - IsActive: {(active ? "True".cyan() : "False")} action: {actions.ContainsKey(identifier)}");
                     if (active && actions.ContainsKey(identifier)) {
-                        if (debugKeyBind)
-                            Logger.Log($"    binding: {binding.ToString()} - lastTriggered: {lastTriggered}");
+                        //if (debugKeyBind)
+                        //    Logger.Log($"    binding: {binding.ToString()} - lastTriggered: {lastTriggered}");
                         if (binding != lastTriggered) {
-                            if (debugKeyBind)
-                                Logger.Log($"    firing action: {identifier}".cyan());
+                            //if (debugKeyBind)
+                            //    Logger.Log($"    firing action: {identifier}".cyan());
                             Action action;
                             actions.TryGetValue(identifier, out action);
                             action();
