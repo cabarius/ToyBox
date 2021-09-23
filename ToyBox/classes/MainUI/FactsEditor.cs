@@ -227,6 +227,7 @@ namespace ToyBox {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
             var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                .Where(x => ((BlueprintSpellbook)x).SpellList != null)
                 .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level));
             var mythic = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
                 .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
