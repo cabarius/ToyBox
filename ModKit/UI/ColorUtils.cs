@@ -37,7 +37,7 @@ namespace ModKit {
         white = 0xffffffff,
         none = black,
         trash = 0x606060FF,
-        notable = medred,       // 0xf03399ff, // 0xff3399ff,
+        notable = 0x40ff40c0,       // 0xf03399ff, // 0xff3399ff,
         common = black,         //0xe8e8e8a0,
         uncommon = 0x00882bff,  //0x00802bff, //0x68b020ff, // 0x60B020ff,
         rare = 0x2060ffff,

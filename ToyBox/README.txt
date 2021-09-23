@@ -18,6 +18,8 @@ Ver 1.3.9
         Prevent alignment shifts
     Added per character alignment locking in Party Editor > Char > Stats
     Books and other items that have info triggers are flagged as notable and show a circle around it
+    Changed coloring for notable items to be a distinct lime green
+    (Romances note from nexus forums - Freemantr80 - Regarding romance, I've played twice now with 3 romances to the end. All you need to do is change the FLAG romance count value to 1 before coming back from abyss, and you won't get harassed by your lovers over having multiple partners.)
 Ver 1.3.8
     Loot Colors and Filters
         ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
