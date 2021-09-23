@@ -9,6 +9,7 @@ using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
+using Kingmaker.UnitLogic.Alignments;
 
 namespace ToyBox {
     public static class WrathExtensions {
@@ -19,6 +20,12 @@ namespace ToyBox {
 
         public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }
         public static string Acronym(this Alignment a) { return UIUtility.GetAlignmentAcronym(a); }
+
+        public static Alignment[] Alignments = new Alignment[] {
+                    Alignment.LawfulGood,       Alignment.NeutralGood,      Alignment.ChaoticGood,
+                    Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
+                    Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
+        };
         public static RGBA Color(this Alignment a) {
             switch (a) {
                 case Alignment.LawfulGood: return RGBA.aqua;
@@ -30,6 +37,34 @@ namespace ToyBox {
                 case Alignment.LawfulEvil: return RGBA.purple;
                 case Alignment.NeutralEvil: return RGBA.fuchsia;
                 case Alignment.ChaoticEvil: return RGBA.red;
+            }
+            return RGBA.grey;
+        }
+        public static AlignmentMaskType[] AlignmentMasks = new AlignmentMaskType[] {
+                    AlignmentMaskType.None,             AlignmentMaskType.Good,             AlignmentMaskType.Evil,
+                    AlignmentMaskType.Any,              AlignmentMaskType.Lawful,           AlignmentMaskType.Chaotic,
+                    AlignmentMaskType.LawfulGood,       AlignmentMaskType.NeutralGood,      AlignmentMaskType.ChaoticGood,  
+                    AlignmentMaskType.LawfulNeutral,    AlignmentMaskType.TrueNeutral,      AlignmentMaskType.ChaoticNeutral,
+                    AlignmentMaskType.LawfulEvil,       AlignmentMaskType.NeutralEvil,      AlignmentMaskType.ChaoticEvil,
+        };
+
+        public static RGBA Color(this AlignmentMaskType a) {
+            switch (a) {
+                case AlignmentMaskType.None: return RGBA.grey;
+                case AlignmentMaskType.Good: return RGBA.lime;
+                case AlignmentMaskType.Evil: return RGBA.fuchsia;
+                case AlignmentMaskType.Any: return RGBA.grey;
+                case AlignmentMaskType.Lawful: return RGBA.blue; ;
+                case AlignmentMaskType.Chaotic: return RGBA.orange;
+                case AlignmentMaskType.LawfulGood: return RGBA.aqua;
+                case AlignmentMaskType.NeutralGood: return RGBA.lime;
+                case AlignmentMaskType.ChaoticGood: return RGBA.yellow;
+                case AlignmentMaskType.LawfulNeutral: return RGBA.blue;
+                case AlignmentMaskType.TrueNeutral: return RGBA.white;
+                case AlignmentMaskType.ChaoticNeutral: return RGBA.orange;
+                case AlignmentMaskType.LawfulEvil: return RGBA.purple;
+                case AlignmentMaskType.NeutralEvil: return RGBA.fuchsia;
+                case AlignmentMaskType.ChaoticEvil: return RGBA.red;
             }
             return RGBA.grey;
         }

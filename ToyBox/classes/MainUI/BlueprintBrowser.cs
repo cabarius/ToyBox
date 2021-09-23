@@ -192,7 +192,7 @@ namespace ToyBox {
                     || blueprint.GetType().ToString().Contains(searchText)) {
                     filtered.Add(blueprint);
                 } else {
-                    var name = blueprint.name;
+                    var name = blueprint.GetDisplayName();
                     var description = blueprint.GetDescription() ?? "";
                     if (terms.All(term => StringExtensions.Matches(name, term))
                         || settings.searchesDescriptions && terms.All(term => StringExtensions.Matches(description, term))

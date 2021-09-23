@@ -12,6 +12,12 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.9
+    Made Alignment section in Bag of Tricks
+        Fixing alignment shifts for neutral good and similar alignments
+        Prevent alignment shifts
+    Added per character alignment locking in Party Editor > Char > Stats
+    Books and other items that have info triggers are flagged as notable and show a circle around it
 Ver 1.3.8
     Loot Colors and Filters
         ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including

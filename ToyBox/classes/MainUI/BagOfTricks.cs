@@ -1,9 +1,11 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using System;
+using System.Linq;
 using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
+using Kingmaker.UnitLogic.Alignments;
 using ModKit;
 using static ModKit.UI;
 
@@ -125,6 +127,12 @@ namespace ToyBox {
                 () => { }
             );
             UI.Div(0, 25);
+            UI.HStack("Alignment", 1,
+                () => { UI.Toggle("Fix Alignment Shifts", ref settings.toggleInfiniteAbilities, 0); UI.Space(119); UI.Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
+                () => { UI.Toggle("Prevent Alignment Changes", ref settings.togglePreventAlignmentChanges, 0); UI.Space(25); UI.Label("See Party Editor for more fine grained alignment locking per character".green()); },
+                () => { }
+                );
+            UI.Div(0, 25);
             UI.HStack("Loot", 1,
                 () => {
                     UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
@@ -148,7 +156,7 @@ namespace ToyBox {
 
                     // The following options let you configure loot filtering and auto sell levels:".green());
                 },
-#if false
+#if DEBUG
                 () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
 #endif
