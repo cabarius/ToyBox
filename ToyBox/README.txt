@@ -11,6 +11,8 @@ Now with 260+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Quest Resolution: 1
 
+Ver 1.3.9
+    (ArcaneTrixter) Added 'Ignore Alignment Requirement for Abilities' to Cheats menu for those struggling paladins and others.
 Ver 1.3.8
     Loot Colors and Filters
         ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
