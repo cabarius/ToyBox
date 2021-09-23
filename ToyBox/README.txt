@@ -4,11 +4,12 @@ Toy Box is a cute and playful mod with 240+ cheats, tweaks and quality of life i
 
 # Detailed Description
 
-Now with 260+ Cheats, Tweaks and Quality of Life Improvements
-    Tweaks: 89 (or 130 depending on how you count)
+Now with 300+ Cheats, Tweaks and Quality of Life Improvements
+    Tweaks: 98 (or 139 depending on how you count)
     Level Up & Multiclass: 34
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
+    Crusade: 25
     Quest Resolution: 1
 
 Ver 1.3.8
