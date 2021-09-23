@@ -222,11 +222,18 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
+
         static public void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
-            var learnable = settings.showFromAllSpellbooks ? BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
-                .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level)).Distinct() : spellbookBP.SpellList.GetSpells(level);
+            var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                .Where(x => ((BlueprintSpellbook)x).SpellList != null)
+                .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level));
+            var mythic = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
+                .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
+
+            var learnable = settings.showFromAllSpellbooks ?  normal.Concat(mythic).Distinct() : spellbookBP.SpellList.GetSpells(level);
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
 
