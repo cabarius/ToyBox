@@ -41,6 +41,8 @@ using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using System.Linq;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 
@@ -275,6 +277,25 @@ namespace ToyBox.BagOfPatches {
         static class RuleDealStatDamage_Immune_Patch {
             public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
                 if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyAbilityDamageImmunity) {
+                    __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch]
+        static class AbilityAlignment_IsRestrictionPassed_Patch {
+            [HarmonyPatch(typeof(AbilityCasterAlignment), "IsCasterRestrictionPassed")]
+            [HarmonyPostfix]
+            public static void PostfixCasterRestriction(ref bool __result) {
+                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
+                    __result = true;
+                }
+            }
+
+            [HarmonyPatch(typeof(AbilityTargetAlignment), "IsTargetRestrictionPassed")]
+            [HarmonyPostfix]
+            public static void PostfixTargetRestriction(ref bool __result) {
+                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
                     __result = true;
                 }
             }

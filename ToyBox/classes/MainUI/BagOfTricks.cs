@@ -208,6 +208,7 @@ namespace ToyBox {
                 () => UI.Toggle("Mass Loot Shows Everything When Leaving Map (some items might be invisible until looted)", ref settings.toggleMassLootEverything),
                 () => UI.ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => UI.Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
+                () => UI.Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
                 () => { }
                 );
             UI.Div(153, 25);
