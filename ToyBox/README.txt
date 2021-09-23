@@ -25,13 +25,13 @@ Ver 1.3.8
     (ArcaneTrixter) Added support for Legendary Heroes throughout Toybox, made fake legendary flag per character.
     (ArcaneTrixter) Added toggles for immunity to negative levels and ability drain.
     (ArcaneTrixter) Revised + added functionality to spellbook tab in party editor. Can now add/remove from specific spellbooks, and can select spells from any spellbook based on toggle.
+    (Delth) Explicitly removed certain negative buffs (Prone, Fatigued) that the game does not mark as harmful from buff duration multiplier
     (Truinto) Added tweak: Auto Start Rage When Entering Combat
     (Truinto) Added tweak: Mass Loot Shows Everything When Leaving Map
     (Truinto) Added tweak: Equipment No Weight
     (Truinto) Added tweak: Allow Item Use From Inventory During Combat
     (Truinto) Added tweak: Disallow Companions Leaving Party
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
-    (Delth) Explicitly removed certain negative buffs (Prone, Fatigued) that the game does not mark as harmful from buff duration multiplier
 Ver 1.3.7
     You can now add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 
     HotKeys now recognize shift, alt, ctrl, alt and command key combos
