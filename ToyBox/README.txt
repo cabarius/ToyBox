@@ -15,7 +15,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments
-        Prevent alignment shifts
+        Toggle allowing you to Prevent alignment shifts
     Added per character alignment locking in Party Editor > Char > Stats
     Books and other items that have info triggers are flagged as notable and show a circle around it
     Changed coloring for notable items to be a distinct lime green
