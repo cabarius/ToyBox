@@ -13,17 +13,21 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.10
+    Added Loot Tab
+    Moved Loot Coloring Settings to Loot Tab
+    Added some basic loot filtering and autosell options (TODO)
+    With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
     (Delth) hopefully fixed gestalt skillpoint calculations
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments
-        Prevent alignment shifts
+        Toggle allowing you to Prevent alignment shifts
     Added per character alignment locking in Party Editor > Char > Stats
     Books and other items that have info triggers are flagged as notable and show a circle around it
     Changed coloring for notable items to be a distinct lime green
-    (Romances note from nexus forums - Freemantr80 - Regarding romance, I've played twice now with 3 romances to the end. All you need to do is change the FLAG romance count value to 1 before coming back from abyss, and you won't get harassed by your lovers over having multiple partners.)
     (ArcaneTrixter) Added mythic spellbooks to the new spellbook management section of Party Editor.
     (ArcaneTrixter) Added 'Ignore Alignment Requirement for Abilities' to Cheats menu for those struggling paladins and others.
+    Note:  Freemantr80  mentioned in the nexus forums - Regarding romance, I've played twice now with 3 romances to the end. All you need to do is change the FLAG romance count value to 1 before coming back from abyss, and you won't get harassed by your lovers over having multiple partners.)  We are planning on better romance support including proper polyamory and same sex but are working on some needed infrastructure improvements to provide this and more
 Ver 1.3.8
     Loot Colors and Filters
         ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
@@ -378,6 +382,7 @@ Acknowledgments:
     Pathfinder Wrath of The Righteous Discord channel members
         @Spacehamster - awesome tutorials and taking time to teach me modding WoTR, and letting me port stuff from Kingdom Resolution Mod
         @m0nster - for giving me permission to port stuff from Back of Tricks
+        @hambeard - for permission to port the great KingMaker mod, TheLootCheckList
         @Vek17, @Bubbles, @Balkoth, @swizzlewizzle and the rest of our great Discord modding community - help, moral support and just general awesomeness
     @m0nster, @Hsinyu, @fireundubh for Bag of Tricks which inspired me to get into modding WoTR because I missed this mod so much
 
