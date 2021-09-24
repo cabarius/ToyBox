@@ -16,7 +16,7 @@ Ver 1.3.10
     Added Loot Tab
     Moved Loot Coloring Settings to Loot Tab
     Added some basic loot filtering and autosell options (TODO)
-    With the kind permission and help from legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
+    With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
 
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
