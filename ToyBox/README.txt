@@ -12,6 +12,12 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.10
+    Added Loot Tab
+    Moved Loot Coloring Settings to Loot Tab
+    Added some basic loot filtering and autosell options (TODO)
+    With the kind permission and help from legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
+
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments
@@ -376,6 +382,7 @@ Acknowledgments:
     Pathfinder Wrath of The Righteous Discord channel members
         @Spacehamster - awesome tutorials and taking time to teach me modding WoTR, and letting me port stuff from Kingdom Resolution Mod
         @m0nster - for giving me permission to port stuff from Back of Tricks
+        @hambeard - for permission to port the great KingMaker mod, TheLootCheckList
         @Vek17, @Bubbles, @Balkoth, @swizzlewizzle and the rest of our great Discord modding community - help, moral support and just general awesomeness
     @m0nster, @Hsinyu, @fireundubh for Bag of Tricks which inspired me to get into modding WoTR because I missed this mod so much
 

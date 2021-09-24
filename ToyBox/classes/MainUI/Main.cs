@@ -155,6 +155,7 @@ namespace ToyBox {
                     new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
 #endif
                     new NamedAction("Party", () => { PartyEditor.OnGUI(); }),
+                    new NamedAction("Loot", () => { PhatLoot.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
                     new NamedAction("Crusade", () => { CrusadeEditor.OnGUI(); }),
                     new NamedAction("Quests", () => { QuestEditor.OnGUI(); })
