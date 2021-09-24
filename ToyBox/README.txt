@@ -12,6 +12,8 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.10
+    (Delth) hopefully fixed gestalt skillpoint calculations
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments
