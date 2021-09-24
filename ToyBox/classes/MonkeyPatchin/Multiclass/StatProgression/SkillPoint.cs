@@ -41,6 +41,9 @@ namespace ToyBox.Multiclass {
             switch (Main.settings.multiclassSkillPointPolicy) {
                 case ProgressionPolicy.Largest:
                     total = Mathf.Max(baseTotal, gestaltSumOrMax);
+                    //if user gestalts unevenly this gets weird
+                    //like if they level up to 2 in main class (that gives 2 points/level) an 1 in gestalt (that gives 6 points) this should return 6.
+                    //but that should be fine? Hard to imagine how else it could work.
                     break;
                 case ProgressionPolicy.Average:
                     total = (gestaltSumOrMax + baseTotal) / (gestaltCount + 1);
