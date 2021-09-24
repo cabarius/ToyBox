@@ -103,10 +103,8 @@ namespace ToyBox {
                 if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
                     return UIUtilityUnit.SpellbookHasSpell(selectedSpellbook, ability);
                 }
-
-                return ch.Spellbooks.Any(spellbook => spellbook.IsKnown(ability));
             }
-            return ch.Descriptor.Abilities.HasFact(ability);
+            return ch.Spellbooks.Any(spellbook => spellbook.IsKnown(ability)) || ch.Descriptor.Abilities.HasFact(ability);
         }
         public static bool CanAddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
