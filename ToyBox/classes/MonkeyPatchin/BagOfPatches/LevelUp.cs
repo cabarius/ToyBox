@@ -289,6 +289,33 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(PrerequisiteFeature))]
+        public static class PrerequisiteFeature_CheckInternal_Patch {
+            [HarmonyPostfix]
+            [HarmonyPatch("CheckInternal")]
+            public static void PostfixCheckInternal([NotNull] UnitDescriptor unit, ref bool __result) {
+                if (!unit.IsPartyOrPet()) {
+                    return;
+                }
+
+                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass) {
+                    __result = true;
+                }
+            }
+
+            [HarmonyPostfix]
+            [HarmonyPatch("ConsiderFulfilled")]
+            public static void PostfixConsiderFulfilled([NotNull] UnitDescriptor unit, ref bool __result) {
+                if (!unit.IsPartyOrPet()) {
+                    return;
+                }
+
+                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass) {
+                    __result = true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(PrerequisiteAlignment), "CheckInternal")]
         public static class PrerequisiteAlignment_Check_Patch {
             public static void Postfix(
