@@ -128,7 +128,7 @@ namespace ToyBox {
             );
             UI.Div(0, 25);
             UI.HStack("Alignment", 1,
-                () => { UI.Toggle("Fix Alignment Shifts", ref settings.toggleInfiniteAbilities, 0); UI.Space(119); UI.Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
+                () => { UI.Toggle("Fix Alignment Shifts", ref settings.toggleAlignmentFix, 0); UI.Space(119); UI.Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
                 () => { UI.Toggle("Prevent Alignment Changes", ref settings.togglePreventAlignmentChanges, 0); UI.Space(25); UI.Label("See Party Editor for more fine grained alignment locking per character".green()); },
                 () => { }
                 );
