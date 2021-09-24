@@ -17,6 +17,7 @@ Ver 1.3.10
     Moved Loot Coloring Settings to Loot Tab
     Added some basic loot filtering and autosell options (TODO)
     With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
+    (ArcaneTrixter) Added 'Ignore Prerequisite Features (like Race) when choosing Class' to levelup.
     (Delth) hopefully fixed gestalt skillpoint calculations
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
