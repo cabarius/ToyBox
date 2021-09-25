@@ -20,15 +20,24 @@ namespace ToyBox {
                         UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
                         UI.Label("The coloring of rarity goes as follows:".green());
                         UI.HStack("Rarity".orange(), 1,
-                            () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
-                            () => UI.Label("Common".bold()),
-                            () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
-                            () => UI.Label("Rare".Rarity(RarityType.Rare).bold()),
-                            () => UI.Label("Epic".Rarity(RarityType.Epic).bold()),
-                            () => UI.Label("Legendary".Rarity(RarityType.Legendary).bold()),
-                            () => UI.Label("Mythic".Rarity(RarityType.Mythic).bold()),
-                            () => UI.Label("Godly".Rarity(RarityType.Godly)),
-                            () => UI.Label("Notable".Rarity(RarityType.Notable).bold()),
+                            () => { 
+                                UI.Label("Trash".Rarity(RarityType.Trash).bold(), UI.rarityStyle, UI.Width(200));
+                                UI.Space(5); UI.Label("Common".Rarity(RarityType.Common).bold(), UI.rarityStyle, UI.Width(200));
+                                UI.Space(5); UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold(), UI.rarityStyle, UI.Width(200));
+                            },
+                            () => {
+                                UI.Space(3); UI.Label("Rare".Rarity(RarityType.Rare).bold(), UI.rarityStyle, UI.Width(200));
+                                UI.Space(5); UI.Label("Epic".Rarity(RarityType.Epic).bold(), UI.rarityStyle, UI.Width(200));
+                                UI.Space(5); UI.Label("Legendary".Rarity(RarityType.Legendary).bold(), UI.rarityStyle, UI.Width(200));
+                            },
+                            () => {
+                                UI.Space(5); UI.Label("Mythic".Rarity(RarityType.Mythic).bold(), UI.rarityStyle, UI.Width(200));
+                                UI.Space(5); UI.Label("Godly".Rarity(RarityType.Godly).bold(), UI.rarityStyle, UI.Width(200));
+                                UI.Space(5); UI.Label("Notable".Rarity(RarityType.Notable).bold() + "*".orange().bold(), UI.rarityStyle, UI.Width(200));
+                            },
+                            () => {
+                                UI.Space(3); UI.Label("*".orange().bold() + " Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green(), UI.Width(615));
+                            },
                             () => { }
                         );
                     }
@@ -53,24 +62,28 @@ namespace ToyBox {
                     if (Main.IsInGame) {
                         areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
                     }
-                    UI.Label(areaName.orange().bold(), UI.AutoWidth());
-                    UI.Space(25); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
-                    UI.Space(25); UI.Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint);
+                    UI.Label(areaName.orange().bold(), UI.Width(300));
+                    UI.Label("Rarity: ".cyan(), UI.AutoWidth());
+                    UI.RarityGrid(ref settings.lootChecklistFilterRarity, 4, UI.AutoWidth());                    
+                },
+                () => {
+                    //UI.Space(390); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
+                    UI.Space(390); UI.Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint);
                     UI.Space(25); UI.Toggle("Description", ref settings.toggleLootChecklistFilterDescription);
-                    UI.Space(25); UI.Label("Rarity: ".cyan(), UI.AutoWidth());
-                    UI.RarityGrid(ref settings.lootChecklistFilterRarity, 0, UI.AutoWidth());
                 },
                 () => {
                     if (!Main.IsInGame) { UI.Label("Not available in the Main Menu".orange()); return; }
                     var presentGroups = LootHelper.GetMassLootFromCurrentArea().GroupBy(p => p.InteractionLoot != null ? "Containers" : "Units");
                     var indent = 3;
-                    UI.Space(50);
                     using (UI.VerticalScope()) {
                         foreach (var group in presentGroups.Reverse()) {
-                            UI.Label($"{group.Key.cyan()}: {group.Count()}");
+                            var presents = group.AsEnumerable();
+                            var rarity = settings.lootChecklistFilterRarity;
+                            var count = presents.Count(p => p.GetLewtz().Lootable(rarity).Count() > 0);
+                            UI.Label($"{group.Key.cyan()}: {count}");
                             UI.Div(indent);
-                            foreach (var present in group.AsEnumerable()) {
-                                var pahtLewts = present.GetLewtz().Lootable(settings.lootChecklistFilterRarity);
+                            foreach (var present in presents) {
+                                var pahtLewts = present.GetLewtz().Lootable(rarity);
                                 var unit = present.Unit;
                                 if (pahtLewts.Count > 0
                                     //&& (unit == null
@@ -78,28 +91,30 @@ namespace ToyBox {
                                     //    )
                                     ) {
                                     isEmpty = false;
+                                    UI.Div();
                                     using (UI.HorizontalScope()) {
                                         UI.Space(indent);
                                         UI.Label(present.GetName().orange().bold(), UI.Width(300));
-                                        //UI.Label($"{present.GetName().orange().bold()} - {pahtLewts.Count()}", UI.Width(300));
+                                        UI.Space(25);
                                         using (UI.VerticalScope()) {
                                             foreach (var lewt in pahtLewts) {
                                                 var description = lewt.Blueprint.Description;
-                                                bool shouldShowDescription = settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
+                                                bool showBP = settings.toggleLootChecklistFilterBlueprint;
+                                                bool showDesc = settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
                                                 using (UI.HorizontalScope()) {
                                                     Main.Log($"rarity: {lewt.Blueprint.Rarity()} - color: {lewt.Blueprint.Rarity().color()}");
-                                                    UI.Label(lewt.Name.Rarity(lewt.Blueprint.Rarity()), UI.Width(300));
-                                                    if (settings.toggleLootChecklistFilterBlueprint) {
-                                                        UI.Space(100); UI.Label(lewt.Blueprint.GetDisplayName(), UI.Width(300));
+                                                    UI.Label(lewt.Name.Rarity(lewt.Blueprint.Rarity()), showDesc || showBP ? UI.Width(350) : UI.AutoWidth());
+                                                    if (showBP) {
+                                                        UI.Space(100); UI.Label(lewt.Blueprint.GetDisplayName().grey(), showDesc ? UI.Width(350) : UI.AutoWidth());
                                                     }
-                                                    if (shouldShowDescription) {
+                                                    if (showDesc) {
                                                         UI.Space(100); UI.Label(description.RemoveHtmlTags().green());
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    //UI.Div(indent);
+                                    UI.Space(25);
                                 }
                             }
                             UI.Space(25);
