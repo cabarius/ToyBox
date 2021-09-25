@@ -60,7 +60,7 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
-        public bool toggleUnlockTheClFromClass = false;
+
         // Loot 
         public bool toggleColorLootByRarity = false;
         public RarityType lootFilterIgnore = RarityType.None;
