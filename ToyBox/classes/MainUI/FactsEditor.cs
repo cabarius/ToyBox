@@ -14,6 +14,7 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using ModKit;
 using ModKit.Utility;
+using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -89,9 +90,10 @@ namespace ToyBox {
                 UI.Space(100);
                 UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
                 UI.Space(25);
-                if (showAll) {
+                if (showAll && typeof(T) == typeof(AbilityData)) { // This is obviously tech debt, but I don't want to deal with Search All Spellbooks/Add All being on the facts editor as it is now
                     UI.Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks);
                     UI.Space(25);
+                    UI.ActionButton("Add All", () => { CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList());}, UI.AutoWidth());
                 }
                 if (matchCount > 0 && searchText.Length > 0) {
                     String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();

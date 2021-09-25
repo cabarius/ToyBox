@@ -3,7 +3,6 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 using UnityEngine;
-using Kingmaker.UnitLogic.Alignments;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -111,6 +110,7 @@ namespace ToyBox {
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
         public bool toggleUniversalSpellbookd = false;
+        public bool toggleUncappedCasterLevel = false;
 
         // Multipliers
         public int encumberanceMultiplier = 1;
