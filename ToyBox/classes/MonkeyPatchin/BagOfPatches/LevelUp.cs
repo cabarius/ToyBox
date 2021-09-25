@@ -411,7 +411,7 @@ namespace ToyBox.BagOfPatches {
         */
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
-            //Defines which progressions are allowed to be multipiled to prevent unexpected behavior
+            //Defines which progressions are allowed to be multiplied to prevent unexpected behavior
             private static readonly BlueprintGuid[] AllowedProgressions = new BlueprintGuid[] {
                 BlueprintGuid.Parse("5b72dd2ca2cb73b49903806ee8986325") //BasicFeatsProgression
             };
