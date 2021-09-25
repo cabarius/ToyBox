@@ -1,24 +1,58 @@
 ﻿    
 # Brief Description
-Toy Box is a cute and playful mod with 240+ cheats, tweaks and quality of life improvements for Pathfinder: WoTR. It was created in the spirit of Bag of Tricks & Cheat Menu but with a little different focus . It of a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members.
+Toy Box is a cute and playful mod with 300+ cheats, tweaks and quality of life improvements for Pathfinder: WoTR. It was created in the spirit of Bag of Tricks & Cheat Menu but with a little different focus . It of a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members.
 
 # Detailed Description
 
-Now with 260+ Cheats, Tweaks and Quality of Life Improvements
-    Tweaks: 84 (or 125 depending on how you count)
+Now with 300+ Cheats, Tweaks and Quality of Life Improvements
+    Tweaks: 98 (or 139 depending on how you count)
     Level Up & Multiclass: 34
     Party Editor: 67    
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
+    Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.10
+    Added Loot Tab
+    Moved Loot Coloring Settings to Loot Tab
+    Added some basic loot filtering and autosell options (TODO)
+    With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
+    Loot color tweaks: notable is now yellow and trash is now an appropriate sh_t brown color
+    Hot Key Binding control now scales properly to Unity Mod Manager UI scale setting.
+    (ArcaneTrixter) Added 'Ignore Prerequisite Features (like Race) when choosing Class' to levelup.
+    (ArcaneTrixter) Bumped max burn for kineticist burn cheat to 30 so you never have to be burned again.
+    (ArcaneTrixter) Reorganized stat section of party editor to not just be the random enum order.
+    (ArcaneTrixter) Allowed multiple judgements to be active at once.
+    (Delth) hopefully fixed gestalt skillpoint calculations
+Ver 1.3.9
+    Made Alignment section in Bag of Tricks
+        Fixing alignment shifts for neutral good and similar alignments
+        Toggle allowing you to Prevent alignment shifts
+    Added per character alignment locking in Party Editor > Char > Stats
+    Books and other items that have info triggers are flagged as notable and show a circle around it
+    Changed coloring for notable items to be a distinct lime green
+    (ArcaneTrixter) Added mythic spellbooks to the new spellbook management section of Party Editor.
+    (ArcaneTrixter) Added 'Ignore Alignment Requirement for Abilities' to Cheats menu for those struggling paladins and others.
+    Note:  Freemantr80  mentioned in the nexus forums - Regarding romance, I've played twice now with 3 romances to the end. All you need to do is change the FLAG romance count value to 1 before coming back from abyss, and you won't get harassed by your lovers over having multiple partners.)  We are planning on better romance support including proper polyamory and same sex but are working on some needed infrastructure improvements to provide this and more
 Ver 1.3.8
     Loot Colors and Filters
         ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
         Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
-        Pickers to let you specifiy loot levels to ignore and/or auto sell.
     "Identify All" added to Bag of Tricks > Common
+    Added quality of life tweak to let you shift click to use items in your inventory
+    Split Tweaks into Quality of Life and Cheats to make it less huge
     New categories for collating items by rarity, cost, enchant value
     Search 'n Pick now defaults to searching descriptions. Untick the checkbox to disable this
+    Renamed the tweak 'Enable multiple romance (experimental)' to 'Disable Romance IsLocked Flag (experimental)' which is more accurate because we don't know what this does but it doesn't unlock multiple romances. That is under investigation.
+    (ArcaneTrixter) Added support for Legendary Heroes throughout Toybox, made fake legendary flag per character.
+    (ArcaneTrixter) Added toggles for immunity to negative levels and ability drain.
+    (ArcaneTrixter) Revised + added functionality to spellbook tab in party editor. Can now add/remove from specific spellbooks, and can select spells from any spellbook based on toggle.
+    (Delth) Explicitly removed certain negative buffs (Prone, Fatigued) that the game does not mark as harmful from buff duration multiplier
+    (Truinto) Added tweak: Auto Start Rage When Entering Combat
+    (Truinto) Added tweak: Mass Loot Shows Everything When Leaving Map
+    (Truinto) Added tweak: Equipment No Weight
+    (Truinto) Added tweak: Allow Item Use From Inventory During Combat
+    (Truinto) Added tweak: Disallow Companions Leaving Party
     (Vikash) Fixed Respec Code, Can now Respec companions even if they are not in party.
 Ver 1.3.7
     You can now add key binds to cheat buttons like "Rest All", "Full Bufs", "Reroll Perception", etc 
@@ -354,6 +388,7 @@ Acknowledgments:
     Pathfinder Wrath of The Righteous Discord channel members
         @Spacehamster - awesome tutorials and taking time to teach me modding WoTR, and letting me port stuff from Kingdom Resolution Mod
         @m0nster - for giving me permission to port stuff from Back of Tricks
+        @hambeard - for permission to port the great KingMaker mod, TheLootCheckList
         @Vek17, @Bubbles, @Balkoth, @swizzlewizzle and the rest of our great Discord modding community - help, moral support and just general awesomeness
     @m0nster, @Hsinyu, @fireundubh for Bag of Tricks which inspired me to get into modding WoTR because I missed this mod so much
 

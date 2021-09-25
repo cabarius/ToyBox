@@ -21,6 +21,8 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
 using UnityModManagerNet;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.UI.ServiceWindow;
 
 namespace ToyBox {
     public static class Actions {
@@ -98,15 +100,19 @@ namespace ToyBox {
         }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
-                foreach (var spellbook in ch.Spellbooks) {
-                    if (spellbook.IsKnown(ability)) return true;
+                if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                    return UIUtilityUnit.SpellbookHasSpell(selectedSpellbook, ability);
                 }
             }
-            if (ch.Descriptor.Abilities.HasFact(ability)) return true;
-            return false;
+            return ch.Spellbooks.Any(spellbook => spellbook.IsKnown(ability)) || ch.Descriptor.Abilities.HasFact(ability);
         }
         public static bool CanAddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
+                if (PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                    return !selectedSpellbook.IsKnown(ability) &&
+                           (ability.IsInSpellList(selectedSpellbook.Blueprint.SpellList) || Main.settings.showFromAllSpellbooks);
+                }
+
                 foreach (var spellbook in ch.Spellbooks) {
                     if (spellbook.IsKnown(ability)) return false;
                     var spellbookBP = spellbook.Blueprint;
@@ -127,6 +133,13 @@ namespace ToyBox {
         }
         public static void AddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
+                if (CanAddAbility(ch, ability)) {
+                    if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                            selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, ability);
+                            return;
+                    }
+                }
+
                 Main.Log($"adding spell: {ability.Name}");
                 foreach (var spellbook in ch.Spellbooks) {
                     var spellbookBP = spellbook.Blueprint;
@@ -149,14 +162,20 @@ namespace ToyBox {
                 ch.Descriptor.AddFact(ability);
             }
         }
-        static public bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
-            return ability.IsSpell && !ch.Descriptor.HasFact(ability);
+        public static bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
+            return ability.IsSpell && !ch.Descriptor.HasFact(ability) && !PartyEditor.IsOnPartyEditor();
         }
         public static void AddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
             ch.Descriptor.AddFact(ability);
         }
         public static void RemoveAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
+                if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                    if (UIUtilityUnit.SpellbookHasSpell(selectedSpellbook, ability)) {
+                        selectedSpellbook.RemoveSpell(ability);
+                        return;
+                    }
+                }
                 foreach (var spellbook in ch.Spellbooks) {
                     if (UIUtilityUnit.SpellbookHasSpell(spellbook, ability)) {
                         spellbook.RemoveSpell(ability);
@@ -170,12 +189,11 @@ namespace ToyBox {
             //            ch.Descriptor.Progression.RemoveMythicLevel
         }
         public static void resetClassLevel(this UnitEntityData ch) {
-            // TODO - this doesn't seem to work in BoT either...
-            int level = 21;
+            int level = ch.Descriptor.Progression.MaxCharacterLevel;
             int xp = ch.Descriptor.Progression.Experience;
-            BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
+            BlueprintStatProgression xpTable = ch.Descriptor.Progression.ExperienceTable;
 
-            for (int i = 20; i >= 1; i--) {
+            for (int i = ch.Descriptor.Progression.MaxCharacterLevel; i >= 1; i--) {
                 int xpBonus = xpTable.GetBonus(i);
 
                 Main.Log(i + ": " + xpBonus + " | " + xp);

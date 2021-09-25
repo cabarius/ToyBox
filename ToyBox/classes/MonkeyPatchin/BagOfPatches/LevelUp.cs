@@ -8,7 +8,6 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
@@ -19,6 +18,9 @@ using System.Linq;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
+using Kingmaker.UI.ServiceWindow;
+using UnityEngine;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -38,27 +40,43 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitProgressionData))]
         static class UnitProgressionData_LegendaryHero_Patch {
             [HarmonyPatch("ExperienceTable", MethodType.Getter)]
-            private static void Postfix(ref BlueprintStatProgression __result) {
-                __result = !settings.toggleLegendaryLeveling
+            private static void Postfix(ref BlueprintStatProgression __result, UnitProgressionData __instance) {
+                settings.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out bool isFakeLegendaryHero);
+                bool legendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
+                __result = !legendaryHero
                         ? Game.Instance.BlueprintRoot.Progression.XPTable
                         : Game.Instance.BlueprintRoot.Progression.LegendXPTable.Or(null)
                           ?? Game.Instance.BlueprintRoot.Progression.XPTable;
             }
 
             [HarmonyPatch("MaxCharacterLevel", MethodType.Getter)]
-            private static void Postfix(ref int __result) {
-                if (settings.toggleLegendaryLeveling) {
+            private static void Postfix(ref int __result, UnitProgressionData __instance) {
+                settings.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out bool isFakeLegendaryHero);
+                bool isLegendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
+                if (isLegendaryHero) {
                     __result = 40;
                 }
             }
         }
 
-        [HarmonyPatch(typeof(ProgressionRoot), "XPTable", MethodType.Getter)]
-        static class ProgressionRoot_FixExperienceBar_Patch {
-            public static void Postfix(ref BlueprintStatProgression __result, ProgressionRoot __instance) {
-                if (settings.toggleLegendaryLeveling) {
-                    __result = __instance.LegendXPTable;
-                }
+        [HarmonyPatch(typeof(CharSheetCommonLevel), "Initialize")]
+        static class CharSheetCommonLevel_FixExperienceBar_Patch {
+            public static void Postfix(UnitProgressionData data, ref CharSheetCommonLevel __instance) {
+                __instance.Level.text = "Level " + data.CharacterLevel;
+                int nextLevel = data.ExperienceTable.Bonuses[data.CharacterLevel + 1];
+                int currentLevel = data.ExperienceTable.Bonuses[data.CharacterLevel];
+                int experience = data.Experience;
+                __instance.Exp.text = $"{experience as object}/{nextLevel as object}";
+                __instance.Bar.value = (float)(experience - currentLevel) / (float)(nextLevel - currentLevel);
+            }
+        }
+
+        [HarmonyPatch(typeof(CharInfoExperienceVM), "RefreshData")]
+        static class CharInfoExperienceVM_FixExperienceBar_Patch {
+            public static void Postfix(ref CharInfoExperienceVM __instance) {
+                var unit = __instance.Unit.Value;
+                __instance.NextLevelExp = unit.Progression.ExperienceTable.Bonuses[Mathf.Min(unit.Progression.CharacterLevel + 1, unit.Progression.ExperienceTable.Bonuses.Length - 1)];
+                __instance.CurrentLevelExp = unit.Progression.ExperienceTable.Bonuses.ElementAtOrDefault(unit.Progression.CharacterLevel);
             }
         }
 
@@ -266,6 +284,33 @@ namespace ToyBox.BagOfPatches {
                     ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
                 if (settings.toggleIgnorePrerequisiteStatValue) {
+                    __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(PrerequisiteFeature))]
+        public static class PrerequisiteFeature_CheckInternal_Patch {
+            [HarmonyPostfix]
+            [HarmonyPatch("CheckInternal")]
+            public static void PostfixCheckInternal([NotNull] UnitDescriptor unit, ref bool __result) {
+                if (!unit.IsPartyOrPet()) {
+                    return;
+                }
+
+                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass) {
+                    __result = true;
+                }
+            }
+
+            [HarmonyPostfix]
+            [HarmonyPatch("ConsiderFulfilled")]
+            public static void PostfixConsiderFulfilled([NotNull] UnitDescriptor unit, ref bool __result) {
+                if (!unit.IsPartyOrPet()) {
+                    return;
+                }
+
+                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass) {
                     __result = true;
                 }
             }

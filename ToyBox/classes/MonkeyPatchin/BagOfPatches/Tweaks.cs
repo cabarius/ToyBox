@@ -6,7 +6,6 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Cheats;
-using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap;
@@ -21,18 +20,13 @@ using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.Commands;
-using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.Utility;
-using Kingmaker.Visual.Animation.Kingmaker.Actions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Tutorial;
-using Kingmaker.Armies.TacticalCombat.Parts;
-using Kingmaker.Armies;
+using Kingmaker.RuleSystem.Rules;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.UnitLogic.ActivatableAbilities;
@@ -40,12 +34,24 @@ using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
 using Kingmaker.UI.IngameMenu;
 using System.Reflection;
+using Kingmaker.View.MapObjects;
+using Owlcat.Runtime.Core.Utils;
+using Kingmaker.Items;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Shields;
+using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
+using System.Linq;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
+        private static BlueprintGuid rage = BlueprintGuid.Parse("df6a2cce8e3a9bd4592fb1968b83f730");
 
         //     private static bool CanCopySpell([NotNull] BlueprintAbility spell, [NotNull] Spellbook spellbook) => spellbook.Blueprint.CanCopyScrolls && !spellbook.IsKnown(spell) && spellbook.Blueprint.SpellList.Contains(spell);
 
@@ -182,6 +188,16 @@ namespace ToyBox.BagOfPatches {
                 if (!inCombat && settings.toggleInstantRestAfterCombat) {
                     CheatsCombat.RestAll();
                 }
+                if (inCombat && settings.toggleEnterCombatAutoRage) {
+                    foreach (var unit in Game.Instance.Player.Party) {
+                        foreach (var activatable in unit.ActivatableAbilities) {
+                            if (activatable.Blueprint.AssetGuid == rage) {
+                                activatable.IsOn = true;
+                                break;
+                            }
+                        }
+                    }
+                }
 #if false
                 if (!inCombat && settings.toggleRestoreItemChargesAfterCombat) {
                     Cheats.RestoreAllItemCharges();
@@ -248,6 +264,43 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(RuleDrainEnergy), "TargetIsImmune", MethodType.Getter)]
+        static class RuleDrainEnergy_Immune_Patch {
+            public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
+                if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyNegativeLevelImmunity) {
+                    __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleDealStatDamage), "Immune", MethodType.Getter)]
+        static class RuleDealStatDamage_Immune_Patch {
+            public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
+                if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyAbilityDamageImmunity) {
+                    __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch]
+        static class AbilityAlignment_IsRestrictionPassed_Patch {
+            [HarmonyPatch(typeof(AbilityCasterAlignment), "IsCasterRestrictionPassed")]
+            [HarmonyPostfix]
+            public static void PostfixCasterRestriction(ref bool __result) {
+                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
+                    __result = true;
+                }
+            }
+
+            [HarmonyPatch(typeof(AbilityTargetAlignment), "IsTargetRestrictionPassed")]
+            [HarmonyPostfix]
+            public static void PostfixTargetRestriction(ref bool __result) {
+                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
+                    __result = true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(MainMenuBoard), "Update")]
         static class MainMenuButtons_Update_Patch {
             static void Postfix() {
@@ -273,6 +326,93 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(MassLootHelper), nameof(MassLootHelper.GetMassLootFromCurrentArea))]
+        public static class PatchLootEverythingOnLeave_Patch {
+            public static bool Prefix(ref IEnumerable<LootWrapper> __result) {
+                if (!settings.toggleMassLootEverything) return true;
+
+                var all_units = Game.Instance.State.Units.All.Where(w => w.IsInGame);
+                var result_units = all_units.Where(unit => unit.HasLoot).Select(unit => new LootWrapper { Unit = unit }); //unit.IsRevealed && unit.IsDeadAndHasLoot
+
+                var all_entities = Game.Instance.State.Entities.All.Where(w => w.IsInGame);
+                var all_chests = all_entities.Select(s => s.Get<InteractionLootPart>()).Where(i => i?.Loot != Game.Instance.Player.SharedStash).NotNull();
+
+                List<InteractionLootPart> tmp = TempList.Get<InteractionLootPart>();
+
+                foreach (InteractionLootPart i in all_chests) {
+                    //if (i.Owner.IsRevealed
+                    //    && i.Loot.HasLoot
+                    //    && (i.LootViewed
+                    //        || (i.View is DroppedLoot && !i.Owner.Get<DroppedLoot.EntityPartBreathOfMoney>())
+                    //        || i.View.GetComponent<SkinnedMeshRenderer>()))
+                    if (i.Loot.HasLoot) {
+                        tmp.Add(i);
+                    }
+                }
+
+                var result_chests = tmp.Distinct(new MassLootHelper.LootDuplicateCheck()).Select(i => new LootWrapper { InteractionLoot = i });
+
+                __result = result_units.Concat(result_chests);
+#if false   
+                foreach (var loot in __result) // showing inventories from living enemies makes the items invisible (also they can still be looted with the Get All option)
+                {
+                    if (loot.Unit != null)
+                    ;
+                    if (loot.InteractionLoot != null)
+                    ;
+                }
+#endif
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemsCollection), nameof(ItemsCollection.DeltaWeight))]
+        public static class NoWeight_Patch1 {
+            public static void Refresh(bool value) {
+                if (value)
+                    Game.Instance.Player.Inventory.Weight = 0f;
+                else
+                    Game.Instance.Player.Inventory.UpdateWeight();
+            }
+
+            public static bool Prefix(ItemsCollection __instance) {
+                if (!settings.toggleEquipmentNoWeight) return true;
+
+                if (__instance.IsPlayerInventory) {
+                    __instance.Weight = 0f;
+                }
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitBody), nameof(UnitBody.EquipmentWeight), MethodType.Getter)]
+        public static class NoWeight_Patch2 {
+            public static bool Prefix(ref float __result) {
+                if (!settings.toggleEquipmentNoWeight) return true;
+
+                __result = 0f;
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.IsUsableFromInventory), MethodType.Getter)]
+        public static class ItemEntity_IsUsableFromInventory_Patch {
+            // Allow Item Use From Inventory During Combat
+            public static bool Prefix(ItemEntity __instance, ref bool __result) {
+                if (!settings.toggleUseItemsDuringCombat) return true;
+
+                BlueprintItemEquipment item = __instance.Blueprint as BlueprintItemEquipment;
+                __result = item?.Ability != null;
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(Unrecruit), nameof(Unrecruit.RunAction))]
+        public class Unrecruit_RunAction_Patch {
+            public static bool Prefix() {
+                return !settings.toggleBlockUnrecruit;
+            }
+        }
 
         [HarmonyPatch(typeof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked), "CheckCondition")]
         public static class RomanceLocked_CheckCondition_Patch {
@@ -297,55 +437,22 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(UnitPartActivatableAbility), nameof(UnitPartActivatableAbility.GetGroupSize))]
         public static class UnitPartActivatableAbility_GetGroupSize_Patch {
-            public static ActivatableAbilityGroup[] groups = new ActivatableAbilityGroup[] {
-                ActivatableAbilityGroup.AeonGaze,
-                ActivatableAbilityGroup.ArcaneArmorProperty,
-                ActivatableAbilityGroup.ArcaneWeaponProperty,
-                ActivatableAbilityGroup.AzataMythicPerformance,
-                ActivatableAbilityGroup.BarbarianStance,
-                ActivatableAbilityGroup.BardicPerformance,
-                ActivatableAbilityGroup.ChangeShape,
-                ActivatableAbilityGroup.ChangeShapeKitsune,
-                ActivatableAbilityGroup.CombatManeuverStrike,
-                ActivatableAbilityGroup.CombatStyle,
-                ActivatableAbilityGroup.CriticalFeat,
-                ActivatableAbilityGroup.DebilitatingStrike,
-                ActivatableAbilityGroup.DemonMajorAspect,
-                ActivatableAbilityGroup.DivineWeaponProperty,
-                ActivatableAbilityGroup.DrovierAspect,
-                ActivatableAbilityGroup.DuelistCripplingCritical,
-                ActivatableAbilityGroup.ElementalOverflow,
-                ActivatableAbilityGroup.FeralTransformation,
-                ActivatableAbilityGroup.FormInfusion,
-                ActivatableAbilityGroup.GatherPower,
-                ActivatableAbilityGroup.HellknightEnchantment,
-                ActivatableAbilityGroup.HunterAnimalFocus,
-                ActivatableAbilityGroup.Judgment,
-                ActivatableAbilityGroup.MagicArrows,
-                ActivatableAbilityGroup.MagicalItems,
-                ActivatableAbilityGroup.MasterHealingTechnique,
-                ActivatableAbilityGroup.MetamagicRod,
-                ActivatableAbilityGroup.RagingTactician,
-                ActivatableAbilityGroup.RingOfCircumstances,
-                ActivatableAbilityGroup.SacredArmorProperty,
-                ActivatableAbilityGroup.SacredWeaponProperty,
-                ActivatableAbilityGroup.SerpentsFang,
-                ActivatableAbilityGroup.ShroudOfWaterMode,
-                ActivatableAbilityGroup.SpiritWeaponProperty,
-                ActivatableAbilityGroup.StyleStrike,
-                ActivatableAbilityGroup.SubstanceInfusion,
-                ActivatableAbilityGroup.TransmutationPhysicalEnhancement,
-                ActivatableAbilityGroup.TrueMagus,
-                ActivatableAbilityGroup.Wings,
-                ActivatableAbilityGroup.WitheringLife,
-                ActivatableAbilityGroup.WizardDivinationAura,
-            };
+            public static List<ActivatableAbilityGroup> groups = Enum.GetValues(typeof(ActivatableAbilityGroup)).Cast<ActivatableAbilityGroup>().ToList();
             public static bool Prefix(ActivatableAbilityGroup group, ref int __result) {
                 if (settings.toggleAllowAllActivatable && groups.Any(group)) {
                     __result = 99;
                     return false;
                 }
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(ActivatableAbility), nameof(ActivatableAbility.SetIsOn))]
+        public static class ActivatableAbility_SetIsOn_Patch {
+            public static void Prefix(ref bool value, ActivatableAbility __instance) {
+                if (settings.toggleAllowAllActivatable && __instance.Blueprint.Group == ActivatableAbilityGroup.Judgment) {
+                    value = true;
+                }
             }
         }
 

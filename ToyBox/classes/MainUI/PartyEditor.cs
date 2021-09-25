@@ -19,7 +19,8 @@ using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
     public class PartyEditor {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
+
         enum ToggleChoice {
             Classes,
             Stats,
@@ -37,16 +38,12 @@ namespace ToyBox {
         static UnitEntityData multiclassEditCharacter = null;
         static int respecableCount = 0;
         static int selectedSpellbook = 0;
-        static int selectedSpellbookLevel = 0;
+        public static int selectedSpellbookLevel = 0;
         static bool editSpellbooks = false;
         static UnitEntityData spellbookEditCharacter = null;
         static float nearbyRange = 25;
-        static Alignment[] alignments = new Alignment[] {
-                    Alignment.LawfulGood,       Alignment.NeutralGood,      Alignment.ChaoticGood,
-                    Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
-                    Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
-        };
         static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
+        public static Dictionary<string, Spellbook> SelectedSpellbook = new Dictionary<string, Spellbook>();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
         private static Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
@@ -89,6 +86,11 @@ namespace ToyBox {
             selectedSpellbookLevel = 0;
             partyFilterChoices = null;
             Main.settings.selectedPartyFilter = 0;
+        }
+
+        // This bit of kludge is added in order to tell whether our generic actions are being accessed from this screen or the Search n' Pick
+        public static bool IsOnPartyEditor() {
+            return Main.settings.selectedTab == 2;
         }
 
         public static void ActionsGUI(UnitEntityData ch) {
@@ -156,7 +158,7 @@ namespace ToyBox {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
                 UnitProgressionData progression = ch.Descriptor.Progression;
-                BlueprintStatProgression xpTable = BlueprintRoot.Instance.Progression.XPTable;
+                BlueprintStatProgression xpTable = progression.ExperienceTable;
                 int level = progression.CharacterLevel;
                 int mythicLevel = progression.MythicExperience;
                 var spellbooks = ch.Spellbooks;
@@ -173,12 +175,12 @@ namespace ToyBox {
                     UI.Label("lvl".green() + $": {level}", UI.Width(75));
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
-                        if (progression.Experience < xpTable.GetBonus(level + 1) && level < 20) {
+                        if (progression.Experience < xpTable.GetBonus(level + 1) && level < xpTable.Bonuses.Length) {
                             UI.ActionButton("+1", () => {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
                             }, UI.Width(70));
                         }
-                        else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < 20) {
+                        else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < xpTable.Bonuses.Length) {
                             UI.Label("LvUp".cyan().italic(), UI.Width(70));
                         }
                         else { UI.Space(74); }
@@ -280,7 +282,7 @@ namespace ToyBox {
                             UI.ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), UI.AutoWidth());
                             UI.Space(25);
                             UI.Label("level".green() + $": {prog.CharacterLevel}", UI.Width(100f));
-                            UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(20, prog.CharacterLevel + 1), UI.AutoWidth());
+                            UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), UI.AutoWidth());
                             UI.Space(25);
                             UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
                             UI.Space(23);
@@ -296,11 +298,30 @@ namespace ToyBox {
                             UI.Label($"{prog.Experience}", UI.Width(150f));
                             UI.Space(36);
                             UI.ActionButton("Set", () => {
-                                int newXP = BlueprintRoot.Instance.Progression.XPTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
+                                int newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
                                 prog.Experience = newXP;
                             }, UI.Width(125));
                             UI.Space(23);
                             UI.Label("This sets your experience to match the current value of character level.".green());
+                        }
+
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.ActionToggle("Levels like a Legendary Hero",
+                                () => {
+                                    bool hasValue = settings.charIsLegendaryHero.TryGetValue(ch.HashKey(), out bool isLegendaryHero);
+                                    return hasValue && isLegendaryHero;
+                                },
+                                (val) => {
+                                    if (settings.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
+                                        settings.charIsLegendaryHero[ch.HashKey()] = val;
+                                    } else {
+                                        settings.charIsLegendaryHero.Add(ch.HashKey(), val);
+                                    }
+                                },
+                                0f,
+                                UI.AutoWidth()
+                            );
                         }
                         UI.Div(100, 25);
                         using (UI.HorizontalScope()) {
@@ -354,11 +375,29 @@ namespace ToyBox {
                     }
                     using (UI.HorizontalScope()) {
                         UI.Space(528);
-                        int alignmentIndex = Array.IndexOf(alignments, alignment);
-                        var titles = alignments.Select(
+                        int alignmentIndex = Array.IndexOf(WrathExtensions.Alignments, alignment);
+                        var titles = WrathExtensions.Alignments.Select(
                             a => a.Acronym().color(a.Color()).bold()).ToArray();
                         if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
-                            ch.Descriptor.Alignment.Set(alignments[alignmentIndex]);
+                            ch.Descriptor.Alignment.Set(WrathExtensions.Alignments[alignmentIndex]);
+                        }
+                    }
+                    UI.Div(100, 20, 755);
+                    var alignmentMask = ch.Descriptor.Alignment.m_LockedAlignmentMask;
+                    using (UI.HorizontalScope()) {
+                        UI.Space(100);
+                        UI.Label("Alignment Lock", UI.Width(425));
+                        //UI.Label($"{alignmentMask.ToString()}".color(alignmentMask.Color()).bold(), UI.Width(325));
+                        UI.Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
+                    }
+
+                    using (UI.HorizontalScope()) {
+                        UI.Space(528);
+                        int maskIndex = Array.IndexOf(WrathExtensions.AlignmentMasks, alignmentMask);
+                        var titles = WrathExtensions.AlignmentMasks.Select(
+                            a => a.ToString().color(a.Color()).bold()).ToArray();
+                        if (UI.SelectionGrid(ref maskIndex, titles, 3, UI.Width(800))) {
+                            ch.Descriptor.Alignment.LockAlignment(WrathExtensions.AlignmentMasks[maskIndex], new Alignment?());
                         }
                     }
                     UI.Div(100, 20, 755);
@@ -380,36 +419,39 @@ namespace ToyBox {
                         UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
                     }
                     UI.Div(100, 20, 755);
-                    foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
+
+                    foreach (StatType obj in HumanFriendly.StatTypes) {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
-                        if (modifiableValue != null) {
-                            String key = $"{ch.CharacterName}-{statType.ToString()}";
-                            var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
-                            var statName = statType.ToString();
-                            if (statName == "BaseAttackBonus" || statName == "SkillAthletics") {
-                                UI.Div(100, 20, 755);
-                            }
-                            using (UI.HorizontalScope()) {
-                                UI.Space(100);
-                                UI.Label(statName, UI.Width(400f));
-                                UI.Space(25);
-                                UI.ActionButton(" < ", () => {
-                                    modifiableValue.BaseValue -= 1;
-                                    storedValue = modifiableValue.BaseValue;
-                                }, UI.AutoWidth());
-                                UI.Space(20);
-                                UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
-                                UI.ActionButton(" > ", () => {
-                                    modifiableValue.BaseValue += 1;
-                                    storedValue = modifiableValue.BaseValue;
-                                }, UI.AutoWidth());
-                                UI.Space(25);
-                                UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
-                                    modifiableValue.BaseValue = v;
-                                }, null, UI.Width(75));
-                                statEditorStorage[key] = storedValue;
-                            }
+                        if (modifiableValue == null) {
+                            continue;
+                        }
+
+                        string key = $"{ch.CharacterName}-{statType.ToString()}";
+                        int storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
+                        string statName = statType.ToString();
+                        if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
+                            UI.Div(100, 20, 755);
+                        }
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.Label(statName, UI.Width(400f));
+                            UI.Space(25);
+                            UI.ActionButton(" < ", () => {
+                                modifiableValue.BaseValue -= 1;
+                                storedValue = modifiableValue.BaseValue;
+                            }, UI.AutoWidth());
+                            UI.Space(20);
+                            UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
+                            UI.ActionButton(" > ", () => {
+                                modifiableValue.BaseValue += 1;
+                                storedValue = modifiableValue.BaseValue;
+                            }, UI.AutoWidth());
+                            UI.Space(25);
+                            UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
+                                modifiableValue.BaseValue = v;
+                            }, null, UI.Width(75));
+                            statEditorStorage[key] = storedValue;
                         }
                     }
                 }
@@ -429,7 +471,7 @@ namespace ToyBox {
                     if (spellbooks.Any()) {
                         using (UI.HorizontalScope()) {
                             UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
-                            if (selectedSpellbook > names.Count()) selectedSpellbook = 0;
+                            if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                             UI.DisclosureToggle("Edit", ref editSpellbooks);
                         }
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
@@ -449,7 +491,7 @@ namespace ToyBox {
                                     0,
                                     (lvl) => {
                                         var levelText = spellbook.Blueprint.SpellsPerDay.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
-                                        var knownCount = spellbook.GetKnownSpells(lvl).Count();
+                                        var knownCount = spellbook.GetKnownSpells(lvl).Count;
                                         var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                         return levelText + countText;
                                     },
@@ -463,6 +505,7 @@ namespace ToyBox {
                                     UI.ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), UI.AutoWidth());
                                 }
                             }
+                            SelectedSpellbook[ch.HashKey()] = spellbook;
                             FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
                         }
                     }

@@ -1,9 +1,11 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using System;
+using System.Linq;
 using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
+using Kingmaker.UnitLogic.Alignments;
 using ModKit;
 using static ModKit.UI;
 
@@ -109,44 +111,29 @@ namespace ToyBox {
                 UI.Space(25);
                 UI.Toggle("Events", ref settings.previewEventResults, 0);
             });
-#if DEBUG
             UI.Div(0, 25);
-            UI.HStack("Loot", 1,
-                () => {
-                UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
-                UI.Space(25);
-                using (UI.VerticalScope()) {
-                    UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
-                    UI.Label("The coloring of rarity goes as follows:".green());
-                    UI.HStack("Rarity".orange(), 1,
-                        () => UI.Label("Trash".Rarity(RarityType.Trash).bold()),
-                        () => UI.Label("Common".Rarity(RarityType.Common).bold()),
-                        () => UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold()),
-                        () => UI.Label("Rare".Rarity(RarityType.Rare).bold()),
-                        () => UI.Label("Epic".Rarity(RarityType.Epic).bold()),
-                        () => UI.Label("Legendary".Rarity(RarityType.Legendary).bold()),
-                        () => UI.Label("Mythic".Rarity(RarityType.Mythic).bold()),
-                        () => UI.Label("Godly".Rarity(RarityType.Godly)),
-                        () => { }
-                    );
-                }
-
-                    // The following options let you configure loot filtering and auto sell levels:".green());
-                },
-#if true
-                () => UI.EnumGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
-#endif
-                () => { }
-            );
-#endif
-            UI.Div(0, 25);
-            UI.HStack("Tweaks", 1,
+            UI.HStack("Quality of Life", 1,
                 () => {
                     UI.Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
                     UI.Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
                 () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
+                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
+                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
+                () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
+                () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
+                () => UI.Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
+                () => { }
+            );
+            UI.Div(0, 25);
+            UI.HStack("Alignment", 1,
+                () => { UI.Toggle("Fix Alignment Shifts", ref settings.toggleAlignmentFix, 0); UI.Space(119); UI.Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
+                () => { UI.Toggle("Prevent Alignment Changes", ref settings.togglePreventAlignmentChanges, 0); UI.Space(25); UI.Label("See Party Editor for more fine grained alignment locking per character".green()); },
+                () => { }
+                );
+            UI.Div(0, 25);
+            UI.HStack("Cheats", 1,
                 () => {
                     UI.Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0);
                     if (settings.toggleTeleportKeysEnabled) {
@@ -162,13 +149,14 @@ namespace ToyBox {
                 () => UI.Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
                 () => UI.Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
                 () => UI.Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure, 0),
+                () => UI.Toggle("Disable Party Negative Levels", ref settings.togglePartyNegativeLevelImmunity, 0),
+                () => UI.Toggle("Disable Party Ability Damage", ref settings.togglePartyAbilityDamageImmunity, 0),
 
                 () => UI.Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0),
                 () => UI.Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
 
                 () => UI.Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0),
 
-                () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
                 () => UI.Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
 
                 () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
@@ -184,12 +172,12 @@ namespace ToyBox {
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
-                () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
-                () => UI.Toggle("Enable multiple romance (experimental)", ref settings.toggleMultipleRomance, 0),
-                () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
-                () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
-                () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+                () => UI.Toggle("Disallow Companions Leaving Party (experimental; only enable while needed)", ref settings.toggleBlockUnrecruit, 0),
+                () => UI.Toggle("Disable Romance IsLocked Flag (experimental)", ref settings.toggleMultipleRomance, 0),
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
+                () => UI.ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
+                () => UI.Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
+                () => UI.Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
                 () => { }
                 );
             UI.Div(153, 25);
@@ -203,11 +191,12 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Class Specific", 1,
-                () => UI.Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 10, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 1, "", UI.AutoWidth()),
                 () => UI.Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f, 1f, 1, "", UI.AutoWidth()),
                 () => UI.Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)", ref settings.toggleExtendHexes),
                 () => UI.Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)", ref settings.toggleAllowAllActivatable),
                 () => UI.Toggle("Kineticist: Allow Gather Power Without Hands", ref settings.toggleKineticistGatherPower),
+                () => UI.Toggle("Barbarian: Auto Start Rage When Entering Combat", ref settings.toggleEnterCombatAutoRage),
                 () => UI.Toggle("Magus: Always Allow Spell Combat", ref settings.toggleAlwaysAllowSpellCombat),
                 () => { }
                 );

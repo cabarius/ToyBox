@@ -3,6 +3,7 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 using UnityEngine;
+using Kingmaker.UnitLogic.Alignments;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -26,6 +27,8 @@ namespace ToyBox {
         public bool toggleEquipmentRestrictions = false;
         public bool toggleIgnoreMaxDexterity = false;
         public bool toggleIgnoreSpellFailure = false;
+        public bool togglePartyNegativeLevelImmunity = false;
+        public bool togglePartyAbilityDamageImmunity = false;
         public bool toggleDialogRestrictions = false;
         public bool toggleNoFriendlyFireForAOE = false;
         public bool toggleSettlementRestrictions = false;
@@ -39,6 +42,7 @@ namespace ToyBox {
         public bool toggleMetamagicIsFree = false;
         public bool toggleMaterialComponent = false;
         public bool toggleAutomaticallyLoadLastSave = false;
+        public bool toggleBlockUnrecruit = false;
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleMultipleRomance = false;
@@ -50,12 +54,24 @@ namespace ToyBox {
         public bool toggleKineticistGatherPower = false;
         public bool toggleAlwaysAllowSpellCombat = false;
         public bool toggleInstantPartyChange = false;
+        public bool toggleEnterCombatAutoRage = false;
+        public bool toggleEquipmentNoWeight = false;
+        public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
+        public bool toggleShiftClickToUseInventorySlot = false;
+        public bool toggleAlignmentFix = false;
+        public bool togglePreventAlignmentChanges = false;
 
-        // Loot Coloring & Filtering
+        // Loot 
         public bool toggleColorLootByRarity = false;
         public RarityType lootFilterIgnore = RarityType.None;
         public RarityType lootFilterAutoSell = RarityType.None;
+        public bool toggleMassLootEverything = false;
+        public bool toggleLootChecklistFilterFriendlies = false;
+        public bool toggleLootChecklistFilterBlueprint = false;
+        public bool toggleLootChecklistFilterDescription = false;
+        public RarityType  lootChecklistFilterRarity = RarityType.None;
+
 
         //Crusade
         public bool toggleInfiniteArmyRerolls = false;
@@ -94,7 +110,7 @@ namespace ToyBox {
         public bool toggleSkipSpellSelection = false;
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
-        public bool toggleLegendaryLeveling = false;
+        public bool toggleUniversalSpellbookd = false;
 
         // Multipliers
         public int encumberanceMultiplier = 1;
@@ -163,6 +179,8 @@ namespace ToyBox {
         public bool showComponents = false;
         public bool showElements = false;
         public bool showDivisions = true;
+        public bool showFromAllSpellbooks = false;
+
 
         // Previews (Dialogs, Events ,etc)
 
@@ -187,6 +205,9 @@ namespace ToyBox {
 
         // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
         public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new SerializableDictionary<string, HashSet<string>>();
+
+        // Dictionary of Name/IsLegendaryHero for configuration per party member
+        public SerializableDictionary<string, bool> charIsLegendaryHero = new SerializableDictionary<string, bool>();
 
         public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
@@ -222,7 +243,7 @@ namespace ToyBox {
         // public bool toggleIgnoreClassAndFeatRestrictions = false; 
         public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
 
-        public bool toggleIgnoreSpellbookAlignmentRestriction = false;
+        public bool toggleIgnoreAbilityAlignmentRestriction = false;
         public bool toggleIgnoreAolityCasterCheckers = false;
         public HashSet<string> ignoredAbilityCasterCheckerSet = new HashSet<string>();
         public bool toggleIgnoreActivatableAbilityRestrictions = false;
@@ -237,6 +258,8 @@ namespace ToyBox {
 
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
+        internal bool toggleSpellbookAbilityAlignmentChecks = false;
+
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);
         }

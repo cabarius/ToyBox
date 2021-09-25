@@ -73,12 +73,13 @@ namespace ToyBox {
                 UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
                 if (searchLimit > 1000) { searchLimit = 1000; }
                 UI.Space(25);
-                UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
-                UI.Space(25);
                 searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
 #if DEBUG
+                UI.Space(25);
                 refreshTree |= UI.DisclosureToggle("Show Tree".orange().bold(), ref showTree);
 #endif
+                UI.Space(50);
+                UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
             }
             if (showTree) {
                 treeEditor.OnGUI(unit, refreshTree);
@@ -88,6 +89,10 @@ namespace ToyBox {
                 UI.Space(100);
                 UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
                 UI.Space(25);
+                if (showAll) {
+                    UI.Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks);
+                    UI.Space(25);
+                }
                 if (matchCount > 0 && searchText.Length > 0) {
                     String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                     if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
@@ -217,12 +222,21 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
+
         static public void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
-            var learnable = spellbookBP.SpellList.GetSpells(level);
+            var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                .Where(x => ((BlueprintSpellbook)x).SpellList != null)
+                .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level));
+            var mythic = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
+                .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
+
+            var learnable = settings.showFromAllSpellbooks ?  normal.Concat(mythic).Distinct() : spellbookBP.SpellList.GetSpells(level);
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
+
             OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
                 (fact) => fact.Blueprint,
                 learnable,

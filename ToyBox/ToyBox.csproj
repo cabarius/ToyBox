@@ -137,9 +137,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Infrastructure\HumanFriendly.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
     <Compile Include="classes\Infrastructure\ItemRarity.cs" />
+    <Compile Include="classes\Infrastructure\LootHelper.cs" />
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="classes\MainUI\CrusadeEditor.cs" />
     <Compile Include="classes\MainUI\EnchantmentEditor.cs" />
     <Compile Include="classes\MainUI\FeaturesTreeEditor.cs" />
+    <Compile Include="classes\MainUI\PhatLoot.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MainUI\BlueprintAction.cs" />
@@ -166,6 +169,7 @@
     <Compile Include="classes\MainUI\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
     <Compile Include="classes\Models\Setings+Multiclass.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Alignment.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />
@@ -174,6 +178,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Metamagic.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestsricted.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Loot.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Movement.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />
@@ -229,7 +234,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

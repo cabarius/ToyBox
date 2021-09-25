@@ -101,6 +101,18 @@ namespace ModKit {
 
             return string.Empty;
         }
+        public static Dictionary<string, TEnum> NameToValueDictionary<TEnum>(this TEnum enumValue) where TEnum : struct {
+            var enumType = enumValue.GetType();
+            return Enum.GetValues(enumType)
+                .Cast<TEnum>()
+                .ToDictionary(e => Enum.GetName(enumType, e), e => e);
+        }
+        public static Dictionary<TEnum, string> ValueToNameDictionary<TEnum>(this TEnum enumValue) where TEnum : struct {
+            var enumType = enumValue.GetType();
+            return Enum.GetValues(enumType)
+                .Cast<TEnum>()
+                .ToDictionary(e => e, e => Enum.GetName(enumType, e));
+        }
     }
     public static class MK {
         public static bool IsKindOf(this Type type, Type baseType) {

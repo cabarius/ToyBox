@@ -39,11 +39,12 @@ namespace ModKit {
             get {
                 if (_hotkeyStyle == null)
                     _hotkeyStyle = new GUIStyle(GUI.skin.textArea) {
-                        fixedHeight = 35,
                         margin = new RectOffset(3, 3, 3, 3),
-                        fontSize = 25,
                         richText = true
                     };
+                _hotkeyStyle.fontSize = UnityModManager.UI.Scale(11);
+                _hotkeyStyle.fixedHeight = UnityModManager.UI.Scale(17);
+
                 return _hotkeyStyle;
             }
         }
@@ -152,28 +153,28 @@ namespace ModKit {
             static KeyBind lastTriggered = null;
             public static void OnUpdate() {
                 if (lastTriggered != null) {
-                    if (debugKeyBind)
-                        Logger.Log($"    lastTriggered: {lastTriggered} - IsActive: {lastTriggered.IsActive}");
+                    //if (debugKeyBind)
+                    //    Logger.Log($"    lastTriggered: {lastTriggered} - IsActive: {lastTriggered.IsActive}");
                     if (!lastTriggered.IsActive) {
-                        if (debugKeyBind)
-                            Logger.Log($"    lastTriggered: {lastTriggered} - Finished".green());
+                        //if (debugKeyBind)
+                        //    Logger.Log($"    lastTriggered: {lastTriggered} - Finished".green());
                         lastTriggered = null;
                     }
                 }
-                if (debugKeyBind)
-                    Logger.Log($"looking for {Event.current.keyCode}");
+                //if (debugKeyBind)
+                //    Logger.Log($"looking for {Event.current.keyCode}");
                 foreach (var item in bindings) {
                     var identifier = item.Key;
                     var binding = item.Value;
                     var active = binding.IsActive;
-                    if (debugKeyBind)
-                        Logger.Log($"    checking: {binding.ToString()} - IsActive: {(active ? "True".cyan() : "False")} action: {actions.ContainsKey(identifier)}");
+                    //if (debugKeyBind)
+                    //    Logger.Log($"    checking: {binding.ToString()} - IsActive: {(active ? "True".cyan() : "False")} action: {actions.ContainsKey(identifier)}");
                     if (active && actions.ContainsKey(identifier)) {
-                        if (debugKeyBind)
-                            Logger.Log($"    binding: {binding.ToString()} - lastTriggered: {lastTriggered}");
+                        //if (debugKeyBind)
+                        //    Logger.Log($"    binding: {binding.ToString()} - lastTriggered: {lastTriggered}");
                         if (binding != lastTriggered) {
-                            if (debugKeyBind)
-                                Logger.Log($"    firing action: {identifier}".cyan());
+                            //if (debugKeyBind)
+                            //    Logger.Log($"    firing action: {identifier}".cyan());
                             Action action;
                             actions.TryGetValue(identifier, out action);
                             action();
@@ -193,7 +194,7 @@ namespace ModKit {
             string label = keyBind.IsEmpty ? (isEditing ? "Cancel" : "Bind") : keyBind.ToString().orange().bold();
             showHint = showHint && isEditing;
             using (UI.VerticalScope(options)) {
-                UI.Space(10);
+                UI.Space(UnityModManager.UI.Scale(3));
                 if (GL.Button(label, hotkeyStyle, UI.AutoWidth())) {
                     if (isEditing || isEditingOther) {
                         KeyBindings.SetBinding(selectedIdentifier, oldValue);

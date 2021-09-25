@@ -14,6 +14,7 @@ using ModKit;
 using ModKit.Utility;
 using ToyBox.classes.MainUI;
 using Kingmaker.GameModes;
+using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
 #if DEBUG
@@ -78,6 +79,7 @@ namespace ToyBox {
                 modEntry.OnSaveGUI = OnSaveGUI;
                 UI.KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.Mod();
+                HumanFriendly.EnsureFriendlyTypesContainAll();
             }
             catch (Exception e) {
                 Main.Error(e);
@@ -133,12 +135,20 @@ namespace ToyBox {
                     UI.ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, UI.AutoWidth());
                     return;
                 }
+#if false
+                using (UI.HorizontalScope()) {
+                    UI.Label("Suggestions or issues click ".green(), UI.AutoWidth());
+                    UI.LinkButton("here", "https://github.com/cabarius/ToyBox/issues");
+                    UI.Space(50);
+                    UI.Label("Chat with the Authors, Narria et all on the ".green(), UI.AutoWidth());
+                    UI.LinkButton("WoTR Discord", "https://discord.gg/wotr");
+                }
+#endif
                 UI.TabBar(ref settings.selectedTab,
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
-                        }
-                        else { UI.Space(25); }
+                        } else UI.Space(25);
                     },
                     new NamedAction("Bag of Tricks", () => { BagOfTricks.OnGUI(); }),
 #if DEBUG
@@ -147,6 +157,7 @@ namespace ToyBox {
                     new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
 #endif
                     new NamedAction("Party", () => { PartyEditor.OnGUI(); }),
+                    new NamedAction("Loot", () => { PhatLoot.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
                     new NamedAction("Crusade", () => { CrusadeEditor.OnGUI(); }),
                     new NamedAction("Quests", () => { QuestEditor.OnGUI(); })
