@@ -199,7 +199,12 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Class Specific", 1,
                 () => UI.Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 1, "", UI.AutoWidth()),
-                () => UI.Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f, 1f, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f,
+                        1f, 1, "", UI.AutoWidth()),
+                () => {
+                    UI.Space(25);
+                    UI.Label("Please rest after adjusting to recalculate your spell slots.".green());
+                },
                 () => UI.Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)", ref settings.toggleExtendHexes),
                 () => UI.Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)", ref settings.toggleAllowAllActivatable),
                 () => UI.Toggle("Kineticist: Allow Gather Power Without Hands", ref settings.toggleKineticistGatherPower),
