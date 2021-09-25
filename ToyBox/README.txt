@@ -16,6 +16,10 @@ Ver 1.3.11
     (ArcaneTrixter) Added a 'Brutal Unfair Difficulty' to Quality of Life. Toggle on if you miss the previous challenge of Unfair or if you thought it too easy there's a slider now.
     (ArcaneTrixter) Modified 'Disable Arcane Spell Failure' to set spell failure to 0 so you can Blink freely.
     (ArcaneTrixter) No longer squaring the multiplier from 'Spells Per Day' when applying to spellbooks.
+    (Vek17) Fixed issues around the Feat Multiplier including
+        - All story companions feats/backgrounds/etc. most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8. Also this is retroactive if you ever level up in the future with the multiplier on.
+        - Messed up All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
+        - Caused certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
 Ver 1.3.10
     Added new top level tab: "Loot"
         Moved Loot Coloring Settings to Loot Tab
