@@ -29,7 +29,8 @@ namespace ToyBox {
         }
         public static string GetName(this LootWrapper present) {
             if (present.InteractionLoot != null) {
-                var name = present.InteractionLoot.Owner.View.name;
+//                var name = present.InteractionLoot.Owner.View.name;
+                var name = present.InteractionLoot.Source.name;
                 if (name == null || name.Length == 0) name = "Ground";
                 return name;
             }

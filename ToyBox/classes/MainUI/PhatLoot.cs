@@ -46,8 +46,14 @@ namespace ToyBox {
                 () => { }
             );
             UI.Div(0, 25);
+            var isEmpty = true;
             UI.HStack("Loot Checklist", 1,
                 () => {
+                    var areaName = "";
+                    if (Main.IsInGame) {
+                        areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
+                    }
+                    UI.Label(areaName.orange().bold(), UI.AutoWidth());
                     UI.Space(25); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
                     UI.Space(25); UI.Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint);
                     UI.Space(25); UI.Toggle("Description", ref settings.toggleLootChecklistFilterDescription);
@@ -57,8 +63,8 @@ namespace ToyBox {
                 () => {
                     if (!Main.IsInGame) { UI.Label("Not available in the Main Menu".orange()); return; }
                     var presentGroups = LootHelper.GetMassLootFromCurrentArea().GroupBy(p => p.InteractionLoot != null ? "Containers" : "Units");
-                    var isEmpty = true;
                     var indent = 3;
+                    UI.Space(50);
                     using (UI.VerticalScope()) {
                         foreach (var group in presentGroups) {
                             UI.Label(group.Key.cyan());
@@ -98,13 +104,13 @@ namespace ToyBox {
                             UI.Space(25);
                         }
                     }
+                },
+                () => {
                     if (isEmpty)
                         using (UI.HorizontalScope()) {
-                            UI.Space(indent);
-                            UI.Label("No Loot Available".orange());
+                            UI.Label("No Loot Available".orange(), UI.AutoWidth());
                         }
-                },
-                () => { }
+                }
             );
         }
 }
