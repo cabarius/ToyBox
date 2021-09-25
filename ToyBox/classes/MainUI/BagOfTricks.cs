@@ -162,8 +162,11 @@ namespace ToyBox {
                 () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
                 () => UI.Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity, 0),
 
-                () => UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0),
-
+                () => UI.Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions, 0),
+                () => UI.Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic, 0),
+#if DEBUG
+                () => UI.Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything, 0),
+#endif
                 () => UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0),
                 () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
 

@@ -13,6 +13,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 Ver 1.3.11
     Found a grey that works for trash loot. The previous brown still looked too much like a meaningful loot color
+    (Truinto) Added Disable Dialog Restrictions (Mythic Path)
 Ver 1.3.10
     Added new top level tab: "Loot"
         Moved Loot Coloring Settings to Loot Tab
