@@ -505,7 +505,7 @@ namespace ToyBox {
                                 }
 
                                 UI.Space(20);
-                                if (ch.Spellbooks.Where(x => x.IsStandaloneMythic && !spellbook.IsStandaloneMythic).Any(y => y.Blueprint.CharacterClass == ch.Progression.GetMythicToMerge().CharacterClass)) {
+                                if (ch.Spellbooks.Where(x => x.IsStandaloneMythic && !spellbook.IsStandaloneMythic && x.Blueprint.CharacterClass != null).Any(y => y.Blueprint.CharacterClass == ch.Progression.GetMythicToMerge()?.CharacterClass)) {
                                     UI.ActionButton("Merge Mythic Levels and Selected Spellbook", () => CasterHelpers.ForceSpellbookMerge(spellbook), UI.AutoWidth());
                                     UI.Label("Warning: This is irreversible. Please save before continuing!".Orange());
                                 }
