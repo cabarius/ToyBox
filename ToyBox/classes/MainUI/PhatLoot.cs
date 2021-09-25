@@ -67,7 +67,7 @@ namespace ToyBox {
                     UI.Space(50);
                     using (UI.VerticalScope()) {
                         foreach (var group in presentGroups.Reverse()) {
-                            UI.Label($"{group.Key.cyan()} - {group.Count()}");
+                            UI.Label($"{group.Key.cyan()}: {group.Count()}");
                             UI.Div(indent);
                             foreach (var present in group.AsEnumerable()) {
                                 var pahtLewts = present.GetLewtz().Lootable(settings.lootChecklistFilterRarity);
