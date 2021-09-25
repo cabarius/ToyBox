@@ -36,6 +36,7 @@ namespace ToyBox {
         public bool toggleMoveSpeedAsOne = false;
         public bool toggleNoFogOfWar = false;
         public bool toggleRestoreSpellsAbilitiesAfterCombat = false;
+        public bool toggleRechargeItemsAfterCombat = false;
         public bool toggleInstantRestAfterCombat = false;
         public bool toggleShowAllPartyPortraits = false;    // TODO - port this
         public bool toggleAccessRemoteCharacters = false;

@@ -183,6 +183,9 @@ namespace ToyBox.BagOfPatches {
                         u.Brain.RestoreAvailableActions();
                     }
                 }
+                if (!inCombat && settings.toggleRechargeItemsAfterCombat) {
+
+                }
                 if (!inCombat && settings.toggleInstantRestAfterCombat) {
                     CheatsCombat.RestAll();
                 }

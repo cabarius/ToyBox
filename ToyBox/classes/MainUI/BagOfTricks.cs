@@ -129,7 +129,7 @@ namespace ToyBox {
                     UI.Space(25);
                     UI.Label("This may require an area transition or reload to take effect".green());
                 },
-                () => UI.Slider("Brutal Unfair Difficulty Multiplier", ref settings.brutalDifficultyMultiplier, 1f, 5f, 1f, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Brutal Unfair Difficulty Multiplier", ref settings.brutalDifficultyMultiplier, 1f, 5f, 1f, 1, "", UI.Width((450))),
                 () => { }
             );
             UI.Div(0, 25);
@@ -177,7 +177,8 @@ namespace ToyBox {
                 () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
 
                 () => UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0),
-                //() => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
+                () => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
+                //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat, 0),
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
