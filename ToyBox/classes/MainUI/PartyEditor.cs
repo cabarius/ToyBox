@@ -501,7 +501,7 @@ namespace ToyBox {
                                 if (casterLevel > 0) {
                                     UI.ActionButton("-1 CL", () => CasterHelpers.LowerCasterLevel(spellbook), UI.AutoWidth());
                                 }
-                                if (casterLevel < 20) {
+                                if (casterLevel < 40) {
                                     UI.ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), UI.AutoWidth());
                                 }
                             }

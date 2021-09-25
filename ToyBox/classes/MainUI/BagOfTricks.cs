@@ -178,6 +178,7 @@ namespace ToyBox {
                 () => UI.ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => UI.Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => UI.Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
+                () => UI.Toggle("Remove Level 20 Caster Level Cap", ref settings.toggleUncappedCasterLevel),
                 () => { }
                 );
             UI.Div(153, 25);

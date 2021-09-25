@@ -24,6 +24,7 @@ Ver 1.3.10
     (ArcaneTrixter) Reorganized stat section of party editor to not just be the random enum order.
     (ArcaneTrixter) Allowed multiple judgements to be active at once.
     (Delth) hopefully fixed gestalt skillpoint calculations
+    (ArcaneTrixter) Added toggle to remove Level 20 Caster Level cap.
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments

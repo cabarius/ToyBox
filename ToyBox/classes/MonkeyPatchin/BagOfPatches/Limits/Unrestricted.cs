@@ -3,15 +3,11 @@ using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Items;
 using Kingmaker.Kingdom.Settlements;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
@@ -96,6 +92,15 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleSettlementRestrictions) {
                     __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.CasterLevel), MethodType.Getter)]
+        public static class Spellbook_CasterLevel_Patch {
+            public static void Postfix(ref int __result, Spellbook __instance) {
+                if (settings.toggleUncappedCasterLevel) {
+                    __result += __instance.m_BaseLevelInternal - __instance.BaseLevel;
                 }
             }
         }
