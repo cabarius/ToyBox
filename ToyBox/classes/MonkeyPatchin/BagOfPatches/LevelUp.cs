@@ -401,7 +401,14 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
+        /**
+         * The feat multiplier is the source of several hard to track down bugs. To quote ArcaneTrixter:
+         * All story companions feats/backgrounds/etc. most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8. Also this is retroactive if you ever level up in the future with the multiplier on.
+         * All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
+         * Required adding in "skip feat selection" because it broke level ups.
+         * Causes certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
+         * This re targets the multiplier into a Postfix instead of a Prefix to reduce the patch foot print, as well as adds progression white listing to make feature multiplication opt in by the developer instead of just multiplying everything always. As setup in this request only the base feat selections that all characters get will be multiplied, which to my mind best suits the name and description of what this setting does. This should also significantly reduce or resolve several associated bugs due to the reduction of scope on this feature
+        */
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             //Defines which progressions are allowed to be multipiled to prevent unexpected behavior
