@@ -21,6 +21,7 @@ using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
 using Kingmaker.UI.ServiceWindow;
 using UnityEngine;
+using Kingmaker.UnitLogic.FactLogic;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -430,6 +431,77 @@ namespace ToyBox.BagOfPatches {
                 }
                 return false;
             }
+        }
+
+
+        [HarmonyPatch(typeof(ApplyClassProgression), "ApplyProgressionLevel")]
+        public static class ApplyClassProgression_Patch {
+            private static bool Prefix(ref int level) {
+                if (settings.toggleUnlockClassUpperLimit) {
+                    int i = level;
+                    if (i >= 40) {
+                        i = 20;
+                    }
+                    if (level > 20) {
+                        if (i % 2 == 0) {
+                            i = 18;
+                        } else {
+                            i = 19;
+
+                        }
+
+                    }
+                    level = i;
+                }
+                return true;
+
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintCharacterClass))]
+        public static class BlueprintCharacterClass_Patch {
+            [HarmonyPatch("MeetsPrerequisites")]
+            public static void Postfix(ref UnitDescriptor unit, BlueprintCharacterClass __instance, ref bool __result) {
+
+                if (Main.settings.toggleUnlockClassUpperLimit) {
+                    if (!__result) {
+                        int classLevel = unit.Progression.GetClassLevel(__instance);
+
+                        if (classLevel >= 20 && classLevel < 40) {
+                            __result = true;
+                        }
+                        if (__instance.PrestigeClass && classLevel < 40 && classLevel >= 10) {
+                            __result = true;
+                        }
+                    }
+
+                }
+            }
+        }
+        [HarmonyPatch(typeof(ProgressionData), "GetLevelEntry")]
+        public static class ProgressionData_Patch {
+            public static bool Prefix(ProgressionData __instance, int level, ref LevelEntry __result) {
+                if (Main.settings.toggleUnlockClassUpperLimit ) {
+                    int i = level;
+                    if (i >= 40) {
+                        i = 20;
+                    }
+                    if (i > 20) {
+                        if (i % 2 == 0) {
+                            i = 18;
+                        } else {
+                            i = 19;
+
+                        }
+                    }
+                    level = i;
+                    __result = __instance.LevelEntries.FirstOrDefault((LevelEntry le) => le.Level == level) ?? new LevelEntry(); ;
+                    return false;
+                }
+                return true;
+            }
+
+
         }
     }
 }

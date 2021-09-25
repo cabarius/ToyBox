@@ -11,6 +11,9 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Crusade: 25
     Quest Resolution: 1
+Ver 1.3.11
+    (xyq565861)Add feature to unlock the upper limit of every class level to 40 in level up page.
+    (xyq565861)Add feature to unlock the upper limit of 20 CL from one class and synchronize class level to caster level in bag of tricks page.
 
 Ver 1.3.10
     Added Loot Tab

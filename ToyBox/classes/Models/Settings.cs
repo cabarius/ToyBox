@@ -61,7 +61,7 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
-
+        public bool toggleUnlockTheClFromClass = false;
         // Loot 
         public bool toggleColorLootByRarity = false;
         public RarityType lootFilterIgnore = RarityType.None;
@@ -111,6 +111,7 @@ namespace ToyBox {
         public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
         public bool toggleUniversalSpellbookd = false;
+        public bool toggleUnlockClassUpperLimit = false;
 
         // Multipliers
         public int encumberanceMultiplier = 1;
