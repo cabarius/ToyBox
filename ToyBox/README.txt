@@ -25,6 +25,7 @@ Ver 1.3.10
     (ArcaneTrixter) Allowed multiple judgements to be active at once.
     (Delth) hopefully fixed gestalt skillpoint calculations
     (ArcaneTrixter) Added toggle to remove Level 20 Caster Level cap.
+    (ArcaneTrixter) Added ability to merge standalone mythics into any spellbook. Spell slots and spells per day are still based on the original type, e.g. Magus gets 6th level spells and below.
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments

@@ -2,6 +2,7 @@
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.UnitLogic;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,6 +98,38 @@ namespace ToyBox.classes.Infrastructure {
             if (newMaxSpellLevel > oldMaxSpellLevel) {
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
             }
+        }
+
+        public static ClassData GetMythicToMerge(this UnitProgressionData unit) {
+            List<ClassData> list = unit.Classes.Where(cls => cls.CharacterClass.IsMythic).ToList();
+            if (!list.Any()) {
+                return null;
+            }
+
+            return list.Count == 1 ? list.First() : list.FirstOrDefault(mythic => mythic.CharacterClass != BlueprintRoot.Instance.Progression.MythicStartingClass && mythic.CharacterClass != BlueprintRoot.Instance.Progression.MythicCompanionClass);
+        }
+
+        public static void ForceSpellbookMerge(Spellbook spellbook) {
+            var unit = spellbook.Owner;
+            var classData = unit.Progression.GetMythicToMerge();
+            var oldMythicSpellbookBp = classData?.Spellbook;
+            if (classData == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
+                Main.Log("Can't merge because you don't have a mythic class / mythic spellbook!");
+                return;
+            }
+            var oldMythicSpellbook = unit.GetSpellbook(oldMythicSpellbookBp);
+            for (int i = 0; i < oldMythicSpellbook.m_KnownSpells.Length;i++) {
+                oldMythicSpellbook.GetKnownSpells(i).ForEach(x => spellbook.AddKnown(i, x.Blueprint));
+            }
+
+            classData.Spellbook = spellbook.Blueprint;
+            spellbook.m_Type = SpellbookType.Mythic;
+            spellbook.AddSpecialList(oldMythicSpellbookBp.MythicSpellList);
+            for (int i = 0; i < unit.Progression.MythicLevel; i++) {
+                spellbook.AddMythicLevel();
+            }
+
+            unit.DeleteSpellbook(oldMythicSpellbookBp);
         }
     }
 }
