@@ -60,6 +60,7 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
+        public bool toggleBrutalUnfair = false;
 
         // Loot 
         public bool toggleColorLootByRarity = false;
@@ -136,6 +137,7 @@ namespace ToyBox {
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
         public float arcanistSpellslotMultiplier = 1;
+        public float brutalDifficultyMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;

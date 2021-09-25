@@ -3,7 +3,6 @@
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
-using Kingmaker.Assets.Controllers.GlobalMap;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
@@ -19,14 +18,11 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.Globalmap.State;
-using Kingmaker.Globalmap.View;
 using Kingmaker.Settings;
 using Kingmaker.Settings.Difficulty;
 using ModKit;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
-using Kingmaker.Blueprints.Area;
 
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
@@ -214,6 +210,14 @@ namespace ToyBox.BagOfPatches {
                 };
 
                 __result.HPMultiplier = hp * settings.enemyBaseHitPointsMultiplier;
+
+                if (settings.toggleBrutalUnfair) {
+                    __result.BasicStatBonusMultiplier = Mathf.RoundToInt(2 * (1+ settings.brutalDifficultyMultiplier));
+                    __result.DerivativeStatBonusMultiplier = Mathf.RoundToInt(2 * settings.brutalDifficultyMultiplier);
+                    __result.HPMultiplier = Mathf.RoundToInt(__result.HPMultiplier * settings.brutalDifficultyMultiplier);
+                    __result.AbilityDCBonus = Mathf.RoundToInt(4 * settings.brutalDifficultyMultiplier);
+                    __result.SkillCheckDCBonus = Mathf.RoundToInt(4 * settings.brutalDifficultyMultiplier);
+                }
             }
         }
 
