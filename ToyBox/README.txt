@@ -21,11 +21,15 @@ Ver 1.3.10
     Added some basic loot filtering and autosell options (TODO)
     With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
     Loot color tweaks: notable is now yellow and trash is now an appropriate sh_t brown color
+    Hot Key Binding control now scales properly to Unity Mod Manager UI scale setting.
     (ArcaneTrixter) Added 'Ignore Prerequisite Features (like Race) when choosing Class' to levelup.
     (ArcaneTrixter) Bumped max burn for kineticist burn cheat to 30 so you never have to be burned again.
     (ArcaneTrixter) Reorganized stat section of party editor to not just be the random enum order.
     (ArcaneTrixter) Allowed multiple judgements to be active at once.
     (Delth) hopefully fixed gestalt skillpoint calculations
+    (ArcaneTrixter) Added toggle to remove Level 20 Caster Level cap.
+    (ArcaneTrixter) Added ability to merge standalone mythics into any spellbook. Spell slots and spells per day are still based on the original type, e.g. Magus gets 6th level spells and below.
+    (ArcaneTrixter) Added Add All button to spellbooks when browsing new spells. It works with Search All Spellbooks and respects current search results.
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments

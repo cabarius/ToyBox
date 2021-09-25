@@ -6,15 +6,14 @@ using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Blueprints.Root;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
-using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
+using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
@@ -501,8 +500,14 @@ namespace ToyBox {
                                 if (casterLevel > 0) {
                                     UI.ActionButton("-1 CL", () => CasterHelpers.LowerCasterLevel(spellbook), UI.AutoWidth());
                                 }
-                                if (casterLevel < 20) {
+                                if (casterLevel < 40) {
                                     UI.ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), UI.AutoWidth());
+                                }
+
+                                UI.Space(20);
+                                if (ch.Spellbooks.Where(x => x.IsStandaloneMythic).Any(y => y.Blueprint.CharacterClass == ch.Progression.GetMythicToMerge().CharacterClass)) {
+                                    UI.ActionButton("Merge Mythic Levels and Selected Spellbook", () => CasterHelpers.ForceSpellbookMerge(spellbook), UI.AutoWidth());
+                                    UI.Label("Warning: This is irreversible. Please save before continuing!".Orange());
                                 }
                             }
                             SelectedSpellbook[ch.HashKey()] = spellbook;

@@ -2,7 +2,10 @@
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -97,6 +100,69 @@ namespace ToyBox.classes.Infrastructure {
             if (newMaxSpellLevel > oldMaxSpellLevel) {
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
             }
+        }
+
+        public static void AddAllSpellsOfSelectedLevel(Spellbook spellbook, int level) {
+            List<BlueprintAbility> toLearn;
+            if (Main.settings.showFromAllSpellbooks) {
+                var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                    .Where(x => ((BlueprintSpellbook)x).SpellList != null)
+                    .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level));
+                var mythic = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                    .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
+                    .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
+                toLearn = normal.Concat(mythic).Distinct().ToList();
+            }
+            else {
+                toLearn = spellbook.Blueprint.SpellList.GetSpells(level);
+            }
+
+            toLearn.ForEach(x => spellbook.AddKnown(level, x));
+        }
+
+        public static void HandleAddAllSpellsOnPartyEditor(UnitDescriptor unit, List<BlueprintAbility> abilities) {
+            if (!PartyEditor.SelectedSpellbook.TryGetValue(unit.HashKey(), out var selectedSpellbook)) {
+                return;
+            }
+
+            if (abilities != null) {
+                abilities.ForEach(x => selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, x));
+            }
+            else {
+                AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
+            }
+        }
+
+        public static ClassData GetMythicToMerge(this UnitProgressionData unit) {
+            List<ClassData> list = unit.Classes.Where(cls => cls.CharacterClass.IsMythic).ToList();
+            if (!list.Any()) {
+                return null;
+            }
+
+            return list.Count == 1 ? list.First() : list.FirstOrDefault(mythic => mythic.CharacterClass != BlueprintRoot.Instance.Progression.MythicStartingClass && mythic.CharacterClass != BlueprintRoot.Instance.Progression.MythicCompanionClass);
+        }
+
+        public static void ForceSpellbookMerge(Spellbook spellbook) {
+            var unit = spellbook.Owner;
+            var classData = unit.Progression.GetMythicToMerge();
+            var oldMythicSpellbookBp = classData?.Spellbook;
+            if (classData == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
+                Main.Log("Can't merge because you don't have a mythic class / mythic spellbook!");
+                return;
+            }
+            var oldMythicSpellbook = unit.GetSpellbook(oldMythicSpellbookBp);
+            for (int i = 0; i < oldMythicSpellbook.m_KnownSpells.Length;i++) {
+                oldMythicSpellbook.GetKnownSpells(i).ForEach(x => spellbook.AddKnown(i, x.Blueprint));
+            }
+
+            classData.Spellbook = spellbook.Blueprint;
+            spellbook.m_Type = SpellbookType.Mythic;
+            spellbook.AddSpecialList(oldMythicSpellbookBp.MythicSpellList);
+            for (int i = 0; i < unit.Progression.MythicLevel; i++) {
+                spellbook.AddMythicLevel();
+            }
+
+            unit.DeleteSpellbook(oldMythicSpellbookBp);
         }
     }
 }

@@ -39,11 +39,12 @@ namespace ModKit {
             get {
                 if (_hotkeyStyle == null)
                     _hotkeyStyle = new GUIStyle(GUI.skin.textArea) {
-                        fixedHeight = 35,
                         margin = new RectOffset(3, 3, 3, 3),
-                        fontSize = 25,
                         richText = true
                     };
+                _hotkeyStyle.fontSize = UnityModManager.UI.Scale(11);
+                _hotkeyStyle.fixedHeight = UnityModManager.UI.Scale(17);
+
                 return _hotkeyStyle;
             }
         }
@@ -193,7 +194,7 @@ namespace ModKit {
             string label = keyBind.IsEmpty ? (isEditing ? "Cancel" : "Bind") : keyBind.ToString().orange().bold();
             showHint = showHint && isEditing;
             using (UI.VerticalScope(options)) {
-                UI.Space(10);
+                UI.Space(UnityModManager.UI.Scale(3));
                 if (GL.Button(label, hotkeyStyle, UI.AutoWidth())) {
                     if (isEditing || isEditingOther) {
                         KeyBindings.SetBinding(selectedIdentifier, oldValue);
