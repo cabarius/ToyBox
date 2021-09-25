@@ -14,7 +14,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
 Ver 1.3.11
     Found a grey that works for trash loot. The previous brown still looked too much like a meaningful loot color
     (ArcaneTrixter) Modified 'Disable Arcane Spell Failure' to set spell failure to 0 so you can Blink freely.
-
+    (ArcaneTrixter) No longer squaring the multiplier from 'Spells Per Day' when applying to spellbooks.
 Ver 1.3.10
     Added new top level tab: "Loot"
         Moved Loot Coloring Settings to Loot Tab
