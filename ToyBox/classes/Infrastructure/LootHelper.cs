@@ -22,7 +22,7 @@ namespace ToyBox {
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
             var rarity = item.Blueprint.Rarity();
             if ((int)rarity < (int)filter) return false;
-            return !item.IsNonRemovable;
+            return item.IsLootable;
         }
         public static List<ItemEntity> Lootable(this List<ItemEntity> loots, RarityType filter = RarityType.None) {
             return loots.Where(l => l.IsLootable(filter)).ToList();
