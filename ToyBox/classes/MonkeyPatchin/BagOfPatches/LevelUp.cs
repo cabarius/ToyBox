@@ -404,6 +404,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
+            //Defines which progressions are allowed to be multipiled to prevent unexpected behavior
             private static readonly BlueprintGuid[] AllowedProgressions = new BlueprintGuid[] {
                 BlueprintGuid.Parse("5b72dd2ca2cb73b49903806ee8986325") //BasicFeatsProgression
             };
@@ -417,9 +418,14 @@ namespace ToyBox.BagOfPatches {
                 if (settings.featsMultiplier < 2) { return; }
                 if (!unit.IsPartyOrPet()) { return; }
                 if (!AllowedProgressions.Any(allowed => source.Blueprint.AssetGuid.Equals(allowed))) { return; }
-                int multiplier = settings.featsMultiplier - 1;
+                
                 modLogger.Log($"Log adding {settings.featsMultiplier}x feats for {unit.CharacterName}");
-                foreach (var selection in features.OfType<BlueprintFeatureSelection>().Where(s => s.GetGroup() == FeatureGroup.Feat)) {
+                int multiplier = settings.featsMultiplier - 1;
+                //We filter to only include feat selections of the feat group to prevent things like deities being multiplied
+                var featSelections = features
+                    .OfType<BlueprintFeatureSelection>()
+                    .Where(s => s.GetGroup() == FeatureGroup.Feat);
+                foreach (var selection in featSelections) {
                     if (selection.MeetsPrerequisites(null, unit, state, true) 
                         && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
 
