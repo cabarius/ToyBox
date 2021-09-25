@@ -26,6 +26,7 @@ Ver 1.3.10
     (Delth) hopefully fixed gestalt skillpoint calculations
     (ArcaneTrixter) Added toggle to remove Level 20 Caster Level cap.
     (ArcaneTrixter) Added ability to merge standalone mythics into any spellbook. Spell slots and spells per day are still based on the original type, e.g. Magus gets 6th level spells and below.
+    (ArcaneTrixter) Added Add All button to spellbooks when browsing new spells. It works with Search All Spellbooks and respects current search results.
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments
