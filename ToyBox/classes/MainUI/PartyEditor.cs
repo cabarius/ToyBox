@@ -11,6 +11,7 @@ using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
+using Kingmaker.Utility;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
@@ -418,36 +419,39 @@ namespace ToyBox {
                         UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
                     }
                     UI.Div(100, 20, 755);
-                    foreach (StatType obj in Enum.GetValues(typeof(StatType))) {
+
+                    foreach (StatType obj in HumanFriendly.StatTypes) {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
-                        if (modifiableValue != null) {
-                            String key = $"{ch.CharacterName}-{statType.ToString()}";
-                            var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
-                            var statName = statType.ToString();
-                            if (statName == "BaseAttackBonus" || statName == "SkillAthletics") {
-                                UI.Div(100, 20, 755);
-                            }
-                            using (UI.HorizontalScope()) {
-                                UI.Space(100);
-                                UI.Label(statName, UI.Width(400f));
-                                UI.Space(25);
-                                UI.ActionButton(" < ", () => {
-                                    modifiableValue.BaseValue -= 1;
-                                    storedValue = modifiableValue.BaseValue;
-                                }, UI.AutoWidth());
-                                UI.Space(20);
-                                UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
-                                UI.ActionButton(" > ", () => {
-                                    modifiableValue.BaseValue += 1;
-                                    storedValue = modifiableValue.BaseValue;
-                                }, UI.AutoWidth());
-                                UI.Space(25);
-                                UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
-                                    modifiableValue.BaseValue = v;
-                                }, null, UI.Width(75));
-                                statEditorStorage[key] = storedValue;
-                            }
+                        if (modifiableValue == null) {
+                            continue;
+                        }
+
+                        string key = $"{ch.CharacterName}-{statType.ToString()}";
+                        int storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
+                        string statName = statType.ToString();
+                        if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
+                            UI.Div(100, 20, 755);
+                        }
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.Label(statName, UI.Width(400f));
+                            UI.Space(25);
+                            UI.ActionButton(" < ", () => {
+                                modifiableValue.BaseValue -= 1;
+                                storedValue = modifiableValue.BaseValue;
+                            }, UI.AutoWidth());
+                            UI.Space(20);
+                            UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
+                            UI.ActionButton(" > ", () => {
+                                modifiableValue.BaseValue += 1;
+                                storedValue = modifiableValue.BaseValue;
+                            }, UI.AutoWidth());
+                            UI.Space(25);
+                            UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
+                                modifiableValue.BaseValue = v;
+                            }, null, UI.Width(75));
+                            statEditorStorage[key] = storedValue;
                         }
                     }
                 }

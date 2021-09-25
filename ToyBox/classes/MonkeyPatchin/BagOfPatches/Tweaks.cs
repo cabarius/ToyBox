@@ -437,55 +437,22 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(UnitPartActivatableAbility), nameof(UnitPartActivatableAbility.GetGroupSize))]
         public static class UnitPartActivatableAbility_GetGroupSize_Patch {
-            public static ActivatableAbilityGroup[] groups = new ActivatableAbilityGroup[] {
-                ActivatableAbilityGroup.AeonGaze,
-                ActivatableAbilityGroup.ArcaneArmorProperty,
-                ActivatableAbilityGroup.ArcaneWeaponProperty,
-                ActivatableAbilityGroup.AzataMythicPerformance,
-                ActivatableAbilityGroup.BarbarianStance,
-                ActivatableAbilityGroup.BardicPerformance,
-                ActivatableAbilityGroup.ChangeShape,
-                ActivatableAbilityGroup.ChangeShapeKitsune,
-                ActivatableAbilityGroup.CombatManeuverStrike,
-                ActivatableAbilityGroup.CombatStyle,
-                ActivatableAbilityGroup.CriticalFeat,
-                ActivatableAbilityGroup.DebilitatingStrike,
-                ActivatableAbilityGroup.DemonMajorAspect,
-                ActivatableAbilityGroup.DivineWeaponProperty,
-                ActivatableAbilityGroup.DrovierAspect,
-                ActivatableAbilityGroup.DuelistCripplingCritical,
-                ActivatableAbilityGroup.ElementalOverflow,
-                ActivatableAbilityGroup.FeralTransformation,
-                ActivatableAbilityGroup.FormInfusion,
-                ActivatableAbilityGroup.GatherPower,
-                ActivatableAbilityGroup.HellknightEnchantment,
-                ActivatableAbilityGroup.HunterAnimalFocus,
-                ActivatableAbilityGroup.Judgment,
-                ActivatableAbilityGroup.MagicArrows,
-                ActivatableAbilityGroup.MagicalItems,
-                ActivatableAbilityGroup.MasterHealingTechnique,
-                ActivatableAbilityGroup.MetamagicRod,
-                ActivatableAbilityGroup.RagingTactician,
-                ActivatableAbilityGroup.RingOfCircumstances,
-                ActivatableAbilityGroup.SacredArmorProperty,
-                ActivatableAbilityGroup.SacredWeaponProperty,
-                ActivatableAbilityGroup.SerpentsFang,
-                ActivatableAbilityGroup.ShroudOfWaterMode,
-                ActivatableAbilityGroup.SpiritWeaponProperty,
-                ActivatableAbilityGroup.StyleStrike,
-                ActivatableAbilityGroup.SubstanceInfusion,
-                ActivatableAbilityGroup.TransmutationPhysicalEnhancement,
-                ActivatableAbilityGroup.TrueMagus,
-                ActivatableAbilityGroup.Wings,
-                ActivatableAbilityGroup.WitheringLife,
-                ActivatableAbilityGroup.WizardDivinationAura,
-            };
+            public static List<ActivatableAbilityGroup> groups = Enum.GetValues(typeof(ActivatableAbilityGroup)).Cast<ActivatableAbilityGroup>().ToList();
             public static bool Prefix(ActivatableAbilityGroup group, ref int __result) {
                 if (settings.toggleAllowAllActivatable && groups.Any(group)) {
                     __result = 99;
                     return false;
                 }
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(ActivatableAbility), nameof(ActivatableAbility.SetIsOn))]
+        public static class ActivatableAbility_SetIsOn_Patch {
+            public static void Prefix(ref bool value, ActivatableAbility __instance) {
+                if (settings.toggleAllowAllActivatable && __instance.Blueprint.Group == ActivatableAbilityGroup.Judgment) {
+                    value = true;
+                }
             }
         }
 

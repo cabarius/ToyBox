@@ -14,6 +14,7 @@ using ModKit;
 using ModKit.Utility;
 using ToyBox.classes.MainUI;
 using Kingmaker.GameModes;
+using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
 #if DEBUG
@@ -78,6 +79,7 @@ namespace ToyBox {
                 modEntry.OnSaveGUI = OnSaveGUI;
                 UI.KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.Mod();
+                HumanFriendly.EnsureFriendlyTypesContainAll();
             }
             catch (Exception e) {
                 Main.Error(e);

@@ -19,6 +19,9 @@ Ver 1.3.10
     With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
     (ArcaneTrixter) Added 'Ignore Prerequisite Features (like Race) when choosing Class' to levelup.
     (Delth) hopefully fixed gestalt skillpoint calculations
+    (ArcaneTrixter) Bumped max burn for kineticist burn cheat to 30 so you never have to be burned again.
+    (ArcaneTrixter) Reorganized stat section of party editor to not just be the random enum order.
+    (ArcaneTrixter) Allowed multiple judgements to be active at once.
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments
