@@ -10,6 +10,11 @@ namespace ModKit {
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, options);
         }
+        public static void Label(String title, GUIStyle style, params GUILayoutOption[] options) {
+            // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
+            //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
+            GL.Label(title, style, options);
+        }
         public static void Label(GUIContent content, params GUILayoutOption[] options) {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
