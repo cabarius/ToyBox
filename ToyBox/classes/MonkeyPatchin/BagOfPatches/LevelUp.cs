@@ -404,31 +404,34 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
-            public static bool Prefix(
+            private static readonly BlueprintGuid[] AllowedProgressions = new BlueprintGuid[] {
+                BlueprintGuid.Parse("5b72dd2ca2cb73b49903806ee8986325") //BasicFeatsProgression
+            };
+            public static void Postfix(
                 [NotNull] LevelUpState state,
                 [NotNull] UnitDescriptor unit,
                 [NotNull] IList<BlueprintFeatureBase> features,
                 FeatureSource source,
                 int level) {
-                if (settings.featsMultiplier < 2) return true;
-                //modLogger.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
-                if (!unit.IsPartyOrPet()) return true;
-                modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
-                foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
-                    for (int i = 0; i < settings.featsMultiplier; ++i) {
-                        if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
-                            if (blueprintFeature is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory()))
-                                state.AddSelection((FeatureSelectionState)null, source, selection, level);
-                            Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
-                            if (blueprintFeature is BlueprintProgression progression)
-                                LevelUpHelper.UpdateProgression(state, unit, progression);
-                            FeatureSource source1 = source;
-                            int level1 = level;
-                            feature.SetSource(source1, level1);
-                        }
+
+                if (settings.featsMultiplier < 2) { return; }
+                if (!unit.IsPartyOrPet()) { return; }
+                if (!AllowedProgressions.Any(allowed => source.Blueprint.AssetGuid.Equals(allowed))) { return; }
+                int multiplier = settings.featsMultiplier - 1;
+                modLogger.Log($"Log adding {settings.featsMultiplier}x feats for {unit.CharacterName}");
+                foreach (var selection in features.OfType<BlueprintFeatureSelection>().Where(s => s.GetGroup() == FeatureGroup.Feat)) {
+                    if (selection.MeetsPrerequisites(null, unit, state, true) 
+                        && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
+
+                        ExecuteByMultiplier(multiplier, () => state.AddSelection(null, source, selection, level));
                     }
                 }
-                return false;
+                return;
+            }
+            private static void ExecuteByMultiplier(int multiplier, Action run = null) {
+                for (int i = 0;i < multiplier;++i) {
+                    run.Invoke();
+                }
             }
         }
     }
