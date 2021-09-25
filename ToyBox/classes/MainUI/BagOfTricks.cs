@@ -175,7 +175,6 @@ namespace ToyBox {
                 () => UI.Toggle("Disallow Companions Leaving Party (experimental; only enable while needed)", ref settings.toggleBlockUnrecruit, 0),
                 () => UI.Toggle("Disable Romance IsLocked Flag (experimental)", ref settings.toggleMultipleRomance, 0),
                 () => UI.Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
-                () => UI.Toggle("Mass Loot Shows Everything When Leaving Map (some items might be invisible until looted)", ref settings.toggleMassLootEverything),
                 () => UI.ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => UI.Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => UI.Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),

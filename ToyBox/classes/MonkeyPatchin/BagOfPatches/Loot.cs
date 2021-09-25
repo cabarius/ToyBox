@@ -71,7 +71,7 @@ namespace ToyBox.BagOfPatches {
 
                     }
                     var rarity = __instance.Item.Blueprint.Rarity();
-                    var color = rarity.Color();
+                    var color = rarity.color();
                     var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
                     if (rarity == RarityType.Notable) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");

@@ -35,10 +35,10 @@ namespace ModKit {
         grey = 0xC0C0C0ff,
         silver = 0xD0D0D0ff,
         white = 0xffffffff,
-        none = black,
-        trash = 0x606060FF,
-        notable = 0x40ff40c0,       // 0xf03399ff, // 0xff3399ff,
-        common = black,         //0xe8e8e8a0,
+        none = silver,
+        trash = brown, // 0x606060FF,
+        notable = yellow, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
+        common = silver,         //0xe8e8e8a0,
         uncommon = 0x00882bff,  //0x00802bff, //0x68b020ff, // 0x60B020ff,
         rare = 0x2060ffff,
         epic = 0xc260f1ff,      //0xc860fff,
@@ -48,12 +48,15 @@ namespace ModKit {
     }
 
     public static class ColorUtils {
-        public static Color Color(this RGBA rga) {
+        public static Color color(this RGBA rga, float adjust = 0) {
             var red = (float)((Int64)rga >> 24) / 256f;
             var green = (float)(0xFF & ((Int64)rga >> 16)) / 256f;
             var blue = (float)(0xFF & ((Int64)rga >> 8)) / 256f;
             var alpha = (float)(0xFF & ((Int64)rga)) / 256f;
-            return new Color(red, green, blue, alpha);
+            var color = new Color(red, green, blue, alpha);
+            if (adjust < 0) color = Color.Lerp(color, Color.black, -adjust);
+            if (adjust > 0) color = Color.Lerp(color, Color.white, adjust);
+            return color;
         }
     }
 }

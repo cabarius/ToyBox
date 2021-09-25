@@ -89,17 +89,27 @@ namespace ModKit {
                 }
             }
         }
-        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
             var names = Enum.GetNames(typeof(TEnum));
+            var formatedNames = names;
+            var nameToEnum = value.NameToValueDictionary();
             if (titleFormater != null)
-                names = names.Select((n) => titleFormater(n)).ToArray();
+                formatedNames = names.Select((n) => titleFormater(n, nameToEnum[n])).ToArray();
             int index = Array.IndexOf(names, value.ToString());
-            if (UI.SelectionGrid(ref index, names, xCols, options)) {
+            var oldIndex = index;
+            if (style == null ? UI.SelectionGrid(ref index, formatedNames, xCols, options) : UI.SelectionGrid(ref index, formatedNames, xCols, style, options))  {
                 TEnum newValue;
                 if (Enum.TryParse(names[index], out newValue)) {
                     value = newValue;
                 }
             }
+
+        }
+        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
+            EnumGrid(ref value, xCols, titleFormater, null, options);
+        }
+        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
+            EnumGrid(ref value, xCols, null, options);
         }
         public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             using (UI.HorizontalScope()) {
@@ -108,11 +118,26 @@ namespace ModKit {
                 UI.EnumGrid<TEnum>(ref value, xCols, null, options);
             }
         }
-        public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, Func<string, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+            using (UI.HorizontalScope()) {
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(25);
+                UI.EnumGrid<TEnum>(ref value, xCols, null, style, options);
+            }
+        }
+
+        public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
             using (UI.HorizontalScope()) {
                 UI.Label(title.cyan(), UI.Width(300));
                 UI.Space(25);
                 UI.EnumGrid<TEnum>(ref value, xCols, titleFormater, options);
+            }
+        }
+        public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+            using (UI.HorizontalScope()) {
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(25);
+                UI.EnumGrid<TEnum>(ref value, xCols, titleFormater, style, options);
             }
         }
         public static void EnumerablePicker<T>(

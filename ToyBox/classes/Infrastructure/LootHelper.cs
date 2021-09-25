@@ -19,12 +19,29 @@ using UnityEngine;
 namespace ToyBox {
     public static class LootHelper {
 
+        public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
+            var rarity = item.Blueprint.Rarity();
+            if ((int)rarity < (int)filter) return false;
+            return !item.IsNonRemovable;
+        }
+        public static List<ItemEntity> Lootable(this List<ItemEntity> loots, RarityType filter = RarityType.None) {
+            return loots.Where(l => l.IsLootable(filter)).ToList();
+        }
         public static string GetName(this LootWrapper present) {
-            if (present.InteractionLoot != null) return present.InteractionLoot.GetName();
+            if (present.InteractionLoot != null) {
+                var name = present.InteractionLoot.Owner.View.name;
+                if (name == null || name.Length == 0) name = "Ground";
+                return name;
+            }
             if (present.Unit != null) return present.Unit.CharacterName;
             return null;
         }
 
+        public static List<ItemEntity> GetInteraction(this LootWrapper present) {
+            if (present.InteractionLoot != null) return present.InteractionLoot.Loot.Items; ;
+            if (present.Unit != null) return present.Unit.Inventory.Items;
+            return null;
+        }
         public static List<ItemEntity> GetLewtz(this LootWrapper present) {
             if (present.InteractionLoot != null) return present.InteractionLoot.Loot.Items; ;
             if (present.Unit != null) return present.Unit.Inventory.Items;

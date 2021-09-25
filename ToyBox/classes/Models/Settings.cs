@@ -55,17 +55,23 @@ namespace ToyBox {
         public bool toggleAlwaysAllowSpellCombat = false;
         public bool toggleInstantPartyChange = false;
         public bool toggleEnterCombatAutoRage = false;
-        public bool toggleMassLootEverything = false;
         public bool toggleEquipmentNoWeight = false;
         public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
-        // Loot Coloring & Filtering
+
+        // Loot 
         public bool toggleColorLootByRarity = false;
         public RarityType lootFilterIgnore = RarityType.None;
         public RarityType lootFilterAutoSell = RarityType.None;
+        public bool toggleMassLootEverything = false;
+        public bool toggleLootChecklistFilterFriendlies = false;
+        public bool toggleLootChecklistFilterBlueprint = false;
+        public bool toggleLootChecklistFilterDescription = false;
+        public RarityType  lootChecklistFilterRarity = RarityType.None;
+
 
         //Crusade
         public bool toggleInfiniteArmyRerolls = false;

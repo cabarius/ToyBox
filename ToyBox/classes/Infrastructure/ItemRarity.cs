@@ -3,40 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using Kingmaker.Blueprints.Items;
 using UnityEngine;
-using ModKit;
 using Kingmaker.Items;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Components;
+using ModKit;
+using ToyBox;
 
 namespace ToyBox {
     public enum RarityType {
         None,
         Trash,
         Common,
-        Notable,
         Uncommon,
         Rare,
         Epic,
         Legendary,
         Mythic,
-        Godly
+        Godly,
+        Notable,
     }
     public static partial class BlueprintExensions {
         public static RGBA[] RarityColors = {
             RGBA.none,
             RGBA.trash,
             RGBA.common,
-            RGBA.notable,
             RGBA.uncommon,
             RGBA.rare,
             RGBA.epic,
             RGBA.legendary,
             RGBA.mythic,
-            RGBA.godly
+            RGBA.godly,
+            RGBA.notable,
         };
-
         public static RarityType Rarity(this BlueprintItem bp) {
             if (bp == null) return RarityType.None;
             var rating = 0;
@@ -56,8 +56,7 @@ namespace ToyBox {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
             } else if (rating == 0 && bp is BlueprintItemEquipment equipBP) {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
-            }
-            else if (rating == 0 && bp is BlueprintItemNote noteBP) {
+            } else if (rating == 0 && bp is BlueprintItemNote noteBP) {
                 var component = noteBP.GetComponent<AddItemShowInfoCallback>();
                 if (component != null) {
                     return RarityType.Notable;
@@ -74,15 +73,44 @@ namespace ToyBox {
 #if false
             Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");
 #endif
-            return rarity ;
+            return rarity;
 
         }
-        public static Color Color(this RarityType rarity) {
-            return RarityColors[(int)rarity].Color();
+        public static Color color(this RarityType rarity, float adjust = 0) {
+            return RarityColors[(int)rarity].color(adjust);
         }
-        public static string Rarity(this string s, RarityType rarity) {
+        public static string Rarity(this string s, RarityType rarity, float adjust = 0) {
             return s.color(RarityColors[(int)rarity]);
         }
         public static string GetString(this RarityType rarity) => rarity.ToString().Rarity(rarity);
+    }
+}
+namespace ModKit {
+    public static partial class UI {
+        private static Texture2D _rarityTexture = null;
+        public static Texture2D RarityTexture {
+            get {
+                if (_rarityTexture == null) _rarityTexture = new Texture2D(1, 1);
+                _rarityTexture.SetPixel(0, 0, RGBA.black.color());
+                _rarityTexture.Apply();
+                return _rarityTexture;
+            }
+        }
+        private static GUIStyle _rarityStyle;
+        public static GUIStyle rarityStyle {
+            get {
+                if (_rarityStyle == null) {
+                    _rarityStyle = new GUIStyle(GUI.skin.button);
+                    _rarityStyle.normal.background = RarityTexture;
+                }
+                return _rarityStyle;
+            }
+        }
+        public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) {
+            UI.EnumGrid(ref rarity, xCols, (n, rarity) => n.Rarity(rarity), UI.rarityStyle, options);
+        }
+        public static void RarityGrid(string title, ref RarityType rarity, int xCols, params GUILayoutOption[] options) {
+            UI.EnumGrid(title, ref rarity, xCols, (n, rarity) => n.Rarity(rarity), UI.rarityStyle, options);
+        }
     }
 }
