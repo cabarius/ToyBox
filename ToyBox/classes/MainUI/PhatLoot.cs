@@ -66,7 +66,7 @@ namespace ToyBox {
                     var indent = 3;
                     UI.Space(50);
                     using (UI.VerticalScope()) {
-                        foreach (var group in presentGroups) {
+                        foreach (var group in presentGroups.Reverse()) {
                             UI.Label(group.Key.cyan());
                             UI.Div(indent);
                             foreach (var present in group.AsEnumerable()) {
