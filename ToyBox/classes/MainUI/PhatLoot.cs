@@ -67,7 +67,7 @@ namespace ToyBox {
                     UI.Space(50);
                     using (UI.VerticalScope()) {
                         foreach (var group in presentGroups.Reverse()) {
-                            UI.Label(group.Key.cyan());
+                            UI.Label($"{group.Key.cyan()} - {group.Count()}");
                             UI.Div(indent);
                             foreach (var present in group.AsEnumerable()) {
                                 var pahtLewts = present.GetLewtz().Lootable(settings.lootChecklistFilterRarity);
@@ -81,6 +81,7 @@ namespace ToyBox {
                                     using (UI.HorizontalScope()) {
                                         UI.Space(indent);
                                         UI.Label(present.GetName().orange().bold(), UI.Width(300));
+                                        //UI.Label($"{present.GetName().orange().bold()} - {pahtLewts.Count()}", UI.Width(300));
                                         using (UI.VerticalScope()) {
                                             foreach (var lewt in pahtLewts) {
                                                 var description = lewt.Blueprint.Description;
