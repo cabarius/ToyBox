@@ -128,7 +128,7 @@ namespace ToyBox.classes.MainUI {
             UI.Div(5);
             for (int i = 0; i < cacheSearch.Count; i++) {
                 var enchant = cacheSearch[i];
-                var title = enchant.name.cyan().bold();
+                var title = enchant.name.Rarity((RarityType)enchant.EnchantmentCost);
                 using (UI.HorizontalScope()) {
                     UI.Space(5);
                     UI.Label(title, UI.Width(300));
@@ -173,7 +173,7 @@ namespace ToyBox.classes.MainUI {
                 }
                 else {
                     var name = enchant.name;
-                    var description = enchant.GetDescription() ?? "";
+                    var description = enchant.GetDescription().RemoveHtmlTags() ?? "";
                     if (terms.All(term => StringExtensions.Matches(name, term))
                         || settings.searchesDescriptions && terms.All(term => StringExtensions.Matches(description, term))
                         ) {
