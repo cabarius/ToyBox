@@ -38,13 +38,11 @@ using Kingmaker.View.MapObjects;
 using Owlcat.Runtime.Core.Utils;
 using Kingmaker.Items;
 using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Blueprints.Items.Shields;
-using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
 using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using System.Linq;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.RuleSystem.Rules.Abilities;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -253,9 +251,21 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintArmorType), "ArcaneSpellFailureChance", MethodType.Getter)]
-        public static class BlueprintArmorType_ArcaneSpellFailureChance_Patch {
-            public static bool Prefix(ref int __result) {
+        [HarmonyPatch(typeof(RuleCastSpell))]
+        public static class RuleCastSpell_SpellFailureChance_Patch {
+            [HarmonyPatch(nameof(RuleCastSpell.SpellFailureChance), MethodType.Getter)]
+            [HarmonyPrefix]
+            public static bool PrefixSpellFailureChance(ref int __result) {
+                if (settings.toggleIgnoreSpellFailure) {
+                    __result = 0;
+                    return false;
+                }
+                return true;
+            }
+
+            [HarmonyPatch(nameof(RuleCastSpell.ArcaneSpellFailureChance), MethodType.Getter)]
+            [HarmonyPrefix]
+            public static bool PrefixArcaneSpellFailureChance(ref int __result) {
                 if (settings.toggleIgnoreSpellFailure) {
                     __result = 0;
                     return false;

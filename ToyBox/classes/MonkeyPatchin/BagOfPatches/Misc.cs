@@ -47,13 +47,6 @@ namespace ToyBox.BagOfPatches {
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
-        static class Spellbook_GetSpellsPerDay_Patch {
-            static void Postfix(ref int __result) {
-                __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.spellsPerDayMultiplier, 1));
-            }
-        }
-
         public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
             ItemEntityUsable itemEntityUsable = item as ItemEntityUsable;
             if (itemEntityUsable?.Blueprint.Type != UsableItemType.Scroll) {
