@@ -117,6 +117,7 @@ namespace ToyBox {
         public bool toggleUncappedCasterLevel = false;
 
         // Multipliers
+        public int featsMultiplier = 1;
         public int encumberanceMultiplier = 1;
         public float experienceMultiplier = 1;
         public float moneyMultiplier = 1;
@@ -124,7 +125,6 @@ namespace ToyBox {
         public float vendorBuyPriceMultiplier = 1;
         public float fatigueHoursModifierMultiplier = 1;
         public float spellsPerDayMultiplier = 1;
-        public int featsMultiplier = 1;
         public float partyMovementSpeedMultiplier = 1;
         public float travelSpeedMultiplier = 1;
         public int characterCreationAbilityPointsMax = 18;
