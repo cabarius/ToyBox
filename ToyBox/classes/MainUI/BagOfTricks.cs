@@ -124,6 +124,12 @@ namespace ToyBox {
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
                 () => UI.Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
+                () => {
+                    UI.Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair, 0);
+                    UI.Space(25);
+                    UI.Label("This may require an area transition or reload to take effect".green());
+                },
+                () => UI.Slider("Brutal Unfair Difficulty Multiplier", ref settings.brutalDifficultyMultiplier, 1f, 5f, 1f, 1, "", UI.Width((450))),
                 () => { }
             );
             UI.Div(0, 25);
@@ -162,13 +168,17 @@ namespace ToyBox {
                 () => UI.Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
                 () => UI.Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity, 0),
 
-                () => UI.Toggle("Disable Dialog Restrictions", ref settings.toggleDialogRestrictions, 0),
-
+                () => UI.Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions, 0),
+                () => UI.Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic, 0),
+#if DEBUG
+                () => UI.Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything, 0),
+#endif
                 () => UI.Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0),
                 () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
 
                 () => UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0),
-                //() => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
+                () => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
+                //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat, 0),
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => UI.Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
@@ -193,7 +203,12 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Class Specific", 1,
                 () => UI.Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 1, "", UI.AutoWidth()),
-                () => UI.Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f, 1f, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f,
+                        1f, 1, "", UI.AutoWidth()),
+                () => {
+                    UI.Space(25);
+                    UI.Label("Please rest after adjusting to recalculate your spell slots.".green());
+                },
                 () => UI.Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)", ref settings.toggleExtendHexes),
                 () => UI.Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)", ref settings.toggleAllowAllActivatable),
                 () => UI.Toggle("Kineticist: Allow Gather Power Without Hands", ref settings.toggleKineticistGatherPower),

@@ -22,6 +22,8 @@ using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScor
 using Kingmaker.UI.ServiceWindow;
 using UnityEngine;
 using Kingmaker.UnitLogic.FactLogic;
+using ModKit;
+
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -402,7 +404,14 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
+        /**
+         * The feat multiplier is the source of several hard to track down bugs. To quote ArcaneTrixter:
+         * All story companions feats/backgrounds/etc. most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8. Also this is retroactive if you ever level up in the future with the multiplier on.
+         * All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
+         * Required adding in "skip feat selection" because it broke level ups.
+         * Causes certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
+        */
+#if true
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             public static bool Prefix(
@@ -416,17 +425,21 @@ namespace ToyBox.BagOfPatches {
                 if (!unit.IsPartyOrPet()) return true;
                 modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
                 foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
-                    for (int i = 0; i < settings.featsMultiplier; ++i) {
+                    for (int i = 0;i < settings.featsMultiplier;++i) {
                         if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
-                            if (blueprintFeature is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory()))
+                            if (blueprintFeature is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
+                                modLogger.Log($"    adding: {blueprintFeature.NameSafe()}".cyan());
                                 state.AddSelection((FeatureSelectionState)null, source, selection, level);
-                            Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
-                            if (blueprintFeature is BlueprintProgression progression)
-                                LevelUpHelper.UpdateProgression(state, unit, progression);
-                            FeatureSource source1 = source;
-                            int level1 = level;
-                            feature.SetSource(source1, level1);
+                            }
                         }
+                    }
+                    Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
+                    FeatureSource source1 = source;
+                    int level1 = level;
+                    feature.SetSource(source1, level1);
+                    if (blueprintFeature is BlueprintProgression progression) {
+                        modLogger.Log($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {blueprintFeature.NameSafe()}".cyan());
+                        LevelUpHelper.UpdateProgression(state, unit, progression);
                     }
                 }
                 return false;
@@ -458,50 +471,98 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintCharacterClass))]
-        public static class BlueprintCharacterClass_Patch {
-            [HarmonyPatch("MeetsPrerequisites")]
-            public static void Postfix(ref UnitDescriptor unit, BlueprintCharacterClass __instance, ref bool __result) {
 
-                if (Main.settings.toggleUnlockClassUpperLimit) {
-                    if (!__result) {
-                        int classLevel = unit.Progression.GetClassLevel(__instance);
 
-                        if (classLevel >= 20 && classLevel < 40) {
-                            __result = true;
-                        }
-                        if (__instance.PrestigeClass && classLevel < 40 && classLevel >= 10) {
-                            __result = true;
-                        }
+        /**
+         * This alternative re-targets the multiplier into a Postfix instead of a Prefix to reduce the patch foot print, as well as adds progression white listing to make feature multiplication opt in by the developer instead of just multiplying everything always. As setup in this request only the base feat selections that all characters get will be multiplied, which to my mind best suits the name and description of what this setting does. This should also significantly reduce or resolve several associated bugs due to the reduction of scope on this feature
+         */
+
+#else
+        [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
+        public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
+            //Defines which progressions are allowed to be multiplied to prevent unexpected behavior
+            private static readonly BlueprintGuid[] AllowedProgressions = new BlueprintGuid[] {
+                BlueprintGuid.Parse("5b72dd2ca2cb73b49903806ee8986325") //BasicFeatsProgression
+            };
+            public static void Postfix(
+                [NotNull] LevelUpState state,
+                [NotNull] UnitDescriptor unit,
+                [NotNull] IList<BlueprintFeatureBase> features,
+                FeatureSource source,
+                int level) {
+
+                if (settings.featsMultiplier < 2) { return; }
+                if (!unit.IsPartyOrPet()) { return; }
+                if (!AllowedProgressions.Any(allowed => source.Blueprint.AssetGuid.Equals(allowed))) { return; }
+
+                modLogger.Log($"Log adding {settings.featsMultiplier}x feats for {unit.CharacterName}");
+                int multiplier = settings.featsMultiplier - 1;
+                //We filter to only include feat selections of the feat group to prevent things like deities being multiplied
+                var featSelections = features
+                    .OfType<BlueprintFeatureSelection>()
+                    .Where(s => s.GetGroup() == FeatureGroup.Feat);
+                foreach (var selection in featSelections) {
+                    if (selection.MeetsPrerequisites(null, unit, state, true)
+                        && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
+
+                        ExecuteByMultiplier(multiplier, () => state.AddSelection(null, source, selection, level));
                     }
-
+                }
+                return;
+            }
+            private static void ExecuteByMultiplier(int multiplier, Action run = null) {
+                for (int i = 0;i < multiplier;++i) {
+                    run.Invoke();
                 }
             }
         }
-        [HarmonyPatch(typeof(ProgressionData), "GetLevelEntry")]
-        public static class ProgressionData_Patch {
-            public static bool Prefix(ProgressionData __instance, int level, ref LevelEntry __result) {
-                if (Main.settings.toggleUnlockClassUpperLimit ) {
-                    int i = level;
-                    if (i >= 40) {
-                        i = 20;
-                    }
-                    if (i > 20) {
-                        if (i % 2 == 0) {
-                            i = 18;
-                        } else {
-                            i = 19;
+#endif
 
-                        }
+    }
+
+    [HarmonyPatch(typeof(BlueprintCharacterClass))]
+    public static class BlueprintCharacterClass_Patch {
+        [HarmonyPatch("MeetsPrerequisites")]
+        public static void Postfix(ref UnitDescriptor unit, BlueprintCharacterClass __instance, ref bool __result) {
+
+            if (Main.settings.toggleUnlockClassUpperLimit) {
+                if (!__result) {
+                    int classLevel = unit.Progression.GetClassLevel(__instance);
+
+                    if (classLevel >= 20 && classLevel < 40) {
+                        __result = true;
                     }
-                    level = i;
-                    __result = __instance.LevelEntries.FirstOrDefault((LevelEntry le) => le.Level == level) ?? new LevelEntry(); ;
-                    return false;
+                    if (__instance.PrestigeClass && classLevel < 40 && classLevel >= 10) {
+                        __result = true;
+                    }
                 }
-                return true;
+
             }
-
-
         }
+    }
+    [HarmonyPatch(typeof(ProgressionData), "GetLevelEntry")]
+    public static class ProgressionData_Patch {
+        public static bool Prefix(ProgressionData __instance, int level, ref LevelEntry __result) {
+            if (Main.settings.toggleUnlockClassUpperLimit) {
+                int i = level;
+                if (i >= 40) {
+                    i = 20;
+                }
+                if (i > 20) {
+                    if (i % 2 == 0) {
+                        i = 18;
+                    } else {
+                        i = 19;
+
+                    }
+                }
+                level = i;
+                __result = __instance.LevelEntries.FirstOrDefault((LevelEntry le) => le.Level == level) ?? new LevelEntry(); ;
+                return false;
+            }
+            return true;
+        }
+
+
     }
 }

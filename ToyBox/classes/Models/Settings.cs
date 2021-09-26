@@ -29,11 +29,14 @@ namespace ToyBox {
         public bool togglePartyNegativeLevelImmunity = false;
         public bool togglePartyAbilityDamageImmunity = false;
         public bool toggleDialogRestrictions = false;
+        public bool toggleDialogRestrictionsMythic = false;
+        public bool toggleDialogRestrictionsEverything = false;
         public bool toggleNoFriendlyFireForAOE = false;
         public bool toggleSettlementRestrictions = false;
         public bool toggleMoveSpeedAsOne = false;
         public bool toggleNoFogOfWar = false;
         public bool toggleRestoreSpellsAbilitiesAfterCombat = false;
+        public bool toggleRechargeItemsAfterCombat = false;
         public bool toggleInstantRestAfterCombat = false;
         public bool toggleShowAllPartyPortraits = false;    // TODO - port this
         public bool toggleAccessRemoteCharacters = false;
@@ -60,6 +63,7 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
+        public bool toggleBrutalUnfair = false;
 
         // Loot 
         public bool toggleColorLootByRarity = false;
@@ -114,6 +118,7 @@ namespace ToyBox {
         public bool toggleUncappedCasterLevel = false;
 
         // Multipliers
+        public int featsMultiplier = 1;
         public int encumberanceMultiplier = 1;
         public float experienceMultiplier = 1;
         public float moneyMultiplier = 1;
@@ -121,7 +126,6 @@ namespace ToyBox {
         public float vendorBuyPriceMultiplier = 1;
         public float fatigueHoursModifierMultiplier = 1;
         public float spellsPerDayMultiplier = 1;
-        public int featsMultiplier = 1;
         public float partyMovementSpeedMultiplier = 1;
         public float travelSpeedMultiplier = 1;
         public int characterCreationAbilityPointsMax = 18;
@@ -137,6 +141,7 @@ namespace ToyBox {
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
         public float arcanistSpellslotMultiplier = 1;
+        public float brutalDifficultyMultiplier = 1;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;

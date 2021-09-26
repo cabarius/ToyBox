@@ -37,7 +37,11 @@ namespace ToyBox {
             });
             UI.Div(0, 25);
             UI.HStack("Create & Level Up", 1,
-                () => UI.Slider("Feat Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.AutoWidth()),
+                () => {
+                    UI.Slider("Feature Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.Width(600));
+                    UI.Space(25);
+                    UI.Label("This allows you to select a given feature more than once at level up".green());
+                    },
                 () => UI.Toggle("Enable  'Next' when no feat selections are available", ref settings.toggleNextWhenNoAvailableFeatSelections),
                 () => UI.Toggle("Make All Feat Selections Optional", ref settings.toggleOptionalFeatSelection),
                 () => {

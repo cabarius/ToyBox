@@ -1,5 +1,4 @@
-﻿    
-# Brief Description
+﻿# Brief Description
 Toy Box is a cute and playful mod with 300+ cheats, tweaks and quality of life improvements for Pathfinder: WoTR. It was created in the spirit of Bag of Tricks & Cheat Menu but with a little different focus . It of a powerful and convenient way to edit the party composition, stats, search and add Feats, Features, Items, etc. to party members.
 
 # Detailed Description
@@ -11,24 +10,34 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Crusade: 25
     Quest Resolution: 1
-Ver 1.3.11
-    (xyq565861)Add feature to unlock the upper limit of every class level to 40 in level up page.
     
+Ver 1.3.12
+    Fixed issue where feat multiplier stopped working for certain cases such as mythic selections
+    (Truinto) Added Disable Dialog Restrictions (Mythic Path)
+    (xyq565861)Add feature to unlock the upper limit of every class level to 40 in level up page.
+Ver 1.3.11
+    Found a grey that works for trash loot. The previous brown still looked too much like a meaningful loot color
+    (ArcaneTrixter) Added a 'Brutal Unfair Difficulty' to Quality of Life. Toggle on if you miss the previous challenge of Unfair or if you thought it too easy there's a slider now.
+    (ArcaneTrixter) Modified 'Disable Arcane Spell Failure' to set spell failure to 0 so you can Blink freely.
+    (ArcaneTrixter) No longer squaring the multiplier from 'Spells Per Day' when applying to spellbooks.
+    (Vek17) Fixed issues around the Feat Multiplier including
+        - All story companions feats/backgrounds/etc. most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8. Also this is retroactive if you ever level up in the future with the multiplier on.
+        - Messed up All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
+        - Caused certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
 Ver 1.3.10
-    Added Loot Tab
-    Moved Loot Coloring Settings to Loot Tab
-    Added some basic loot filtering and autosell options (TODO)
-    With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
+    Added new top level tab: "Loot"
+        Moved Loot Coloring Settings to Loot Tab
+        With the kind permission and help from the legend himself, @Hambeard, ToyBox now supports a new version of TheLootCheckList
     Loot color tweaks: notable is now yellow and trash is now an appropriate sh_t brown color
     Hot Key Binding control now scales properly to Unity Mod Manager UI scale setting.
     (ArcaneTrixter) Added 'Ignore Prerequisite Features (like Race) when choosing Class' to levelup.
     (ArcaneTrixter) Bumped max burn for kineticist burn cheat to 30 so you never have to be burned again.
     (ArcaneTrixter) Reorganized stat section of party editor to not just be the random enum order.
     (ArcaneTrixter) Allowed multiple judgements to be active at once.
-    (Delth) hopefully fixed gestalt skillpoint calculations
     (ArcaneTrixter) Added toggle to remove Level 20 Caster Level cap.
     (ArcaneTrixter) Added ability to merge standalone mythics into any spellbook. Spell slots and spells per day are still based on the original type, e.g. Magus gets 6th level spells and below.
     (ArcaneTrixter) Added Add All button to spellbooks when browsing new spells. It works with Search All Spellbooks and respects current search results.
+    (Delth) hopefully fixed gestalt skillpoint calculations
 Ver 1.3.9
     Made Alignment section in Bag of Tricks
         Fixing alignment shifts for neutral good and similar alignments
@@ -388,6 +397,9 @@ Install & Use
     - Open the Unity Mod Manager﻿ by pressing CTRL + F10.
     - Adjust the settings in the mod's menu
 Acknowledgments:  
+    ArcaneTrixter for many awesome improvements and bug fixes
+    fire & m0nster for lots of awesome code from bag of tricks
+    Truinto, Delth, Aphelion, fire for great contributions to the ToyBox project
     Owlcat Games - for making fun and amazing games
     Paizo - for carrying the D20 3.5 torch
     Pathfinder Wrath of The Righteous Discord channel members
