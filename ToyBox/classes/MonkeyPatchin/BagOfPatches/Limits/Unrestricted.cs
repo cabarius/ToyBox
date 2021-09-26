@@ -68,7 +68,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintAnswerBase), "IsAlignmentRequirementSatisfied", MethodType.Getter)]
+        [HarmonyPatch(typeof(BlueprintAnswerBase), nameof(BlueprintAnswerBase.IsAlignmentRequirementSatisfied), MethodType.Getter)]
         public static class BlueprintAnswerBase_IsAlignmentRequirementSatisfied_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleDialogRestrictions) {
@@ -77,6 +77,23 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(BlueprintAnswerBase), nameof(BlueprintAnswerBase.IsMythicRequirementSatisfied), MethodType.Getter)]
+        public static class BlueprintAnswerBase_IsMythicRequirementSatisfied_Patch {
+            public static void Postfix(ref bool __result) {
+                if (settings.toggleDialogRestrictionsMythic) {
+                    __result = true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintAnswer), nameof(BlueprintAnswer.CanSelect))]
+        public static class BlueprintAnswer_CanSelect_Patch {
+            public static void Postfix(ref bool __result) {
+                if (settings.toggleDialogRestrictionsEverything) {
+                    __result = true;
+                }
+            }
+        }
 
         [HarmonyPatch(typeof(BlueprintSettlementBuilding), "CheckRestrictions", new Type[] { typeof(SettlementState) })]
         public static class BlueprintSettlementBuilding_CheckRestrictions_Patch1 {

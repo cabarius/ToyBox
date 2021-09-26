@@ -29,6 +29,8 @@ namespace ToyBox {
         public bool togglePartyNegativeLevelImmunity = false;
         public bool togglePartyAbilityDamageImmunity = false;
         public bool toggleDialogRestrictions = false;
+        public bool toggleDialogRestrictionsMythic = false;
+        public bool toggleDialogRestrictionsEverything = false;
         public bool toggleNoFriendlyFireForAOE = false;
         public bool toggleSettlementRestrictions = false;
         public bool toggleMoveSpeedAsOne = false;

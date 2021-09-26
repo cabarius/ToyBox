@@ -11,6 +11,8 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Crusade: 25
     Quest Resolution: 1
+Ver 1.3.12
+    (Truinto) Added Disable Dialog Restrictions (Mythic Path)
 Ver 1.3.11
     Found a grey that works for trash loot. The previous brown still looked too much like a meaningful loot color
     (ArcaneTrixter) Added a 'Brutal Unfair Difficulty' to Quality of Life. Toggle on if you miss the previous challenge of Unfair or if you thought it too easy there's a slider now.
