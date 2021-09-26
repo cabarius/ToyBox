@@ -13,6 +13,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 Ver 1.3.12
     Fixed issue where feat multiplier stopped working for certain cases such as mythic selections
+    Renamed Feat Multiplier to Feature Selection Multiplier and added green explainer text to make it clear what this does
     (Truinto) Added Disable Dialog Restrictions (Mythic Path)
 Ver 1.3.11
     Found a grey that works for trash loot. The previous brown still looked too much like a meaningful loot color
