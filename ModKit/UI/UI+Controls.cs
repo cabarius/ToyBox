@@ -100,6 +100,21 @@ namespace ModKit {
             UI.ActionIntTextField(ref inc, title, (v) => { }, null, UI.Width(fieldWidth + 25));
             increment = inc;
         }
+        public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
+            value = Math.Max(min, Math.Min(max, value));    // clamp it
+            float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
+            using (UI.HorizontalScope()) {
+                UI.Space(25);
+                UI.FloatTextField(ref newValue, null, UI.Width(75));
+                if (units.Length > 0)
+                    UI.Label($"{units}".orange().bold(), UI.Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
+                UI.Space(25);
+                UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+            }
+            bool changed = value != newValue;
+            value = newValue;
+            return changed;
+        }
         public static bool Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             UI.BeginHorizontal(options);
@@ -120,6 +135,12 @@ namespace ModKit {
         public static bool Slider(String title, ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
             float fvalue = value;
             bool changed = UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, "", options);
+            value = (int)fvalue;
+            return changed;
+        }
+        public static bool Slider(ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
+            float fvalue = value;
+            bool changed = UI.Slider(ref fvalue, min, max, (float)defaultValue, 0, "", options);
             value = (int)fvalue;
             return changed;
         }

@@ -12,7 +12,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 Ver 1.3.13
-    Added paginatation to Search 'n Pick
+    Added pagination to Search 'n Pick so now you can go page by page or slide through more than 1000 search results
     Added experimental Show Tree in Party Editor > Char > Facts
     Rolling out experimental enchantment feature implemented by our very own (Truinto)
 Ver 1.3.12

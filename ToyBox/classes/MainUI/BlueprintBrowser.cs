@@ -28,19 +28,18 @@ using ModKit.Utility;
 using Kingmaker.DialogSystem.Blueprints;
 
 namespace ToyBox {
-    public class KeyComparer : IComparer<string>
-{
+    public class KeyComparer : IComparer<string> {
 
-    public int Compare(string left, string right) {
+        public int Compare(string left, string right) {
             int l;
             int r;
             if (int.TryParse(left, out l) && int.TryParse(right, out r))
                 return l.CompareTo(r);
             else
                 return left.CompareTo(right);
-    }
+        }
 
-}
+    }
     public class BlueprintBrowser {
         public static Settings settings { get { return Main.settings; } }
 
@@ -53,6 +52,8 @@ namespace ToyBox {
         public static String[] filteredBPNames = null;
         public static int uncolatedMatchCount = 0;
         public static int matchCount = 0;
+        public static int pageCount = 0;
+        public static int currentPage = 0;
         public static String parameter = "";
 
         static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
@@ -166,10 +167,13 @@ namespace ToyBox {
             collatedBPs = null;
             BlueprintListUI.needsLayout = true;
         }
-
         public static void ResetGUI() {
             ResetSearch();
             settings.selectedBPTypeFilter = 1;
+        }
+        public static void UpdatePageCount() {
+            pageCount = matchCount / settings.searchLimit;
+            currentPage = Math.Min(currentPage, pageCount);
         }
         public static void UpdateSearchResults() {
             if (blueprints == null) return;
@@ -203,6 +207,7 @@ namespace ToyBox {
             }
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
+            UpdatePageCount();
             for (int i = 0;i < BlueprintListUI.ParamSelected.Length;i++) {
                 BlueprintListUI.ParamSelected[i] = 0;
             }
@@ -214,7 +219,12 @@ namespace ToyBox {
                 collationKeys = new List<String>() { "All" };
                 collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
             }
-            filteredBPs = filteredBPs.Take(settings.searchLimit).ToArray();
+            var limit = settings.searchLimit;
+            var count = filtered.Count;
+            var offset = Math.Min(count, currentPage * limit);
+            limit = Math.Min(limit, count - limit);
+            Main.Log($"{currentPage} / {pageCount} => offset: {offset} limit: {limit}");
+            filteredBPs = filteredBPs.Skip(offset).Take(limit).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
             firstSearch = false;
         }
@@ -253,14 +263,14 @@ namespace ToyBox {
                             ref settings.searchText,
                             "searhText",
                             (text) => { },
-                            () => { UpdateSearchResults(); },
+                            () => UpdateSearchResults(),
                             UI.MinWidth(100), UI.MaxWidth(400));
                         UI.Label("Limit", UI.Width(150));
                         UI.ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
-                            (limit) => { },
-                            () => { UpdateSearchResults(); },
+                            (limit) => UpdatePageCount(),
+                            () => UpdateSearchResults(),
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
@@ -286,7 +296,19 @@ namespace ToyBox {
                             UI.Label(title, UI.ExpandWidth(false));
                         }
                         UI.Space(50);
-                        UI.Label($"".green(), UI.AutoWidth());
+                        UI.ActionButton("-", () => {
+                            currentPage = Math.Max(currentPage -= 1, 0);
+                            UpdateSearchResults();
+                        }, UI.AutoWidth());
+                        UI.Label($"Page: ".green() + $"{Math.Min(currentPage + 1, pageCount)}".orange() + " / " + $"{pageCount}".cyan(), UI.AutoWidth());
+                        UI.ActionButton("+", () => {
+                            currentPage = Math.Min(currentPage += 1, pageCount);
+                            UpdateSearchResults();
+                        }, UI.AutoWidth());
+                        UI.Space(25);
+                        var pageNum = currentPage + 1;
+                        if (UI.Slider(ref pageNum, 1, pageCount, 1)) UpdateSearchResults();
+                        currentPage = pageNum - 1;
                     }
                     UI.Space(10);
 
