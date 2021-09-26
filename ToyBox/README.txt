@@ -13,6 +13,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     
 Ver 1.3.12
     Fixed issue where feat multiplier stopped working for certain cases such as mythic selections
+    Renamed Feat Multiplier to Feature Selection Multiplier and added green explainer text to make it clear what this does
     (Truinto) Added Disable Dialog Restrictions (Mythic Path)
     (xyq565861)Add feature to unlock the upper limit of every class level to 40 in level up page.
 Ver 1.3.11

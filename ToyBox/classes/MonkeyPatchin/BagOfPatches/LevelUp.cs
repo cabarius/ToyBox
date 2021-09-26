@@ -447,35 +447,9 @@ namespace ToyBox.BagOfPatches {
         }
 
 
-        [HarmonyPatch(typeof(ApplyClassProgression), "ApplyProgressionLevel")]
-        public static class ApplyClassProgression_Patch {
-            private static bool Prefix(ref int level) {
-                if (settings.toggleUnlockClassUpperLimit) {
-                    int i = level;
-                    if (i >= 40) {
-                        i = 20;
-                    }
-                    if (level > 20) {
-                        if (i % 2 == 0) {
-                            i = 18;
-                        } else {
-                            i = 19;
-
-                        }
-
-                    }
-                    level = i;
-                }
-                return true;
-
-            }
-        }
 
 
 
-        /**
-         * This alternative re-targets the multiplier into a Postfix instead of a Prefix to reduce the patch foot print, as well as adds progression white listing to make feature multiplication opt in by the developer instead of just multiplying everything always. As setup in this request only the base feat selections that all characters get will be multiplied, which to my mind best suits the name and description of what this setting does. This should also significantly reduce or resolve several associated bugs due to the reduction of scope on this feature
-         */
 
 #else
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
@@ -517,6 +491,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
+
 
     }
 
@@ -565,4 +540,29 @@ namespace ToyBox.BagOfPatches {
 
 
     }
+            
+  [HarmonyPatch(typeof(ApplyClassProgression), "ApplyProgressionLevel")]
+        public static class ApplyClassProgression_Patch {
+            private static bool Prefix(ref int level) {
+                if (settings.toggleUnlockClassUpperLimit) {
+                    int i = level;
+                    if (i >= 40) {
+                        i = 20;
+                    }
+                    if (level > 20) {
+                        if (i % 2 == 0) {
+                            i = 18;
+                        } else {
+                            i = 19;
+
+                        }
+
+                    }
+                    level = i;
+                }
+                return true;
+
+            }
+        }
+
 }
