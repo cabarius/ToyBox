@@ -1,10 +1,6 @@
-﻿using HarmonyLib;
-using Kingmaker;
+﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
 using Kingmaker.UI.Common;
@@ -13,11 +9,8 @@ using Kingmaker.Utility;
 using ModKit;
 using ModKit.Utility;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ToyBox.classes.MainUI {

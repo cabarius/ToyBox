@@ -75,10 +75,8 @@ namespace ToyBox {
                 if (searchLimit > 1000) { searchLimit = 1000; }
                 UI.Space(25);
                 searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
-#if DEBUG
                 UI.Space(25);
                 refreshTree |= UI.DisclosureToggle("Show Tree".orange().bold(), ref showTree);
-#endif
                 UI.Space(50);
                 UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
             }

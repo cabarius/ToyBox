@@ -150,14 +150,17 @@ namespace ToyBox {
                             UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
                         } else UI.Space(25);
                     },
-                    new NamedAction("Bag of Tricks", () => { BagOfTricks.OnGUI(); }),
-                    new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
-                    new NamedAction("Party", () => { PartyEditor.OnGUI(); }),
-                    new NamedAction("Loot", () => { PhatLoot.OnGUI(); }),
-                    new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
-                    new NamedAction("Crusade", () => { CrusadeEditor.OnGUI(); }),
-                    new NamedAction("Quests", () => { QuestEditor.OnGUI(); }),
-                    new NamedAction("Enchantment", () => { EnchantmentEditor.OnGUI(); })
+                    new NamedAction("Bag of Tricks", () => BagOfTricks.OnGUI()),
+                    new NamedAction("Level Up", () => LevelUp.OnGUI()),
+                    new NamedAction("Party", () => PartyEditor.OnGUI()),
+                    new NamedAction("Loot", () => PhatLoot.OnGUI()),
+#if false
+                    new NamedAction("Playground", () => Playground.OnGUI()),
+#endif
+                    new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
+                    new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
+                    new NamedAction("Quests", () => QuestEditor.OnGUI()),
+                    new NamedAction("Enchantment", () => EnchantmentEditor.OnGUI())
                     );
             }
             catch (Exception e) {

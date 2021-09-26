@@ -12,6 +12,8 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 Ver 1.3.13
+    Added paginatation to Search 'n Pick
+    Added experimental Show Tree in Party Editor > Char > Facts
     Rolling out experimental enchantment feature implemented by our very own (Truinto)
 Ver 1.3.12
     Fixed issue where feat multiplier stopped working for certain cases such as mythic selections

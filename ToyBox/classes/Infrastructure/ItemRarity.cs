@@ -62,6 +62,7 @@ namespace ToyBox {
                     return RarityType.Notable;
                 }
             }
+
             RarityType rarity = RarityType.Trash;
             if (rating > 100) rarity = RarityType.Godly;
             else if (rating >= 60) rarity = RarityType.Mythic;
