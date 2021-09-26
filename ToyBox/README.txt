@@ -11,6 +11,8 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Crusade: 25
     Quest Resolution: 1
+Ver 1.3.13
+    Rolling out experimental enchantment feature implemented by our very own (Truinto)
 Ver 1.3.12
     Fixed issue where feat multiplier stopped working for certain cases such as mythic selections
     Renamed Feat Multiplier to Feature Selection Multiplier and added green explainer text to make it clear what this does

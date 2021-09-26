@@ -151,16 +151,13 @@ namespace ToyBox {
                         } else UI.Space(25);
                     },
                     new NamedAction("Bag of Tricks", () => { BagOfTricks.OnGUI(); }),
-#if DEBUG
-                    new NamedAction("Level Up & Multiclass", () => { LevelUp.OnGUI(); }),
-#else
                     new NamedAction("Level Up", () => { LevelUp.OnGUI(); }),
-#endif
                     new NamedAction("Party", () => { PartyEditor.OnGUI(); }),
                     new NamedAction("Loot", () => { PhatLoot.OnGUI(); }),
                     new NamedAction("Search 'n Pick", () => { BlueprintBrowser.OnGUI(); }),
                     new NamedAction("Crusade", () => { CrusadeEditor.OnGUI(); }),
-                    new NamedAction("Quests", () => { QuestEditor.OnGUI(); })
+                    new NamedAction("Quests", () => { QuestEditor.OnGUI(); }),
+                    new NamedAction("Enchantment", () => { EnchantmentEditor.OnGUI(); })
                     );
             }
             catch (Exception e) {
