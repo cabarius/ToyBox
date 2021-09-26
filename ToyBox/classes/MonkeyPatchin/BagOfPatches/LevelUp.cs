@@ -21,6 +21,7 @@ using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
 using Kingmaker.UI.ServiceWindow;
 using UnityEngine;
+using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -407,8 +408,46 @@ namespace ToyBox.BagOfPatches {
          * All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
          * Required adding in "skip feat selection" because it broke level ups.
          * Causes certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
-         * This re-targets the multiplier into a Postfix instead of a Prefix to reduce the patch foot print, as well as adds progression white listing to make feature multiplication opt in by the developer instead of just multiplying everything always. As setup in this request only the base feat selections that all characters get will be multiplied, which to my mind best suits the name and description of what this setting does. This should also significantly reduce or resolve several associated bugs due to the reduction of scope on this feature
         */
+#if true
+        [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
+        public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
+            public static bool Prefix(
+                [NotNull] LevelUpState state,
+                [NotNull] UnitDescriptor unit,
+                [NotNull] IList<BlueprintFeatureBase> features,
+                FeatureSource source,
+                int level) {
+                if (settings.featsMultiplier < 2) return true;
+                //modLogger.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
+                if (!unit.IsPartyOrPet()) return true;
+                modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
+                foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
+                    for (int i = 0;i < settings.featsMultiplier;++i) {
+                        if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
+                            if (blueprintFeature is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
+                                modLogger.Log($"    adding: {blueprintFeature.NameSafe()}".cyan());
+                                state.AddSelection((FeatureSelectionState)null, source, selection, level);
+                            }
+                        }
+                    }
+                    Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact((BlueprintUnitFact)blueprintFeature);
+                    FeatureSource source1 = source;
+                    int level1 = level;
+                    feature.SetSource(source1, level1);
+                    if (blueprintFeature is BlueprintProgression progression) {
+                        modLogger.Log($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {blueprintFeature.NameSafe()}".cyan());
+                        LevelUpHelper.UpdateProgression(state, unit, progression);
+                    }
+                }
+                return false;
+            }
+        }
+        /**
+         * This alternative re-targets the multiplier into a Postfix instead of a Prefix to reduce the patch foot print, as well as adds progression white listing to make feature multiplication opt in by the developer instead of just multiplying everything always. As setup in this request only the base feat selections that all characters get will be multiplied, which to my mind best suits the name and description of what this setting does. This should also significantly reduce or resolve several associated bugs due to the reduction of scope on this feature
+         */
+
+#else
         [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             //Defines which progressions are allowed to be multiplied to prevent unexpected behavior
@@ -425,7 +464,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.featsMultiplier < 2) { return; }
                 if (!unit.IsPartyOrPet()) { return; }
                 if (!AllowedProgressions.Any(allowed => source.Blueprint.AssetGuid.Equals(allowed))) { return; }
-                
+
                 modLogger.Log($"Log adding {settings.featsMultiplier}x feats for {unit.CharacterName}");
                 int multiplier = settings.featsMultiplier - 1;
                 //We filter to only include feat selections of the feat group to prevent things like deities being multiplied
@@ -433,7 +472,7 @@ namespace ToyBox.BagOfPatches {
                     .OfType<BlueprintFeatureSelection>()
                     .Where(s => s.GetGroup() == FeatureGroup.Feat);
                 foreach (var selection in featSelections) {
-                    if (selection.MeetsPrerequisites(null, unit, state, true) 
+                    if (selection.MeetsPrerequisites(null, unit, state, true)
                         && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
 
                         ExecuteByMultiplier(multiplier, () => state.AddSelection(null, source, selection, level));
@@ -447,5 +486,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+#endif
     }
 }
