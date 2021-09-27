@@ -154,13 +154,13 @@ namespace ToyBox {
                     new NamedAction("Level Up", () => LevelUp.OnGUI()),
                     new NamedAction("Party", () => PartyEditor.OnGUI()),
                     new NamedAction("Loot", () => PhatLoot.OnGUI()),
+                    new NamedAction("Enchantment", () => EnchantmentEditor.OnGUI()),
 #if false
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
                     new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
                     new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
-                    new NamedAction("Quests", () => QuestEditor.OnGUI()),
-                    new NamedAction("Enchantment", () => EnchantmentEditor.OnGUI())
+                    new NamedAction("Quests", () => QuestEditor.OnGUI())
                     );
             }
             catch (Exception e) {
