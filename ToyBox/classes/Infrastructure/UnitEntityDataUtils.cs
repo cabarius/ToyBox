@@ -93,7 +93,32 @@ namespace ToyBox
             Charm(unit);
             Game.Instance.Player.AddCompanion(unit);
         }
-#if false
+#if true
+        public static void AddCompanion(UnitEntityData unit) {
+            var player = Game.Instance.Player;
+            GameModeType currentMode = Game.Instance.CurrentMode;
+            unit = Game.Instance.EntityCreator.RecruitNPC(unit, unit.Blueprint);
+            // this line worries me but the dev said I should do it
+            //unit.HoldingState.RemoveEntityData(unit);  
+            //player.AddCompanion(unit);
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                var pets = unit.Pets;
+                unit.IsInGame = true;
+                unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                unit.LeaveCombat();
+                Charm(unit);
+                unit.SwitchFactions(Game.Instance.Player.MainCharacter.Value.Faction);
+                //unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
+                //Game.Instance.Player.CrossSceneState.AddEntityData(unit);
+                if (unit.IsDetached) {
+                    Game.Instance.Player.AttachPartyMember(unit);
+                }
+                foreach (var pet in pets) {
+                    pet.Entity.Position = unit.Position;
+                }
+            }
+        }
+#else
         public static void AddCompanion(UnitEntityData unit) {
             Player player = Game.Instance.Player;
             player.AddCompanion(unit);
@@ -110,29 +135,6 @@ namespace ToyBox
                 unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
                 unit.HoldingState.RemoveEntityData(unit);
                 Game.Instance.Player.CrossSceneState.AddEntityData(unit);
-                foreach (var pet in pets) {
-                    pet.Entity.Position = unit.Position;
-                }
-            }
-        }
-#else
-        public static void AddCompanion(UnitEntityData unit) {
-            var player = Game.Instance.Player;
-            GameModeType currentMode = Game.Instance.CurrentMode;
-            unit.HoldingState.RemoveEntityData(unit);  // this line worries me but the dev said I should do it
-            player.AddCompanion(unit);
-            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-                var pets = unit.Pets;
-                unit.IsInGame = true;
-                unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
-                unit.LeaveCombat();
-                Charm(unit);
-                unit.SwitchFactions(Game.Instance.Player.MainCharacter.Value.Faction);
-                unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
-                Game.Instance.Player.CrossSceneState.AddEntityData(unit);
-                if (unit.IsDetached) {
-                    Game.Instance.Player.AttachPartyMember(unit);
-                }
                 foreach (var pet in pets) {
                     pet.Entity.Position = unit.Position;
                 }
