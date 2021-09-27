@@ -13,6 +13,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Crusade: 25
     Quest Resolution: 1
+
 Ver 1.3.13
     Sandal says `Enchantment`!
         Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye brace crusaders with the power of item Enchantment
