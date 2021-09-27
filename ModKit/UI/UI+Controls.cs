@@ -61,16 +61,20 @@ namespace ModKit {
             String newText = GL.TextField(text, options);
             if (newText != text) {
                 text = newText;
-                if (action != null) action(text);
+                if (action != null)
+                    action(text);
             }
             if (enterAction != null && UI.userHasHitReturn && UI.focusedControlName == name) {
                 enterAction();
             }
         }
-        public static void ActionIntTextField(ref int value,
+        public static void ActionIntTextField(
+                ref int value,
                 String name,
                 Action<int> action,
                 Action enterAction,
+                int min = 0,
+                int max = int.MaxValue,
                 params GUILayoutOption[] options
             ) {
             bool changed = false;
@@ -85,6 +89,14 @@ namespace ModKit {
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
         }
+        public static void ActionIntTextField(
+                ref int value,
+                String name,
+                Action<int> action,
+                Action enterAction,
+                params GUILayoutOption[] options) {
+            ActionIntTextField(ref value, name, action, enterAction, int.MinValue, int.MaxValue, options);
+        }
         public static void ValueEditor(String title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, float titleWidth = 500) {
             var value = get();
             var inc = increment;
@@ -93,7 +105,8 @@ namespace ModKit {
             float fieldWidth = GUI.skin.textField.CalcSize(new GUIContent(max.ToString())).x;
             UI.ActionButton(" < ", () => { set(Math.Max(value - inc, min)); }, UI.AutoWidth());
             UI.Space(20);
-            UI.Label($"{value}".orange().bold(), UI.AutoWidth()); ;
+            UI.Label($"{value}".orange().bold(), UI.AutoWidth());
+            ;
             UI.Space(20);
             UI.ActionButton(" > ", () => { set(Math.Min(value + inc, max)); }, UI.AutoWidth());
             UI.Space(50);
@@ -145,7 +158,8 @@ namespace ModKit {
             return changed;
         }
         public static bool LogSlider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
-            if (min < 0) throw new Exception("LogSlider - min value: {min} must be >= 0");
+            if (min < 0)
+                throw new Exception("LogSlider - min value: {min} must be >= 0");
             UI.BeginHorizontal(options);
             UI.Label(title.cyan(), UI.Width(300));
             UI.Space(25);

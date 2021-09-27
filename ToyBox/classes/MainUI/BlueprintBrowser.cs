@@ -43,6 +43,7 @@ namespace ToyBox {
     public class BlueprintBrowser {
         public static Settings settings { get { return Main.settings; } }
 
+        public static IEnumerable<SimpleBlueprint> unpagedBPs = null;
         public static IEnumerable<SimpleBlueprint> filteredBPs = null;
         public static IEnumerable<IGrouping<String, SimpleBlueprint>> collatedBPs = null;
         public static IEnumerable<SimpleBlueprint> selectedCollatedBPs = null;
@@ -172,8 +173,23 @@ namespace ToyBox {
             settings.selectedBPTypeFilter = 1;
         }
         public static void UpdatePageCount() {
-            pageCount = matchCount / settings.searchLimit;
-            currentPage = Math.Min(currentPage, pageCount);
+            if (settings.searchLimit > 0) {
+                pageCount = matchCount / settings.searchLimit;
+                currentPage = Math.Min(currentPage, pageCount);
+            } else { 
+                pageCount = 1;
+                currentPage = 1;
+            }
+        }
+        public static void UpdatePaginatedResults() {
+            var limit = settings.searchLimit;
+            var count = unpagedBPs.Count();
+            var offset = Math.Min(count, currentPage * limit);
+            limit = Math.Min(limit, Math.Max(count, count - limit));
+            Main.Log($"{currentPage} / {pageCount} count: {count} => offset: {offset} limit: {limit} ");
+            filteredBPs = unpagedBPs.Skip(offset).Take(limit).ToArray();
+            filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
+
         }
         public static void UpdateSearchResults() {
             if (blueprints == null) return;
@@ -219,13 +235,8 @@ namespace ToyBox {
                 collationKeys = new List<String>() { "All" };
                 collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
             }
-            var limit = settings.searchLimit;
-            var count = filtered.Count;
-            var offset = Math.Min(count, currentPage * limit);
-            limit = Math.Min(limit, count - limit);
-            Main.Log($"{currentPage} / {pageCount} => offset: {offset} limit: {limit}");
-            filteredBPs = filteredBPs.Skip(offset).Take(limit).ToArray();
-            filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
+            unpagedBPs = filteredBPs;
+            UpdatePaginatedResults();
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
@@ -265,11 +276,13 @@ namespace ToyBox {
                             (text) => { },
                             () => UpdateSearchResults(),
                             UI.MinWidth(100), UI.MaxWidth(400));
-                        UI.Label("Limit", UI.Width(150));
+                        UI.Space(50);
+                        UI.Label("Limit", UI.AutoWidth());
+                        UI.Space(15);
                         UI.ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
-                            (limit) => UpdatePageCount(),
+                            (limit) => { },
                             () => UpdateSearchResults(),
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
@@ -295,19 +308,19 @@ namespace ToyBox {
                             if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
                             UI.Label(title, UI.ExpandWidth(false));
                         }
-                        UI.Space(50);
+                        UI.Space(130);
+                        UI.Label($"Page: ".green() + $"{Math.Min(currentPage + 1, pageCount + 1)}".orange() + " / " + $"{pageCount + 1}".cyan(), UI.AutoWidth());
                         UI.ActionButton("-", () => {
                             currentPage = Math.Max(currentPage -= 1, 0);
-                            UpdateSearchResults();
+                            UpdatePaginatedResults();
                         }, UI.AutoWidth());
-                        UI.Label($"Page: ".green() + $"{Math.Min(currentPage + 1, pageCount)}".orange() + " / " + $"{pageCount}".cyan(), UI.AutoWidth());
                         UI.ActionButton("+", () => {
                             currentPage = Math.Min(currentPage += 1, pageCount);
-                            UpdateSearchResults();
+                            UpdatePaginatedResults();
                         }, UI.AutoWidth());
                         UI.Space(25);
                         var pageNum = currentPage + 1;
-                        if (UI.Slider(ref pageNum, 1, pageCount, 1)) UpdateSearchResults();
+                        if (UI.Slider(ref pageNum, 1, pageCount + 1, 1)) UpdatePaginatedResults();
                         currentPage = pageNum - 1;
                     }
                     UI.Space(10);
@@ -319,6 +332,7 @@ namespace ToyBox {
                         if (selectedCollationIndex == 0) {
                             selectedCollatedBPs = null;
                             matchCount = uncolatedMatchCount;
+                            UpdatePageCount();
                         }
                         if (selectedCollationIndex > 0) {
                             if (collationChanged) {
@@ -330,6 +344,7 @@ namespace ToyBox {
                                     if (group.Key == selectedKey) {
                                         selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
                                         matchCount = selectedCollatedBPs.Count();
+                                        UpdatePageCount();
                                     }
                                 }
                                 BlueprintListUI.needsLayout = true;
