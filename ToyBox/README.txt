@@ -16,7 +16,7 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
 
 Ver 1.3.13
     Sandal says `Enchantment`!
-        Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye brace crusaders with the power of item Enchantment
+        Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye brave crusaders with the power of item Enchantment
         This is a powerful yet easy to use enchantment editor available in a new top level tab called 'Enchantment'
         Special thanks to Truinto for delivering awesome base code and Narria for polishing the UI
     Updated item rarity to account for added enchantments either by Sandal or other sources
