@@ -7,7 +7,9 @@ Toy Box is a cute and playful mod with 300+ cheats, tweaks and quality of life i
 Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Tweaks: 98 (or 139 depending on how you count)
     Level Up & Multiclass: 34
-    Party Editor: 67    
+    Party Editor: 67
+    Loot + Loot Checklist: 4
+    Enchantment: over 20 ways to view and edit the enchantments on your items
     Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
     Crusade: 25
     Quest Resolution: 1
@@ -15,8 +17,11 @@ Ver 1.3.13
     Sandal says `Enchantment`!
         Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye brace crusaders with the power of item Enchantment
         This is a powerful yet easy to use enchantment editor available in a new top level tab called 'Enchantment'
-        Special thanks to Truinto for delivering the base code and Narria for polishing the UI
+        Special thanks to Truinto for delivering awesome base code and Narria for polishing the UI
     Updated item rarity to account for added enchantments either by Sandal or other sources
+    Party Editor Improvements
+        You can now rename character, pets and others under your control
+        Units you add to your party don't run away when you leave the area
     Added pagination to Search 'n Pick so now you can go page by page or slide through more than 1000 search results
     Added experimental Show Tree in Party Editor > Char > Facts
 Ver 1.3.12

@@ -15,6 +15,7 @@ using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
 using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
+using Kingmaker.PubSubSystem;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -37,6 +38,7 @@ namespace ToyBox {
         static UnitEntityData multiclassEditCharacter = null;
         static int respecableCount = 0;
         static int selectedSpellbook = 0;
+        static (string, string) nameEditState = (null, null);
         public static int selectedSpellbookLevel = 0;
         static bool editSpellbooks = false;
         static UnitEntityData spellbookEditCharacter = null;
@@ -111,9 +113,10 @@ namespace ToyBox {
                 UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, UI.Width(150));
             }
             else {
-                UI.Space(170);
+                UI.Space(153);
             }
 #if DEBUG
+            UI.Space(25);
             UI.ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
                 UI.AutoWidth());
 #endif
@@ -163,10 +166,28 @@ namespace ToyBox {
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 using (UI.HorizontalScope()) {
-                    if (isWide)
-                        UI.Label(ch.CharacterName.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600));
-                    else
-                        UI.Label(ch.CharacterName.orange().bold(), UI.Width(230));
+                    var name = ch.CharacterName;
+                    if (Game.Instance.Player.AllCharacters.Contains(ch)) {
+                        if (isWide) {
+                            if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600))) {
+                                ch.Descriptor.CustomName = name;
+                                // TODO - why does this cause a piece of the turn based UI come up?
+                                // Game.Instance.ScheduleAction(() => Game.ResetUI());
+                            }
+                        }
+                        else
+                            if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.Width(230))) {
+                            ch.Descriptor.CustomName = name;
+                            // TODO - why does this cause a piece of the turn based UI come up?
+                            //Game.Instance.ScheduleAction(() => Game.ResetUI());
+                        }
+                    }
+                    else {
+                        if (isWide)
+                            UI.Label(ch.CharacterName.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600));
+                        else
+                            UI.Label(ch.CharacterName.orange().bold(), UI.Width(230));
+                    }
                     UI.Space(5);
                     float distance = mainChar.DistanceTo(ch); ;
                     UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
@@ -264,7 +285,7 @@ namespace ToyBox {
                             UI.Space(50);
                             UI.Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
                         }
-                        else { UI.Space(50);  UI.Label("Experimental Preview ".magenta());  }
+                        else { UI.Space(50); UI.Label("Experimental Preview ".magenta()); }
                     }
 #endif
                     UI.Div(100, 20);
@@ -314,7 +335,8 @@ namespace ToyBox {
                                 (val) => {
                                     if (settings.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
                                         settings.charIsLegendaryHero[ch.HashKey()] = val;
-                                    } else {
+                                    }
+                                    else {
                                         settings.charIsLegendaryHero.Add(ch.HashKey(), val);
                                     }
                                 },

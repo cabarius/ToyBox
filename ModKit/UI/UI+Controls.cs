@@ -20,6 +20,38 @@ namespace ModKit {
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
         }
+        public static bool EditableLabel(ref String label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
+            bool changed = false;
+            if (editState.Item1 != label) {
+                using (UI.HorizontalScope(options)) {
+                    UI.Label(formatter(label), style, UI.AutoWidth());
+                    UI.Space(5);
+                    if (GL.Button("✎", GUI.skin.box, UI.AutoWidth())) {
+                        editState = (label, label);
+                    }
+                }
+            }
+            else {
+                GUI.SetNextControlName(label);
+                using (UI.HorizontalScope(options)) {
+                    UI.TextField(ref editState.Item2, null, UI.MinWidth(minWidth), UI.AutoWidth());
+                    UI.Space(15);
+                    if (GL.Button("✖".red(), GUI.skin.box, UI.AutoWidth())) {
+                        editState = (null, null);
+                    }
+                    if (GL.Button("✔".green(), GUI.skin.box, UI.AutoWidth()) 
+                        || UI.userHasHitReturn && UI.focusedControlName == label) {
+                        label = editState.Item2;
+                        changed = true;
+                        editState = (null, null);
+                    }
+                }
+            }
+            return changed;
+        }
+        public static bool EditableLabel(ref String label, ref (string, string) editState, float minWidth, Func<string, string> formatter = null, params GUILayoutOption[] options) {
+            return EditableLabel(ref label, ref editState, minWidth, GUI.skin.label, formatter, options);
+        }
 
         // Controls
         public static String TextField(ref String text, String name = null, params GUILayoutOption[] options) {

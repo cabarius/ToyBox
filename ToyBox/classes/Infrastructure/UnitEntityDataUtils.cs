@@ -13,6 +13,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.ElementsSystem;
 
 namespace ToyBox 
 {
@@ -92,10 +93,11 @@ namespace ToyBox
             Charm(unit);
             Game.Instance.Player.AddCompanion(unit);
         }
-
+#if false
         public static void AddCompanion(UnitEntityData unit) {
+            Player player = Game.Instance.Player;
+            player.AddCompanion(unit);
             GameModeType currentMode = Game.Instance.CurrentMode;
-            Game.Instance.Player.AddCompanion(unit);
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 var pets = unit.Pets;
                 unit.IsInGame = true;
@@ -103,7 +105,31 @@ namespace ToyBox
                 unit.LeaveCombat();
                 Charm(unit);
                 UnitPartCompanion unitPartCompanion = unit.Get<UnitPartCompanion>();
-                unitPartCompanion.State = CompanionState.InParty;
+                unit.Ensure<UnitPartCompanion>().SetState(CompanionState.InParty);
+                unit.SwitchFactions(Game.Instance.Player.MainCharacter.Value.Faction);
+                unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
+                unit.HoldingState.RemoveEntityData(unit);
+                Game.Instance.Player.CrossSceneState.AddEntityData(unit);
+                foreach (var pet in pets) {
+                    pet.Entity.Position = unit.Position;
+                }
+            }
+        }
+#else
+        public static void AddCompanion(UnitEntityData unit) {
+            var player = Game.Instance.Player;
+            GameModeType currentMode = Game.Instance.CurrentMode;
+            unit.HoldingState.RemoveEntityData(unit);  // this line worries me but the dev said I should do it
+            player.AddCompanion(unit);
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                var pets = unit.Pets;
+                unit.IsInGame = true;
+                unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                unit.LeaveCombat();
+                Charm(unit);
+                unit.SwitchFactions(Game.Instance.Player.MainCharacter.Value.Faction);
+                unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
+                Game.Instance.Player.CrossSceneState.AddEntityData(unit);
                 if (unit.IsDetached) {
                     Game.Instance.Player.AttachPartyMember(unit);
                 }
@@ -112,6 +138,7 @@ namespace ToyBox
                 }
             }
         }
+#endif
 
         public static void RemoveCompanion(UnitEntityData unit) {
             GameModeType currentMode = Game.Instance.CurrentMode;
@@ -126,6 +153,10 @@ namespace ToyBox
             return Game.Instance.Player.AllCharacters
                 .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null ||
                     Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
+        }
+
+        public static void Rename(UnitEntityData unit, string newName) {
+
         }
     }
 }
