@@ -21,6 +21,7 @@ namespace ToyBox.classes.MainUI {
         public static int selectedItemType;
         public static int selectedItemIndex;
         public static int selectedEnchantIndex;
+        public static (string, string) renameState = (null, null);
         public static ItemEntity selectedItem = null;
         public static ItemEntity editedItem = null;
 
@@ -96,7 +97,14 @@ namespace ToyBox.classes.MainUI {
                         using (UI.HorizontalScope(GUI.skin.box, UI.MinHeight(125))) {
                             var rarity = item.Rarity();
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
+                            var itemName = item.Blueprint.GetDisplayName();
+#if false
+                            if (UI.EditableLabel(ref itemName, ref renameState,200, n => item.Name, UI.Width(300))) {
+                                
+                            }
+#else
                             UI.Label(item.Name.bold(), UI.Width(300));
+#endif
                             UI.Space(100);
                             if (enchantements.Count > 0) {
                                 using (UI.VerticalScope()) {
@@ -112,6 +120,11 @@ namespace ToyBox.classes.MainUI {
                                                 UI.Label(entry.Value ? "Custom".yellow() : "Perm".orange(), UI.Width(100));
                                                 UI.Space(25);
                                                 UI.ActionButton("Remove", () => RemoveEnchantment(selectedItem, enchant), UI.AutoWidth());
+                                                var description = enchantBP.Description;
+                                                if (description != null) {
+                                                    UI.Space(25);
+                                                    UI.Label(description.RemoveHtmlTags().green());
+                                                }
                                             }
                                         }
                                     }
@@ -246,9 +259,9 @@ namespace ToyBox.classes.MainUI {
             RemoveEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
         }
 
-        #endregion
+#endregion
 
-        #region Code
+#region Code
         public static void Test() {
             var frost_enchantment = ResourcesLibrary.TryGetBlueprint<BlueprintWeaponEnchantment>("421e54078b7719d40915ce0672511d0b");
 
@@ -333,9 +346,9 @@ namespace ToyBox.classes.MainUI {
 
             return Source.Added;
         }
-        #endregion
+#endregion
 
-        #region Classes
+#region Classes
         public class ItemTypeFilter {
 
         }
@@ -347,6 +360,6 @@ namespace ToyBox.classes.MainUI {
             Added,     // enchantment is added by toybox
             Removed,   // enchantment is removed by toybox; removing enchantments which should be on an item, might cause stacking bugs
         }
-        #endregion
+#endregion
     }
 }
