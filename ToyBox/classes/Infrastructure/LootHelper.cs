@@ -20,7 +20,7 @@ namespace ToyBox {
     public static class LootHelper {
 
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
-            var rarity = item.Blueprint.Rarity();
+            var rarity = item.Rarity();
             if ((int)rarity < (int)filter) return false;
             return item.IsLootable;
         }

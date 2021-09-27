@@ -126,7 +126,7 @@ namespace ToyBox.Multiclass {
             foreach (var ch in chars) {
                 //Main.Log($"   {ch.Progression.Owner} vs { progression.Owner}");
                 if (ch.Progression.Owner == progression.Owner) {
-                    modLogger.Log($"   found: {ch.HashKey()} - {ch.Progression.Owner}");
+                    //modLogger.Log($"   found: {ch.HashKey()} - {ch.Progression.Owner}");
                     return ch.IsClassGestalt(cl);
                 }
             }

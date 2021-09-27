@@ -10,6 +10,7 @@ using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Components;
 using ModKit;
 using ToyBox;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 
 namespace ToyBox {
     public enum RarityType {
@@ -37,32 +38,7 @@ namespace ToyBox {
             RGBA.godly,
             RGBA.notable,
         };
-        public static RarityType Rarity(this BlueprintItem bp) {
-            if (bp == null) return RarityType.None;
-            var rating = 0;
-            var enchantValue = 0;
-            try {
-                var enchants = bp.CollectEnchantments();
-                enchantValue = 10 * enchants.Sum((e) => e.EnchantmentCost);
-                rating = enchantValue;
-            }
-            catch {
-            }
-            //var rating = item.EnchantmentValue * 10;
-            var cost = bp.Cost;
-            var logCost = cost > 1 ? Math.Log(cost) / Math.Log(5) : 0;
-            if (bp.IsNotable) return RarityType.Notable;
-            if (rating == 0 && bp is BlueprintItemEquipmentUsable usableBP) {
-                rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
-            } else if (rating == 0 && bp is BlueprintItemEquipment equipBP) {
-                rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
-            } else if (rating == 0 && bp is BlueprintItemNote noteBP) {
-                var component = noteBP.GetComponent<AddItemShowInfoCallback>();
-                if (component != null) {
-                    return RarityType.Notable;
-                }
-            }
-
+        public static RarityType Rarity(this int rating) {
             RarityType rarity = RarityType.Trash;
             if (rating > 100) rarity = RarityType.Godly;
             else if (rating >= 60) rarity = RarityType.Mythic;
@@ -71,11 +47,56 @@ namespace ToyBox {
             else if (rating >= 20) rarity = RarityType.Rare;
             else if (rating >= 10) rarity = RarityType.Uncommon;
             else if (rating > 5) rarity = RarityType.Common;
+            return rarity;
+        }
+        public static int Rating(this BlueprintItem bp, ItemEntity item = null) {
+            var rating = 0;
+            var enchantValue = 0;
+            try {
+                if (item != null) {
+                    enchantValue = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
+                    //Main.Log($"item enchantValue: {enchantValue}");
+                } else {
+                    enchantValue = 10 * bp.CollectEnchantments().Sum((e) => e.EnchantmentCost);
+                    //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
+                }
+                rating = enchantValue;
+            }
+            catch {
+            }
+            //var rating = item.EnchantmentValue * 10;
+            var cost = bp.Cost;
+            var logCost = cost > 1 ? Math.Log(cost) / Math.Log(5) : 0;
+            if (rating == 0 && bp is BlueprintItemEquipmentUsable usableBP) {
+                rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
+            } else if (rating == 0 && bp is BlueprintItemEquipment equipBP) {
+                rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
+                var rarity = rating.Rarity();
+            }
 #if false
             Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");
 #endif
-            return rarity;
+            return rating;
+        }
+        public static RarityType Rarity(this BlueprintItem bp) {
+            if (bp == null) return RarityType.None;
+            if (bp.IsNotable) return RarityType.Notable;
+            if (bp is BlueprintItemNote noteBP) {
+                var component = noteBP.GetComponent<AddItemShowInfoCallback>();
+                if (component != null) {
+                    return RarityType.Notable;
+                }
+            }
+            return Rarity(bp.Rating());
+        }
 
+        public static RarityType Rarity(this ItemEntity item) {
+            var bp = item.Blueprint;
+            return Rarity(bp.Rating(item));
+        }
+        public static RarityType Rarity(this BlueprintItemEnchantment bp) {
+            var rating = bp.EnchantmentCost * 10;
+            return rating.Rarity();
         }
         public static Color color(this RarityType rarity, float adjust = 0) {
             return RarityColors[(int)rarity].color(adjust);
@@ -107,6 +128,19 @@ namespace ModKit {
                 return _rarityStyle;
             }
         }
+        private static GUIStyle _rarityButtonStyle;
+        public static GUIStyle rarityButtonStyle {
+            get {
+                if (_rarityButtonStyle == null) {
+                    _rarityButtonStyle = new GUIStyle(GUI.skin.button) {
+                        alignment = TextAnchor.MiddleLeft
+                    };
+                    _rarityButtonStyle.normal.background = RarityTexture;
+                }
+                return _rarityButtonStyle;
+            }
+        }
+
         public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) {
             UI.EnumGrid(ref rarity, xCols, (n, rarity) => n.Rarity(rarity), UI.rarityStyle, options);
         }

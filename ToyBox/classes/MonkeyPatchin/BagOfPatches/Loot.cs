@@ -37,18 +37,6 @@ namespace ToyBox.BagOfPatches {
                     } else {
                         itemSlotPCView.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
                     }
-                    if (settings.toggleColorLootByRarity) {
-                        // TODO - figure this out for loot containers
-#if false
-                        var magicGO = __instance.m_MagicLayer.gameObject;
-                        var color = __instance.Item.Blueprint.Rarity().Color();
-                        var colorOpaque = new Color(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a * 0.9f);
-                        var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
-                        magicGO.GetComponent<Image>().color = colorTranslucent;
-                        var magicFXGO = __instance.m_MagicLayer.FindChild("MagicLayerFX");
-                        magicFXGO.GetComponent<Image>().color = color;
-#endif
-                    }
                 }
             }
         }
@@ -70,7 +58,7 @@ namespace ToyBox.BagOfPatches {
                     } else {
 
                     }
-                    var rarity = __instance.Item.Blueprint.Rarity();
+                    var rarity = __instance.Item.Rarity();
                     var color = rarity.color();
                     var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
                     if (rarity == RarityType.Notable) {
@@ -85,31 +73,19 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        [HarmonyPatch(typeof(BlueprintItem), nameof(BlueprintItem.Name), MethodType.Getter)]
-        static class BlueprintItem_Name_Patch {
-            public static void Postfix(BlueprintItem __instance, ref string __result) {
+        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
+        static class ItemEntity_Name_Patch {
+            public static void Postfix(ItemEntity __instance, ref string __result) {
                 if (settings.toggleColorLootByRarity && __result != null && __result.Length > 0) {
-                    if (__instance is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) return;
-                    if (__instance is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) return;
+                    var bp = __instance.Blueprint;
+                    if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) return;
+                    if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) return;
                     var rarity = __instance.Rarity();
                     var result = __result.Rarity(rarity);
-                    //Main.Log($"BlueprintItem - Name: {__result} - {rarity.ToString()} -> {result}");
+                    //Main.Log($"Item Entity - Name: {__result} - {rarity.ToString()} -> {result}");
                     __result = result;
                 }
             }
         }
-#if false
-        [HarmonyPatch(typeof(UIUtility), nameof(UIUtility.IsMagicItem))]
-        static class UIUtility_IsMagicItem_Patch {
-            public static void PostFix(ItemEntity item, ref bool __result) {
-                if (settings.toggleColorLootByRarity) {
-                    var component = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
-                    Main.Log($"BlueprintItem - IsMagicItem: {item.Name} - {component}");
-                    __result = __result || component != null;
-                }
-            }
-        }
-#endif
     }
 }

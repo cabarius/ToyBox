@@ -12,9 +12,12 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 Ver 1.3.13
+    Sandal says `Enchantment`!
+        Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye brace crusaders with the power of item Enchantment
+        This is a powerful yet easy to use enchantment editor available in a new top level tab called 'Enchantment'
+    Updated item rarity to account for added enchantments either by Sandal or other sources
     Added pagination to Search 'n Pick so now you can go page by page or slide through more than 1000 search results
     Added experimental Show Tree in Party Editor > Char > Facts
-    Rolling out experimental enchantment feature implemented by our very own (Truinto)
 Ver 1.3.12
     Fixed issue where feat multiplier stopped working for certain cases such as mythic selections
     Renamed Feat Multiplier to Feature Selection Multiplier and added green explainer text to make it clear what this does
