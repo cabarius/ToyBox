@@ -78,13 +78,18 @@ namespace ToyBox.classes.MainUI {
 
                 // Second column - Item Selection Grid
                 using (UI.VerticalScope(GUI.skin.box)) {
-                    UI.ActionSelectionGrid(
-                        ref selectedItemIndex,
-                        inventory.Select(bp => bp.Name).ToArray(),
-                        1,
-                        index => selectedItem = inventory[selectedItemIndex],
-                        UI.rarityButtonStyle,
-                        UI.Width(200));
+                    if (inventory.Length > 0) {
+                        UI.ActionSelectionGrid(
+                            ref selectedItemIndex,
+                            inventory.Select(bp => bp.Name).ToArray(),
+                            1,
+                            index => selectedItem = inventory[selectedItemIndex],
+                            UI.rarityButtonStyle,
+                            UI.Width(200));
+                    }
+                    else {
+                        UI.Label("No Items".grey(), UI.Width(200));
+                    }
                 }
                 remainingWidth -= 350;
 
@@ -181,7 +186,7 @@ namespace ToyBox.classes.MainUI {
 
                     UI.ActionButton("Add", () => AddClicked(i), UI.Width(160)); // TODO - switch Add/Remove and color
 
-                    if (selectedItemEnchantments.Contains(enchant)) {
+                    if (selectedItemEnchantments != null && selectedItemEnchantments.Contains(enchant)) {
                         UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(150));
                     }
                     else UI.Space(154);

@@ -14,12 +14,12 @@ namespace ModKit.Utility {
 
         public static string GetToggleText(ToggleState toggleState, string text)
         {
-            switch (toggleState) {
-                case ToggleState.Off: return string.Format(FormatOff, text);
-                case ToggleState.On: return string.Format(FormatOn, text);
-                case ToggleState.None: return string.Format(FormatNone, text);
-            }
-            return string.Format(FormatNone);
+            return toggleState switch {
+                ToggleState.Off => string.Format(FormatOff, text),
+                ToggleState.On => string.Format(FormatOn, text),
+                ToggleState.None => string.Format(FormatNone, text),
+                _ => string.Format(FormatNone),
+            };
         }
 
         public static int AdjusterButton(int value, string text, int min = int.MinValue, int max = int.MaxValue)

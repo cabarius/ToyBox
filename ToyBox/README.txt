@@ -14,7 +14,8 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
-Ver 1.3.14
+Ver 1.3.13.1
+    Fixed Crash in Echantments when you have no inventory in a new game
     Enchantments - show descriptions of existing enchantments of the selected weapon
     Identify All now identifies items that are equiped. Useful if you recruit an NPC to your party because you see cool stuff on them in Loot Checklist
 Ver 1.3.13
