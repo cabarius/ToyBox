@@ -97,6 +97,12 @@ namespace ToyBox {
             foreach (var item in inventory) {
                 item.Identify();
             }
+            foreach (var ch in Game.Instance.Player.AllCharacters) {
+                foreach (var item in ch.Body.GetAllItemsInternal()) {
+                    item.Identify();
+                    //Main.Log($"{ch.CharacterName} - {item.Name} - {item.IsIdentified}");
+                }
+            }
         }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {

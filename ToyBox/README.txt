@@ -14,6 +14,8 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.14
+    Identify All now identifies items that are equiped. Useful if you recruit an NPC to your party because you see cool stuff on them in Loot Checklist
 Ver 1.3.13
     Sandal says `Enchantment`!
         Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye brave crusaders with the power of item Enchantment
