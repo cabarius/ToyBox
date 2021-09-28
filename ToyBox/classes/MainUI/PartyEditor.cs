@@ -33,10 +33,12 @@ namespace ToyBox {
         static ToggleChoice selectedToggle = ToggleChoice.None;
         static int selectedCharacterIndex = 0;
         static UnitEntityData charToAdd = null;
+        static UnitEntityData charToRecruit = null;
         static UnitEntityData charToRemove = null;
         static bool editMultiClass = false;
         static UnitEntityData multiclassEditCharacter = null;
         static int respecableCount = 0;
+        static int recruitableCount = 0;
         static int selectedSpellbook = 0;
         static (string, string) nameEditState = (null, null);
         public static int selectedSpellbookLevel = 0;
@@ -97,7 +99,7 @@ namespace ToyBox {
         public static void ActionsGUI(UnitEntityData ch) {
             var player = Game.Instance.Player;
             UI.Space(25);
-            if (!player.PartyAndPets.Contains(ch)) {
+            if (!player.PartyAndPets.Contains(ch) && player.AllCharacters.Contains(ch)) {
                 UI.ActionButton("Add", () => { charToAdd = ch; }, UI.Width(150));
                 UI.Space(25);
             }
@@ -105,12 +107,17 @@ namespace ToyBox {
                 UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.Width(150));
                 UI.Space(25);
             }
+            else if (!player.AllCharacters.Contains(ch)) {
+                recruitableCount++;
+                UI.ActionButton("Recruit".cyan(), () => { charToRecruit = ch; }, UI.Width(150));
+                UI.Space(25);
+            }
             else {
                 UI.Space(178);
             }
             if (RespecHelper.GetRespecableUnits().Contains(ch)) {
                 respecableCount++;
-                UI.ActionButton("Respec", () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, UI.Width(150));
+                UI.ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, UI.Width(150));
             }
             else {
                 UI.Space(153);
@@ -127,6 +134,7 @@ namespace ToyBox {
             if (filterChoices == null) { return; }
 
             charToAdd = null;
+            charToRecruit = null;
             charToRemove = null;
             var characterListFunc = UI.TypePicker<List<UnitEntityData>>(
                 null,
@@ -141,6 +149,7 @@ namespace ToyBox {
             }
             UI.Space(20);
             int chIndex = 0;
+            recruitableCount = 0;
             respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
             bool isWide = UI.IsWide;
@@ -551,15 +560,20 @@ namespace ToyBox {
                 chIndex += 1;
             }
             UI.Space(25);
+            if (recruitableCount > 0) {
+                UI.Label($"{recruitableCount} character(s) can be ".orange().bold() + " Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green());
+            }
             if (respecableCount > 0) {
-                UI.Label($"{respecableCount} characters".yellow().bold() + " can be respecced. Pressing Respec will close the mod window and take you to character level up".orange());
+                UI.Label($"{respecableCount} character(s)  can be ".orange().bold() + "Respecced".cyan() +". Pressing Respec will close the mod window and take you to character level up".green());
                 UI.Label("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange());
-                UI.Label("WARNING".yellow().bold() + " this feature is ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange());
+            }
+            if (recruitableCount > 0 || respecableCount > 0) {
+                UI.Label("WARNING".yellow().bold() + " these features are ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange());
                 UI.Label("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange());
-
             }
             UI.Space(25);
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
+            if (charToRecruit != null) { UnitEntityDataUtils.AddCompanion(charToRecruit); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
         }
     }

@@ -14,6 +14,13 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.14
+    Party Editor > Adding characters to the party
+        Last change to add npcs to party broke when adding characters you have already recruited.
+        You can now recruit NPCs that are not in your wider group
+        Restored the previous Add functionality to add characters that you have aleady recruited
+        Any char in your party with either have Add or Recruit but not both
+        Colored both Recruit and Respec to cyan and made the warnings 
 Ver 1.3.13.1
     Fixed Crash in Echantments when you have no inventory in a new game
     Enchantments - show descriptions of existing enchantments of the selected weapon

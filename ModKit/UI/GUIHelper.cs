@@ -82,10 +82,10 @@ namespace ModKit.Utility {
                     onChanged();
             }
         }
-
+#if false
         static bool CheckboxPrivate(
             ref bool value,
-            String title,
+            string title,
             GUIStyle style = null,
             params GUILayoutOption[] options
     ) {
@@ -102,6 +102,7 @@ namespace ModKit.Utility {
                 params GUILayoutOption[] options) {
             return CheckboxPrivate(ref value, title, style, options);
         }
+#endif
         public static ToggleState ToggleButton(ToggleState toggle, string text, GUIStyle style = null, params GUILayoutOption[] options)
         {
             UI.ToggleButton(ref toggle, text, style, options);
@@ -129,8 +130,8 @@ namespace ModKit.Utility {
 
         public static void ToggleButton(ref ToggleState toggle, string text, ref float minWidth, GUIStyle style = null, params GUILayoutOption[] options)
         {
-            GUIContent content = new GUIContent(GetToggleText(toggle, text));
-            style = style ?? GUI.skin.button;
+            GUIContent content = new(GetToggleText(toggle, text));
+            style ??= GUI.skin.button;
             minWidth = Math.Max(minWidth, style.CalcSize(content).x);
             if (GUILayout.Button(content, style, options?.Concat(new[] { GUILayout.Width(minWidth) }).ToArray() ?? new[] { GUILayout.Width(minWidth) }))
                 toggle = toggle.Flip();
@@ -224,8 +225,11 @@ namespace ModKit.Utility {
 
         private static Texture2D fillTexture = null;
         private static GUIStyle fillStyle = null;
-        private static Color fillColor = new Color(1f, 1f, 1f, 0.65f);
-        private static Color fillColor2 = new Color(1f, 1f, 1f, 0.35f);
+        private static Color fillColor = new(1f, 1f, 1f, 0.65f);
+        private static readonly Color color = new(1f, 1f, 1f, 0.35f);
+        private static Color fillColor2 = color;
+
+        public static Color FillColor2 { get => fillColor2; set => fillColor2 = value; }
 
         public static GUIStyle FillStyle(Color color) {
             if (fillTexture == null)
@@ -245,8 +249,9 @@ namespace ModKit.Utility {
         public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
             if (fillTexture == null)
                 fillTexture = new Texture2D(1, 1);
-            var divStyle = new GUIStyle();
-            divStyle.fixedHeight = 1;
+            var divStyle = new GUIStyle {
+                fixedHeight = 1
+            };
             fillTexture.SetPixel(0, 0, color);
             fillTexture.Apply();
             divStyle.normal.background = fillTexture;

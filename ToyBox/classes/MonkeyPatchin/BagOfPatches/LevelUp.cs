@@ -462,7 +462,8 @@ namespace ToyBox.BagOfPatches {
                 if (!unit.IsPartyOrPet()) return true;
                 modLogger.Log($"Log adding {settings.featsMultiplier}x features for {unit.CharacterName}");
                 foreach (BlueprintFeature blueprintFeature in features.OfType<BlueprintFeature>()) {
-                    for (int i = 0;i < settings.featsMultiplier;++i) {
+                    modLogger.Log($"checking {blueprintFeature.NameSafe()}");
+                    for (int i = 0; i < settings.featsMultiplier; ++i) {
                         if (blueprintFeature.MeetsPrerequisites((FeatureSelectionState)null, unit, state, true)) {
                             if (blueprintFeature is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
                                 modLogger.Log($"    adding: {blueprintFeature.NameSafe()}".cyan());

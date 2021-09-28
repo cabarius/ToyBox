@@ -95,6 +95,25 @@ namespace ToyBox
         }
 #if true
         public static void AddCompanion(UnitEntityData unit) {
+            GameModeType currentMode = Game.Instance.CurrentMode;
+            Game.Instance.Player.AddCompanion(unit);
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+                var pets = unit.Pets;
+                unit.IsInGame = true;
+                unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                unit.LeaveCombat();
+                Charm(unit);
+                UnitPartCompanion unitPartCompanion = unit.Get<UnitPartCompanion>();
+                unitPartCompanion.State = CompanionState.InParty;
+                if (unit.IsDetached) {
+                    Game.Instance.Player.AttachPartyMember(unit);
+                }
+                foreach (var pet in pets) {
+                    pet.Entity.Position = unit.Position;
+                }
+            }
+        }
+        public static void RecruitCompanion(UnitEntityData unit) {
             var player = Game.Instance.Player;
             GameModeType currentMode = Game.Instance.CurrentMode;
             unit = Game.Instance.EntityCreator.RecruitNPC(unit, unit.Blueprint);

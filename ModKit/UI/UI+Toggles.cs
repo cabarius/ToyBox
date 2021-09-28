@@ -16,15 +16,12 @@ namespace ModKit {
         public static bool IsOn(this ToggleState state) { return state == ToggleState.On; }
         public static bool IsOff(this ToggleState state) { return state == ToggleState.Off; }
         public static ToggleState Flip(this ToggleState state) {
-            switch (state) {
-                case ToggleState.Off:
-                    return ToggleState.On;
-                case ToggleState.On:
-                    return ToggleState.Off;
-                case ToggleState.None:
-                    return ToggleState.None;
-            }
-            return ToggleState.None;
+            return state switch {
+                ToggleState.Off => ToggleState.On,
+                ToggleState.On => ToggleState.Off,
+                ToggleState.None => ToggleState.None,
+                _ => ToggleState.None,
+            };
         }
 
         static bool TogglePrivate(
