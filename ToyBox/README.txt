@@ -21,6 +21,7 @@ Ver 1.3.14
         Restored the previous Add functionality to add characters that you have aleady recruited
         Any char in your party with either have Add or Recruit but not both
         Colored both Recruit and Respec to cyan and made the warnings 
+    (Delth) Added ability to add/remove skills from generals (works on currently selected army) - new selection type in Search'n'Pick
 Ver 1.3.13.1
     Fixed Crash in Echantments when you have no inventory in a new game
     Enchantments - show descriptions of existing enchantments of the selected weapon
