@@ -326,6 +326,16 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintArmyPreset>("Add", (bp, ch, n, l) => {
                 Actions.CreateArmy(bp);
             });
+
+            //ArmyGeneral
+            BlueprintAction.Register<BlueprintLeaderSkill>("Add",
+                (bp, ch, n, l) => Actions.AddSkillToLeader(bp),
+                (bp, ch, index) => Actions.LeaderSelected(bp) && !Actions.LeaderHasSkill(bp));
+
+            //ArmyGeneral
+            BlueprintAction.Register<BlueprintLeaderSkill>("Remove",
+                (bp, ch, n, l) => Actions.RemoveSkillFromLeader(bp),
+                (bp, ch, index) => Actions.LeaderSelected(bp) && Actions.LeaderHasSkill(bp));
         }
     }
 }

@@ -127,6 +127,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintAnswer>("Answer", null),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
+            new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp => bp.GetType().ToString()),
             //new NamedTypeFilter<SimpleBlueprint>("In Memory", null, bp => bp.CollationName(), () => ResourcesLibrary.s_LoadedBlueprints.Values.Where(bp => bp != null)),
 
         };

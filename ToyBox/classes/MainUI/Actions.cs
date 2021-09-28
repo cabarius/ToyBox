@@ -23,6 +23,7 @@ using Kingmaker.Utility;
 using UnityModManagerNet;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.UI.ServiceWindow;
+using Kingmaker.Globalmap.State;
 
 namespace ToyBox {
     public static class Actions {
@@ -216,6 +217,44 @@ namespace ToyBox {
         public static void CreateArmy(BlueprintArmyPreset bp) {
             var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
             Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
+        }
+
+        public static void AddSkillToLeader (BlueprintLeaderSkill bp) {
+            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            if (selectedArmy == null || selectedArmy.Data.Leader == null) {
+                Main.Log($"Choose an army with a leader!");
+                return;
+            }
+            ArmyLeader leader = selectedArmy.Data.Leader;
+            leader.AddSkill(bp, true);
+        }
+
+        public static void RemoveSkillFromLeader(BlueprintLeaderSkill bp) {
+            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            if (selectedArmy == null || selectedArmy.Data.Leader == null) {
+                Main.Log($"Choose an army with a leader!");
+                return;
+            }
+            ArmyLeader leader = selectedArmy.Data.Leader;
+            leader.RemoveSkill(bp);
+        }
+
+        public static bool LeaderHasSkill(BlueprintLeaderSkill bp) {
+            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            if (selectedArmy == null || selectedArmy.Data.Leader == null) {
+                Main.Log($"Choose an army with a leader!");
+                return false;
+            }
+            ArmyLeader leader = selectedArmy.Data.Leader;
+            return leader.m_Skills.Contains(bp);
+        }
+
+        public static bool LeaderSelected(BlueprintLeaderSkill bp) {
+            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            if (selectedArmy == null || selectedArmy.Data.Leader == null) {
+                return false;
+            }
+            return true;
         }
     }
 }
