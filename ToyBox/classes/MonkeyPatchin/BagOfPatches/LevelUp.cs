@@ -22,6 +22,8 @@ using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScor
 using Kingmaker.UI.ServiceWindow;
 using UnityEngine;
 using ModKit;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace ToyBox.BagOfPatches {
     static class LevelUp {
@@ -57,6 +59,43 @@ namespace ToyBox.BagOfPatches {
                 if (isLegendaryHero) {
                     __result = 40;
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.AddClassLevel))]
+        public static class UnitProgressionData_AddClassLevel_Patch {
+            private static readonly MethodInfo UnitProgressionData_GetExperienceTable =
+                AccessTools.PropertyGetter(typeof(UnitProgressionData), "ExperienceTable");
+
+            private static readonly FieldInfo BlueprintStatProgression_GetBonuses =
+                AccessTools.Field(typeof(BlueprintStatProgression), "Bonuses");
+
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+                var codes = new List<CodeInstruction>(instructions);
+                int target = FindInsertionPoint(codes);
+                if (target < 0) {
+                    Main.Log("UnitProgressionData_AddClassLevel_Patch Transpiler unable to find target!");
+                    return codes;
+                }
+
+                codes[target] = new CodeInstruction(OpCodes.Nop);
+                codes[target + 1] = new CodeInstruction(OpCodes.Ldarg_0);
+                codes[target + 2] =
+                    new CodeInstruction(new CodeInstruction(OpCodes.Callvirt, UnitProgressionData_GetExperienceTable));
+                codes[target + 3] = new CodeInstruction(OpCodes.Ldfld, BlueprintStatProgression_GetBonuses);
+
+                return codes;
+            }
+
+            private static int FindInsertionPoint(List<CodeInstruction> codes) {
+                for (int i = 0;i < codes.Count;i++) {
+                    if (codes[i].opcode == OpCodes.Ldfld && codes[i].LoadsField(BlueprintStatProgression_GetBonuses)) {
+                        return i - 3;
+                    }
+                }
+
+                Main.Log("UnitProgressionData_AddClassLevel_Patch: COULD NOT FIND TARGET");
+                return -1;
             }
         }
 
