@@ -28,23 +28,23 @@ namespace ModKit {
         pink = 0xf03399ff,
         purple = 0xC060F0ff,
         red = 0xFF4040ff,
-        teal = 0x80f0c0ff,
-        yellow = 0xffff00ff,
         black = 0x000000ff,
         medgrey = 0xA8A8A8ff,
         grey = 0xC0C0C0ff,
         silver = 0xD0D0D0ff,
+        teal = 0x80f0c0ff,
+        yellow = 0xffff00ff,
         white = 0xffffffff,
         none = silver,
         trash = 0x484848ff, // 0x787878ff, // 0x734d26ff, // 0x86592dff, //0xA07040ff, // brown, 0x606060FF,
-        notable = yellow, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
         common = silver,         //0xe8e8e8a0,
         uncommon = 0x00882bff,  //0x00802bff, //0x68b020ff, // 0x60B020ff,
         rare = 0x2060ffff,
         epic = 0xc260f1ff,      //0xc860fff,
-        legendary = 0xe67821ff, // 0xe68019ff // 0xEDCB1Aff,
+        legendary = 0xe67821e0,  // 0xe67821ff, // 0xe68019ff // 0xEDCB1Aff,
         mythic = 0x60ffffff,
-        godly =  pink           //red
+        godly =  pink,           //red
+        notable = 0xffe000ff, // 0xC08020ff //0xffd840ff, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
     }
 
     public static class ColorUtils {
