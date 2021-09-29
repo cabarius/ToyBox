@@ -21,6 +21,7 @@ Ver 1.3.14
         Restored the previous Add functionality to add characters that you have aleady recruited
         Any char in your party with either have Add or Recruit but not both
         Colored both Recruit and Respec to cyan and made the warnings 
+    Added some more extensive debug logging for feature selection multiplier.  (working on a proper fix)
     (Delth) Added ability to add/remove skills from generals (works on currently selected army) - new selection type in Search'n'Pick
     (ArcaneTrixter) Fixed Legend exp on level.
 Ver 1.3.13.1
