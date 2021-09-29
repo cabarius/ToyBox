@@ -55,8 +55,6 @@ namespace ToyBox.BagOfPatches {
                     if (cb != null && (!cb.m_Settings.Once || !cb.m_Triggered)) {
                         // This forces the item to display as notable
                         __instance.SlotVM.IsNotable.SetValueAndForceNotify(true);
-                    } else {
-
                     }
                     var rarity = __instance.Item.Rarity();
                     var color = rarity.color();
@@ -82,7 +80,7 @@ namespace ToyBox.BagOfPatches {
                     if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) return;
                     var rarity = __instance.Rarity();
                     var result = __result.Rarity(rarity);
-                    //Main.Log($"Item Entity - Name: {__result} - {rarity.ToString()} -> {result}");
+                    Main.Log($"Item Entity - Name: {__result} - {rarity.ToString()} -> {result}");
                     __result = result;
                 }
             }

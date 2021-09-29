@@ -15,8 +15,12 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.15
-    Bag of Tricks > Allow Shift Click To Transfer Entire Stack - Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
-    Moved Game Time Scale Slider into Quality of Life
+    Bag of Tricks
+        Allow Shift Click To Transfer Entire Stack - Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
+        Moved Game Time Scale Slider into Quality of Life
+    Loot Coloring
+        Fixed issue that caused notable items to no longer show their special highlight
+        Darkened trash color
     (Vek17) Added Turn Based Combat Delay slider to Bag of Tricks > Quality of Life
 Ver 1.3.14
     Party Editor > Adding characters to the party

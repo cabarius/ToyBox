@@ -36,7 +36,7 @@ namespace ModKit {
         silver = 0xD0D0D0ff,
         white = 0xffffffff,
         none = silver,
-        trash = 0x787878ff, // 0x734d26ff, // 0x86592dff, //0xA07040ff, // brown, 0x606060FF,
+        trash = 0x484848ff, // 0x787878ff, // 0x734d26ff, // 0x86592dff, //0xA07040ff, // brown, 0x606060FF,
         notable = yellow, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
         common = silver,         //0xe8e8e8a0,
         uncommon = 0x00882bff,  //0x00802bff, //0x68b020ff, // 0x60B020ff,

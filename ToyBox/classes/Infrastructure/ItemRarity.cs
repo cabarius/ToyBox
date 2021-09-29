@@ -92,6 +92,14 @@ namespace ToyBox {
 
         public static RarityType Rarity(this ItemEntity item) {
             var bp = item.Blueprint;
+            if (bp == null) return RarityType.None;
+            if (bp.IsNotable) return RarityType.Notable;
+            if (bp is BlueprintItemNote noteBP) {
+                var component = noteBP.GetComponent<AddItemShowInfoCallback>();
+                if (component != null) {
+                    return RarityType.Notable;
+                }
+            }
             return Rarity(bp.Rating(item));
         }
         public static RarityType Rarity(this BlueprintItemEnchantment bp) {
