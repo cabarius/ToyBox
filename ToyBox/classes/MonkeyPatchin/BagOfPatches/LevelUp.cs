@@ -447,26 +447,26 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(ProgressionData __instance, ref LevelEntry[] __result) {
                 var featMultiplier = settings.featsMultiplier;
                 if (featMultiplier < 2) return true;
-                if (__instance.Archetypes.Count <= 0) {
-                    __result = __instance.Blueprint.LevelEntries;
-                    return false;
-                }
                 List<LevelEntry> levelEntryList = new List<LevelEntry>();
                 foreach (LevelEntry levelEntry in __instance.Blueprint.LevelEntries) {
                     int level = levelEntry.Level;
-                    List<BlueprintFeatureBase> blueprintFeatureBaseList = new List<BlueprintFeatureBase>((IEnumerable<BlueprintFeatureBase>)levelEntry.Features);
+                    Main.Log($"levelEntry {level} - {string.Join(", ", levelEntry.Features.Select(f => f.name.cyan()))}");
+                    var blueprintFeatureBaseList = new List<BlueprintFeatureBase>(levelEntry.Features);
                     foreach (BlueprintArchetype archetype in __instance.Archetypes) {
                         foreach (BlueprintFeatureBase feature in (IEnumerable<BlueprintFeatureBase>)archetype.GetRemoveEntry(level).Features)
                             blueprintFeatureBaseList.Remove(feature);
-                        for (int ii = 0; ii < featMultiplier; ii++) {
-                            blueprintFeatureBaseList.AddRange((IEnumerable<BlueprintFeatureBase>)archetype.GetAddEntry(level).Features);
-                        }
+                        Main.Log($"adding archetype: {archetype.name.cyan()} - {levelEntry.Level}");
+                        blueprintFeatureBaseList.AddRange((IEnumerable<BlueprintFeatureBase>)archetype.GetAddEntry(level).Features);
                     }
                     if (blueprintFeatureBaseList.Count > 0) {
                         LevelEntry levelEntry2 = new LevelEntry() {
                             Level = level
                         };
-                        levelEntry2.SetFeatures((IEnumerable<BlueprintFeatureBase>)blueprintFeatureBaseList);
+                        var features = new List<BlueprintFeatureBase>();
+                        for (int ii = 0; ii < featMultiplier; ii++) {
+                            features = features.Concat(blueprintFeatureBaseList).ToList();
+                        }
+                        levelEntry2.SetFeatures(features);
                         levelEntryList.Add(levelEntry2);
                     }
                 }
@@ -475,6 +475,19 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
+        //if (__instance.Archetypes.Count <= 0) {
+        //    List<LevelEntry> levelEntries = new List<LevelEntry>();
+        //    foreach (LevelEntry levelEntry in __instance.Blueprint.LevelEntries) {
+        //        Main.Log($"adding level entry - {levelEntry.Level}}");
+        //        for (int ii = 0; ii < featMultiplier; ii++) {
+        //            levelEntries.Add(levelEntry);
+        //        }
+        //    }
+        //    levelEntries.Sort((e1, e2) => e1.Level.CompareTo(e2.Level));
+        //    __result = levelEntries.ToArray();
+        //    return false;
+        //}
+
 #endif
 #if true
         /**

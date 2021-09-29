@@ -34,7 +34,7 @@ namespace ModKit {
             ) {
             bool changed = false;
             if (width == 0 && !disclosureStyle) {
-                width  = UI.toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
+                width = UI.toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
             }
             options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
             if (!disclosureStyle) {
@@ -51,19 +51,24 @@ namespace ModKit {
             bool isEmpty = toggle == ToggleState.None;
             if (UI.TogglePrivate(title, ref state, isEmpty, true, 0, options))
                 toggle = toggle.Flip();
-#if true
-
-#else
-            if (GUILayout.Button(GetToggleText(toggle, text), style ?? GUI.skin.button, options))
-                toggle = toggle.Flip();
-#endif
         }
-
+        public static bool Toggle(string title, ref bool value, string on, string off, float width = 0, GUIStyle stateStyle = null, GUIStyle labelStyle = null, params GUILayoutOption[] options) {
+            bool changed = false;
+            if (stateStyle == null) stateStyle = GUI.skin.box;
+            if (labelStyle == null) labelStyle = GUI.skin.box;
+            if (width == 0) {
+                width = UI.toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
+            }
+            options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
+            title = value ? title.bold() : title.color(RGBA.medgrey).bold();
+            if (Private.UI.Toggle(title, value, on, off, stateStyle, labelStyle, options)) { value = !value; changed = true; }
+            return changed;
+        }
         public static bool Toggle(
-                String title,
-                ref bool value,
-                float width = 0,
-                params GUILayoutOption[] options) {
+            String title,
+            ref bool value,
+            float width = 0,
+            params GUILayoutOption[] options) {
             return TogglePrivate(title, ref value, false, false, width, options);
         }
 

@@ -127,8 +127,11 @@ namespace ModKit.Private {
             return Toggle(rect, label, value, isEmpty, on, off, stateStyle, labelStyle);
         }
 #endif
-            // Disclosure Toggles
-            public static bool DisclosureToggle(GUIContent label, bool value, bool isEmpty = false, params GUILayoutOption[] options) {
+        public static bool Toggle(string label, bool value, string on, string off, GUIStyle stateStyle, GUIStyle labelStyle, params GUILayoutOption[] options) {
+            return Toggle(LabelContent(label), value, new GUIContent(on), new GUIContent(off), stateStyle, labelStyle, false, options);
+        }
+        // Disclosure Toggles
+        public static bool DisclosureToggle(GUIContent label, bool value, bool isEmpty = false, params GUILayoutOption[] options) {
             return Toggle(label, value, DisclosureOn, DisclosureOff, GUI.skin.textArea, GUI.skin.label, isEmpty, options);
         }
         public static bool DisclosureToggle(string label, bool value, GUIStyle stateStyle, GUIStyle labelStyle, bool isEmpty = false, params GUILayoutOption[] options) {

@@ -16,6 +16,7 @@ using ModKit;
 using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
 using Kingmaker.PubSubSystem;
+using Kingmaker.Blueprints;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -448,7 +449,20 @@ namespace ToyBox {
                         UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
                     }
                     UI.Div(100, 20, 755);
-
+                    using (UI.HorizontalScope()) {
+                        UI.Space(100);
+                        UI.Label("Gender", UI.Width(400));
+                        UI.Space(25);
+                        var gender = ch.Descriptor.CustomGender ?? ch.Descriptor.Gender;
+                        bool isFemale = gender == Gender.Female;
+                        if (UI.Toggle(isFemale ? "Female" : "Male", ref isFemale, 
+                            "♀".color(RGBA.magenta).bold(),
+                            "♂".color(RGBA.aqua).bold(), 
+                            0, UI.largeStyle, GUI.skin.box , UI.Width(300), UI.Height(20))) {
+                            ch.Descriptor.CustomGender = isFemale ? Gender.Female : Gender.Male;
+                        }
+                    }
+                        UI.Div(100, 20, 755);
                     foreach (StatType obj in HumanFriendly.StatTypes) {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);

@@ -1,5 +1,6 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
+using UnityModManagerNet;
 
 namespace ModKit {
     public static partial class UI {
@@ -28,6 +29,22 @@ namespace ModKit {
                 if (_buttonStyle == null) _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft };
                 return _buttonStyle;
             } }
+        private static GUIStyle _largeStyle;
+        public static GUIStyle largeStyle {
+            get {
+                if (_largeStyle == null)
+                    _largeStyle = new GUIStyle(GUI.skin.box) {
+                        richText = true
+                    };
+                _largeStyle.contentOffset = new Vector2(0, UnityModManager.UI.Scale(-6));
+                _largeStyle.fontSize = UnityModManager.UI.Scale(22);
+                _largeStyle.fontStyle = FontStyle.Bold;
+                _largeStyle.fixedHeight = UnityModManager.UI.Scale(36);
+
+                return _largeStyle;
+            }
+        }
+
         private static GUIStyle _toggleStyle;
         public static GUIStyle toggleStyle {
             get {
