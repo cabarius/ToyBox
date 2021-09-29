@@ -26,7 +26,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 
 namespace ToyBox.BagOfPatches {
-    static class LevelUp {
+    internal static class LevelUp {
         public static Settings settings = Main.settings;
         public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;

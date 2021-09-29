@@ -25,6 +25,7 @@ Ver 1.3.15
         You can now unlock indivudual mythic paths
         Made mythic path unlock more robust and refresh the UI to reflect the new unlocks without reloading
         Changed "Make All Feat Selections Optionsl" to "Make All Feature Selections Optional"
+        Fixed bug that prevented mythic level up from happening with multiclass enabled
     Party Editor 
         You can now see and change your gender in Stats. This may help you do same gender romances
         Changing a character's name imediately refreshes the tool tips and other UI
@@ -32,7 +33,6 @@ Ver 1.3.15
         Reworked Level Up UI to give clear feedback about how many levels you have given yourself
         Renamed "Levels Like a Legendary Hero" to "Allow Levels Past 20" and added some green explainer text
             Moved it to just under Multiple Classes Per Level Up
-
     Allow Achievements While Using Mods now also marks your save file as unmodded so you can continue to earn achievements after disabling ToyBox (as long as you disable all other mods)
     (Vek17) Added Turn Based Combat Delay slider to Bag of Tricks > Quality of Life
 Ver 1.3.14

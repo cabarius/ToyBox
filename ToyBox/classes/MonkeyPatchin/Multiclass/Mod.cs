@@ -133,4 +133,83 @@ namespace ToyBox.Multiclass {
             return false;
         }
     }
+    static partial class MultipleClasses {
+
+        public static Settings settings = Main.settings;
+        public static Player player = Game.Instance.Player;
+        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
+        public static LevelUpController levelUpController { get; internal set; }
+
+        public static bool IsAvailable() {
+            return Main.Enabled &&
+                settings.toggleMulticlass &&
+                levelUpController.IsManualPlayerUnit(true);
+        }
+
+        public static bool Enabled {
+            get => settings.toggleMulticlass;
+            set => settings.toggleMulticlass = value;
+        }
+     #region Utilities
+
+#if true
+    private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
+            var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
+            StateReplacer stateReplacer = new StateReplacer(state);
+            modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
+            modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
+            modLogger.Log($"    options: {options}");
+            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
+                if (characterClass != stateReplacer.SelectedClass && options.Contains(characterClass)) {
+                    modLogger.Log($"       {characterClass.GetDisplayName()} ");
+                    if (state.IsMythicClassSelected == characterClass.IsMythic) {
+                        stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+                        action();
+                    }
+                }
+            }
+            stateReplacer.Restore();
+        }
+#else
+        private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
+            var multiclassSet = MulticlassUtils.SelectedMulticlassSet(unit, state.IsCharGen());
+            StateReplacer stateReplacer = new StateReplacer(state);
+            modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
+            modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
+            modLogger.Log($"    multiclass set: {multiclassSet.Count}");
+            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
+                if (characterClass != stateReplacer.SelectedClass && MulticlassUtils.GetMulticlassSet(unit).Contains(characterClass.AssetGuid.ToString())) {
+                    modLogger.Log($"       {characterClass.GetDisplayName()} ");
+                    if (state.IsMythicClassSelected == characterClass.IsMythic) {
+                        stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+                        action();
+                    }
+                }
+            }
+            stateReplacer.Restore();
+        }
+#endif
+        public static void UpdateLevelsForGestalt(this UnitProgressionData progression) {
+            progression.m_CharacterLevel = new int?(0);
+            progression.m_MythicLevel = new int?(0);
+            int? nullable;
+            foreach (ClassData classData in progression.Classes) {
+                var shouldSkip = progression.IsClassGestalt(classData.CharacterClass);
+                //modLogger.Log($"UpdateLevelsForGestalt - owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}".cyan().bold());
+                if (!shouldSkip) {
+                    if (classData.CharacterClass.IsMythic) {
+                        nullable = progression.m_MythicLevel;
+                        int level = classData.Level;
+                        progression.m_MythicLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
+                    }
+                    else {
+                        nullable = progression.m_CharacterLevel;
+                        int level = classData.Level;
+                        progression.m_CharacterLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
+                    }
+                }
+            }
+        }
+        #endregion
+    }
 }

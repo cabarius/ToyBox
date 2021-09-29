@@ -194,7 +194,7 @@
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\General.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\LevelUP+Multiclass.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\Mod.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs" />
