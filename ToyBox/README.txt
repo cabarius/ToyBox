@@ -14,6 +14,9 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.15
+    Bag of Tricks > Allow Shift Click To Transfer Entire Stack - Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
+    (Vek17) Added Turn Based Combat Delay slider to Bag of Tricks > Quality of Life
 Ver 1.3.14
     Party Editor > Adding characters to the party
         Last change to add npcs to party broke when adding characters you have already recruited.
@@ -22,11 +25,11 @@ Ver 1.3.14
         Any char in your party with either have Add or Recruit but not both
         Colored both Recruit and Respec to cyan and made the warnings 
     Added some more extensive debug logging for feature selection multiplier.  (working on a proper fix)
-    (Delth) Added ability to add/remove skills from generals (works on currently selected army) - new selection type in Search'n'Pick
     (ArcaneTrixter) Fixed Legend exp on level.
+    (Delth) Added ability to add/remove skills from generals (works on currently selected army) - new selection type in Search'n'Pick
 Ver 1.3.13.1
     Fixed Crash in Echantments when you have no inventory in a new game
-    Enchantments - show descriptions of existing enchantments of the selected weapon
+    Enchantments - show descriptions o f existing enchantments of the selected weapon
     Identify All now identifies items that are equiped. Useful if you recruit an NPC to your party because you see cool stuff on them in Loot Checklist
 Ver 1.3.13
     Sandal says `Enchantment`!

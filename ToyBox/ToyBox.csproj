@@ -65,7 +65,11 @@
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Owlcat.Runtime.UI_public">
+	  <Reference Include="Owlcat.Runtime.UniRx">
+		  <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UniRx.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Owlcat.Runtime.UI_public">
       <HintPath>$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -206,7 +210,6 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <EmbeddedResource Include="Config\bindings.json" />
-    <None Include="README.txt.vsspell" />
     <None Include="Repository.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -235,7 +238,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

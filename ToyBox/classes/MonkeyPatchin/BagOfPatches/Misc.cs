@@ -2,6 +2,7 @@
 
 using HarmonyLib;
 using JetBrains.Annotations;
+using Owlcat.Runtime.UniRx;
 using Kingmaker;
 using Kingmaker.Achievements;
 using Kingmaker.Blueprints;
@@ -40,6 +41,12 @@ using Kingmaker.Achievements.Platforms;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._PCView.Slots;
+using Kingmaker.UI.MVVM._VM.Common;
+using Kingmaker.UI.MVVM._VM.CounterWindow;
+using Kingmaker.UI.Loot;
+using Kingmaker.UI.MVVM._PCView.Vendor;
+using Kingmaker.UI.TurnBasedMode;
+using Kingmaker.UI._ConsoleUI.CombatStartScreen;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
@@ -285,9 +292,55 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        // Turnbased Combat Start Delay
+        [HarmonyPatch(typeof(TurnBasedModeUIController), nameof(TurnBasedModeUIController.ShowCombatStartWindow))]
+        static class Difficulty_Override_Patch {
+            static bool Prefix(TurnBasedModeUIController __instance) {
+                if (settings.turnBasedCombatStartDelay == 4f) return true;
+                if (__instance.m_CombatStartWindowVM == null) {
+                    __instance.HideTurnPanel();
+                    __instance.m_CombatStartWindowVM = new CombatStartWindowVM(new Action(__instance.HideCombatStartWindow));
+                    __instance.m_Config.CombatStartWindowView.Bind(__instance.m_CombatStartWindowVM);
+                    object p = DelayedInvoker.InvokeInTime(new Action(__instance.HideCombatStartWindow), settings.turnBasedCombatStartDelay, true);
+                }
+                return false;
+            }
+        }
+
+        // Shift + Click Inventory Tweaks
+        [HarmonyPatch(typeof(CommonVM), nameof(CommonVM.HandleOpen), new Type[] {
+            typeof(CounterWindowType), typeof(ItemEntity), typeof(Action<int>)
+        })]
+        public static class CommonVM_HandleOpen_Patch {
+            public static bool Prefix(CounterWindowType type, ItemEntity item, Action<int> command) {
+                if (!settings.toggleShiftClickToFastTransfer) return true;
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    command.Invoke(item.Count);
+                    return false;
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
+        public static class ItemSlotPCView_OnClick_Patch {
+            public static bool Prefix(ItemSlotPCView __instance) {
+                if (!settings.toggleShiftClickToFastTransfer) return true;
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    __instance.OnDoubleClick();
+                    return false;
+                }
+                return true;
+            }
+        }
         [HarmonyPatch(typeof(InventorySlotPCView), nameof(InventorySlotPCView.OnClick))]
         public static class InventorySlotPCView_OnClick_Patch {
             public static bool Prefix(InventorySlotPCView __instance) {
+                if (settings.toggleShiftClickToFastTransfer) {
+                    if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                        __instance.OnDoubleClick();
+                        return false;
+                    }
+                }
                 if (__instance.UsableSource != UsableSourceType.Inventory) return true;
                 if (!settings.toggleShiftClickToUseInventorySlot) return true;
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
@@ -299,6 +352,17 @@ namespace ToyBox.BagOfPatches {
                     catch (Exception e) {
                         Main.Log($"InventorySlotPCView_OnClick_Patch - {e}");
                     }
+                    return false;
+                }
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(VendorSlotPCView), nameof(VendorSlotPCView.OnClick))]
+        public static class VendorSlotPCView_OnClick_Patch {
+            public static bool Prefix(VendorSlotPCView __instance) {
+                if (!settings.toggleShiftClickToFastTransfer) return true;
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    __instance.OnDoubleClick();
                     return false;
                 }
                 return true;

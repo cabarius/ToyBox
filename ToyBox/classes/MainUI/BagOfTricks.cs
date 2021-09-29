@@ -124,12 +124,14 @@ namespace ToyBox {
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
                 () => UI.Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
+                () => UI.Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 0),
                 () => {
                     UI.Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair, 0);
                     UI.Space(25);
                     UI.Label("This may require an area transition or reload to take effect".green());
                 },
                 () => UI.Slider("Brutal Unfair Difficulty Multiplier", ref settings.brutalDifficultyMultiplier, 1f, 5f, 1f, 1, "", UI.Width((450))),
+                () => UI.Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", UI.Width((450))),
                 () => { }
             );
             UI.Div(0, 25);

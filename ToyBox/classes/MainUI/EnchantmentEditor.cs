@@ -28,7 +28,7 @@ namespace ToyBox.classes.MainUI {
         public static string[] ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType));
         private static ItemEntity[] inventory;
         private static List<BlueprintItemEnchantment> enchantments;
-        private static List<BlueprintItemEnchantment> filteredEnchantments = new List<BlueprintItemEnchantment>(100);
+        private static readonly List<BlueprintItemEnchantment> filteredEnchantments = new List<BlueprintItemEnchantment>();
 
         public static void ResetGUI() { }
         public static void OnGUI() {
@@ -40,10 +40,10 @@ namespace ToyBox.classes.MainUI {
                 BlueprintBrowser.GetBlueprints();
                 if (BlueprintBrowser.blueprints == null) return;
 
-                enchantments = new List<BlueprintItemEnchantment>(1500);
+                enchantments = new List<BlueprintItemEnchantment>();
                 foreach (var bp in BlueprintBrowser.blueprints) {
-                    if (bp is BlueprintItemEnchantment) {
-                        enchantments.Add(bp as BlueprintItemEnchantment);
+                    if (bp is BlueprintItemEnchantment enchantBP) {
+                        enchantments.Add(enchantBP);
                     }
                 }
                 enchantments.Sort((l, r) => {
@@ -177,7 +177,7 @@ namespace ToyBox.classes.MainUI {
         public static void ItemGUI() {
             var selectedItemEnchantments = selectedItem?.Enchantments.Select(e => e.Blueprint).ToHashSet();
             UI.Div(5);
-            for (int i = 0;i < filteredEnchantments.Count;i++) {
+            for (int i = 0; i < filteredEnchantments.Count; i++) {
                 var enchant = filteredEnchantments[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
                 using (UI.HorizontalScope()) {
@@ -194,14 +194,14 @@ namespace ToyBox.classes.MainUI {
                     if (settings.showAssetIDs) {
                         using (UI.VerticalScope()) {
                             using (UI.HorizontalScope()) {
-                                UI.Label(enchant.CollationName().cyan(), UI.Width(250));
+                                UI.Label(enchant.CollationName().cyan(), UI.Width(300));
                                 GUILayout.TextField(enchant.AssetGuid.ToString(), UI.AutoWidth());
                             }
                             if (enchant.Description.Length > 0) UI.Label(enchant.Description.RemoveHtmlTags().green());
                         }
                     }
                     else {
-                        UI.Label(enchant.CollationName().cyan(), UI.Width(250));
+                        UI.Label(enchant.CollationName().cyan(), UI.Width(300));
                         if (enchant.Description.Length > 0) UI.Label(enchant.Description.RemoveHtmlTags().green());
                     }
 
@@ -230,7 +230,7 @@ namespace ToyBox.classes.MainUI {
             editedItem = null;
             var terms = settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
 
-            for (int i = 0;filteredEnchantments.Count < settings.searchLimit && i < enchantments.Count;i++) {
+            for (int i = 0; filteredEnchantments.Count < settings.searchLimit && i < enchantments.Count; i++) {
                 var enchant = enchantments[i];
                 if (enchant.AssetGuid.ToString().Contains(settings.searchText)
                     || enchant.GetType().ToString().Contains(settings.searchText)
@@ -264,9 +264,9 @@ namespace ToyBox.classes.MainUI {
             RemoveEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
         }
 
-#endregion
+        #endregion
 
-#region Code
+        #region Code
         public static void Test() {
             var frost_enchantment = ResourcesLibrary.TryGetBlueprint<BlueprintWeaponEnchantment>("421e54078b7719d40915ce0672511d0b");
 
@@ -351,9 +351,9 @@ namespace ToyBox.classes.MainUI {
 
             return Source.Added;
         }
-#endregion
+        #endregion
 
-#region Classes
+        #region Classes
         public class ItemTypeFilter {
 
         }
@@ -365,6 +365,6 @@ namespace ToyBox.classes.MainUI {
             Added,     // enchantment is added by toybox
             Removed,   // enchantment is removed by toybox; removing enchantments which should be on an item, might cause stacking bugs
         }
-#endregion
+        #endregion
     }
 }

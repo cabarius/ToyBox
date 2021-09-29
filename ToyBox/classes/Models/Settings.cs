@@ -62,6 +62,7 @@ namespace ToyBox {
         public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
         public bool toggleShiftClickToUseInventorySlot = false;
+        public bool toggleShiftClickToFastTransfer = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
         public bool toggleBrutalUnfair = false;
@@ -142,6 +143,7 @@ namespace ToyBox {
         public float timeScaleMultiplier = 1;
         public float arcanistSpellslotMultiplier = 1;
         public float brutalDifficultyMultiplier = 1;
+        public float turnBasedCombatStartDelay = 4;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
