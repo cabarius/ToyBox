@@ -182,15 +182,13 @@ namespace ToyBox {
                         if (isWide) {
                             if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600))) {
                                 ch.Descriptor.CustomName = name;
-                                // TODO - why does this cause a piece of the turn based UI come up?
-                                // Game.Instance.ScheduleAction(() => Game.ResetUI());
+                                Main.NeedsResetGameUI = true;
                             }
                         }
                         else
                             if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.Width(230))) {
                             ch.Descriptor.CustomName = name;
-                            // TODO - why does this cause a piece of the turn based UI come up?
-                            //Game.Instance.ScheduleAction(() => Game.ResetUI());
+                            Main.NeedsResetGameUI = true;
                         }
                     }
                     else {

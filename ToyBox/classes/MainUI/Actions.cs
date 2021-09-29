@@ -27,7 +27,17 @@ using Kingmaker.Globalmap.State;
 
 namespace ToyBox {
     public static class Actions {
-        public static void UnlockAllMythicPaths() {
+        public static void UnlockAllBasicMythicPaths() {
+            // TODO - do this right once I build the etude browser and understand this better
+            UnlockAeon();
+            UnlockAzata();
+            UnlockLich();
+            UnlockTrickster();
+            // The following two block progression so better not to
+            //UnlockDevil();
+            //UnockSwarm();
+            UnlockGoldDragon();
+#if false
             var mythicInfos = BlueprintRoot.Instance.MythicsSettings.m_MythicsInfos;
             foreach (var infoRef in mythicInfos) {
                 var info = infoRef.Get();
@@ -36,13 +46,53 @@ namespace ToyBox {
                 Main.Log($"mythicInfo: {info} {etudeGUID} {etudeBp}");
                 Game.Instance.Player.EtudesSystem.StartEtude(etudeBp);
             }
-#if false
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("d85f7367b453b7b468b77e5e708297ae"));
-                Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("e6669aad304206c4d969f6602e6b412e"));
-                Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("8f2f0ea65ef3a3f48948d27a39b37db1"));
-                Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("f6dce66b61f98eb4dbe6388e16b1de11"));
 #endif
+            Main.NeedsResetGameUI = true;
         }
+        public static void UnlockAngel() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("d85f7367b453b7b468b77e5e708297ae"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockDemon() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("e6669aad304206c4d969f6602e6b412e"));
+            Main.NeedsResetGameUI = true;
+        }
+
+        public static void UnlockAeon() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("d85f7367b453b7b468b77e5e708297ae"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockAzata() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("e6669aad304206c4d969f6602e6b412e"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockLich() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("8f2f0ea65ef3a3f48948d27a39b37db1"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockTrickster() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("f6dce66b61f98eb4dbe6388e16b1de11"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockLegend() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("2943a647eb4017c49b4c121b15841d07"));
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("230552776ff941e1b054596bf589f9a9"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockDevil() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("26028ff893925ef44aa1179906ac9265"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockSwarm() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("6248db4784b301945b67b52143386b55"));
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("544443943d917e14ca72583d0357d4ad"));
+            Main.NeedsResetGameUI = true;
+        }
+        public static void UnlockGoldDragon() {
+            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("067212d277e846a4f9ff96aee6138f0b"));
+            Main.NeedsResetGameUI = true;
+        }
+
         public static void ToggleModWindow() {
             UnityModManager.UI.Instance.ToggleWindow();
         }

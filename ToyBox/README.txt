@@ -21,8 +21,13 @@ Ver 1.3.15
     Loot Coloring
         Fixed issue that caused notable items to no longer show their special highlight
         Darkened trash color
+    Level Up
+        You can now unlock indivudual mythic paths
+        Made mythic path unlock more robust and refresh the UI to reflect the new unlocks without reloading
+        Changed "Make All Feat Selections Optionsl" to "Make All Feature Selections Optional"
     Party Editor 
         You can now see and change your gender in Stats. This may help you do same gender romances
+        Changing a character's name imediately refreshes the tool tips and other UI
         You can now hit +1 to level up multiple times before going to level up screen
         Reworked Level Up UI to give clear feedback about how many levels you have given yourself
         Renamed "Levels Like a Legendary Hero" to "Allow Levels Past 20" and added some green explainer text

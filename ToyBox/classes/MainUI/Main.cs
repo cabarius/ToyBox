@@ -50,6 +50,7 @@ namespace ToyBox {
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
         public static bool NeedsActionInit = true;
+        public static bool NeedsResetGameUI = false;
         public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
         static Exception caughtException = null;
@@ -148,7 +149,8 @@ namespace ToyBox {
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
-                        } else UI.Space(25);
+                        }
+                        else UI.Space(25);
                     },
                     new NamedAction("Bag of Tricks", () => BagOfTricks.OnGUI()),
                     new NamedAction("Level Up", () => LevelUp.OnGUI()),
@@ -184,6 +186,23 @@ namespace ToyBox {
             if (NeedsActionInit) {
                 BagOfTricks.OnLoad();
                 NeedsActionInit = false;
+            }
+            if (NeedsResetGameUI) {
+                Game.Instance.ScheduleAction(() => {
+                    NeedsResetGameUI = false;
+                    Game.ResetUI();
+                    
+                    // TODO - Find out why the intiative tracker comes up when I do Game.ResetUI.  The following kludge makes it go away
+
+                    var canvas = Game.Instance?.UI?.Canvas?.transform;
+                    //Main.Log($"canvas: {canvas}");
+                    var hudLayout = canvas?.transform.Find("HUDLayout");
+                    //Main.Log($"hudLayout: {hudLayout}");
+                    var initiaveTracker = hudLayout.transform.Find("Console_InitiativeTrackerHorizontalPC");
+                    //Main.Log($"    initiaveTracker: {initiaveTracker}");
+                    initiaveTracker?.gameObject?.SetActive(false);
+
+                });
             }
             var currentMode = Game.Instance.CurrentMode;
             if (IsModGUIShown || Event.current == null || !Event.current.isKey) return;

@@ -441,7 +441,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#if true
+#if false
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]
         public static class ProgressionData_CalculateLevelEntries_Patch {
             public static bool Prefix(ProgressionData __instance, ref LevelEntry[] __result) {
