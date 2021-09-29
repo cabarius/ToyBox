@@ -132,6 +132,11 @@ namespace ToyBox {
                 },
                 () => UI.Slider("Brutal Unfair Difficulty Multiplier", ref settings.brutalDifficultyMultiplier, 1f, 5f, 1f, 1, "", UI.Width((450))),
                 () => UI.Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", UI.Width((450))),
+                () => {
+                    UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.Width(450));
+                    UI.Space(25);
+                    UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
+                },
                 () => { }
             );
             UI.Div(0, 25);
@@ -179,7 +184,7 @@ namespace ToyBox {
                 () => UI.Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
 
                 () => UI.Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0),
-                () => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat,0),
+                () => UI.Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat, 0),
                 //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat, 0),
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
@@ -238,11 +243,6 @@ namespace ToyBox {
                     UI.LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", UI.Width(600));
                     UI.Space(25);
                     UI.Label("Adjusts the movement speed of your party on world maps".green());
-                },
-                () => {
-                    UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.Width(600));
-                    UI.Space(25);
-                    UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
                 },
                 () => {
                     UI.LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", UI.Width(600));
