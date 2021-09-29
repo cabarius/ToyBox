@@ -291,10 +291,29 @@ namespace ToyBox {
                             if (UI.DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
                                 multiclassEditCharacter = selectedCharacter;
                             }
-                            UI.Space(50);
+                            UI.Space(53);
                             UI.Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
                         }
-                        else { UI.Space(50); UI.Label("Experimental Preview ".magenta()); }
+                    }
+                    using (UI.HorizontalScope()) {
+                        UI.Space(100);
+                        UI.ActionToggle("Allow Levels Past 20",
+                            () => {
+                                bool hasValue = settings.charIsLegendaryHero.TryGetValue(ch.HashKey(), out bool isLegendaryHero);
+                                return hasValue && isLegendaryHero;
+                            },
+                            (val) => {
+                                if (settings.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
+                                    settings.charIsLegendaryHero[ch.HashKey()] = val;
+                                }
+                                else {
+                                    settings.charIsLegendaryHero.Add(ch.HashKey(), val);
+                                }
+                            },
+                            0f,
+                            UI.AutoWidth());
+                        UI.Space(380);
+                        UI.Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".green());
                     }
 #endif
                     UI.Div(100, 20);
@@ -332,26 +351,6 @@ namespace ToyBox {
                             }, UI.Width(125));
                             UI.Space(23);
                             UI.Label("This sets your experience to match the current value of character level.".green());
-                        }
-
-                        using (UI.HorizontalScope()) {
-                            UI.Space(100);
-                            UI.ActionToggle("Levels like a Legendary Hero",
-                                () => {
-                                    bool hasValue = settings.charIsLegendaryHero.TryGetValue(ch.HashKey(), out bool isLegendaryHero);
-                                    return hasValue && isLegendaryHero;
-                                },
-                                (val) => {
-                                    if (settings.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
-                                        settings.charIsLegendaryHero[ch.HashKey()] = val;
-                                    }
-                                    else {
-                                        settings.charIsLegendaryHero.Add(ch.HashKey(), val);
-                                    }
-                                },
-                                0f,
-                                UI.AutoWidth()
-                            );
                         }
                         UI.Div(100, 25);
                         using (UI.HorizontalScope()) {
@@ -564,7 +563,7 @@ namespace ToyBox {
                 UI.Label($"{recruitableCount} character(s) can be ".orange().bold() + " Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green());
             }
             if (respecableCount > 0) {
-                UI.Label($"{respecableCount} character(s)  can be ".orange().bold() + "Respecced".cyan() +". Pressing Respec will close the mod window and take you to character level up".green());
+                UI.Label($"{respecableCount} character(s)  can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green());
                 UI.Label("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange());
             }
             if (recruitableCount > 0 || respecableCount > 0) {

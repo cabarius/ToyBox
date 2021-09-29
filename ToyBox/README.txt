@@ -21,6 +21,9 @@ Ver 1.3.15
     Loot Coloring
         Fixed issue that caused notable items to no longer show their special highlight
         Darkened trash color
+    Party Editor > Char > Classes > Levels Like a Legendary Hero 
+        Moved it to just under Multiple Classes Per Level Up
+        Renamed it to "Allow Levels Past 20" and added some green explainer text
     (Vek17) Added Turn Based Combat Delay slider to Bag of Tricks > Quality of Life
 Ver 1.3.14
     Party Editor > Adding characters to the party
