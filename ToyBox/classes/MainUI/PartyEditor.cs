@@ -172,9 +172,10 @@ namespace ToyBox {
                 UnitProgressionData progression = ch.Descriptor.Progression;
                 BlueprintStatProgression xpTable = progression.ExperienceTable;
                 int level = progression.CharacterLevel;
-                int mythicLevel = progression.MythicExperience;
+                int mythicLevel = progression.MythicLevel;
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
+                bool isOnTeam = player.AllCharacters.Contains(ch);
                 using (UI.HorizontalScope()) {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)) {
@@ -202,31 +203,37 @@ namespace ToyBox {
                     float distance = mainChar.DistanceTo(ch); ;
                     UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
                     UI.Space(5);
-                    UI.Label("lvl".green() + $": {level}", UI.Width(75));
+                    int nextLevel;
+                    for (nextLevel = level; progression.Experience >= xpTable.GetBonus(nextLevel+1) && xpTable.HasBonusForLevel(nextLevel+1); nextLevel++) { }
+                    if (nextLevel <= level || !isOnTeam) 
+                        UI.Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", UI.Width(90));
+                    else
+                        UI.Label((level < 10 ? "  " : "") + $"{level} > "+ $"{nextLevel}".cyan(), UI.Width(90));
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
-                        if (progression.Experience < xpTable.GetBonus(level + 1) && level < xpTable.Bonuses.Length) {
+                        if (xpTable.HasBonusForLevel(nextLevel + 1)) {
                             UI.ActionButton("+1", () => {
-                                progression.AdvanceExperienceTo(xpTable.GetBonus(level + 1), true);
-                            }, UI.Width(70));
+                                progression.AdvanceExperienceTo(xpTable.GetBonus(nextLevel + 1), true);
+                            }, UI.Width(63));
                         }
-                        else if (progression.Experience >= xpTable.GetBonus(level + 1) && level < xpTable.Bonuses.Length) {
-                            UI.Label("LvUp".cyan().italic(), UI.Width(70));
-                        }
-                        else { UI.Space(74); }
+                        else { UI.Label("max", UI.Width(63)); }
                     }
-                    else { UI.Space(74); }
-                    UI.Space(5);
-                    UI.Label($"my".green() + $": {mythicLevel}", UI.Width(80));
+                    else { UI.Space(66); }
+                    UI.Space(10);
+                    int nextML = progression.MythicExperience;
+                    if (nextML <= mythicLevel || !isOnTeam)
+                        UI.Label((mythicLevel < 10 ? "  my" : "  my").green() + $" {mythicLevel}", UI.Width(90));
+                    else
+                        UI.Label((level < 10 ? "  " : "") + $"{mythicLevel} > " + $"{nextML}".cyan(), UI.Width(90));
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.MythicExperience < 10) {
                             UI.ActionButton("+1", () => {
                                 progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
-                            }, UI.Width(70));
+                            }, UI.Width(63));
                         }
-                        else { UI.Label("max".cyan(), UI.Width(70)); }
+                        else { UI.Label("max", UI.Width(63)); }
                     }
-                    else { UI.Space(74); }
+                    else { UI.Space(66); }
                     UI.Space(30);
                     if (!isWide) ActionsGUI(ch);
                     UI.Wrap(!UI.IsWide, 283, 0);
@@ -455,14 +462,18 @@ namespace ToyBox {
                         UI.Space(25);
                         var gender = ch.Descriptor.CustomGender ?? ch.Descriptor.Gender;
                         bool isFemale = gender == Gender.Female;
-                        if (UI.Toggle(isFemale ? "Female" : "Male", ref isFemale, 
-                            "♀".color(RGBA.magenta).bold(),
-                            "♂".color(RGBA.aqua).bold(), 
-                            0, UI.largeStyle, GUI.skin.box , UI.Width(300), UI.Height(20))) {
-                            ch.Descriptor.CustomGender = isFemale ? Gender.Female : Gender.Male;
+                        using (UI.HorizontalScope(UI.Width(200))) {
+                            if (UI.Toggle(isFemale ? "Female" : "Male", ref isFemale,
+                                "♀".color(RGBA.magenta).bold(),
+                                "♂".color(RGBA.aqua).bold(),
+                                0, UI.largeStyle, GUI.skin.box, UI.Width(300), UI.Height(20))) {
+                                ch.Descriptor.CustomGender = isFemale ? Gender.Female : Gender.Male;
+                            }
                         }
+                        UI.Label("Changing your gender may cause visual glitches".green());
                     }
-                        UI.Div(100, 20, 755);
+                    UI.Space(10);
+                    UI.Div(100, 20, 755);
                     foreach (StatType obj in HumanFriendly.StatTypes) {
                         StatType statType = (StatType)obj;
                         ModifiableValue modifiableValue = ch.Stats.GetStat(statType);

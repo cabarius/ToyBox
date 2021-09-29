@@ -21,10 +21,13 @@ Ver 1.3.15
     Loot Coloring
         Fixed issue that caused notable items to no longer show their special highlight
         Darkened trash color
-    Party Editor > Char > Classes > Levels Like a Legendary Hero 
-        Moved it to just under Multiple Classes Per Level Up
-        Renamed it to "Allow Levels Past 20" and added some green explainer text
-        You can now see and change your gender in Stats
+    Party Editor 
+        You can now see and change your gender in Stats. This may help you do same gender romances
+        You can now hit +1 to level up multiple times before going to level up screen
+        Reworked Level Up UI to give clear feedback about how many levels you have given yourself
+        Renamed "Levels Like a Legendary Hero" to "Allow Levels Past 20" and added some green explainer text
+            Moved it to just under Multiple Classes Per Level Up
+
     Allow Achievements While Using Mods now also marks your save file as unmodded so you can continue to earn achievements after disabling ToyBox (as long as you disable all other mods)
     (Vek17) Added Turn Based Combat Delay slider to Bag of Tricks > Quality of Life
 Ver 1.3.14

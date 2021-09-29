@@ -83,6 +83,10 @@ namespace ModKit {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, options)) { action(); }
         }
+        public static void ActionButton(String title, Action action, GUIStyle style, params GUILayoutOption[] options) {
+            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
+            if (GL.Button(title, style, options)) { action(); }
+        }
         public static void ActionTextField(ref string text,
                 String name,
                 Action<String> action,

@@ -441,7 +441,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#if false
+#if true
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]
         public static class ProgressionData_CalculateLevelEntries_Patch {
             public static bool Prefix(ProgressionData __instance, ref LevelEntry[] __result) {
@@ -488,8 +488,7 @@ namespace ToyBox.BagOfPatches {
         //    return false;
         //}
 
-#endif
-#if true
+#else
         /**
          * The feat multiplier is the source of several hard to track down bugs. To quote ArcaneTrixter:
          * All story companions feats/backgrounds/etc. most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8. Also this is retroactive if you ever level up in the future with the multiplier on.
