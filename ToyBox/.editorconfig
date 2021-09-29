@@ -121,4 +121,4 @@ dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 #prefer properties to be prefaced with this. in C# or Me. in Visual Basic
 dotnet_style_qualification_for_property = true:suggestion
-csharp_space_after_semicolon_in_for_statement=false
+csharp_space_after_semicolon_in_for_statement=true
