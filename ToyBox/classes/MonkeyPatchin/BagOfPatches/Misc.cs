@@ -100,6 +100,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        // Disables the lockout for reporting achievements
         [HarmonyPatch(typeof(AchievementEntity), "IsDisabled", MethodType.Getter)]
         public static class AchievementEntity_IsDisabled_Patch {
             private static void Postfix(ref bool __result, AchievementEntity __instance) {
@@ -110,6 +111,17 @@ namespace ToyBox.BagOfPatches {
                     // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive)
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
                 }
+            }
+        }
+        // Removes the flag that taints the save file of a user who mods their game
+        [HarmonyPatch(typeof(Player), nameof(Player.ModsUser), MethodType.Getter)]
+        public static class Player_ModsUser_Patch {
+            public static bool Prefix(ref bool __result) {
+                if (settings.toggleAllowAchievementsDuringModdedGame) {
+                    __result = false;
+                    return false;
+                }
+                return true;
             }
         }
 
