@@ -97,46 +97,20 @@ namespace ToyBox.classes.MainUI {
                 using (UI.VerticalScope(UI.MinWidth(remainingWidth))) {
                     if (selectedItem != null) {
                         var item = selectedItem;
-                        var enchantements = GetEnchantments(item);
                         UI.Label("Target".cyan());
-                        using (UI.HorizontalScope(GUI.skin.box, UI.MinHeight(125))) {
+                        using (UI.VerticalScope(GUI.skin.box, UI.MinHeight(125))) {
                             var rarity = item.Rarity();
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
                             var itemName = item.Blueprint.GetDisplayName();
-#if false
-                            if (UI.EditableLabel(ref itemName, ref renameState,200, n => item.Name, UI.Width(300))) {
-                                
-                            }
-#else
+
                             UI.Label(item.Name.bold(), UI.Width(300));
-#endif
-                            UI.Space(100);
-                            if (enchantements.Count > 0) {
-                                using (UI.VerticalScope()) {
-                                    foreach (var entry in enchantements) {
-                                        var enchant = entry.Key;
-                                        var enchantBP = enchant.Blueprint;
-                                        var name = enchantBP.name;
-                                        if (name != null && name.Length > 0) {
-                                            name = name.Rarity(enchantBP.Rarity());
-                                            using (UI.HorizontalScope()) {
-                                                UI.Label(name, UI.Width(400));
-                                                UI.Space(25);
-                                                UI.Label(entry.Value ? "Custom".yellow() : "Perm".orange(), UI.Width(100));
-                                                UI.Space(25);
-                                                UI.ActionButton("Remove", () => RemoveEnchantment(selectedItem, enchant), UI.AutoWidth());
-                                                var description = enchantBP.Description;
-                                                if (description != null) {
-                                                    UI.Space(25);
-                                                    UI.Label(description.RemoveHtmlTags().green());
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else {
-                                UI.Label("No Enchantments".orange());
+                            UI.Space(20);
+                            TargetGUI(item);
+                            if (item is ItemEntityWeapon weapon && weapon.Second != null) {
+                                UI.Space(20);
+                                UI.Label(("2nd ".orange() + item.Name).bold(), UI.Width(300));
+                                UI.Space(20);
+                                TargetGUI(weapon.Second);
                             }
                         }
                         UI.Space(25);
@@ -174,6 +148,37 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
+        public static void TargetGUI(ItemEntity item) {
+            var enchantements = GetEnchantments(item);
+            if (enchantements.Count > 0) {
+                using (UI.VerticalScope()) {
+                    foreach (var entry in enchantements) {
+                        var enchant = entry.Key;
+                        var enchantBP = enchant.Blueprint;
+                        var name = enchantBP.name;
+                        if (name != null && name.Length > 0) {
+                            name = name.Rarity(enchantBP.Rarity());
+                            using (UI.HorizontalScope()) {
+                                UI.Label(name, UI.Width(400));
+                                UI.Space(25);
+                                UI.Label(entry.Value ? "Custom".yellow() : "Perm".orange(), UI.Width(100));
+                                UI.Space(25);
+                                UI.ActionButton("Remove", () => RemoveEnchantment(item, enchant), UI.AutoWidth());
+                                var description = enchantBP.Description;
+                                if (description != null) {
+                                    UI.Space(25);
+                                    UI.Label(description.RemoveHtmlTags().green());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                UI.Label("No Enchantments".orange());
+            }
+        }
+
         public static void ItemGUI() {
             var selectedItemEnchantments = selectedItem?.Enchantments.Select(e => e.Blueprint).ToHashSet();
             UI.Div(5);
@@ -184,12 +189,23 @@ namespace ToyBox.classes.MainUI {
                     UI.Space(5);
                     UI.Label(title, UI.Width(400));
 
-                    UI.ActionButton("Add", () => AddClicked(i), UI.Width(160));
-
+                    UI.ActionButton("Add", () => AddClicked(i), UI.Width(100));
                     if (selectedItemEnchantments != null && selectedItemEnchantments.Contains(enchant)) {
-                        UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(150));
+                        UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(100));
                     }
-                    else UI.Space(154);
+                    else {
+                        UI.Space(104);
+                    }
+                    if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
+                        UI.ActionButton("Sec. Add", () => AddClicked(i, true), UI.Width(100));
+                        if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant)) {
+                            UI.ActionButton("Sec. Remove", () => RemoveClicked(i, true), UI.Width(100));
+                        }
+                        else {
+                            UI.Space(104);
+                        }
+                    }
+
                     UI.Space(10);
                     if (settings.showAssetIDs) {
                         using (UI.VerticalScope()) {
@@ -213,7 +229,7 @@ namespace ToyBox.classes.MainUI {
         public static void UpdateItems(int index) {
             inventory = Game.Instance.Player.Inventory
                             .Where(item => (int)item.Blueprint.ItemType == index)
-                            .OrderByDescending(item => item.Rarity())
+                            .OrderByDescending(item => item.Blueprint.Rarity())
                             .ToArray();
             if (editedItem != null) {
                 selectedItemIndex = inventory.IndexOf(editedItem);
@@ -250,25 +266,39 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
-        public static void AddClicked(int index) {
+        public static void AddClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
-            AddEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
+            if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
+                AddEnchantment(weapon.Second, filteredEnchantments[index]);
+                editedItem = weapon;
+            }
+            else {
+                AddEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
+                editedItem = inventory[selectedItemIndex];
+            }
         }
 
-        public static void RemoveClicked(int index) {
+        public static void RemoveClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
-            RemoveEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
+            if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
+                RemoveEnchantment(weapon.Second, filteredEnchantments[index]);
+                editedItem = weapon;
+            }
+            else {
+                RemoveEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
+                editedItem = inventory[selectedItemIndex];
+            }
         }
 
         #endregion
 
         #region Code
         public static void AddEnchantment(ItemEntity item, BlueprintItemEnchantment enchantment, Rounds? duration = null) {
-            if (item.m_Enchantments == null)
+            if (item?.m_Enchantments == null)
                 Main.Log("item.m_Enchantments is null");
 
             var fake_context = new MechanicsContext(default(JsonConstructorMark)); // if context is null, items may stack which could cause bugs
@@ -277,15 +307,15 @@ namespace ToyBox.classes.MainUI {
             //fi.SetValue(fake_context, enchantment);  // check if AssociatedBlueprint must be set; I think not
 
             item.AddEnchantment(enchantment, fake_context, duration);
-            editedItem = item;
         }
 
         public static void RemoveEnchantment(ItemEntity item, BlueprintItemEnchantment enchantment) {
+            if (item == null) return;
             item.RemoveEnchantment(item.GetEnchantment(enchantment));
-            editedItem = item;
         }
 
         public static void RemoveEnchantment(ItemEntity item, ItemEnchantment enchantment) {
+            if (item == null) return;
             item.RemoveEnchantment(enchantment);
         }
 
@@ -327,10 +357,10 @@ namespace ToyBox.classes.MainUI {
         #region Classes
         public enum Source {
             Not,       // enchantment is not on the item
-            Blueprint, // enchantment is part of item's blueprint
+            Removed,   // enchantment is removed by toybox; removing enchantments which should be on an item, might cause stacking bugs
             Timed,     // enchantment is temporarily added by ability/spell (like Magic Weapon)
             Added,     // enchantment is added by toybox
-            Removed,   // enchantment is removed by toybox; removing enchantments which should be on an item, might cause stacking bugs
+            Blueprint, // enchantment is part of item's blueprint
         }
         #endregion
     }
