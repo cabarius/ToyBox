@@ -5,6 +5,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Blueprints;
 using ModKit;
 using System.Linq;
 
@@ -82,8 +83,46 @@ public static class CrusadeEditor {
                     UI.EndHorizontal();
                 },
                 () => {
+                    UI.Space(50);
+                    UI.Label("EXPERIMENTAL".orange().bold());
+                },
+                () => {
+                    using (UI.VerticalScope()) {
+                        using (UI.HorizontalScope()) {
+                            UI.Label("Kingdom Stat", UI.Width(150));
+                            UI.Label("Experience", UI.Width(100));
+                            UI.Label("Rank", UI.Width(100));
+                            UI.Label("Required", UI.Width(100));
+                        }
+
+                        foreach (KingdomStats.Stat kingdomStat in kingdom.Stats) {
+                            using (UI.HorizontalScope()) {
+                                UI.Label(kingdomStat.Type.ToString().cyan(), UI.Width(150));
+                                UI.Label(kingdomStat.Value.ToString().orange().bold(), UI.Width(100));
+                                UI.Label($"Rank {kingdomStat.Rank}".orange().bold(), UI.Width(100));
+                                UI.Label(KingdomRoot.Instance.RankUps.Conditions[kingdomStat.Type].GetRequiredStatValue(kingdomStat.Rank).ToString().orange().bold(), UI.Width(100));
+                                UI.ActionButton($"Gain {Settings.increment} Experience", () => {
+                                    kingdomStat.Value += Settings.increment;
+                                }, UI.AutoWidth());
+                                UI.ActionButton($"Lose {Settings.increment} Experience", () => {
+                                    kingdomStat.Value -= Settings.increment;
+                                }, UI.AutoWidth());
+                                if (kingdomStat.Rank < 8) {
+                                    UI.ActionButton("+ Rank", () => { kingdomStat.Rank++; }, UI.AutoWidth());
+                                }
+                                if (kingdomStat.Rank > 1) {
+                                    UI.ActionButton("- Rank", () => { kingdomStat.Rank--; }, UI.AutoWidth());
+                                }
+                            }
+                        }
+                    }
+                },
+                () => {
+                    UI.Space(50);
+                    UI.Label("Kingdom Finances");},
+                () => {
                     UI.Label("Finances".cyan(), UI.Width(150));
-                    UI.Label(kingdom.Resources.Finances.ToString().orange().bold(), UI.Width(200));
+                    UI.Label(kingdom.Resources.Finances.ToString().orange().bold(), UI.Width(100));
                     UI.ActionButton($"Gain {Settings.increment}", () => {
                         kingdom.Resources += KingdomResourcesAmount.FromFinances(Settings.increment);
                     }, UI.AutoWidth());
@@ -93,7 +132,7 @@ public static class CrusadeEditor {
                 },
                 () => {
                     UI.Label("Materials".cyan(), UI.Width(150));
-                    UI.Label(kingdom.Resources.Materials.ToString().orange().bold(), UI.Width(200));
+                    UI.Label(kingdom.Resources.Materials.ToString().orange().bold(), UI.Width(100));
                     UI.ActionButton($"Gain {Settings.increment}", () => {
                         kingdom.Resources += KingdomResourcesAmount.FromMaterials(Settings.increment);
                     }, UI.AutoWidth());
@@ -103,7 +142,7 @@ public static class CrusadeEditor {
                 },
                 () => {
                     UI.Label("Favors".cyan(), UI.Width(150));
-                    UI.Label(kingdom.Resources.Favors.ToString().orange().bold(), UI.Width(200));
+                    UI.Label(kingdom.Resources.Favors.ToString().orange().bold(), UI.Width(100));
                     UI.ActionButton($"Gain {Settings.increment}", () => {
                         kingdom.Resources += KingdomResourcesAmount.FromFavors(Settings.increment);
                     }, UI.AutoWidth());
