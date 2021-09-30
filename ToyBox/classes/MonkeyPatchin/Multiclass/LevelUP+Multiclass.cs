@@ -15,6 +15,7 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,22 +156,21 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-#if false
         [HarmonyPatch(typeof(UnitHelper))]
         [HarmonyPatch("CopyInternal")]
         static class UnitProgressionData_CopyFrom_Patch {
             static void Postfix(UnitEntityData unit, UnitEntityData __result) {
                 if (!settings.toggleMulticlass) return;
-
                 // When upgrading, this method will be used to copy a UnitEntityData, which involves copying UnitProgressionData
                 // By default, the CharacterLevel of the copied UnitProgressionData is equal to the sum of all non-mythical class levels
                 //  If the character level is not equal to this default value, there will be problems (for example, when it is lower than the default value, you may not be able to upgrade until you reach level 20, because the sum of non-mythical class levels has exceeded 20 in advance)
                 // Fix this.
 
                 var UnitProgressionData_CharacterLevel = AccessTools.Property(typeof(UnitProgressionData), nameof(UnitProgressionData.CharacterLevel));
+                Main.Log($"UnitProgressionData_CopyFrom_Patch - {unit.CharacterName.orange()} - {UnitProgressionData_CharacterLevel}");
+
                 UnitProgressionData_CharacterLevel.SetValue(__result.Descriptor.Progression, unit.Descriptor.Progression.CharacterLevel);
             }
         }
-#endif
     }
 }

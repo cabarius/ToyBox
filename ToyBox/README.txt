@@ -15,9 +15,11 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.15
+    Note: Patch 1.0.7c-e patch of the game introduced a few issues impacting ToyBox. Me and my team are working on resolving these as quickly as we can.  Please help out by filing issues here: https://github.com/cabarius/ToyBox/issues
     Bag of Tricks
         Allow Shift Click To Transfer Entire Stack - Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
         Moved Game Time Scale Slider into Quality of Life
+        Fixed an issue with "Refill consumables in belt slots" that would cause items to disappear from inventory if you shifted an item and then immediately triggered a battle through dialog
     Loot Coloring
         Fixed issue that caused notable items to no longer show their special highlight
         Darkened trash color

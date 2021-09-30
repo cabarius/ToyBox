@@ -47,6 +47,7 @@ using Kingmaker.UI.Loot;
 using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.TurnBasedMode;
 using Kingmaker.UI._ConsoleUI.CombatStartScreen;
+using Kingmaker.Items.Slots;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
@@ -264,7 +265,8 @@ namespace ToyBox.BagOfPatches {
             static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
                 if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
                     __state = null;
-                    if (__instance.Owner.Body.QuickSlots.Any(x => x.HasItem && x.Item == __instance.m_ItemRef)) {
+                    var slot = __instance.Owner.Body.QuickSlots.FindOrDefault(s => s.HasItem && s.Item == __instance.m_ItemRef);
+                    if (slot != null) {
                         __state = __instance.m_ItemRef;
                     }
                 }
@@ -273,11 +275,9 @@ namespace ToyBox.BagOfPatches {
                 if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
                     if (__state != null) {
                         BlueprintItem blueprint = __state.Blueprint;
-                        foreach (ItemEntity item in Game.Instance.Player.Inventory.Items) {
-                            if (item.Blueprint.ItemType == ItemsFilter.ItemType.Usable && item.Blueprint == blueprint) {
-                                __instance.InsertItem(item);
-                                break;
-                            }
+                        var item = Game.Instance.Player.Inventory.Items.FindOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
+                        if (item != null) {
+                            Game.Instance.ScheduleAction(() => __instance.InsertItem(item));
                         }
                         __state = null;
                     }
