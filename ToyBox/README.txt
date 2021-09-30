@@ -14,6 +14,8 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Crusade: 25
     Quest Resolution: 1
 
+Ver 1.3.16
+    (ArcaneTrixter) Added Crusade Stats editor
 Ver 1.3.15
     Note: Patch 1.0.7c-e patch of the game introduced a few issues impacting ToyBox. Me and my team are working on resolving these as quickly as we can.  Please help out by filing issues here: https://github.com/cabarius/ToyBox/issues
     Bag of Tricks
