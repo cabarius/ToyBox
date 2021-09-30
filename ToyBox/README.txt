@@ -15,6 +15,9 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.16
+    Critical - fixed crasher triggered on rest and other situations when you use belt auto refill
+    Made separate search field for Enchantment editor so it no longer uses the search from Search 'n Pick
+    More color tweaks to common and trash
     (ArcaneTrixter) Added Crusade Stats editor
 Ver 1.3.15
     Note: Patch 1.0.7c-e patch of the game introduced a few issues impacting ToyBox. Me and my team are working on resolving these as quickly as we can.  Please help out by filing issues here: https://github.com/cabarius/ToyBox/issues

@@ -18,6 +18,7 @@ namespace ToyBox.classes.MainUI {
         public static Settings settings => Main.settings;
 
         #region GUI
+        public static string searchText = "";
         public static int selectedItemType;
         public static int selectedItemIndex;
         public static int selectedEnchantIndex;
@@ -144,7 +145,7 @@ namespace ToyBox.classes.MainUI {
                     // Search Field and modifiers
                     using (UI.HorizontalScope()) {
                         UI.ActionTextField(
-                            ref settings.searchText,
+                            ref searchText,
                             "searhText",
                             (text) => { },
                             () => { UpdateSearchResults(); },
@@ -228,12 +229,12 @@ namespace ToyBox.classes.MainUI {
         public static void UpdateSearchResults() {
             filteredEnchantments.Clear();
             editedItem = null;
-            var terms = settings.searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
+            var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
 
             for (int i = 0; filteredEnchantments.Count < settings.searchLimit && i < enchantments.Count; i++) {
                 var enchant = enchantments[i];
-                if (enchant.AssetGuid.ToString().Contains(settings.searchText)
-                    || enchant.GetType().ToString().Contains(settings.searchText)
+                if (enchant.AssetGuid.ToString().Contains(searchText)
+                    || enchant.GetType().ToString().Contains(searchText)
                     ) {
                     filteredEnchantments.Add(enchant);
                 }
