@@ -60,7 +60,7 @@ namespace ToyBox.classes.MainUI {
 
             // Stackable browser
             using (UI.HorizontalScope(UI.Width(350))) {
-                float remainingWidth = UI.ummWidth; // TODO - fix remainingWidth; I don't know how that works
+                float remainingWidth = UI.ummWidth;
 
                 // First column - Type Selection Grid
                 using (UI.VerticalScope(GUI.skin.box)) {
@@ -184,7 +184,7 @@ namespace ToyBox.classes.MainUI {
                     UI.Space(5);
                     UI.Label(title, UI.Width(400));
 
-                    UI.ActionButton("Add", () => AddClicked(i), UI.Width(160)); // TODO - switch Add/Remove and color
+                    UI.ActionButton("Add", () => AddClicked(i), UI.Width(160));
 
                     if (selectedItemEnchantments != null && selectedItemEnchantments.Contains(enchant)) {
                         UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(150));
@@ -267,35 +267,6 @@ namespace ToyBox.classes.MainUI {
         #endregion
 
         #region Code
-        public static void Test() {
-            var frost_enchantment = ResourcesLibrary.TryGetBlueprint<BlueprintWeaponEnchantment>("421e54078b7719d40915ce0672511d0b");
-
-            var item = Game.Instance.Player.MainCharacter.Value.GetFirstWeapon();
-            AddEnchantment(item, frost_enchantment);
-        }
-
-        public static void Test2() {
-            var item = Game.Instance.Player.MainCharacter.Value.GetFirstWeapon();
-            var enchantments = GetEnchantments(item);
-            foreach (var enchantment in enchantments) {
-                Main.Log($"{enchantment.Key.Blueprint.name} : {enchantment.Value}");
-                if (enchantment.Value) {
-                    RemoveEnchantment(item, enchantment.Key);
-                }
-            }
-        }
-
-        // not good; this should be split by ItemsFilter.ItemType
-        public static List<ItemEntity> GetInventory() {
-            var collection = new List<ItemEntity>();
-            foreach (var item in Game.Instance.Player.Inventory) {
-                if (item is ItemEntityWeapon || item is ItemEntityArmor || item is ItemEntityShield) {
-                    collection.Add(item);
-                }
-            }
-            return collection;
-        }
-
         public static void AddEnchantment(ItemEntity item, BlueprintItemEnchantment enchantment, Rounds? duration = null) {
             if (item.m_Enchantments == null)
                 Main.Log("item.m_Enchantments is null");
@@ -354,10 +325,6 @@ namespace ToyBox.classes.MainUI {
         #endregion
 
         #region Classes
-        public class ItemTypeFilter {
-
-        }
-
         public enum Source {
             Not,       // enchantment is not on the item
             Blueprint, // enchantment is part of item's blueprint
