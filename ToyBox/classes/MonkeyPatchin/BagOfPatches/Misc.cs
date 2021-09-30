@@ -48,6 +48,7 @@ using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.TurnBasedMode;
 using Kingmaker.UI._ConsoleUI.CombatStartScreen;
 using Kingmaker.Items.Slots;
+using ModKit;
 
 namespace ToyBox.BagOfPatches {
     static class Misc {
@@ -138,7 +139,8 @@ namespace ToyBox.BagOfPatches {
                 bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
-                } else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                }
+                else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintCR2RatSwarmGUID;
                 }
             }
@@ -151,7 +153,8 @@ namespace ToyBox.BagOfPatches {
                 bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
-                } else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                }
+                else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintCR2RatSwarmGUID).Prefab;
                 }
             }
@@ -259,7 +262,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
         [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), "RemoveItem", new Type[] { typeof(bool), typeof(bool) })]
         static class ItemSlot_RemoveItem_Patch {
             static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
@@ -277,13 +279,19 @@ namespace ToyBox.BagOfPatches {
                         BlueprintItem blueprint = __state.Blueprint;
                         var item = Game.Instance.Player.Inventory.Items.FindOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
                         if (item != null) {
-                            Game.Instance.ScheduleAction(() => __instance.InsertItem(item));
+                            Game.Instance.ScheduleAction(() =>{ 
+                                try {
+                                    Main.Log($"refill {item.m_Blueprint.Name.cyan()}");
+                                    __instance.InsertItem(item); 
+                                } 
+                                catch (Exception e) { Main.Log($"{e}"); } } );
                         }
                         __state = null;
                     }
                 }
             }
         }
+
         // To eliminate some log spam
         [HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", new Type[] { typeof(UserStatsStored_t) })]
         public static class SteamAchievementsManager_OnUserStatsStored_Patch {
@@ -298,7 +306,8 @@ namespace ToyBox.BagOfPatches {
                         m_eResult = EResult.k_EResultOK,
                         m_nGameID = (ulong)__instance.m_GameId
                     });
-                } else
+                }
+                else
                     Debug.Log((object)("StoreStats - failed, " + (object)pCallback.m_eResult));
                 return false;
             }
@@ -318,7 +327,6 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
-
         // Shift + Click Inventory Tweaks
         [HarmonyPatch(typeof(CommonVM), nameof(CommonVM.HandleOpen), new Type[] {
             typeof(CounterWindowType), typeof(ItemEntity), typeof(Action<int>)

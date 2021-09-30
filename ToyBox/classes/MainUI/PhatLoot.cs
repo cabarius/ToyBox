@@ -102,7 +102,7 @@ namespace ToyBox {
                                                 bool showBP = settings.toggleLootChecklistFilterBlueprint;
                                                 bool showDesc = settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
                                                 using (UI.HorizontalScope()) {
-                                                    Main.Log($"rarity: {lewt.Blueprint.Rarity()} - color: {lewt.Blueprint.Rarity().color()}");
+                                                    //Main.Log($"rarity: {lewt.Blueprint.Rarity()} - color: {lewt.Blueprint.Rarity().color()}");
                                                     UI.Label(lewt.Name.Rarity(lewt.Blueprint.Rarity()), showDesc || showBP ? UI.Width(350) : UI.AutoWidth());
                                                     if (showBP) {
                                                         UI.Space(100); UI.Label(lewt.Blueprint.GetDisplayName().grey(), showDesc ? UI.Width(350) : UI.AutoWidth());
