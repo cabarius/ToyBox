@@ -2,6 +2,7 @@
 using Kingmaker.Armies;
 using Kingmaker.Armies.State;
 using Kingmaker.Armies.TacticalCombat;
+using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Kingdom;
@@ -36,7 +37,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
         [HarmonyPatch(typeof(TacticalCombatHelper), "GetSpellPower")]
         public static class TacticalCombatHelper_GetSpellPower_Patch {
             public static void Postfix(ref int __result, UnitEntityData leader) {
-                float leaderPowerMultiplier = TacticalCombatHelper.IsDemon(leader)
+                float leaderPowerMultiplier = leader.Get<UnitPartLeaderTacticalCombat>()?.LeaderData.Faction != ArmyFaction.Crusaders
                     ? Settings.enemyLeaderPowerMultiplier
                     : Settings.playerLeaderPowerMultiplier;
 

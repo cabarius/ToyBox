@@ -19,6 +19,7 @@ Ver 1.3.17
     Gave Brutal Difficulty Multiplier a bit more fun feedback for the Brutality level
     Expanded Brutality range from Trash (0.5) to Goldly
     Improved the look and layout of all Sliders
+    (ArcaneTrixter) Handled additional edge cases around factions for Crusade Power Multiplier; should properly make anything that isn't explicitly player faction get enemy multiplier.
 Ver 1.3.16
     Critical - fixed crasher triggered on rest and other situations when you use belt auto refill
     Made separate search field for Enchantment editor so it no longer uses the search from Search 'n Pick
