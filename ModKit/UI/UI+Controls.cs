@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using GL = UnityEngine.GUILayout;
+using UnityModManagerNet;
 
 namespace ModKit {
     public static partial class UI {
@@ -164,18 +165,37 @@ namespace ModKit {
             value = newValue;
             return changed;
         }
+        const int sliderTop = 3;
+        const int sliderBottom = -7;
         public static bool Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             UI.BeginHorizontal(options);
-            UI.Label(title.cyan(), UI.Width(300));
+            using (UI.VerticalScope(UI.Width(300))) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop - 1));
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             UI.Space(25);
-            float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
+            float newValue = value;
+            using (UI.VerticalScope(UI.Width(200))) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop + 4));
+                newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             UI.Space(25);
-            UI.FloatTextField(ref newValue, null, UI.Width(75));
+            using (UI.VerticalScope(UI.Width(75))) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop + 2));
+                UI.FloatTextField(ref newValue, null, UI.Width(75));
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             if (units.Length > 0)
                 UI.Label($"{units}".orange().bold(), UI.Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
             UI.Space(25);
-            UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+            using (UI.VerticalScope(UI.AutoWidth())) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop - 0));
+                UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             UI.EndHorizontal();
             bool changed = value != newValue;
             value = newValue;
@@ -197,7 +217,11 @@ namespace ModKit {
             if (min < 0)
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             UI.BeginHorizontal(options);
-            UI.Label(title.cyan(), UI.Width(300));
+            using (UI.VerticalScope(UI.Width(300))) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop - 1));
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             UI.Space(25);
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var offset = 1;
@@ -205,14 +229,27 @@ namespace ModKit {
             var logMin = 100f * (float)Math.Log10(min + offset);
             var logMax = 100f * (float)Math.Log10(max + offset);
             var logValue = 100f * (float)Math.Log10(value + offset);
-            var logNewValue = (float)(GL.HorizontalSlider(logValue, logMin, logMax, UI.Width(200)));
+            var logNewValue = logValue;
+            using (UI.VerticalScope(UI.Width(200))) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop + 4));
+                logNewValue = (float)(GL.HorizontalSlider(logValue, logMin, logMax, UI.Width(200)));
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             var newValue = (float)Math.Round(Math.Pow(10, logNewValue / 100f) - offset, places);
             UI.Space(25);
-            UI.FloatTextField(ref newValue, null, UI.Width(75));
+            using (UI.VerticalScope(UI.Width(75))) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop + 2));
+                UI.FloatTextField(ref newValue, null, UI.Width(75));
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             if (units.Length > 0)
                 UI.Label($"{units}".orange().bold(), UI.Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
             UI.Space(25);
-            UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+            using (UI.VerticalScope(UI.AutoWidth())) {
+                UI.Space(UnityModManager.UI.Scale(sliderTop + 0));
+                UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            }
             UI.EndHorizontal();
             bool changed = value != newValue;
             value = newValue;

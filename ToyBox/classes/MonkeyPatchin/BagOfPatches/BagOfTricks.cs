@@ -7,6 +7,7 @@ using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
 using Kingmaker.UnitLogic.Alignments;
 using ModKit;
+using UnityModManagerNet;
 using static ModKit.UI;
 
 namespace ToyBox {
@@ -126,11 +127,25 @@ namespace ToyBox {
                 () => UI.Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
                 () => UI.Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 0),
                 () => {
-                    UI.Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair, 0);
-                    UI.Space(25);
-                    UI.Label("This may require an area transition or reload to take effect".green());
+                    using (UI.VerticalScope()) {
+                        UI.Div(0, 25, 1280);
+                        UI.Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair, 0);
+                        UI.Label("This restores the orignal release Unfair Difficulty to the game (require an area transition or reload to take effect)".green());
+                        UI.Div(0, 25, 1280);
+                        UI.Space(5);
+                        using (UI.HorizontalScope()) {
+                            UI.Slider("Brutality Multiplier", ref settings.brutalDifficultyMultiplier, 0.5f, 7f, 1f, 1, "", UI.Width((450)));
+                            UI.Space(25);
+                            RarityType rarity = (RarityType)(1 + settings.brutalDifficultyMultiplier);
+                            using (UI.VerticalScope(UI.AutoWidth())) {
+                                UI.Space(UnityModManager.UI.Scale(3));
+                                UI.Label($"{rarity} Brutality".Rarity(rarity).bold(), UI.largeStyle, UI.AutoWidth());
+                            }
+                        }
+                        UI.Div(0, -20, 1280);
+                        UI.Space(15);
+                    }
                 },
-                () => UI.Slider("Brutal Unfair Difficulty Multiplier", ref settings.brutalDifficultyMultiplier, 1f, 5f, 1f, 1, "", UI.Width((450))),
                 () => UI.Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", UI.Width((450))),
                 () => {
                     UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.Width(450));
