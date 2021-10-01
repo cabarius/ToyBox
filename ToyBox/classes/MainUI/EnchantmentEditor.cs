@@ -19,7 +19,7 @@ namespace ToyBox.classes.MainUI {
         public static Settings settings => Main.settings;
 
         #region GUI
-        public static BlueprintItemWeaponReference basicSpikeShield = new BlueprintItemWeaponReference() { deserializedGuid = BlueprintGuid.Parse("98a0dc03586a6d04791901c41700e516") }; //SpikedLightShieldPlus1
+        public static BlueprintItemWeapon basicSpikeShield = ResourcesLibrary.TryGetBlueprint<BlueprintItemWeapon>("62c90581f9892e9468f0d8229c7321c4"); //StandardWeaponLightShield
 
         public static int selectedItemType;
         public static int selectedItemIndex;
@@ -114,15 +114,16 @@ namespace ToyBox.classes.MainUI {
                                         UI.Label("Shield".orange(), UI.Width(100));
                                         TargetItemGUI(shield.ArmorComponent);
                                     }
-                                    using (UI.HorizontalScope()) {
-                                        UI.Label("Spikes".orange(), UI.Width(100));
-                                        if (shield.WeaponComponent != null) {
+                                    if (shield.WeaponComponent != null) {
+                                        using (UI.HorizontalScope()) {
+                                            UI.Label("Spikes".orange(), UI.Width(100));
                                             TargetItemGUI(shield.WeaponComponent);
-                                            //UI.ActionButton("Remove Spikes", () => shield.WeaponComponent = null, UI.AutoWidth());
                                         }
-                                        else {
-                                            //UI.ActionButton("Add Spikes", () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
-                                        }
+                                        UI.ActionButton("Remove Spikes", () => shield.WeaponComponent = null, UI.AutoWidth());
+                                    }
+                                    else {
+                                        UI.Label($"{shield.Blueprint.WeaponComponent?.name}");
+                                        UI.ActionButton("Add Spikes", () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
                                     }
                                 }
                             }
@@ -394,6 +395,7 @@ namespace ToyBox.classes.MainUI {
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {
             Dictionary<ItemEnchantment, bool> enchantments = new Dictionary<ItemEnchantment, bool>();
+            if (item == null) return enchantments;
             var base_enchantments = item.Blueprint.Enchantments;
             foreach (var enchantment in item.Enchantments) {
                 enchantments.Add(enchantment, !base_enchantments.Contains(enchantment.Blueprint));
