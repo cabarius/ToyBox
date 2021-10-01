@@ -1,6 +1,7 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
 using Kingmaker.UI.Common;
@@ -18,6 +19,8 @@ namespace ToyBox.classes.MainUI {
         public static Settings settings => Main.settings;
 
         #region GUI
+        public static BlueprintItemWeaponReference basicSpikeShield = new BlueprintItemWeaponReference() { deserializedGuid = BlueprintGuid.Parse("98a0dc03586a6d04791901c41700e516") }; //SpikedLightShieldPlus1
+
         public static string searchText = "";
         public static int selectedItemType;
         public static int selectedItemIndex;
@@ -106,12 +109,31 @@ namespace ToyBox.classes.MainUI {
 
                             UI.Label(item.Name.bold(), UI.Width(300));
                             UI.Space(20);
-                            TargetGUI(item);
-                            if (item is ItemEntityWeapon weapon && weapon.Second != null) {
+
+                            if (item is ItemEntityShield shield) {
+                                TargetGUI(shield.ArmorComponent);
                                 UI.Space(20);
-                                UI.Label(("2nd ".orange() + item.Name).bold(), UI.Width(300));
+                                if (shield.WeaponComponent != null) {
+                                    UI.Label("Weapon Part".orange().bold(), UI.Width(300));
+                                    UI.Space(20);
+                                    TargetGUI(shield.WeaponComponent);
+                                    UI.ActionButton("Remove Weapon Part", () => shield.WeaponComponent = null, UI.AutoWidth());
+                                }
+                                else {
+                                    UI.ActionButton("Add Weapon Part", () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
+                                }
+                            }
+                            else if (item is ItemEntityWeapon weapon) {
+                                TargetGUI(weapon);
                                 UI.Space(20);
-                                TargetGUI(weapon.Second);
+                                if (weapon.Second != null) {
+                                    UI.Label("2nd Weapon Part".orange().bold(), UI.Width(300));
+                                    UI.Space(20);
+                                    TargetGUI(weapon.Second);
+                                }
+                            }
+                            else {
+                                TargetGUI(item);
                             }
                         }
                         UI.Space(25);
@@ -181,7 +203,6 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static void ItemGUI() {
-            var selectedItemEnchantments = selectedItem?.Enchantments.Select(e => e.Blueprint).ToHashSet();
             UI.Div(5);
             for (int i = 0; i < filteredEnchantments.Count; i++) {
                 var enchant = filteredEnchantments[i];
@@ -190,20 +211,39 @@ namespace ToyBox.classes.MainUI {
                     UI.Space(5);
                     UI.Label(title, UI.Width(400));
 
-                    UI.ActionButton("Add", () => AddClicked(i), UI.Width(100));
-                    if (selectedItemEnchantments != null && selectedItemEnchantments.Contains(enchant)) {
-                        UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(100));
-                    }
-                    else {
-                        UI.Space(104);
-                    }
-                    if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
-                        UI.ActionButton("Sec. Add", () => AddClicked(i, true), UI.Width(100));
-                        if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant)) {
-                            UI.ActionButton("Sec. Remove", () => RemoveClicked(i, true), UI.Width(100));
+                    if (selectedItem != null) {
+                        var shield = selectedItem as ItemEntityShield;
+                        var weapon = selectedItem as ItemEntityWeapon;
+                        // first part
+                        UI.ActionButton("Add", () => AddClicked(i), UI.Width(100));
+                        if (shield != null && shield.ArmorComponent.Enchantments.Any(e => e.Blueprint == enchant)) {
+                            UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(100));
+                        }
+                        else if (selectedItem.Enchantments.Any(e => e.Blueprint == enchant)) {
+                            UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(100));
                         }
                         else {
                             UI.Space(104);
+                        }
+
+                        // second part
+                        if (shield?.WeaponComponent != null) {
+                            UI.ActionButton("Sec. Add", () => AddClicked(i, true), UI.Width(100));
+                            if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant)) {
+                                UI.ActionButton("Sec. Remove", () => RemoveClicked(i, true), UI.Width(100));
+                            }
+                            else {
+                                UI.Space(104);
+                            }
+                        }
+                        else if (weapon?.Second != null) {
+                            UI.ActionButton("Sec. Add", () => AddClicked(i, true), UI.Width(100));
+                            if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant)) {
+                                UI.ActionButton("Sec. Remove", () => RemoveClicked(i, true), UI.Width(100));
+                            }
+                            else {
+                                UI.Space(104);
+                            }
                         }
                     }
 
@@ -271,7 +311,14 @@ namespace ToyBox.classes.MainUI {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
-            if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
+            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+                if (!second)
+                    AddEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                else
+                    AddEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                editedItem = shield;
+            }
+            else if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
                 AddEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
             }
@@ -285,6 +332,13 @@ namespace ToyBox.classes.MainUI {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
+            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+                if (!second)
+                    RemoveEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                else
+                    RemoveEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                editedItem = shield;
+            }
             if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
                 RemoveEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
