@@ -22,7 +22,6 @@ Ver 1.3.17
             2   - Brutal (As released with double Unfair bug)
             3+  - Applies the Unfair modifiers 3 or more times
         Provide a clear title for the Brutality Levels (Unfair, Brutal, Uncommon, Rare, Epic, etc)
-    
     Fixed issue causing some uncommon items to show green circles but not green titles. This means rarity for weapons and armor now show up correctly in Enchantment. Sandal apoligizes for misrepresenting your items...
     Cleaned up UI around spellbook Edit toggle
     Improved the look and layout of all Sliders

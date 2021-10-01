@@ -63,6 +63,8 @@ namespace ToyBox.BagOfPatches {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");
                         objFX.GetComponent<Image>().color = color;
                     } else {
+                        if (rarity >= RarityType.Uncommon) // Make sure things uncommon or better get their color circles despite not being magic. Colored loot offers sligtly different UI assumptions
+                            __instance.SlotVM.IsMagic.SetValueAndForceNotify(true);
                         var obj = __instance.m_MagicLayer.gameObject;
                         obj.GetComponent<Image>().color = colorTranslucent;
                         var objFX = __instance.m_MagicLayer.Find("MagicLayerFX");
