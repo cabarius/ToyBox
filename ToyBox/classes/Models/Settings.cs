@@ -189,6 +189,7 @@ namespace ToyBox {
         public bool showDivisions = true;
         public bool showFromAllSpellbooks = false;
 
+        public string searchTextEnchantments = "";
 
         // Previews (Dialogs, Events ,etc)
 

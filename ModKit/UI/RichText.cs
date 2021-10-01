@@ -26,6 +26,9 @@ namespace ModKit {
         public static string color(this string str, Color32 color) {
             return $"<color=#{color.r:X}{color.g:X}{color.b:X}{color.a:X}>{str}</color>";
         }
+        public static string color(this string str, Color color) {
+            return $"<color=#{color.r:X}{color.g:X}{color.b:X}{color.a:X}>{str}</color>";
+        }
         public static string white(this string s) { return s = s.color("white"); }
         public static string grey(this string s) { return s = s.color("#A0A0A0FF"); }
         public static string red(this string s) { return s = s.color("#C04040E0"); }

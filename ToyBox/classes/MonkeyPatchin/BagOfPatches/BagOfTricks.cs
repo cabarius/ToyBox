@@ -5,8 +5,10 @@ using System.Linq;
 using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
+using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic.Alignments;
 using ModKit;
+using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
 
@@ -128,27 +130,57 @@ namespace ToyBox {
                 () => UI.Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 0),
                 () => {
                     using (UI.VerticalScope()) {
-                        UI.Div(0, 25, 1280);
-                        UI.Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair, 0);
-                        UI.Label("This restores the orignal release Unfair Difficulty to the game (require an area transition or reload to take effect)".green());
-                        UI.Div(0, 25, 1280);
-                        UI.Space(5);
+
                         using (UI.HorizontalScope()) {
-                            UI.Slider("Brutality Multiplier", ref settings.brutalDifficultyMultiplier, 0.5f, 7f, 1f, 1, "", UI.Width((450)));
-                            UI.Space(25);
-                            RarityType rarity = (RarityType)(1 + settings.brutalDifficultyMultiplier);
-                            using (UI.VerticalScope(UI.AutoWidth())) {
-                                UI.Space(UnityModManager.UI.Scale(3));
-                                UI.Label($"{rarity} Brutality".Rarity(rarity).bold(), UI.largeStyle, UI.AutoWidth());
+                            using (UI.VerticalScope()) {
+                                UI.Div(0, 25, 1280);
+                                if (UI.Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair, 0)) {
+                                    EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
+                                        h.HandleDifficultyChanged();
+                                        Main.SetNeedsResetGameUI();
+                                    }));
+                                }
+                                UI.Space(15);
+                                UI.Label("This allows you to play with the originally released Unfair difficulty. ".green() + "Note:".orange().bold() + "This Unfair difficulty was bugged and applied the intended difficulty modifers twice. ToyBox allows you to keep playing at this Brutal difficulty level and beyond.  Use the slider below to select your desired Brutality Level".green(), UI.Width(1200));
+                                UI.Space(15);
+                                using (UI.HorizontalScope()) {
+                                    if (UI.Slider("Brutality Level", ref settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", UI.Width((450)))) {
+                                        EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
+                                            h.HandleDifficultyChanged();
+                                            Main.SetNeedsResetGameUI();
+                                        }));
+                                    }
+                                    UI.Space(25);
+                                    var brutaltiy = settings.brutalDifficultyMultiplier;
+                                    string label;
+                                    string suffix = Math.Abs(brutaltiy - Math.Floor(brutaltiy)) <= float.Epsilon ? "" : "+";
+                                    switch (brutaltiy) {
+                                        case float level when level < 2.0:
+                                            label = $"Unfair{suffix}".Rarity(RarityType.Common);
+                                            break;
+                                        case float level when level < 3.0:
+                                            label = $"Brutal{suffix}";
+                                            break;
+                                        default:
+                                            RarityType rarity = (RarityType)(brutaltiy);
+                                            label = $"{rarity}{suffix}".Rarity(rarity);
+                                            break;
+                                    }
+                                    using (UI.VerticalScope(UI.AutoWidth())) {
+                                        UI.Space(UnityModManager.UI.Scale(3));
+                                        UI.Label(label.bold(), UI.largeStyle, UI.AutoWidth());
+                                    }
+                                }
+                                UI.Space(-10);
                             }
                         }
-                        UI.Div(0, -20, 1280);
+                        UI.Div(0, 25, 1280);
                         UI.Space(15);
                     }
                 },
                 () => UI.Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", UI.Width((450))),
                 () => {
-                    UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 2, "", UI.Width(450));
+                    UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 1, "", UI.Width(450));
                     UI.Space(25);
                     UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
                 },

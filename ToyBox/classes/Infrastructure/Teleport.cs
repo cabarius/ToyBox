@@ -106,7 +106,7 @@ namespace ToyBox {
 
                 }
                 globalMapController.StartTravels();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStarted((IGlobalMapTraveler)globalMapView.State.Player, false)));
+                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>(h => h.HandleGlobalMapPlayerTravelStarted(globalMapView.State.Player, false));
                 globalMapView.State.Player.SetCurrentPosition(new GlobalMapPosition(destination));
                 globalMapView.GetPointView(destination)?.OpenOutgoingEdges((GlobalMapPointView)null);
                 globalMapView.UpdatePawnPosition();

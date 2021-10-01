@@ -50,7 +50,14 @@ namespace ToyBox {
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
         public static bool NeedsActionInit = true;
-        public static bool NeedsResetGameUI = false;
+        private static bool needsResetGameUI = false;
+        private static bool resetRequested = false;
+        private static DateTime resetRequestTime = DateTime.Now;
+        public static void SetNeedsResetGameUI() {
+            resetRequested = true;
+            resetRequestTime = DateTime.Now;
+            Main.Log($"resetRequested - {resetRequestTime}");
+        }
         public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
         static Exception caughtException = null;
@@ -187,11 +194,20 @@ namespace ToyBox {
                 BagOfTricks.OnLoad();
                 NeedsActionInit = false;
             }
-            if (NeedsResetGameUI) {
+            if (resetRequested) {
+                var timeSinceRequest = DateTime.Now.Subtract(resetRequestTime).TotalMilliseconds;
+                //Main.Log($"timeSinceRequest - {timeSinceRequest}");
+                if (timeSinceRequest > 1000) {
+                    Main.Log($"resetExecuted - {timeSinceRequest}".cyan());
+                    needsResetGameUI = true;
+                    resetRequested = false;
+                }
+            }
+            if (needsResetGameUI) {
                 Game.Instance.ScheduleAction(() => {
-                    NeedsResetGameUI = false;
+                    needsResetGameUI = false;
                     Game.ResetUI();
-                    
+
                     // TODO - Find out why the intiative tracker comes up when I do Game.ResetUI.  The following kludge makes it go away
 
                     var canvas = Game.Instance?.UI?.Canvas?.transform;

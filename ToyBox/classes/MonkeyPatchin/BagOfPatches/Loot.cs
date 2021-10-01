@@ -1,13 +1,11 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Items;
 using Kingmaker.Items.Parts;
-using Kingmaker.UI.Common;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._PCView.Slots;
@@ -49,15 +47,17 @@ namespace ToyBox.BagOfPatches {
                 } else if (__instance.SlotVM.IsScroll) {
                     __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
                 }
-                if (settings.toggleColorLootByRarity && __instance.Item != null) { 
-                    var component = __instance.Item.Blueprint.GetComponent<AddItemShowInfoCallback>();
-                    ItemPartShowInfoCallback cb = __instance.Item.Get<ItemPartShowInfoCallback>();
+                var item = __instance.Item;
+                if (settings.toggleColorLootByRarity && item != null) { 
+                    var component = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
+                    ItemPartShowInfoCallback cb = item.Get<ItemPartShowInfoCallback>();
                     if (cb != null && (!cb.m_Settings.Once || !cb.m_Triggered)) {
                         // This forces the item to display as notable
                         __instance.SlotVM.IsNotable.SetValueAndForceNotify(true);
                     }
-                    var rarity = __instance.Item.Rarity();
+                    var rarity = item.Rarity();
                     var color = rarity.color();
+                    //Main.Log($"ItemSlotView_RefreshItem_Patch - {item.Name} - {color}");
                     var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
                     if (rarity == RarityType.Notable) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");
@@ -76,14 +76,14 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntity __instance, ref string __result) {
                 if (settings.toggleColorLootByRarity && __result != null && __result.Length > 0) {
                     var bp = __instance.Blueprint;
-                    if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) return;
-                    if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) return;
                     var rarity = __instance.Rarity();
+                    if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic && rarity < RarityType.Uncommon) return;
+                    if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic && rarity < RarityType.Uncommon) return;
                     var result = __result.Rarity(rarity);
-                    //Main.Log($"Item Entity - Name: {__result} - {rarity.ToString()} -> {result}");
+                    //Main.Log($"ItemEntity_Name_Patch - Name: {__result} type:{__instance.GetType().FullName} - {rarity.ToString()} -> {result}");
                     __result = result;
                 }
             }
         }
-    }
+        }
 }

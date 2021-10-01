@@ -51,16 +51,16 @@ namespace ToyBox {
         }
         public static int Rating(this BlueprintItem bp, ItemEntity item = null) {
             var rating = 0;
-            var enchantValue = 0;
             try {
+                int itemRating = 0;
+                int bpRating = 0;
                 if (item != null) {
-                    enchantValue = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
-                    //Main.Log($"item enchantValue: {enchantValue}");
-                } else {
-                    enchantValue = 10 * bp.CollectEnchantments().Sum((e) => e.EnchantmentCost);
-                    //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
+                    itemRating = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
+                   //Main.Log($"item enchantValue: {enchantValue}");
                 }
-                rating = enchantValue;
+                bpRating = 10 * bp.CollectEnchantments().Sum((e) => e.EnchantmentCost);
+                //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
+                rating = Math.Max(itemRating, bpRating);
             }
             catch {
             }
@@ -71,7 +71,6 @@ namespace ToyBox {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
             } else if (rating == 0 && bp is BlueprintItemEquipment equipBP) {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
-                var rarity = rating.Rarity();
             }
 #if false
             Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");

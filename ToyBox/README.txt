@@ -15,10 +15,22 @@ Now with 300+ Cheats, Tweaks and Quality of Life Improvements
     Quest Resolution: 1
 
 Ver 1.3.17
-    Added more explainer text for Brutal Unfair
-    Gave Brutal Difficulty Multiplier a bit more fun feedback for the Brutality level
-    Expanded Brutality range from Trash (0.5) to Goldly
+    Brutal Unfair Difficulty & Brutal Level Slider
+        Improved explainer text for Brutal Unfair Difficulty to describe how Unfair was applying Unfair Modifiers twice and that Owlcat fixed the bug to only apply them once.
+        Changed slider values as follows
+            1   - Unfair (Current Game)
+            2   - Brutal (As released with double Unfair bug)
+            3+  - Applies the Unfair modifiers 3 or more times
+        Provide a clear title for the Brutality Levels (Unfair, Brutal, Uncommon, Rare, Epic, etc)
+    
+    Fixed issue causing some uncommon items to show green circles but not green titles. This means rarity for weapons and armor now show up correctly in Enchantment. Sandal apoligizes for misrepresenting your items...
+    Cleaned up UI around spellbook Edit toggle
     Improved the look and layout of all Sliders
+    Enchantment Editor
+        (Truinto) Added support for enchanting double ended weapons
+        Made search text persistent in settings
+        Added Search Button and Match Count
+        Misc UI cleanup
     (ArcaneTrixter) Handled additional edge cases around factions for Crusade Power Multiplier; should properly make anything that isn't explicitly player faction get enemy multiplier.
 Ver 1.3.16
     Critical - fixed crasher triggered on rest and other situations when you use belt auto refill

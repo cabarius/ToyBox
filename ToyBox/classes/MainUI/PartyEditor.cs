@@ -182,13 +182,13 @@ namespace ToyBox {
                         if (isWide) {
                             if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600))) {
                                 ch.Descriptor.CustomName = name;
-                                Main.NeedsResetGameUI = true;
+                                Main.SetNeedsResetGameUI();
                             }
                         }
                         else
                             if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.Width(230))) {
                             ch.Descriptor.CustomName = name;
-                            Main.NeedsResetGameUI = true;
+                            Main.SetNeedsResetGameUI();
                         }
                     }
                     else {
@@ -522,9 +522,9 @@ namespace ToyBox {
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
                         using (UI.HorizontalScope()) {
-                            UI.SelectionGrid(ref selectedSpellbook, titles, 7, UI.Width(1581));
+                            UI.SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), UI.AutoWidth());
                             if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
-                            UI.DisclosureToggle("Edit", ref editSpellbooks);
+                            UI.DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
                         }
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         if (editSpellbooks) {

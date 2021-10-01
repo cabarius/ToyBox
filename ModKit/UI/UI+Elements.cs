@@ -30,16 +30,20 @@ namespace ModKit {
                 return _buttonStyle;
             } }
         private static GUIStyle _largeStyle;
+
         public static GUIStyle largeStyle {
             get {
                 if (_largeStyle == null)
                     _largeStyle = new GUIStyle(GUI.skin.box) {
                         richText = true
                     };
-                _largeStyle.contentOffset = new Vector2(0, UnityModManager.UI.Scale(-6));
-                _largeStyle.fontSize = UnityModManager.UI.Scale(22);
+                _largeStyle.fixedHeight = UnityModManager.UI.Scale(24);
+                //_largeStyle.contentOffset = new Vector2(0, UnityModManager.UI.Scale(-6));
+                _largeStyle.padding = new RectOffset(0, 0, UnityModManager.UI.Scale(-3), 0);
+                _largeStyle.clipOffset = new Vector2(0, UnityModManager.UI.Scale(3));
+                _largeStyle.fontSize = UnityModManager.UI.Scale(21);
                 _largeStyle.fontStyle = FontStyle.Bold;
-                _largeStyle.fixedHeight = UnityModManager.UI.Scale(36);
+                _largeStyle.normal.background = GUI.skin.label.normal.background;
 
                 return _largeStyle;
             }

@@ -212,11 +212,11 @@ namespace ToyBox.BagOfPatches {
                 __result.HPMultiplier = hp * settings.enemyBaseHitPointsMultiplier;
 
                 if (settings.toggleBrutalUnfair) {
-                    __result.BasicStatBonusMultiplier = Mathf.RoundToInt(2 * (1+ settings.brutalDifficultyMultiplier));
-                    __result.DerivativeStatBonusMultiplier = Mathf.RoundToInt(2 * settings.brutalDifficultyMultiplier);
-                    __result.HPMultiplier = Mathf.RoundToInt(__result.HPMultiplier * settings.brutalDifficultyMultiplier);
-                    __result.AbilityDCBonus = Mathf.RoundToInt(4 * settings.brutalDifficultyMultiplier);
-                    __result.SkillCheckDCBonus = Mathf.RoundToInt(4 * settings.brutalDifficultyMultiplier);
+                    __result.BasicStatBonusMultiplier = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
+                    __result.DerivativeStatBonusMultiplier = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
+                    //__result.HPMultiplier = Mathf.RoundToInt(__result.HPMultiplier * settings.brutalDifficultyMultiplier);
+                    __result.AbilityDCBonus = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
+                    __result.SkillCheckDCBonus = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
                 }
             }
         }
