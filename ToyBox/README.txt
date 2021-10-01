@@ -27,10 +27,11 @@ Ver 1.3.17
     Cleaned up UI around spellbook Edit toggle
     Improved the look and layout of all Sliders
     Enchantment Editor
-        (Truinto) Added support for enchanting double ended weapons
-        Made search text persistent in settings
+        Search now updates as you type
         Added Search Button and Match Count
+        Made search text persistent in settings
         Misc UI cleanup
+        (Truinto) Added support for enchanting double ended weapons
     (ArcaneTrixter) Handled additional edge cases around factions for Crusade Power Multiplier; should properly make anything that isn't explicitly player faction get enemy multiplier.
 Ver 1.3.16
     Critical - fixed crasher triggered on rest and other situations when you use belt auto refill

@@ -47,7 +47,7 @@ namespace ToyBox {
                 }
             }
             matchCount = filtered.Count();
-            filteredBPs = filtered.Take(searchLimit).OrderBy(bp => bp.name).ToArray();
+            filteredBPs = filtered.OrderBy(bp => bp.name).Take(searchLimit).ToArray();
             BlueprintListUI.needsLayout = true;
         }
         static public void OnGUI<T>(String callerKey,
