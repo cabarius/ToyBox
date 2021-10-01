@@ -1,6 +1,7 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
 using Kingmaker.UI.Common;
@@ -18,6 +19,8 @@ namespace ToyBox.classes.MainUI {
         public static Settings settings => Main.settings;
 
         #region GUI
+        public static BlueprintItemWeaponReference basicSpikeShield = new BlueprintItemWeaponReference() { deserializedGuid = BlueprintGuid.Parse("98a0dc03586a6d04791901c41700e516") }; //SpikedLightShieldPlus1
+
         public static int selectedItemType;
         public static int selectedItemIndex;
         public static int selectedEnchantIndex;
@@ -199,13 +202,13 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static void EnchantmentsListGUI() {
-            var selectedItemEnchantments = selectedItem?.Enchantments.Select(e => e.Blueprint).ToHashSet();
+            UI.Div(5);
             for (int i = 0; i < filteredEnchantments.Count; i++) {
                 var enchant = filteredEnchantments[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
                 using (UI.HorizontalScope()) {
-                    UI.Label(title, UI.Width(450));
-                    UI.Space(25);
+                    UI.Space(5);
+                    UI.Label(title, UI.Width(400));
                     if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
                         UI.ActionButton("Add Main", () => AddClicked(i), UI.Width(150));
                         if (selectedItemEnchantments != null && selectedItemEnchantments.Contains(enchant))
@@ -292,7 +295,14 @@ namespace ToyBox.classes.MainUI {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
-            if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
+            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+                if (!second)
+                    AddEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                else
+                    AddEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                editedItem = shield;
+            }
+            else if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
                 AddEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
             }
@@ -306,6 +316,13 @@ namespace ToyBox.classes.MainUI {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
+            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+                if (!second)
+                    RemoveEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                else
+                    RemoveEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                editedItem = shield;
+            }
             if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
                 RemoveEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
