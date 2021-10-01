@@ -11,6 +11,7 @@ using Kingmaker.Blueprints.Items.Components;
 using ModKit;
 using ToyBox;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Blueprints.Items.Armors;
 
 namespace ToyBox {
     public enum RarityType {
@@ -75,6 +76,9 @@ namespace ToyBox {
 #if false
             Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");
 #endif
+            if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) rating = Math.Min(rating , 9);
+            if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) rating = Math.Min(rating, 9);
+
             return rating;
         }
         public static RarityType Rarity(this BlueprintItem bp) {
