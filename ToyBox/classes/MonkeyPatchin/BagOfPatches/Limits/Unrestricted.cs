@@ -117,7 +117,7 @@ namespace ToyBox.BagOfPatches {
         public static class Spellbook_CasterLevel_Patch {
             public static void Postfix(ref int __result, Spellbook __instance) {
                 if (settings.toggleUncappedCasterLevel) {
-                    __result += __instance.m_BaseLevelInternal - __instance.BaseLevel;
+                    __result += __instance.m_BaseLevelInternal - __instance.BaseLevel - __instance.Blueprint.CasterLevelModifier;
                 }
             }
         }

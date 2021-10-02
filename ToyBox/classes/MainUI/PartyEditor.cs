@@ -559,8 +559,14 @@ namespace ToyBox {
 
                                 UI.Space(20);
                                 if (ch.Spellbooks.Where(x => x.IsStandaloneMythic && !spellbook.IsStandaloneMythic && x.Blueprint.CharacterClass != null).Any(y => y.Blueprint.CharacterClass == ch.Progression.GetMythicToMerge()?.CharacterClass)) {
-                                    UI.ActionButton("Merge Mythic Levels and Selected Spellbook", () => CasterHelpers.ForceSpellbookMerge(spellbook), UI.AutoWidth());
-                                    UI.Label("Warning: This is irreversible. Please save before continuing!".Orange());
+                                    using (UI.VerticalScope()) {
+                                        using (UI.HorizontalScope()) {
+                                            UI.ActionButton("Merge Mythic Levels and Selected Spellbook", () => CasterHelpers.ForceSpellbookMerge(spellbook), UI.AutoWidth());
+                                            UI.Label("Warning: This is irreversible. Please save before continuing!".Orange());
+                                        }
+
+                                        UI.Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up.", UI.Width(850));
+                                    }
                                 }
                             }
                             SelectedSpellbook[ch.HashKey()] = spellbook;
