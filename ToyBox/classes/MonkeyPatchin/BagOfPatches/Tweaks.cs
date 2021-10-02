@@ -539,11 +539,10 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        public static class UnityEntityData_CanRollPerception_Extension {
+        public static class UnitEntityData_CanRollPerception_Extension {
             public static bool TriggerReroll = false;
             public static bool CanRollPerception(UnitEntityData unit) {
                 if (TriggerReroll) {
-                    TriggerReroll = false;
                     return true;
                 }
 
@@ -554,7 +553,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(PartyPerceptionController), "Tick")]
         public static class PartyPerceptionController_Tick_Patch {
             public static MethodInfo HasMotionThisTick_Method = AccessTools.DeclaredMethod(typeof(UnitEntityData), "get_HasMotionThisTick");
-            public static MethodInfo CanRollPerception_Method = AccessTools.DeclaredMethod(typeof(UnityEntityData_CanRollPerception_Extension), "CanRollPerception");
+            public static MethodInfo CanRollPerception_Method = AccessTools.DeclaredMethod(typeof(UnitEntityData_CanRollPerception_Extension), "CanRollPerception");
 
             static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
                 foreach (CodeInstruction instr in instructions) {
@@ -564,6 +563,10 @@ namespace ToyBox.BagOfPatches {
                         yield return instr;
                     }
                 }
+            }
+
+            static void Postfix() {
+                UnitEntityData_CanRollPerception_Extension.TriggerReroll = false;
             }
         }
     }

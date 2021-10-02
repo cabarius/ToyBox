@@ -107,7 +107,7 @@ namespace ToyBox {
                 obj.LastPerceptionRollRank = new Dictionary<UnitReference, int>();
             }
 
-            Tweaks.UnityEntityData_CanRollPerception_Extension.TriggerReroll = true;
+            Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
         }
         public static void RemoveAllBuffs() {
             foreach (UnitEntityData target in Game.Instance.Player.Party) {
