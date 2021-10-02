@@ -306,5 +306,13 @@ namespace ToyBox {
             }
             return true;
         }
+
+        public static void ApplyTimeScale() {
+            float timeScale = Main.settings.timeScaleMultiplier;
+            if (Main.settings.toggleTimeScaleMultiplierMultiplier) {
+                timeScale *= Main.settings.timeScaleMultiplierMultiplier;
+            }
+            Game.Instance.TimeController.DebugTimeScale = timeScale;
+        }
     }
 }

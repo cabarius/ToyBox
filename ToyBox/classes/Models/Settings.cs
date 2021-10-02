@@ -141,6 +141,8 @@ namespace ToyBox {
         public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
+        public float timeScaleMultiplierMultiplier = 1;
+        public bool toggleTimeScaleMultiplierMultiplier = false;
         public float arcanistSpellslotMultiplier = 1;
         public float brutalDifficultyMultiplier = 1;
         public float turnBasedCombatStartDelay = 4;
