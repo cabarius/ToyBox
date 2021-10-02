@@ -6,7 +6,7 @@
 * **Loot Checklist**: 2
 * **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
 * **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
-*  **Crusade**: 25
+* **Crusade**: 25
 * **Quest Resolution**: 1
 
 **Please backup early and backup often.**
