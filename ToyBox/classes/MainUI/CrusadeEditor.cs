@@ -160,6 +160,20 @@ public static class CrusadeEditor {
                     }
                 },
                 () => UI.Label("Multiplies build time by (1 + modifier). -1 will make new buildings instant.".cyan()),
+            () => {
+                using (UI.HorizontalScope()) {
+                    UI.Label("Date".cyan(), UI.Width(150));
+                    UI.Label(
+                        Game.Instance.BlueprintRoot.Calendar.GetDateText(
+                            KingdomState.Instance.Date - Game.Instance.BlueprintRoot.Calendar.GetStartDate(),
+                            GameDateFormat.Full, true
+                        ).orange().bold(), UI.Width(200));
+                    UI.ActionButton($"+1 Day", () => { Actions.KingdomTimelineAdvanceDays(1); }, UI.AutoWidth());
+                    UI.ActionButton($"+1 Month", () => {
+                        Actions.KingdomTimelineAdvanceDays(KingdomState.Instance.DaysTillNextMonth);
+                    }, UI.AutoWidth());
+                }
+            },
             () => { }
         );
 
