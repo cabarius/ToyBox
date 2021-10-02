@@ -45,28 +45,27 @@
 
 * **Note**: Patch 1.0.7c-e patch of the game introduced a few issues impacting ToyBox. Me and my team are working on resolving these as quickly as we can.  Please help out by filing issues here: https://github.com/cabarius/ToyBox/issues
 * Bag of Tricks
-    * Allow Shift Click To Transfer Entire Stack - Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
-    * Moved Game Time Scale Slider into Quality of Life
-    * Fixed an issue with "Refill consumables in belt slots" that would cause items to disappear 
-            from inventory if you shifted an item and then immediately triggered a battle through dialog
-
+  * Allow Shift Click To Transfer Entire Stack 
+    * Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
+  * Moved Game Time Scale Slider into Quality of Life
+  * Fixed an issue with "Refill consumables in belt slots" that would cause items to disappear from inventory if you shifted an item and then immediately triggered a battle through dialog
 * Loot Coloring
-    * Fixed issue that caused notable items to no longer show their special highlight
-    * Darkened trash color
+  * Fixed issue that caused notable items to no longer show their special highlight
+  * Darkened trash color
 
 * Level Up
-    * You can now unlock individual mythic paths
-    * Made mythic path unlock more robust and refresh the UI to reflect the new unlocks without reloading
-    * Changed "Make All Feat Selections Optionsl" to "Make All Feature Selections Optional"
-    * Fixed bug that prevented mythic level up from happening with multiclass enabled
+  * You can now unlock individual mythic paths
+  * Made mythic path unlock more robust and refresh the UI to reflect the new unlocks without reloading
+  * Changed "Make All Feat Selections Optionsl" to "Make All Feature Selections Optional"
+  * Fixed bug that prevented mythic level up from happening with multiclass enabled
 
-* Party Editor 
-    * You can now see and change your gender in Stats. This may help you do same gender romances
-    * Changing a character's name immediately refreshes the tool tips and other UI
-    * You can now hit +1 to level up multiple times before going to level up screen
-    * Reworked Level Up UI to give clear feedback about how many levels you have given yourself
-    * Renamed "Levels Like a Legendary Hero" to "Allow Levels Past 20" and added some green explainer text
-    * Moved it to just under Multiple Classes Per Level Up
+* Party Editor
+  * You can now see and change your gender in Stats. This may help you do same gender romances
+  * Changing a character's name immediately refreshes the tool tips and other UI
+  * You can now hit +1 to level up multiple times before going to level up screen
+  * Reworked Level Up UI to give clear feedback about how many levels you have given yourself
+  * Renamed "Levels Like a Legendary Hero" to "Allow Levels Past 20" and added some green explainer text
+  * Moved it to just under Multiple Classes Per Level Up
 
 * Allow Achievements While Using Mods now also marks your save file as unmodded so you can continue to earn achievements after disabling ToyBox (as long as you disable all other mods)
 * (Vek17) Added Turn Based Combat Delay slider to Bag of Tricks > Quality of Life
@@ -93,15 +92,14 @@
 **Ver 1.3.13**
 
 * Sandal says `Enchantment`!
-    * Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye
-             brave crusaders with the power of item Enchantment
-    * This is a powerful yet easy to use enchantment editor available in a new top level tab called 'Enchantment'
-    * Special thanks to Truinto for delivering awesome base code and Narria for polishing the UI
+  * Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye brave crusaders with the power of item Enchantment
+  * This is a powerful yet easy to use enchantment editor available in a new top level tab called 'Enchantment'
+  * Special thanks to Truinto for delivering awesome base code and Narria for polishing the UI
 
 * Updated item rarity to account for added enchantments either by Sandal or other sources
 * Party Editor Improvements
-    * You can now rename character, pets and others under your control
-    * Units you add to your party don't run away when you leave the area
+  * You can now rename character, pets and others under your control
+  * Units you add to your party don't run away when you leave the area
 
 * Added pagination to Search 'n Pick so now you can go page by page or slide through more than 1000 search results
 * Added experimental Show Tree in Party Editor > Char > Facts
@@ -143,9 +141,8 @@
 **Ver 1.3.9**
 
 * Made Alignment section in Bag of Tricks
-    * Fixing alignment shifts for neutral good and similar alignments
-    * Toggle allowing you to Prevent alignment shifts
-
+  * Fixing alignment shifts for neutral good and similar alignments
+  * Toggle allowing you to Prevent alignment shifts
 * Added per character alignment locking in Party Editor > Char > Stats
 * Books and other items that have info triggers are flagged as notable and show a circle around it
 * Changed coloring for notable items to be a distinct lime green
@@ -156,9 +153,8 @@
 **Ver 1.3.8**
 
 * Loot Colors and Filters
-    * ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
-    * Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
-
+  * ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
+  * Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
 * "Identify All" added to Bag of Tricks > Common
 * Added quality of life tweak to let you shift click to use items in your inventory
 * Split Tweaks into Quality of Life and Cheats to make it less huge
@@ -245,17 +241,14 @@
 * (ArcaneTrixter) This increases the speed at which generals level up and the amount of units spawned by features like Necromancy after battles. I pegged it to the existing experience multiplier to be consistent, but it could be its own multiplier if others prefer.
 
 **Ver 1.3.0**
-
 * Multiple Classes On Level Up (Gestalting) is live.
-        This is a complex new feature so it is still marked experimental
-        Note that configuration such as which classes you will multiclass on level up has been reset. 
-        Any past results of multiclassing will remain intact however.
-
+    * This is a complex new feature so it is still marked experimental
+    * Note that configuration such as which classes you will multiclass on level up has been reset. 
+    * Any past results of multiclassing will remain intact however.
 * Cleaned up Multiclass UI for release
 * Archetypes now work in char gen and fixed other bugs with multiclass
 * New tweak in Level up to let you hit next on any feature selector that runs out of feats. 
-        This is activated automatically if feat selection multiplier is greater than 1
-
+  * This is activated automatically if feat selection multiplier is greater than 1
 * Additional tweak to let you skip any feat selection you wish
 * Improved run speed multiplier to work when moving and now when looting chests
 * Fixed 'Whole Team Moves At Same Speed' to only happen when it is ticked.
@@ -296,10 +289,11 @@
 **Ver 1.2.10**
 * Added feature to exclude classes in character level calculation, which helps gestalt class tinkering
 * Search 'n Pick - Update match count when you change collation category
-*  Fixed Performance issue caused by showing combat challenge rating in party editor so removed it for now
-*  Search 'n Pick - Update match count when you change collation category
+  * Fixed Performance issue caused by showing combat challenge rating in party editor so removed it for now
+  * Update match count when you change collation category
 * Raised max caster level to 20 for spellbook calculations (thanks Delth)
 * Made buff length multiplier not apply to harmful buffs (thanks Delth)
+
 **Ver 1.2.9**
 
 * Renamed 'Cheap Tricks' Tab to 'Bag of Tricks' in honor of m0nster and the great mod that helped make ToyBox what it is today
@@ -353,7 +347,6 @@
 * Fixed disappearing doll in inventory screen and map refresh bugs due to NoFogOfWar flag
 
 **Ver 1.2.0**
-
 * Ported to Beta 2
 * UI improvements
     * More beautiful check-boxes and disclosure controls
@@ -373,7 +366,6 @@
     * Start and complete quests, quest objectives (Experimental)
 
 **Ver 1.1.11**
-
 * Getting ready for 1.2.0 but doing a pre-release as 1.1.11
 * ﻿Significant Improvements to scrolling speed and other aspects of performance in Search 'n Pick and Party Editor
 * Moved Level Up related tweaks to a new tab called 'Level Up'
@@ -386,14 +378,12 @@
 * You can now add BlueprintActivatableAbility
 * Added category for browsing Wrath's in memory cache
 * Experimental Multiclass on level up preview (experimental binary only)
-   ﻿   ﻿This is very limited right now as it only gives you the classes
-   ﻿   ﻿It does not let you choose feats, abilities, spells
-      ﻿﻿If you want to check it out please download the side experimental version from nexus
-
+  * ﻿This is very limited right now as it only gives you the classes
+  * ﻿It does not let you choose feats, abilities, spells
+  * ﻿﻿If you want to check it out please download the side experimental version from nexus
 * Various other small improvements
 
 **Ver 1.1.10**
-
 * Tweak for autoloading last save on app launch
 * Improved layout for mod window sizes < 2000 and < 1600
 * Reverted mouse wheel patch that broke horizontal scrolling
@@ -409,15 +399,13 @@
 * Multiplier Sliders should work better for adjusting for small and big values
 * Fixed bug with item sell price multiplier where it was selling for too much when multiplier is 1
 * Mouse Wheel scrolling should work reliably now
-**
-Ver 1.1.8**
 
+**Ver 1.1.8**
 * Added Dice Roll Tweaks to Cheap Tricks
 * Added friendly (Non Hostile) as a category to which you can apply tweaks
 * Fixed bug where mercenaries where getting main character build points instead of mercenary
 
 **Ver 1.1.7**
-
 * Added Attack of Opportunity Disable to Cheap Tricks
 * Can now choose Alignment in Party Editor > Stats
 * Can now choose Size in Party Editor > Stats
