@@ -13,6 +13,10 @@
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
+**Ver 1.3.18** (Coming Soon)
+* (mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
+* (mafemergency) Added a timescale multiplier option with bindable key
+
 **Ver 1.3.17**
  * Brutal Unfair Difficulty & Brutal Level Slider
     * Improved explainer text for Brutal Unfair Difficulty to describe how Unfair was applying Unfair Modifiers twice and that Owlcat fixed the bug to only apply them once.
