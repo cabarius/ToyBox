@@ -94,6 +94,9 @@ namespace ToyBox {
                             UI.Space(50);
                             UI.ActionButton(lockAction.name, () => { lockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
                             UI.Space(100);
+#if DEBUG
+                            UI.Label(flagBP.GetDescription().green());
+#endif
                         }
                         else {
                             var unlockIndex = titles.IndexOf("Unlock");
@@ -102,6 +105,7 @@ namespace ToyBox {
                             UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
                             UI.Space(100);
                         }
+                        remWidth -= 300;
                     }
                     else {
                         for (int ii = 0; ii < maxActions; ii++) {

@@ -19,7 +19,8 @@ namespace ToyBox {
         // cheats combat
         const string RestAll = "Rest All";
         const string Empowered = "Empowered";
-        const string FullBuffPlease = "Full Buff Please";
+        const string FullBuffPlease = "Full Buffs Please";
+        const string GoddesBuffs = "Buff Like A Godess";
         const string RemoveBuffs = "Remove Buffs";
         const string RemoveDeathsDoor = "Remove Deaths Door";
         const string KillAllEnemies = "Kill All Enemies";
@@ -40,6 +41,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
             KeyBindings.RegisterAction(Empowered, () => CheatsCombat.Empowered(""));
             KeyBindings.RegisterAction(FullBuffPlease, () => CheatsCombat.FullBuffPlease(""));
+            KeyBindings.RegisterAction(GoddesBuffs, () => CheatsCombat.Iddqd(""));
             KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
             KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
             KeyBindings.RegisterAction(KillAllEnemies, () => CheatsCombat.KillAll());
@@ -91,6 +93,7 @@ namespace ToyBox {
                 () => UI.BindableActionButton(RestAll),
                 () => UI.BindableActionButton(Empowered),
                 () => UI.BindableActionButton(FullBuffPlease),
+                () => UI.BindableActionButton(GoddesBuffs),
                 () => UI.BindableActionButton(RemoveBuffs),
                 () => UI.BindableActionButton(RemoveDeathsDoor),
                 () => UI.BindableActionButton(KillAllEnemies),
