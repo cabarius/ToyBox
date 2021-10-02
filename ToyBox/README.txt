@@ -33,6 +33,7 @@ Ver 1.3.17
         Added Search Button and Match Count
         Made search text persistent in settings
         Misc UI cleanup
+        (Truinto) Added support for enchanting shields
         (Truinto) Added support for enchanting double ended weapons
     (ArcaneTrixter) Handled additional edge cases around factions for Crusade Power Multiplier; should properly make anything that isn't explicitly player faction get enemy multiplier.
 Ver 1.3.16

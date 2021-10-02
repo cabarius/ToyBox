@@ -102,6 +102,7 @@ namespace ToyBox.classes.MainUI {
                     if (selectedItem != null) {
                         var item = selectedItem;
                         //UI.Label("Target".cyan());
+                        UI.Div();
                         using (UI.HorizontalScope(GUI.skin.box, UI.MinHeight(125))) {
                             var rarity = item.Rarity();
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
@@ -114,16 +115,18 @@ namespace ToyBox.classes.MainUI {
                                         UI.Label("Shield".orange(), UI.Width(100));
                                         TargetItemGUI(shield.ArmorComponent);
                                     }
+                                    UI.Div();
                                     if (shield.WeaponComponent != null) {
                                         using (UI.HorizontalScope()) {
                                             UI.Label("Spikes".orange(), UI.Width(100));
                                             TargetItemGUI(shield.WeaponComponent);
                                         }
-                                        UI.ActionButton("Remove Spikes", () => shield.WeaponComponent = null, UI.AutoWidth());
+                                        UI.ActionButton("Remove ", () => shield.WeaponComponent = null, UI.AutoWidth());
                                     }
                                     else {
-                                        UI.Label($"{shield.Blueprint.WeaponComponent?.name}");
-                                        UI.ActionButton("Add Spikes", () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
+                                        string compTitle = shield.Blueprint.WeaponComponent?.name;
+                                        compTitle = compTitle != null ? " from " + compTitle.yellow() : "";
+                                        UI.ActionButton("Add "+ "Spikes".orange() + compTitle, () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
                                     }
                                 }
                             }
@@ -133,6 +136,7 @@ namespace ToyBox.classes.MainUI {
                                         UI.Label("Main".orange(), UI.Width(100));
                                         TargetItemGUI(weapon);
                                     }
+                                    UI.Div();
                                     using (UI.HorizontalScope()) {
                                         UI.Label("2nd".orange(), UI.Width(100));
                                         TargetItemGUI(weapon.Second);
@@ -143,6 +147,7 @@ namespace ToyBox.classes.MainUI {
                                 TargetItemGUI(item);
                             }
                         }
+                        UI.Div();
                     }
                     // Search Field and modifiers
                     UI.Space(10);
@@ -229,28 +234,28 @@ namespace ToyBox.classes.MainUI {
                     UI.Space(5);
                     UI.Label(title, UI.Width(400));
                     if (selectedItem is ItemEntityShield shield) {
-                        UI.ActionButton("Add Armor", () => AddClicked(i), UI.Width(150));
+                        UI.ActionButton("+ " + "Armor".orange(), () => AddClicked(i), UI.Width(150));
                         if (shield.ArmorComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                            UI.ActionButton("Rm Armor", () => RemoveClicked(i), UI.Width(150));
+                            UI.ActionButton("- " + "Armor".orange(), () => RemoveClicked(i), UI.Width(150));
                         else
                             UI.Space(154);
                         if (shield.WeaponComponent != null) {
-                            UI.ActionButton("Add Spikes", () => AddClicked(i, true), UI.Width(150));
+                            UI.ActionButton("+ "+ "Spikes".orange(), () => AddClicked(i, true), UI.Width(150));
                             if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                                UI.ActionButton("Rem Spikes", () => RemoveClicked(i, true), UI.Width(150));
+                                UI.ActionButton("- " + "Spikes".orange(), () => RemoveClicked(i, true), UI.Width(150));
                             else
                                 UI.Space(154);
                         }
                     }
                     else if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
-                        UI.ActionButton("Add Main", () => AddClicked(i), UI.Width(150));
+                        UI.ActionButton("+ " + "Main".orange(), () => AddClicked(i), UI.Width(150));
                         if (weapon.Enchantments.Any(e => e.Blueprint == enchant))
-                            UI.ActionButton("Rm Main", () => RemoveClicked(i), UI.Width(150));
+                            UI.ActionButton("- " + "Main".orange(), () => RemoveClicked(i), UI.Width(150));
                         else
                             UI.Space(154);
-                        UI.ActionButton("Add 2nd", () => AddClicked(i, true), UI.Width(150));
+                        UI.ActionButton("+ "+ "2nd".orange(), () => AddClicked(i, true), UI.Width(150));
                         if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant))
-                            UI.ActionButton("Rem 2nd", () => RemoveClicked(i, true), UI.Width(150));
+                            UI.ActionButton("- " + "2nd".orange(), () => RemoveClicked(i, true), UI.Width(150));
                         else
                             UI.Space(154);
                     }
