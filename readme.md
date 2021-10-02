@@ -36,7 +36,7 @@ Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteou
 1. build the solution debug and it will automatically build and install into the mod folder in the game
 1.  when you rebuild you can go to the mod and hit the reload button at the top to make it use the latest
 1. **Important** If you are adding a feature or fixing a bug please add a release note entry to the *ReadMe.md*.  This is how we tell our the world about your great work^_^
-    1. Find the highest release name near the top. It will look something like `**Ver 1.3.7**`. 
+    1. Find the highest release name near the top. It will look something like `**Ver 1.3.7 (Coming Soon)**`. 
     1. Usually it is 0.0.1 higher than the current release but please check on Nexus.  If not please add a new Version entry at the top for the next release using proper markdown. 
     1. Don't worry too much about getting this right as Narria Cabarius will clean this up on merge so when in doubt add a new version.
     1. format your release note like like this:
