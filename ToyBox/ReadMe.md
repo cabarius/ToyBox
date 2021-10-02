@@ -24,7 +24,7 @@
     * Loot Coloring
        * Made sure non magic items had rarity capped at Common
        * Titles and loot coloring should match now
-       * This means rarity for weapons and armor now show up correctly in Enchantment. Sandal apoligizes for misrepresenting your items...
+       * This means rarity for weapons and armor now show up correctly in Enchantment. Sandal apologizes for misrepresenting your items...
     * Cleaned up UI around spellbook Edit toggle
     * Improved the look and layout of all Sliders
     * Enchantment Editor
