@@ -10,10 +10,13 @@ using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.Controllers.Rest;
 using Kingmaker.Designers.EventConditionActionSystem.Events;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap.View;
+using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Tasks;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
@@ -333,6 +336,31 @@ namespace ToyBox {
                     }
                 }
             }
+        }
+        // can potentially go back in time but some parts of the game don't expect it
+        public static void KingdomTimelineAdvanceDays(int days) {
+            KingdomState kingdom = KingdomState.Instance;
+            KingdomTimelineManager timelineManager = kingdom.TimelineManager;
+
+            // from KingdomState.SkipTime
+            foreach (KingdomTask kingdomTask in kingdom.ActiveTasks) {
+                if (!kingdomTask.IsFinished && !kingdomTask.IsStarted && !kingdomTask.NeedsCommit && kingdomTask.HasAssignedLeader) {
+                    kingdomTask.Start(true);
+                }
+            }
+
+            // from KingdomTimelineManager.Advance
+            if (!KingdomTimelineManager.CanAdvanceTime()) {
+                return;
+            }
+            Game.Instance.AdvanceGameTime(TimeSpan.FromDays(days));
+            if (Game.Instance.IsModeActive(GameModeType.Kingdom)) {
+                foreach (UnitEntityData unitEntityData in Game.Instance.Player.AllCharacters) {
+                    RestController.ApplyRest(unitEntityData.Descriptor);
+                }
+            }
+
+            timelineManager.UpdateTimeline();
         }
     }
 }
