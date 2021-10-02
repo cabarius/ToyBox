@@ -14,6 +14,7 @@
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
 **Ver 1.3.18 (Coming Soon)**
+* Equipment No Weight tweek is back. It was stolen by quazits who work for the merchaant guild...
 * (mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
 * (mafemergency) Added a timescale multiplier option with bindable key
 
