@@ -1,10 +1,3 @@
-##### Table of Contents  
-[Headers](#headers)  
-[Emphasis](#emphasis)  
-...snip...    
-<a name="headers"/>
-## Headers
-
 **Now with 300+ Cheats, Tweaks and Quality of Life Improvements**
 
 * **Tweaks**: 98 (or 139 depending on how you count)
