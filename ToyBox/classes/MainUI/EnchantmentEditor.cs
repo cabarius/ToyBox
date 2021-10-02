@@ -1,6 +1,7 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
 using Kingmaker.UI.Common;
@@ -18,6 +19,8 @@ namespace ToyBox.classes.MainUI {
         public static Settings settings => Main.settings;
 
         #region GUI
+        public static BlueprintItemWeapon basicSpikeShield = ResourcesLibrary.TryGetBlueprint<BlueprintItemWeapon>("62c90581f9892e9468f0d8229c7321c4"); //StandardWeaponLightShield
+
         public static int selectedItemType;
         public static int selectedItemIndex;
         public static int selectedEnchantIndex;
@@ -105,11 +108,30 @@ namespace ToyBox.classes.MainUI {
                             var itemName = item.Blueprint.GetDisplayName();
                             UI.Label(item.Name.bold(), UI.Width(400));
                             UI.Space(25);
-                            if (item is ItemEntityWeapon weapon && weapon.Second != null) {
+                            if (item is ItemEntityShield shield) {
+                                using (UI.VerticalScope()) {
+                                    using (UI.HorizontalScope()) {
+                                        UI.Label("Shield".orange(), UI.Width(100));
+                                        TargetItemGUI(shield.ArmorComponent);
+                                    }
+                                    if (shield.WeaponComponent != null) {
+                                        using (UI.HorizontalScope()) {
+                                            UI.Label("Spikes".orange(), UI.Width(100));
+                                            TargetItemGUI(shield.WeaponComponent);
+                                        }
+                                        UI.ActionButton("Remove Spikes", () => shield.WeaponComponent = null, UI.AutoWidth());
+                                    }
+                                    else {
+                                        UI.Label($"{shield.Blueprint.WeaponComponent?.name}");
+                                        UI.ActionButton("Add Spikes", () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
+                                    }
+                                }
+                            }
+                            else if (item is ItemEntityWeapon weapon && weapon.Second != null) {
                                 using (UI.VerticalScope()) {
                                     using (UI.HorizontalScope()) {
                                         UI.Label("Main".orange(), UI.Width(100));
-                                        TargetItemGUI(item);
+                                        TargetItemGUI(weapon);
                                     }
                                     using (UI.HorizontalScope()) {
                                         UI.Label("2nd".orange(), UI.Width(100));
@@ -199,16 +221,30 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static void EnchantmentsListGUI() {
-            var selectedItemEnchantments = selectedItem?.Enchantments.Select(e => e.Blueprint).ToHashSet();
+            UI.Div(5);
             for (int i = 0; i < filteredEnchantments.Count; i++) {
                 var enchant = filteredEnchantments[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
                 using (UI.HorizontalScope()) {
-                    UI.Label(title, UI.Width(450));
-                    UI.Space(25);
-                    if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
+                    UI.Space(5);
+                    UI.Label(title, UI.Width(400));
+                    if (selectedItem is ItemEntityShield shield) {
+                        UI.ActionButton("Add Armor", () => AddClicked(i), UI.Width(150));
+                        if (shield.ArmorComponent.Enchantments.Any(e => e.Blueprint == enchant))
+                            UI.ActionButton("Rm Armor", () => RemoveClicked(i), UI.Width(150));
+                        else
+                            UI.Space(154);
+                        if (shield.WeaponComponent != null) {
+                            UI.ActionButton("Add Spikes", () => AddClicked(i, true), UI.Width(150));
+                            if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant))
+                                UI.ActionButton("Rem Spikes", () => RemoveClicked(i, true), UI.Width(150));
+                            else
+                                UI.Space(154);
+                        }
+                    }
+                    else if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
                         UI.ActionButton("Add Main", () => AddClicked(i), UI.Width(150));
-                        if (selectedItemEnchantments != null && selectedItemEnchantments.Contains(enchant))
+                        if (weapon.Enchantments.Any(e => e.Blueprint == enchant))
                             UI.ActionButton("Rm Main", () => RemoveClicked(i), UI.Width(150));
                         else
                             UI.Space(154);
@@ -220,7 +256,7 @@ namespace ToyBox.classes.MainUI {
                     }
                     else {
                         UI.ActionButton("Add", () => AddClicked(i), UI.Width(150));
-                        if (selectedItemEnchantments != null && selectedItemEnchantments.Contains(enchant))
+                        if (selectedItem.Enchantments.Any(e => e.Blueprint == enchant))
                             UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(150));
                         else
                             UI.Space(154);
@@ -292,7 +328,14 @@ namespace ToyBox.classes.MainUI {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
-            if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
+            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+                if (!second)
+                    AddEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                else
+                    AddEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                editedItem = shield;
+            }
+            else if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
                 AddEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
             }
@@ -306,6 +349,13 @@ namespace ToyBox.classes.MainUI {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
 
+            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+                if (!second)
+                    RemoveEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                else
+                    RemoveEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                editedItem = shield;
+            }
             if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
                 RemoveEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
@@ -345,6 +395,7 @@ namespace ToyBox.classes.MainUI {
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {
             Dictionary<ItemEnchantment, bool> enchantments = new Dictionary<ItemEnchantment, bool>();
+            if (item == null) return enchantments;
             var base_enchantments = item.Blueprint.Enchantments;
             foreach (var enchantment in item.Enchantments) {
                 enchantments.Add(enchantment, !base_enchantments.Contains(enchantment.Blueprint));
