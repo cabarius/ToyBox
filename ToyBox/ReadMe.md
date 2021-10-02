@@ -73,12 +73,11 @@
 **Ver 1.3.14**
 
 * Party Editor > Adding characters to the party
-    * Last change to add npcs to party broke when adding characters you have already recruited.
-    * You can now recruit NPCs that are not in your wider group
-    * Restored the previous Add functionality to add characters that you have aleady recruited
-    * Any char in your party with either have Add or Recruit but not both
-    * Colored both Recruit and Respec to cyan and made the warnings 
-
+  * Last change to add npcs to party broke when adding characters you have already recruited.
+  * You can now recruit NPCs that are not in your wider group
+  * Restored the previous Add functionality to add characters that you have aleady recruited
+  * Any char in your party with either have Add or Recruit but not both
+  * Colored both Recruit and Respec to cyan and made the warnings 
 * Added some more extensive debug logging for feature selection multiplier.  (working on a proper fix)
 * (ArcaneTrixter) Fixed Legend exp on level
 * (Delth) Added ability to add/remove skills from generals (works on currently selected army) - new selection type in Search'n'Pick
