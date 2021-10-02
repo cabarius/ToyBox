@@ -102,12 +102,10 @@ namespace ToyBox {
             UnityModManager.UI.Instance.ToggleWindow();
         }
         public static void RunPerceptionTriggers() {
-            if (!Game.Instance.Player.Party.Any()) { return; }
-            foreach (BlueprintComponent bc in Game.Instance.State.LoadedAreaState.Blueprint.CollectComponents()) {
-                if (bc.name.Contains("PerceptionTrigger")) {
-                    PerceptionTrigger pt = (PerceptionTrigger)bc;
-                    pt.OnSpotted.Run();
-                }
+            List<MapObjectEntityData> objs = new List<MapObjectEntityData>();
+            Game.Instance.LoadedAreaState.CollectAllEntities<MapObjectEntityData>(objs);
+            foreach(MapObjectEntityData obj in objs) {
+                obj.LastPerceptionRollRank = new Dictionary<UnitReference, int>();
             }
         }
         public static void RemoveAllBuffs() {
