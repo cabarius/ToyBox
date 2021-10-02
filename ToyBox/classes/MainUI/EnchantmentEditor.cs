@@ -27,7 +27,7 @@ namespace ToyBox.classes.MainUI {
         public static (string, string) renameState = (null, null);
         public static ItemEntity selectedItem = null;
         public static ItemEntity editedItem = null;
-
+        public static string itemSearchText = "";
         public static string[] ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType));
         private static ItemEntity[] inventory;
         private static List<BlueprintItemEnchantment> enchantments;
@@ -72,16 +72,20 @@ namespace ToyBox.classes.MainUI {
                         ref selectedItemType,
                         ItemTypeNames,
                         1,
-                        index => { },
+                        index => UpdateItems(index),
                         UI.buttonStyle,
                         UI.Width(150));
                 }
                 remainingWidth -= 250;
-
-                UpdateItems(selectedItemType); // maybe this should be cached?
                 UI.Space(10);
                 // Second column - Item Selection Grid
                 using (UI.VerticalScope(GUI.skin.box)) {
+                    UI.ActionTextField(
+                        ref itemSearchText,
+                        "itemSearhText",
+                        (text) => UpdateItems(selectedItemType),
+                        () => UpdateItems(selectedItemType),
+                        UI.Width(375));
                     if (inventory.Length > 0) {
                         UI.ActionSelectionGrid(
                             ref selectedItemIndex,
@@ -106,7 +110,6 @@ namespace ToyBox.classes.MainUI {
                         using (UI.HorizontalScope(GUI.skin.box, UI.MinHeight(125))) {
                             var rarity = item.Rarity();
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
-                            var itemName = item.Blueprint.GetDisplayName();
                             UI.Label(item.Name.bold(), UI.Width(400));
                             UI.Space(25);
                             if (item is ItemEntityShield shield) {
@@ -126,7 +129,7 @@ namespace ToyBox.classes.MainUI {
                                     else {
                                         string compTitle = shield.Blueprint.WeaponComponent?.name;
                                         compTitle = compTitle != null ? " from " + compTitle.yellow() : "";
-                                        UI.ActionButton("Add "+ "Spikes".orange() + compTitle, () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
+                                        UI.ActionButton("Add " + "Spikes".orange() + compTitle, () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
                                     }
                                 }
                             }
@@ -240,7 +243,7 @@ namespace ToyBox.classes.MainUI {
                         else
                             UI.Space(154);
                         if (shield.WeaponComponent != null) {
-                            UI.ActionButton("+ "+ "Spikes".orange(), () => AddClicked(i, true), UI.Width(150));
+                            UI.ActionButton("+ " + "Spikes".orange(), () => AddClicked(i, true), UI.Width(150));
                             if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant))
                                 UI.ActionButton("- " + "Spikes".orange(), () => RemoveClicked(i, true), UI.Width(150));
                             else
@@ -253,7 +256,7 @@ namespace ToyBox.classes.MainUI {
                             UI.ActionButton("- " + "Main".orange(), () => RemoveClicked(i), UI.Width(150));
                         else
                             UI.Space(154);
-                        UI.ActionButton("+ "+ "2nd".orange(), () => AddClicked(i, true), UI.Width(150));
+                        UI.ActionButton("+ " + "2nd".orange(), () => AddClicked(i, true), UI.Width(150));
                         if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant))
                             UI.ActionButton("- " + "2nd".orange(), () => RemoveClicked(i, true), UI.Width(150));
                         else
@@ -261,7 +264,7 @@ namespace ToyBox.classes.MainUI {
                     }
                     else {
                         UI.ActionButton("Add", () => AddClicked(i), UI.Width(150));
-                        if (selectedItem.Enchantments.Any(e => e.Blueprint == enchant))
+                        if (selectedItem?.Enchantments.Any(e => e.Blueprint == enchant) ?? false)
                             UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(150));
                         else
                             UI.Space(154);
@@ -288,8 +291,9 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static void UpdateItems(int index) {
+            var searchText = itemSearchText.ToLower();
             inventory = Game.Instance.Player.Inventory
-                            .Where(item => (int)item.Blueprint.ItemType == index)
+                            .Where(item => item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == index)
                             .OrderByDescending(item => item.Blueprint.Rarity())
                             .ToArray();
             if (editedItem != null) {
