@@ -210,8 +210,6 @@ namespace ToyBox {
                                 UI.Space(-10);
                             }
                         }
-                        UI.Div(0, 25, 1280);
-                        UI.Space(15);
                     }
                 },
             () => { }
