@@ -1,5 +1,5 @@
-**Now with 300+ Cheats, Tweaks and Quality of Life Improvements**
-
+# ToyBox
+#### Now with 300+ Cheats, Tweaks and Quality of Life Improvements
 * **Tweaks**: 98 (or 139 depending on how you count)
 * **Level Up & Multiclass**: 34 
 * **Party Editor**: 67
