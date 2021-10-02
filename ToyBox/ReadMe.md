@@ -456,7 +456,7 @@
 * Fixed Party Editor bug where it would get out of sync with the party, especially when loading other saves
 * ﻿Added Nearby Units and show distance to other units
 
-**Ver 1.1.0****
+**Ver 1.1.0**
 * Cheap Tricks
     * Ported ~3 dozen flags, multipliers, etc. patches from Bag of Tricks (see below for full list)
 * Search 'n Pick
@@ -565,7 +565,7 @@ Please also file any bugs you find [here](https://github.com/cabarius/ToyBox/is
 
 * **ArcaneTrixter** for many awesome improvements and bug fixes
 * **fire** & **m0nster** for lots of awesome code from bag of tricks
-* **[Truinto](https://github.com/cabarius/ToyBox/issues?q=is%3Apr+author%3ATruinto), Delth, Aphelion, fire **for great contributions to the ToyBox project
+* [Truinto](https://github.com/cabarius/ToyBox/issues?q=is%3Apr+author%3ATruinto), **Delth, Aphelion, fire **for great contributions to the ToyBox project
    **Owlcat Games** - for making fun and amazing games
    **Paizo** - for carrying the D20 3.5 torch
    Pathfinder Wrath of The Righteous Discord channel members**
