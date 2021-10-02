@@ -422,7 +422,7 @@
 
 * Fixed bug with meta magic where if Free Meta Magic is on it doubles the meta-magic and if off it hides it (I fixed this before but it was lost somewhere along the way)
 
-**Ver 1.1.4 **
+**Ver 1.1.4**
 *  ` (was Ver 1.1.3 but had the wrong version in Info.json so 1.1.3 is now a lost version)`
 * Party Editor > Classes
     * Can now adjust character level, mythic level, and induvial class level without triggering level up 
