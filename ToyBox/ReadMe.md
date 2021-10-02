@@ -18,7 +18,7 @@
 * **Equipment No Weight** tweek is back. It was stolen by quasits who work for the merchant guild...
 * Improved scrolling performance after searching for Paramterized Feats
 * (mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
-* (mafemergency) Added a timescale multiplier option with bindable key
+* (mafemergency) Added a alternate game timescale multiplier option and bindable key to toggle between them.  Useful for when you want to fast forward through things
 
 **Ver 1.3.17**
  * Brutal Unfair Difficulty & Brutal Level Slider

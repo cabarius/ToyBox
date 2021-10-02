@@ -167,7 +167,7 @@
     <Compile Include="classes\MainUI\FactsEditor.cs" />
     <Compile Include="classes\MainUI\Main.cs" />
     <Compile Include="classes\MainUI\BlueprintBrowser.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\BagOfTricks.cs" />
+    <Compile Include="classes\MainUI\BagOfTricks.cs" />
     <Compile Include="classes\MainUI\CharacterPicker.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor.cs" />

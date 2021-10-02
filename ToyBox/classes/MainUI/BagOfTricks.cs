@@ -14,7 +14,7 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public static class BagOfTricks {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         // cheats combat
         const string RestAll = "Rest All";
@@ -24,7 +24,7 @@ namespace ToyBox {
         const string RemoveDeathsDoor = "Remove Deaths Door";
         const string KillAllEnemies = "Kill All Enemies";
         const string SummonZoo = "Summon Zoo";
-        const string LobotomizeAllEnemies = "LobotomizeAllEnemies";
+        const string LobotomizeAllEnemies = "Lobotomize Enemies";
 
         // cheats common
         const string TeleportPartyToYou = "Teleport Party To You";
@@ -33,7 +33,7 @@ namespace ToyBox {
         const string ChangeParty = "Change Party";
 
         // other
-        const string TimeScaleMultToggle = "TimeScaleMultToggle";
+        const string TimeScaleMultToggle = "Main/Alt Timescale";
 
         public static void OnLoad() {
             // Combat
@@ -52,7 +52,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
             // Other
             KeyBindings.RegisterAction(TimeScaleMultToggle, () => {
-                settings.toggleTimeScaleMultiplierMultiplier = !settings.toggleTimeScaleMultiplierMultiplier;
+                settings.useAlternateTimeScaleMultiplier = !settings.useAlternateTimeScaleMultiplier;
                 Actions.ApplyTimeScale();
             });
         }
@@ -141,6 +141,31 @@ namespace ToyBox {
                 () => UI.Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 0),
                 () => {
                     using (UI.VerticalScope()) {
+                        UI.Div(0, 25, 1280);
+                        var useAlt = settings.useAlternateTimeScaleMultiplier;
+                        var mainTimeScaleTitle = "Game Time Scale";
+                        if (useAlt) mainTimeScaleTitle = mainTimeScaleTitle.grey();
+                        var altTimeScaleTitle = "Alternate Time Scale";
+                        if (!useAlt) altTimeScaleTitle = altTimeScaleTitle.grey();
+                        using (UI.HorizontalScope()) {
+                            UI.LogSlider(mainTimeScaleTitle, ref settings.timeScaleMultiplier, 0f, 20, 1, 1, "", UI.Width(450));
+                            UI.Space(25);
+                            UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
+                        }
+                        using (UI.HorizontalScope()) {
+                            UI.LogSlider(altTimeScaleTitle, ref settings.alternateTimeScaleMultiplier, 0f, 20, 5, 1, "", UI.Width(450));
+                        }
+                        using (UI.HorizontalScope()) {
+                            UI.BindableActionButton(TimeScaleMultToggle);
+                            UI.Space(-95);
+                            UI.Label("Bindable hot key to swap between main and alternate time scale multipliers".green());
+                        }
+                        UI.Div(0, 25, 1280);
+                    }
+                },
+                () => UI.Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", UI.Width((450))),
+                () => {
+                    using (UI.VerticalScope()) {
 
                         using (UI.HorizontalScope()) {
                             using (UI.VerticalScope()) {
@@ -189,19 +214,7 @@ namespace ToyBox {
                         UI.Space(15);
                     }
                 },
-                () => UI.Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", UI.Width((450))),
-                () => {
-                    UI.LogSlider("Game Time Scale", ref settings.timeScaleMultiplier, 0f, 20, 1, 1, "", UI.Width(450));
-                    UI.Space(25);
-                    UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
-                },
-                () => {
-                    UI.LogSlider("Game Time Scale Multiplier", ref settings.timeScaleMultiplierMultiplier, 0f, 20, 1, 2, "", UI.Width(450));
-                    UI.Space(25);
-                    UI.Label("Multiplies the above time scale setting when a hotkey is pressed".green());
-                },
-                () => { UI.KeyBindPicker("TimeScaleMultToggle", "Toggle", 50, 50); },
-                () => { }
+            () => { }
             );
             UI.Div(0, 25);
             UI.HStack("Alignment", 1,

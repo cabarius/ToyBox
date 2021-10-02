@@ -27,6 +27,8 @@ using Kingmaker.Globalmap.State;
 
 namespace ToyBox {
     public static class Actions {
+        public static Settings settings { get { return Main.settings; } }
+
         public static void UnlockAllBasicMythicPaths() {
             // TODO - do this right once I build the etude browser and understand this better
             UnlockAeon();
@@ -307,10 +309,9 @@ namespace ToyBox {
             return true;
         }
         public static void ApplyTimeScale() {
-            float timeScale = Main.settings.timeScaleMultiplier;
-            if (Main.settings.toggleTimeScaleMultiplierMultiplier) {
-                timeScale *= Main.settings.timeScaleMultiplierMultiplier;
-            }
+            float timeScale = settings.useAlternateTimeScaleMultiplier 
+                ? settings.alternateTimeScaleMultiplier
+                : settings.timeScaleMultiplier;
             Game.Instance.TimeController.DebugTimeScale = timeScale;
         }
         public static void LobotomizeAllEnemies() {
