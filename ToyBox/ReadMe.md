@@ -27,6 +27,7 @@
 * Improved scrolling performance after searching for Paramterized Feats
 * (Mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
 * (Mafemergency & Narria) Added a alternate game timescale multiplier option and bindable key to toggle between them.  Useful for when you want to fast forward through things
+* (Mafemergency) Fixed perception check rerolling
 * (ArcaneTrixter) Fix various issues with learning spells related to merging spellbooks and gestalt spellcasters. On leveling up, you should be prompted to pick spells as a caster of the appropriate caster level.
 * (ArcaneTrixter) Fixed small bug related to paladin/ranger caster level. Feel free to use the caster level cheats if you wish to continue playing with that!
 

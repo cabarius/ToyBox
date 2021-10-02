@@ -27,6 +27,7 @@ using UnityModManagerNet;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.Globalmap.State;
+using ToyBox.BagOfPatches;
 
 namespace ToyBox {
     public static class Actions {
@@ -102,11 +103,11 @@ namespace ToyBox {
             UnityModManager.UI.Instance.ToggleWindow();
         }
         public static void RunPerceptionTriggers() {
-            List<MapObjectEntityData> objs = new List<MapObjectEntityData>();
-            Game.Instance.LoadedAreaState.CollectAllEntities<MapObjectEntityData>(objs);
-            foreach(MapObjectEntityData obj in objs) {
+            foreach (MapObjectEntityData obj in Game.Instance.State.MapObjects) {
                 obj.LastPerceptionRollRank = new Dictionary<UnitReference, int>();
             }
+
+            Tweaks.UnityEntityData_CanRollPerception_Extension.TriggerReroll = true;
         }
         public static void RemoveAllBuffs() {
             foreach (UnitEntityData target in Game.Instance.Player.Party) {

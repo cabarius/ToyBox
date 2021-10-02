@@ -6,6 +6,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Cheats;
+using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap;
@@ -34,6 +35,7 @@ using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
 using Kingmaker.UI.IngameMenu;
 using System.Reflection;
+using System.Reflection.Emit;
 using Kingmaker.View.MapObjects;
 using Owlcat.Runtime.Core.Utils;
 using Kingmaker.Items;
@@ -43,6 +45,7 @@ using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using System.Linq;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.RuleSystem.Rules.Abilities;
+using UnityEngine;
 
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
@@ -533,6 +536,34 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 }
                 return true;
+            }
+        }
+
+        public static class UnityEntityData_CanRollPerception_Extension {
+            public static bool TriggerReroll = false;
+            public static bool CanRollPerception(UnitEntityData unit) {
+                if (TriggerReroll) {
+                    TriggerReroll = false;
+                    return true;
+                }
+
+                return unit.HasMotionThisTick;
+            }
+        }
+
+        [HarmonyPatch(typeof(PartyPerceptionController), "Tick")]
+        public static class PartyPerceptionController_Tick_Patch {
+            public static MethodInfo HasMotionThisTick_Method = AccessTools.DeclaredMethod(typeof(UnitEntityData), "get_HasMotionThisTick");
+            public static MethodInfo CanRollPerception_Method = AccessTools.DeclaredMethod(typeof(UnityEntityData_CanRollPerception_Extension), "CanRollPerception");
+
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+                foreach (CodeInstruction instr in instructions) {
+                    if (instr.Calls(HasMotionThisTick_Method)) {
+                        yield return new CodeInstruction(OpCodes.Call, CanRollPerception_Method);
+                    } else {
+                        yield return instr;
+                    }
+                }
             }
         }
     }
