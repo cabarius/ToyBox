@@ -16,6 +16,7 @@
 **Ver 1.3.18 (Coming Soon)**
 * **Enchantment**: Sandal knows you like to hoard loot so he will help you find items with a handy new Search field in the inventory column
 * **Equipment No Weight** tweek is back. It was stolen by quasits who work for the merchant guild...
+* Improved scrolling performance after searching for Paramterized Feats
 * (mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
 * (mafemergency) Added a timescale multiplier option with bindable key
 

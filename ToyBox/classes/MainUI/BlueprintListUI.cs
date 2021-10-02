@@ -22,6 +22,7 @@ namespace ToyBox {
         public static int maxActions = 0;
         public static bool needsLayout = true;
         public static int[] ParamSelected = new int[1000];
+        public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
 
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<SimpleBlueprint> blueprints,
@@ -67,8 +68,7 @@ namespace ToyBox {
                 using (UI.HorizontalScope()) {
                     UI.Space(indent);
                     var actions = blueprint.GetActions()
-                        .Where(action => action.canPerform(blueprint, ch))
-                        .ToArray();
+                        .Where(action => action.canPerform(blueprint, ch));
                     var titles = actions.Select(a => a.name);
                     var title = blueprint.NameSafe();
                     if (titles.Contains("Remove") || titles.Contains("Lock")) {
@@ -86,7 +86,7 @@ namespace ToyBox {
                         // special case this for now
                         if (lockIndex >= 0) {
                             var flags = Game.Instance.Player.UnlockableFlags;
-                            var lockAction = actions[lockIndex];
+                            var lockAction = actions.ElementAt(lockIndex);
                             UI.ActionButton("<", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) - 1); }, UI.Width(50));
                             UI.Space(25);
                             UI.Label($"{flags.GetFlagValue(flagBP)}".orange().bold(), UI.MinWidth(50));
@@ -97,7 +97,7 @@ namespace ToyBox {
                         }
                         else {
                             var unlockIndex = titles.IndexOf("Unlock");
-                            var unlockAction = actions[unlockIndex];
+                            var unlockAction = actions.ElementAt(unlockIndex);
                             UI.Space(240);
                             UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
                             UI.Space(100);
@@ -106,7 +106,7 @@ namespace ToyBox {
                     else {
                         for (int ii = 0; ii < maxActions; ii++) {
                             if (ii < actionCount) {
-                                BlueprintAction action = actions[ii];
+                                BlueprintAction action = actions.ElementAt(ii);
                                 // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
                                 if (action.name == "<" || action.name == ">") {
                                     UI.Space(174); continue;
@@ -176,7 +176,11 @@ namespace ToyBox {
                                 //UI.Space(indent + titleWidth - labelWidth - 25);
                                 UI.Label(content, UI.Width(labelWidth));
                                 UI.Space(25);
-                                string[] nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray();
+                                string[] nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
+                                if (nameStrings == null) {
+                                    nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray();
+                                    paramBPValueNames[paramBP] = nameStrings;
+                                }
                                 UI.ActionSelectionGrid(
                                     ref ParamSelected[currentCount],
                                     nameStrings,

@@ -126,11 +126,12 @@ namespace ToyBox {
                                                        (bp, ch, n, index) => ch.Progression.Features.RemoveFact(bp),
                                                        (bp, ch, index) => ch.Progression.Features.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Add", (bp, ch, n, index) => ch?.Descriptor?.AddFact<UnitFact>(bp, null,bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param),
-                                                       (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param ==bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param) == null);
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Add", 
+                (bp, ch, n, index) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param),
+                (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param) == null);
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove", (bp, ch, n, index) => ch?.Progression?.Features?.RemoveFact(ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param ==bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param)),
-                                                       (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param ==bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param) != null);
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove", (bp, ch, n, index) => ch?.Progression?.Features?.RemoveFact(ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param)),
+                                                       (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param) != null);
 
             BlueprintAction.Register<BlueprintFeature>("<",
                                                        (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
@@ -278,11 +279,11 @@ namespace ToyBox {
 
             BlueprintAction.Register<BlueprintUnlockableFlag>("Lock",
                 (bp, ch, n, index) => flags.Lock(bp),
-                (bp, ch, index) =>flags.IsUnlocked(bp));
+                (bp, ch, index) => flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>(">",
                 (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) + n),
-                (bp, ch, index) => flags.IsUnlocked(bp) );
+                (bp, ch, index) => flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>("<",
                 (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n),
@@ -321,7 +322,7 @@ namespace ToyBox {
                     Teleport.TeleportToGlobalMap(() => Teleport.TeleportToGlobalMapPoint(globalMapPoint));
                 }
             });
-            
+
             //Army
             BlueprintAction.Register<BlueprintArmyPreset>("Add", (bp, ch, n, l) => {
                 Actions.CreateArmy(bp);
