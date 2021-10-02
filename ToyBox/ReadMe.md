@@ -45,28 +45,28 @@
 
 * **Note**: Patch 1.0.7c-e patch of the game introduced a few issues impacting ToyBox. Me and my team are working on resolving these as quickly as we can.  Please help out by filing issues here: https://github.com/cabarius/ToyBox/issues
 * Bag of Tricks
-          - Allow Shift Click To Transfer Entire Stack - Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
-          - Moved Game Time Scale Slider into Quality of Life
-          - Fixed an issue with "Refill consumables in belt slots" that would cause items to disappear 
+    * Allow Shift Click To Transfer Entire Stack - Holding down shift lets you transfer whole stacks of items to the vendor and other similar things
+    * Moved Game Time Scale Slider into Quality of Life
+    * Fixed an issue with "Refill consumables in belt slots" that would cause items to disappear 
             from inventory if you shifted an item and then immediately triggered a battle through dialog
 
 * Loot Coloring
-          - Fixed issue that caused notable items to no longer show their special highlight
-          - Darkened trash color
+    * Fixed issue that caused notable items to no longer show their special highlight
+    * Darkened trash color
 
 * Level Up
-          - You can now unlock individual mythic paths
-          - Made mythic path unlock more robust and refresh the UI to reflect the new unlocks without reloading
-          - Changed "Make All Feat Selections Optionsl" to "Make All Feature Selections Optional"
-          - Fixed bug that prevented mythic level up from happening with multiclass enabled
+    * You can now unlock individual mythic paths
+    * Made mythic path unlock more robust and refresh the UI to reflect the new unlocks without reloading
+    * Changed "Make All Feat Selections Optionsl" to "Make All Feature Selections Optional"
+    * Fixed bug that prevented mythic level up from happening with multiclass enabled
 
 * Party Editor 
-          - You can now see and change your gender in Stats. This may help you do same gender romances
-          - Changing a character's name immediately refreshes the tool tips and other UI
-          - You can now hit +1 to level up multiple times before going to level up screen
-          - Reworked Level Up UI to give clear feedback about how many levels you have given yourself
-          - Renamed "Levels Like a Legendary Hero" to "Allow Levels Past 20" and added some green explainer text
-          - Moved it to just under Multiple Classes Per Level Up
+    * You can now see and change your gender in Stats. This may help you do same gender romances
+    * Changing a character's name immediately refreshes the tool tips and other UI
+    * You can now hit +1 to level up multiple times before going to level up screen
+    * Reworked Level Up UI to give clear feedback about how many levels you have given yourself
+    * Renamed "Levels Like a Legendary Hero" to "Allow Levels Past 20" and added some green explainer text
+    * Moved it to just under Multiple Classes Per Level Up
 
 * Allow Achievements While Using Mods now also marks your save file as unmodded so you can continue to earn achievements after disabling ToyBox (as long as you disable all other mods)
 * (Vek17) Added Turn Based Combat Delay slider to Bag of Tricks > Quality of Life
@@ -74,11 +74,11 @@
 **Ver 1.3.14**
 
 * Party Editor > Adding characters to the party
-           - Last change to add npcs to party broke when adding characters you have already recruited.
-           - You can now recruit NPCs that are not in your wider group
-           - Restored the previous Add functionality to add characters that you have aleady recruited
-           - Any char in your party with either have Add or Recruit but not both
-           - Colored both Recruit and Respec to cyan and made the warnings 
+    * Last change to add npcs to party broke when adding characters you have already recruited.
+    * You can now recruit NPCs that are not in your wider group
+    * Restored the previous Add functionality to add characters that you have aleady recruited
+    * Any char in your party with either have Add or Recruit but not both
+    * Colored both Recruit and Respec to cyan and made the warnings 
 
 * Added some more extensive debug logging for feature selection multiplier.  (working on a proper fix)
 * (ArcaneTrixter) Fixed Legend exp on level
@@ -93,15 +93,15 @@
 **Ver 1.3.13**
 
 * Sandal says `Enchantment`!
-           - Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye
+    * Sandal comes through an interplaner portal from Thedas (Dragon Age) and has blessed ye
              brave crusaders with the power of item Enchantment
-           - This is a powerful yet easy to use enchantment editor available in a new top level tab called 'Enchantment'
-           - Special thanks to Truinto for delivering awesome base code and Narria for polishing the UI
+    * This is a powerful yet easy to use enchantment editor available in a new top level tab called 'Enchantment'
+    * Special thanks to Truinto for delivering awesome base code and Narria for polishing the UI
 
 * Updated item rarity to account for added enchantments either by Sandal or other sources
 * Party Editor Improvements
-           - You can now rename character, pets and others under your control
-           - Units you add to your party don't run away when you leave the area
+    * You can now rename character, pets and others under your control
+    * Units you add to your party don't run away when you leave the area
 
 * Added pagination to Search 'n Pick so now you can go page by page or slide through more than 1000 search results
 * Added experimental Show Tree in Party Editor > Char > Facts
@@ -119,11 +119,11 @@
 * (ArcaneTrixter) Modified 'Disable Arcane Spell Failure' to set spell failure to 0 so you can Blink freely.
 * (ArcaneTrixter) No longer squaring the multiplier from 'Spells Per Day' when applying to spellbooks.
 * (Vek17) Fixed issues around the Feat Multiplier including
-         - All story companions feats/backgrounds/etc. 
-             - most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8. 
-             - This is retroactive if you ever level up in the future with the multiplier on.
-        - Messed up All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
-        - Caused certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
+  * All story companions feats/backgrounds/etc. 
+  * most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8
+  * This is retroactive if you ever level up in the future with the multiplier on.
+  * Messed up All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
+  * Caused certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
 
 **Ver 1.3.10**
 
@@ -143,8 +143,8 @@
 **Ver 1.3.9**
 
 * Made Alignment section in Bag of Tricks
-        - Fixing alignment shifts for neutral good and similar alignments
-        - Toggle allowing you to Prevent alignment shifts
+    * Fixing alignment shifts for neutral good and similar alignments
+    * Toggle allowing you to Prevent alignment shifts
 
 * Added per character alignment locking in Party Editor > Char > Stats
 * Books and other items that have info triggers are flagged as notable and show a circle around it
@@ -156,8 +156,8 @@
 **Ver 1.3.8**
 
 * Loot Colors and Filters
-        - ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
-        - Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
+    * ToyBox gives WoTR a Diablo 2/Borderlands style loot rarity and coloring system including
+    * Checkbox to have the game color your loot according to rarity in inventory, containers, etc.
 
 * "Identify All" added to Bag of Tricks > Common
 * Added quality of life tweak to let you shift click to use items in your inventory
