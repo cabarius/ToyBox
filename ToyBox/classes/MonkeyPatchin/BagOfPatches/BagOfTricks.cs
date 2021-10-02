@@ -32,6 +32,9 @@ namespace ToyBox {
         const string RerollPerception = "Reroll Perception";
         const string ChangeParty = "Change Party";
 
+        // other
+        const string TimeScaleMultToggle = "TimeScaleMultToggle";
+
         public static void OnLoad() {
             // Combat
             KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
@@ -47,6 +50,11 @@ namespace ToyBox {
             KeyBindings.RegisterAction(GoToGlobalMap, () => Teleport.TeleportToGlobalMap());
             KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
+            // Other
+            KeyBindings.RegisterAction(TimeScaleMultToggle, () => {
+                settings.toggleTimeScaleMultiplierMultiplier = !settings.toggleTimeScaleMultiplierMultiplier;
+                Actions.ApplyTimeScale();
+            });
         }
         public static void ResetGUI() { }
         public static void OnGUI() {
@@ -187,6 +195,12 @@ namespace ToyBox {
                     UI.Space(25);
                     UI.Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
                 },
+                () => {
+                    UI.LogSlider("Game Time Scale Multiplier", ref settings.timeScaleMultiplierMultiplier, 0f, 20, 1, 2, "", UI.Width(450));
+                    UI.Space(25);
+                    UI.Label("Multiplies the above time scale setting when a hotkey is pressed".green());
+                },
+                () => { UI.KeyBindPicker("TimeScaleMultToggle", "Toggle", 50, 50); },
                 () => { }
             );
             UI.Div(0, 25);
@@ -306,7 +320,7 @@ namespace ToyBox {
                 () => UI.LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", UI.AutoWidth()),
                 () => { }
                 );
-            Game.Instance.TimeController.DebugTimeScale = settings.timeScaleMultiplier;
+            Actions.ApplyTimeScale();
             UI.Div(0, 25);
             UI.HStack("Dice Rolls", 1,
                 () => UI.EnumGrid("All Attacks Hit", ref settings.allAttacksHit, 0, UI.AutoWidth()),
