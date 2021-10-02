@@ -125,7 +125,7 @@ namespace ToyBox.Multiclass {
                         List<AbilityData> known = spellbook1.SureKnownSpells(index).Where(x => !x.CopiedFromScroll).Distinct().ToList(); // Don't count scribed scrolls or free variants
                         int actual = known.Count(x => !x.IsFromMythicSpellList); // Don't count the spells from any merged mythic spellbooks
 #if DEBUG
-                        Main.Log($"SPELLBOOK: Giving {Math.Max(0, expectedCount - actual)} spells of level {index}; expected:{expectedCount} and actual:{actual}; known:{known.Count()}; special: {special}");
+                        Main.Log($"SPELLBOOK: Giving {Math.Max(0, expectedCount - actual)} spells of level {index}; expected:{expectedCount} and actual:{actual}; known:{known.Count()}");
 #endif
                         spellSelectionData.SetLevelSpells(index, Math.Max(0, expectedCount - actual));
                     }
