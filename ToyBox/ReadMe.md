@@ -567,13 +567,12 @@ Please also file any bugs you find [here](https://github.com/cabarius/ToyBox/is
 * **fire** & **m0nster** for lots of awesome code from bag of tricks
 * [Truinto](https://github.com/cabarius/ToyBox/issues?q=is%3Apr+author%3ATruinto), **Delth, Aphelion, fire** for great contributions to the ToyBox project
 * **Owlcat Games** - for making fun and amazing games
-   **Paizo** - for carrying the D20 3.5 torch
-   Pathfinder Wrath of The Righteous Discord channel members**
-**
-* **@Spacehamster** - awesome tutorials and taking time to teach me modding WoTR, and letting me port stuff from Kingdom Resolution Mod
-* **@m0nster** - for giving me permission to port stuff from Back of Tricks
-* **@Vek17, @Bubbles, @Balkoth, @swizzlewizzle** and the rest of our great Discord modding community - help, moral support and just general awesomeness
-* **@m0nster, @Hsinyu, @fireundubh** for Bag of Tricks which inspired me to get into modding WoTR because I missed this mod so much
+* **Paizo** - for carrying the D20 3.5 torch
+* Pathfinder Wrath of The Righteous Discord channel members
+  * **@Spacehamster** - awesome tutorials and taking time to teach me modding WoTR, and letting me port stuff from Kingdom Resolution Mod
+  * **@m0nster** - for giving me permission to port stuff from Back of Tricks
+  * **@Vek17, @Bubbles, @Balkoth, @swizzlewizzle** and the rest of our great Discord modding community - help, moral support and just general awesomeness
+  * **@m0nster, @Hsinyu, @fireundubh** for Bag of Tricks which inspired me to get into modding WoTR because I missed this mod so much
 * PS: Learn to mod Kingmaker Games at Spacehamster's [Modding Wiki](https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide )
 * Come visit the authors Narria et al on the [WoTR Discord](https://discord.gg/wotr)﻿
 
