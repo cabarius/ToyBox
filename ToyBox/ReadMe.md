@@ -21,20 +21,20 @@
         * 2   - Brutal (As released with double Unfair bug)
         * 3+  - Applies the Unfair modifiers 3 or more times
     * Provide a clear title for the Brutality Levels (Unfair, Brutal, Uncommon, Rare, Epic, etc)
-    * Loot Coloring
-       * Made sure non magic items had rarity capped at Common
-       * Titles and loot coloring should match now
-       * This means rarity for weapons and armor now show up correctly in Enchantment. Sandal apologizes for misrepresenting your items...
-    * Cleaned up UI around spellbook Edit toggle
-    * Improved the look and layout of all Sliders
-    * Enchantment Editor
-        * Search now updates as you type
-        * Added Search Button and Match Count
-        * Made search text persistent in settings
-        * Misc UI cleanup
-        * (Truinto) Added support for enchanting shields
-        * (Truinto) Added support for enchanting double ended weapons
-    * (ArcaneTrixter) Handled additional edge cases around factions for Crusade Power Multiplier; should properly make anything that isn't explicitly player faction get enemy multiplier.
+* Loot Coloring
+  * Made sure non magic items had rarity capped at Common
+  * Titles and loot coloring should match now
+    * This means rarity for weapons and armor now show up correctly in Enchantment. Sandal apologizes for misrepresenting your items...
+* Cleaned up UI around spellbook Edit toggle
+  * Improved the look and layout of all Sliders
+  * Enchantment Editor
+    * Search now updates as you type
+    * Added Search Button and Match Count
+    * Made search text persistent in settings
+    * Misc UI cleanup
+    * (Truinto) Added support for enchanting shields
+    * (Truinto) Added support for enchanting double ended weapons
+* (ArcaneTrixter) Handled additional edge cases around factions for Crusade Power Multiplier; should properly make anything that isn't explicitly player faction get enemy multiplier.
 
 **Ver 1.3.16**
 
