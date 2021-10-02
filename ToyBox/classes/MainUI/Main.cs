@@ -22,26 +22,7 @@ namespace ToyBox {
 #endif
     static class Main {
         static Harmony HarmonyInstance;
-        //// OwlCatMM
-        //public static OwlcatModification modEntry;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
-        //public static UnitEntityView entityView;
-        //public static void EnterPoint(OwlcatModification modification) {
-        //    try {
-        //        modEntry = modification;
-        //        var harmony = new Harmony("Respec");
-        //        harmony.PatchAll();
-        //        ///modification;
-        //        modification.OnGUI += OnGUI;
-        //        IsEnabled = true;
-        //        if (!Main.haspatched) {
-        //            Main.PatchLibrary();
-        //        }
-        //    }
-        //    catch (Exception e) {
-        //        throw e;
-        //    }
-        //}        // UMM
         static string modId;
         public static UnityModManager.ModEntry modEntry = null;
         public static Settings settings;

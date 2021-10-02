@@ -14,6 +14,7 @@
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
 **Ver 1.3.18 (Coming Soon)**
+* **Loot Colors** make scribable scrolls show up as uncommon
 * **Enchantment**: Sandal knows you like to hoard loot so he will help you find items with a handy new Search field in the inventory column
 * **Equipment No Weight** tweek is back. It was stolen by quasits who work for the merchant guild...
 * Improved scrolling performance after searching for Paramterized Feats

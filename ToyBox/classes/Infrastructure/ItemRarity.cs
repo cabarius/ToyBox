@@ -12,6 +12,7 @@ using ModKit;
 using ToyBox;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Armors;
+using Kingmaker.UI.Common;
 
 namespace ToyBox {
     public enum RarityType {
@@ -57,7 +58,12 @@ namespace ToyBox {
                 int bpRating = 0;
                 if (item != null) {
                     itemRating = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
-                   //Main.Log($"item enchantValue: {enchantValue}");
+                    //Main.Log($"item enchantValue: {enchantValue}");
+                    var currentCharacter = UIUtility.GetCurrentCharacter();
+                    var component = bp.GetComponent<CopyItem>();
+                    if (component != null && component.CanCopy(item, currentCharacter)) {
+                        itemRating = Math.Max(itemRating, 10);
+                    }
                 }
                 bpRating = 10 * bp.CollectEnchantments().Sum((e) => e.EnchantmentCost);
                 //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
