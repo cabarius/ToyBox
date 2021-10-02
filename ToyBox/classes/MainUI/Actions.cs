@@ -306,13 +306,32 @@ namespace ToyBox {
             }
             return true;
         }
-
         public static void ApplyTimeScale() {
             float timeScale = Main.settings.timeScaleMultiplier;
             if (Main.settings.toggleTimeScaleMultiplierMultiplier) {
                 timeScale *= Main.settings.timeScaleMultiplierMultiplier;
             }
             Game.Instance.TimeController.DebugTimeScale = timeScale;
+        }
+        public static void LobotomizeAllEnemies() {
+            foreach (UnitEntityData unit in Game.Instance.State.Units) {
+                if (unit.CombatState.IsInCombat &&
+                    unit.IsPlayersEnemy &&
+                    unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
+                    UnitDescriptor descriptor = unit.Descriptor;
+                    if(descriptor != null) {
+                        // removing the brain works better in RTWP, but gets stuck in turn based
+                        //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
+
+                        // add a bunch of conditions and hope for the best
+                        descriptor.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity);
+                        descriptor.State.AddCondition(UnitCondition.CantAct);
+                        descriptor.State.AddCondition(UnitCondition.CanNotAttack);
+                        descriptor.State.AddCondition(UnitCondition.CantMove);
+                        descriptor.State.AddCondition(UnitCondition.MovementBan);
+                    }
+                }
+            }
         }
     }
 }
