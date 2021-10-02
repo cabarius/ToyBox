@@ -565,8 +565,8 @@ Please also file any bugs you find [here](https://github.com/cabarius/ToyBox/is
 
 * **ArcaneTrixter** for many awesome improvements and bug fixes
 * **fire** & **m0nster** for lots of awesome code from bag of tricks
-* [Truinto](https://github.com/cabarius/ToyBox/issues?q=is%3Apr+author%3ATruinto), **Delth, Aphelion, fire **for great contributions to the ToyBox project
-   **Owlcat Games** - for making fun and amazing games
+* [Truinto](https://github.com/cabarius/ToyBox/issues?q=is%3Apr+author%3ATruinto), **Delth, Aphelion, fire** for great contributions to the ToyBox project
+* **Owlcat Games** - for making fun and amazing games
    **Paizo** - for carrying the D20 3.5 torch
    Pathfinder Wrath of The Righteous Discord channel members**
 **
