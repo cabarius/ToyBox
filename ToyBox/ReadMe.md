@@ -1,15 +1,17 @@
 ﻿**Now with 300+ Cheats, Tweaks and Quality of Life Improvements**
 
-* Tweaks: 98 (or 139 depending on how you count)
-* Level Up & Multiclass: 34 
-* Party Editor: 67
-* Search 'n Pick: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
-*  Crusade: 25
-* Quest Resolution: 1
+* **Tweaks**: 98 (or 139 depending on how you count)
+* **Level Up & Multiclass**: 34 
+* **Party Editor**: 67
+* **Loot Checklist**: 2
+* **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
+* **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
+*  **Crusade**: 25
+* **Quest Resolution**: 1
 
 **Please backup early and backup often.**
 
-**Important: Make sure you are on the latest version of the game 1.07f or newer
+**Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
 **Ver 1.3.17**
  * Brutal Unfair Difficulty & Brutal Level Slider
