@@ -20,6 +20,7 @@
 * Improved scrolling performance after searching for Paramterized Feats
 * (Mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
 * (Mafemergency & Narria) Added a alternate game timescale multiplier option and bindable key to toggle between them.  Useful for when you want to fast forward through things
+* (ArcaneTrixter) Fix various issues with learning spells related to merging spellbooks and gestalt spellcasters. On leveling up, you should be prompted to pick spells as a caster of the appropriate caster level.
 
 **Ver 1.3.17**
  * Brutal Unfair Difficulty & Brutal Level Slider

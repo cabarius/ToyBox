@@ -4,7 +4,6 @@ using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +13,30 @@ namespace ToyBox.classes.Infrastructure {
         public static Dictionary<UnitDescriptor, Dictionary<BlueprintSpellbook, int>> UnitBonusSpellLevels =
             new Dictionary<UnitDescriptor, Dictionary<BlueprintSpellbook, int>>();
         public static Dictionary<BlueprintSpellbook, int> GetOriginalCasterLevel(UnitDescriptor unit) {
+            int mythicLevel = 0;
+            BlueprintSpellbook mythicSpellbook = null;
             Dictionary<BlueprintSpellbook, int> casterLevelDictionary = new Dictionary<BlueprintSpellbook, int>();
             foreach (var classInfo in unit.Progression.Classes) {
+
+                if (classInfo.CharacterClass == BlueprintRoot.Instance.Progression.MythicStartingClass ||
+                    classInfo.CharacterClass == BlueprintRoot.Instance.Progression.MythicCompanionClass) {
+                    if (mythicSpellbook == null) {
+                        mythicLevel += classInfo.Level;
+                    }
+                    else {
+                        casterLevelDictionary[mythicSpellbook] += classInfo.Level;
+                    }
+                }
+
                 if (classInfo.Spellbook == null) {
                     continue;
                 }
 
                 int casterLevel = classInfo.Level + classInfo.Spellbook.CasterLevelModifier;
+                if (classInfo.CharacterClass.IsMythic) {
+                    casterLevel += mythicLevel;
+                    mythicSpellbook = classInfo.Spellbook;
+                }
 
                 var skipLevels = classInfo.CharacterClass.GetComponent<SkipLevelsForSpellProgression>();
                 
@@ -52,8 +68,8 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static int GetRealCasterLevel(UnitDescriptor unit, BlueprintSpellbook spellbook) {
-            GetOriginalCasterLevel(unit).TryGetValue(spellbook, out int level);
-            return level;
+            bool hasCasterLevel = GetOriginalCasterLevel(unit).TryGetValue(spellbook, out int level);
+            return hasCasterLevel ? level : 0;
         }
 
         public static void FindBonusLevels(UnitDescriptor unit) {
@@ -149,10 +165,6 @@ namespace ToyBox.classes.Infrastructure {
             if (classData == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
                 Main.Log("Can't merge because you don't have a mythic class / mythic spellbook!");
                 return;
-            }
-            var oldMythicSpellbook = unit.GetSpellbook(oldMythicSpellbookBp);
-            for (int i = 0; i < oldMythicSpellbook.m_KnownSpells.Length;i++) {
-                oldMythicSpellbook.GetKnownSpells(i).ForEach(x => spellbook.AddKnown(i, x.Blueprint));
             }
 
             classData.Spellbook = spellbook.Blueprint;
