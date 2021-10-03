@@ -19,7 +19,7 @@ namespace ToyBox {
         // cheats combat
         const string RestAll = "Rest All";
         const string Empowered = "Empowered";
-        const string FullBuffPlease = "Full Buffs Please";
+        const string FullBuffPlease = "Common Buffs";
         const string GoddesBuffs = "Buff Like A Godess";
         const string RemoveBuffs = "Remove Buffs";
         const string RemoveDeathsDoor = "Remove Deaths Door";
@@ -45,7 +45,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
             KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
             KeyBindings.RegisterAction(KillAllEnemies, () => CheatsCombat.KillAll());
-            KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
+            //KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
             KeyBindings.RegisterAction(LobotomizeAllEnemies, () => Actions.LobotomizeAllEnemies());
             // Common
             KeyBindings.RegisterAction(TeleportPartyToYou, () => Teleport.TeleportPartyToPlayer());
@@ -91,13 +91,13 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Combat", 2,
                 () => UI.BindableActionButton(RestAll),
-                () => UI.BindableActionButton(Empowered),
                 () => UI.BindableActionButton(FullBuffPlease),
+                () => UI.BindableActionButton(Empowered),
                 () => UI.BindableActionButton(GoddesBuffs),
                 () => UI.BindableActionButton(RemoveBuffs),
                 () => UI.BindableActionButton(RemoveDeathsDoor),
                 () => UI.BindableActionButton(KillAllEnemies),
-                () => UI.BindableActionButton(SummonZoo),
+                //() => UI.BindableActionButton(SummonZoo),
                 () => UI.BindableActionButton(LobotomizeAllEnemies),
                 () => { }
                 );
@@ -348,6 +348,8 @@ namespace ToyBox {
                 () => UI.EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Always Roll 20 Out Of Combat", ref settings.alwaysRoll20OutOfCombat, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Take 10 Out of Combat (Always)", ref settings.take10always, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Take 10 Out of Combat (Minimum)", ref settings.take10minimum, 0, UI.AutoWidth()),
                 () => { }
                 );
             UI.Div(0, 25);

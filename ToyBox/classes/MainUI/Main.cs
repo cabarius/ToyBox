@@ -164,6 +164,7 @@ namespace ToyBox {
         }
         static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
+            EnchantmentEditor.OnShowGUI();
         }
 
         static void OnHideGUI(UnityModManager.ModEntry modEntry) {
