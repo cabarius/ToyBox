@@ -19,6 +19,8 @@
 * **Party Editor** - Changed Stat < and > arrows to have a box background instead of the ugly buttons
 * **Army Editor**
   * Moved Armies into its own Tab
+  * Fixed bug where squads disclosure would never close
+  * You can now open one squad in your army and another on the demon armies
   * Reworked the layout to resemble other similar editors
   * Now displays the *Locaton* of the army
   * You can ***Teleport*** to any army from anywhere in the game
