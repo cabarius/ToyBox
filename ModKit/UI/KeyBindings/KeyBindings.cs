@@ -21,7 +21,7 @@ namespace ModKit {
         public static class KeyBindings {
             static ModEntry modEntry = null;
             static SerializableDictionary<string, KeyBind> bindings = null;
-            static Dictionary<string, Action> actions = new Dictionary<string, Action> { };
+            static readonly Dictionary<string, Action> actions = new() { };
             internal static Dictionary<string, List<string>> conflicts = new() { };
             internal static bool BindingsDidChange = false;
             public static bool IsActive(string identifier) {
@@ -97,8 +97,7 @@ namespace ModKit {
                         if (binding != lastTriggered) {
                             //if (debugKeyBind)
                             //    Logger.Log($"    firing action: {identifier}".cyan());
-                            Action action;
-                            actions.TryGetValue(identifier, out action);
+                            actions.TryGetValue(identifier, out Action action);
                             action();
                             lastTriggered = binding;
                         }

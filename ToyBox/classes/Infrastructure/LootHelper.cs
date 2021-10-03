@@ -49,7 +49,7 @@ namespace ToyBox {
             return null;
         }
         public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea() {
-            List<LootWrapper> lootWrapperList = new List<LootWrapper>();
+            List<LootWrapper> lootWrapperList = new();
             var units = Game.Instance.State.Units.All
                 .Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsInGame && !u.Descriptor.IsPartyOrPet()));
                 //.Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsRevealed && u.IsDeadAndHasLoot));

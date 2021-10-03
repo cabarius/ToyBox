@@ -23,8 +23,8 @@ namespace ModKit.Utility
         }
         public void ReadXml(XmlReader reader)
         {
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+            XmlSerializer keySerializer = new(typeof(TKey));
+            XmlSerializer valueSerializer = new(typeof(TValue));
             
             bool wasEmpty = reader.IsEmptyElement;
             reader.Read();
@@ -54,8 +54,8 @@ namespace ModKit.Utility
 
         public void WriteXml(XmlWriter writer)
         {
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+            XmlSerializer keySerializer = new(typeof(TKey));
+            XmlSerializer valueSerializer = new(typeof(TValue));
 
             foreach (TKey key in this.Keys)
             {

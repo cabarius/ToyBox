@@ -20,7 +20,7 @@ using UnityModManagerNet;
 namespace ToyBox {
     public static class Teleport {
         public static Settings Settings => Main.settings;
-        private static HoverHandler _hover = new HoverHandler();
+        private static readonly HoverHandler _hover = new();
 
         public static void TeleportUnit(UnitEntityData unit, Vector3 position) {
             UnitEntityView view = unit.View;

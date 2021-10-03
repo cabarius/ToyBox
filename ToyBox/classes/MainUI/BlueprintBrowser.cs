@@ -31,9 +31,7 @@ namespace ToyBox {
     public class KeyComparer : IComparer<string> {
 
         public int Compare(string left, string right) {
-            int l;
-            int r;
-            if (int.TryParse(left, out l) && int.TryParse(right, out r))
+            if (int.TryParse(left, out int l) && int.TryParse(right, out int r))
                 return l.CompareTo(r);
             else
                 return left.CompareTo(right);

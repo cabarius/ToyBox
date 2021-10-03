@@ -46,10 +46,10 @@ namespace ToyBox {
         static bool editSpellbooks = false;
         static UnitEntityData spellbookEditCharacter = null;
         static float nearbyRange = 25;
-        static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
-        public static Dictionary<string, Spellbook> SelectedSpellbook = new Dictionary<string, Spellbook>();
+        static readonly Dictionary<String, int> statEditorStorage = new();
+        public static Dictionary<string, Spellbook> SelectedSpellbook = new();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
-        private static Player partyFilterPlayer = null;
+        private static readonly Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             if (partyFilterPlayer != Game.Instance.Player) partyFilterChoices = null;
             if (Game.Instance.Player != null && partyFilterChoices == null) {

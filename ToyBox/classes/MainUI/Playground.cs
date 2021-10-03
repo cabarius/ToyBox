@@ -21,7 +21,7 @@ namespace ModKit {
             public void Dispose() {
                 throw new NotImplementedException();
             }
-            public static explicit operator View(Color c) => new View { color = c };
+            public static explicit operator View(Color c) => new() { color = c };
         }
         public class Stack : View {
             public float spacing { get; set; } = 25;
@@ -52,16 +52,14 @@ namespace ToyBox {
     public static class Playground {
         public static void OnGUI() {
             var blueprints = BlueprintBrowser.filteredBPs;
-            using (var list = new ui.List<SimpleBlueprint> { items = blueprints, spacing = 5 }) {
-                using (new ui.VStack()) {
-                    UI.Label("Blueprints");
-                    list.ForEach((bp) => {
-                        using (new ui.HStack { spacing = 25 }) {
-                            new ui.Label(bp.name);
-                            new ui.Label(bp.GetDescription());
-                        }
-                    });
-                }
+            using var list = new ui.List<SimpleBlueprint> { items = blueprints, spacing = 5 }; using (new ui.VStack()) {
+                UI.Label("Blueprints");
+                list.ForEach((bp) => {
+                    using (new ui.HStack { spacing = 25 }) {
+                        new ui.Label(bp.name);
+                        new ui.Label(bp.GetDescription());
+                    }
+                });
             }
         }
     }

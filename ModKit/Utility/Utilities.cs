@@ -8,12 +8,11 @@ using System.Text.RegularExpressions;
 
 namespace ModKit {
     public static class Utilties {
-        public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default(TValue)) {
+        public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default) {
             if (dictionary == null) { throw new ArgumentNullException(nameof(dictionary)); } // using C# 6
             if (key == null) { throw new ArgumentNullException(nameof(key)); } //  using C# 6
 
-            TValue value;
-            return dictionary.TryGetValue(key, out value) ? value : defaultValue;
+            return dictionary.TryGetValue(key, out TValue value) ? value : defaultValue;
         }
         public static object GetPropValue(this object obj, String name) {
             foreach (String part in name.Split('.')) {
@@ -29,7 +28,7 @@ namespace ModKit {
         }
         public static T GetPropValue<T>(this object obj, String name) {
             object retval = GetPropValue(obj, name);
-            if (retval == null) { return default(T); }
+            if (retval == null) { return default; }
             // throws InvalidCastException if types are incompatible
             return (T)retval;
         }
@@ -54,7 +53,7 @@ namespace ModKit {
         }
         public static T SetPropValue<T>(this object obj, String name, T value) {
             object retval = SetPropValue(obj, name, value);
-            if (retval == null) { return default(T); }
+            if (retval == null) { return default; }
             // throws InvalidCastException if types are incompatible
             return (T)retval;
         }

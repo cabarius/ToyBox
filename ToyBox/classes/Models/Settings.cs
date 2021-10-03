@@ -215,13 +215,13 @@ namespace ToyBox {
         //      Dictionary<CharacterName, 
         //          Dictionary<ClassID, HashSet<ArchetypeIDs>
         // For character gen config we use the following special key:
-        public SerializableDictionary<string, MulticlassOptions> multiclassSettings = new SerializableDictionary<string, MulticlassOptions>();
+        public SerializableDictionary<string, MulticlassOptions> multiclassSettings = new();
 
         // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
-        public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new SerializableDictionary<string, HashSet<string>>();
+        public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new();
 
         // Dictionary of Name/IsLegendaryHero for configuration per party member
-        public SerializableDictionary<string, bool> charIsLegendaryHero = new SerializableDictionary<string, bool>();
+        public SerializableDictionary<string, bool> charIsLegendaryHero = new();
 
         public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
@@ -255,17 +255,17 @@ namespace ToyBox {
 
         // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
         // public bool toggleIgnoreClassAndFeatRestrictions = false; 
-        public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
+        public HashSet<string> ignoredPrerequisiteSet = new(); // adding this granularity might be nice
 
         public bool toggleIgnoreAbilityAlignmentRestriction = false;
         public bool toggleIgnoreAolityCasterCheckers = false;
-        public HashSet<string> ignoredAbilityCasterCheckerSet = new HashSet<string>();
+        public HashSet<string> ignoredAbilityCasterCheckerSet = new();
         public bool toggleIgnoreActivatableAbilityRestrictions = false;
-        public HashSet<string> ignoredActivatableAbilityRestrictionSet = new HashSet<string>();
+        public HashSet<string> ignoredActivatableAbilityRestrictionSet = new();
         public bool toggleIgnoreEquipmentRestrictions = false;
-        public HashSet<string> ignoredEquipmentRestrictionSet = new HashSet<string>();
+        public HashSet<string> ignoredEquipmentRestrictionSet = new();
         public bool toggleIgnoreBuildingRestrictions = false;
-        public HashSet<string> ignoredBuildingRestrictionSet = new HashSet<string>();
+        public HashSet<string> ignoredBuildingRestrictionSet = new();
 
         // Development
         public LogLevel loggingLevel = LogLevel.Info;

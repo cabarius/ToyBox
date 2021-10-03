@@ -13,7 +13,7 @@ namespace ToyBox
         public static List<UnitEntityData> GetCustomCompanions()
         {
             List<UnitEntityData> unitEntityData = Game.Instance.Player.AllCharacters;
-            List<UnitEntityData> unitEntityDataNew = new List<UnitEntityData>();
+            List<UnitEntityData> unitEntityDataNew = new();
 
             foreach (UnitEntityData unit in unitEntityData)
             {
@@ -28,7 +28,7 @@ namespace ToyBox
         public static List<UnitEntityData> GetPets()
         {
             List<UnitEntityData> unitEntityData = Game.Instance.Player.AllCharacters;
-            List<UnitEntityData> unitEntityDataNew = new List<UnitEntityData>();
+            List<UnitEntityData> unitEntityDataNew = new();
             foreach (UnitEntityData unit in unitEntityData)
             {
                 if (unit.IsPet)

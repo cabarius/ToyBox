@@ -69,8 +69,7 @@ namespace ModKit {
         public static float FloatTextField(ref float value, String name = null, params GUILayoutOption[] options) {
             String text = $"{value}";
             UI.TextField(ref text, name, options);
-            var val = value;
-            if (float.TryParse(text, out val)) {
+            if (float.TryParse(text, out float val)) {
                 value = val;
             }
             return value;
@@ -98,8 +97,7 @@ namespace ModKit {
             String newText = GL.TextField(text, options);
             if (newText != text) {
                 text = newText;
-                if (action != null)
-                    action(text);
+                action?.Invoke(text);
             }
             if (enterAction != null && UI.userHasHitReturn && UI.focusedControlName == name) {
                 enterAction();
@@ -123,6 +121,7 @@ namespace ModKit {
                 () => { hitEnter = true; },
                 options);
             Int32.TryParse(str, out value);
+            value = Math.Min(max, Math.Max(value, min));
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
         }
@@ -153,7 +152,7 @@ namespace ModKit {
         public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
-            using (UI.HorizontalScope()) {
+            using (UI.HorizontalScope(options)) {
                 UI.Space(25);
                 UI.FloatTextField(ref newValue, null, UI.Width(75));
                 if (units.Length > 0)
@@ -169,47 +168,47 @@ namespace ModKit {
         const int sliderBottom = -7;
         public static bool Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
-            UI.BeginHorizontal(options);
-            using (UI.VerticalScope(UI.Width(300))) {
-                UI.Space(UnityModManager.UI.Scale(sliderTop - 1));
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(UnityModManager.UI.Scale(sliderBottom));
-            }
-            UI.Space(25);
             float newValue = value;
-            using (UI.VerticalScope(UI.Width(200))) {
-                UI.Space(UnityModManager.UI.Scale(sliderTop + 4));
-                newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
-                UI.Space(UnityModManager.UI.Scale(sliderBottom));
+            using (UI.HorizontalScope(options)) {
+                using (UI.VerticalScope(UI.Width(300))) {
+                    UI.Space(UnityModManager.UI.Scale(sliderTop - 1));
+                    UI.Label(title.cyan(), UI.Width(300));
+                    UI.Space(UnityModManager.UI.Scale(sliderBottom));
+                }
+                UI.Space(25);
+                using (UI.VerticalScope(UI.Width(200))) {
+                    UI.Space(UnityModManager.UI.Scale(sliderTop + 4));
+                    newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
+                    UI.Space(UnityModManager.UI.Scale(sliderBottom));
+                }
+                UI.Space(25);
+                using (UI.VerticalScope(UI.Width(75))) {
+                    UI.Space(UnityModManager.UI.Scale(sliderTop + 2));
+                    UI.FloatTextField(ref newValue, null, UI.Width(75));
+                    UI.Space(UnityModManager.UI.Scale(sliderBottom));
+                }
+                if (units.Length > 0)
+                    UI.Label($"{units}".orange().bold(), UI.Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
+                UI.Space(25);
+                using (UI.VerticalScope(UI.AutoWidth())) {
+                    UI.Space(UnityModManager.UI.Scale(sliderTop - 0));
+                    UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
+                    UI.Space(UnityModManager.UI.Scale(sliderBottom));
+                }
             }
-            UI.Space(25);
-            using (UI.VerticalScope(UI.Width(75))) {
-                UI.Space(UnityModManager.UI.Scale(sliderTop + 2));
-                UI.FloatTextField(ref newValue, null, UI.Width(75));
-                UI.Space(UnityModManager.UI.Scale(sliderBottom));
-            }
-            if (units.Length > 0)
-                UI.Label($"{units}".orange().bold(), UI.Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
-            UI.Space(25);
-            using (UI.VerticalScope(UI.AutoWidth())) {
-                UI.Space(UnityModManager.UI.Scale(sliderTop - 0));
-                UI.ActionButton("Reset", () => { newValue = defaultValue; }, UI.AutoWidth());
-                UI.Space(UnityModManager.UI.Scale(sliderBottom));
-            }
-            UI.EndHorizontal();
             bool changed = value != newValue;
             value = newValue;
             return changed;
         }
         public static bool Slider(String title, ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            bool changed = UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, "", options);
+            bool changed = UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }
         public static bool Slider(ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            bool changed = UI.Slider(ref fvalue, min, max, (float)defaultValue, 0, "", options);
+            bool changed = UI.Slider(ref fvalue, min, max, (float)defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }

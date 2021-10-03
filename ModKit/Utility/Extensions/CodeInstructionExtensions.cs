@@ -17,7 +17,7 @@ namespace ModKit.Utility
 
         public static IEnumerable<CodeInstruction> Dump(this IEnumerable<CodeInstruction> codes, Action<string> print)
         {
-            Dictionary<Label, string> labels = new Dictionary<Label, string>();
+            Dictionary<Label, string> labels = new();
             IEnumerator<CodeInstruction> ie = codes.GetEnumerator();
             for (int i = 0; ie.MoveNext(); i++)
                 foreach (Label l in ie.Current.labels)
@@ -264,7 +264,7 @@ namespace ModKit.Utility
         {
             List<Label> source = codes.Item(index).labels;
             List<Label> target = targetCodes.Item(targetIndex).labels;
-            HashSet<Label> skip = new HashSet<Label>(skipLabels);
+            HashSet<Label> skip = new(skipLabels);
             int i = 0;
             while (i < source.Count)
             {

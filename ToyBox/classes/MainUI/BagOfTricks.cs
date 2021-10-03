@@ -17,24 +17,24 @@ namespace ToyBox {
         public static Settings settings => Main.settings;
 
         // cheats combat
-        const string RestAll = "Rest All";
-        const string Empowered = "Empowered";
-        const string FullBuffPlease = "Common Buffs";
-        const string GoddesBuffs = "Buff Like A Godess";
-        const string RemoveBuffs = "Remove Buffs";
-        const string RemoveDeathsDoor = "Remove Deaths Door";
-        const string KillAllEnemies = "Kill All Enemies";
-        const string SummonZoo = "Summon Zoo";
-        const string LobotomizeAllEnemies = "Lobotomize Enemies";
+        private const string RestAll = "Rest All";
+        private const string Empowered = "Empowered";
+        private const string FullBuffPlease = "Common Buffs";
+        private const string GoddesBuffs = "Buff Like A Godess";
+        private const string RemoveBuffs = "Remove Buffs";
+        private const string RemoveDeathsDoor = "Remove Deaths Door";
+        private const string KillAllEnemies = "Kill All Enemies";
+        //private const string SummonZoo = "Summon Zoo"
+        private const string LobotomizeAllEnemies = "Lobotomize Enemies";
 
         // cheats common
-        const string TeleportPartyToYou = "Teleport Party To You";
-        const string GoToGlobalMap = "Go To Global Map";
-        const string RerollPerception = "Reroll Perception";
-        const string ChangeParty = "Change Party";
+        private const string TeleportPartyToYou = "Teleport Party To You";
+        private const string GoToGlobalMap = "Go To Global Map";
+        private const string RerollPerception = "Reroll Perception";
+        private const string ChangeParty = "Change Party";
 
         // other
-        const string TimeScaleMultToggle = "Main/Alt Timescale";
+        private const string TimeScaleMultToggle = "Main/Alt Timescale";
 
         public static void OnLoad() {
             // Combat

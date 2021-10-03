@@ -14,7 +14,7 @@ using ModKit;
 
 namespace ToyBox {
     public static class QuestExensions {
-        private static String[] questColors = new String[] {
+        private static readonly String[] questColors = new String[] {
             "gray",
             "yellow",
             "green",

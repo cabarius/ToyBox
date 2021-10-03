@@ -35,7 +35,7 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
-        private static Dictionary<string, GlobalMapArmyState> armySelection = new() { };
+        private static readonly Dictionary<string, GlobalMapArmyState> armySelection = new() { };
         public static void OnGUI() {
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {

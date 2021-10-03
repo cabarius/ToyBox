@@ -249,8 +249,8 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(CameraZoom), "TickZoom")]
         static class CameraZoom_TickZoom {
             static bool firstCall = true;
-            static float BaseFovMin = 17.5f;
-            static float BaseFovMax = 30;
+            static readonly float BaseFovMin = 17.5f;
+            static readonly float BaseFovMax = 30;
             public static bool Prefix(CameraZoom __instance) {
                 if (firstCall) {
                     //Main.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");

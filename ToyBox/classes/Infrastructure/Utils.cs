@@ -16,11 +16,10 @@ namespace ToyBox {
     public static partial class Utils {
         public static string ToyBoxUserPath => Path.Combine(ApplicationPaths.persistentDataPath, "ToyBox");
         public static Vector3 PointerPosition() {
-            Vector3 result = new Vector3();
+            Vector3 result = new();
 
             Camera camera = Game.GetCamera();
-            RaycastHit raycastHit = default(RaycastHit);
-            if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out raycastHit, camera.farClipPlane, 21761)) {
+            if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out var raycastHit, camera.farClipPlane, 21761)) {
                 result = raycastHit.point;
             }
             return result;
@@ -42,10 +41,8 @@ namespace ToyBox {
             var filePath = Path.Combine(toyboxFolder, filename);
             try {
 
-                using (StreamReader reader = new StreamReader(filePath)) {
-                    var text = reader.ReadToEnd();
-                    obj = JsonConvert.DeserializeObject<T>(text);
-                }
+                using StreamReader reader = new(filePath); var text = reader.ReadToEnd();
+                obj = JsonConvert.DeserializeObject<T>(text);
             }
             catch (Exception e) {
                 Mod.Error($"{filename} could not be read: {e}");

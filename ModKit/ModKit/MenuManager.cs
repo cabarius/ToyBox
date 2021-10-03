@@ -42,9 +42,9 @@ namespace ModKit
             get { return this._tabIndex; }
             set { _tabIndex = value; NotifyPropertyChanged(); }
         }
-        private List<IMenuTopPage> _topPages = new List<IMenuTopPage>();
-        private List<IMenuSelectablePage> _selectablePages = new List<IMenuSelectablePage>();
-        private List<IMenuBottomPage> _bottomPages = new List<IMenuBottomPage>();
+        private readonly List<IMenuTopPage> _topPages = new();
+        private readonly List<IMenuSelectablePage> _selectablePages = new();
+        private readonly List<IMenuBottomPage> _bottomPages = new();
         static Exception caughtException = null;
 
         #endregion

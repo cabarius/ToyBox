@@ -23,11 +23,11 @@ namespace ToyBox {
         static String prevCallerKey = "";
         static String searchText = "";
         static int searchLimit = 100;
-        static int repeatCount = 1;
+        static readonly int repeatCount = 1;
         public static int matchCount = 0;
         static bool showAll = false;
         static bool showTree = false;
-        static FeaturesTreeEditor treeEditor = new FeaturesTreeEditor();
+        static readonly FeaturesTreeEditor treeEditor = new();
 
         public static void UpdateSearchResults(String searchText, int limit, IEnumerable<SimpleBlueprint> blueprints) {
             if (blueprints == null) return;

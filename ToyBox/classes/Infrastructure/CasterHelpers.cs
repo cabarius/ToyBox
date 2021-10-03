@@ -12,11 +12,11 @@ using System.Linq;
 namespace ToyBox.classes.Infrastructure {
     public static class CasterHelpers {
         public static Dictionary<UnitDescriptor, Dictionary<BlueprintSpellbook, int>> UnitBonusSpellLevels =
-            new Dictionary<UnitDescriptor, Dictionary<BlueprintSpellbook, int>>();
+            new();
         public static Dictionary<BlueprintSpellbook, int> GetOriginalCasterLevel(UnitDescriptor unit) {
             int mythicLevel = 0;
             BlueprintSpellbook mythicSpellbook = null;
-            Dictionary<BlueprintSpellbook, int> casterLevelDictionary = new Dictionary<BlueprintSpellbook, int>();
+            Dictionary<BlueprintSpellbook, int> casterLevelDictionary = new();
             foreach (var classInfo in unit.Progression.Classes) {
 
                 if (classInfo.CharacterClass == BlueprintRoot.Instance.Progression.MythicStartingClass ||

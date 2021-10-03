@@ -7,7 +7,7 @@ namespace ModKit.Utility
 {
     public static partial class ReflectionCache
     {
-        private static readonly DoubleDictionary<Type, string, WeakReference> _propertieCache = new DoubleDictionary<Type, string, WeakReference>();
+        private static readonly DoubleDictionary<Type, string, WeakReference> _propertieCache = new();
 
         private static CachedProperty<TProperty> GetPropertyCache<T, TProperty>(string name)
         {
@@ -119,7 +119,7 @@ namespace ModKit.Utility
             {
                 if (getter.IsStatic)
                 {
-                    DynamicMethod method = new DynamicMethod(
+                    DynamicMethod method = new(
                     name: "get_" + Info.Name,
                     returnType: Info.PropertyType,
                     parameterTypes: new[] { isInstByRef ? Info.DeclaringType.MakeByRefType() : Info.DeclaringType },
@@ -141,7 +141,7 @@ namespace ModKit.Utility
             {
                 if (setter.IsStatic)
                 {
-                    DynamicMethod method = new DynamicMethod(
+                    DynamicMethod method = new(
                     name: "set_" + Info.Name,
                     returnType: null,
                     parameterTypes: new[] { isInstByRef ? Info.DeclaringType.MakeByRefType() : Info.DeclaringType, Info.PropertyType },
@@ -199,7 +199,7 @@ namespace ModKit.Utility
             private delegate TProperty Getter(T instance);
             private delegate void Setter(T instance, TProperty value);
 
-            private T _dummy = default;
+            private readonly T _dummy = default;
             private Getter _getter;
             private Setter _setter;
 

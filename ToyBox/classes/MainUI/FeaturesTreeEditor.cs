@@ -96,11 +96,11 @@ namespace ToyBox {
         }
 
         private class FeaturesTree {
-            public readonly List<FeatureNode> RootNodes = new List<FeatureNode>();
+            public readonly List<FeatureNode> RootNodes = new();
 
             public FeaturesTree(UnitProgressionData progression) {
-                Dictionary<BlueprintScriptableObject, FeatureNode> normalNodes = new Dictionary<BlueprintScriptableObject, FeatureNode>();
-                List<FeatureNode> parametrizedNodes = new List<FeatureNode>();
+                Dictionary<BlueprintScriptableObject, FeatureNode> normalNodes = new();
+                List<FeatureNode> parametrizedNodes = new();
 
                 //Main.Log($"prog: {progression}");
                 // get nodes (features / race)
@@ -170,7 +170,7 @@ namespace ToyBox {
 
                 public readonly string Name;
                 public readonly BlueprintScriptableObject Blueprint;
-                public readonly List<FeatureNode> ChildNodes = new List<FeatureNode>();
+                public readonly List<FeatureNode> ChildNodes = new();
 
                 public ToggleState Expanded;
 

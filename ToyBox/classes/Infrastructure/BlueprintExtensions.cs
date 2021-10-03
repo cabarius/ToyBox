@@ -17,7 +17,7 @@ using ModKit;
 namespace ToyBox {
 
     public static partial class BlueprintExensions {
-        private static ConditionalWeakTable<object, string> cachedCollationNames = new ConditionalWeakTable<object, string> { };
+        private static readonly ConditionalWeakTable<object, string> cachedCollationNames = new() { };
         public static String GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
         public static String GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
@@ -25,8 +25,7 @@ namespace ToyBox {
             return name;
         }
         public static String CollationName(this SimpleBlueprint bp) {
-            string collationName;
-            cachedCollationNames.TryGetValue(bp, out collationName);
+            cachedCollationNames.TryGetValue(bp, out string collationName);
             if (collationName != null) return collationName;
             var typeName = bp.GetType().ToString();
             var stripIndex = typeName.LastIndexOf("Blueprint");
@@ -67,7 +66,7 @@ namespace ToyBox {
             return typeName;
         }
 
-        static Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new Dictionary<Type, List<SimpleBlueprint>>();
+        static readonly Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new();
         public static List<SimpleBlueprint> BlueprintsOfType(Type type) {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();

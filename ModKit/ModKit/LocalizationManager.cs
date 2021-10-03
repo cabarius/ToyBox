@@ -126,7 +126,7 @@ namespace ModKit
         {
             if (_local != null)
             {
-                Dictionary<string, string> temp = new Dictionary<string, string>();
+                Dictionary<string, string> temp = new();
                 foreach (string key in _localDefault.Strings.Keys)
                 {
                     if (_local.Strings.TryGetValue(key, out string text))
@@ -146,7 +146,7 @@ namespace ModKit
 
                 if (File.Exists(path))
                 {
-                    using (StreamReader reader = new StreamReader(path))
+                    using (StreamReader reader = new(path))
                     {
                         _local = _localDefault.Deserialize<TDefaultLanguage>(reader);
                     }
@@ -187,7 +187,7 @@ namespace ModKit
 
                 if (!File.Exists(path))
                 {
-                    using (StreamWriter writer = new StreamWriter(path))
+                    using (StreamWriter writer = new(path))
                     {
                         _localDefault.Serialize(writer, IsDefault ? _localDefault : _local);
                     }

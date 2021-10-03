@@ -9,7 +9,7 @@ namespace ModKit {
         static public bool userHasHitReturn = false;
         static public String focusedControlName = null;
 
-        public static Rect ummRect = new Rect();
+        public static Rect ummRect = new();
         public static float ummWidth = 960f;
         public static int ummTabID = 0;
         public static bool IsNarrow { get { return ummWidth < 1200; } }

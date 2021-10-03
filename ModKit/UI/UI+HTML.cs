@@ -11,8 +11,9 @@ namespace ModKit {
         public static bool LinkButton(String title, String url, Action action = null, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { UI.AutoWidth() }; }
             if (linkStyle == null) {
-                linkStyle = new GUIStyle(GUI.skin.label);
-                linkStyle.wordWrap = false;
+                linkStyle = new GUIStyle(GUI.skin.label) {
+                    wordWrap = false
+                };
                 // Match selection color which works nicely for both light and dark skins
                 linkStyle.normal.textColor = new Color(0f, 0.75f, 1f);
                 linkStyle.stretchWidth = false;

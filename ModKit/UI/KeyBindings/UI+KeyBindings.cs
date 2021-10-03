@@ -92,12 +92,12 @@ namespace ModKit {
                 UI.Space(indent);
                 UI.Label(title.bold(), titleWidth == 0 ? UI.ExpandWidth(false) : UI.Width(titleWidth));
                 UI.Space(25);
-                var keyBind = EditKeyBind(identifier, true);
+                EditKeyBind(identifier, true);
             }
         }
 
-        // One stop shop for making an instant button that you want to let a player bind to a key in game
-        public static void BindableActionButton(String title, bool showHint = false, params GUILayoutOption[] options) {
+        // One stop shopping for making an instant button that you want to let a player bind to a key in game
+        public static void BindableActionButton(String title, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             var action = KeyBindings.GetAction(title);
             if (GL.Button(title, options)) { action(); }

@@ -15,7 +15,7 @@ namespace ModKit.Utility
     {
         private const BindingFlags ALL_FLAGS = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic /*| BindingFlags.FlattenHierarchy*/;
 
-        private static readonly Queue _cache = new Queue();
+        private static readonly Queue _cache = new();
 
         public static int Count => _cache.Count;
 
@@ -43,7 +43,7 @@ namespace ModKit.Utility
 
         private static TypeBuilder RequestTypeBuilder()
         {
-            AssemblyName asmName = new AssemblyName(nameof(ReflectionCache) + "." + Guid.NewGuid().ToString());
+            AssemblyName asmName = new(nameof(ReflectionCache) + "." + Guid.NewGuid().ToString());
             AssemblyBuilder asmBuilder = AssemblyBuilder.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndCollect);
             ModuleBuilder moduleBuilder = asmBuilder.DefineDynamicModule("<Module>");
             return moduleBuilder.DefineType("<Type>");

@@ -7,7 +7,7 @@ namespace ModKit.Utility
 {
     public static partial class ReflectionCache
     {
-        private static readonly DoubleDictionary<Type, string, WeakReference> _fieldCache = new DoubleDictionary<Type, string, WeakReference>();
+        private static readonly DoubleDictionary<Type, string, WeakReference> _fieldCache = new();
 
         private static CachedField<TField> GetFieldCache<T, TField>(string name)
         {
@@ -125,7 +125,7 @@ namespace ModKit.Utility
 
             protected Delegate CreateGetter(Type delType, bool isInstByRef)
             {
-                DynamicMethod method = new DynamicMethod(
+                DynamicMethod method = new(
                     name: "get_" + Info.Name,
                     returnType: Info.FieldType,
                     parameterTypes: new[] { isInstByRef ? Info.DeclaringType.MakeByRefType() : Info.DeclaringType },
@@ -179,7 +179,7 @@ namespace ModKit.Utility
 
             protected Delegate CreateSetter(Type delType, bool isInstByRef)
             {
-                DynamicMethod method = new DynamicMethod(
+                DynamicMethod method = new(
                     name: "set_" + Info.Name,
                     returnType: null,
                     parameterTypes: new[] { isInstByRef ? Info.DeclaringType.MakeByRefType() : Info.DeclaringType, Info.FieldType },
@@ -251,7 +251,7 @@ namespace ModKit.Utility
             private delegate ref TField RefGetter(T instance);
             private delegate void Setter(T instance, TField value);
 
-            private T _dummy = default;
+            private readonly T _dummy = default;
             private Getter _getter;
             private RefGetter _refGetter;
             private Setter _setter;
@@ -310,7 +310,7 @@ namespace ModKit.Utility
 
             private Getter CreateGetter()
             {
-                DynamicMethod method = new DynamicMethod(
+                DynamicMethod method = new(
                     name: "get_" + Info.Name,
                     returnType: Info.FieldType,
                     parameterTypes: null,
@@ -326,7 +326,7 @@ namespace ModKit.Utility
 
             private Setter CreateSetter()
             {
-                DynamicMethod method = new DynamicMethod(
+                DynamicMethod method = new(
                     name: "set_" + Info.Name,
                     returnType: null,
                     parameterTypes: new[] { Info.FieldType },

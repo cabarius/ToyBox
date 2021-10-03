@@ -8,7 +8,7 @@ namespace ModKit.Utility
 {
     public static partial class ReflectionCache
     {
-        private static readonly HashSet<Type> ACTION_AND_FUNC_TYPES = new HashSet<Type>() {
+        private static readonly HashSet<Type> ACTION_AND_FUNC_TYPES = new() {
             typeof(Action),
             typeof(Action<>),
             typeof(Action<,>),
@@ -45,7 +45,7 @@ namespace ModKit.Utility
             typeof(Func<,,,,,,,,,,,,,,,,>)
         };
 
-        private static readonly TripleDictionary<Type, string, Type, WeakReference> _methodCache = new TripleDictionary<Type, string, Type, WeakReference>();
+        private static readonly TripleDictionary<Type, string, Type, WeakReference> _methodCache = new();
 
         private static CachedMethod<TMethod> GetMethodCache<T, TMethod>(string name) where TMethod : Delegate
         {
@@ -207,7 +207,7 @@ namespace ModKit.Utility
             protected override TMethod CreateDelegate()
             {
                 ParameterInfo[] parameters = Info.GetParameters();
-                DynamicMethod method = new DynamicMethod(
+                DynamicMethod method = new(
                     name: Info.Name,
                     returnType: Info.ReturnType,
                     parameterTypes: parameters.Select(item => item.ParameterType).ToArray(),
@@ -234,7 +234,7 @@ namespace ModKit.Utility
             {
                 Type type = typeof(T);
                 ParameterInfo[] parameters = Info.GetParameters();
-                DynamicMethod method = new DynamicMethod(
+                DynamicMethod method = new(
                     name: Info.Name,
                     returnType: Info.ReturnType,
                     parameterTypes: new[] { type.IsValueType ? type.MakeByRefType() : type }

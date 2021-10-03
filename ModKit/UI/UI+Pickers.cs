@@ -83,8 +83,7 @@ namespace ModKit {
             var names = Enum.GetNames(typeof(TEnum));
             int index = Array.IndexOf(names, value.ToString());
             if (UI.SelectionGrid(ref index, names, xCols, options)) {
-                TEnum newValue;
-                if (Enum.TryParse(names[index], out newValue)) {
+                if (Enum.TryParse(names[index], out TEnum newValue)) {
                     set(newValue);
                 }
             }
@@ -98,8 +97,7 @@ namespace ModKit {
             int index = Array.IndexOf(names, value.ToString());
             var oldIndex = index;
             if (style == null ? UI.SelectionGrid(ref index, formatedNames, xCols, options) : UI.SelectionGrid(ref index, formatedNames, xCols, style, options))  {
-                TEnum newValue;
-                if (Enum.TryParse(names[index], out newValue)) {
+                if (Enum.TryParse(names[index], out TEnum newValue)) {
                     value = newValue;
                 }
             }

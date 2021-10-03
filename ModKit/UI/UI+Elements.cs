@@ -9,8 +9,7 @@ namespace ModKit {
 
         private static Texture2D fillTexture = null;
         private static GUIStyle fillStyle = null;
-        private static Color fillColor = new Color(1f, 1f, 1f, 0.65f);
-        private static Color fillColor2 = new Color(1f, 1f, 1f, 0.35f);
+        private static Color fillColor = new(1f, 1f, 1f, 0.65f);
 
         public static GUIStyle FillStyle(Color color) {
             if (fillTexture == null) fillTexture = new Texture2D(1, 1);
@@ -63,8 +62,9 @@ namespace ModKit {
         public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
             if (fillTexture == null) fillTexture = new Texture2D(1, 1);
             //if (divStyle == null) {
-                divStyle = new GUIStyle();
-                divStyle.fixedHeight = 1;
+            divStyle = new GUIStyle {
+                fixedHeight = 1
+            };
             //}
             fillTexture.SetPixel(0, 0, color);
             fillTexture.Apply();

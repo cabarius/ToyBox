@@ -153,7 +153,7 @@ namespace ToyBox.Multiclass {
 #if true
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
-            StateReplacer stateReplacer = new StateReplacer(state);
+            StateReplacer stateReplacer = new(state);
             Mod.Trace($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
             Mod.Trace($"    mythic: {state.IsMythicClassSelected}");
             Mod.Trace($"    options: {options}");

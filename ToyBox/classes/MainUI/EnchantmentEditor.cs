@@ -31,7 +31,7 @@ namespace ToyBox.classes.MainUI {
         public static string[] ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType));
         private static List<ItemEntity> inventory;
         private static List<BlueprintItemEnchantment> enchantments;
-        private static List<BlueprintItemEnchantment> filteredEnchantments = new List<BlueprintItemEnchantment>();
+        private static List<BlueprintItemEnchantment> filteredEnchantments = new();
         public static int matchCount = 0;
 
         public static void ResetGUI() { }
@@ -399,7 +399,7 @@ namespace ToyBox.classes.MainUI {
             if (item?.m_Enchantments == null)
                 Mod.Trace("item.m_Enchantments is null");
 
-            var fake_context = new MechanicsContext(default(JsonConstructorMark)); // if context is null, items may stack which could cause bugs
+            var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
 
             //var fi = AccessTools.Field(typeof(MechanicsContext), nameof(MechanicsContext.AssociatedBlueprint));
             //fi.SetValue(fake_context, enchantment);  // check if AssociatedBlueprint must be set; I think not
@@ -420,7 +420,7 @@ namespace ToyBox.classes.MainUI {
         /// <summary>probably useless</summary>
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {
-            Dictionary<ItemEnchantment, bool> enchantments = new Dictionary<ItemEnchantment, bool>();
+            Dictionary<ItemEnchantment, bool> enchantments = new();
             if (item == null) return enchantments;
             var base_enchantments = item.Blueprint.Enchantments;
             foreach (var enchantment in item.Enchantments) {
