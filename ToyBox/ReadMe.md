@@ -19,6 +19,7 @@
 * Renamed ***Full Buffs Please*** to ***Common Buffs*** because it gives you Bless/Haste/Displacement/Heroism
 * **Loot Colors** - made scribable scrolls show up as uncommon
 * **Enchantment** - Sandal knows you like to hoard loot so he will help you find items with a handy new Search field in the inventory column
+* **Enchantment** - Added very basic export and inport commands that allows you to save and add a list of items to a file based on the type (e.g. Weapon.json). These files live in a new ToyBox folder that in the same folder that contains your saved games
 * **Equipment No Weight** tweek is back. It was stolen by quasits who work for the merchant guild...
 * Improved scrolling performance after searching for Paramterized Feats
 * (Mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back

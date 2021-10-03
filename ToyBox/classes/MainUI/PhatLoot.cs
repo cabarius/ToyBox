@@ -11,6 +11,21 @@ namespace ToyBox {
         public static Settings settings { get { return Main.settings; } }
         public static void ResetGUI() { }
         public static void OnGUI() {
+#if DEBUG
+            UI.Div(0, 25);
+            var inventory = Game.Instance.Player.Inventory;
+            var items = inventory.ToList();
+            UI.HStack("Inventory", 1,
+                () => {
+                    UI.ActionButton("Export", () => items.Export("inventory.json"), UI.Width(150));
+                    UI.Space(25);
+                    UI.ActionButton("Import", () => inventory.Import("inventory.json"), UI.Width(150));
+                    UI.Space(25);
+                    UI.ActionButton("Replace", () => inventory.Import("inventory.json", true), UI.Width(150));
+                },
+                () => { }
+            );
+#endif
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
                 () => {
@@ -20,7 +35,7 @@ namespace ToyBox {
                         UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
                         UI.Label("The coloring of rarity goes as follows:".green());
                         UI.HStack("Rarity".orange(), 1,
-                            () => { 
+                            () => {
                                 UI.Label("Trash".Rarity(RarityType.Trash).bold(), UI.rarityStyle, UI.Width(200));
                                 UI.Space(5); UI.Label("Common".Rarity(RarityType.Common).bold(), UI.rarityStyle, UI.Width(200));
                                 UI.Space(5); UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold(), UI.rarityStyle, UI.Width(200));
@@ -44,7 +59,7 @@ namespace ToyBox {
 
                     // The following options let you configure loot filtering and auto sell levels:".green());
                 },
-#if DEBUG
+#if false
                 () => UI.RarityGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
                 () => UI.RarityGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
 #endif
@@ -64,7 +79,7 @@ namespace ToyBox {
                     }
                     UI.Label(areaName.orange().bold(), UI.Width(300));
                     UI.Label("Rarity: ".cyan(), UI.AutoWidth());
-                    UI.RarityGrid(ref settings.lootChecklistFilterRarity, 4, UI.AutoWidth());                    
+                    UI.RarityGrid(ref settings.lootChecklistFilterRarity, 4, UI.AutoWidth());
                 },
                 () => {
                     //UI.Space(390); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
@@ -129,5 +144,5 @@ namespace ToyBox {
                 }
             );
         }
-}
+    }
 }

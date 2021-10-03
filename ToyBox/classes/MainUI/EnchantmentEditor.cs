@@ -29,12 +29,16 @@ namespace ToyBox.classes.MainUI {
         public static ItemEntity editedItem = null;
         public static string itemSearchText = "";
         public static string[] ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType));
-        private static ItemEntity[] inventory;
+        private static List<ItemEntity> inventory;
         private static List<BlueprintItemEnchantment> enchantments;
         private static List<BlueprintItemEnchantment> filteredEnchantments = new List<BlueprintItemEnchantment>();
         public static int matchCount = 0;
 
         public static void ResetGUI() { }
+
+        public static void OnShowGUI() {
+            UpdateItems();
+        }
         public static void OnGUI() {
             if (!Main.IsInGame) return;
             UI.Label("Sandal says '".orange() + "Enchantment'".cyan().bold());
@@ -58,7 +62,7 @@ namespace ToyBox.classes.MainUI {
                     //return -1;
                 });
                 enchantments.TrimExcess();
-                UpdateItems(selectedItemType);
+                UpdateItems();
                 UpdateSearchResults();
             }
 
@@ -72,10 +76,11 @@ namespace ToyBox.classes.MainUI {
                         ref selectedItemType,
                         ItemTypeNames,
                         1,
-                        index => UpdateItems(index),
+                        index => { selectedItemIndex = index; UpdateItems(); },
                         UI.buttonStyle,
                         UI.Width(150));
                 }
+                var itemTypeName = ItemTypeNames[selectedItemType];
                 remainingWidth -= 250;
                 UI.Space(10);
                 // Second column - Item Selection Grid
@@ -83,10 +88,17 @@ namespace ToyBox.classes.MainUI {
                     UI.ActionTextField(
                         ref itemSearchText,
                         "itemSearhText",
-                        (text) => UpdateItems(selectedItemType),
-                        () => UpdateItems(selectedItemType),
+                        (text) => UpdateItems(),
+                        () => UpdateItems(),
                         UI.Width(375));
-                    if (inventory.Length > 0) {
+                    using (UI.HorizontalScope()) {
+                        UI.ActionButton("Export", () => inventory.Export(itemTypeName + ".json"), UI.Width(160));
+                        UI.ActionButton("Import", () => {
+                            Game.Instance.Player.Inventory.Import(itemTypeName + ".json");
+                            UpdateItems();
+                        }, UI.Width(160));
+                    }
+                    if (inventory.Count > 0) {
                         UI.ActionSelectionGrid(
                             ref selectedItemIndex,
                             inventory.Select(bp => bp.Name).ToArray(),
@@ -103,6 +115,7 @@ namespace ToyBox.classes.MainUI {
                 UI.Space(10);
                 // Section Column - Main Area
                 using (UI.VerticalScope(UI.MinWidth(remainingWidth))) {
+                    UI.Label("Import/Export allows you to save and add a list of items to a file based on the type (e.g. Weapon.json). These files live in a new ToyBox folder that in the same folder that contains your saved games ".green());
                     if (selectedItem != null) {
                         var item = selectedItem;
                         //UI.Label("Target".cyan());
@@ -290,20 +303,22 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
-        public static void UpdateItems(int index) {
+        public static void UpdateItems() {
             var searchText = itemSearchText.ToLower();
-            inventory = Game.Instance.Player.Inventory
-                            .Where(item => item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == index)
-                            .OrderByDescending(item => item.Blueprint.Rarity())
-                            .ToArray();
+            inventory = (from item in Game.Instance.Player.Inventory
+                         where item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == selectedItemIndex
+                         orderby item.Name
+                         orderby item.Blueprint.Rarity() descending
+                         select item
+                         ).ToList();
             if (editedItem != null) {
                 selectedItemIndex = inventory.IndexOf(editedItem);
                 editedItem = null;
             }
-            if (selectedItemIndex >= inventory.Length) {
+            if (selectedItemIndex >= inventory.Count) {
                 selectedItemIndex = 0;
             }
-            selectedItem = selectedItemIndex < inventory.Length ? inventory[selectedItemIndex] : null;
+            selectedItem = selectedItemIndex < inventory.Count ? inventory[selectedItemIndex] : null;
         }
 
         public static void UpdateSearchResults() {
@@ -334,44 +349,44 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static void AddClicked(int index, bool second = false) {
-            if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
+            if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
-
-            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+            var selected = inventory.ElementAt(selectedItemIndex);
+            if (selected is ItemEntityShield shield) {
                 if (!second)
                     AddEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
                 else
                     AddEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
                 editedItem = shield;
             }
-            else if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
+            else if (second && selected is ItemEntityWeapon weapon) {
                 AddEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
             }
             else {
-                AddEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
-                editedItem = inventory[selectedItemIndex];
+                AddEnchantment(selected, filteredEnchantments[index]);
+                editedItem = selected;
             }
         }
 
         public static void RemoveClicked(int index, bool second = false) {
-            if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Length) return;
+            if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
-
-            if (inventory[selectedItemIndex] is ItemEntityShield shield) {
+            var selected = inventory.ElementAt(selectedItemIndex);
+            if (selected is ItemEntityShield shield) {
                 if (!second)
                     RemoveEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
                 else
                     RemoveEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
                 editedItem = shield;
             }
-            if (second && inventory[selectedItemIndex] is ItemEntityWeapon weapon) {
+            if (second && selected is ItemEntityWeapon weapon) {
                 RemoveEnchantment(weapon.Second, filteredEnchantments[index]);
                 editedItem = weapon;
             }
             else {
-                RemoveEnchantment(inventory[selectedItemIndex], filteredEnchantments[index]);
-                editedItem = inventory[selectedItemIndex];
+                RemoveEnchantment(selected, filteredEnchantments[index]);
+                editedItem = selected;
             }
         }
 
