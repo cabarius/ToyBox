@@ -9,7 +9,7 @@ using static UnityModManagerNet.UnityModManager;
 namespace ModKit {
     public enum LogLevel : int {
         Error,
-        Urgent,
+        Warning,
         Normal,
         Detail,
         Debug
@@ -34,8 +34,8 @@ namespace ModKit {
         public static void Error(Exception ex) {
             Error(ex.ToString());
         }
-        public static void Urgent(string str) {
-            if (logLevel >= LogLevel.Urgent)
+        public static void Warning(string str) {
+            if (logLevel >= LogLevel.Warning)
                 modLogger?.Warning(str.orange());
         }
         public static void Log(string str) {

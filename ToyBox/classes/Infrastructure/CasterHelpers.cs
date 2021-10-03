@@ -164,7 +164,7 @@ namespace ToyBox.classes.Infrastructure {
             var classData = unit.Progression.GetMythicToMerge();
             var oldMythicSpellbookBp = classData?.Spellbook;
             if (classData == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
-                Mod.Urgent("Can't merge because you don't have a mythic class / mythic spellbook!");
+                Mod.Warning("Can't merge because you don't have a mythic class / mythic spellbook!");
                 return;
             }
 

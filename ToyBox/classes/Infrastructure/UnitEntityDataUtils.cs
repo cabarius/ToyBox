@@ -85,7 +85,7 @@ namespace ToyBox
             if (unit != null)
                 unit.Descriptor.SwitchFactions(Game.Instance.BlueprintRoot.PlayerFaction, true);
             else
-                Mod.Urgent("Unit is null!");
+                Mod.Warning("Unit is null!");
         }
 
         public static void AddToParty(UnitEntityData unit) {
