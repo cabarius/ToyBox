@@ -19,7 +19,10 @@
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
-### Ver 1.3.18 (Coming Soon)
+### Ver 1.3.19 (Coming Soon)
+* (ShadowRanger) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
+
+### Ver 1.3.18 
 * **Bag of Tricks** - Added a ***Buff Like A Godess*** which makes you practically invulnerable
 * **Loot Colors** - made scribable scrolls show up as uncommon
 * **Enchantment** - Sandal knows you like to hoard loot so he will help you find items with a handy new Search field in the inventory column
