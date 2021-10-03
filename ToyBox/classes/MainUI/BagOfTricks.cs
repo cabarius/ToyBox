@@ -45,7 +45,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
             KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
             KeyBindings.RegisterAction(KillAllEnemies, () => CheatsCombat.KillAll());
-            KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
+            //KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
             KeyBindings.RegisterAction(LobotomizeAllEnemies, () => Actions.LobotomizeAllEnemies());
             // Common
             KeyBindings.RegisterAction(TeleportPartyToYou, () => Teleport.TeleportPartyToPlayer());
@@ -97,9 +97,7 @@ namespace ToyBox {
                 () => UI.BindableActionButton(RemoveBuffs),
                 () => UI.BindableActionButton(RemoveDeathsDoor),
                 () => UI.BindableActionButton(KillAllEnemies),
-#if DEBUg
-                () => UI.BindableActionButton(SummonZoo),
-#endif
+                //() => UI.BindableActionButton(SummonZoo),
                 () => UI.BindableActionButton(LobotomizeAllEnemies),
                 () => { }
                 );
