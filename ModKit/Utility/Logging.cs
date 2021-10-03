@@ -1,19 +1,65 @@
 ﻿// some stuff borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 using System;
 using System.IO;
+using System.Media;
 using HarmonyLib;
 using UnityModManagerNet;
+using static UnityModManagerNet.UnityModManager;
 
 namespace ModKit {
+    public enum LogLevel : int {
+        Error,
+        Warning,
+        Info,
+        Debug,
+        Trace
+    }
+    public static partial class Mod {
+        public static ModEntry modEntry { get; set; } = null;
+        public static string modEntryPath { get; set; } = null;
+        private static UnityModManager.ModEntry.ModLogger modLogger;
+
+        public static LogLevel logLevel = LogLevel.Info;
+
+
+        public static void OnLoad(UnityModManager.ModEntry modEntry) {
+            Mod.modEntry = modEntry;
+            Mod.modLogger = modEntry.Logger;
+            Mod.modEntryPath = modEntry.Path;
+        }
+        public static void Error(string str) {
+            str = str.red().bold();
+            modLogger?.Error(str + "\n" + System.Environment.StackTrace);
+        }
+        public static void Error(Exception ex) {
+            Error(ex.ToString());
+        }
+        public static void Warning(string str) {
+            if (logLevel >= LogLevel.Warning)
+                modLogger?.Warning(str.orange());
+        }
+        public static void Log(string str) {
+            if (logLevel >= LogLevel.Info)
+                modLogger?.Log(str);
+        }
+        public static void Debug(string str) {
+            if (logLevel >= LogLevel.Debug)
+                modLogger?.Log(str);
+        }
+        public static void Trace(string str) {
+            if (logLevel >= LogLevel.Trace)
+                modLogger?.Log(str);
+        }
+
+    }
+#if false
+
     public class Logger {
-        public static UnityModManager.ModEntry.ModLogger modLogger;
-        public static string modEntryPath = null;
 
         public static readonly string logFile = "ModKit";
 
         private String path;
-        private bool removeHtmlTags = true;
-        public bool RemoveHtmlTags { get => removeHtmlTags; set => removeHtmlTags = value; }
+        public bool RemoveHtmlTags { get; set; }
         private bool useTimeStamp = true;
         public bool UseTimeStamp { get => useTimeStamp; set => useTimeStamp = value; }
 
@@ -22,25 +68,14 @@ namespace ModKit {
         }
 
         public Logger(String fileName, String fileExtension = ".log") {
-            path = Path.Combine(modEntryPath, (fileName + fileExtension));
+            path = Path.Combine(Mod.modEntryPath, (fileName + fileExtension));
             Clear();
         }
 
-        public static void Log(string str) {
-            Logger.modLogger.Log(str);
-        }
-
-        public static void Log(Exception ex) {
-            Logger.modLogger.Log(ex.ToString().red().bold() + "\n" + ex.StackTrace);
-        }
-
-        public static void Error(Exception ex) {
-            Logger.modLogger.Log(ex.ToString() + "\n" + ex.StackTrace);
-        }
 
         public void LogToFiles(string str) {
-            if (removeHtmlTags) {
-                str = Utilties.RemoveHtmlTags(str);
+            if (RemoveHtmlTags) {
+                str = Utilties.StripHTML(str);
             }
             if (UseTimeStamp) {
                 ToFile(TimeStamp() + " " + str);
@@ -52,7 +87,7 @@ namespace ModKit {
         }
 
         private static string TimeStamp() {
-            return "[" + DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss.ff") + "]";
+            return "[" + DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss.ff".blue()) + "]";
         }
 
         private void ToFile(string s) {
@@ -62,7 +97,7 @@ namespace ModKit {
                 }
             }
             catch (Exception e) {
-                modLogger.Log(e.ToString());
+                Mod.Error(e);
             }
         }
 
@@ -74,27 +109,22 @@ namespace ModKit {
                     }
                 }
                 catch (Exception e) {
-                    modLogger.Log(e.ToString());
+                    Mod.Error(e);
                 }
             }
         }
-        public static void ModLog(string message) {
-            Logger.modLogger.Log(message);
-        }
         public static void ModLoggerDebug(string message) {
             //if (Main.settings.settingShowDebugInfo) {
-                Logger.modLogger.Log(message);
+            Mod.Debug(message);
             //}
         }
         public static void ModLoggerDebug(int message) {
             //if (Main.settings.settingShowDebugInfo) {
-                Logger.modLogger.Log(message.ToString());
+            Mod.Debug(message.ToString());
             //}
         }
         public static void ModLoggerDebug(bool message) {
-            //if (Main.settings.settingShowDebugInfo) {
-                Logger.modLogger.Log(message.ToString());
-            //}
+            Mod.Debug(message.ToString());
         }
     }
 
@@ -108,7 +138,7 @@ namespace ModKit {
             this.UseTimeStamp = false;
         }
 
-        public new void Log(string str) {
+        public void Log(string str) {
             str = Utilties.UnityRichTextToHtml(str);
             base.LogToFiles(str);
         }
@@ -130,5 +160,5 @@ namespace ModKit {
             return new string[] { fields, methods, properties };
         }
     }
-
+#endif
 }

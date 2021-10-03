@@ -2,6 +2,7 @@
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Items;
 using Kingmaker.Utility;
+using ModKit;
 using Newtonsoft.Json;
 using Owlcat.Runtime.Core.Utils;
 using System;
@@ -47,7 +48,7 @@ namespace ToyBox {
                 }
             }
             catch (Exception e) {
-                Main.Log($"{filename} could not be read: {e}");
+                Mod.Error($"{filename} could not be read: {e}");
             }
             return obj;
         }

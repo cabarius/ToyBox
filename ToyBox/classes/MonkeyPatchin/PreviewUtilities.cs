@@ -8,6 +8,7 @@ using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Blueprints;
 using System.Diagnostics;
 using System;
+using ModKit;
 
 namespace ToyBox {
     class PreviewUtilities {
@@ -102,7 +103,7 @@ namespace ToyBox {
             public void Dispose() {
                 this.m_Stopwatch.Stop();
                 string message = string.Format("Profiled {0}: {1:0.00}ms", this.m_Text, this.m_Stopwatch.ElapsedMilliseconds);
-                Main.Debug(message);
+                Mod.Trace(message);
             }
         }
     }

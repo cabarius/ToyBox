@@ -14,6 +14,7 @@ using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.ElementsSystem;
+using ModKit;
 
 namespace ToyBox 
 {
@@ -81,12 +82,10 @@ namespace ToyBox
         }
 
         public static void Charm(UnitEntityData unit) {
-            if (unit != null) {
+            if (unit != null)
                 unit.Descriptor.SwitchFactions(Game.Instance.BlueprintRoot.PlayerFaction, true);
-            }
-            else {
-                Main.Debug("Unit is null!");
-            }
+            else
+                Mod.Warning("Unit is null!");
         }
 
         public static void AddToParty(UnitEntityData unit) {

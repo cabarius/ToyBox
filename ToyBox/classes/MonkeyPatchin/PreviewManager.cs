@@ -20,6 +20,7 @@ using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.Tooltip;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.Utility;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -225,7 +226,7 @@ namespace ToyBox {
                     if (results.Count > 0) __result += $" \n<size=75%>[{results.Join()}]</size>";
                 }
                 catch (Exception ex) {
-                    Main.Error(ex);
+                    Mod.Error(ex);
                 }
             }
         }
@@ -250,7 +251,7 @@ namespace ToyBox {
                     __instance.DialogPhrase.text += text;
                 }
                 catch (Exception ex) {
-                    Main.Error(ex);
+                    Mod.Error(ex);
                 }
             }
         }
@@ -325,7 +326,7 @@ namespace ToyBox {
                 }
 
                 catch (Exception ex) {
-                    Main.Error(ex);
+                    Mod.Error(ex);
                 }
             }
         }
@@ -346,7 +347,7 @@ namespace ToyBox {
                     }
                 }
                 catch (Exception ex) {
-                    Main.Error(ex);
+                    Mod.Error(ex);
                 }
             }
         }

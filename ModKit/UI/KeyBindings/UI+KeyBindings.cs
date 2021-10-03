@@ -66,7 +66,7 @@ namespace ModKit {
                 }
                 if (Event.current.isKey && !keyCode.IsModifier()) {
                     keyBind = new KeyBind(identifier, keyCode, isCtrlDown, isAltDown, isCmdDown, isShiftDown);
-                    Logger.Log($"    currentEvent isKey - bind: {keyBind}");
+                    Mod.Trace($"    currentEvent isKey - bind: {keyBind}");
                     KeyBindings.SetBinding(identifier, keyBind);
                     selectedIdentifier = null;
                     oldValue = null;

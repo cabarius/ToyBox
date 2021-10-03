@@ -14,6 +14,7 @@ using Kingmaker.UnitLogic.Commands;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
+using ModKit;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -22,7 +23,6 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 namespace ToyBox.BagOfPatches {
     static class Movement {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(UnitEntityData), "ModifiedSpeedMps", MethodType.Getter)]
@@ -55,7 +55,7 @@ namespace ToyBox.BagOfPatches {
                 if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return true;
 
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
-                Main.Log($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
+                Mod.Trace($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
                 unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {

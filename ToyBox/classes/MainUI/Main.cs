@@ -26,7 +26,7 @@ namespace ToyBox {
         static string modId;
         public static UnityModManager.ModEntry modEntry = null;
         public static Settings settings;
-        public static Mod multiclassMod;
+        public static MulticlassMod multiclassMod;
         public static bool Enabled;
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
@@ -37,25 +37,20 @@ namespace ToyBox {
         public static void SetNeedsResetGameUI() {
             resetRequested = true;
             resetRequestTime = DateTime.Now;
-            Main.Log($"resetRequested - {resetRequestTime}");
+            Mod.Debug($"resetRequested - {resetRequestTime}");
         }
         public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
         static Exception caughtException = null;
-        public static void Log(string s) { if (modEntry != null) ModKit.Logger.Log(s); }
-        public static void Log(int indent, string s) { Log("    ".Repeat(indent) + s); }
-        public static void Debug(String s) { if (modEntry != null) ModKit.Logger.ModLoggerDebug(s); }
-        public static void Error(Exception e) { if (modEntry != null) ModKit.Logger.Log(e); }
-
         static bool Load(UnityModManager.ModEntry modEntry) {
             try {
 #if DEBUG
                 modEntry.OnUnload = Unload;
 #endif
                 modId = modEntry.Info.Id;
-                ModKit.Logger.modLogger = modEntry.Logger;
+
+                ModKit.Mod.OnLoad(modEntry);
                 settings = Settings.Load<Settings>(modEntry);
-                ModKit.Logger.modEntryPath = modEntry.Path;
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
@@ -67,11 +62,11 @@ namespace ToyBox {
                 modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
                 UI.KeyBindings.OnLoad(modEntry);
-                multiclassMod = new Multiclass.Mod();
+                multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendly.EnsureFriendlyTypesContainAll();
             }
             catch (Exception e) {
-                Main.Error(e);
+                Mod.Error(e);
                 throw e;
             }
             return true;
@@ -150,6 +145,7 @@ namespace ToyBox {
 #endif
                     new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
                     new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
+                    new NamedAction("Armies", () => ArmiesEditor.OnGUI()),
                     new NamedAction("Quests", () => QuestEditor.OnGUI())
                     );
             }
@@ -165,6 +161,7 @@ namespace ToyBox {
         static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
+            ArmiesEditor.OnShowGUI();
         }
 
         static void OnHideGUI(UnityModManager.ModEntry modEntry) {
@@ -180,7 +177,7 @@ namespace ToyBox {
                 var timeSinceRequest = DateTime.Now.Subtract(resetRequestTime).TotalMilliseconds;
                 //Main.Log($"timeSinceRequest - {timeSinceRequest}");
                 if (timeSinceRequest > 1000) {
-                    Main.Log($"resetExecuted - {timeSinceRequest}".cyan());
+                    Mod.Debug($"resetExecuted - {timeSinceRequest}".cyan());
                     needsResetGameUI = true;
                     resetRequested = false;
                 }

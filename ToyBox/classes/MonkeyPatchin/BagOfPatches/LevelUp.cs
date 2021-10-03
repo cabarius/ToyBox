@@ -28,7 +28,6 @@ using System.Reflection.Emit;
 namespace ToyBox.BagOfPatches {
     internal static class LevelUp {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(LevelUpController), "CanLevelUp")]
@@ -74,7 +73,7 @@ namespace ToyBox.BagOfPatches {
                 var codes = new List<CodeInstruction>(instructions);
                 int target = FindInsertionPoint(codes);
                 if (target < 0) {
-                    Main.Log("UnitProgressionData_AddClassLevel_Patch Transpiler unable to find target!");
+                    Mod.Error("UnitProgressionData_AddClassLevel_Patch Transpiler unable to find target!");
                     return codes;
                 }
 
@@ -94,7 +93,7 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
 
-                Main.Log("UnitProgressionData_AddClassLevel_Patch: COULD NOT FIND TARGET");
+                Mod.Error("UnitProgressionData_AddClassLevel_Patch: COULD NOT FIND TARGET");
                 return -1;
             }
         }
@@ -435,7 +434,7 @@ namespace ToyBox.BagOfPatches {
                     IFeatureSelection selection = (selection = (selectionVM.Feature as IFeatureSelection));
                     var availableItems = selection?.Items
                         .Where((IFeatureSelectionItem item) => selection.CanSelect(state.Unit, state, selectionState, item));
-                    //modLogger.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");
+                    //Main.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");
                     if (availableItems.Count() == 0)
                         __result = true;
                 }
@@ -505,16 +504,16 @@ namespace ToyBox.BagOfPatches {
                 FeatureSource source,
                 int level) {
                 //if (settings.featsMultiplier < 2) return true;
-                //modLogger.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
+                //Main.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
                 if (!unit.IsPartyOrPet()) return true;
-                modLogger.Log($"Log adding {settings.featsMultiplier}x features from {source.Blueprint.name.orange()} : {source.Blueprint.GetType().Name.yellow()} for {unit.CharacterName.green()} {string.Join(", ", state.Selections.Select(s => $"{s.Selection}")).cyan()}");
+                Mod.Trace($"Log adding {settings.featsMultiplier}x features from {source.Blueprint.name.orange()} : {source.Blueprint.GetType().Name.yellow()} for {unit.CharacterName.green()} {string.Join(", ", state.Selections.Select(s => $"{s.Selection}")).cyan()}");
                 foreach (BlueprintFeature featureBP in features.OfType<BlueprintFeature>()) {
-                    modLogger.Log($"    checking {featureBP.NameSafe().cyan()} : {featureBP.GetType().Name.yellow()}");
+                    Mod.Trace($"    checking {featureBP.NameSafe().cyan()} : {featureBP.GetType().Name.yellow()}");
                     var multiplier = settings.featsMultiplier;
                     for (int i = 0; i < multiplier; ++i) {
                         if (featureBP.MeetsPrerequisites(null, unit, state, true)) {
                             if (featureBP is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
-                                modLogger.Log($"    adding: {featureBP.NameSafe().cyan()}".orange());
+                                Mod.Trace($"    adding: {featureBP.NameSafe().cyan()}".orange());
                                 state.AddSelection(null, source, selection, level);
                             }
                         }
@@ -524,7 +523,7 @@ namespace ToyBox.BagOfPatches {
                     int level1 = level;
                     feature.SetSource(source1, level1);
                     if (featureBP is BlueprintProgression progression) {
-                        modLogger.Log($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {featureBP.NameSafe()}".cyan());
+                        Mod.Trace($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {featureBP.NameSafe()}".cyan());
                         LevelUpHelper.UpdateProgression(state, unit, progression);
                     }
                 }
@@ -554,7 +553,7 @@ namespace ToyBox.BagOfPatches {
                 if (!unit.IsPartyOrPet()) { return; }
                 if (!AllowedProgressions.Any(allowed => source.Blueprint.AssetGuid.Equals(allowed))) { return; }
 
-                modLogger.Log($"Log adding {settings.featsMultiplier}x feats for {unit.CharacterName}");
+                Main.Log($"Log adding {settings.featsMultiplier}x feats for {unit.CharacterName}");
                 int multiplier = settings.featsMultiplier - 1;
                 //We filter to only include feat selections of the feat group to prevent things like deities being multiplied
                 var featSelections = features

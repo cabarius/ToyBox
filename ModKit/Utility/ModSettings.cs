@@ -37,7 +37,7 @@ namespace ModKit {
                 }
             }
             catch (Exception e) {
-                Logger.Log($"{fileName} resource is not present or is malformed. exception: {e}");
+                Mod.Error($"{fileName} resource is not present or is malformed. exception: {e}");
                 settings = new T { };
             }
             if (File.Exists(userPath)) {
@@ -48,9 +48,9 @@ namespace ModKit {
                         settings = userSettings;
                     }
                     catch {
-                        Logger.Log("Failed to load user settings. Settings will be rebuilt.");
+                        Mod.Error("Failed to load user settings. Settings will be rebuilt.");
                         try { File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true); }
-                        catch { Logger.Log("Failed to archive broken settings."); }
+                        catch { Mod.Error("Failed to archive broken settings."); }
                     }
                 }
             }

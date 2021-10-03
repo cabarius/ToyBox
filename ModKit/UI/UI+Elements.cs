@@ -40,7 +40,9 @@ namespace ModKit {
                 _largeStyle.fixedHeight = UnityModManager.UI.Scale(24);
                 //_largeStyle.contentOffset = new Vector2(0, UnityModManager.UI.Scale(-6));
                 _largeStyle.padding = new RectOffset(0, 0, UnityModManager.UI.Scale(-3), 0);
+#pragma warning disable CS0618 // Type or member is obsolete
                 _largeStyle.clipOffset = new Vector2(0, UnityModManager.UI.Scale(3));
+#pragma warning restore CS0618 // Type or member is obsolete
                 _largeStyle.fontSize = UnityModManager.UI.Scale(21);
                 _largeStyle.fontStyle = FontStyle.Bold;
                 _largeStyle.normal.background = GUI.skin.label.normal.background;

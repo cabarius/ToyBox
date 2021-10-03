@@ -12,14 +12,13 @@ using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
 using ModKit.Utility;
+using ModKit;
 
 namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
-
         public static void AddClassLevel_NotCharacterLevel(this UnitProgressionData instance, BlueprintCharacterClass characterClass) {
             //instance.SureClassData(characterClass).Level++;
-            Main.Log($"AddClassLevel_NotCharLevel: class = {characterClass}");
+            Mod.Trace($"AddClassLevel_NotCharLevel: class = {characterClass}");
             ReflectionCache.GetMethod<UnitProgressionData, Func<UnitProgressionData, BlueprintCharacterClass, ClassData>>
                 ("SureClassData")(instance, characterClass).Level++;
             //instance.CharacterLevel++;
@@ -33,7 +32,7 @@ namespace ToyBox.Multiclass {
         }
 
         public static void Apply_NoStatsAndHitPoints(this ApplyClassMechanics instance, LevelUpState state, UnitDescriptor unit) {
-            Main.Log($"Apply_NoStatsAndHitPoints: unit = {unit.CharacterName}, state.class = {(state.SelectedClass==null?"NULL":state.SelectedClass.Name)}");
+            Mod.Trace($"Apply_NoStatsAndHitPoints: unit = {unit.CharacterName}, state.class = {(state.SelectedClass==null?"NULL":state.SelectedClass.Name)}");
             if (state.SelectedClass != null) {
                 ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData != null) {

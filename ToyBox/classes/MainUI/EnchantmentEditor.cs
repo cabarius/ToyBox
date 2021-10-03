@@ -231,7 +231,7 @@ namespace ToyBox.classes.MainUI {
                                 var description = enchantBP.Description;
                                 if (description != null) {
                                     UI.Space(25);
-                                    UI.Label(description.RemoveHtmlTags().green());
+                                    UI.Label(description.StripHTML().green());
                                 }
                             }
                         }
@@ -292,12 +292,12 @@ namespace ToyBox.classes.MainUI {
                                 UI.Label(enchant.CollationName().cyan(), UI.Width(300));
                                 GUILayout.TextField(enchant.AssetGuid.ToString(), UI.AutoWidth());
                             }
-                            if (enchant.Description.Length > 0) UI.Label(enchant.Description.RemoveHtmlTags().green());
+                            if (enchant.Description.Length > 0) UI.Label(enchant.Description.StripHTML().green());
                         }
                     }
                     else {
                         UI.Label(enchant.CollationName().cyan(), UI.Width(300));
-                        if (enchant.Description.Length > 0) UI.Label(enchant.Description.RemoveHtmlTags().green());
+                        if (enchant.Description.Length > 0) UI.Label(enchant.Description.StripHTML().green());
                     }
 
                 }
@@ -338,7 +338,7 @@ namespace ToyBox.classes.MainUI {
                 else {
                     var name = enchant.name;
                     var description = enchant.Description ?? "";
-                    description = description.RemoveHtmlTags();
+                    description = description.StripHTML();
                     if (terms.All(term => StringExtensions.Matches(name, term))
                         || settings.searchesDescriptions && terms.All(term => StringExtensions.Matches(description, term))
                         ) {
@@ -397,7 +397,7 @@ namespace ToyBox.classes.MainUI {
         #region Code
         public static void AddEnchantment(ItemEntity item, BlueprintItemEnchantment enchantment, Rounds? duration = null) {
             if (item?.m_Enchantments == null)
-                Main.Log("item.m_Enchantments is null");
+                Mod.Trace("item.m_Enchantments is null");
 
             var fake_context = new MechanicsContext(default(JsonConstructorMark)); // if context is null, items may stack which could cause bugs
 

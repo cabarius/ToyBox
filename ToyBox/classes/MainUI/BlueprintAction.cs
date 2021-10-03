@@ -23,6 +23,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,7 +178,7 @@ namespace ToyBox {
                                                                      spellbook.AddBaseLevel();
                                                                  }
                                                              }
-                                                             catch (Exception e) { Main.Error(e); }
+                                                             catch (Exception e) { Mod.Error(e); }
                                                          },
                                                          (bp, ch, index) => ch.Descriptor.Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
 

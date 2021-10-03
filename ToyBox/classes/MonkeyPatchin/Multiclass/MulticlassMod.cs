@@ -27,7 +27,7 @@ namespace ToyBox.Multiclass {
         Largest = 2,
         Sum = 3,
     };
-    public class Mod {
+    public class MulticlassMod {
         //public HashSet<Type> AbilityCasterCheckerTypes { get; } =
         //    new HashSet<Type>(Assembly.GetAssembly(typeof(IAbilityCasterChecker)).GetTypes()
         //        .Where(type => typeof(IAbilityCasterChecker).IsAssignableFrom(type) && !type.IsInterface));
@@ -77,7 +77,6 @@ namespace ToyBox.Multiclass {
     public static class MulticlassUtils {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         public static bool IsCharGen(this LevelUpState state) {
             return state.Mode == LevelUpState.CharBuildMode.CharGen || state.Unit.CharacterName == "Player Character";
@@ -102,7 +101,7 @@ namespace ToyBox.Multiclass {
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (isGestalt) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
-            modLogger.Log($"Set - key: {classID} -> {isGestalt} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
+            Mod.Trace($"Set - key: {classID} -> {isGestalt} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
 
@@ -118,7 +117,7 @@ namespace ToyBox.Multiclass {
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (exclude) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
-            // modLogger.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
+            // Main.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
         static public bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
@@ -126,7 +125,7 @@ namespace ToyBox.Multiclass {
             foreach (var ch in chars) {
                 //Main.Log($"   {ch.Progression.Owner} vs { progression.Owner}");
                 if (ch.Progression.Owner == progression.Owner) {
-                    //modLogger.Log($"   found: {ch.HashKey()} - {ch.Progression.Owner}");
+                    //Main.Log($"   found: {ch.HashKey()} - {ch.Progression.Owner}");
                     return ch.IsClassGestalt(cl);
                 }
             }
@@ -137,7 +136,6 @@ namespace ToyBox.Multiclass {
 
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static LevelUpController levelUpController { get; internal set; }
 
         public static bool IsAvailable() {
@@ -150,18 +148,18 @@ namespace ToyBox.Multiclass {
             get => settings.toggleMulticlass;
             set => settings.toggleMulticlass = value;
         }
-     #region Utilities
+        #region Utilities
 
 #if true
-    private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
+        private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
             StateReplacer stateReplacer = new StateReplacer(state);
-            modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
-            modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
-            modLogger.Log($"    options: {options}");
+            Mod.Trace($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
+            Mod.Trace($"    mythic: {state.IsMythicClassSelected}");
+            Mod.Trace($"    options: {options}");
             foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
                 if (characterClass != stateReplacer.SelectedClass && options.Contains(characterClass)) {
-                    modLogger.Log($"       {characterClass.GetDisplayName()} ");
+                    Mod.Trace($"       {characterClass.GetDisplayName()} ");
                     if (state.IsMythicClassSelected == characterClass.IsMythic) {
                         stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
                         action();
@@ -174,12 +172,12 @@ namespace ToyBox.Multiclass {
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var multiclassSet = MulticlassUtils.SelectedMulticlassSet(unit, state.IsCharGen());
             StateReplacer stateReplacer = new StateReplacer(state);
-            modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
-            modLogger.Log($"    mythic: {state.IsMythicClassSelected}");
-            modLogger.Log($"    multiclass set: {multiclassSet.Count}");
+            Main.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
+            Main.Log($"    mythic: {state.IsMythicClassSelected}");
+            Main.Log($"    multiclass set: {multiclassSet.Count}");
             foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
                 if (characterClass != stateReplacer.SelectedClass && MulticlassUtils.GetMulticlassSet(unit).Contains(characterClass.AssetGuid.ToString())) {
-                    modLogger.Log($"       {characterClass.GetDisplayName()} ");
+                    Main.Log($"       {characterClass.GetDisplayName()} ");
                     if (state.IsMythicClassSelected == characterClass.IsMythic) {
                         stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
                         action();
@@ -193,9 +191,18 @@ namespace ToyBox.Multiclass {
             progression.m_CharacterLevel = new int?(0);
             progression.m_MythicLevel = new int?(0);
             int? nullable;
+            // this logic is to work around a case where you may mark a character gestalt and then load an earlier save and have them get level 0 which breaks level up.  Here we will detect that you have no main class and prevent your first class from being gestalt
+            BlueprintCharacterClass classToEnsureNonGestalt = progression.Classes.FirstOrDefault()?.CharacterClass ?? null;
             foreach (ClassData classData in progression.Classes) {
-                var shouldSkip = progression.IsClassGestalt(classData.CharacterClass);
-                //modLogger.Log($"UpdateLevelsForGestalt - owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}".cyan().bold());
+                if (!progression.IsClassGestalt(classData.CharacterClass)) {
+                    classToEnsureNonGestalt = classData.CharacterClass;
+                    break;
+                }
+            }
+            foreach (ClassData classData in progression.Classes) {
+                var cl = classData.CharacterClass;
+                var shouldSkip = progression.IsClassGestalt(cl) && cl != classToEnsureNonGestalt;
+                //Main.Log($"UpdateLevelsForGestalt - owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}".cyan().bold());
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = progression.m_MythicLevel;

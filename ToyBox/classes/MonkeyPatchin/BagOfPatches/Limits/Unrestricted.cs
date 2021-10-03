@@ -13,7 +13,6 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 namespace ToyBox.BagOfPatches {
     static class Unrestricted {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EquipmentRestrictionAlignment), "CanBeEquippedBy")]

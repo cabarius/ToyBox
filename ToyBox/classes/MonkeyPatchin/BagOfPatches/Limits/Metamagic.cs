@@ -9,6 +9,7 @@ using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.FactLogic;
+using ModKit;
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
@@ -16,7 +17,6 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 namespace ToyBox.BagOfPatches {
     static class MetamagicPatches {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(MetamagicHelper), "DefaultCost")]
@@ -37,7 +37,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMetamagicIsFree) {
                     AddMetamagicFeat component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
-                        Main.Debug(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
+                        Mod.Trace(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
                     }
                     else {
                         __instance.KnownMetamagics.Add(metamagicFeature);

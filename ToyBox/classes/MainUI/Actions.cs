@@ -9,11 +9,10 @@ using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Root;
 using Kingmaker.Controllers.Rest;
-using Kingmaker.Designers.EventConditionActionSystem.Events;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
+using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;
@@ -24,10 +23,8 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
 using UnityModManagerNet;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.UI.ServiceWindow;
-using Kingmaker.Globalmap.State;
 using ToyBox.BagOfPatches;
+using ModKit;
 
 namespace ToyBox {
     public static class Actions {
@@ -196,23 +193,23 @@ namespace ToyBox {
             if (ability.IsSpell) {
                 if (CanAddAbility(ch, ability)) {
                     if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
-                            selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, ability);
-                            return;
+                        selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, ability);
+                        return;
                     }
                 }
 
-                Main.Log($"adding spell: {ability.Name}");
+                Mod.Trace($"adding spell: {ability.Name}");
                 foreach (var spellbook in ch.Spellbooks) {
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
-                    Main.Log($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
+                    Mod.Trace($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
                     for (int level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         var allowsSpell = learnable.Contains(ability);
                         var allowText = allowsSpell ? "FOUND" : "did not find";
-                        Main.Log($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
+                        Mod.Trace($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
                         if (allowsSpell) {
-                            Main.Log($"spell level = {level}");
+                            Mod.Trace($"spell level = {level}");
                             spellbook.AddKnown(level, ability);
                         }
 
@@ -257,26 +254,26 @@ namespace ToyBox {
             for (int i = ch.Descriptor.Progression.MaxCharacterLevel; i >= 1; i--) {
                 int xpBonus = xpTable.GetBonus(i);
 
-                Main.Log(i + ": " + xpBonus + " | " + xp);
+                Mod.Trace(i + ": " + xpBonus + " | " + xp);
 
                 if ((xp - xpBonus) >= 0) {
-                    Main.Log(i + ": " + (xp - xpBonus));
+                    Mod.Trace(i + ": " + (xp - xpBonus));
                     level = i;
                     break;
                 }
             }
             ch.Descriptor.Progression.CharacterLevel = level;
         }
-        
+
         public static void CreateArmy(BlueprintArmyPreset bp) {
             var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
             Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
         }
 
-        public static void AddSkillToLeader (BlueprintLeaderSkill bp) {
+        public static void AddSkillToLeader(BlueprintLeaderSkill bp) {
             GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
-                Main.Log($"Choose an army with a leader!");
+                Mod.Trace($"Choose an army with a leader!");
                 return;
             }
             ArmyLeader leader = selectedArmy.Data.Leader;
@@ -286,7 +283,7 @@ namespace ToyBox {
         public static void RemoveSkillFromLeader(BlueprintLeaderSkill bp) {
             GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
-                Main.Log($"Choose an army with a leader!");
+                Mod.Trace($"Choose an army with a leader!");
                 return;
             }
             ArmyLeader leader = selectedArmy.Data.Leader;
@@ -296,7 +293,7 @@ namespace ToyBox {
         public static bool LeaderHasSkill(BlueprintLeaderSkill bp) {
             GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
-                Main.Log($"Choose an army with a leader!");
+                Mod.Trace($"Choose an army with a leader!");
                 return false;
             }
             ArmyLeader leader = selectedArmy.Data.Leader;
@@ -311,7 +308,7 @@ namespace ToyBox {
             return true;
         }
         public static void ApplyTimeScale() {
-            float timeScale = settings.useAlternateTimeScaleMultiplier 
+            float timeScale = settings.useAlternateTimeScaleMultiplier
                 ? settings.alternateTimeScaleMultiplier
                 : settings.timeScaleMultiplier;
             Game.Instance.TimeController.DebugTimeScale = timeScale;
@@ -322,7 +319,7 @@ namespace ToyBox {
                     unit.IsPlayersEnemy &&
                     unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
                     UnitDescriptor descriptor = unit.Descriptor;
-                    if(descriptor != null) {
+                    if (descriptor != null) {
                         // removing the brain works better in RTWP, but gets stuck in turn based
                         //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
 

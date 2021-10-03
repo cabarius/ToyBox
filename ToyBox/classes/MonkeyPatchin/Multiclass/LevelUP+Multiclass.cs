@@ -28,7 +28,6 @@ namespace ToyBox.Multiclass {
     internal static class LevelUp {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
 
         [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] {
             typeof(UnitEntityData),
@@ -177,7 +176,7 @@ namespace ToyBox.Multiclass {
                 // Fix this.
 
                 var UnitProgressionData_CharacterLevel = AccessTools.Property(typeof(UnitProgressionData), nameof(UnitProgressionData.CharacterLevel));
-                Main.Log($"UnitProgressionData_CopyFrom_Patch - {unit.CharacterName.orange()} - {UnitProgressionData_CharacterLevel}");
+                Mod.Trace($"UnitProgressionData_CopyFrom_Patch - {unit.CharacterName.orange()} - {UnitProgressionData_CharacterLevel}");
 
                 UnitProgressionData_CharacterLevel.SetValue(__result.Descriptor.Progression, unit.Descriptor.Progression.CharacterLevel);
             }

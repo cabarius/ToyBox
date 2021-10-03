@@ -6,6 +6,7 @@ using Kingmaker.UnitLogic.Parts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ModKit;
 
 namespace ToyBox {
     class RespecHelper {
@@ -32,7 +33,7 @@ namespace ToyBox {
         }
 
         public static void Respec (UnitEntityData unit, Action successCallback = null) {
-            Main.Log("Initiating Respec");
+            Mod.Debug("Initiating Respec");
             EventBus.RaiseEvent(delegate (IRespecInitiateUIHandler h) {
                 h.HandleRespecInitiate(unit, FinishRespec);
             });
@@ -40,7 +41,7 @@ namespace ToyBox {
         }
 
         private static void FinishRespec() {
-            Main.Log("Finishing Respec");
+            Mod.Debug("Finishing Respec");
             // Maybe Apply Rest Without Advancing Time ?
         }
     }

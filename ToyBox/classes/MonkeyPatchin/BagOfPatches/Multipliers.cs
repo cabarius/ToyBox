@@ -27,7 +27,6 @@ using Kingmaker.Utility;
 namespace ToyBox.BagOfPatches {
     static class Multipliers {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EncumbranceHelper), "GetHeavy")]
@@ -115,10 +114,10 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
                 catch (Exception e) {
-                    modLogger.Log(e.ToString());
+                    Mod.Error(e);
                 }
 
-                Main.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+                Mod.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
 #endif
@@ -150,10 +149,10 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
                 catch (Exception e) {
-                    modLogger.Log(e.ToString());
+                    Mod.Error(e);
                 }
 
-                //Main.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+                //Mod.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
 
@@ -172,10 +171,10 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
                 catch (Exception e) {
-                    modLogger.Log(e.ToString());
+                    Mod.Error(e);
                 }
 
-                //Main.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
+                //Mod.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
         }
 
@@ -194,7 +193,7 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
                 catch (Exception e) {
-                    modLogger.Log(e.ToString());
+                    Mod.Error(e);
                 }
             }
         }
@@ -254,13 +253,13 @@ namespace ToyBox.BagOfPatches {
             static float BaseFovMax = 30;
             public static bool Prefix(CameraZoom __instance) {
                 if (firstCall) {
-                    //modLogger.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
+                    //Main.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
                     if (__instance.FovMin != BaseFovMin) {
-                        modLogger.Log($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
+                        Mod.Warning($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMin = __instance.FovMin;
                     }
                     if (__instance.FovMax != BaseFovMax) {
-                        modLogger.Log($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
+                        Mod.Warning($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMax = __instance.FovMax;
                     }
                     firstCall = false;

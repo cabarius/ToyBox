@@ -3,6 +3,7 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 using UnityEngine;
+using ModKit;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -75,7 +76,7 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterFriendlies = false;
         public bool toggleLootChecklistFilterBlueprint = false;
         public bool toggleLootChecklistFilterDescription = false;
-        public RarityType  lootChecklistFilterRarity = RarityType.None;
+        public RarityType lootChecklistFilterRarity = RarityType.None;
 
 
         //Crusade
@@ -102,7 +103,7 @@ namespace ToyBox {
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnoreClassAndFeatRestrictions = false;
-        public bool toggleIgnorePrerequisites = false; 
+        public bool toggleIgnorePrerequisites = false;
         public bool toggleIgnoreCasterTypeSpellLevel = false;
         public bool toggleIgnoreForbiddenArchetype = false;
         public bool toggleIgnorePrerequisiteStatValue = false;
@@ -266,15 +267,32 @@ namespace ToyBox {
         public bool toggleIgnoreBuildingRestrictions = false;
         public HashSet<string> ignoredBuildingRestrictionSet = new HashSet<string>();
 
-        // Other
-        public bool settingShowDebugInfo = true;
+        // Development
+        public LogLevel loggingLevel = LogLevel.Info;
+        public bool stripHtmlTagsFromUMMLogsTab = false;
+        public bool stripHtmlTagsFromNativeConsole = true;
+        public bool toggleShowDebugInfo = true;
+        public bool toggleDevopmentMode = false;
+        public bool toggleUberLoggerForwardPrefix = false;
 
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);
+        }
+        public static void OnGUI() {
+            Mod.logLevel = Main.settings.loggingLevel;
+            UI.HStack("Settings", 1,
+#if DEBUG
+                () => UI.Toggle("Strip HTML (colors) from Native Console", ref Main.settings.stripHtmlTagsFromNativeConsole),
+                () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.settings.stripHtmlTagsFromUMMLogsTab),
+#endif
+                () => UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode),
+                () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
+            () => { }
+            );
+
         }
     }
 }

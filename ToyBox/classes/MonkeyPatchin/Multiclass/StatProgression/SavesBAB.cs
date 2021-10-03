@@ -15,7 +15,7 @@ namespace ToyBox.Multiclass {
     public static class SavesBAB {
         public static void ApplySingleStat(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] appliedClasses, StatType stat, BlueprintStatProgression[] statProgs, ProgressionPolicy policy = ProgressionPolicy.Largest) {
             if (appliedClasses.Count() <= 0) return;
-            //Main.Debug($"stat: {stat}  baseValue: {unit.Stats.GetStat(stat).BaseValue}");
+            //Mod.Debug($"stat: {stat}  baseValue: {unit.Stats.GetStat(stat).BaseValue}");
             int[] newClassLvls = appliedClasses.Select(cd => unit.Progression.GetClassLevel(cd)).ToArray();
             int appliedClassCount = newClassLvls.Length;
             int[] oldBonuses = new int[appliedClassCount];

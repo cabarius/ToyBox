@@ -92,7 +92,11 @@ namespace ToyBox {
                     var indent = 3;
                     using (UI.VerticalScope()) {
                         foreach (var group in presentGroups.Reverse()) {
-                            var presents = group.AsEnumerable();
+                            var presents = group.AsEnumerable().OrderByDescending(p => {
+                                var loot = p.GetLewtz();
+                                if (loot.Count == 0) return 0;
+                                else return (int)loot.Max(l => l.Rarity());
+                            });
                             var rarity = settings.lootChecklistFilterRarity;
                             var count = presents.Count(p => p.GetLewtz().Lootable(rarity).Count() > 0);
                             UI.Label($"{group.Key.cyan()}: {count}");
@@ -123,7 +127,7 @@ namespace ToyBox {
                                                         UI.Space(100); UI.Label(lewt.Blueprint.GetDisplayName().grey(), showDesc ? UI.Width(350) : UI.AutoWidth());
                                                     }
                                                     if (showDesc) {
-                                                        UI.Space(100); UI.Label(description.RemoveHtmlTags().green());
+                                                        UI.Space(100); UI.Label(description.StripHTML().green());
                                                     }
                                                 }
                                             }
