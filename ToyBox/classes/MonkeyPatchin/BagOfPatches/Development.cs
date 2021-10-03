@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityModManagerNet;
+using static UnityModManagerNet.UnityModManager;
+using Logger = UnityModManagerNet.UnityModManager.Logger;
 
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     class Development {
@@ -50,6 +53,31 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 }
             }
         }
+        // This patch if for you @ArcaneTrixter and @Vek17
+        [HarmonyPatch(typeof(Logger), "Write")]
+        static class Logger_Logger_Patch {
+            static bool  Prefix(string str, bool onlyNative = false) {
+                if (str == null)
+                    return false;
+                var stripHTMLNative = settings.stripHtmlTagsFromNativeConsole;
+                var sriptHTMLHistory = settings.stripHtmlTagsFromUMMLogsTab;
+                Console.WriteLine(stripHTMLNative ?  str.StripHTML() : str);
+
+                if (onlyNative)
+                    return false;
+                if (sriptHTMLHistory) str = str.StripHTML();
+                Logger.buffer.Add(str);
+                Logger.history.Add(str);
+
+                if (Logger.history.Count >= Logger.historyCapacity * 2) {
+                    var result = Logger.history.Skip(Logger.historyCapacity);
+                    Logger.history.Clear();
+                    Logger.history.AddRange(result);
+                }
+                return false;
+            }
+        }
+
 
     }
 }

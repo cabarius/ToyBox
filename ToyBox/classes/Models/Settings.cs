@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityModManagerNet;
 using UnityEngine;
 using ModKit;
-using Logger = ModKit.Logger;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -269,7 +268,9 @@ namespace ToyBox {
         public HashSet<string> ignoredBuildingRestrictionSet = new HashSet<string>();
 
         // Development
-        public bool stripHtmlTagsFromLogs = false;
+        public LogLevel loggingLevel = LogLevel.Normal;
+        public bool stripHtmlTagsFromUMMLogsTab = false;
+        public bool stripHtmlTagsFromNativeConsole = true;
         public bool toggleShowDebugInfo = true;
         public bool toggleDevopmentMode = false;
         public bool toggleUberLoggerForwardPrefix = false;
@@ -277,18 +278,16 @@ namespace ToyBox {
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);
         }
-
-
         public static void OnGUI() {
-            Mod.ShouldStripHTML = Main.settings.stripHtmlTagsFromLogs;
+            Mod.logLevel = Main.settings.loggingLevel;
             UI.HStack("Settings", 1,
-                () => UI.EnumGrid("Log Level", ref Mod.logLevel, UI.AutoWidth()),
-                () => UI.Toggle("Strip HTML tags from Logging", ref Main.settings.stripHtmlTagsFromLogs),
+                () => UI.Toggle("Strip HTML (colors) from Native Console", ref Main.settings.stripHtmlTagsFromNativeConsole),
+                () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.settings.stripHtmlTagsFromUMMLogsTab),
                 () => UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode),
+                () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
             () => { }
             );
 

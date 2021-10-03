@@ -7,7 +7,7 @@ using UnityModManagerNet;
 using static UnityModManagerNet.UnityModManager;
 
 namespace ModKit {
-    public enum LogLevel {
+    public enum LogLevel : int {
         Error,
         Urgent,
         Normal,
@@ -20,7 +20,6 @@ namespace ModKit {
         private static UnityModManager.ModEntry.ModLogger modLogger;
 
         public static LogLevel logLevel = LogLevel.Normal;
-        public static bool ShouldStripHTML = false;
 
 
         public static void OnLoad(UnityModManager.ModEntry modEntry) {
@@ -29,30 +28,32 @@ namespace ModKit {
             Mod.modEntryPath = modEntry.Path;
         }
         public static void Error(string str) {
-            str = ShouldStripHTML ? str.StripHTML() : str.red().bold();
-            modLogger?.Log(str + "\n" + System.Environment.StackTrace);
+            str = str.red().bold();
+            modLogger?.Error(str + "\n" + System.Environment.StackTrace);
         }
         public static void Error(Exception ex) {
             Error(ex.ToString());
         }
         public static void Urgent(string str) {
             if (logLevel >= LogLevel.Urgent)
-                modLogger?.Log(ShouldStripHTML ? str.StripHTML() : str.orange());
+                modLogger?.Warning(str.orange());
         }
         public static void Log(string str) {
             if (logLevel >= LogLevel.Normal)
-                modLogger?.Log(ShouldStripHTML ? str.StripHTML() : str);
+                modLogger?.Log(str);
         }
         public static void Verbose(string str) {
             if (logLevel >= LogLevel.Verbose)
-                modLogger?.Log(ShouldStripHTML ? str.StripHTML() : str);
+                modLogger?.Log(str);
         }
         public static void Debug(string str) {
             if (logLevel >= LogLevel.Debug)
-                modLogger?.Log(ShouldStripHTML ? str.StripHTML() : str);
+                modLogger?.Log(str);
         }
 
     }
+#if false
+
     public class Logger {
 
         public static readonly string logFile = "ModKit";
@@ -137,7 +138,7 @@ namespace ModKit {
             this.UseTimeStamp = false;
         }
 
-        public new void Log(string str) {
+        public void Log(string str) {
             str = Utilties.UnityRichTextToHtml(str);
             base.LogToFiles(str);
         }
@@ -159,4 +160,5 @@ namespace ModKit {
             return new string[] { fields, methods, properties };
         }
     }
+#endif
 }

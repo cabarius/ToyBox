@@ -38,6 +38,7 @@
     <ItemGroup>
       <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp.dll" />
       <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll" />
+      <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll" />
     </ItemGroup>
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
   </Target>
@@ -135,9 +136,8 @@
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityModManager">
-      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="UnityModManager_public">
+      <HintPath>..\lib\UnityModManager_public.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +242,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
