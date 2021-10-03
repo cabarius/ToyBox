@@ -5,6 +5,7 @@ using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using ModKit;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,7 +62,7 @@ namespace ToyBox.classes.Infrastructure {
             }
 #if DEBUG
             foreach (var spellbook in casterLevelDictionary) {
-                Main.Log($"{spellbook.Key.Name}: {spellbook.Value}");
+                Mod.Debug($"{spellbook.Key.Name}: {spellbook.Value}");
             }
 #endif
             return casterLevelDictionary;
@@ -163,7 +164,7 @@ namespace ToyBox.classes.Infrastructure {
             var classData = unit.Progression.GetMythicToMerge();
             var oldMythicSpellbookBp = classData?.Spellbook;
             if (classData == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
-                Main.Log("Can't merge because you don't have a mythic class / mythic spellbook!");
+                Mod.Urgent("Can't merge because you don't have a mythic class / mythic spellbook!");
                 return;
             }
 

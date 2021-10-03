@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Kingmaker.Blueprints;
 using Kingmaker.BundlesLoading;
+using ModKit;
 
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {
@@ -60,7 +61,7 @@ namespace ToyBox {
                     bp = bpCache.Load(guid);
                 }
                 catch {
-                    Main.Log($"cannot load GUID: {guid}");
+                    Mod.Urgent($"cannot load GUID: {guid}");
                     continue;
                 }
                 blueprints.Add(bp);
@@ -75,7 +76,7 @@ namespace ToyBox {
 #endif
             watch.Stop();
 
-            Main.Log($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
+            Mod.Verbose($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             this.callback(blueprints);
             yield return null;
             StopCoroutine(coroutine);
@@ -114,9 +115,9 @@ namespace ToyBox {
             var bundle = BundlesLoadService.Instance.RequestBundle(AssetBundleNames.BlueprintAssets);
             BundlesLoadService.Instance.LoadDependencies(AssetBundleNames.BlueprintAssets);
             LoadRequest = bundle.LoadAllAssetsAsync<object>();
-            Main.Log($"created request {LoadRequest}");
+            Mod.Debug($"created request {LoadRequest}");
             LoadRequest.completed += (asyncOperation) => {
-                Main.Log($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
+                Mod.Debug($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
                 callback(LoadRequest.allAssets.Cast<SimpleBlueprint>());
                 LoadRequest = null;
             };

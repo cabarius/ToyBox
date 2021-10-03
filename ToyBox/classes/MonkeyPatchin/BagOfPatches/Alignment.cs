@@ -7,11 +7,11 @@ using Kingmaker.UnitLogic.Alignments;
 using UnityEngine;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using ModKit;
 
 namespace ToyBox {
     public static class AlignmentPatches {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(UnitAlignment), nameof(UnitAlignment.GetDirection))]
@@ -68,7 +68,7 @@ namespace ToyBox {
                     }
                 }
                 catch (Exception e) {
-                    modLogger.Log(e.ToString());
+                    Mod.Error(e);
                 }
                 return true;
             }

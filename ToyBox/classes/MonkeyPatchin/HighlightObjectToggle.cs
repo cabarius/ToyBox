@@ -7,6 +7,7 @@ using Kingmaker;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.PubSubSystem;
+using ModKit;
 
 namespace ToyBox.classes.MonkeyPatchin {
     public class HighlightObjectToggle
@@ -53,9 +54,8 @@ namespace ToyBox.classes.MonkeyPatchin {
                         return false;
                     }
                 }
-                catch (Exception ex)
-                {
-                    Main.Error(ex);
+                catch (Exception ex) {
+                    Mod.Error(ex);
                 }
                 return true;
             }
@@ -75,7 +75,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                 }
                 catch (Exception ex)
                 {
-                    Main.Error(ex);
+                    Mod.Error(ex);
                 }
                 return true;
             }

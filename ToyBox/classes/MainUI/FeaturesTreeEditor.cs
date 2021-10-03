@@ -71,7 +71,7 @@ namespace ToyBox {
                                     else {
                                         node.Expanded = ToggleState.None;
                                     }
-                                    Main.Log($"{node.Expanded} {titleText}");
+                                    Mod.Debug($"{node.Expanded} {titleText}");
                                     UI.ToggleButton(ref node.Expanded, titleText, _buttonStyle);
                                     if (node.Expanded.IsOn()) {
                                         using (UI.VerticalScope(UI.ExpandWidth(false))) {
@@ -90,7 +90,7 @@ namespace ToyBox {
             catch (Exception e) {
                 _selectedCharacter = null;
                 _featuresTree = null;
-                Main.Log(e.StackTrace);
+                Mod.Error(e);
                 throw e;
             }
         }

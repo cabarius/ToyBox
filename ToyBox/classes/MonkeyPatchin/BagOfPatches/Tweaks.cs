@@ -50,7 +50,6 @@ using UnityEngine;
 namespace ToyBox.BagOfPatches {
     static class Tweaks {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
         private static BlueprintGuid rage_barbarian = BlueprintGuid.Parse("df6a2cce8e3a9bd4592fb1968b83f730");
         private static BlueprintGuid rage_blood = BlueprintGuid.Parse("e3a0056eedac7754ca9a50603ba05177");

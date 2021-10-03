@@ -39,12 +39,12 @@ namespace ToyBox {
                     (v) => {
                         if (v) options.Add(cl);
                         else options.Remove(cl);
-                        Main.Debug($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
+                        Mod.Debug($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
                         changed = true;
                     },
                     350
                     );
-                if (showDesc) UI.Label(cl.Description.RemoveHtmlTags().green());
+                if (showDesc) UI.Label(cl.Description.StripHTML().green());
             }
             using (UI.HorizontalScope()) {
                 UI.Space(indent);
@@ -62,12 +62,12 @@ namespace ToyBox {
                                 (v) => {
                                     if (v) archetypeOptions.AddExclusive(archetype);
                                     else archetypeOptions.Remove(archetype);
-                                    Main.Log($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
+                                    Mod.Debug($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
                                 },
                                 350
                                 );
                                 options.SetArchetypeOptions(cl, archetypeOptions);
-                                if (showDesc) UI.Label(archetype.Description.RemoveHtmlTags().green());
+                                if (showDesc) UI.Label(archetype.Description.StripHTML().green());
                             }
                         }
                     }

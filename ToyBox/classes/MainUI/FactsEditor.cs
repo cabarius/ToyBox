@@ -167,7 +167,7 @@ namespace ToyBox {
                             if (settings.showAssetIDs)
                                 GUILayout.TextField(blueprint(fact).AssetGuid.ToString(), UI.AutoWidth());
                             if (description != null) {
-                                UI.Label(description(fact).RemoveHtmlTags().green(), UI.Width(remWidth - 100));
+                                UI.Label(description(fact).StripHTML().green(), UI.Width(remWidth - 100));
                             }
                         }
                     }

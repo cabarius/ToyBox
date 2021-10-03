@@ -238,7 +238,7 @@ namespace ToyBox {
                     bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
-                            selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Main.Log($"selected {ch.CharacterName}");
+                            selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Debug($"selected {ch.CharacterName}");
                         }
                         else { selectedToggle = ToggleChoice.None; }
                     }
@@ -395,7 +395,7 @@ namespace ToyBox {
                                 }
                                 else UI.Space(125);
                                 UI.Space(27);
-                                UI.Label(cd.CharacterClass.Description.RemoveHtmlTags().green(), UI.AutoWidth());
+                                UI.Label(cd.CharacterClass.Description.StripHTML().green(), UI.AutoWidth());
                             }
                         }
                     }

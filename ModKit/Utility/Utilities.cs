@@ -58,7 +58,7 @@ namespace ModKit {
             // throws InvalidCastException if types are incompatible
             return (T)retval;
         }
-        public static string RemoveHtmlTags(this string s) {
+        public static string StripHTML(this string s) {
             return Regex.Replace(s, "<.*?>", String.Empty);
         }
         public static string UnityRichTextToHtml(string s) {

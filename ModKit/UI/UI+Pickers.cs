@@ -118,6 +118,14 @@ namespace ModKit {
                 UI.EnumGrid<TEnum>(ref value, xCols, null, options);
             }
         }
+        public static void EnumGrid<TEnum>(String title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
+            using (UI.HorizontalScope()) {
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(25);
+                UI.EnumGrid<TEnum>(ref value, 0, null, options);
+            }
+        }
+
         public static void EnumGrid<TEnum>(String title, ref TEnum value, int xCols, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
             using (UI.HorizontalScope()) {
                 UI.Label(title.cyan(), UI.Width(300));

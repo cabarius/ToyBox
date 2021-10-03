@@ -127,7 +127,7 @@ namespace ToyBox {
                                                         UI.Space(100); UI.Label(lewt.Blueprint.GetDisplayName().grey(), showDesc ? UI.Width(350) : UI.AutoWidth());
                                                     }
                                                     if (showDesc) {
-                                                        UI.Space(100); UI.Label(description.RemoveHtmlTags().green());
+                                                        UI.Space(100); UI.Label(description.StripHTML().green());
                                                     }
                                                 }
                                             }

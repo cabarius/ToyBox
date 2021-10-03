@@ -278,8 +278,8 @@ namespace ToyBox {
                 );
             UI.Div(153, 25);
             UI.HStack("", 1,
-                () => UI.EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, UI.AutoWidth()),
+                () => UI.EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, UI.AutoWidth()),
                 () => { UI.Space(328); UI.Label("This allows characters you control to move through the selected category of units during combat".green(), UI.AutoWidth()); }
 #if false
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
@@ -337,19 +337,19 @@ namespace ToyBox {
             Actions.ApplyTimeScale();
             UI.Div(0, 25);
             UI.HStack("Dice Rolls", 1,
-                () => UI.EnumGrid("All Attacks Hit", ref settings.allAttacksHit, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("All Hits Critical", ref settings.allHitsCritical, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Always Roll 20", ref settings.alwaysRoll20, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Always Roll 1", ref settings.alwaysRoll1, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Never Roll 20", ref settings.neverRoll20, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Never Roll 1", ref settings.neverRoll1, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Always Roll 20 Out Of Combat", ref settings.alwaysRoll20OutOfCombat, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Take 10 Out of Combat (Always)", ref settings.take10always, 0, UI.AutoWidth()),
-                () => UI.EnumGrid("Take 10 Out of Combat (Minimum)", ref settings.take10minimum, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("All Attacks Hit", ref settings.allAttacksHit, UI.AutoWidth()),
+                () => UI.EnumGrid("All Hits Critical", ref settings.allHitsCritical, UI.AutoWidth()),
+                () => UI.EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, UI.AutoWidth()),
+                () => UI.EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 20", ref settings.alwaysRoll20, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 1", ref settings.alwaysRoll1, UI.AutoWidth()),
+                () => UI.EnumGrid("Never Roll 20", ref settings.neverRoll20, UI.AutoWidth()),
+                () => UI.EnumGrid("Never Roll 1", ref settings.neverRoll1, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, UI.AutoWidth()),
+                () => UI.EnumGrid("Always Roll 20 Out Of Combat", ref settings.alwaysRoll20OutOfCombat, UI.AutoWidth()),
+                () => UI.EnumGrid("Take 10 Out of Combat (Always)", ref settings.take10always, UI.AutoWidth()),
+                () => UI.EnumGrid("Take 10 Out of Combat (Minimum)", ref settings.take10minimum, UI.AutoWidth()),
                 () => { }
                 );
             UI.Div(0, 25);
@@ -362,7 +362,7 @@ namespace ToyBox {
                             UI.Label("Primary".orange(), UI.AutoWidth()); UI.Space(215); UI.Label("good for party".green());
                         }
                         UI.Space(25);
-                        UI.EnumGrid("Modify Summons For", ref settings.summonTweakTarget1, 0, UI.AutoWidth());
+                        UI.EnumGrid("Modify Summons For", ref settings.summonTweakTarget1, UI.AutoWidth());
                         UI.LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", UI.AutoWidth());
                         UI.Slider("Level Increase/Decrease", ref settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", UI.AutoWidth());
                         UI.Div(0, 25);
@@ -370,13 +370,16 @@ namespace ToyBox {
                             UI.Label("Secondary".orange(), UI.AutoWidth()); UI.Space(215); UI.Label("good for larger group or to reduce enemies".green());
                         }
                         UI.Space(25);
-                        UI.EnumGrid("Modify Summons For", ref settings.summonTweakTarget2, 0, UI.AutoWidth());
+                        UI.EnumGrid("Modify Summons For", ref settings.summonTweakTarget2, UI.AutoWidth());
                         UI.LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", UI.AutoWidth());
                         UI.Slider("Level Increase/Decrease", ref settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", UI.AutoWidth());
                     }
                 },
                 () => { }
              );
+            // Show config options here for now. Consider moving to its own tab someday
+            UI.Div(0, 25);
+            Settings.OnGUI();
         }
     }
 }

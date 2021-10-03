@@ -141,6 +141,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
     <Compile Include="classes\Infrastructure\HumanFriendly.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Development.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUp.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
@@ -196,7 +198,7 @@
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\LevelUP+Multiclass.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\Mod.cs" />
+    <Compile Include="classes\MonkeyPatchin\Multiclass\MulticlassMod.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs" />
@@ -207,7 +209,7 @@
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="classes\Models\Settings.cs" />
+    <Compile Include="classes\Models\settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

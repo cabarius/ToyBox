@@ -53,7 +53,6 @@ using ModKit;
 namespace ToyBox.BagOfPatches {
     static class Misc {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
@@ -281,10 +280,10 @@ namespace ToyBox.BagOfPatches {
                         if (item != null) {
                             Game.Instance.ScheduleAction(() =>{ 
                                 try {
-                                    Main.Log($"refill {item.m_Blueprint.Name.cyan()}");
+                                    Mod.Verbose($"refill {item.m_Blueprint.Name.cyan()}");
                                     __instance.InsertItem(item); 
                                 } 
-                                catch (Exception e) { Main.Log($"{e}"); } } );
+                                catch (Exception e) { Mod.Error($"{e}"); } } );
                         }
                         __state = null;
                     }
@@ -365,12 +364,12 @@ namespace ToyBox.BagOfPatches {
                 if (!settings.toggleShiftClickToUseInventorySlot) return true;
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
                     var item = __instance.Item;
-                    Main.Log($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
+                    Mod.Verbose($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
                     try {
                         item.TryUseFromInventory(item.GetBestAvailableUser(), (TargetWrapper)UIUtility.GetCurrentCharacter());
                     }
                     catch (Exception e) {
-                        Main.Log($"InventorySlotPCView_OnClick_Patch - {e}");
+                        Mod.Error($"InventorySlotPCView_OnClick_Patch - {e}");
                     }
                     return false;
                 }

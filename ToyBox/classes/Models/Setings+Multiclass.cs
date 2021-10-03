@@ -29,12 +29,12 @@ namespace ToyBox {
             MulticlassOptions options;
             if (ch == null) {
                 options = Main.settings.multiclassSettings.GetValueOrDefault(CharGenKey, new MulticlassOptions());
-                //Main.Debug($"MulticlassOptions.Get - chargen - options: {options}");
+                //Mod.Debug($"MulticlassOptions.Get - chargen - options: {options}");
             }
             else {
                 if (ch.HashKey() == null) return null;
                 options = Main.settings.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
-                //Main.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
+                //Mod.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
             }
             return options;
         }

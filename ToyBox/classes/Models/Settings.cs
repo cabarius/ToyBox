@@ -3,6 +3,8 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
 using UnityEngine;
+using ModKit;
+using Logger = ModKit.Logger;
 
 namespace ToyBox {
     public class Settings : UnityModManager.ModSettings {
@@ -75,7 +77,7 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterFriendlies = false;
         public bool toggleLootChecklistFilterBlueprint = false;
         public bool toggleLootChecklistFilterDescription = false;
-        public RarityType  lootChecklistFilterRarity = RarityType.None;
+        public RarityType lootChecklistFilterRarity = RarityType.None;
 
 
         //Crusade
@@ -102,7 +104,7 @@ namespace ToyBox {
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnoreClassAndFeatRestrictions = false;
-        public bool toggleIgnorePrerequisites = false; 
+        public bool toggleIgnorePrerequisites = false;
         public bool toggleIgnoreCasterTypeSpellLevel = false;
         public bool toggleIgnoreForbiddenArchetype = false;
         public bool toggleIgnorePrerequisiteStatValue = false;
@@ -266,8 +268,11 @@ namespace ToyBox {
         public bool toggleIgnoreBuildingRestrictions = false;
         public HashSet<string> ignoredBuildingRestrictionSet = new HashSet<string>();
 
-        // Other
-        public bool settingShowDebugInfo = true;
+        // Development
+        public bool stripHtmlTagsFromLogs = false;
+        public bool toggleShowDebugInfo = true;
+        public bool toggleDevopmentMode = false;
+        public bool toggleUberLoggerForwardPrefix = false;
 
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
@@ -275,6 +280,18 @@ namespace ToyBox {
 
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);
+        }
+
+
+        public static void OnGUI() {
+            Mod.ShouldStripHTML = Main.settings.stripHtmlTagsFromLogs;
+            UI.HStack("Settings", 1,
+                () => UI.EnumGrid("Log Level", ref Mod.logLevel, UI.AutoWidth()),
+                () => UI.Toggle("Strip HTML tags from Logging", ref Main.settings.stripHtmlTagsFromLogs),
+                () => UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode),
+            () => { }
+            );
+
         }
     }
 }

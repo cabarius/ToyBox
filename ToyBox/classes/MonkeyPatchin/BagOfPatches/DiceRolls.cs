@@ -5,6 +5,7 @@ using Kingmaker;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
+using ModKit;
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 using System;
@@ -14,7 +15,6 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 namespace ToyBox.BagOfPatches {
     static class DiceRolls {
         public static Settings settings = Main.settings;
-        public static UnityModManager.ModEntry.ModLogger modLogger = ModKit.Logger.modLogger;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
@@ -58,7 +58,7 @@ namespace ToyBox.BagOfPatches {
                 var initiator = __instance.Initiator;
                 int result = __instance.m_Result;
                 //modLogger.Log($"initiator: {initiator.CharacterName} isInCombat: {initiator.IsInCombat} alwaysRole20OutOfCombat: {settings.alwaysRoll20OutOfCombat}");
-                //Main.Debug($"initiator: {initiator.CharacterName} Initial D20Roll: " + result);
+                //Mod.Debug($"initiator: {initiator.CharacterName} Initial D20Roll: " + result);
                 if (    UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)
                    || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat)
                            && !initiator.IsInCombat
@@ -93,7 +93,7 @@ namespace ToyBox.BagOfPatches {
                         result = UnityEngine.Random.Range(min, 20);
                     }
                 }
-                //Main.Debug("Modified D20Roll: " + result);
+                //Mod.Debug("Modified D20Roll: " + result);
                 __instance.m_Result = result;
             }
         }
@@ -103,11 +103,11 @@ namespace ToyBox.BagOfPatches {
             static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
                     __result = 1 + __instance.Modifier;
-                    Main.Debug("Modified InitiativeRoll: " + __result);
+                    Mod.Debug("Modified InitiativeRoll: " + __result);
                 }
                 else if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
                     __result = 20 + __instance.Modifier;
-                    Main.Debug("Modified InitiativeRoll: " + __result);
+                    Mod.Debug("Modified InitiativeRoll: " + __result);
                 }
             }
         }
