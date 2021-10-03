@@ -13,7 +13,7 @@
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
-### Ver 1.3.18 (Coming Soon)
+### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
 * **Bag of Tricks**
   * ***Equipment No Weight*** tweek is back. It was stolen by quasits who work for the merchant guild...
