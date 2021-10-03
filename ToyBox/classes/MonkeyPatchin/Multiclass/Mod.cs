@@ -150,10 +150,10 @@ namespace ToyBox.Multiclass {
             get => settings.toggleMulticlass;
             set => settings.toggleMulticlass = value;
         }
-     #region Utilities
+        #region Utilities
 
 #if true
-    private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
+        private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
             StateReplacer stateReplacer = new StateReplacer(state);
             modLogger.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
@@ -193,8 +193,17 @@ namespace ToyBox.Multiclass {
             progression.m_CharacterLevel = new int?(0);
             progression.m_MythicLevel = new int?(0);
             int? nullable;
+            // this logic is to work around a case where you may mark a character gestalt and then load an earlier save and have them get level 0 which breaks level up.  Here we will detect that you have no main class and prevent your first class from being gestalt
+            BlueprintCharacterClass classToEnsureNonGestalt = progression.Classes.FirstOrDefault()?.CharacterClass ?? null;
             foreach (ClassData classData in progression.Classes) {
-                var shouldSkip = progression.IsClassGestalt(classData.CharacterClass);
+                if (!progression.IsClassGestalt(classData.CharacterClass)) {
+                    classToEnsureNonGestalt = classData.CharacterClass;
+                    break;
+                }
+            }
+            foreach (ClassData classData in progression.Classes) {
+                var cl = classData.CharacterClass;
+                var shouldSkip = progression.IsClassGestalt(cl) && cl != classToEnsureNonGestalt;
                 //modLogger.Log($"UpdateLevelsForGestalt - owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}".cyan().bold());
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {
