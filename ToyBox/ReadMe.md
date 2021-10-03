@@ -13,6 +13,9 @@
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
+### Ver 1.3.19 (Coming Soon)
+* (ShadowRanger) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
+
 ### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
 * **Bag of Tricks**
