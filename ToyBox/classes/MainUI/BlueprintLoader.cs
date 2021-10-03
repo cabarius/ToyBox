@@ -76,7 +76,7 @@ namespace ToyBox {
 #endif
             watch.Stop();
 
-            Mod.Verbose($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
+            Mod.Detail($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             this.callback(blueprints);
             yield return null;
             StopCoroutine(coroutine);

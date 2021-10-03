@@ -37,7 +37,7 @@ namespace ToyBox {
         public static void SetNeedsResetGameUI() {
             resetRequested = true;
             resetRequestTime = DateTime.Now;
-            Mod.Verbose($"resetRequested - {resetRequestTime}");
+            Mod.Detail($"resetRequested - {resetRequestTime}");
         }
         public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
 
@@ -177,7 +177,7 @@ namespace ToyBox {
                 var timeSinceRequest = DateTime.Now.Subtract(resetRequestTime).TotalMilliseconds;
                 //Main.Log($"timeSinceRequest - {timeSinceRequest}");
                 if (timeSinceRequest > 1000) {
-                    Mod.Verbose($"resetExecuted - {timeSinceRequest}".cyan());
+                    Mod.Detail($"resetExecuted - {timeSinceRequest}".cyan());
                     needsResetGameUI = true;
                     resetRequested = false;
                 }

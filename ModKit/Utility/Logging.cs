@@ -11,7 +11,7 @@ namespace ModKit {
         Error,
         Urgent,
         Normal,
-        Verbose,
+        Detail,
         Debug
     }
     public static partial class Mod {
@@ -42,8 +42,8 @@ namespace ModKit {
             if (logLevel >= LogLevel.Normal)
                 modLogger?.Log(str);
         }
-        public static void Verbose(string str) {
-            if (logLevel >= LogLevel.Verbose)
+        public static void Detail(string str) {
+            if (logLevel >= LogLevel.Detail)
                 modLogger?.Log(str);
         }
         public static void Debug(string str) {

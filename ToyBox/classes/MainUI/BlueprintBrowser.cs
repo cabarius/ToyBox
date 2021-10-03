@@ -150,11 +150,11 @@ namespace ToyBox {
                 }
 #else
                 if (BlueprintLoader.Shared.IsLoading) { return null; } else {
-                    Mod.Verbose($"calling BlueprintLoader.Load");
+                    Mod.Detail($"calling BlueprintLoader.Load");
                     BlueprintLoader.Shared.Load((bps) => {
                         blueprints = bps;
                         UpdateSearchResults();
-                        Mod.Verbose($"success got {bps.Count()} bluerints");
+                        Mod.Detail($"success got {bps.Count()} bluerints");
                     });
                     return null;
                 }
