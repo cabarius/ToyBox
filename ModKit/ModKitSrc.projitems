@@ -18,12 +18,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\MenuManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ColorUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\KeyBindings\KeyBindings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Toggle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\RichText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Builders.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+HTML.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Controls.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Elements.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\KeyBindings\KeyBind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Pickers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Toggles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Wrappers.cs" />
@@ -34,7 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\GUIHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+KeyBindings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\KeyBindings\UI+KeyBindings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Logging.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\ModSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\NamedTypes.cs" />
@@ -47,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)UI\KeyBindings\" />
     <Folder Include="$(MSBuildThisFileDirectory)Utility\Extensions\" />
   </ItemGroup>
 </Project>

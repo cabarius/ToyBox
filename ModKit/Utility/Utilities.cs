@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 
 namespace ModKit {
     public static class Utilties {
-
         public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default(TValue)) {
             if (dictionary == null) { throw new ArgumentNullException(nameof(dictionary)); } // using C# 6
             if (key == null) { throw new ArgumentNullException(nameof(key)); } //  using C# 6
@@ -71,7 +70,6 @@ namespace ModKit {
 
             return s;
         }
-
         public static string[] getObjectInfo(object o) {
 
             string fields = "";
@@ -112,6 +110,10 @@ namespace ModKit {
             return Enum.GetValues(enumType)
                 .Cast<TEnum>()
                 .ToDictionary(e => e, e => Enum.GetName(enumType, e));
+        }
+        public static Dictionary<K, V> Filter<K, V>(this Dictionary<K, V> dict,
+        Predicate<KeyValuePair<K, V>> pred) {
+            return dict.Where(it => pred(it)).ToDictionary(it => it.Key, it => it.Value);
         }
     }
     public static class MK {

@@ -19,7 +19,7 @@ namespace ToyBox {
         // cheats combat
         const string RestAll = "Rest All";
         const string Empowered = "Empowered";
-        const string FullBuffPlease = "Full Buffs Please";
+        const string FullBuffPlease = "Common Buffs";
         const string GoddesBuffs = "Buff Like A Godess";
         const string RemoveBuffs = "Remove Buffs";
         const string RemoveDeathsDoor = "Remove Deaths Door";
@@ -91,13 +91,15 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Combat", 2,
                 () => UI.BindableActionButton(RestAll),
-                () => UI.BindableActionButton(Empowered),
                 () => UI.BindableActionButton(FullBuffPlease),
+                () => UI.BindableActionButton(Empowered),
                 () => UI.BindableActionButton(GoddesBuffs),
                 () => UI.BindableActionButton(RemoveBuffs),
                 () => UI.BindableActionButton(RemoveDeathsDoor),
                 () => UI.BindableActionButton(KillAllEnemies),
+#if DEBUg
                 () => UI.BindableActionButton(SummonZoo),
+#endif
                 () => UI.BindableActionButton(LobotomizeAllEnemies),
                 () => { }
                 );
