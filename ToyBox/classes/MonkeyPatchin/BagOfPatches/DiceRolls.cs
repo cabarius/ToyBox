@@ -81,11 +81,11 @@ namespace ToyBox.BagOfPatches {
                         result = UnityEngine.Random.Range(2, 21);
                         min = 2;
                     }
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10always) && result < 10) {
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10always) && result < 10 && !initiator.IsInCombat) {
                         result = 10;
                         min = 10;
                     }
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10minimum) && result < 10) {
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10minimum) && result < 10 && !initiator.IsInCombat) {
                         result = UnityEngine.Random.Range(10, 21);
                         min = 10;
                     }
