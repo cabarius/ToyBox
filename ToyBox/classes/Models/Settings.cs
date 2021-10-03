@@ -284,8 +284,10 @@ namespace ToyBox {
         public static void OnGUI() {
             Mod.logLevel = Main.settings.loggingLevel;
             UI.HStack("Settings", 1,
+#if DEBUG
                 () => UI.Toggle("Strip HTML (colors) from Native Console", ref Main.settings.stripHtmlTagsFromNativeConsole),
                 () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.settings.stripHtmlTagsFromUMMLogsTab),
+#endif
                 () => UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode),
                 () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
             () => { }
