@@ -10,16 +10,16 @@ namespace ModKit {
     public enum LogLevel : int {
         Error,
         Warning,
-        Normal,
-        Detail,
-        Debug
+        Info,
+        Debug,
+        Trace
     }
     public static partial class Mod {
         public static ModEntry modEntry { get; set; } = null;
         public static string modEntryPath { get; set; } = null;
         private static UnityModManager.ModEntry.ModLogger modLogger;
 
-        public static LogLevel logLevel = LogLevel.Normal;
+        public static LogLevel logLevel = LogLevel.Info;
 
 
         public static void OnLoad(UnityModManager.ModEntry modEntry) {
@@ -39,15 +39,15 @@ namespace ModKit {
                 modLogger?.Warning(str.orange());
         }
         public static void Log(string str) {
-            if (logLevel >= LogLevel.Normal)
-                modLogger?.Log(str);
-        }
-        public static void Detail(string str) {
-            if (logLevel >= LogLevel.Detail)
+            if (logLevel >= LogLevel.Info)
                 modLogger?.Log(str);
         }
         public static void Debug(string str) {
             if (logLevel >= LogLevel.Debug)
+                modLogger?.Log(str);
+        }
+        public static void Trace(string str) {
+            if (logLevel >= LogLevel.Trace)
                 modLogger?.Log(str);
         }
 

@@ -268,7 +268,7 @@ namespace ToyBox {
         public HashSet<string> ignoredBuildingRestrictionSet = new HashSet<string>();
 
         // Development
-        public LogLevel loggingLevel = LogLevel.Normal;
+        public LogLevel loggingLevel = LogLevel.Info;
         public bool stripHtmlTagsFromUMMLogsTab = false;
         public bool stripHtmlTagsFromNativeConsole = true;
         public bool toggleShowDebugInfo = true;

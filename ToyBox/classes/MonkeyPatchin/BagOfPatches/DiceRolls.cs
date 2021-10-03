@@ -103,11 +103,11 @@ namespace ToyBox.BagOfPatches {
             static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
                     __result = 1 + __instance.Modifier;
-                    Mod.Debug("Modified InitiativeRoll: " + __result);
+                    Mod.Trace("Modified InitiativeRoll: " + __result);
                 }
                 else if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
                     __result = 20 + __instance.Modifier;
-                    Mod.Debug("Modified InitiativeRoll: " + __result);
+                    Mod.Trace("Modified InitiativeRoll: " + __result);
                 }
             }
         }

@@ -33,7 +33,7 @@ namespace ToyBox {
         }
 
         public static void Respec (UnitEntityData unit, Action successCallback = null) {
-            Mod.Detail("Initiating Respec");
+            Mod.Debug("Initiating Respec");
             EventBus.RaiseEvent(delegate (IRespecInitiateUIHandler h) {
                 h.HandleRespecInitiate(unit, FinishRespec);
             });
@@ -41,7 +41,7 @@ namespace ToyBox {
         }
 
         private static void FinishRespec() {
-            Mod.Detail("Finishing Respec");
+            Mod.Debug("Finishing Respec");
             // Maybe Apply Rest Without Advancing Time ?
         }
     }

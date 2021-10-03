@@ -506,14 +506,14 @@ namespace ToyBox.BagOfPatches {
                 //if (settings.featsMultiplier < 2) return true;
                 //Main.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
                 if (!unit.IsPartyOrPet()) return true;
-                Mod.Debug($"Log adding {settings.featsMultiplier}x features from {source.Blueprint.name.orange()} : {source.Blueprint.GetType().Name.yellow()} for {unit.CharacterName.green()} {string.Join(", ", state.Selections.Select(s => $"{s.Selection}")).cyan()}");
+                Mod.Trace($"Log adding {settings.featsMultiplier}x features from {source.Blueprint.name.orange()} : {source.Blueprint.GetType().Name.yellow()} for {unit.CharacterName.green()} {string.Join(", ", state.Selections.Select(s => $"{s.Selection}")).cyan()}");
                 foreach (BlueprintFeature featureBP in features.OfType<BlueprintFeature>()) {
-                    Mod.Debug($"    checking {featureBP.NameSafe().cyan()} : {featureBP.GetType().Name.yellow()}");
+                    Mod.Trace($"    checking {featureBP.NameSafe().cyan()} : {featureBP.GetType().Name.yellow()}");
                     var multiplier = settings.featsMultiplier;
                     for (int i = 0; i < multiplier; ++i) {
                         if (featureBP.MeetsPrerequisites(null, unit, state, true)) {
                             if (featureBP is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
-                                Mod.Debug($"    adding: {featureBP.NameSafe().cyan()}".orange());
+                                Mod.Trace($"    adding: {featureBP.NameSafe().cyan()}".orange());
                                 state.AddSelection(null, source, selection, level);
                             }
                         }
@@ -523,7 +523,7 @@ namespace ToyBox.BagOfPatches {
                     int level1 = level;
                     feature.SetSource(source1, level1);
                     if (featureBP is BlueprintProgression progression) {
-                        Mod.Debug($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {featureBP.NameSafe()}".cyan());
+                        Mod.Trace($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {featureBP.NameSafe()}".cyan());
                         LevelUpHelper.UpdateProgression(state, unit, progression);
                     }
                 }

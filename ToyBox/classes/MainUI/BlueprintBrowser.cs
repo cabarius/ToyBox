@@ -150,11 +150,11 @@ namespace ToyBox {
                 }
 #else
                 if (BlueprintLoader.Shared.IsLoading) { return null; } else {
-                    Mod.Detail($"calling BlueprintLoader.Load");
+                    Mod.Debug($"calling BlueprintLoader.Load");
                     BlueprintLoader.Shared.Load((bps) => {
                         blueprints = bps;
                         UpdateSearchResults();
-                        Mod.Detail($"success got {bps.Count()} bluerints");
+                        Mod.Debug($"success got {bps.Count()} bluerints");
                     });
                     return null;
                 }
@@ -187,7 +187,7 @@ namespace ToyBox {
             var count = unpagedBPs.Count();
             var offset = Math.Min(count, currentPage * limit);
             limit = Math.Min(limit, Math.Max(count, count - limit));
-            Mod.Debug($"{currentPage} / {pageCount} count: {count} => offset: {offset} limit: {limit} ");
+            Mod.Trace($"{currentPage} / {pageCount} count: {count} => offset: {offset} limit: {limit} ");
             filteredBPs = unpagedBPs.Skip(offset).Take(limit).ToArray();
             filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
 

@@ -76,7 +76,7 @@ namespace ToyBox {
 #endif
             watch.Stop();
 
-            Mod.Detail($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
+            Mod.Debug($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             this.callback(blueprints);
             yield return null;
             StopCoroutine(coroutine);
@@ -115,9 +115,9 @@ namespace ToyBox {
             var bundle = BundlesLoadService.Instance.RequestBundle(AssetBundleNames.BlueprintAssets);
             BundlesLoadService.Instance.LoadDependencies(AssetBundleNames.BlueprintAssets);
             LoadRequest = bundle.LoadAllAssetsAsync<object>();
-            Mod.Debug($"created request {LoadRequest}");
+            Mod.Trace($"created request {LoadRequest}");
             LoadRequest.completed += (asyncOperation) => {
-                Mod.Debug($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
+                Mod.Trace($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
                 callback(LoadRequest.allAssets.Cast<SimpleBlueprint>());
                 LoadRequest = null;
             };

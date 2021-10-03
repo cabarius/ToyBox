@@ -39,7 +39,7 @@ namespace ToyBox {
                     (v) => {
                         if (v) options.Add(cl);
                         else options.Remove(cl);
-                        Mod.Debug($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
+                        Mod.Trace($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
                         changed = true;
                     },
                     350
@@ -62,7 +62,7 @@ namespace ToyBox {
                                 (v) => {
                                     if (v) archetypeOptions.AddExclusive(archetype);
                                     else archetypeOptions.Remove(archetype);
-                                    Mod.Debug($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
+                                    Mod.Trace($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
                                 },
                                 350
                                 );

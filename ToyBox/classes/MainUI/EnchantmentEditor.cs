@@ -397,7 +397,7 @@ namespace ToyBox.classes.MainUI {
         #region Code
         public static void AddEnchantment(ItemEntity item, BlueprintItemEnchantment enchantment, Rounds? duration = null) {
             if (item?.m_Enchantments == null)
-                Mod.Debug("item.m_Enchantments is null");
+                Mod.Trace("item.m_Enchantments is null");
 
             var fake_context = new MechanicsContext(default(JsonConstructorMark)); // if context is null, items may stack which could cause bugs
 

@@ -238,7 +238,7 @@ namespace ToyBox {
                     bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
-                            selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Debug($"selected {ch.CharacterName}");
+                            selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Trace($"selected {ch.CharacterName}");
                         }
                         else { selectedToggle = ToggleChoice.None; }
                     }

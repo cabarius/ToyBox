@@ -101,7 +101,7 @@ namespace ToyBox.Multiclass {
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (isGestalt) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
-            Mod.Debug($"Set - key: {classID} -> {isGestalt} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
+            Mod.Trace($"Set - key: {classID} -> {isGestalt} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
 
@@ -154,12 +154,12 @@ namespace ToyBox.Multiclass {
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
             StateReplacer stateReplacer = new StateReplacer(state);
-            Mod.Debug($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
-            Mod.Debug($"    mythic: {state.IsMythicClassSelected}");
-            Mod.Debug($"    options: {options}");
+            Mod.Trace($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
+            Mod.Trace($"    mythic: {state.IsMythicClassSelected}");
+            Mod.Trace($"    options: {options}");
             foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
                 if (characterClass != stateReplacer.SelectedClass && options.Contains(characterClass)) {
-                    Mod.Debug($"       {characterClass.GetDisplayName()} ");
+                    Mod.Trace($"       {characterClass.GetDisplayName()} ");
                     if (state.IsMythicClassSelected == characterClass.IsMythic) {
                         stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
                         action();

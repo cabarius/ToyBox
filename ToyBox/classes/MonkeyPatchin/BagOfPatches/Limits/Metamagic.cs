@@ -37,7 +37,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMetamagicIsFree) {
                     AddMetamagicFeat component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
-                        Mod.Debug(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
+                        Mod.Trace(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
                     }
                     else {
                         __instance.KnownMetamagics.Add(metamagicFeature);

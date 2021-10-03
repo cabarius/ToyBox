@@ -68,7 +68,7 @@ namespace ToyBox.BagOfPatches {
         )]
         public static class RuleSummonUnit_Constructor_Patch {
             public static void Prefix(UnitEntityData initiator, BlueprintUnit blueprint, Vector3 position, ref Rounds duration, ref int level, RuleSummonUnit __instance) {
-                Mod.Detail($"old duration: {duration} level: {level} \n mult: {settings.summonDurationMultiplier1} levelInc: {settings.summonLevelModifier1}\n initiatior: {initiator} tweakTarget: {settings.summonTweakTarget1} shouldTweak: {UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget1)}");
+                Mod.Debug($"old duration: {duration} level: {level} \n mult: {settings.summonDurationMultiplier1} levelInc: {settings.summonLevelModifier1}\n initiatior: {initiator} tweakTarget: {settings.summonTweakTarget1} shouldTweak: {UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget1)}");
                 if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget1)) {
                     if (settings.summonDurationMultiplier1 != 1) {
                         duration = new Rounds(Convert.ToInt32(duration.Value * settings.summonDurationMultiplier1));
@@ -85,12 +85,12 @@ namespace ToyBox.BagOfPatches {
                         level = Math.Max(0, Math.Min(level + (int)settings.summonLevelModifier1, 20));
                     }
                 }
-                Mod.Detail($"new duration: {duration} level: {level}");
+                Mod.Debug($"new duration: {duration} level: {level}");
 
                 if (settings.toggleMakeSummmonsControllable) {
                     SummonedByPlayerFaction = initiator.IsPlayerFaction;
                 }
-                Mod.Detail("Initiator: " + initiator.CharacterName + $"(PlayerFaction : {initiator.IsPlayerFaction})" + "\nBlueprint: " + blueprint.CharacterName  + "\nDuration: " + duration.Value);
+                Mod.Debug("Initiator: " + initiator.CharacterName + $"(PlayerFaction : {initiator.IsPlayerFaction})" + "\nBlueprint: " + blueprint.CharacterName  + "\nDuration: " + duration.Value);
             }
         }
 

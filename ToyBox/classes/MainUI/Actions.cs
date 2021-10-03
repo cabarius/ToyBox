@@ -198,18 +198,18 @@ namespace ToyBox {
                     }
                 }
 
-                Mod.Debug($"adding spell: {ability.Name}");
+                Mod.Trace($"adding spell: {ability.Name}");
                 foreach (var spellbook in ch.Spellbooks) {
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
-                    Mod.Debug($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
+                    Mod.Trace($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
                     for (int level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         var allowsSpell = learnable.Contains(ability);
                         var allowText = allowsSpell ? "FOUND" : "did not find";
-                        Mod.Debug($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
+                        Mod.Trace($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
                         if (allowsSpell) {
-                            Mod.Debug($"spell level = {level}");
+                            Mod.Trace($"spell level = {level}");
                             spellbook.AddKnown(level, ability);
                         }
 
@@ -254,10 +254,10 @@ namespace ToyBox {
             for (int i = ch.Descriptor.Progression.MaxCharacterLevel; i >= 1; i--) {
                 int xpBonus = xpTable.GetBonus(i);
 
-                Mod.Debug(i + ": " + xpBonus + " | " + xp);
+                Mod.Trace(i + ": " + xpBonus + " | " + xp);
 
                 if ((xp - xpBonus) >= 0) {
-                    Mod.Debug(i + ": " + (xp - xpBonus));
+                    Mod.Trace(i + ": " + (xp - xpBonus));
                     level = i;
                     break;
                 }
@@ -273,7 +273,7 @@ namespace ToyBox {
         public static void AddSkillToLeader(BlueprintLeaderSkill bp) {
             GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
-                Mod.Debug($"Choose an army with a leader!");
+                Mod.Trace($"Choose an army with a leader!");
                 return;
             }
             ArmyLeader leader = selectedArmy.Data.Leader;
@@ -283,7 +283,7 @@ namespace ToyBox {
         public static void RemoveSkillFromLeader(BlueprintLeaderSkill bp) {
             GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
-                Mod.Debug($"Choose an army with a leader!");
+                Mod.Trace($"Choose an army with a leader!");
                 return;
             }
             ArmyLeader leader = selectedArmy.Data.Leader;
@@ -293,7 +293,7 @@ namespace ToyBox {
         public static bool LeaderHasSkill(BlueprintLeaderSkill bp) {
             GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
-                Mod.Debug($"Choose an army with a leader!");
+                Mod.Trace($"Choose an army with a leader!");
                 return false;
             }
             ArmyLeader leader = selectedArmy.Data.Leader;
