@@ -15,19 +15,23 @@
 
 ### Ver 1.3.18 (Coming Soon)
 * **Key Bindings** - now shows conflicting keyBinds
-* **Bag of Tricks** - Added a ***Buff Like A Godess*** which makes you practically invulnerable
-* Renamed ***Full Buffs Please*** to ***Common Buffs*** because it gives you Bless/Haste/Displacement/Heroism
-* **Loot Colors** - made scribable scrolls show up as uncommon
-* **Enchantment** - Sandal knows you like to hoard loot so he will help you find items with a handy new Search field in the inventory column
-* **Enchantment** - Added very basic export and inport commands that allows you to save and add a list of items to a file based on the type (e.g. Weapon.json). These files live in a new ToyBox folder that in the same folder that contains your saved games
-* **Equipment No Weight** tweek is back. It was stolen by quasits who work for the merchant guild...
-* Improved scrolling performance after searching for Paramterized Feats
-* (Mafemergency) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
-* (Mafemergency & Narria) Added a alternate game timescale multiplier option and bindable key to toggle between them.  Useful for when you want to fast forward through things
-* (Mafemergency) Fixed perception check rerolling
-* (ArcaneTrixter) Fix various issues with learning spells related to merging spellbooks and gestalt spellcasters. On leveling up, you should be prompted to pick spells as a caster of the appropriate caster level.
-* (ArcaneTrixter) Fixed small bug related to paladin/ranger caster level. Feel free to use the caster level cheats if you wish to continue playing with that!
-* (ShadowRanger) Added in two ways of taking 10 out of combat.  Always - rolls a 10 everytime.  Minimum - rolls at least a 10 everytime.
+* **Bag of Tricks**
+  * ***Equipment No Weight*** tweek is back. It was stolen by quasits who work for the merchant guild...
+  * Added a ***Buff Like A Godess*** which makes you practically invulnerable
+  * Renamed ***Full Buffs Please*** to ***Common Buffs*** because it gives you Bless/Haste/Displacement/Heroism
+  * (***ShadowRanger***) Added in two ways of taking 10 out of combat.  Always - rolls a 10 everytime.  Minimum - rolls at least a 10 everytime.
+  * (***Mafemergency***) Added an action to lobotomize enemies bindable key that will render them unable to move or attack in combat. This is useful for when you need punching bags that don't fight back
+  * (***Mafemergency***) Fixed perception check rerolling
+  * (***Mafemergency & Narria***) Added a alternate game timescale multiplier option and bindable key to toggle between them.  Useful for when you want to fast forward through things
+* **Party Editor**
+  * (***ArcaneTrixter***) Fix various issues with learning spells related to merging spellbooks and gestalt spellcasters. On leveling up, you should be prompted to pick spells as a caster of the appropriate caster level.
+  * (***ArcaneTrixter***) Fixed small bug related to paladin/ranger caster level. Feel free to use the caster level cheats if you wish to continue playing with that!
+* **Loot** - Made scribable scrolls show up as uncommon
+* **Enchantment**
+  * Sandal knows you like to hoard loot so he will help you find items with a handy new Search field in the inventory column
+  * Added very basic export and inport commands that allows you to save and add a list of items to a file based on the type (e.g. Weapon.json). These files live in a new ToyBox folder that in the same folder that contains your saved games
+  * Added dividers in the target item box
+* *Search 'n Pick* *Improved scrolling performance after searching for Paramterized Feats
 
 ### Ver 1.3.17
  * Brutal Unfair Difficulty & Brutal Level Slider

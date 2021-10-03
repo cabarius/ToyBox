@@ -214,7 +214,9 @@ namespace ToyBox.classes.MainUI {
             var enchantements = GetEnchantments(item);
             if (enchantements.Count > 0) {
                 using (UI.VerticalScope()) {
+                    var index = 0;
                     foreach (var entry in enchantements) {
+                        if (index++ > 0) UI.Div();
                         var enchant = entry.Key;
                         var enchantBP = enchant.Blueprint;
                         var name = enchantBP.name;
