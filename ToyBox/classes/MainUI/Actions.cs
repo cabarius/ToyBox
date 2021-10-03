@@ -9,11 +9,10 @@ using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Root;
 using Kingmaker.Controllers.Rest;
-using Kingmaker.Designers.EventConditionActionSystem.Events;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
+using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;
@@ -24,9 +23,6 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
 using UnityModManagerNet;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.UI.ServiceWindow;
-using Kingmaker.Globalmap.State;
 using ToyBox.BagOfPatches;
 
 namespace ToyBox {
@@ -196,8 +192,8 @@ namespace ToyBox {
             if (ability.IsSpell) {
                 if (CanAddAbility(ch, ability)) {
                     if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
-                            selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, ability);
-                            return;
+                        selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, ability);
+                        return;
                     }
                 }
 
@@ -267,13 +263,13 @@ namespace ToyBox {
             }
             ch.Descriptor.Progression.CharacterLevel = level;
         }
-        
+
         public static void CreateArmy(BlueprintArmyPreset bp) {
             var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
             Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
         }
 
-        public static void AddSkillToLeader (BlueprintLeaderSkill bp) {
+        public static void AddSkillToLeader(BlueprintLeaderSkill bp) {
             GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
                 Main.Log($"Choose an army with a leader!");
@@ -311,7 +307,7 @@ namespace ToyBox {
             return true;
         }
         public static void ApplyTimeScale() {
-            float timeScale = settings.useAlternateTimeScaleMultiplier 
+            float timeScale = settings.useAlternateTimeScaleMultiplier
                 ? settings.alternateTimeScaleMultiplier
                 : settings.timeScaleMultiplier;
             Game.Instance.TimeController.DebugTimeScale = timeScale;
@@ -322,7 +318,7 @@ namespace ToyBox {
                     unit.IsPlayersEnemy &&
                     unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
                     UnitDescriptor descriptor = unit.Descriptor;
-                    if(descriptor != null) {
+                    if (descriptor != null) {
                         // removing the brain works better in RTWP, but gets stuck in turn based
                         //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
 

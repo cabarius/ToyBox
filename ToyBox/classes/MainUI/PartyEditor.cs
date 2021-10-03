@@ -492,13 +492,13 @@ namespace ToyBox {
                             UI.ActionButton(" < ", () => {
                                 modifiableValue.BaseValue -= 1;
                                 storedValue = modifiableValue.BaseValue;
-                            }, UI.AutoWidth());
+                            }, GUI.skin.box, UI.AutoWidth());
                             UI.Space(20);
                             UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
                             UI.ActionButton(" > ", () => {
                                 modifiableValue.BaseValue += 1;
                                 storedValue = modifiableValue.BaseValue;
-                            }, UI.AutoWidth());
+                            }, GUI.skin.box, UI.AutoWidth());
                             UI.Space(25);
                             UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
                                 modifiableValue.BaseValue = v;

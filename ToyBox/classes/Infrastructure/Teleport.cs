@@ -15,6 +15,7 @@ using Kingmaker.Globalmap;
 using Kingmaker.Utility;
 using Kingmaker.EntitySystem.Persistence;
 using ModKit;
+using UnityModManagerNet;
 
 namespace ToyBox {
     public static class Teleport {
@@ -79,7 +80,6 @@ namespace ToyBox {
             var locationToObject = GlobalMapView.Instance.GetNearestLocationToObject(pointerTransform);
             locationToObject.Blueprint.TeleportToGlobalMapPoint();
         }
-
         public static void TeleportToGlobalMap(Action callback = null) {
             var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
             var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;

@@ -150,6 +150,7 @@ namespace ToyBox {
 #endif
                     new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
                     new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
+                    new NamedAction("Armies", () => ArmiesEditor.OnGUI()),
                     new NamedAction("Quests", () => QuestEditor.OnGUI())
                     );
             }
@@ -165,6 +166,7 @@ namespace ToyBox {
         static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
+            ArmiesEditor.OnShowGUI();
         }
 
         static void OnHideGUI(UnityModManager.ModEntry modEntry) {
