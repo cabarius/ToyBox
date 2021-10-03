@@ -348,6 +348,8 @@ namespace ToyBox {
                 () => UI.EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, 0, UI.AutoWidth()),
                 () => UI.EnumGrid("Always Roll 20 Out Of Combat", ref settings.alwaysRoll20OutOfCombat, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Take 10 Out of Combat (Always)", ref settings.take10always, 0, UI.AutoWidth()),
+                () => UI.EnumGrid("Take 10 Out of Combat (Minimum)", ref settings.take10minimum, 0, UI.AutoWidth()),
                 () => { }
                 );
             UI.Div(0, 25);

@@ -27,6 +27,7 @@
 * (Mafemergency) Fixed perception check rerolling
 * (ArcaneTrixter) Fix various issues with learning spells related to merging spellbooks and gestalt spellcasters. On leveling up, you should be prompted to pick spells as a caster of the appropriate caster level.
 * (ArcaneTrixter) Fixed small bug related to paladin/ranger caster level. Feel free to use the caster level cheats if you wish to continue playing with that!
+* (ShadowRanger) Added in two ways of taking 10 out of combat.  Always - rolls a 10 everytime.  Minimum - rolls at least a 10 everytime.
 
 ### Ver 1.3.17
  * Brutal Unfair Difficulty & Brutal Level Slider
