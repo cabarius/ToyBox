@@ -320,7 +320,7 @@ namespace ToyBox.classes.MainUI {
             if (selectedItemIndex >= inventory.Count) {
                 selectedItemIndex = 0;
             }
-            selectedItem = selectedItemIndex < inventory.Count ? inventory[selectedItemIndex] : null;
+            selectedItem = selectedItemIndex < inventory.Count ? inventory.ElementAt(selectedItemIndex) : null;
         }
 
         public static void UpdateSearchResults() {
