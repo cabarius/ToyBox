@@ -21,14 +21,14 @@ using System;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    static class Infinites {
+    internal static class Infinites {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(AbilityResourceLogic), "Spend")]
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
-                UnitEntityData unit = ability.Caster.Unit;
+                var unit = ability.Caster.Unit;
                 if (unit?.Descriptor.IsPartyOrPet() == true && settings.toggleInfiniteAbilities) {
                     return false;
                 }
@@ -39,16 +39,12 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(ActivatableAbilityResourceLogic), "SpendResource")]
         public static class ActivatableAbilityResourceLogic_SpendResource_Patch {
-            public static bool Prefix() {
-                return !settings.toggleInfiniteAbilities;
-            }
+            public static bool Prefix() => !settings.toggleInfiniteAbilities;
         }
 
         [HarmonyPatch(typeof(AbilityData), "SpellSlotCost", MethodType.Getter)]
         public static class AbilityData_SpellSlotCost_Patch {
-            public static bool Prefix() {
-                return !settings.toggleInfiniteSpellCasts;
-            }
+            public static bool Prefix() => !settings.toggleInfiniteSpellCasts;
         }
 
         [HarmonyPatch(typeof(SpendSkillPoint), "Apply")]
@@ -73,7 +69,7 @@ namespace ToyBox.BagOfPatches {
             }
             public static void Postfix(bool __state, ItemEntity __instance, ref bool __result, UnitDescriptor user) {
                 if (__state) {
-                    BlueprintItemEquipment blueprintItemEquipment = __instance.Blueprint as BlueprintItemEquipment;
+                    var blueprintItemEquipment = __instance.Blueprint as BlueprintItemEquipment;
                     if (!blueprintItemEquipment || !blueprintItemEquipment.GainAbility) {
                         __result = false;
                         return;
@@ -82,7 +78,7 @@ namespace ToyBox.BagOfPatches {
                         __result = true;
                         return;
                     }
-                    bool hasNoCharges = false;
+                    var hasNoCharges = false;
                     if (__instance.Charges > 0) {
                         ItemEntityUsable itemEntityUsable = new((BlueprintItemEquipmentUsable)__instance.Blueprint);
                         if (user.State.Features.HandOfMagusDan && itemEntityUsable.Blueprint.Type == UsableItemType.Scroll) {
@@ -115,7 +111,7 @@ namespace ToyBox.BagOfPatches {
                         __instance.Charges = 1;
                     }
                     else {
-                        ItemsCollection collection = __instance.Collection;
+                        var collection = __instance.Collection;
                         collection?.Remove(__instance);
                     }
 

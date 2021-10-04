@@ -18,22 +18,22 @@ using ToyBox.classes.Infrastructure;
 
 namespace ToyBox {
     public class FactsEditor {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
         public static IEnumerable<SimpleBlueprint> filteredBPs = null;
-        static String prevCallerKey = "";
-        static String searchText = "";
-        static int searchLimit = 100;
-        static readonly int repeatCount = 1;
+        private static string prevCallerKey = "";
+        private static string searchText = "";
+        private static int searchLimit = 100;
+        private static readonly int repeatCount = 1;
         public static int matchCount = 0;
-        static bool showAll = false;
-        static bool showTree = false;
-        static readonly FeaturesTreeEditor treeEditor = new();
+        private static bool showAll = false;
+        private static bool showTree = false;
+        private static readonly FeaturesTreeEditor treeEditor = new();
 
-        public static void UpdateSearchResults(String searchText, int limit, IEnumerable<SimpleBlueprint> blueprints) {
+        public static void UpdateSearchResults(string searchText, IEnumerable<SimpleBlueprint> blueprints) {
             if (blueprints == null) return;
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
             var filtered = new List<SimpleBlueprint>();
-            foreach (SimpleBlueprint blueprint in blueprints) {
+            foreach (var blueprint in blueprints) {
                 if (blueprint.AssetGuid.ToString().Contains(searchText)
                     || blueprint.GetType().ToString().Contains(searchText)
                     ) {
@@ -50,18 +50,18 @@ namespace ToyBox {
             filteredBPs = filtered.OrderBy(bp => bp.name).Take(searchLimit).ToArray();
             BlueprintListUI.needsLayout = true;
         }
-        static public void OnGUI<T>(String callerKey,
+        public static void OnGUI<T>(string callerKey,
                                     UnitEntityData unit,
                                     List<T> facts,
                                     Func<T, SimpleBlueprint> blueprint,
                                     IEnumerable<SimpleBlueprint> blueprints,
-                                    Func<T, String> title,
-                                    Func<T, String> description = null,
+                                    Func<T, string> title,
+                                    Func<T, string> description = null,
                                     Func<T, int> value = null,
                                     IEnumerable<BlueprintAction> actions = null
                 ) {
-            bool searchChanged = false;
-            bool refreshTree = false;
+            var searchChanged = false;
+            var refreshTree = false;
             if (actions == null) actions = new List<BlueprintAction>();
             if (callerKey != prevCallerKey) { searchChanged = true; showAll = false; }
             prevCallerKey = callerKey;
@@ -91,10 +91,10 @@ namespace ToyBox {
                 if (showAll && typeof(T) == typeof(AbilityData)) { // This is obviously tech debt, but I don't want to deal with Search All Spellbooks/Add All being on the facts editor as it is now
                     UI.Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks);
                     UI.Space(25);
-                    UI.ActionButton("Add All", () => { CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList());}, UI.AutoWidth());
+                    UI.ActionButton("Add All", () => { CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList()); }, UI.AutoWidth());
                 }
                 if (matchCount > 0 && searchText.Length > 0) {
-                    String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                    var matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                     if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
                     UI.Label(matchesText, UI.ExpandWidth(false));
                 }
@@ -103,17 +103,17 @@ namespace ToyBox {
             if (showAll) {
                 // TODO - do we need this logic or can we make blueprint filtering fast enough to do keys by key searching?
                 //if (filteredBPs == null || searchChanged) {
-                    UpdateSearchResults(searchText, searchLimit, blueprints);
+                UpdateSearchResults(searchText, blueprints);
                 //}
                 BlueprintListUI.OnGUI(unit, filteredBPs, 100, remainingWidth - 100);
                 return;
             }
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
 
-            BlueprintAction add = mutatorLookup.GetValueOrDefault("Add", null);
-            BlueprintAction remove = mutatorLookup.GetValueOrDefault("Remove", null);
-            BlueprintAction decrease = mutatorLookup.GetValueOrDefault("<", null);
-            BlueprintAction increase = mutatorLookup.GetValueOrDefault(">", null);
+            var add = mutatorLookup.GetValueOrDefault("Add", null);
+            var remove = mutatorLookup.GetValueOrDefault("Remove", null);
+            var decrease = mutatorLookup.GetValueOrDefault("<", null);
+            var increase = mutatorLookup.GetValueOrDefault(">", null);
 
             mutatorLookup.Remove("Add");
             mutatorLookup.Remove("Remove");
@@ -124,7 +124,7 @@ namespace ToyBox {
             SimpleBlueprint toRemove = null;
             SimpleBlueprint toIncrease = null;
             SimpleBlueprint toDecrease = null;
-            var toValues = new Dictionary<String, SimpleBlueprint>();
+            var toValues = new Dictionary<string, SimpleBlueprint>();
             var sorted = facts.OrderBy((f) => title(f));
             matchCount = 0;
             UI.Div(100);
@@ -132,8 +132,8 @@ namespace ToyBox {
                 var remWidth = remainingWidth;
                 if (fact == null) continue;
                 var bp = blueprint(fact);
-                String name = title(fact);
-                String nameLower = name.ToLower();
+                var name = title(fact);
+                var nameLower = name.ToLower();
                 if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => nameLower.Contains(term)))) {
                     matchCount++;
                     using (UI.HorizontalScope()) {
@@ -186,7 +186,7 @@ namespace ToyBox {
             }
             toValues.Clear();
         }
-        static public void OnGUI(UnitEntityData ch, List<Feature> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Feature> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Feature>("Features", ch, facts,
@@ -198,7 +198,7 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintFeature))
                 );
         }
-        static public void OnGUI(UnitEntityData ch, List<Buff> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Buff> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Buff>("Features", ch, facts,
@@ -210,7 +210,7 @@ namespace ToyBox {
                BlueprintAction.ActionsForType(typeof(BlueprintBuff))
                 );
         }
-        static public void OnGUI(UnitEntityData ch, List<Ability> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Ability> facts) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Ability>("Abilities", ch, facts,
@@ -223,7 +223,7 @@ namespace ToyBox {
                 );
         }
 
-        static public void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
+        public static void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
             var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
@@ -233,7 +233,7 @@ namespace ToyBox {
                 .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
                 .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
 
-            var learnable = settings.showFromAllSpellbooks ?  normal.Concat(mythic).Distinct() : spellbookBP.SpellList.GetSpells(level);
+            var learnable = settings.showFromAllSpellbooks ? normal.Concat(mythic).Distinct() : spellbookBP.SpellList.GetSpells(level);
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
 
@@ -246,7 +246,7 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
-        static public void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
+        public static void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Spellbook>("Spellbooks", ch, spellbooks,

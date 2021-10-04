@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ToyBox {
-    public class FeaturesTreeEditor  {
+    public class FeaturesTreeEditor {
         private UnitEntityData _selectedCharacter = null;
         private FeaturesTree _featuresTree;
 
@@ -25,7 +25,7 @@ namespace ToyBox {
 
         public void OnGUI(UnitEntityData character, bool refresh) {
             if (!Main.IsInGame) return;
-            string activeScene = SceneManager.GetActiveScene().name;
+            var activeScene = SceneManager.GetActiveScene().name;
             if (Game.Instance?.Player == null || activeScene == "MainMenu" || activeScene == "Start") {
                 UI.Label(" * Please start or load the game first.".color(RGBA.yellow));
                 return;
@@ -42,8 +42,8 @@ namespace ToyBox {
                     // features tree
                     if (_featuresTree != null)
                         using (UI.VerticalScope()) {
-                            bool expandAll = false;
-                            bool collapseAll = false;
+                            var expandAll = false;
+                            var collapseAll = false;
 
                             // draw tool bar
                             using (UI.HorizontalScope()) {
@@ -55,7 +55,7 @@ namespace ToyBox {
                             UI.Space(10f);
 
                             // draw tree
-                            foreach (FeaturesTree.FeatureNode node in _featuresTree.RootNodes) {
+                            foreach (var node in _featuresTree.RootNodes) {
                                 draw(node);
                             }
 
@@ -118,16 +118,16 @@ namespace ToyBox {
                 }
 
                 // get nodes (classes)
-                foreach (BlueprintCharacterClass characterClass in progression.Classes.Select(item => item.CharacterClass)) {
+                foreach (var characterClass in progression.Classes.Select(item => item.CharacterClass)) {
                     normalNodes.Add(characterClass, new FeatureNode(characterClass.Name, characterClass, null));
                 }
 
                 // set source selection
-                List<FeatureNode> selectionNodes = normalNodes.Values
+                var selectionNodes = normalNodes.Values
                     .Where(item => item.Blueprint is BlueprintFeatureSelection).ToList();
-                for (int i = 0; i <= 20; i++) {
+                for (var i = 0; i <= 20; i++) {
                     foreach (var selection in selectionNodes) {
-                        foreach (BlueprintFeature feature in progression.GetSelections(selection.Blueprint as BlueprintFeatureSelection, i)) {
+                        foreach (var feature in progression.GetSelections(selection.Blueprint as BlueprintFeatureSelection, i)) {
                             FeatureNode node = default;
                             if (feature is BlueprintParametrizedFeature) {
                                 node = parametrizedNodes
@@ -147,11 +147,11 @@ namespace ToyBox {
                 }
 
                 // build tree
-                foreach (FeatureNode node in normalNodes.Values.Concat(parametrizedNodes).ToList()) {
+                foreach (var node in normalNodes.Values.Concat(parametrizedNodes).ToList()) {
                     if (node.Source == null) {
                         RootNodes.Add(node);
                     }
-                    else if (normalNodes.TryGetValue(node.Source, out FeatureNode parent)) {
+                    else if (normalNodes.TryGetValue(node.Source, out var parent)) {
                         parent.ChildNodes.Add(node);
                     }
                     else {

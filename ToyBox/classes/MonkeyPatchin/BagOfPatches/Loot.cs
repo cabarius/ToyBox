@@ -17,21 +17,22 @@ using UnityEngine.UI;
 using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
-    static class Loot {
+    internal static class Loot {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
         //        [HarmonyPatch(typeof(ItemSlot), "SetupEquipPossibility")]
 
         [HarmonyPatch(typeof(LootSlotPCView), "BindViewImplementation")]
-        static class ItemSlot_IsUsable_Patch {
+        private static class ItemSlot_IsUsable_Patch {
             public static void Postfix(ViewBase<ItemSlotVM> __instance) {
                 if (__instance is LootSlotPCView itemSlotPCView) {
                     //                        modLogger.Log($"checking  {itemSlotPCView.ViewModel.Item}");
                     if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll && settings.toggleHighlightCopyableScrolls) {
                         //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
                         itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
-                    } else {
+                    }
+                    else {
                         itemSlotPCView.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
                     }
                 }
@@ -39,17 +40,18 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
-        static class ItemSlotView_RefreshItem_Patch {
+        private static class ItemSlotView_RefreshItem_Patch {
             public static void Postfix(InventoryEquipSlotView __instance) {
                 if (!__instance.SlotVM.HasItem || !__instance.SlotVM.IsScroll) {
                     __instance.m_Icon.canvasRenderer.SetColor(Color.white);
-                } else if (__instance.SlotVM.IsScroll) {
+                }
+                else if (__instance.SlotVM.IsScroll) {
                     __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
                 }
                 var item = __instance.Item;
-                if (settings.toggleColorLootByRarity && item != null) { 
-                    var component = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
-                    ItemPartShowInfoCallback cb = item.Get<ItemPartShowInfoCallback>();
+                if (settings.toggleColorLootByRarity && item != null) {
+                    _ = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
+                    var cb = item.Get<ItemPartShowInfoCallback>();
                     if (cb != null && (!cb.m_Settings.Once || !cb.m_Triggered)) {
                         // This forces the item to display as notable
                         __instance.SlotVM.IsNotable.SetValueAndForceNotify(true);
@@ -61,7 +63,8 @@ namespace ToyBox.BagOfPatches {
                     if (rarity == RarityType.Notable) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");
                         objFX.GetComponent<Image>().color = color;
-                    } else {
+                    }
+                    else {
                         if (rarity >= RarityType.Uncommon) // Make sure things uncommon or better get their color circles despite not being magic. Colored loot offers sligtly different UI assumptions
                             __instance.SlotVM.IsMagic.SetValueAndForceNotify(true);
                         var obj = __instance.m_MagicLayer.gameObject;
@@ -73,7 +76,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
-        static class ItemEntity_Name_Patch {
+        private static class ItemEntity_Name_Patch {
             public static void Postfix(ItemEntity __instance, ref string __result) {
                 if (settings.toggleColorLootByRarity && __result != null && __result.Length > 0) {
                     var bp = __instance.Blueprint;
@@ -86,5 +89,5 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        }
+    }
 }

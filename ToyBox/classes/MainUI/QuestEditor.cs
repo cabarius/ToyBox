@@ -14,31 +14,29 @@ using ModKit;
 
 namespace ToyBox {
     public static class QuestExensions {
-        private static readonly String[] questColors = new String[] {
+        private static readonly string[] questColors = new string[] {
             "gray",
             "yellow",
             "green",
             "red"
         };
-        public static String stateColored(this String text, Quest quest) { return text.color(questColors[(int)quest.State]); }
-        public static String stateColored(this String text, QuestObjective objective) { return text.color(questColors[(int)objective.State]); }
+        public static string stateColored(this string text, Quest quest) => text.color(questColors[(int)quest.State]);
+        public static string stateColored(this string text, QuestObjective objective) => text.color(questColors[(int)objective.State]);
 
-        public static String stateString(this Quest quest) { return quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest); }
-        public static String stateString(this QuestObjective objective) {
-            return objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective);
-        }
+        public static string stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest);
+        public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective);
     }
     public class QuestEditor {
-        static bool[] selectedQuests = new bool[0];
+        private static bool[] selectedQuests = new bool[0];
         public static void ResetGUI() { }
 
         public static void OnGUI() {
             UI.Toggle("Hide Completed", ref Main.settings.hideCompleted);
             GUILayout.Space(5f);
-            Quest[] quests = Game.Instance.Player.QuestBook.Quests.ToArray();
+            var quests = Game.Instance.Player.QuestBook.Quests.ToArray();
             selectedQuests = ((selectedQuests.Length != quests.Length) ? new bool[quests.Length] : selectedQuests);
-            int index = 0;
-            Color contentColor = GUI.contentColor;
+            var index = 0;
+            var contentColor = GUI.contentColor;
             var split = quests.GroupBy(q => q.State == QuestState.Completed).OrderBy(g => g.Key);
             foreach (var group in split) {
                 foreach (var quest in group.ToList()) {
@@ -53,7 +51,7 @@ namespace ToyBox {
                             UI.DisclosureToggle(quest.stateString(), ref selectedQuests[index]);
                         });
                         if (selectedQuests[index]) {
-                            foreach (QuestObjective questObjective in quest.Objectives) {
+                            foreach (var questObjective in quest.Objectives) {
                                 if (questObjective.ParentObjective == null) {
                                     UI.HStack(null, 0, () => {
                                         UI.Space(50);
@@ -86,7 +84,7 @@ namespace ToyBox {
                                         }
                                     });
                                     if (questObjective.State == QuestObjectiveState.Started) {
-                                        foreach (QuestObjective childObjective in quest.Objectives) {
+                                        foreach (var childObjective in quest.Objectives) {
                                             if (childObjective.ParentObjective == questObjective) {
                                                 UI.HStack(null, 0, () => {
                                                     UI.Space(100);

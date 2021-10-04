@@ -13,21 +13,30 @@ using Newtonsoft.Json;
 using System.Linq;
 
 namespace ModKit {
-    static partial class UI {
+    public static partial class UI {
         private static readonly HashSet<KeyCode> allowedMouseButtons = new() { KeyCode.Mouse3, KeyCode.Mouse4, KeyCode.Mouse5, KeyCode.Mouse6 };
-        public static bool IsModifier(this KeyCode code)
-            => code == KeyCode.LeftControl || code == KeyCode.RightControl
-            || code == KeyCode.LeftAlt || code == KeyCode.RightAlt
-            || code == KeyCode.LeftShift || code == KeyCode.RightShift
-            || code == KeyCode.LeftCommand || code == KeyCode.RightCommand;
-        public static bool IsControl(this KeyCode code)
-            => code == KeyCode.LeftControl || code == KeyCode.RightControl;
-        public static bool IsAlt(this KeyCode code)
-            => code == KeyCode.LeftAlt || code == KeyCode.RightAlt;
-        public static bool IsCommand(this KeyCode code)
-            => code == KeyCode.LeftCommand || code == KeyCode.RightCommand;
-        public static bool IsShift(this KeyCode code)
-            => code == KeyCode.LeftShift || code == KeyCode.RightShift;
+        public static bool IsModifier(this KeyCode code) {
+            return code == KeyCode.LeftControl || code == KeyCode.RightControl
+                       || code == KeyCode.LeftAlt || code == KeyCode.RightAlt
+                       || code == KeyCode.LeftShift || code == KeyCode.RightShift
+                       || code == KeyCode.LeftCommand || code == KeyCode.RightCommand;
+        }
+
+        public static bool IsControl(this KeyCode code) {
+            return code == KeyCode.LeftControl || code == KeyCode.RightControl;
+        }
+
+        public static bool IsAlt(this KeyCode code) {
+            return code == KeyCode.LeftAlt || code == KeyCode.RightAlt;
+        }
+
+        public static bool IsCommand(this KeyCode code) {
+            return code == KeyCode.LeftCommand || code == KeyCode.RightCommand;
+        }
+
+        public static bool IsShift(this KeyCode code) {
+            return code == KeyCode.LeftShift || code == KeyCode.RightShift;
+        }
 
         private static GUIStyle _hotkeyStyle;
         public static GUIStyle hotkeyStyle {
@@ -81,9 +90,9 @@ namespace ModKit {
                     return false;
             }
             public override int GetHashCode() {
-                return ID.GetHashCode() 
-                    + (int)Key 
-                    + (Ctrl ? 1 : 0) 
+                return ID.GetHashCode()
+                    + (int)Key
+                    + (Ctrl ? 1 : 0)
                     + (Cmd ? 1 : 0)
                     + (Shift ? 1 : 0);
             }
@@ -123,7 +132,7 @@ namespace ModKit {
                     return active;
                 }
             }
-            public string bindCode => this.ToString();
+            public string bindCode => ToString();
             public override string ToString() { // Why can't Unity display these ⌥⌃⇧⌘ ???  ⌗⌃⌥⇧⇑⌂©ăåâÂ
                 var result = "";
                 if (Ctrl)

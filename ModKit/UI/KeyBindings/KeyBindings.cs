@@ -13,15 +13,15 @@ using Newtonsoft.Json;
 using System.Linq;
 
 namespace ModKit {
-    static partial class UI {
+    public static partial class UI {
         public static IEnumerable<string> Conflicts(this KeyBind keyBind) {
             return KeyBindings.conflicts.GetValueOrDefault(keyBind.bindCode, new List<string> { }).Where(id => id != keyBind.ID);
         }
 
         public static class KeyBindings {
-            static ModEntry modEntry = null;
-            static SerializableDictionary<string, KeyBind> bindings = null;
-            static readonly Dictionary<string, Action> actions = new() { };
+            private static ModEntry modEntry = null;
+            private static SerializableDictionary<string, KeyBind> bindings = null;
+            private static readonly Dictionary<string, Action> actions = new() { };
             internal static Dictionary<string, List<string>> conflicts = new() { };
             internal static bool BindingsDidChange = false;
             public static bool IsActive(string identifier) {
@@ -72,7 +72,8 @@ namespace ModKit {
                     BindingsDidChange = false;
                 }
             }
-            static KeyBind lastTriggered = null;
+
+            private static KeyBind lastTriggered = null;
             public static void OnUpdate() {
                 if (lastTriggered != null) {
                     //if (debugKeyBind)
@@ -97,7 +98,7 @@ namespace ModKit {
                         if (binding != lastTriggered) {
                             //if (debugKeyBind)
                             //    Logger.Log($"    firing action: {identifier}".cyan());
-                            actions.TryGetValue(identifier, out Action action);
+                            actions.TryGetValue(identifier, out var action);
                             action();
                             lastTriggered = binding;
                         }

@@ -42,7 +42,7 @@ namespace ToyBox {
                 BlueprintActions.InitializeActions();
             }
 
-            actionsForType.TryGetValue(type, out BlueprintAction[] result);
+            actionsForType.TryGetValue(type, out var result);
 
             if (result == null) {
                 var baseType = type.BaseType;
@@ -59,14 +59,12 @@ namespace ToyBox {
             return result;
         }
 
-        public static IEnumerable<BlueprintAction> ActionsForBlueprint(SimpleBlueprint bp) {
-            return ActionsForType(bp.GetType());
-        }
+        public static IEnumerable<BlueprintAction> ActionsForBlueprint(SimpleBlueprint bp) => ActionsForType(bp.GetType());
 
         public static void Register<T>(string name, BlueprintAction<T>.Perform perform, BlueprintAction<T>.CanPerform canPerform = null, bool isRepeatable = false) where T : SimpleBlueprint {
             var action = new BlueprintAction<T>(name, perform, canPerform, isRepeatable);
             var type = action.BlueprintType;
-            actionsForType.TryGetValue(type, out BlueprintAction[] existing);
+            actionsForType.TryGetValue(type, out var existing);
             existing ??= new BlueprintAction[] { };
             var list = existing.ToList();
             list.Add(action);
@@ -103,9 +101,7 @@ namespace ToyBox {
     }
 
     public static class BlueprintActions {
-        public static IEnumerable<BlueprintAction> GetActions(this SimpleBlueprint bp) {
-            return BlueprintAction.ActionsForBlueprint(bp);
-        }
+        public static IEnumerable<BlueprintAction> GetActions(this SimpleBlueprint bp) => BlueprintAction.ActionsForBlueprint(bp);
 
         public static void InitializeActions() {
             var flags = Game.Instance.Player.UnlockableFlags;
@@ -127,7 +123,7 @@ namespace ToyBox {
                                                        (bp, ch, n, index) => ch.Progression.Features.RemoveFact(bp),
                                                        (bp, ch, index) => ch.Progression.Features.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Add", 
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
                 (bp, ch, n, index) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param),
                 (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param) == null);
 
@@ -293,7 +289,7 @@ namespace ToyBox {
             // Cutscenes
             BlueprintAction.Register<Cutscene>("Play", (bp, ch, n, index) => {
                 Actions.ToggleModWindow();
-                CutscenePlayerData cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
+                var cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
 
                 if (cutscenePlayerData != null) {
                     cutscenePlayerData.PreventDestruction = true;

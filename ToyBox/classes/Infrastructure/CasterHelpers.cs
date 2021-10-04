@@ -14,7 +14,7 @@ namespace ToyBox.classes.Infrastructure {
         public static Dictionary<UnitDescriptor, Dictionary<BlueprintSpellbook, int>> UnitBonusSpellLevels =
             new();
         public static Dictionary<BlueprintSpellbook, int> GetOriginalCasterLevel(UnitDescriptor unit) {
-            int mythicLevel = 0;
+            var mythicLevel = 0;
             BlueprintSpellbook mythicSpellbook = null;
             Dictionary<BlueprintSpellbook, int> casterLevelDictionary = new();
             foreach (var classInfo in unit.Progression.Classes) {
@@ -33,21 +33,21 @@ namespace ToyBox.classes.Infrastructure {
                     continue;
                 }
 
-                int casterLevel = classInfo.Level + classInfo.Spellbook.CasterLevelModifier;
+                var casterLevel = classInfo.Level + classInfo.Spellbook.CasterLevelModifier;
                 if (classInfo.CharacterClass.IsMythic) {
                     casterLevel += mythicLevel;
                     mythicSpellbook = classInfo.Spellbook;
                 }
 
                 var skipLevels = classInfo.CharacterClass.GetComponent<SkipLevelsForSpellProgression>();
-                
+
                 if (skipLevels?.Levels?.Length > 0) {
-                    foreach (int skipLevelsLevel in skipLevels.Levels) {
+                    foreach (var skipLevelsLevel in skipLevels.Levels) {
                         if (classInfo.Level >= skipLevelsLevel) { --casterLevel; }
                     }
                 }
 
-                int levelToStartCountingFrom = classInfo.CharacterClass.PrestigeClass ? GetPrestigeCasterLevelStart(classInfo.CharacterClass.Progression) : 1;
+                var levelToStartCountingFrom = classInfo.CharacterClass.PrestigeClass ? GetPrestigeCasterLevelStart(classInfo.CharacterClass.Progression) : 1;
                 casterLevel += 1 - levelToStartCountingFrom;
 
                 if (classInfo.Spellbook.IsMythic) {
@@ -56,7 +56,8 @@ namespace ToyBox.classes.Infrastructure {
 
                 if (casterLevelDictionary.ContainsKey(classInfo.Spellbook)) {
                     casterLevelDictionary[classInfo.Spellbook] += casterLevel;
-                } else {
+                }
+                else {
                     casterLevelDictionary[classInfo.Spellbook] = casterLevel;
                 }
             }
@@ -69,7 +70,7 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static int GetRealCasterLevel(UnitDescriptor unit, BlueprintSpellbook spellbook) {
-            bool hasCasterLevel = GetOriginalCasterLevel(unit).TryGetValue(spellbook, out int level);
+            var hasCasterLevel = GetOriginalCasterLevel(unit).TryGetValue(spellbook, out var level);
             return hasCasterLevel ? level : 0;
         }
 
@@ -80,7 +81,7 @@ namespace ToyBox.classes.Infrastructure {
             foreach (var spellbookTypePair in calculatedResults) {
                 actual.TryGetValue(spellbookTypePair.Key, out var actualSpellbook);
                 if (actualSpellbook != null) {
-                    int bonus = actualSpellbook.CasterLevel - spellbookTypePair.Value;
+                    var bonus = actualSpellbook.CasterLevel - spellbookTypePair.Value;
                     resultsDictionary.Add(spellbookTypePair.Key, bonus);
                 }
             }
@@ -102,18 +103,18 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static void LowerCasterLevel(Spellbook spellbook) {
-            int oldMaxSpellLevel = spellbook.MaxSpellLevel;
+            var oldMaxSpellLevel = spellbook.MaxSpellLevel;
             spellbook.m_BaseLevelInternal--;
-            int newMaxSpellLevel = spellbook.MaxSpellLevel;
+            var newMaxSpellLevel = spellbook.MaxSpellLevel;
             if (newMaxSpellLevel < oldMaxSpellLevel) {
                 RemoveSpellsOfLevel(spellbook, oldMaxSpellLevel);
             }
         }
 
         public static void AddCasterLevel(Spellbook spellbook) {
-            int oldMaxSpellLevel = spellbook.MaxSpellLevel;
+            var oldMaxSpellLevel = spellbook.MaxSpellLevel;
             spellbook.m_BaseLevelInternal++;
-            int newMaxSpellLevel = spellbook.MaxSpellLevel;
+            var newMaxSpellLevel = spellbook.MaxSpellLevel;
             if (newMaxSpellLevel > oldMaxSpellLevel) {
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
             }
@@ -151,7 +152,7 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static ClassData GetMythicToMerge(this UnitProgressionData unit) {
-            List<ClassData> list = unit.Classes.Where(cls => cls.CharacterClass.IsMythic).ToList();
+            var list = unit.Classes.Where(cls => cls.CharacterClass.IsMythic).ToList();
             if (!list.Any()) {
                 return null;
             }
@@ -171,7 +172,7 @@ namespace ToyBox.classes.Infrastructure {
             classData.Spellbook = spellbook.Blueprint;
             spellbook.m_Type = SpellbookType.Mythic;
             spellbook.AddSpecialList(oldMythicSpellbookBp.MythicSpellList);
-            for (int i = 0; i < unit.Progression.MythicLevel; i++) {
+            for (var i = 0; i < unit.Progression.MythicLevel; i++) {
                 spellbook.AddMythicLevel();
             }
 

@@ -8,7 +8,7 @@ using Kingmaker.PubSubSystem;
 using UniRx;
 
 namespace ToyBox.BagOfPatches {
-    static class PartyView {
+    internal static class PartyView {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 

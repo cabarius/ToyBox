@@ -5,10 +5,9 @@ using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
+        private static GUIStyle linkStyle = null;
 
-        static GUIStyle linkStyle = null;
-
-        public static bool LinkButton(String title, String url, Action action = null, params GUILayoutOption[] options) {
+        public static bool LinkButton(string title, string url, Action action = null, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { UI.AutoWidth() }; }
             if (linkStyle == null) {
                 linkStyle = new GUIStyle(GUI.skin.label) {
@@ -24,7 +23,7 @@ namespace ModKit {
             UI.Div(linkStyle.normal.textColor, 4, 0, rect.width);
             if (result) {
                 Application.OpenURL(url);
-                if (action != null) action(); 
+                action?.Invoke();
             }
             return result;
         }

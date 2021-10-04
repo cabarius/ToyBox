@@ -70,7 +70,7 @@ csharp_prefer_braces = false:suggestion
 #prefer expression-bodied members for accessors
 csharp_style_expression_bodied_accessors = true:suggestion
 #prefer block bodies for methods
-csharp_style_expression_bodied_methods = false:suggestion
+csharp_style_expression_bodied_methods = true:suggestion
 #prefer expression-bodied members for properties
 csharp_style_expression_bodied_properties = true:suggestion
 
@@ -127,3 +127,9 @@ csharp_space_after_semicolon_in_for_statement=true
 
 # IDE0051: Remove unused private members
 dotnet_diagnostic.IDE0051.severity = silent
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = silent
+
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = silent

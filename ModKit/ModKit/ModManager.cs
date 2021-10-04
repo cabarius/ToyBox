@@ -60,16 +60,16 @@ namespace ModKit {
                 Settings = UnityModManager.ModSettings.Load<TSettings>(modEntry);
                 Core = new TCore();
 
-                Type[] types = assembly.GetTypes();
+                var types = assembly.GetTypes();
 
                 if (!Patched) {
                     Harmony harmonyInstance = new(modEntry.Info.Id);
-                    foreach (Type type in types) {
-                        List<HarmonyMethod> harmonyMethods = HarmonyMethodExtensions.GetFromType(type);
+                    foreach (var type in types) {
+                        var harmonyMethods = HarmonyMethodExtensions.GetFromType(type);
                         if (harmonyMethods != null && harmonyMethods.Count() > 0) {
                             process.Log($"Patching: {type.FullName}");
                             try {
-                                PatchClassProcessor patchProcessor = harmonyInstance.CreateClassProcessor(type);
+                                var patchProcessor = harmonyInstance.CreateClassProcessor(type);
                                 patchProcessor.Patch();
                             }
                             catch (Exception e) {
@@ -125,14 +125,14 @@ namespace ModKit {
 
             if (unpatch) {
                 Harmony harmonyInstance = new(modEntry.Info.Id);
-                foreach (MethodBase method in harmonyInstance.GetPatchedMethods().ToList()) {
-                    Patches patchInfo = Harmony.GetPatchInfo(method);
-                    IEnumerable<Patch> patches =
+                foreach (var method in harmonyInstance.GetPatchedMethods().ToList()) {
+                    var patchInfo = Harmony.GetPatchInfo(method);
+                    var patches =
                         patchInfo.Transpilers.Concat(patchInfo.Postfixes).Concat(patchInfo.Prefixes)
                         .Where(patch => patch.owner == modEntry.Info.Id);
                     if (patches.Any()) {
                         process.Log($"Unpatching: {patches.First().PatchMethod.DeclaringType.FullName} from {method.DeclaringType.FullName}.{method.Name}");
-                        foreach (Patch patch in patches) {
+                        foreach (var patch in patches) {
                             try { harmonyInstance.Unpatch(method, patch.PatchMethod); }
                             catch (Exception e) { Error(e); }
                         }
@@ -224,8 +224,8 @@ namespace ModKit {
         #endregion
 
         private class ProcessLogger : IDisposable {
-            readonly Stopwatch _stopWatch = new();
-            readonly UnityModManager.ModEntry.ModLogger _logger;
+            private readonly Stopwatch _stopWatch = new();
+            private readonly UnityModManager.ModEntry.ModLogger _logger;
 
             public ProcessLogger(UnityModManager.ModEntry.ModLogger logger) {
                 _logger = logger;

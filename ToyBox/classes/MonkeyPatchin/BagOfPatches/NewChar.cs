@@ -14,7 +14,7 @@ using System;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    static class NewChar {
+    internal static class NewChar {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
@@ -27,10 +27,10 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.IsFirstCharacterLevel) {
                     if (!__instance.IsPregen) {
                         // Kludge - there is some weirdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
-                        bool isCustom = unit.Blueprint.ToString() == "CustomCompanion";
+                        var isCustom = unit.Blueprint.ToString() == "CustomCompanion";
                         //Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
                         //Logger.Log($"not pregen - isCust: {isCustom}");
-                        int pointCount = Math.Max(0, isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+                        var pointCount = Math.Max(0, isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
                         //Logger.Log($"points: {pointCount}");
 
                         __instance.StatsDistribution.Start(pointCount);
@@ -51,10 +51,10 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.CanAdd))]
         public static class StatsDistribution_CanAdd_Patch {
             public static void Prefix() {
- 
+
             }
             public static void Postfix(ref bool __result, StatType attribute, StatsDistribution __instance) {
-                int attributeMax = settings.characterCreationAbilityPointsMax;
+                var attributeMax = settings.characterCreationAbilityPointsMax;
                 if (!__instance.Available) {
                     __result = false;
                 }
@@ -62,7 +62,7 @@ namespace ToyBox.BagOfPatches {
                     if (attributeMax <= 18) {
                         attributeMax = 18;
                     }
-                    int attributeValue = __instance.StatValues[attribute];
+                    var attributeValue = __instance.StatValues[attribute];
                     __result = attributeValue < attributeMax && __instance.GetAddCost(attribute) <= __instance.Points;
                 }
             }
@@ -70,11 +70,11 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.GetAddCost))]
         public static class StatsDistribution_GetAddCost_Patch {
             public static bool Prefix(StatsDistribution __instance, StatType attribute) {
-                int attributeValue = __instance.StatValues[attribute];
+                var attributeValue = __instance.StatValues[attribute];
                 return (attributeValue > 7 && attributeValue < 17);
             }
             public static void Postfix(StatsDistribution __instance, ref int __result, StatType attribute) {
-                int attributeValue = __instance.StatValues[attribute];
+                var attributeValue = __instance.StatValues[attribute];
                 if (attributeValue <= 7) {
                     __result = 2;
                 }
@@ -86,11 +86,11 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.GetRemoveCost))]
         public static class StatsDistribution_GetRemoveCost_Patch {
             public static bool Prefix(StatsDistribution __instance, StatType attribute) {
-                int attributeValue = __instance.StatValues[attribute];
+                var attributeValue = __instance.StatValues[attribute];
                 return (attributeValue > 7 && attributeValue < 17);
             }
             public static void Postfix(StatsDistribution __instance, ref int __result, StatType attribute) {
-                int attributeValue = __instance.StatValues[attribute];
+                var attributeValue = __instance.StatValues[attribute];
                 if (attributeValue <= 7) {
                     __result = -2;
                 }

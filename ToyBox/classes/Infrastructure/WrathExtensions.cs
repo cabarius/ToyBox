@@ -13,37 +13,35 @@ using Kingmaker.UnitLogic.Alignments;
 
 namespace ToyBox {
     public static class WrathExtensions {
-        public static string HashKey(this UnitEntityData ch) { return ch.CharacterName; } // + ch.UniqueId; }
-        public static string HashKey(this UnitDescriptor ch) { return ch.CharacterName; }
-        public static string HashKey(this BlueprintCharacterClass cl) { return cl.NameSafe(); }
-        public static string HashKey(this BlueprintArchetype arch) { return arch.NameSafe(); }
+        public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
+        public static string HashKey(this UnitDescriptor ch) => ch.CharacterName;
+        public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
+        public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();
 
-        public static string Name(this Alignment a) { return UIUtility.GetAlignmentName(a); }
-        public static string Acronym(this Alignment a) { return UIUtility.GetAlignmentAcronym(a); }
+        public static string Name(this Alignment a) => UIUtility.GetAlignmentName(a);
+        public static string Acronym(this Alignment a) => UIUtility.GetAlignmentAcronym(a);
 
         public static Alignment[] Alignments = new Alignment[] {
                     Alignment.LawfulGood,       Alignment.NeutralGood,      Alignment.ChaoticGood,
                     Alignment.LawfulNeutral,    Alignment.TrueNeutral,      Alignment.ChaoticNeutral,
                     Alignment.LawfulEvil,       Alignment.NeutralEvil,      Alignment.ChaoticEvil
         };
-        public static RGBA Color(this Alignment a) {
-            switch (a) {
-                case Alignment.LawfulGood: return RGBA.aqua;
-                case Alignment.NeutralGood: return RGBA.lime;
-                case Alignment.ChaoticGood: return RGBA.yellow;
-                case Alignment.LawfulNeutral: return RGBA.blue;
-                case Alignment.TrueNeutral: return RGBA.white;
-                case Alignment.ChaoticNeutral: return RGBA.orange;
-                case Alignment.LawfulEvil: return RGBA.purple;
-                case Alignment.NeutralEvil: return RGBA.fuchsia;
-                case Alignment.ChaoticEvil: return RGBA.red;
-            }
-            return RGBA.grey;
-        }
+        public static RGBA Color(this Alignment a) => a switch {
+            Alignment.LawfulGood => RGBA.aqua,
+            Alignment.NeutralGood => RGBA.lime,
+            Alignment.ChaoticGood => RGBA.yellow,
+            Alignment.LawfulNeutral => RGBA.blue,
+            Alignment.TrueNeutral => RGBA.white,
+            Alignment.ChaoticNeutral => RGBA.orange,
+            Alignment.LawfulEvil => RGBA.purple,
+            Alignment.NeutralEvil => RGBA.fuchsia,
+            Alignment.ChaoticEvil => RGBA.red,
+            _ => RGBA.grey,
+        };
         public static AlignmentMaskType[] AlignmentMasks = new AlignmentMaskType[] {
                     AlignmentMaskType.None,             AlignmentMaskType.Good,             AlignmentMaskType.Evil,
                     AlignmentMaskType.Any,              AlignmentMaskType.Lawful,           AlignmentMaskType.Chaotic,
-                    AlignmentMaskType.LawfulGood,       AlignmentMaskType.NeutralGood,      AlignmentMaskType.ChaoticGood,  
+                    AlignmentMaskType.LawfulGood,       AlignmentMaskType.NeutralGood,      AlignmentMaskType.ChaoticGood,
                     AlignmentMaskType.LawfulNeutral,    AlignmentMaskType.TrueNeutral,      AlignmentMaskType.ChaoticNeutral,
                     AlignmentMaskType.LawfulEvil,       AlignmentMaskType.NeutralEvil,      AlignmentMaskType.ChaoticEvil,
         };
@@ -68,14 +66,14 @@ namespace ToyBox {
             }
             return RGBA.grey;
         }
-        public static string GetDescription(this SimpleBlueprint   bp)
+        public static string GetDescription(this SimpleBlueprint bp)
         // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {
             try {
                 // avoid exceptions on known broken items
                 var guid = bp.AssetGuid;
                 if (guid == "b60252a8ae028ba498340199f48ead67" || guid == "fb379e61500421143b52c739823b4082") return null;
-                IUIDataProvider associatedBlueprint = bp as IUIDataProvider;
+                var associatedBlueprint = bp as IUIDataProvider;
                 return associatedBlueprint?.Description.StripHTML();
                 // Why did BoT do this instead of the above which is what MechanicsContext.SelectUIData() does for description
 #if false

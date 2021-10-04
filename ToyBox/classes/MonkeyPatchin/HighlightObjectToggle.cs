@@ -10,45 +10,37 @@ using Kingmaker.PubSubSystem;
 using ModKit;
 
 namespace ToyBox.classes.MonkeyPatchin {
-    public class HighlightObjectToggle
-    {
+    public class HighlightObjectToggle {
         [HarmonyPatch(typeof(InteractionHighlightController), "HighlightOn")]
-        class InteractionHighlightController_Activate_Patch
-        {
+        private class InteractionHighlightController_Activate_Patch {
             //static TimeSpan m_LastTickTime;
-            static AccessTools.FieldRef<InteractionHighlightController, bool> m_IsHighlightingRef;
+            private static AccessTools.FieldRef<InteractionHighlightController, bool> m_IsHighlightingRef;
 
             //static FastGetter<InteractionHighlightController, bool> IsHighlightingGet;
             //static FastSetter<InteractionHighlightController, bool> IsHighlightingSet;
-            static bool Prepare()
-            {
+            private static bool Prepare() {
                 // Accessors.CreateFieldRef<KingdomEvent, int>("m_StartedOn");
                 m_IsHighlightingRef = Accessors.CreateFieldRef<InteractionHighlightController, bool>("m_IsHighlighting");
                 //IsHighlightingGet = Accessors.CreateFieldRe<InteractionHighlightController, bool>("IsHighlighting");
                 //IsHighlightingSet = Accessors.CreateSetter<InteractionHighlightController, bool>("IsHighlighting");
                 return true;
             }
-            static bool Prefix(InteractionHighlightController __instance, bool ___m_Inactive)
-            {
-                try
-                {
+
+            private static bool Prefix(InteractionHighlightController __instance, bool ___m_Inactive) {
+                try {
                     if (!Main.Enabled) return true;
                     if (!Main.settings.highlightObjectsToggle) return true;
                     //var isInCutScene = Game.Instance.State.Cutscenes.ToList().Count() > 0;
                     //if (isInCutScene) return true;
-                    if (m_IsHighlightingRef(__instance) & !___m_Inactive)
-                    {
-                        m_IsHighlightingRef(__instance) =  false;
-                        foreach (MapObjectEntityData mapObjectEntityData in Game.Instance.State.MapObjects)
-                        {
+                    if (m_IsHighlightingRef(__instance) & !___m_Inactive) {
+                        m_IsHighlightingRef(__instance) = false;
+                        foreach (var mapObjectEntityData in Game.Instance.State.MapObjects) {
                             mapObjectEntityData.View.UpdateHighlight();
                         }
-                        foreach (UnitEntityData unitEntityData in Game.Instance.State.Units)
-                        {
+                        foreach (var unitEntityData in Game.Instance.State.Units) {
                             unitEntityData.View.UpdateHighlight(false);
                         }
-                        EventBus.RaiseEvent<IInteractionHighlightUIHandler>(delegate (IInteractionHighlightUIHandler h)
-                        {
+                        EventBus.RaiseEvent<IInteractionHighlightUIHandler>(delegate (IInteractionHighlightUIHandler h) {
                             h.HandleHighlightChange(false);
                         });
                         return false;
@@ -61,20 +53,15 @@ namespace ToyBox.classes.MonkeyPatchin {
             }
         }
         [HarmonyPatch(typeof(InteractionHighlightController), "HighlightOff")]
-        class InteractionHighlightController_Deactivate_Patch
-        {
-            static bool Prefix(InteractionHighlightController __instance)
-            {
-                try
-                {
+        private class InteractionHighlightController_Deactivate_Patch {
+            private static bool Prefix(InteractionHighlightController __instance) {
+                try {
                     if (!Main.Enabled) return true;
-                    if (Main.settings.highlightObjectsToggle)
-                    {
+                    if (Main.settings.highlightObjectsToggle) {
                         return false;
                     }
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Mod.Error(ex);
                 }
                 return true;

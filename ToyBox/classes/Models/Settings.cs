@@ -278,9 +278,7 @@ namespace ToyBox {
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-        public override void Save(UnityModManager.ModEntry modEntry) {
-            Save(this, modEntry);
-        }
+        public override void Save(UnityModManager.ModEntry modEntry) => Save(this, modEntry);
         public static void OnGUI() {
             Mod.logLevel = Main.settings.loggingLevel;
             UI.HStack("Settings", 1,

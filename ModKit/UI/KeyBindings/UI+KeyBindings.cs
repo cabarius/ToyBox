@@ -13,9 +13,9 @@ using Newtonsoft.Json;
 using System.Linq;
 
 namespace ModKit {
-    static partial class UI {
-        static string selectedIdentifier = null;
-        static KeyBind oldValue = null;
+    public static partial class UI {
+        private static string selectedIdentifier = null;
+        private static KeyBind oldValue = null;
         public static KeyBind EditKeyBind(string identifier, bool showHint = true, params GUILayoutOption[] options) {
             if (Event.current.type == EventType.Layout)
                 KeyBindings.OnGUI();
@@ -42,7 +42,7 @@ namespace ModKit {
                     KeyBindings.SetBinding(identifier, keyBind);
                 }
                 if (conflicts.Count() > 0) {
-                    UI.Label("conflicts".orange().bold() + "\n" + String.Join("\n", conflicts));
+                    UI.Label("conflicts".orange().bold() + "\n" + string.Join("\n", conflicts));
                 }
                 if (showHint) {
                     var hint = "";
@@ -97,7 +97,7 @@ namespace ModKit {
         }
 
         // One stop shopping for making an instant button that you want to let a player bind to a key in game
-        public static void BindableActionButton(String title, params GUILayoutOption[] options) {
+        public static void BindableActionButton(string title, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             var action = KeyBindings.GetAction(title);
             if (GL.Button(title, options)) { action(); }
@@ -105,7 +105,7 @@ namespace ModKit {
         }
 
         // Action button designed to live in a collection with a BindableActionButton
-        public static void NonBindableActionButton(String title, Action action, params GUILayoutOption[] options) {
+        public static void NonBindableActionButton(string title, Action action, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             if (GL.Button(title, options)) { action(); }
             UI.Space(204);

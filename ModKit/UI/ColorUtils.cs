@@ -45,19 +45,21 @@ namespace ModKit {
         epic = 0xc260f1ff,      //0xc860fff,
         legendary = 0xe67821e0,  // 0xe67821ff, // 0xe68019ff // 0xEDCB1Aff,
         mythic = 0x60ffffff,
-        godly =  pink,           //red
+        godly = pink,           //red
         notable = 0xb1821fff, //0xffe000ff, // 0xC08020ff //0xffd840ff, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
     }
 
     public static class ColorUtils {
         public static Color color(this RGBA rga, float adjust = 0) {
-            var red = (float)((Int64)rga >> 24) / 256f;
-            var green = (float)(0xFF & ((Int64)rga >> 16)) / 256f;
-            var blue = (float)(0xFF & ((Int64)rga >> 8)) / 256f;
-            var alpha = (float)(0xFF & ((Int64)rga)) / 256f;
+            var red = (float)((long)rga >> 24) / 256f;
+            var green = (float)(0xFF & ((long)rga >> 16)) / 256f;
+            var blue = (float)(0xFF & ((long)rga >> 8)) / 256f;
+            var alpha = (float)(0xFF & ((long)rga)) / 256f;
             var color = new Color(red, green, blue, alpha);
-            if (adjust < 0) color = Color.Lerp(color, Color.black, -adjust);
-            if (adjust > 0) color = Color.Lerp(color, Color.white, adjust);
+            if (adjust < 0)
+                color = Color.Lerp(color, Color.black, -adjust);
+            if (adjust > 0)
+                color = Color.Lerp(color, Color.white, adjust);
             return color;
         }
     }

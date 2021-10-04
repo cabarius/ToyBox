@@ -12,8 +12,10 @@ namespace ModKit {
         private static Color fillColor = new(1f, 1f, 1f, 0.65f);
 
         public static GUIStyle FillStyle(Color color) {
-            if (fillTexture == null) fillTexture = new Texture2D(1, 1);
-            if (fillStyle == null) fillStyle = new GUIStyle();
+            if (fillTexture == null)
+                fillTexture = new Texture2D(1, 1);
+            if (fillStyle == null)
+                fillStyle = new GUIStyle();
             fillTexture.SetPixel(0, 0, color);
             fillTexture.Apply();
             fillStyle.normal.background = fillTexture;
@@ -24,10 +26,13 @@ namespace ModKit {
             GUI.Box(position, GUIContent.none, FillStyle(color));
         }
         private static GUIStyle _buttonStyle;
-        public static GUIStyle buttonStyle { get { 
-                if (_buttonStyle == null) _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft };
+        public static GUIStyle buttonStyle {
+            get {
+                if (_buttonStyle == null)
+                    _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft };
                 return _buttonStyle;
-            } }
+            }
+        }
         private static GUIStyle _largeStyle;
 
         public static GUIStyle largeStyle {
@@ -60,7 +65,8 @@ namespace ModKit {
         }
         public static GUIStyle divStyle;
         public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
-            if (fillTexture == null) fillTexture = new Texture2D(1, 1);
+            if (fillTexture == null)
+                fillTexture = new Texture2D(1, 1);
             //if (divStyle == null) {
             divStyle = new GUIStyle {
                 fixedHeight = 1
@@ -75,8 +81,10 @@ namespace ModKit {
             else {
                 divStyle.margin.left = (int)indent;
             }
-            if (width > 0) divStyle.fixedWidth = width;
-            else divStyle.fixedWidth = 0;
+            if (width > 0)
+                divStyle.fixedWidth = width;
+            else
+                divStyle.fixedWidth = 0;
             UI.Space((2f * height) / 3f);
             GUILayout.Box(GUIContent.none, divStyle);
             UI.Space(height / 3f);

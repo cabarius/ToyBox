@@ -4,9 +4,9 @@ namespace ModKit.Private {
     public static partial class UI {
         public const string ChecklyphOn = "<color=green><b>✔</b></color>";
         public const string CheckGlyphOff = "<color=#B8B8B8FF>✖</color>";      // #A0A0A0E0
-        const string DisclosureGlyphOn = "<color=orange><b>▼</b></color>";      // ▼▲∧⋀
-        const string DisclosureGlyphOff = "<color=#C0C0C0FF><b>▶</b></color>";  // ▶▲∨⋁
-        const string DisclosureGlyphEmpty = " <color=#B8B8B8FF>▪</color> ";
+        private const string DisclosureGlyphOn = "<color=orange><b>▼</b></color>";      // ▼▲∧⋀
+        private const string DisclosureGlyphOff = "<color=#C0C0C0FF><b>▶</b></color>";  // ▶▲∨⋁
+        private const string DisclosureGlyphEmpty = " <color=#B8B8B8FF>▪</color> ";
 
         // Helper functionality.
 

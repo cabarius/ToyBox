@@ -30,8 +30,11 @@ namespace ModKit {
         public static void BeginHorizontal(params GUILayoutOption[] options) { GL.BeginHorizontal(options); }
         public static void EndHorizontal() { GL.EndHorizontal(); }
         public static GL.AreaScope AreaScope(Rect screenRect) { return new GL.AreaScope(screenRect); }
-        public static GL.AreaScope AreaScope(Rect screenRect, String text) { return new GL.AreaScope(screenRect, text); }
-        public static GL.HorizontalScope HorizontalScope(params GUILayoutOption[] options) => new(options);
+        public static GL.AreaScope AreaScope(Rect screenRect, string text) { return new GL.AreaScope(screenRect, text); }
+        public static GL.HorizontalScope HorizontalScope(params GUILayoutOption[] options) {
+            return new(options);
+        }
+
         public static GL.HorizontalScope HorizontalScope(GUIStyle style, params GUILayoutOption[] options) { return new GL.HorizontalScope(style, options); }
         public static GL.VerticalScope VerticalScope(params GUILayoutOption[] options) { return new GL.VerticalScope(options); }
         public static GL.VerticalScope VerticalScope(GUIStyle style, params GUILayoutOption[] options) { return new GL.VerticalScope(style, options); }

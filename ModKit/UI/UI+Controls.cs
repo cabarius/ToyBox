@@ -6,12 +6,12 @@ using UnityModManagerNet;
 
 namespace ModKit {
     public static partial class UI {
-        public static void Label(String title, params GUILayoutOption[] options) {
+        public static void Label(string title, params GUILayoutOption[] options) {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, options);
         }
-        public static void Label(String title, GUIStyle style, params GUILayoutOption[] options) {
+        public static void Label(string title, GUIStyle style, params GUILayoutOption[] options) {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, style, options);
@@ -21,7 +21,7 @@ namespace ModKit {
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
         }
-        public static bool EditableLabel(ref String label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
+        public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
             bool changed = false;
             if (editState.Item1 != label) {
                 using (UI.HorizontalScope(options)) {
@@ -40,7 +40,7 @@ namespace ModKit {
                     if (GL.Button("✖".red(), GUI.skin.box, UI.AutoWidth())) {
                         editState = (null, null);
                     }
-                    if (GL.Button("✔".green(), GUI.skin.box, UI.AutoWidth()) 
+                    if (GL.Button("✔".green(), GUI.skin.box, UI.AutoWidth())
                         || UI.userHasHitReturn && UI.focusedControlName == label) {
                         label = editState.Item2;
                         changed = true;
@@ -50,51 +50,51 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool EditableLabel(ref String label, ref (string, string) editState, float minWidth, Func<string, string> formatter = null, params GUILayoutOption[] options) {
+        public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, Func<string, string> formatter = null, params GUILayoutOption[] options) {
             return EditableLabel(ref label, ref editState, minWidth, GUI.skin.label, formatter, options);
         }
 
         // Controls
-        public static String TextField(ref String text, String name = null, params GUILayoutOption[] options) {
+        public static string TextField(ref string text, string name = null, params GUILayoutOption[] options) {
             if (name != null) { GUI.SetNextControlName(name); }
             text = GL.TextField(text, options);
             return text;
         }
-        public static int IntTextField(ref int value, String name = null, params GUILayoutOption[] options) {
-            String text = $"{value}";
+        public static int IntTextField(ref int value, string name = null, params GUILayoutOption[] options) {
+            string text = $"{value}";
             UI.TextField(ref text, name, options);
-            Int32.TryParse(text, out value);
+            int.TryParse(text, out value);
             return value;
         }
-        public static float FloatTextField(ref float value, String name = null, params GUILayoutOption[] options) {
-            String text = $"{value}";
+        public static float FloatTextField(ref float value, string name = null, params GUILayoutOption[] options) {
+            string text = $"{value}";
             UI.TextField(ref text, name, options);
             if (float.TryParse(text, out float val)) {
                 value = val;
             }
             return value;
         }
-        public static bool Button(String title, ref bool pressed, params GUILayoutOption[] options) {
+        public static bool Button(string title, ref bool pressed, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, options)) { pressed = true; }
             return pressed;
         }
-        public static void ActionButton(String title, Action action, params GUILayoutOption[] options) {
+        public static void ActionButton(string title, Action action, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, options)) { action(); }
         }
-        public static void ActionButton(String title, Action action, GUIStyle style, params GUILayoutOption[] options) {
+        public static void ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
             if (GL.Button(title, style, options)) { action(); }
         }
         public static void ActionTextField(ref string text,
-                String name,
-                Action<String> action,
+                string name,
+                Action<string> action,
                 Action enterAction,
                 params GUILayoutOption[] options
             ) {
             GUI.SetNextControlName(name);
-            String newText = GL.TextField(text, options);
+            string newText = GL.TextField(text, options);
             if (newText != text) {
                 text = newText;
                 action?.Invoke(text);
@@ -105,7 +105,7 @@ namespace ModKit {
         }
         public static void ActionIntTextField(
                 ref int value,
-                String name,
+                string name,
                 Action<int> action,
                 Action enterAction,
                 int min = 0,
@@ -114,26 +114,26 @@ namespace ModKit {
             ) {
             bool changed = false;
             bool hitEnter = false;
-            String str = $"{value}";
+            string str = $"{value}";
             UI.ActionTextField(ref str,
                 name,
                 (text) => { changed = true; },
                 () => { hitEnter = true; },
                 options);
-            Int32.TryParse(str, out value);
+            int.TryParse(str, out value);
             value = Math.Min(max, Math.Max(value, min));
             if (changed) { action(value); }
             if (hitEnter) { enterAction(); }
         }
         public static void ActionIntTextField(
                 ref int value,
-                String name,
+                string name,
                 Action<int> action,
                 Action enterAction,
                 params GUILayoutOption[] options) {
             ActionIntTextField(ref value, name, action, enterAction, int.MinValue, int.MaxValue, options);
         }
-        public static void ValueEditor(String title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, float titleWidth = 500) {
+        public static void ValueEditor(string title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, float titleWidth = 500) {
             var value = get();
             var inc = increment;
             UI.Label(title.cyan(), UI.Width(titleWidth));
@@ -149,7 +149,7 @@ namespace ModKit {
             UI.ActionIntTextField(ref inc, title, (v) => { }, null, UI.Width(fieldWidth + 25));
             increment = inc;
         }
-        public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
+        public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, UI.Width(200)), decimals);
             using (UI.HorizontalScope(options)) {
@@ -164,9 +164,10 @@ namespace ModKit {
             value = newValue;
             return changed;
         }
-        const int sliderTop = 3;
-        const int sliderBottom = -7;
-        public static bool Slider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
+
+        private const int sliderTop = 3;
+        private const int sliderBottom = -7;
+        public static bool Slider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             float newValue = value;
             using (UI.HorizontalScope(options)) {
@@ -200,19 +201,19 @@ namespace ModKit {
             value = newValue;
             return changed;
         }
-        public static bool Slider(String title, ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
+        public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
             bool changed = UI.Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }
-        public static bool Slider(ref int value, int min, int max, int defaultValue = 1, String units = "", params GUILayoutOption[] options) {
+        public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
             bool changed = UI.Slider(ref fvalue, min, max, (float)defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }
-        public static bool LogSlider(String title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, String units = "", params GUILayoutOption[] options) {
+        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             if (min < 0)
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             UI.BeginHorizontal(options);

@@ -10,8 +10,8 @@ namespace ModKit {
         void AddMissingKeys(IUpdatableSettings from);
     }
 
-    static class ModSettings {
-        public static void SaveSettings<T>(this ModEntry modEntry, string fileName, T settings) { 
+    internal static class ModSettings {
+        public static void SaveSettings<T>(this ModEntry modEntry, string fileName, T settings) {
             string userConfigFolder = modEntry.Path + "UserSettings";
             Directory.CreateDirectory(userConfigFolder);
             var userPath = $"{userConfigFolder}{Path.DirectorySeparatorChar}{fileName}";
@@ -41,9 +41,9 @@ namespace ModKit {
                 settings = new T { };
             }
             if (File.Exists(userPath)) {
-                using StreamReader reader = File.OpenText(userPath);
+                using var reader = File.OpenText(userPath);
                 try {
-                    T userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+                    var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
                     userSettings.AddMissingKeys(settings);
                     settings = userSettings;
                 }

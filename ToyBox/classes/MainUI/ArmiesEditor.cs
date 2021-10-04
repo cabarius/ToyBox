@@ -20,9 +20,7 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<GlobalMapArmyState> armies;
         public static IEnumerable<GlobalMapArmyState> playerArmies;
         public static IEnumerable<GlobalMapArmyState> demonArmies;
-        public static void OnShowGUI() {
-            UpdateArmies();
-        }
+        public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {
             armies = ArmiesByDistanceFromPlayer()?.ToList();
             if (armies != null) {
@@ -65,7 +63,7 @@ namespace ToyBox.classes.MainUI {
                         using (UI.VerticalScope()) {
                             var last = armies.Last();
                             foreach (var army in armies) {
-                                bool showSquads = false;
+                                var showSquads = false;
                                 using (UI.HorizontalScope()) {
                                     UI.Label(army.Data.ArmyName.ToString().orange().bold(), UI.MinWidth(100), UI.MaxWidth(250));
                                     UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(250));
@@ -160,8 +158,8 @@ namespace ToyBox.classes.MainUI {
                 //.Where<GlobalMapArmyState>(_army => _army.Data.Faction == this.Faction)
                 .Select<GlobalMapArmyState, (GlobalMapArmyState, float)>(_army => {
                     var globalMapArmyState = _army;
-                    float? length = globalMap?.PathManager?.CalculateArmyPathToPosition(_army, position)?.GetLength(false);
-                    double num = length.HasValue ? (double)length.GetValueOrDefault() : -1.0;
+                    var length = globalMap?.PathManager?.CalculateArmyPathToPosition(_army, position)?.GetLength(false);
+                    var num = length.HasValue ? (double)length.GetValueOrDefault() : -1.0;
                     return (globalMapArmyState, (float)num);
                 });
             return source.OrderBy(t => t.Item2).Select(t => t.Item1);

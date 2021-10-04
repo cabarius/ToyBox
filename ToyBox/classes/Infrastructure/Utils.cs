@@ -18,7 +18,7 @@ namespace ToyBox {
         public static Vector3 PointerPosition() {
             Vector3 result = new();
 
-            Camera camera = Game.GetCamera();
+            var camera = Game.GetCamera();
             if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out var raycastHit, camera.farClipPlane, 21761)) {
                 result = raycastHit.point;
             }

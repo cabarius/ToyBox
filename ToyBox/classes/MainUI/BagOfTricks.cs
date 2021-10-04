@@ -192,7 +192,7 @@ namespace ToyBox {
                                     UI.Space(25);
                                     var brutaltiy = settings.brutalDifficultyMultiplier;
                                     string label;
-                                    string suffix = Math.Abs(brutaltiy - Math.Floor(brutaltiy)) <= float.Epsilon ? "" : "+";
+                                    var suffix = Math.Abs(brutaltiy - Math.Floor(brutaltiy)) <= float.Epsilon ? "" : "+";
                                     switch (brutaltiy) {
                                         case float level when level < 2.0:
                                             label = $"Unfair{suffix}".Rarity(RarityType.Common);
@@ -201,7 +201,7 @@ namespace ToyBox {
                                             label = $"Brutal{suffix}";
                                             break;
                                         default:
-                                            RarityType rarity = (RarityType)(brutaltiy);
+                                            var rarity = (RarityType)(brutaltiy);
                                             label = $"{rarity}{suffix}".Rarity(rarity);
                                             break;
                                     }

@@ -24,9 +24,9 @@ namespace ToyBox.Multiclass {
         #region Class Level & Archetype
 
         [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        static class SelectClass_Apply_Patch {
+        private static class SelectClass_Apply_Patch {
             [HarmonyPostfix]
-            static void Postfix(LevelUpState state, UnitDescriptor unit) {
+            private static void Postfix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (!unit.IsPartyOrPet()) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
@@ -46,7 +46,7 @@ namespace ToyBox.Multiclass {
 
                     // applying classes
                     StateReplacer stateReplacer = new(state);
-                    foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
+                    foreach (var characterClass in Main.multiclassMod.AllClasses) {
                         if (options.Contains(characterClass)) {
                             Mod.Trace($"   checking {characterClass.HashKey()} {characterClass.GetDisplayName()} ");
                         }
@@ -101,23 +101,23 @@ namespace ToyBox.Multiclass {
 
         [HarmonyPatch(typeof(LevelUpController))]
         [HarmonyPatch("ApplyLevelup")]
-        static class LevelUpController_ApplyLevelup_Patch {
-            static void Prefix(LevelUpController __instance, UnitEntityData unit) {
+        private static class LevelUpController_ApplyLevelup_Patch {
+            private static void Prefix(LevelUpController __instance, UnitEntityData unit) {
                 if (!settings.toggleMulticlass) return;
 
                 if (unit == __instance.Preview) {
                     Mod.Trace($"Unit Preview = {unit.CharacterName}");
                     Mod.Trace("levelup action：");
                     foreach (var action in __instance.LevelUpActions) {
-                        Mod.Trace($"{action.GetType().ToString()}");
+                        Mod.Trace($"{action.GetType()}");
                     }
                 }
             }
         }
         [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        static class ApplyClassMechanics_Apply_Patch {
+        private static class ApplyClassMechanics_Apply_Patch {
             [HarmonyPostfix]
-            static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
+            private static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
                     //Main.Log($"ApplyClassMechanics.Apply.Postfix - unit: {unit} {unit.CharacterName}");
@@ -129,7 +129,7 @@ namespace ToyBox.Multiclass {
                             __instance.Apply_NoStatsAndHitPoints(state, unit);
                         });
                     }
-                    List<BlueprintCharacterClass> allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
+                    var allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
                     //Main.Log($"ApplyClassMechanics.Apply.Postfix - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
                     allAppliedClasses.Add(state.SelectedClass);
                     SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
@@ -139,17 +139,17 @@ namespace ToyBox.Multiclass {
         }
 
         [HarmonyPatch(typeof(SelectFeature), nameof(SelectFeature.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        static class SelectFeature_Apply_Patch {
+        private static class SelectFeature_Apply_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
-            static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
+            private static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
                 if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
                     if (__instance.Item != null) {
-                        FeatureSelectionState selectionState =
+                        var selectionState =
                             ReflectionCache.GetMethod<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
                             ("GetSelectionState")(__instance, state);
                         if (selectionState != null) {
-                            BlueprintCharacterClass sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
+                            var sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
                             if (sourceClass != null) {
                                 __state = new StateReplacer(state);
                                 __state.Replace(sourceClass, unit.Progression.GetClassLevel(sourceClass));
@@ -160,7 +160,7 @@ namespace ToyBox.Multiclass {
             }
 
             [HarmonyPostfix, HarmonyPriority(Priority.Last)]
-            static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
+            private static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
                 if (!settings.toggleMulticlass) return;
                 if (__state != null) {
                     __state.Restore();
@@ -169,17 +169,17 @@ namespace ToyBox.Multiclass {
         }
 
         [HarmonyPatch(typeof(SelectFeature), nameof(SelectFeature.Check), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        static class SelectFeature_Check_Patch {
+        private static class SelectFeature_Check_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
-            static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
+            private static void Prefix(SelectFeature __instance, LevelUpState state, UnitDescriptor unit, ref StateReplacer __state) {
                 if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
                     if (__instance.Item != null) {
-                        FeatureSelectionState selectionState =
+                        var selectionState =
                             ReflectionCache.GetMethod<SelectFeature, Func<SelectFeature, LevelUpState, FeatureSelectionState>>
                             ("GetSelectionState")(__instance, state);
                         if (selectionState != null) {
-                            BlueprintCharacterClass sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
+                            var sourceClass = selectionState.SourceFeature?.GetSourceClass(unit);
                             if (sourceClass != null) {
                                 __state = new StateReplacer(state);
                                 __state.Replace(sourceClass, unit.Progression.GetClassLevel(sourceClass));
@@ -190,7 +190,7 @@ namespace ToyBox.Multiclass {
             }
 
             [HarmonyPostfix, HarmonyPriority(Priority.Last)]
-            static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
+            private static void Postfix(SelectFeature __instance, ref StateReplacer __state) {
                 if (!settings.toggleMulticlass) return;
                 if (__state != null) {
                     __state.Restore();
@@ -203,9 +203,9 @@ namespace ToyBox.Multiclass {
         #region Spellbook
 
         [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        static class ApplySpellbook_Apply_Patch {
+        private static class ApplySpellbook_Apply_Patch {
             [HarmonyPostfix]
-            static void Postfix(MethodBase __originalMethod, ApplySpellbook __instance, LevelUpState state, UnitDescriptor unit) {
+            private static void Postfix(MethodBase __originalMethod, ApplySpellbook __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
 
                 if (IsAvailable() && !Main.multiclassMod.LockedPatchedMethods.Contains(__originalMethod)) {
@@ -223,9 +223,9 @@ namespace ToyBox.Multiclass {
         #region Commit
 
         [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
-        static class LevelUpController_Commit_Patch {
+        private static class LevelUpController_Commit_Patch {
             [HarmonyPostfix]
-            static void Postfix(LevelUpController __instance) {
+            private static void Postfix(LevelUpController __instance) {
                 if (!settings.toggleMulticlass) return;
 
                 if (IsAvailable()) {
@@ -245,8 +245,8 @@ namespace ToyBox.Multiclass {
         #endregion
 
         [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.SetupLevelsIfNecessary))]
-        static class UnitProgressionData_SetupLevelsIfNecessary_Patch {
-            static private bool Prefix(UnitProgressionData __instance) {
+        private static class UnitProgressionData_SetupLevelsIfNecessary_Patch {
+            private static bool Prefix(UnitProgressionData __instance) {
                 if (__instance.m_CharacterLevel.HasValue && __instance.m_MythicLevel.HasValue)
                     return false;
                 __instance.UpdateLevelsForGestalt();

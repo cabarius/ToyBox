@@ -16,17 +16,15 @@ namespace ToyBox {
 
         }
 
-        public static void Beep(string parameters) {
-            SystemSounds.Beep.Play();
-        }
+        public static void Beep(string parameters) => SystemSounds.Beep.Play();
 
         public static void CommandBatch(string parameters) {
             parameters = parameters.Remove(0, 4);
             if (File.Exists(Mod.modEntryPath + parameters)) {
                 try {
-                    int i = 0;
-                    string[] commands = File.ReadAllLines(Mod.modEntryPath + parameters);
-                    foreach (string s in commands) {
+                    var i = 0;
+                    var commands = File.ReadAllLines(Mod.modEntryPath + parameters);
+                    foreach (var s in commands) {
                         SmartConsole.WriteLine($"[{i}]: {s}");
                         SmartConsole.ExecuteLine(s);
                         i++;

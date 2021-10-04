@@ -18,9 +18,7 @@ namespace ModKit {
             public float height { get; set; } = ui.Size.Automatic;
             public float width { get; set; } = ui.Size.Automatic;
             public RectOffset padding { get; set; } = new RectOffset();
-            public void Dispose() {
-                throw new NotImplementedException();
-            }
+            public void Dispose() => throw new NotImplementedException();
             public static explicit operator View(Color c) => new() { color = c };
         }
         public class Stack : View {
@@ -42,7 +40,7 @@ namespace ModKit {
 
         public class Label : View {
             public string text { get; set; } = "";
-            public Label(string t) { text = t; }
+            public Label(string t) { this.text = t; }
         }
     }
 }

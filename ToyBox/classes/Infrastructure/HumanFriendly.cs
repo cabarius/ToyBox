@@ -15,7 +15,8 @@ namespace ToyBox.classes.Infrastructure {
             }
         }
 
-        public static List<StatType> StatTypes = new() { StatType.Unknown,
+        public static List<StatType> StatTypes = new() {
+            StatType.Unknown,
             StatType.Strength,
             StatType.Dexterity,
             StatType.Constitution,
@@ -55,6 +56,7 @@ namespace ToyBox.classes.Infrastructure {
             StatType.SkillUseMagicDevice,
             StatType.CheckBluff,
             StatType.CheckDiplomacy,
-            StatType.CheckIntimidate };
+            StatType.CheckIntimidate
+        };
     }
 }

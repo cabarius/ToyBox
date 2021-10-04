@@ -27,14 +27,14 @@ using System.Linq;
 using TMPro;
 
 namespace ToyBox {
-    class PreviewManager {
-        static GameDialogsSettings DialogSettings { get { return Kingmaker.Settings.SettingsRoot.Game.Dialogs; } }
+    internal class PreviewManager {
+        private static GameDialogsSettings DialogSettings => Kingmaker.Settings.SettingsRoot.Game.Dialogs;
         public static KingdomStats.Changes CalculateEventResult(KingdomEvent kingdomEvent, EventResult.MarginType margin, AlignmentMaskType alignment, LeaderType leaderType) {
             var checkMargin = EventResult.MarginToInt(margin);
             var result = new KingdomStats.Changes();
             var m_TriggerChange = Traverse.Create(kingdomEvent).Field("m_TriggerChange").GetValue<KingdomStats.Changes>();
             var m_SuccessCount = Traverse.Create(kingdomEvent).Field("m_SuccessCount").GetValue<int>();
-            BlueprintKingdomEvent blueprintKingdomEvent = kingdomEvent.EventBlueprint as BlueprintKingdomEvent;
+            var blueprintKingdomEvent = kingdomEvent.EventBlueprint as BlueprintKingdomEvent;
             if (blueprintKingdomEvent && blueprintKingdomEvent.UnapplyTriggerOnResolve && m_TriggerChange != null) {
                 result.Accumulate(m_TriggerChange.Opposite(), 1);
             }
@@ -50,7 +50,7 @@ namespace ToyBox {
             if (checkMargin >= 0 && blueprintKingdomEvent != null) {
                 result.Accumulate((KingdomStats.Type)leaderType, Game.Instance.BlueprintRoot.Kingdom.StatIncreaseOnEvent);
             }
-            bool willBeFinished = true;
+            var willBeFinished = true;
             if (blueprintKingdomEvent != null && blueprintKingdomEvent.IsRecurrent) {
                 willBeFinished = m_SuccessCount >= blueprintKingdomEvent.Solutions.GetSuccessCount(leaderType);
             }
@@ -68,8 +68,9 @@ namespace ToyBox {
             return result;
 
         }
-        static string FormatResult(KingdomEvent kingdomEvent, EventResult.MarginType margin, AlignmentMaskType alignment, LeaderType leaderType) {
-            string text = "";
+
+        private static string FormatResult(KingdomEvent kingdomEvent, EventResult.MarginType margin, AlignmentMaskType alignment, LeaderType leaderType) {
+            var text = "";
             var statChanges = CalculateEventResult(kingdomEvent, margin, alignment, leaderType);
             var statChangesText = statChanges.ToStringWithPrefix(" ");
             text += string.Format("{0}:{1}",
@@ -79,7 +80,8 @@ namespace ToyBox {
             text += "\n";
             return text;
         }
-        static List<Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>> CollateAnswerData(BlueprintAnswer answer, out bool isRecursive) {
+
+        private static List<Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>> CollateAnswerData(BlueprintAnswer answer, out bool isRecursive) {
             var cueResults = new List<Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>>();
             var toCheck = new Queue<Tuple<BlueprintCueBase, int>>();
             isRecursive = false;
@@ -97,7 +99,7 @@ namespace ToyBox {
             while (toCheck.Count > 0) {
                 var item = toCheck.Dequeue();
                 var cueBase = item.Item1;
-                int currentDepth = item.Item2;
+                var currentDepth = item.Item2;
                 if (currentDepth > 20) break;
                 if (cueBase is BlueprintCue cue) {
                     cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>(
@@ -166,9 +168,9 @@ namespace ToyBox {
             return cueResults;
         }
         public static string GetFixedAnswerString(BlueprintAnswer answer, string bind, int index) {
-            bool flag = Game.Instance.DialogController.Dialog.Type == DialogType.Book;
+            var flag = Game.Instance.DialogController.Dialog.Type == DialogType.Book;
             string checkFormat = (!flag) ? UIDialog.Instance.AnswerStringWithCheckFormat : UIDialog.Instance.AnswerStringWithCheckBeFormat;
-            string text = string.Empty;
+            var text = string.Empty;
             if (DialogSettings.ShowSkillcheckDC) {
                 text = answer.SkillChecksDC.Aggregate(string.Empty, (string current, SkillCheckDC skillCheck) => current + string.Format(checkFormat, UIUtility.PackKeys(new object[]
                 {
@@ -185,21 +187,21 @@ namespace ToyBox {
             if (DialogSettings.ShowAlignmentShiftsInAnswer && answer.AlignmentRequirement == AlignmentComponent.None && answer.AlignmentShift.Value > 0 && DialogSettings.ShowAlignmentShiftsInAnswer) {
                 text = string.Format(UIDialog.Instance.AligmentShiftedFormat, UIUtility.GetAlignmentShiftDirectionText(answer.AlignmentShift.Direction)) + text;
             }
-            string stringByBinding = UIKeyboardTexts.Instance.GetStringByBinding(Game.Instance.Keyboard.GetBindingByName(bind));
+            var stringByBinding = UIKeyboardTexts.Instance.GetStringByBinding(Game.Instance.Keyboard.GetBindingByName(bind));
             return string.Format(UIDialog.Instance.AnswerDialogueFormat,
                 (!stringByBinding.Empty()) ? stringByBinding : index.ToString(),
                 text + ((!text.Empty()) ? " " : string.Empty) + answer.DisplayText);
         }
         [HarmonyPatch(typeof(UIConsts), "GetAnswerString")]
-        static class UIConsts_GetAnswerString_Patch {
-            static void Postfix(ref string __result, BlueprintAnswer answer, string bind, int index) {
+        private static class UIConsts_GetAnswerString_Patch {
+            private static void Postfix(ref string __result, BlueprintAnswer answer, string bind, int index) {
                 try {
                     if (!Main.Enabled) return;
                     if (Main.settings.previewAlignmentRestrictedDialog && !answer.IsAlignmentRequirementSatisfied) {
                         __result = GetFixedAnswerString(answer, bind, index);
                     }
                     if (!Main.settings.previewDialogResults) return;
-                    var answerData = CollateAnswerData(answer, out bool isRecursive);
+                    var answerData = CollateAnswerData(answer, out var isRecursive);
                     if (isRecursive) {
                         __result += $" <size=75%>[Repeats]</size>";
                     }
@@ -231,8 +233,8 @@ namespace ToyBox {
             }
         }
         [HarmonyPatch(typeof(DialogCurrentPart), "Fill")]
-        static class DialogCurrentPart_Fill_Patch {
-            static void Postfix(DialogCurrentPart __instance) {
+        private static class DialogCurrentPart_Fill_Patch {
+            private static void Postfix(DialogCurrentPart __instance) {
                 try {
                     if (!Main.Enabled) return;
                     if (!Main.settings.previewDialogResults) return;
@@ -256,8 +258,8 @@ namespace ToyBox {
             }
         }
         [HarmonyPatch(typeof(KingdomUIEventWindow), "SetHeader")]
-        static class KingdomUIEventWindow_SetHeader_Patch {
-            static void Postfix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
+        private static class KingdomUIEventWindow_SetHeader_Patch {
+            private static void Postfix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
                 try {
                     if (!Main.Enabled) return;
                     if (!Main.settings.previewEventResults) return;
@@ -287,7 +289,7 @@ namespace ToyBox {
                     }
 #endif
                     //Calculate best result
-                    int bestResult = 0;
+                    var bestResult = 0;
                     KingdomStats.Changes bestEventResult = null;
                     LeaderType bestLeader = 0;
                     AlignmentMaskType bestAlignment = 0;
@@ -295,8 +297,8 @@ namespace ToyBox {
                         if (!solution.CanBeSolved) continue;
                         foreach (var alignmentMask in solution.Resolutions.Select(s => s.LeaderAlignment).Distinct()) {
                             var eventResult = CalculateEventResult(kingdomEventView.Task.Event, EventResult.MarginType.GreatSuccess, alignmentMask, solution.Leader);
-                            int sum = 0;
-                            for (int i = 0; i < 10; i++) sum += eventResult[(KingdomStats.Type)i];
+                            var sum = 0;
+                            for (var i = 0; i < 10; i++) sum += eventResult[(KingdomStats.Type)i];
                             if (sum > bestResult) {
                                 bestResult = sum;
                                 bestLeader = solution.Leader;
@@ -331,13 +333,15 @@ namespace ToyBox {
             }
         }
         [HarmonyPatch(typeof(GlobalMapRandomEncounterController), "OnRandomEncounterStarted")]
-        static class GlobalMapRandomEncounterController_OnRandomEncounterStarted_Patch {
-            static AccessTools.FieldRef<GlobalMapRandomEncounterController, TextMeshProUGUI> m_DescriptionRef;
-            static bool Prepare() {
+        private static class GlobalMapRandomEncounterController_OnRandomEncounterStarted_Patch {
+            private static AccessTools.FieldRef<GlobalMapRandomEncounterController, TextMeshProUGUI> m_DescriptionRef;
+
+            private static bool Prepare() {
                 m_DescriptionRef = Accessors.CreateFieldRef<GlobalMapRandomEncounterController, TextMeshProUGUI>("m_Description");
                 return true;
             }
-            static void Postfix(GlobalMapRandomEncounterController __instance, ref CombatRandomEncounterData encounter) {
+
+            private static void Postfix(GlobalMapRandomEncounterController __instance, ref CombatRandomEncounterData encounter) {
                 try {
                     if (!Main.Enabled) return;
                     if (Main.settings.previewRandomEncounters) {
