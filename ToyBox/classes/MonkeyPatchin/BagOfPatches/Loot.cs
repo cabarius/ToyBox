@@ -10,8 +10,10 @@ using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._PCView.Tooltip.Bricks;
+using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._VM.Slots;
+using ModKit;
 using Owlcat.Runtime.UI.MVVM;
 using TMPro;
 using UnityEngine;
@@ -91,8 +93,90 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+
+        internal static Color ColoredLootBackgroundColor = new(1f, 1f, 1f, 0.25f);
+        internal static Color ColoredEquipSlotBackgroundColor = new(1f, 1f, 1f, 0.45f);
+
+
+        [HarmonyPatch(typeof(InventoryPCView), nameof(InventoryPCView.BindViewImplementation))]
+        private static class InventoryPCView_BindViewImplementation_Patch {
+            public static void Postfix(InventoryPCView __instance) {
+                if (!settings.toggleColorLootByRarity) return;
+                var decoration = __instance.gameObject?
+                    .transform.Find("Inventory")?
+                    .transform.Find("Stash")?
+                    .transform.Find("StashContainer")?
+                    .transform.Find("StashScrollView")?
+                    .transform.Find("decoration");
+                var image = decoration?.GetComponent<UnityEngine.UI.Image>();
+                if (image != null) {
+                    image.color = ColoredLootBackgroundColor;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(InventoryEquipSlotPCView), nameof(InventoryEquipSlotPCView.BindViewImplementation))]
+        private static class InventoryEquipSlotPCView_BindViewImplementation_Patch {
+            public static void Postfix(InventoryEquipSlotPCView __instance) {
+                if (!settings.toggleColorLootByRarity) return;
+                var backfill = __instance.gameObject?
+                    .transform.Find("Backfill");
+                var image = backfill?.GetComponent<UnityEngine.UI.Image>();
+                if (image != null) {
+                    image.color = ColoredEquipSlotBackgroundColor;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(WeaponSetPCView), nameof(WeaponSetPCView.BindViewImplementation))]
+        private static class WeaponSetPCView_BindViewImplementation_Patch {
+            public static void Postfix(WeaponSetPCView __instance) {
+                if (!settings.toggleColorLootByRarity) return;
+                var selected = __instance.gameObject?
+                    .transform.Find("SelectedObject");
+                var image = selected?.GetComponent<UnityEngine.UI.Image>();
+                if (image != null) {
+                    image.color = ColoredLootBackgroundColor;
+                }
+            }
+        }
+        
+       [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
+        private static class LootCollectorPCView_BindViewImplementation_Patch {
+            public static void Postfix(LootCollectorPCView __instance) {
+                if (!settings.toggleColorLootByRarity) return;
+                var image = __instance.gameObject?
+                    .transform.Find("Collector") ?
+                    .transform.Find("StashScrollView") ?
+                    .transform.Find("Decoration")?
+                    .GetComponent<UnityEngine.UI.Image>();
+                image.color = ColoredLootBackgroundColor;
+
+            }
+        }
+        [HarmonyPatch(typeof(VendorPCView), nameof(VendorPCView.BindViewImplementation))]
+        private static class VendorPCView_BindViewImplementation_Patch {
+            public static void Postfix(VendorPCView __instance) {
+                if (!settings.toggleColorLootByRarity) return;
+                var vendorImage = __instance.gameObject?
+                    .transform.Find("MainContent")?
+                    .transform.Find("VendorBlock")?
+                    .transform.Find("VendorStashScrollView")?
+                    .transform.Find("decoration")?
+                    .GetComponent<UnityEngine.UI.Image>();
+                vendorImage.color = ColoredLootBackgroundColor;
+                var playerImage = __instance.gameObject?
+                    .transform.Find("MainContent")?
+                    .transform.Find("PlayerStash")?
+                    .transform.Find("StashScrollView")?
+                    .transform.Find("decoration")?
+                    .GetComponent<UnityEngine.UI.Image>();
+                playerImage.color = ColoredLootBackgroundColor;
+            }
+        }
+    }
+}
 #if false
-        [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
+
+            [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
         private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
             public static void Postfix(TooltipBrickEntityHeaderView __instance) {
                 //__instance.m_MainTitle.text = "hi";
@@ -104,5 +188,3 @@ namespace ToyBox.BagOfPatches {
 
         }
 #endif
-    }
-}
