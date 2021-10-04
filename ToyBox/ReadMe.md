@@ -34,6 +34,7 @@
 * **Crusade Editor**
   * Reworked UI to match design of other parts of the mod
   * Fixed bug where it was displaying the Exp required for the current rank rather than the next rank
+  * (***ArcaneTrixter***) Made spell learning for spontaneous casters less buggy. Still has an issue with certain sources of bonus spells and mega gestalts.
 ### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
 * **Bag of Tricks**

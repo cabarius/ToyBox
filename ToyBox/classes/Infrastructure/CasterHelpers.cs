@@ -3,16 +3,17 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ToyBox.classes.Infrastructure {
     public static class CasterHelpers {
-        public static Dictionary<UnitDescriptor, Dictionary<BlueprintSpellbook, int>> UnitBonusSpellLevels =
-            new();
+        private static readonly Dictionary<string, List<int>> UnitSpellsKnown = new();
         public static Dictionary<BlueprintSpellbook, int> GetOriginalCasterLevel(UnitDescriptor unit) {
             var mythicLevel = 0;
             BlueprintSpellbook mythicSpellbook = null;
@@ -74,19 +75,6 @@ namespace ToyBox.classes.Infrastructure {
             return hasCasterLevel ? level : 0;
         }
 
-        public static void FindBonusLevels(UnitDescriptor unit) {
-            var resultsDictionary = new Dictionary<BlueprintSpellbook, int>();
-            var calculatedResults = GetOriginalCasterLevel(unit);
-            var actual = unit.m_Spellbooks;
-            foreach (var spellbookTypePair in calculatedResults) {
-                actual.TryGetValue(spellbookTypePair.Key, out var actualSpellbook);
-                if (actualSpellbook != null) {
-                    var bonus = actualSpellbook.CasterLevel - spellbookTypePair.Value;
-                    resultsDictionary.Add(spellbookTypePair.Key, bonus);
-                }
-            }
-            UnitBonusSpellLevels.Add(unit, resultsDictionary);
-        }
 
         private static int GetPrestigeCasterLevelStart(BlueprintProgression progression) {
             foreach (var level in progression.LevelEntries) {
@@ -149,6 +137,62 @@ namespace ToyBox.classes.Infrastructure {
             else {
                 AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
             }
+        }
+
+        public static int GetCachedSpellsKnown(UnitDescriptor unit, Spellbook spellbook, int level) {
+            var key = $"{unit.CharacterName}.{spellbook.Blueprint.Name}";
+            if (!UnitSpellsKnown.TryGetValue(key, out var spellsKnownList)) {
+                Mod.Trace($"Can't find cached spells known data for character {unit.CharacterName} with key: {key}");
+                return level > 1 ? GetCachedSpellsKnown(unit, spellbook, level - 1) : 0;
+            }
+
+            return spellsKnownList.Count > level ? spellsKnownList[level] : spellsKnownList.LastOrDefault();
+        }
+
+        public static void CacheSpellsLearned(UnitEntityData unit) {
+            var addedSpellComponents = unit.Facts.List.SelectMany(x =>
+                x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell).ToList();
+            foreach (var unitSpellbook in unit.Spellbooks) {
+                var spellsToIgnore = addedSpellComponents
+                    .Where(x => x.CharacterClass == unitSpellbook.Blueprint.CharacterClass && (x.Archetype == null || unit.Progression.IsArchetype(x.Archetype))).Select(y => y.Spell).ToList();
+                var key = $"{unit.CharacterName}.{unitSpellbook.Blueprint.Name}";
+                if (UnitSpellsKnown.ContainsKey(key)) {
+                    continue;
+                }
+                var spellsLearnedList = new List<int>();
+                for (var i = 0; i < 10; i++) {
+                    spellsLearnedList.Add(GetActualSpellsLearned(unitSpellbook, i, spellsToIgnore));
+                }
+                UnitSpellsKnown.Add(key, spellsLearnedList);
+                var list = string.Join(", ", spellsLearnedList);
+                Mod.Trace($"Caching {list} for {key}");
+            }
+        }
+
+        public static void ClearCachedSpellsLearned(UnitEntityData unit) {
+            foreach (var unitSpellbook in unit.Spellbooks) {
+                var key = $"{unit.CharacterName}.{unitSpellbook.Blueprint.Name}";
+                if (UnitSpellsKnown.ContainsKey(key)) {
+                    Mod.Trace($"Clearing cached value for {key}");
+                    UnitSpellsKnown.Remove(key);
+                }
+            }
+        }
+
+        public static int GetActualSpellsLearned(Spellbook spellbook, int level, List<BlueprintAbility> spellsToIgnore) {
+            var known = spellbook.SureKnownSpells(level)
+                .Where(x => !x.IsTemporary)
+                .Where(x => !x.CopiedFromScroll)
+                .Where(x => !x.IsFromMythicSpellList)
+                .Where(x => x.SourceItem == null)
+                .Where(x => x.SourceItemEquipmentBlueprint == null)
+                .Where(x => x.SourceItemUsableBlueprint == null)
+                .Where(x => !x.IsMysticTheurgeCombinedSpell)
+                .Where(x => !spellsToIgnore.Contains(x.Blueprint))
+                .Distinct()
+                .ToList();
+
+            return known.Count;
         }
 
         public static ClassData GetMythicToMerge(this UnitProgressionData unit) {
