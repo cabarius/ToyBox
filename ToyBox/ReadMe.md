@@ -14,6 +14,9 @@
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
 ### Ver 1.3.19 (Coming Soon)
+* **Bag of Tricks** 
+  * You can enabled 
+  * (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
 * **Loot Checklist**  - Containers and Units now sort with higest rarity loot at the top
 * **Multiple Classes Per Level Up** - added safey check where if all classes are gestalt (can happen if you set your original class gestalt and the load a save from before you gained your new main class) then we treat the first one as non gestalt
 * **Party Editor** - Changed Stat < and > arrows to have a box background instead of the ugly buttons
@@ -28,7 +31,6 @@
 * **Crusade Editor**
   * Reworked UI to match design of other parts of the mod
   * Fixed bug where it was displaying the Exp required for the current rank rather than the next rank
-* (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
 ### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
 * **Bag of Tricks**

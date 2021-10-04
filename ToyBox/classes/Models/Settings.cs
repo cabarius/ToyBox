@@ -282,14 +282,20 @@ namespace ToyBox {
         public static void OnGUI() {
             Mod.logLevel = Main.settings.loggingLevel;
             UI.HStack("Settings", 1,
-#if DEBUG
+                () => {
+                    UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode);
+                    UI.Space(25);
+                    UI.Label("This turns on the developer console which lets you access cheat commands, shows a FPS window (hife with F11), etc".green());
+                },
+                () => UI.Label(""),
+                () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
+                () => UI.Label(""),
                 () => UI.Toggle("Strip HTML (colors) from Native Console", ref Main.settings.stripHtmlTagsFromNativeConsole),
+#if DEBUG
                 () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.settings.stripHtmlTagsFromUMMLogsTab),
 #endif
-                () => UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode),
-                () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
             () => { }
-            );
+            ); ;
 
         }
     }
