@@ -274,6 +274,15 @@ namespace ToyBox {
                 () => UI.Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => UI.Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
                 () => UI.Toggle("Remove Level 20 Caster Level Cap", ref settings.toggleUncappedCasterLevel),
+                () => {
+                    using (UI.HorizontalScope()) {
+                        UI.ToggleCallback("Highlight Hidden Objects", ref settings.highlightHiddenObjects, Actions.UpdateHighlights);
+                        if (settings.highlightHiddenObjects) {
+                            UI.Space(100);
+                            UI.ToggleCallback("In Fog Of War ", ref settings.highlightHiddenObjectsInFog, Actions.UpdateHighlights);
+                        }
+                    }
+                },
                 () => { }
                 );
             UI.Div(153, 25);
