@@ -123,7 +123,7 @@ namespace ModKit {
             int.TryParse(str, out value);
             value = Math.Min(max, Math.Max(value, min));
             if (changed) { action(value); }
-            if (hitEnter) { enterAction(); }
+            if (hitEnter && enterAction != null) { enterAction(); }
         }
         public static void ActionIntTextField(
                 ref int value,
