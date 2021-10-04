@@ -28,7 +28,7 @@ namespace ModKit {
             Mod.modEntryPath = modEntry.Path;
         }
         public static void Error(string str) {
-            str = str.red().bold();
+            str = str.yellow().bold();
             modLogger?.Error(str + "\n" + System.Environment.StackTrace);
         }
         public static void Error(Exception ex) {
