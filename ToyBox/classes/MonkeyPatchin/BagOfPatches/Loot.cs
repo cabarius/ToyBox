@@ -9,9 +9,11 @@ using Kingmaker.Items.Parts;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._PCView.Slots;
+using Kingmaker.UI.MVVM._PCView.Tooltip.Bricks;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._VM.Slots;
 using Owlcat.Runtime.UI.MVVM;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityModManagerNet;
@@ -89,5 +91,18 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+#if false
+        [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
+        private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
+            public static void Postfix(TooltipBrickEntityHeaderView __instance) {
+                //__instance.m_MainTitle.text = "hi";
+                __instance.m_MainTitle.color = (Color32)Color.green;
+                __instance.m_MainTitle.overrideColorTags = true;
+                __instance.m_MainTitle.outlineColor = (Color32)Color.magenta;
+                __instance.m_MainTitle.outlineWidth = 5;
+            }
+
+        }
+#endif
     }
 }

@@ -307,8 +307,7 @@ namespace ToyBox.classes.MainUI {
             var searchText = itemSearchText.ToLower();
             inventory = (from item in Game.Instance.Player.Inventory
                          where item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == selectedItemIndex
-                         orderby item.Name
-                         orderby item.Blueprint.Rarity() descending
+                         orderby item.Rarity() descending, item.Name
                          select item
                          ).ToList();
             if (editedItem != null) {
