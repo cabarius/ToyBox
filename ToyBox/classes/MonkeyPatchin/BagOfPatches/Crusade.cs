@@ -92,7 +92,6 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(MercenarySlot), "Price", MethodType.Getter)]
         private static class MercenarySlot_Price_Patch {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
             private static void Postfix(ref KingdomResourcesAmount __result) {
                 __result *= Settings.recruitmentCost;
                 if (!__result.IsPositive) {

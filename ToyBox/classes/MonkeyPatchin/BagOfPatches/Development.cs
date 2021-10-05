@@ -77,7 +77,5 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 return false;
             }
         }
-
-
     }
 }

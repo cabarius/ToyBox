@@ -99,6 +99,5 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
     }
 }

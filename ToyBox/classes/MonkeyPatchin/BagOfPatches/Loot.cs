@@ -176,7 +176,6 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_MainTitle.outlineWidth = 5;
 #endif
             }
-
         }
     }
 }

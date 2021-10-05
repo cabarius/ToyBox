@@ -14,9 +14,7 @@ using System.Linq;
 
 namespace ModKit {
     public static partial class UI {
-        public static IEnumerable<string> Conflicts(this KeyBind keyBind) {
-            return KeyBindings.conflicts.GetValueOrDefault(keyBind.bindCode, new List<string> { }).Where(id => id != keyBind.ID);
-        }
+        public static IEnumerable<string> Conflicts(this KeyBind keyBind) => KeyBindings.conflicts.GetValueOrDefault(keyBind.bindCode, new List<string> { }).Where(id => id != keyBind.ID);
 
         public static class KeyBindings {
             private static ModEntry modEntry = null;
@@ -24,15 +22,9 @@ namespace ModKit {
             private static readonly Dictionary<string, Action> actions = new() { };
             internal static Dictionary<string, List<string>> conflicts = new() { };
             internal static bool BindingsDidChange = false;
-            public static bool IsActive(string identifier) {
-                return GetBinding(identifier).IsActive;
-            }
-            public static Action GetAction(string identifier) {
-                return actions.GetValueOrDefault(identifier, null);
-            }
-            public static void RegisterAction(string identifier, Action action) {
-                actions[identifier] = action;
-            }
+            public static bool IsActive(string identifier) => GetBinding(identifier).IsActive;
+            public static Action GetAction(string identifier) => actions.GetValueOrDefault(identifier, null);
+            public static void RegisterAction(string identifier, Action action) => actions[identifier] = action;
             internal static KeyBind GetBinding(string identifier) {
                 BindingsDidChange = true;
                 return bindings.GetValueOrDefault(identifier, new KeyBind(identifier));

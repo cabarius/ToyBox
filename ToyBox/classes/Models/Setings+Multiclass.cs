@@ -20,7 +20,6 @@ namespace ToyBox {
             result += "}";
             return result;
         }
-
     }
     public class MulticlassOptions : SerializableDictionary<string, ArchetypeOptions> {
         public const string CharGenKey = @"$CharacterGeneration";

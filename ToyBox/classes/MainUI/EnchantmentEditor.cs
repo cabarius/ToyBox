@@ -319,7 +319,6 @@ namespace ToyBox.classes.MainUI {
                         UI.Label(enchant.CollationNames().First().cyan(), UI.Width(300));
                         if (enchant.Description.Length > 0) UI.Label(enchant.Description.StripHTML().green());
                     }
-
                 }
                 UI.Div();
             }

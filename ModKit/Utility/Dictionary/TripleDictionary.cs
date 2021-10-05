@@ -25,9 +25,7 @@ namespace ModKit.Utility {
             innerDictionary2.Add(key3, value);
         }
 
-        public void Clear() {
-            _dictionary.Clear();
-        }
+        public void Clear() => _dictionary.Clear();
 
         public bool TryGetValue(TKey1 key1, TKey2 key2, TKey3 key3, out TValue value) {
             if (!_dictionary.TryGetValue(key1, out var innerDictionary1)) {

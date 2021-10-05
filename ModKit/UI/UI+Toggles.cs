@@ -13,8 +13,8 @@ namespace ModKit {
     public static partial class UI {
         public const string onMark = "<color=green><b>✔</b></color>";
         public const string offMark = "<color=#A0A0A0E0>✖</color>";
-        public static bool IsOn(this ToggleState state) { return state == ToggleState.On; }
-        public static bool IsOff(this ToggleState state) { return state == ToggleState.Off; }
+        public static bool IsOn(this ToggleState state) => state == ToggleState.On;
+        public static bool IsOff(this ToggleState state) => state == ToggleState.Off;
         public static ToggleState Flip(this ToggleState state) {
             return state switch {
                 ToggleState.Off => ToggleState.On,
@@ -46,9 +46,8 @@ namespace ModKit {
             }
             return changed;
         }
-#pragma warning disable IDE0060 // Remove unused parameter
+
         public static void ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
-#pragma warning restore IDE0060 // Remove unused parameter
             bool state = toggle.IsOn();
             bool isEmpty = toggle == ToggleState.None;
             if (TogglePrivate(title, ref state, isEmpty, true, 0, options))
@@ -72,9 +71,7 @@ namespace ModKit {
             string title,
             ref bool value,
             float width = 0,
-            params GUILayoutOption[] options) {
-            return TogglePrivate(title, ref value, false, false, width, options);
-        }
+            params GUILayoutOption[] options) => TogglePrivate(title, ref value, false, false, width, options);
 
         public static bool ActionToggle(
                 string title,
@@ -136,6 +133,5 @@ namespace ModKit {
             If(newBit, actions);
             return bit != newBit;
         }
-
     }
 }

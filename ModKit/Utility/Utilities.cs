@@ -58,9 +58,7 @@ namespace ModKit {
             // throws InvalidCastException if types are incompatible
             return (T)retval;
         }
-        public static string StripHTML(this string s) {
-            return Regex.Replace(s, "<.*?>", string.Empty);
-        }
+        public static string StripHTML(this string s) => Regex.Replace(s, "<.*?>", string.Empty);
         public static string UnityRichTextToHtml(string s) {
             s = s.Replace("<color=", "<font color=");
             s = s.Replace("</color>", "</font>");
@@ -112,13 +110,9 @@ namespace ModKit {
                 .ToDictionary(e => e, e => Enum.GetName(enumType, e));
         }
         public static Dictionary<K, V> Filter<K, V>(this Dictionary<K, V> dict,
-        Predicate<KeyValuePair<K, V>> pred) {
-            return dict.Where(it => pred(it)).ToDictionary(it => it.Key, it => it.Value);
-        }
+        Predicate<KeyValuePair<K, V>> pred) => dict.Where(it => pred(it)).ToDictionary(it => it.Key, it => it.Value);
     }
     public static class MK {
-        public static bool IsKindOf(this Type type, Type baseType) {
-            return type.IsSubclassOf(baseType) || type == baseType;
-        }
+        public static bool IsKindOf(this Type type, Type baseType) => type.IsSubclassOf(baseType) || type == baseType;
     }
 }

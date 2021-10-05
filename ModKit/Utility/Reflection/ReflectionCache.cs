@@ -32,9 +32,7 @@ namespace ModKit.Utility {
             _cache.Enqueue(obj);
         }
 
-        private static bool IsStatic(Type type) {
-            return type.IsAbstract && type.IsSealed;
-        }
+        private static bool IsStatic(Type type) => type.IsAbstract && type.IsSealed;
 
         private static TypeBuilder RequestTypeBuilder() {
             AssemblyName asmName = new(nameof(ReflectionCache) + "." + Guid.NewGuid().ToString());

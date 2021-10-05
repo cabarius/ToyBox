@@ -9,12 +9,8 @@ namespace ModKit {
     public static partial class UI {
 
         // UI for picking items from a collection
-        public static void Toolbar(ref int value, string[] texts, params GUILayoutOption[] options) {
-            value = GL.Toolbar(value, texts, options);
-        }
-        public static void Toolbar(ref int value, string[] texts, GUIStyle style, params GUILayoutOption[] options) {
-            value = GL.Toolbar(value, texts, style, options);
-        }
+        public static void Toolbar(ref int value, string[] texts, params GUILayoutOption[] options) => value = GL.Toolbar(value, texts, options);
+        public static void Toolbar(ref int value, string[] texts, GUIStyle style, params GUILayoutOption[] options) => value = GL.Toolbar(value, texts, style, options);
         public static bool SelectionGrid(ref int selected, string[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0)
                 xCols = texts.Count();
@@ -115,14 +111,9 @@ namespace ModKit {
                     value = newValue;
                 }
             }
-
         }
-        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
-            EnumGrid(ref value, xCols, titleFormater, null, options);
-        }
-        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
-            EnumGrid(ref value, xCols, null, options);
-        }
+        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, titleFormater, null, options);
+        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, null, options);
         public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));

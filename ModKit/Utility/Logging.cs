@@ -31,9 +31,7 @@ namespace ModKit {
             str = str.yellow().bold();
             modLogger?.Error(str + "\n" + Environment.StackTrace);
         }
-        public static void Error(Exception ex) {
-            Error(ex.ToString());
-        }
+        public static void Error(Exception ex) => Error(ex.ToString());
         public static void Warning(string str) {
             if (logLevel >= LogLevel.Warning)
                 modLogger?.Warning(str.orange());
@@ -50,7 +48,6 @@ namespace ModKit {
             if (logLevel >= LogLevel.Trace)
                 modLogger?.Log(str);
         }
-
     }
 #if false
 

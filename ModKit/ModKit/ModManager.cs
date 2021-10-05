@@ -160,21 +160,15 @@ namespace ModKit {
             }
         }
 
-        private void HandleSaveGUI(UnityModManager.ModEntry modEntry) {
-            UnityModManager.ModSettings.Save(Settings, modEntry);
-        }
+        private void HandleSaveGUI(UnityModManager.ModEntry modEntry) => UnityModManager.ModSettings.Save(Settings, modEntry);
 
         #endregion
 
         #region Loggers
 
-        public void Critical(string str) {
-            _logger.Critical(str);
-        }
+        public void Critical(string str) => _logger.Critical(str);
 
-        public void Critical(object obj) {
-            _logger.Critical(obj?.ToString() ?? "null");
-        }
+        public void Critical(object obj) => _logger.Critical(obj?.ToString() ?? "null");
 
         public void Error(Exception e) {
             _logger.Error($"{e.Message}\n{e.StackTrace}");
@@ -182,44 +176,26 @@ namespace ModKit {
                 Error(e.InnerException);
         }
 
-        public void Error(string str) {
-            _logger.Error(str);
-        }
+        public void Error(string str) => _logger.Error(str);
 
-        public void Error(object obj) {
-            _logger.Error(obj?.ToString() ?? "null");
-        }
+        public void Error(object obj) => _logger.Error(obj?.ToString() ?? "null");
 
-        public void Log(string str) {
-            _logger.Log(str);
-        }
+        public void Log(string str) => _logger.Log(str);
 
-        public void Log(object obj) {
-            _logger.Log(obj?.ToString() ?? "null");
-        }
+        public void Log(object obj) => _logger.Log(obj?.ToString() ?? "null");
 
-        public void Warning(string str) {
-            _logger.Warning(str);
-        }
+        public void Warning(string str) => _logger.Warning(str);
 
-        public void Warning(object obj) {
-            _logger.Warning(obj?.ToString() ?? "null");
-        }
+        public void Warning(object obj) => _logger.Warning(obj?.ToString() ?? "null");
 
         [Conditional("DEBUG")]
-        public void Debug(MethodBase method, params object[] parameters) {
-            _logger.Log($"{method.DeclaringType.Name}.{method.Name}({string.Join(", ", parameters)})");
-        }
+        public void Debug(MethodBase method, params object[] parameters) => _logger.Log($"{method.DeclaringType.Name}.{method.Name}({string.Join(", ", parameters)})");
 
         [Conditional("DEBUG")]
-        public void Debug(string str) {
-            _logger.Log(str);
-        }
+        public void Debug(string str) => _logger.Log(str);
 
         [Conditional("DEBUG")]
-        public void Debug(object obj) {
-            _logger.Log(obj?.ToString() ?? "null");
-        }
+        public void Debug(object obj) => _logger.Log(obj?.ToString() ?? "null");
 
         #endregion
 
@@ -232,14 +208,10 @@ namespace ModKit {
                 _stopWatch.Start();
             }
 
-            public void Dispose() {
-                _stopWatch.Stop();
-            }
+            public void Dispose() => _stopWatch.Stop();
 
             [Conditional("DEBUG")]
-            public void Log(string status) {
-                _logger.Log($"[{_stopWatch.Elapsed:ss\\.ff}] {status}");
-            }
+            public void Log(string status) => _logger.Log($"[{_stopWatch.Elapsed:ss\\.ff}] {status}");
         }
     }
 }

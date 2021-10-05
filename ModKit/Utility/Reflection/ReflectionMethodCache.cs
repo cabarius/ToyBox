@@ -72,28 +72,16 @@ namespace ModKit.Utility {
             return cache as CachedMethod<TMethod>;
         }
 
-        public static MethodInfo GetMethodInfo<T, TMethod>(string name) where TMethod : Delegate {
-            return GetMethodCache<T, TMethod>(name).Info;
-        }
+        public static MethodInfo GetMethodInfo<T, TMethod>(string name) where TMethod : Delegate => GetMethodCache<T, TMethod>(name).Info;
 
-        public static MethodInfo GetMethodInfo<TMethod>(Type type, string name) where TMethod : Delegate {
-            return GetMethodCache<TMethod>(type, name).Info;
-        }
-        public static TMethod GetMethodDel<T, TMethod>(string name) where TMethod : Delegate {
-            return GetMethodCache<T, TMethod>(name).Del;
-        }
+        public static MethodInfo GetMethodInfo<TMethod>(Type type, string name) where TMethod : Delegate => GetMethodCache<TMethod>(type, name).Info;
+        public static TMethod GetMethodDel<T, TMethod>(string name) where TMethod : Delegate => GetMethodCache<T, TMethod>(name).Del;
 
-        public static TMethod GetMethodDel<TMethod>(Type type, string name) where TMethod : Delegate {
-            return GetMethodCache<TMethod>(type, name).Del;
-        }
+        public static TMethod GetMethodDel<TMethod>(Type type, string name) where TMethod : Delegate => GetMethodCache<TMethod>(type, name).Del;
 
-        public static TMethod GetMethod<T, TMethod>(string name) where TMethod : Delegate {
-            return GetMethodCache<T, TMethod>(name).Del;
-        }
+        public static TMethod GetMethod<T, TMethod>(string name) where TMethod : Delegate => GetMethodCache<T, TMethod>(name).Del;
 
-        public static TMethod GetMethod<TMethod>(Type type, string name) where TMethod : Delegate {
-            return GetMethodCache<TMethod>(type, name).Del;
-        }
+        public static TMethod GetMethod<TMethod>(Type type, string name) where TMethod : Delegate => GetMethodCache<TMethod>(type, name).Del;
 
         private abstract class CachedMethod<TMethod> where TMethod : Delegate {
             private TMethod _delegate;

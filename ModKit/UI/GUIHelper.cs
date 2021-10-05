@@ -36,9 +36,7 @@ namespace ModKit.Utility {
             return value != oldValue;
         }
 
-        public static void Hyperlink(string url, Color normalColor, Color hoverColor, GUIStyle style) {
-            Hyperlink(url, url, normalColor, hoverColor, style);
-        }
+        public static void Hyperlink(string url, Color normalColor, Color hoverColor, GUIStyle style) => Hyperlink(url, url, normalColor, hoverColor, style);
 
         public static void Hyperlink(string text, string url, Color normalColor, Color hoverColor, GUIStyle style) {
             var color = GUI.color;
@@ -54,13 +52,9 @@ namespace ModKit.Utility {
             GUI.color = color;
         }
 
-        public static void TextField(ref string value, GUIStyle style = null, params GUILayoutOption[] options) {
-            value = GUILayout.TextField(value, style ?? GUI.skin.textField, options);
-        }
+        public static void TextField(ref string value, GUIStyle style = null, params GUILayoutOption[] options) => value = GUILayout.TextField(value, style ?? GUI.skin.textField, options);
 
-        public static void TextField(ref string value, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options) {
-            TextField(ref value, null, onChanged, style, options);
-        }
+        public static void TextField(ref string value, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options) => TextField(ref value, null, onChanged, style, options);
 
         public static void TextField(ref string value, Action onClear, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options) {
             string old = value;
@@ -165,13 +159,9 @@ namespace ModKit.Utility {
             return toggle;
         }
 
-        public static void Toolbar(ref int selected, string[] texts, GUIStyle style = null, params GUILayoutOption[] options) {
-            selected = GUILayout.Toolbar(selected, texts, style ?? GUI.skin.button, options);
-        }
+        public static void Toolbar(ref int selected, string[] texts, GUIStyle style = null, params GUILayoutOption[] options) => selected = GUILayout.Toolbar(selected, texts, style ?? GUI.skin.button, options);
 
-        public static void SelectionGrid(ref int selected, string[] texts, int xCount, GUIStyle style = null, params GUILayoutOption[] options) {
-            selected = GUILayout.SelectionGrid(selected, texts, xCount, style ?? GUI.skin.button, options);
-        }
+        public static void SelectionGrid(ref int selected, string[] texts, int xCount, GUIStyle style = null, params GUILayoutOption[] options) => selected = GUILayout.SelectionGrid(selected, texts, xCount, style ?? GUI.skin.button, options);
 
         public static void SelectionGrid(ref int selected, string[] texts, int xCount, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options) {
             int old = selected;
@@ -209,10 +199,7 @@ namespace ModKit.Utility {
             fillStyle.normal.background = fillTexture;
             return fillStyle;
         }
-        public static void GUIDrawRect(Rect position, Color color) {
-
-            GUI.Box(position, GUIContent.none, FillStyle(color));
-        }
+        public static void GUIDrawRect(Rect position, Color color) => GUI.Box(position, GUIContent.none, FillStyle(color));
         //private static GUIStyle divStyle;
         public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
             if (fillTexture == null)
@@ -233,9 +220,7 @@ namespace ModKit.Utility {
             GUILayout.Space(height / 2f);
         }
 
-        public static void Div(float indent = 0, float height = 25, float width = 0) {
-            Div(fillColor, indent, height, width);
-        }
+        public static void Div(float indent = 0, float height = 25, float width = 0) => Div(fillColor, indent, height, width);
 
     }
 }

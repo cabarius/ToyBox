@@ -210,7 +210,6 @@ namespace ToyBox {
                             Mod.Trace($"spell level = {level}");
                             spellbook.AddKnown(level, ability);
                         }
-
                     }
                 }
             }

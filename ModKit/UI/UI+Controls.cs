@@ -6,21 +6,18 @@ using UnityModManagerNet;
 
 namespace ModKit {
     public static partial class UI {
-        public static void Label(string title, params GUILayoutOption[] options) {
+        public static void Label(string title, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, options);
-        }
-        public static void Label(string title, GUIStyle style, params GUILayoutOption[] options) {
+        public static void Label(string title, GUIStyle style, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, style, options);
-        }
-        public static void Label(GUIContent content, params GUILayoutOption[] options) {
+        public static void Label(GUIContent content, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
-        }
         public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
             bool changed = false;
             if (editState.Item1 != label) {
@@ -50,9 +47,7 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, Func<string, string> formatter = null, params GUILayoutOption[] options) {
-            return EditableLabel(ref label, ref editState, minWidth, GUI.skin.label, formatter, options);
-        }
+        public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, Func<string, string> formatter = null, params GUILayoutOption[] options) => EditableLabel(ref label, ref editState, minWidth, GUI.skin.label, formatter, options);
 
         // Controls
         public static string TextField(ref string text, string name = null, params GUILayoutOption[] options) {
@@ -130,9 +125,7 @@ namespace ModKit {
                 string name,
                 Action<int> action,
                 Action enterAction,
-                params GUILayoutOption[] options) {
-            ActionIntTextField(ref value, name, action, enterAction, int.MinValue, int.MaxValue, options);
-        }
+                params GUILayoutOption[] options) => ActionIntTextField(ref value, name, action, enterAction, int.MinValue, int.MaxValue, options);
         public static void ValueEditor(string title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, float titleWidth = 500) {
             var value = get();
             var inc = increment;

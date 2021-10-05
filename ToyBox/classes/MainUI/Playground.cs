@@ -35,7 +35,6 @@ namespace ModKit {
             public IEnumerable<ItemType> items;
             public void ForEach(Action<ItemType> action) { }
             public void ForEach(Action<ItemType, int> action) { }
-
         }
 
         public class Label : View {

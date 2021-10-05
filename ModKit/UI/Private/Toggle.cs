@@ -128,30 +128,16 @@ namespace ModKit.Private {
             return Toggle(rect, label, value, isEmpty, on, off, stateStyle, labelStyle);
         }
 #endif
-        public static bool Toggle(string label, bool value, string on, string off, GUIStyle stateStyle, GUIStyle labelStyle, params GUILayoutOption[] options) {
-            return Toggle(LabelContent(label), value, new GUIContent(on), new GUIContent(off), stateStyle, labelStyle, false, options);
-        }
+        public static bool Toggle(string label, bool value, string on, string off, GUIStyle stateStyle, GUIStyle labelStyle, params GUILayoutOption[] options) => Toggle(LabelContent(label), value, new GUIContent(on), new GUIContent(off), stateStyle, labelStyle, false, options);
         // Disclosure Toggles
-        public static bool DisclosureToggle(GUIContent label, bool value, bool isEmpty = false, params GUILayoutOption[] options) {
-            return Toggle(label, value, DisclosureOn, DisclosureOff, GUI.skin.textArea, GUI.skin.label, isEmpty, options);
-        }
-        public static bool DisclosureToggle(string label, bool value, GUIStyle stateStyle, GUIStyle labelStyle, bool isEmpty = false, params GUILayoutOption[] options) {
-            return Toggle(LabelContent(label), value, DisclosureOn, DisclosureOff, stateStyle, labelStyle, isEmpty, options);
-        }
-        public static bool DisclosureToggle(string label, bool value, bool isEmpty = false, params GUILayoutOption[] options) {
-            return DisclosureToggle(label, value, GUI.skin.box, GUI.skin.label, isEmpty, options);
-        }
+        public static bool DisclosureToggle(GUIContent label, bool value, bool isEmpty = false, params GUILayoutOption[] options) => Toggle(label, value, DisclosureOn, DisclosureOff, GUI.skin.textArea, GUI.skin.label, isEmpty, options);
+        public static bool DisclosureToggle(string label, bool value, GUIStyle stateStyle, GUIStyle labelStyle, bool isEmpty = false, params GUILayoutOption[] options) => Toggle(LabelContent(label), value, DisclosureOn, DisclosureOff, stateStyle, labelStyle, isEmpty, options);
+        public static bool DisclosureToggle(string label, bool value, bool isEmpty = false, params GUILayoutOption[] options) => DisclosureToggle(label, value, GUI.skin.box, GUI.skin.label, isEmpty, options);
         // CheckBox 
-        public static bool CheckBox(GUIContent label, bool value, params GUILayoutOption[] options) {
-            return Toggle(label, value, CheckOn, CheckOff, GUI.skin.textArea, GUI.skin.label, false, options);
-        }
+        public static bool CheckBox(GUIContent label, bool value, params GUILayoutOption[] options) => Toggle(label, value, CheckOn, CheckOff, GUI.skin.textArea, GUI.skin.label, false, options);
 
-        public static bool CheckBox(string label, bool value, GUIStyle style, params GUILayoutOption[] options) {
-            return Toggle(LabelContent(label), value, CheckOn, CheckOff, GUI.skin.box, style, false, options);
-        }
+        public static bool CheckBox(string label, bool value, GUIStyle style, params GUILayoutOption[] options) => Toggle(LabelContent(label), value, CheckOn, CheckOff, GUI.skin.box, style, false, options);
 
-        public static bool CheckBox(string label, bool value, params GUILayoutOption[] options) {
-            return CheckBox(label, value, GUI.skin.label, options);
-        }
+        public static bool CheckBox(string label, bool value, params GUILayoutOption[] options) => CheckBox(label, value, GUI.skin.label, options);
     }
 }
