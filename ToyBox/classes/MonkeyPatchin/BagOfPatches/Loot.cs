@@ -95,6 +95,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         internal static Color ColoredLootBackgroundColor = new(1f, 1f, 1f, 0.25f);
+        internal static Color ColoredLootBrickBackgroundColor = new(1f, 1f, 1f, 0.15f);
         internal static Color ColoredEquipSlotBackgroundColor = new(1f, 1f, 1f, 0.45f);
 
 
@@ -172,19 +173,26 @@ namespace ToyBox.BagOfPatches {
                 playerImage.color = ColoredLootBackgroundColor;
             }
         }
-    }
-}
-#if false
-
-            [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
+        [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
         private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
             public static void Postfix(TooltipBrickEntityHeaderView __instance) {
-                //__instance.m_MainTitle.text = "hi";
+                if (!settings.toggleColorLootByRarity) return;
+                var image = __instance.gameObject?
+                    .transform.Find("TextBlock")?
+                    .transform.Find("Back")?
+                    .transform.Find("ItemBackContainer")?
+                    .GetComponent<UnityEngine.UI.Image>();
+                image.color = ColoredLootBackgroundColor;
+
+#if false
                 __instance.m_MainTitle.color = (Color32)Color.green;
                 __instance.m_MainTitle.overrideColorTags = true;
                 __instance.m_MainTitle.outlineColor = (Color32)Color.magenta;
                 __instance.m_MainTitle.outlineWidth = 5;
+#endif
             }
 
         }
-#endif
+    }
+}
+
