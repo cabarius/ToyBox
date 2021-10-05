@@ -7,7 +7,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
@@ -15,7 +15,6 @@ using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
@@ -276,13 +275,40 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(LevelUpController), "IsPossibleMythicSelection", MethodType.Getter)]
         private static class LevelUpControllerIsPossibleMythicSelection_Patch {
-            private static void Postfix(ref bool __result) {
-                //Logger.Log($"LevelUpController.IsPossibleMythicSelection {settings.toggleIgnoreClassAndFeatRestrictions}");
-                if (settings.toggleIgnoreClassAndFeatRestrictions) {
+            private static void Postfix(ref bool __result, LevelUpController __instance) {
+                if (settings.toggleIgnoreClassAndFeatRestrictions || settings.toggleAllowCompanionsToBecomeMythic && !__instance.Unit.IsMainCharacter) {
                     __result = true;
                 }
             }
         }
+
+        [HarmonyPatch(typeof(BlueprintCharacterClass), nameof(BlueprintCharacterClass.MeetsPrerequisites))]
+        private static class BlueprintCharacterClass_MeetsPrerequisites_Patch {
+            private static void Postfix(ref bool __result, BlueprintCharacterClass __instance, [NotNull] UnitDescriptor unit, [NotNull] LevelUpState state) {
+                if (!settings.toggleAllowCompanionsToBecomeMythic || unit.IsMainCharacter || !__instance.IsMythic) return;
+
+                if (__instance == BlueprintRoot.Instance.Progression.MythicCompanionClass &&
+                    unit.Progression.LastMythicClass != __instance && unit.Progression.LastMythicClass != null) {
+                    __result = false;
+                    return;
+                }
+
+                if (state.NextMythicLevel == 8 && __instance.m_IsHigherMythic) {
+                    __result = true;
+                    return;
+                }
+
+                if (unit.Progression.LastMythicClass == __instance) {
+                    __result = true;
+                    return;
+                }
+
+                if (state.NextMythicLevel == 3 && !__instance.m_IsHigherMythic) {
+                    __result = true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "CheckInternal")]
         public static class PrerequisiteCasterTypeSpellLevel_Check_Patch {
             public static void Postfix(

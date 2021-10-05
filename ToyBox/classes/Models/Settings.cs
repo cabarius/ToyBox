@@ -106,6 +106,7 @@ namespace ToyBox {
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnoreClassAndFeatRestrictions = false;
+        public bool toggleAllowCompanionsToBecomeMythic = false;
         public bool toggleIgnorePrerequisites = false;
         public bool toggleIgnoreCasterTypeSpellLevel = false;
         public bool toggleIgnoreForbiddenArchetype = false;
