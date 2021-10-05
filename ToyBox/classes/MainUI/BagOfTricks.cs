@@ -137,6 +137,7 @@ namespace ToyBox {
                 () => UI.Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
                 () => UI.Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
                 () => UI.Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
+                () => UI.Toggle("Vescavors begone (experimental)", ref settings.toggleVescavorsBegone, 0),
                 () => UI.Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => UI.Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => UI.Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),

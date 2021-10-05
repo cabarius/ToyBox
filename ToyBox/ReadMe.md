@@ -29,6 +29,8 @@
   * Reworked UI to match design of other parts of the mod
   * Fixed bug where it was displaying the Exp required for the current rank rather than the next rank
 * (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
+* (***ShadowRanger***) Added a vescavors-begone option, similar to spiders-begone, to replace all vescavor models 
+
 ### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
 * **Bag of Tricks**
