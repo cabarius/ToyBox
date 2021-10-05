@@ -351,7 +351,6 @@ namespace ToyBox {
                                     if (group.Key == selectedKey) {
                                         matchCount = group.Count();
                                         selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
-                                        matchCount = selectedCollatedBPs.Count();
                                         UpdatePageCount();
                                     }
                                 }
