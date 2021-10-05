@@ -92,6 +92,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(MercenarySlot), "Price", MethodType.Getter)]
         private static class MercenarySlot_Price_Patch {
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
             private static void Postfix(ref KingdomResourcesAmount __result) {
                 __result *= Settings.recruitmentCost;
                 if (!__result.IsPositive) {
@@ -131,8 +132,8 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(KingdomEvent), "CalculateResolutionTime")]
-        static class KingdomEvent_CalculateResolutionTime_Patch {
-            static void Postfix(KingdomEvent __instance, ref int __result) {
+        private static class KingdomEvent_CalculateResolutionTime_Patch {
+            private static void Postfix(KingdomEvent __instance, ref int __result) {
                 if (Settings.kingdomTaskResolutionLengthMultiplier == 0) return;
                 if (__instance.EventBlueprint.IsResolveByBaron) return; //this is a guard from KingdomResolution, not sure why it's there or if we still need it
                 //KingdomResolution split this into multiple settings, but this should be good enough until someone who cares checks what blueprint types we have

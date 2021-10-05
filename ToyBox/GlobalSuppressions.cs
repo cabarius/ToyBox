@@ -5,4 +5,3 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0011:Add braces", Justification = "<Pending>", Scope = "member", Target = "~M:ToyBox.BlueprintExensions.Rarity(Kingmaker.Blueprints.Items.BlueprintItem)~ToyBox.RarityType")]
