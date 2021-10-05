@@ -15,13 +15,15 @@ using System.Runtime.CompilerServices;
 using ModKit;
 using Kingmaker.Blueprints.Items.Weapons;
 using HarmonyLib;
+using Kingmaker.AreaLogic.Etudes;
 
 namespace ToyBox {
 
     public static partial class BlueprintExensions {
         public static Settings settings => Main.settings;
 
-        private static readonly ConditionalWeakTable<object, List<string>> cachedCollationNames = new() { };
+        private static ConditionalWeakTable<object, List<string>> cachedCollationNames = new() { };
+        public static void ResetCollationCache() => cachedCollationNames = new() { };
         private static void AddOrUpdateCachedNames(SimpleBlueprint bp, List<string> names) {
             if (cachedCollationNames.TryGetValue(bp, out _)) {
                 cachedCollationNames.Remove(bp);
@@ -53,15 +55,13 @@ namespace ToyBox {
         private static List<string> DefaultCollationNames(this SimpleBlueprint bp, params string[] extras) {
             cachedCollationNames.TryGetValue(bp, out var names);
             if (names != null) return names;
-            names = extras?.ToList() ?? new List<string> {};
+            names = extras?.ToList() ?? new List<string> { };
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
             //var stripIndex = typeName.LastIndexOf("Blueprint");
             //if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
             names.Add(typeName);
-            if (settings.showAttributes) {
-                foreach (var attribute in bp.Attributes()) 
-                    names.Add(attribute.orange());
-            }
+            foreach (var attribute in bp.Attributes())
+                names.Add(attribute.orange());
             cachedCollationNames.Add(bp, names);
             return names;
         }
@@ -97,6 +97,23 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
+        public static List<string> CollationNames(this BlueprintEtude bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            //foreach (var item in bp.ActivationCondition) {
+            //    names.Add(item.name.yellow());
+            //}
+            //names.Add(bp.ValidationStatus.ToString().yellow());
+            //if (bp.HasParent) names.Add($"P:".yellow() + bp.Parent.NameSafe());
+            //foreach (var sibling in bp.StartsWith) {
+            //    names.Add($"W:".yellow() + bp.Parent.NameSafe());
+            //}
+            //if (bp.HasLinkedAreaPart) names.Add($"area {bp.LinkedAreaPart.name}".yellow());
+            //foreach (var condition in bp.ActivationCondition?.Conditions)
+            //    names.Add(condition.GetCaption().yellow());
+            AddOrUpdateCachedNames(bp, names);
+            return names;
+        }
+
 
         private static readonly Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new();
         public static List<SimpleBlueprint> BlueprintsOfType(Type type) {
