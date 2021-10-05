@@ -32,9 +32,9 @@ namespace ToyBox.Multiclass {
         }
 
         public static void Apply_NoStatsAndHitPoints(this ApplyClassMechanics instance, LevelUpState state, UnitDescriptor unit) {
-            Mod.Trace($"Apply_NoStatsAndHitPoints: unit = {unit.CharacterName}, state.class = {(state.SelectedClass==null?"NULL":state.SelectedClass.Name)}");
+            Mod.Trace($"Apply_NoStatsAndHitPoints: unit = {unit.CharacterName}, state.class = {(state.SelectedClass == null ? "NULL" : state.SelectedClass.Name)}");
             if (state.SelectedClass != null) {
-                ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
+                var classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData != null) {
                     //GetMethodDel<ApplyClassMechanics, Action<ApplyClassMechanics, LevelUpState, ClassData, UnitDescriptor>>
                     //    ("ApplyBaseStats")(null, state, classData, unit);
@@ -48,20 +48,14 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        public static BlueprintCharacterClass GetOwnerClass(this BlueprintSpellbook spellbook, UnitDescriptor unit) {
-            return unit.Progression.Classes.FirstOrDefault(item => item.Spellbook == spellbook)?.CharacterClass;
-        }
+        public static BlueprintCharacterClass GetOwnerClass(this BlueprintSpellbook spellbook, UnitDescriptor unit) => unit.Progression.Classes.FirstOrDefault(item => item.Spellbook == spellbook)?.CharacterClass;
 
-        public static ClassData GetOwnerClassData(this BlueprintSpellbook spellbook, UnitDescriptor unit) {
-            return unit.Progression.Classes.FirstOrDefault(item => item.Spellbook == spellbook);
-        }
+        public static ClassData GetOwnerClassData(this BlueprintSpellbook spellbook, UnitDescriptor unit) => unit.Progression.Classes.FirstOrDefault(item => item.Spellbook == spellbook);
 
-        public static BlueprintCharacterClass GetSourceClass(this BlueprintFeature feature, UnitDescriptor unit) {
-            return unit.Progression.Features.Enumerable.FirstOrDefault(item => item.Blueprint == feature)?.GetSourceClass();
-        }
+        public static BlueprintCharacterClass GetSourceClass(this BlueprintFeature feature, UnitDescriptor unit) => unit.Progression.Features.Enumerable.FirstOrDefault(item => item.Blueprint == feature)?.GetSourceClass();
 
         public static bool IsChildProgressionOf(this BlueprintProgression progression, UnitDescriptor unit, BlueprintCharacterClass characterClass) {
-            ClassData classData = unit.Progression.GetClassData(characterClass);
+            var classData = unit.Progression.GetClassData(characterClass);
             if (classData != null) {
                 /*
                 if (progression.Classes.Contains(characterClass) &&
@@ -76,19 +70,17 @@ namespace ToyBox.Multiclass {
             return false;
         }
 
-        public static bool IsManualPlayerUnit(this LevelUpController controller, bool allowPet = false, bool allowAutoCommit = false, bool allowPregen = false) {
+        public static bool IsManualPlayerUnit(this LevelUpController controller, bool allowPet = false, bool allowAutoCommit = false, bool allowPregen = false) =>
             //Main.Log($"controller: {controller} AutoCommit: {controller.AutoCommit}");
             //Main.Log($"    unit: {controller.Unit} isPlayerFaction: {controller.Unit.IsPlayerFaction} isPet: {controller.Unit.IsPet}");
             //Main.Log($"    levelup state: {controller.State}");
-           
-            return controller != null 
-                && controller.Unit.IsPlayerFaction 
+
+            controller != null
+                && controller.Unit.IsPlayerFaction
                 && (allowPet || !controller.Unit.IsPet
                 //&& (allowAutoCommit || !controller.AutoCommit)
                 //&& (allowPregen || !controller.State.IsPreGen()
                 );
-                
-        }
 
 #if false
         public static void SetSpellbook(this CharBPhaseSpells instance, BlueprintCharacterClass characterClass) {

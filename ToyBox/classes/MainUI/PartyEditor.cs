@@ -22,7 +22,7 @@ namespace ToyBox {
     public class PartyEditor {
         public static Settings settings => Main.settings;
 
-        enum ToggleChoice {
+        private enum ToggleChoice {
             Classes,
             Stats,
             Facts,
@@ -31,25 +31,26 @@ namespace ToyBox {
             Spells,
             None,
         };
-        static ToggleChoice selectedToggle = ToggleChoice.None;
-        static int selectedCharacterIndex = 0;
-        static UnitEntityData charToAdd = null;
-        static UnitEntityData charToRecruit = null;
-        static UnitEntityData charToRemove = null;
-        static bool editMultiClass = false;
-        static UnitEntityData multiclassEditCharacter = null;
-        static int respecableCount = 0;
-        static int recruitableCount = 0;
-        static int selectedSpellbook = 0;
-        static (string, string) nameEditState = (null, null);
+
+        private static ToggleChoice selectedToggle = ToggleChoice.None;
+        private static int selectedCharacterIndex = 0;
+        private static UnitEntityData charToAdd = null;
+        private static UnitEntityData charToRecruit = null;
+        private static UnitEntityData charToRemove = null;
+        private static bool editMultiClass = false;
+        private static UnitEntityData multiclassEditCharacter = null;
+        private static int respecableCount = 0;
+        private static int recruitableCount = 0;
+        private static int selectedSpellbook = 0;
+        private static (string, string) nameEditState = (null, null);
         public static int selectedSpellbookLevel = 0;
-        static bool editSpellbooks = false;
-        static UnitEntityData spellbookEditCharacter = null;
-        static float nearbyRange = 25;
-        static Dictionary<String, int> statEditorStorage = new Dictionary<String, int>();
-        public static Dictionary<string, Spellbook> SelectedSpellbook = new Dictionary<string, Spellbook>();
+        private static bool editSpellbooks = false;
+        private static UnitEntityData spellbookEditCharacter = null;
+        private static float nearbyRange = 25;
+        private static readonly Dictionary<string, int> statEditorStorage = new();
+        public static Dictionary<string, Spellbook> SelectedSpellbook = new();
         private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
-        private static Player partyFilterPlayer = null;
+        private static readonly Player partyFilterPlayer = null;
         public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
             if (partyFilterPlayer != Game.Instance.Player) partyFilterChoices = null;
             if (Game.Instance.Player != null && partyFilterChoices == null) {
@@ -78,7 +79,8 @@ namespace ToyBox {
             if (partyFilterChoices == null) { return null; }
             return partyFilterChoices[Main.settings.selectedPartyFilter].func();
         }
-        static UnitEntityData GetSelectedCharacter() {
+
+        private static UnitEntityData GetSelectedCharacter() {
             var characterList = GetCharacterList();
             if (characterList == null || characterList.Count == 0) return null;
             if (selectedCharacterIndex >= characterList.Count) selectedCharacterIndex = 0;
@@ -93,9 +95,7 @@ namespace ToyBox {
         }
 
         // This bit of kludge is added in order to tell whether our generic actions are being accessed from this screen or the Search n' Pick
-        public static bool IsOnPartyEditor() {
-            return Main.settings.selectedTab == 2;
-        }
+        public static bool IsOnPartyEditor() => Main.settings.selectedTab == 2;
 
         public static void ActionsGUI(UnitEntityData ch) {
             var player = Game.Instance.Player;
@@ -149,11 +149,11 @@ namespace ToyBox {
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
             UI.Space(20);
-            int chIndex = 0;
+            var chIndex = 0;
             recruitableCount = 0;
             respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
-            bool isWide = UI.IsWide;
+            var isWide = UI.IsWide;
             if (Main.IsInGame) {
                 using (UI.HorizontalScope()) {
                     UI.Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
@@ -166,16 +166,16 @@ namespace ToyBox {
 #endif
                 }
             }
-            foreach (UnitEntityData ch in characterList) {
+            foreach (var ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
-                UnitProgressionData progression = ch.Descriptor.Progression;
-                BlueprintStatProgression xpTable = progression.ExperienceTable;
-                int level = progression.CharacterLevel;
-                int mythicLevel = progression.MythicLevel;
+                var progression = ch.Descriptor.Progression;
+                var xpTable = progression.ExperienceTable;
+                var level = progression.CharacterLevel;
+                var mythicLevel = progression.MythicLevel;
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
-                bool isOnTeam = player.AllCharacters.Contains(ch);
+                var isOnTeam = player.AllCharacters.Contains(ch);
                 using (UI.HorizontalScope()) {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)) {
@@ -198,15 +198,15 @@ namespace ToyBox {
                             UI.Label(ch.CharacterName.orange().bold(), UI.Width(230));
                     }
                     UI.Space(5);
-                    float distance = mainChar.DistanceTo(ch); ;
+                    var distance = mainChar.DistanceTo(ch); ;
                     UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
                     UI.Space(5);
                     int nextLevel;
-                    for (nextLevel = level; progression.Experience >= xpTable.GetBonus(nextLevel+1) && xpTable.HasBonusForLevel(nextLevel+1); nextLevel++) { }
-                    if (nextLevel <= level || !isOnTeam) 
+                    for (nextLevel = level; progression.Experience >= xpTable.GetBonus(nextLevel + 1) && xpTable.HasBonusForLevel(nextLevel + 1); nextLevel++) { }
+                    if (nextLevel <= level || !isOnTeam)
                         UI.Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", UI.Width(90));
                     else
-                        UI.Label((level < 10 ? "  " : "") + $"{level} > "+ $"{nextLevel}".cyan(), UI.Width(90));
+                        UI.Label((level < 10 ? "  " : "") + $"{level} > " + $"{nextLevel}".cyan(), UI.Width(90));
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
                         if (xpTable.HasBonusForLevel(nextLevel + 1)) {
@@ -218,7 +218,7 @@ namespace ToyBox {
                     }
                     else { UI.Space(66); }
                     UI.Space(10);
-                    int nextML = progression.MythicExperience;
+                    var nextML = progression.MythicExperience;
                     if (nextML <= mythicLevel || !isOnTeam)
                         UI.Label((mythicLevel < 10 ? "  my" : "  my").green() + $" {mythicLevel}", UI.Width(90));
                     else
@@ -235,38 +235,38 @@ namespace ToyBox {
                     UI.Space(30);
                     if (!isWide) ActionsGUI(ch);
                     UI.Wrap(!UI.IsWide, 283, 0);
-                    bool showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
+                    var showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
                             selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Trace($"selected {ch.CharacterName}");
                         }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    bool showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
+                    var showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
                     if (UI.DisclosureToggle("Stats", ref showStats, 125)) {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     UI.Wrap(UI.IsNarrow, 279);
-                    bool showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
+                    var showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
                     if (UI.DisclosureToggle("Facts", ref showFacts, 125)) {
                         if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    bool showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
+                    var showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
                     if (UI.DisclosureToggle("Buffs", ref showBuffs, 125)) {
                         if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     UI.Wrap(UI.IsNarrow, 304);
-                    bool showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
+                    var showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
                     if (UI.DisclosureToggle("Abilities", ref showAbilities, 125)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     UI.Space(10);
                     if (spellbooks.Count() > 0) {
-                        bool showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
+                        var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
                         if (UI.DisclosureToggle($"{spellCount} Spells", ref showSpells)) {
                             if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                             else { selectedToggle = ToggleChoice.None; }
@@ -305,7 +305,7 @@ namespace ToyBox {
                         UI.Space(100);
                         UI.ActionToggle("Allow Levels Past 20",
                             () => {
-                                bool hasValue = settings.charIsLegendaryHero.TryGetValue(ch.HashKey(), out bool isLegendaryHero);
+                                var hasValue = settings.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
                                 return hasValue && isLegendaryHero;
                             },
                             (val) => {
@@ -352,7 +352,7 @@ namespace ToyBox {
                             UI.Label($"{prog.Experience}", UI.Width(150f));
                             UI.Space(36);
                             UI.ActionButton("Set", () => {
-                                int newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
+                                var newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
                                 prog.Experience = newXP;
                             }, UI.Width(125));
                             UI.Space(23);
@@ -410,7 +410,7 @@ namespace ToyBox {
                     }
                     using (UI.HorizontalScope()) {
                         UI.Space(528);
-                        int alignmentIndex = Array.IndexOf(WrathExtensions.Alignments, alignment);
+                        var alignmentIndex = Array.IndexOf(WrathExtensions.Alignments, alignment);
                         var titles = WrathExtensions.Alignments.Select(
                             a => a.Acronym().color(a.Color()).bold()).ToArray();
                         if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
@@ -428,7 +428,7 @@ namespace ToyBox {
 
                     using (UI.HorizontalScope()) {
                         UI.Space(528);
-                        int maskIndex = Array.IndexOf(WrathExtensions.AlignmentMasks, alignmentMask);
+                        var maskIndex = Array.IndexOf(WrathExtensions.AlignmentMasks, alignmentMask);
                         var titles = WrathExtensions.AlignmentMasks.Select(
                             a => a.ToString().color(a.Color()).bold()).ToArray();
                         if (UI.SelectionGrid(ref maskIndex, titles, 3, UI.Width(800))) {
@@ -459,7 +459,7 @@ namespace ToyBox {
                         UI.Label("Gender", UI.Width(400));
                         UI.Space(25);
                         var gender = ch.Descriptor.CustomGender ?? ch.Descriptor.Gender;
-                        bool isFemale = gender == Gender.Female;
+                        var isFemale = gender == Gender.Female;
                         using (UI.HorizontalScope(UI.Width(200))) {
                             if (UI.Toggle(isFemale ? "Female" : "Male", ref isFemale,
                                 "♀".color(RGBA.magenta).bold(),
@@ -472,16 +472,16 @@ namespace ToyBox {
                     }
                     UI.Space(10);
                     UI.Div(100, 20, 755);
-                    foreach (StatType obj in HumanFriendly.StatTypes) {
-                        StatType statType = (StatType)obj;
-                        ModifiableValue modifiableValue = ch.Stats.GetStat(statType);
+                    foreach (var obj in HumanFriendly.StatTypes) {
+                        var statType = (StatType)obj;
+                        var modifiableValue = ch.Stats.GetStat(statType);
                         if (modifiableValue == null) {
                             continue;
                         }
 
-                        string key = $"{ch.CharacterName}-{statType.ToString()}";
-                        int storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
-                        string statName = statType.ToString();
+                        var key = $"{ch.CharacterName}-{statType}";
+                        var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
+                        var statName = statType.ToString();
                         if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
                             UI.Div(100, 20, 755);
                         }

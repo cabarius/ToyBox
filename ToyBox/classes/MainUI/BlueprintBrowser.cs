@@ -31,9 +31,7 @@ namespace ToyBox {
     public class KeyComparer : IComparer<string> {
 
         public int Compare(string left, string right) {
-            int l;
-            int r;
-            if (int.TryParse(left, out l) && int.TryParse(right, out r))
+            if (int.TryParse(left, out var l) && int.TryParse(right, out var r))
                 return l.CompareTo(r);
             else
                 return left.CompareTo(right);
@@ -41,23 +39,22 @@ namespace ToyBox {
 
     }
     public class BlueprintBrowser {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         public static IEnumerable<SimpleBlueprint> unpagedBPs = null;
         public static IEnumerable<SimpleBlueprint> filteredBPs = null;
-        public static IEnumerable<IGrouping<String, SimpleBlueprint>> collatedBPs = null;
+        public static IEnumerable<IGrouping<string, SimpleBlueprint>> collatedBPs = null;
         public static IEnumerable<SimpleBlueprint> selectedCollatedBPs = null;
-        public static List<String> collationKeys = null;
+        public static List<string> collationKeys = null;
         public static int selectedCollationIndex = 0;
-        static bool firstSearch = true;
-        public static String[] filteredBPNames = null;
+        private static bool firstSearch = true;
+        public static string[] filteredBPNames = null;
         public static int uncolatedMatchCount = 0;
         public static int matchCount = 0;
         public static int pageCount = 0;
         public static int currentPage = 0;
-        public static String parameter = "";
-
-        static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
+        public static string parameter = "";
+        private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationName()),
@@ -67,7 +64,7 @@ namespace ToyBox {
                                                                               : bp.IsMythic ? "Mythic"
                                                                               : bp.IsHigherMythic ? "Higher Mythic"
                                                                               : "Standard"),
-            new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => String.Join(" ", bp.Classes.Select(cl => cl.Name))),
+            new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => string.Join(" ", bp.Classes.Select(cl => cl.Name))),
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAbility>("Actions", null, bp => bp.ActionType.ToString()),
@@ -85,7 +82,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintItemEquipment>("Equip (ench)", null, (bp) => {
                 try {
                     var enchants = bp.CollectEnchantments();
-                    int value = enchants.Sum((e) => e.EnchantmentCost);
+                    var value = enchants.Sum((e) => e.EnchantmentCost);
                     return value.ToString();
                 }
                 catch {
@@ -149,7 +146,8 @@ namespace ToyBox {
                     return null;
                 }
 #else
-                if (BlueprintLoader.Shared.IsLoading) { return null; } else {
+                if (BlueprintLoader.Shared.IsLoading) { return null; }
+                else {
                     Mod.Debug($"calling BlueprintLoader.Load");
                     BlueprintLoader.Shared.Load((bps) => {
                         blueprints = bps;
@@ -177,7 +175,8 @@ namespace ToyBox {
             if (settings.searchLimit > 0) {
                 pageCount = matchCount / settings.searchLimit;
                 currentPage = Math.Min(currentPage, pageCount);
-            } else { 
+            }
+            else {
                 pageCount = 1;
                 currentPage = 1;
             }
@@ -208,11 +207,12 @@ namespace ToyBox {
             if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
             else bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
             var filtered = new List<SimpleBlueprint>();
-            foreach (SimpleBlueprint blueprint in bps) {
+            foreach (var blueprint in bps) {
                 if (blueprint.AssetGuid.ToString().Contains(searchText)
                     || blueprint.GetType().ToString().Contains(searchText)) {
                     filtered.Add(blueprint);
-                } else {
+                }
+                else {
                     var name = blueprint.GetDisplayName();
                     var description = blueprint.GetDescription() ?? "";
                     if (terms.All(term => StringExtensions.Matches(name, term))
@@ -225,7 +225,7 @@ namespace ToyBox {
             filteredBPs = filtered.OrderBy(bp => bp.name);
             matchCount = filtered.Count();
             UpdatePageCount();
-            for (int i = 0;i < BlueprintListUI.ParamSelected.Length;i++) {
+            for (var i = 0; i < BlueprintListUI.ParamSelected.Length; i++) {
                 BlueprintListUI.ParamSelected[i] = 0;
             }
             uncolatedMatchCount = matchCount;
@@ -233,7 +233,7 @@ namespace ToyBox {
                 collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key, new KeyComparer());
                 // I could do something like this but I will leave it up to the UI when a collation is selected.
                 // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
-                collationKeys = new List<String>() { "All" };
+                collationKeys = new List<string>() { "All" };
                 collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
             }
             unpagedBPs = filteredBPs;
@@ -244,7 +244,7 @@ namespace ToyBox {
             if (blueprints == null) BlueprintBrowser.GetBlueprints();
             // Stackable browser
             using (UI.HorizontalScope(UI.Width(350))) {
-                float remainingWidth = UI.ummWidth;
+                var remainingWidth = UI.ummWidth;
                 // First column - Type Selection Grid
                 using (UI.VerticalScope(GUI.skin.box)) {
                     UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
@@ -255,7 +255,7 @@ namespace ToyBox {
                         UI.Width(200));
                 }
                 remainingWidth -= 350;
-                bool collationChanged = false;
+                var collationChanged = false;
                 if (collatedBPs != null) {
                     using (UI.VerticalScope(GUI.skin.box)) {
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(),
@@ -304,8 +304,9 @@ namespace ToyBox {
                         UI.Space(25);
                         if (firstSearch) {
                             UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
-                        } else if (matchCount > 0) {
-                            String title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                        }
+                        else if (matchCount > 0) {
+                            var title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
                             UI.Label(title, UI.ExpandWidth(false));
                         }

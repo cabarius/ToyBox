@@ -24,8 +24,8 @@ namespace ModKit {
             };
         }
 
-        static bool TogglePrivate(
-                String title,
+        private static bool TogglePrivate(
+                string title,
                 ref bool value,
                 bool isEmpty,
                 bool disclosureStyle = false,
@@ -54,8 +54,10 @@ namespace ModKit {
         }
         public static bool Toggle(string title, ref bool value, string on, string off, float width = 0, GUIStyle stateStyle = null, GUIStyle labelStyle = null, params GUILayoutOption[] options) {
             bool changed = false;
-            if (stateStyle == null) stateStyle = GUI.skin.box;
-            if (labelStyle == null) labelStyle = GUI.skin.box;
+            if (stateStyle == null)
+                stateStyle = GUI.skin.box;
+            if (labelStyle == null)
+                labelStyle = GUI.skin.box;
             if (width == 0) {
                 width = UI.toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
             }
@@ -65,7 +67,7 @@ namespace ModKit {
             return changed;
         }
         public static bool Toggle(
-            String title,
+            string title,
             ref bool value,
             float width = 0,
             params GUILayoutOption[] options) {
@@ -73,7 +75,7 @@ namespace ModKit {
         }
 
         public static bool ActionToggle(
-                String title,
+                string title,
                 Func<bool> get,
                 Action<bool> set,
                 float width = 0,
@@ -86,7 +88,7 @@ namespace ModKit {
         }
 
         public static bool ToggleCallback(
-                String title,
+                string title,
                 ref bool value,
                 Action<bool> callback,
                 float width = 0,
@@ -100,7 +102,7 @@ namespace ModKit {
         }
 
         public static bool BitFieldToggle(
-                String title,
+                string title,
                 ref int bitfield,
                 int offset,
                 float width = 0,
@@ -112,12 +114,12 @@ namespace ModKit {
             if (bit != newBit) { bitfield ^= 1 << offset; }
             return bit != newBit;
         }
-        public static bool DisclosureToggle(String title, ref bool value, float width = 175, params Action[] actions) {
+        public static bool DisclosureToggle(string title, ref bool value, float width = 175, params Action[] actions) {
             bool changed = UI.TogglePrivate(title, ref value, false, true, width);
             UI.If(value, actions);
             return changed;
         }
-        public static bool DisclosureBitFieldToggle(String title, ref int bitfield, int offset, bool exclusive = true, float width = 175, params Action[] actions) {
+        public static bool DisclosureBitFieldToggle(string title, ref int bitfield, int offset, bool exclusive = true, float width = 175, params Action[] actions) {
             bool bit = ((1 << offset) & bitfield) != 0;
             bool newBit = bit;
             TogglePrivate(title, ref newBit, false, true, width);

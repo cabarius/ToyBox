@@ -15,8 +15,8 @@ namespace ToyBox {
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(UnitAlignment), nameof(UnitAlignment.GetDirection))]
-        static class UnitAlignment_GetDirection_Patch {
-            static void Postfix(UnitAlignment __instance, ref Vector2 __result, AlignmentShiftDirection direction) {
+        private static class UnitAlignment_GetDirection_Patch {
+            private static void Postfix(UnitAlignment __instance, ref Vector2 __result, AlignmentShiftDirection direction) {
                 if (settings.toggleAlignmentFix) {
                     if (direction == AlignmentShiftDirection.NeutralGood) __result = new Vector2(0, 1);
                     if (direction == AlignmentShiftDirection.NeutralEvil) __result = new Vector2(0, -1);
@@ -26,8 +26,8 @@ namespace ToyBox {
             }
         }
         [HarmonyPatch(typeof(UnitAlignment), "Set", new Type[] { typeof(Alignment), typeof(bool) })]
-        static class UnitAlignment_Set_Patch {
-            static void Prefix(UnitAlignment __instance, ref Kingmaker.Enums.Alignment alignment) {
+        private static class UnitAlignment_Set_Patch {
+            private static void Prefix(UnitAlignment __instance, ref Kingmaker.Enums.Alignment alignment) {
                 if (settings.togglePreventAlignmentChanges) {
                     if (__instance.m_Value != null)
                         alignment = (Kingmaker.Enums.Alignment)__instance.m_Value;
@@ -35,8 +35,8 @@ namespace ToyBox {
             }
         }
         [HarmonyPatch(typeof(UnitAlignment), "Shift", new Type[] { typeof(AlignmentShiftDirection), typeof(int), typeof(IAlignmentShiftProvider) })]
-        static class UnitAlignment_Shift_Patch {
-            static bool Prefix(UnitAlignment __instance, AlignmentShiftDirection direction, ref int value, IAlignmentShiftProvider provider) {
+        private static class UnitAlignment_Shift_Patch {
+            private static bool Prefix(UnitAlignment __instance, AlignmentShiftDirection direction, ref int value, IAlignmentShiftProvider provider) {
                 try {
                     if ((settings.togglePreventAlignmentChanges)) {
                         value = 0;
@@ -46,10 +46,10 @@ namespace ToyBox {
                         if (value == 0) {
                             return false;
                         }
-                        Vector2 vector = __instance.m_Vector;
-                        float num = (float)value / 50f;
+                        var vector = __instance.m_Vector;
+                        var num = (float)value / 50f;
                         var directionVector = Traverse.Create(__instance).Method("GetDirection", new object[] { direction }).GetValue<Vector2>();
-                        Vector2 newAlignment = __instance.m_Vector + directionVector * num;
+                        var newAlignment = __instance.m_Vector + directionVector * num;
                         if (newAlignment.magnitude > 1f) {
                             //Instead of normalizing towards true neutral, normalize opposite to the alignment vector
                             //to prevent sliding towards neutral
@@ -75,8 +75,8 @@ namespace ToyBox {
         }
 
         [HarmonyPatch(typeof(ForbidSpellbookOnAlignmentDeviation), "CheckAlignment")]
-        static class ForbidSpellbookOnAlignmentDeviation_CheckAlignment_Patch {
-            static bool Prefix(ForbidSpellbookOnAlignmentDeviation __instance) {
+        private static class ForbidSpellbookOnAlignmentDeviation_CheckAlignment_Patch {
+            private static bool Prefix(ForbidSpellbookOnAlignmentDeviation __instance) {
                 if ((settings.toggleSpellbookAbilityAlignmentChecks)) {
                     __instance.Alignment = __instance.Owner.Alignment.ValueRaw.ToMask();
                 }
@@ -84,8 +84,8 @@ namespace ToyBox {
             }
         }
         [HarmonyPatch(typeof(AbilityCasterAlignment), nameof(AbilityCasterAlignment.IsCasterRestrictionPassed))]
-        static class AbilityCasterAlignment_CheckAlignment_Patch {
-            static void Postfix(ref bool __result) {
+        private static class AbilityCasterAlignment_CheckAlignment_Patch {
+            private static void Postfix(ref bool __result) {
                 if ((settings.toggleSpellbookAbilityAlignmentChecks)) {
                     __result = true;
                 }

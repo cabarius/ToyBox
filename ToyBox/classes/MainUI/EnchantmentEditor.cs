@@ -31,14 +31,12 @@ namespace ToyBox.classes.MainUI {
         public static string[] ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType));
         private static List<ItemEntity> inventory;
         private static List<BlueprintItemEnchantment> enchantments;
-        private static List<BlueprintItemEnchantment> filteredEnchantments = new List<BlueprintItemEnchantment>();
+        private static List<BlueprintItemEnchantment> filteredEnchantments = new();
         public static int matchCount = 0;
 
         public static void ResetGUI() { }
 
-        public static void OnShowGUI() {
-            UpdateItems();
-        }
+        public static void OnShowGUI() => UpdateItems();
         public static void OnGUI() {
             if (!Main.IsInGame) return;
             UI.Label("Sandal says '".orange() + "Enchantment'".cyan().bold());
@@ -68,7 +66,7 @@ namespace ToyBox.classes.MainUI {
 
             // Stackable browser
             using (UI.HorizontalScope(UI.Width(350))) {
-                float remainingWidth = UI.ummWidth;
+                var remainingWidth = UI.ummWidth;
 
                 // First column - Type Selection Grid
                 using (UI.VerticalScope()) {
@@ -140,7 +138,7 @@ namespace ToyBox.classes.MainUI {
                                         UI.ActionButton("Remove ", () => shield.WeaponComponent = null, UI.AutoWidth());
                                     }
                                     else {
-                                        string compTitle = shield.Blueprint.WeaponComponent?.name;
+                                        var compTitle = shield.Blueprint.WeaponComponent?.name;
                                         compTitle = compTitle != null ? " from " + compTitle.yellow() : "";
                                         UI.ActionButton("Add " + "Spikes".orange() + compTitle, () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
                                     }
@@ -197,7 +195,7 @@ namespace ToyBox.classes.MainUI {
                         UI.ActionButton("Search", () => UpdateSearchResults(), UI.AutoWidth());
                         UI.Space(25);
                         if (matchCount > 0 && settings.searchTextEnchantments.Length > 0) {
-                            String matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                            var matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { matchesText += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
                             UI.Label(matchesText, UI.ExpandWidth(false));
                         }
@@ -245,7 +243,7 @@ namespace ToyBox.classes.MainUI {
 
         public static void EnchantmentsListGUI() {
             UI.Div(5);
-            for (int i = 0; i < filteredEnchantments.Count; i++) {
+            for (var i = 0; i < filteredEnchantments.Count; i++) {
                 var enchant = filteredEnchantments[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
                 using (UI.HorizontalScope()) {
@@ -309,8 +307,7 @@ namespace ToyBox.classes.MainUI {
             var searchText = itemSearchText.ToLower();
             inventory = (from item in Game.Instance.Player.Inventory
                          where item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == selectedItemIndex
-                         orderby item.Name
-                         orderby item.Blueprint.Rarity() descending
+                         orderby item.Rarity() descending, item.Name
                          select item
                          ).ToList();
             if (editedItem != null) {
@@ -328,7 +325,7 @@ namespace ToyBox.classes.MainUI {
             editedItem = null;
             var terms = settings.searchTextEnchantments.Split(' ').Select(s => s.ToLower()).ToHashSet();
 
-            for (int i = 0; i < enchantments.Count; i++) {
+            for (var i = 0; i < enchantments.Count; i++) {
                 var enchant = enchantments[i];
                 if (enchant.AssetGuid.ToString().Contains(settings.searchTextEnchantments)
                     || enchant.GetType().ToString().Contains(settings.searchTextEnchantments)
@@ -399,7 +396,7 @@ namespace ToyBox.classes.MainUI {
             if (item?.m_Enchantments == null)
                 Mod.Trace("item.m_Enchantments is null");
 
-            var fake_context = new MechanicsContext(default(JsonConstructorMark)); // if context is null, items may stack which could cause bugs
+            var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
 
             //var fi = AccessTools.Field(typeof(MechanicsContext), nameof(MechanicsContext.AssociatedBlueprint));
             //fi.SetValue(fake_context, enchantment);  // check if AssociatedBlueprint must be set; I think not
@@ -420,7 +417,7 @@ namespace ToyBox.classes.MainUI {
         /// <summary>probably useless</summary>
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {
-            Dictionary<ItemEnchantment, bool> enchantments = new Dictionary<ItemEnchantment, bool>();
+            Dictionary<ItemEnchantment, bool> enchantments = new();
             if (item == null) return enchantments;
             var base_enchantments = item.Blueprint.Enchantments;
             foreach (var enchantment in item.Enchantments) {

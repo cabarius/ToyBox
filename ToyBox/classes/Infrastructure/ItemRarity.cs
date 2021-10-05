@@ -41,7 +41,7 @@ namespace ToyBox {
             RGBA.notable,
         };
         public static RarityType Rarity(this int rating) {
-            RarityType rarity = RarityType.Trash;
+            var rarity = RarityType.Trash;
             if (rating > 100) rarity = RarityType.Godly;
             else if (rating >= 60) rarity = RarityType.Mythic;
             else if (rating >= 40) rarity = RarityType.Legendary;
@@ -54,8 +54,8 @@ namespace ToyBox {
         public static int Rating(this BlueprintItem bp, ItemEntity item = null) {
             var rating = 0;
             try {
-                int itemRating = 0;
-                int bpRating = 0;
+                var itemRating = 0;
+                var bpRating = 0;
                 if (item != null) {
                     itemRating = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
                     //Main.Log($"item enchantValue: {enchantValue}");
@@ -76,13 +76,14 @@ namespace ToyBox {
             var logCost = cost > 1 ? Math.Log(cost) / Math.Log(5) : 0;
             if (rating == 0 && bp is BlueprintItemEquipmentUsable usableBP) {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
-            } else if (rating == 0 && bp is BlueprintItemEquipment equipBP) {
+            }
+            else if (rating == 0 && bp is BlueprintItemEquipment equipBP) {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
             }
 #if false
             Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");
 #endif
-            if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) rating = Math.Min(rating , 9);
+            if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) rating = Math.Min(rating, 9);
             if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) rating = Math.Min(rating, 9);
 
             return rating;
@@ -115,12 +116,8 @@ namespace ToyBox {
             var rating = bp.EnchantmentCost * 10;
             return rating.Rarity();
         }
-        public static Color color(this RarityType rarity, float adjust = 0) {
-            return RarityColors[(int)rarity].color(adjust);
-        }
-        public static string Rarity(this string s, RarityType rarity, float adjust = 0) {
-            return s.color(RarityColors[(int)rarity]);
-        }
+        public static Color color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
+        public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
         public static string GetString(this RarityType rarity) => rarity.ToString().Rarity(rarity);
     }
 }
@@ -158,11 +155,7 @@ namespace ModKit {
             }
         }
 
-        public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) {
-            UI.EnumGrid(ref rarity, xCols, (n, rarity) => n.Rarity(rarity), UI.rarityStyle, options);
-        }
-        public static void RarityGrid(string title, ref RarityType rarity, int xCols, params GUILayoutOption[] options) {
-            UI.EnumGrid(title, ref rarity, xCols, (n, rarity) => n.Rarity(rarity), UI.rarityStyle, options);
-        }
+        public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(ref rarity, xCols, (n, rarity) => n.Rarity(rarity), rarityStyle, options);
+        public static void RarityGrid(string title, ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(title, ref rarity, xCols, (n, rarity) => n.Rarity(rarity), rarityStyle, options);
     }
 }

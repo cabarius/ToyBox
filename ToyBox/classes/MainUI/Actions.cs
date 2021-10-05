@@ -28,7 +28,7 @@ using ModKit;
 
 namespace ToyBox {
     public static class Actions {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         public static void UnlockAllBasicMythicPaths() {
             // TODO - do this right once I build the etude browser and understand this better
@@ -96,30 +96,28 @@ namespace ToyBox {
             Main.SetNeedsResetGameUI();
         }
 
-        public static void ToggleModWindow() {
-            UnityModManager.UI.Instance.ToggleWindow();
-        }
+        public static void ToggleModWindow() => UnityModManager.UI.Instance.ToggleWindow();
         public static void RunPerceptionTriggers() {
-            foreach (MapObjectEntityData obj in Game.Instance.State.MapObjects) {
+            foreach (var obj in Game.Instance.State.MapObjects) {
                 obj.LastPerceptionRollRank = new Dictionary<UnitReference, int>();
             }
 
             Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
         }
         public static void RemoveAllBuffs() {
-            foreach (UnitEntityData target in Game.Instance.Player.Party) {
-                foreach (Buff buff in new List<Buff>(target.Descriptor.Buffs.Enumerable)) {
+            foreach (var target in Game.Instance.Player.Party) {
+                foreach (var buff in new List<Buff>(target.Descriptor.Buffs.Enumerable)) {
                     target.Descriptor.RemoveFact(buff);
                 }
             }
         }
         public static void SpawnUnit(BlueprintUnit unit, int count) {
-            Vector3 worldPosition = Game.Instance.ClickEventsController.WorldPosition;
+            var worldPosition = Game.Instance.ClickEventsController.WorldPosition;
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
-                for (int i = 0; i < count; i++) {
-                    Vector3 offset = 5f * UnityEngine.Random.insideUnitSphere;
-                    Vector3 spawnPosition = new Vector3(
+                for (var i = 0; i < count; i++) {
+                    var offset = 5f * UnityEngine.Random.insideUnitSphere;
+                    Vector3 spawnPosition = new(
                         worldPosition.x + offset.x,
                         worldPosition.y,
                         worldPosition.z + offset.z);
@@ -129,14 +127,14 @@ namespace ToyBox {
         }
 
         public static void HandleChangeParty() {
-            List<UnitReference> partyCharacters = Game.Instance.Player.Party.Select<UnitEntityData, UnitReference>((Func<UnitEntityData, UnitReference>)(u => (UnitReference)u)).ToList<UnitReference>(); ;
+            var partyCharacters = Game.Instance.Player.Party.Select<UnitEntityData, UnitReference>((Func<UnitEntityData, UnitReference>)(u => (UnitReference)u)).ToList<UnitReference>(); ;
             if ((partyCharacters != null ? (partyCharacters.Select<UnitReference, UnitEntityData>((Func<UnitReference, UnitEntityData>)(r => r.Value)).SequenceEqual<UnitEntityData>((IEnumerable<UnitEntityData>)Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
                 return;
             GlobalMapView.Instance.ChangePartyOnMap();
         }
 
         public static void ChangeParty() {
-            GameModeType currentMode = Game.Instance.CurrentMode;
+            var currentMode = Game.Instance.CurrentMode;
 
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 UnityModManager.UI.Instance.ToggleWindow();
@@ -158,7 +156,7 @@ namespace ToyBox {
         }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
-                if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
                     return UIUtilityUnit.SpellbookHasSpell(selectedSpellbook, ability);
                 }
             }
@@ -166,7 +164,7 @@ namespace ToyBox {
         }
         public static bool CanAddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
-                if (PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                if (PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
                     return !selectedSpellbook.IsKnown(ability) &&
                            (ability.IsInSpellList(selectedSpellbook.Blueprint.SpellList) || Main.settings.showFromAllSpellbooks);
                 }
@@ -175,7 +173,7 @@ namespace ToyBox {
                     if (spellbook.IsKnown(ability)) return false;
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
-                    for (int level = 0; level <= maxLevel; level++) {
+                    for (var level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         if (learnable.Contains(ability)) {
                             //                            Logger.Log($"found spell {ability.Name} in {learnable.Count()} level {level} spells");
@@ -192,7 +190,7 @@ namespace ToyBox {
         public static void AddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
                 if (CanAddAbility(ch, ability)) {
-                    if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                    if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
                         selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, ability);
                         return;
                     }
@@ -203,7 +201,7 @@ namespace ToyBox {
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
                     Mod.Trace($"checking {spellbook.Blueprint.Name} maxLevel: {maxLevel}");
-                    for (int level = 0; level <= maxLevel; level++) {
+                    for (var level = 0; level <= maxLevel; level++) {
                         var learnable = spellbookBP.SpellList.GetSpells(level);
                         var allowsSpell = learnable.Contains(ability);
                         var allowText = allowsSpell ? "FOUND" : "did not find";
@@ -220,15 +218,11 @@ namespace ToyBox {
                 ch.Descriptor.AddFact(ability);
             }
         }
-        public static bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
-            return ability.IsSpell && !ch.Descriptor.HasFact(ability) && !PartyEditor.IsOnPartyEditor();
-        }
-        public static void AddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) {
-            ch.Descriptor.AddFact(ability);
-        }
+        public static bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) => ability.IsSpell && !ch.Descriptor.HasFact(ability) && !PartyEditor.IsOnPartyEditor();
+        public static void AddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) => ch.Descriptor.AddFact(ability);
         public static void RemoveAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
-                if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out Spellbook selectedSpellbook)) {
+                if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
                     if (UIUtilityUnit.SpellbookHasSpell(selectedSpellbook, ability)) {
                         selectedSpellbook.RemoveSpell(ability);
                         return;
@@ -247,12 +241,12 @@ namespace ToyBox {
             //            ch.Descriptor.Progression.RemoveMythicLevel
         }
         public static void resetClassLevel(this UnitEntityData ch) {
-            int level = ch.Descriptor.Progression.MaxCharacterLevel;
-            int xp = ch.Descriptor.Progression.Experience;
-            BlueprintStatProgression xpTable = ch.Descriptor.Progression.ExperienceTable;
+            var level = ch.Descriptor.Progression.MaxCharacterLevel;
+            var xp = ch.Descriptor.Progression.Experience;
+            var xpTable = ch.Descriptor.Progression.ExperienceTable;
 
-            for (int i = ch.Descriptor.Progression.MaxCharacterLevel; i >= 1; i--) {
-                int xpBonus = xpTable.GetBonus(i);
+            for (var i = ch.Descriptor.Progression.MaxCharacterLevel; i >= 1; i--) {
+                var xpBonus = xpTable.GetBonus(i);
 
                 Mod.Trace(i + ": " + xpBonus + " | " + xp);
 
@@ -271,54 +265,54 @@ namespace ToyBox {
         }
 
         public static void AddSkillToLeader(BlueprintLeaderSkill bp) {
-            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            var selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
                 Mod.Trace($"Choose an army with a leader!");
                 return;
             }
-            ArmyLeader leader = selectedArmy.Data.Leader;
+            var leader = selectedArmy.Data.Leader;
             leader.AddSkill(bp, true);
         }
 
         public static void RemoveSkillFromLeader(BlueprintLeaderSkill bp) {
-            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            var selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
                 Mod.Trace($"Choose an army with a leader!");
                 return;
             }
-            ArmyLeader leader = selectedArmy.Data.Leader;
+            var leader = selectedArmy.Data.Leader;
             leader.RemoveSkill(bp);
         }
 
         public static bool LeaderHasSkill(BlueprintLeaderSkill bp) {
-            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            var selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
                 Mod.Trace($"Choose an army with a leader!");
                 return false;
             }
-            ArmyLeader leader = selectedArmy.Data.Leader;
+            var leader = selectedArmy.Data.Leader;
             return leader.m_Skills.Contains(bp);
         }
 
         public static bool LeaderSelected(BlueprintLeaderSkill bp) {
-            GlobalMapArmyState selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
+            var selectedArmy = Game.Instance.GlobalMapController.SelectedArmy;
             if (selectedArmy == null || selectedArmy.Data.Leader == null) {
                 return false;
             }
             return true;
         }
         public static void ApplyTimeScale() {
-            float timeScale = settings.useAlternateTimeScaleMultiplier
+            var timeScale = settings.useAlternateTimeScaleMultiplier
                 ? settings.alternateTimeScaleMultiplier
                 : settings.timeScaleMultiplier;
             Game.Instance.TimeController.DebugTimeScale = timeScale;
         }
         public static void LobotomizeAllEnemies() {
-            foreach (UnitEntityData unit in Game.Instance.State.Units) {
+            foreach (var unit in Game.Instance.State.Units) {
                 if (unit.CombatState.IsInCombat &&
                     unit.IsPlayersEnemy &&
                     unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
-                    UnitDescriptor descriptor = unit.Descriptor;
+                    var descriptor = unit.Descriptor;
                     if (descriptor != null) {
                         // removing the brain works better in RTWP, but gets stuck in turn based
                         //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
@@ -335,11 +329,11 @@ namespace ToyBox {
         }
         // can potentially go back in time but some parts of the game don't expect it
         public static void KingdomTimelineAdvanceDays(int days) {
-            KingdomState kingdom = KingdomState.Instance;
-            KingdomTimelineManager timelineManager = kingdom.TimelineManager;
+            var kingdom = KingdomState.Instance;
+            var timelineManager = kingdom.TimelineManager;
 
             // from KingdomState.SkipTime
-            foreach (KingdomTask kingdomTask in kingdom.ActiveTasks) {
+            foreach (var kingdomTask in kingdom.ActiveTasks) {
                 if (!kingdomTask.IsFinished && !kingdomTask.IsStarted && !kingdomTask.NeedsCommit && kingdomTask.HasAssignedLeader) {
                     kingdomTask.Start(true);
                 }
@@ -351,12 +345,22 @@ namespace ToyBox {
             }
             Game.Instance.AdvanceGameTime(TimeSpan.FromDays(days));
             if (Game.Instance.IsModeActive(GameModeType.Kingdom)) {
-                foreach (UnitEntityData unitEntityData in Game.Instance.Player.AllCharacters) {
+                foreach (var unitEntityData in Game.Instance.Player.AllCharacters) {
                     RestController.ApplyRest(unitEntityData.Descriptor);
                 }
             }
 
             timelineManager.UpdateTimeline();
+        }
+
+        // called when changing highlight settings so they take immediate effect
+        public static void UpdateHighlights(bool on) {
+            foreach (MapObjectEntityData mapObjectEntityData in Game.Instance.State.MapObjects) {
+                mapObjectEntityData.View.UpdateHighlight();
+            }
+            foreach (UnitEntityData unitEntityData in Game.Instance.State.Units) {
+                unitEntityData.View.UpdateHighlight(false);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Kingmaker;
@@ -20,10 +21,10 @@ namespace ToyBox {
 #if DEBUG
     [EnableReloading]
 #endif
-    static class Main {
-        static Harmony HarmonyInstance;
+    internal static class Main {
+        private static Harmony HarmonyInstance;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
-        static string modId;
+        private static string modId;
         public static UnityModManager.ModEntry modEntry = null;
         public static Settings settings;
         public static MulticlassMod multiclassMod;
@@ -39,10 +40,13 @@ namespace ToyBox {
             resetRequestTime = DateTime.Now;
             Mod.Debug($"resetRequested - {resetRequestTime}");
         }
-        public static bool IsInGame { get { return Game.Instance.Player?.Party.Any() ?? false; } }
+        public static bool IsInGame => Game.Instance.Player?.Party.Any() ?? false;
 
-        static Exception caughtException = null;
-        static bool Load(UnityModManager.ModEntry modEntry) {
+        private static Exception caughtException = null;
+
+        public static List<GameObject> Objects;
+
+        private static bool Load(UnityModManager.ModEntry modEntry) {
             try {
 #if DEBUG
                 modEntry.OnUnload = Unload;
@@ -61,6 +65,7 @@ namespace ToyBox {
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
+                Objects = new List<GameObject>();
                 UI.KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendly.EnsureFriendlyTypesContainAll();
@@ -72,21 +77,23 @@ namespace ToyBox {
             return true;
         }
 #if DEBUG
-        static bool Unload(UnityModManager.ModEntry modEntry) {
+        private static bool Unload(UnityModManager.ModEntry modEntry) {
+            foreach (GameObject obj in Objects) {
+                GameObject.DestroyImmediate(obj);
+            }
             HarmonyInstance.UnpatchAll(modId);
             NeedsActionInit = true;
             return true;
         }
 #endif
-        static bool OnToggle(UnityModManager.ModEntry modEntry, bool value) {
+        private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value) {
             Enabled = value;
             return true;
         }
-        static void ResetSearch() {
-            BlueprintBrowser.ResetSearch();
-        }
 
-        static void ResetGUI(UnityModManager.ModEntry modEntry) {
+        private static void ResetSearch() => BlueprintBrowser.ResetSearch();
+
+        private static void ResetGUI(UnityModManager.ModEntry modEntry) {
             settings = Settings.Load<Settings>(modEntry);
             settings.searchText = "";
             settings.searchLimit = 100;
@@ -100,7 +107,7 @@ namespace ToyBox {
             caughtException = null;
         }
 
-        static void OnGUI(UnityModManager.ModEntry modEntry) {
+        private static void OnGUI(UnityModManager.ModEntry modEntry) {
             Main.modEntry = modEntry;
             if (!Enabled) return;
             IsModGUIShown = true;
@@ -111,7 +118,7 @@ namespace ToyBox {
                 UI.Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
             }
             try {
-                Event e = Event.current;
+                var e = Event.current;
                 UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();
                 if (caughtException != null) {
@@ -155,18 +162,15 @@ namespace ToyBox {
             }
         }
 
-        static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
-            settings.Save(modEntry);
-        }
-        static void OnShowGUI(UnityModManager.ModEntry modEntry) {
+        private static void OnSaveGUI(UnityModManager.ModEntry modEntry) => settings.Save(modEntry);
+
+        private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
             ArmiesEditor.OnShowGUI();
         }
 
-        static void OnHideGUI(UnityModManager.ModEntry modEntry) {
-            IsModGUIShown = false;
-        }
+        private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
 
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
             if (NeedsActionInit) {

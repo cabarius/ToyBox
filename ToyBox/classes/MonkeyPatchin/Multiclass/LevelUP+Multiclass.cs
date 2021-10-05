@@ -6,23 +6,21 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Designers.Mechanics.Facts;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
 using ModKit;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using ToyBox.classes.Infrastructure;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 //using Kingmaker.UI.LevelUp.Phase;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.Multiclass {
     internal static class LevelUp {
@@ -33,9 +31,9 @@ namespace ToyBox.Multiclass {
             typeof(UnitEntityData),
             typeof(bool),
             typeof(LevelUpState.CharBuildMode) })]
-        static class LevelUpController_ctor_Patch {
+        private static class LevelUpController_ctor_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
-            static bool Prefix(LevelUpController __instance) {
+            private static bool Prefix(LevelUpController __instance) {
                 if (Main.Enabled) {
                     MultipleClasses.levelUpController = __instance;
                 }
@@ -50,12 +48,12 @@ namespace ToyBox.Multiclass {
         */
         [HarmonyPatch(typeof(LevelUpHelper), "UpdateProgression")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor), typeof(BlueprintProgression) })]
-        static class LevelUpHelper_UpdateProgression_Patch {
+        private static class LevelUpHelper_UpdateProgression_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] BlueprintProgression progression) {
                 if (!settings.toggleMulticlass) return true;
-                ProgressionData progressionData = unit.Progression.SureProgressionData(progression);
-                int level = progressionData.Level;
-                int nextLevel = progressionData.Blueprint.CalcLevel(unit);
+                var progressionData = unit.Progression.SureProgressionData(progression);
+                var level = progressionData.Level;
+                var nextLevel = progressionData.Blueprint.CalcLevel(unit);
                 progressionData.Level = nextLevel;
                 // TODO - this is from the mod but we need to figure out if max level 20 still makes sense with mythic levels
                 // int maxLevel = 20 // unit.Progression.CharacterLevel;
@@ -65,9 +63,9 @@ namespace ToyBox.Multiclass {
                     return false;
                 if (!progression.GiveFeaturesForPreviousLevels)
                     level = nextLevel - 1;
-                for (int lvl = level + 1; lvl <= nextLevel; ++lvl) {
+                for (var lvl = level + 1; lvl <= nextLevel; ++lvl) {
                     //                    if (!AllowProceed(progression)) break;
-                    LevelEntry levelEntry = progressionData.GetLevelEntry(lvl);
+                    var levelEntry = progressionData.GetLevelEntry(lvl);
                     LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, lvl);
                 }
                 return false;
@@ -82,51 +80,68 @@ namespace ToyBox.Multiclass {
         }
 #endif
 
+        // This is to grab the spells known on load
+        [HarmonyPatch(typeof(UnitDescriptor), nameof(UnitDescriptor.PostLoad))]
+        public static class UnitDescriptor_PostLoad_Hook {
+            private static void Postfix(UnitEntityData entity) => CasterHelpers.CacheSpellsLearned(entity);
+        }
+
+        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
+        private static class LevelUpController_Commit_Posthook {
+            private static void Postfix(LevelUpController __instance) {
+                Mod.Warning("Clearing Cache because LevelUpController.Commit called");
+                CasterHelpers.ClearCachedSpellsLearned(__instance.Unit);
+                CasterHelpers.CacheSpellsLearned(__instance.Unit);
+            }
+        }
+
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        static class ApplySpellbook_Apply_Patch {
+        private static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (state.SelectedClass == null) {
                     return false;
                 }
 
-                SkipLevelsForSpellProgression component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
+                var component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
                 if (component1 != null && component1.Levels.Contains(state.NextClassLevel)) {
                     return false;
                 }
 
-                ClassData classData = unit.Progression.GetClassData(state.SelectedClass);
+                var classData = unit.Progression.GetClassData(state.SelectedClass);
                 if (classData?.Spellbook == null) {
                     return false;
                 }
 
-                Spellbook spellbook1 = unit.DemandSpellbook(classData.Spellbook);
+                var spellbook1 = unit.DemandSpellbook(classData.Spellbook);
                 if (state.SelectedClass.Spellbook && state.SelectedClass.Spellbook != classData.Spellbook) {
-                    Spellbook spellbook2 = unit.Spellbooks.FirstOrDefault(s => s.Blueprint == state.SelectedClass.Spellbook);
+                    var spellbook2 = unit.Spellbooks.FirstOrDefault(s => s.Blueprint == state.SelectedClass.Spellbook);
                     if (spellbook2 != null) {
-                        foreach (AbilityData allKnownSpell in spellbook2.GetAllKnownSpells()) {
+                        foreach (var allKnownSpell in spellbook2.GetAllKnownSpells()) {
                             spellbook1.AddKnown(allKnownSpell.SpellLevel, allKnownSpell.Blueprint);
                         }
 
                         unit.DeleteSpellbook(state.SelectedClass.Spellbook);
                     }
                 }
-                int casterLevelAfter = CasterHelpers.GetRealCasterLevel(unit, spellbook1.Blueprint); // Calculates based on progression which includes class selected in level up screen
+                var casterLevelAfter = CasterHelpers.GetRealCasterLevel(unit, spellbook1.Blueprint); // Calculates based on progression which includes class selected in level up screen
                 spellbook1.AddLevelFromClass(classData.CharacterClass); // This only adds one class at a time and will only ever increase by 1 or 2
-                int casterLevelBefore = casterLevelAfter - (classData.CharacterClass.IsMythic ? 2 : 1); // Technically only needed to see if this is our first level of a casting class
-                SpellSelectionData spellSelectionData = state.DemandSpellSelection(spellbook1.Blueprint, spellbook1.Blueprint.SpellList);
+                var casterLevelBefore = casterLevelAfter - (classData.CharacterClass.IsMythic ? 2 : 1); // Technically only needed to see if this is our first level of a casting class
+                var spellSelectionData = state.DemandSpellSelection(spellbook1.Blueprint, spellbook1.Blueprint.SpellList);
                 if (spellbook1.Blueprint.SpellsKnown != null) {
-                    for (int index = 0; index <= 10; ++index) {
-                        BlueprintSpellsTable spellsKnown = spellbook1.Blueprint.SpellsKnown;
-                        int? count = spellsKnown.GetCount(casterLevelAfter, index);
-                        int expectedCount = count ?? 0;
-                        List<AbilityData> known = spellbook1.SureKnownSpells(index).Where(x => !x.CopiedFromScroll).Distinct().ToList(); // Don't count scribed scrolls or free variants
-                        int actual = known.Count(x => !x.IsFromMythicSpellList); // Don't count the spells from any merged mythic spellbooks
+                    for (var index = 0; index <= 10; ++index) {
+                        var spellsKnown = spellbook1.Blueprint.SpellsKnown;
+                        var count = spellsKnown.GetCount(casterLevelAfter, index);
+                        var expectedCount = count ?? 0;
+                        var actual = CasterHelpers.GetCachedSpellsKnown(unit, spellbook1, index);
+#if DEBUG
+                        Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {expectedCount-actual} spells of spell level:{index} based on expected={expectedCount} and actual={actual}");
+#endif
                         spellSelectionData.SetLevelSpells(index, Math.Max(0, expectedCount - actual));
                     }
                 }
-                int maxSpellLevel = spellbook1.MaxSpellLevel;
+                var maxSpellLevel = spellbook1.MaxSpellLevel;
                 if (spellbook1.Blueprint.SpellsPerLevel > 0) {
                     if (casterLevelBefore == 0) {
                         spellSelectionData.SetExtraSpells(0, maxSpellLevel);
@@ -137,7 +152,7 @@ namespace ToyBox.Multiclass {
                         spellSelectionData.SetExtraSpells(spellbook1.Blueprint.SpellsPerLevel, maxSpellLevel);
                     }
                 }
-                foreach (AddCustomSpells component2 in spellbook1.Blueprint.GetComponents<AddCustomSpells>()) {
+                foreach (var component2 in spellbook1.Blueprint.GetComponents<AddCustomSpells>()) {
                     ApplySpellbook.TryApplyCustomSpells(spellbook1, component2, state, unit);
                 }
 
@@ -147,12 +162,12 @@ namespace ToyBox.Multiclass {
 
         // Fixed a vanilla PFK bug that caused dragon bloodline to be displayed in Magus' feats tree
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyProgressions")]
-        static class ApplyClassMechanics_ApplyProgressions_Patch {
+        private static class ApplyClassMechanics_ApplyProgressions_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
-                BlueprintCharacterClass blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
-                foreach (BlueprintProgression blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
-                    BlueprintProgression p = blueprintProgression;
+                var blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
+                foreach (var blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
+                    var p = blueprintProgression;
                     if (blueprintCharacterClass != null
                         // && p.Classes.Contains<BlueprintCharacterClass>(blueprintCharacterClass)) 
                         && p.IsChildProgressionOf(unit, blueprintCharacterClass) // Mod Line replacing above
@@ -167,8 +182,8 @@ namespace ToyBox.Multiclass {
         }
         [HarmonyPatch(typeof(UnitHelper))]
         [HarmonyPatch("CopyInternal")]
-        static class UnitProgressionData_CopyFrom_Patch {
-            static void Postfix(UnitEntityData unit, UnitEntityData __result) {
+        private static class UnitProgressionData_CopyFrom_Patch {
+            private static void Postfix(UnitEntityData unit, UnitEntityData __result) {
                 if (!settings.toggleMulticlass) return;
                 // When upgrading, this method will be used to copy a UnitEntityData, which involves copying UnitProgressionData
                 // By default, the CharacterLevel of the copied UnitProgressionData is equal to the sum of all non-mythical class levels

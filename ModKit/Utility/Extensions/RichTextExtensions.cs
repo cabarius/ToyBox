@@ -6,7 +6,8 @@ using UnityEngine;
 namespace ModKit.Utility {
     public static class StringExtensions {
         public static bool Matches(string source, string other) {
-            if (source == null || other == null) return false;
+            if (source == null || other == null)
+                return false;
 #if false
             return source.IndexOf(other, 0, StringComparison.InvariantCulture) != -1;
 #else
@@ -31,7 +32,8 @@ namespace ModKit.Utility {
             return source;
         }
         public static string Repeat(this string s, int n) {
-            if (n < 0 || s == null || s.Length == 0) return s;
+            if (n < 0 || s == null || s.Length == 0)
+                return s;
             return new StringBuilder(s.Length * n).Insert(0, s, n).ToString();
         }
         public static string Indent(this string s, int n) {
@@ -91,18 +93,18 @@ namespace ModKit.Utility {
         }
 
         public static string color(this string s, string color) {
-            return s = $"<color={color}>{s}</color>";
+            return _ = $"<color={color}>{s}</color>";
         }
-        public static string White(this string s) { return s = s.color("white"); }
-        public static string Grey(this string s) { return s = s.color("#A0A0A0FF"); }
-        public static string Red(this string s) { return s = s.color("#C04040E0"); }
-        public static string Pink(this string s) { return s = s.color("#FFA0A0E0"); }
-        public static string Green(this string s) { return s = s.color("#00ff00ff"); }
-        public static string Blue(this string s) { return s = s.color("blue"); }
-        public static string Cyan(this string s) { return s = s.color("cyan"); }
-        public static string Magenta(this string s) { return s = s.color("magenta"); }
-        public static string Yellow(this string s) { return s = s.color("yellow"); }
-        public static string Orange(this string s) { return s = s.color("orange"); }
+        public static string White(this string s) { return _ = s.color("white"); }
+        public static string Grey(this string s) { return _ = s.color("#A0A0A0FF"); }
+        public static string Red(this string s) { return _ = s.color("#C04040E0"); }
+        public static string Pink(this string s) { return _ = s.color("#FFA0A0E0"); }
+        public static string Green(this string s) { return _ = s.color("#00ff00ff"); }
+        public static string Blue(this string s) { return _ = s.color("blue"); }
+        public static string Cyan(this string s) { return _ = s.color("cyan"); }
+        public static string Magenta(this string s) { return _ = s.color("magenta"); }
+        public static string Yellow(this string s) { return _ = s.color("yellow"); }
+        public static string Orange(this string s) { return _ = s.color("orange"); }
 
 
 

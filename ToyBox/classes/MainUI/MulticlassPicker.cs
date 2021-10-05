@@ -7,12 +7,12 @@ using ModKit;
 
 namespace ToyBox {
     public class MulticlassPicker {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         public static void OnGUI(MulticlassOptions options, float indent = 100) {
             var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
             var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
-            bool showDesc = settings.toggleMulticlassShowClassDescriptions;
+            var showDesc = settings.toggleMulticlassShowClassDescriptions;
             foreach (var cl in classes) {
                 PickerRow(cl, options, indent);
             }
@@ -28,8 +28,8 @@ namespace ToyBox {
         }
 
         public static bool PickerRow(BlueprintCharacterClass cl, MulticlassOptions options, float indent = 100) {
-            bool changed = false;
-            bool showDesc = settings.toggleMulticlassShowClassDescriptions;
+            var changed = false;
+            var showDesc = settings.toggleMulticlassShowClassDescriptions;
             if (showDesc) UI.Div(indent);
             using (UI.HorizontalScope()) {
                 UI.Space(indent);

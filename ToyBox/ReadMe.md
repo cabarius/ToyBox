@@ -14,9 +14,16 @@
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
 ### Ver 1.3.19 (Coming Soon)
+* **Bag of Tricks** 
+  * You can now enable Developer Mode which enables the developer console which you can access by hitting tilde `
+  * (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
+  * (***ShadowRanger***) Added a vescavors-begone option, similar to spiders-begone, to replace all vescavor models 
+* **Loot Coloring** - Improved legibility of colored loot in various loot views
 * **Loot Checklist**  - Containers and Units now sort with higest rarity loot at the top
 * **Multiple Classes Per Level Up** - added safey check where if all classes are gestalt (can happen if you set your original class gestalt and the load a save from before you gained your new main class) then we treat the first one as non gestalt
-* **Party Editor** - Changed Stat < and > arrows to have a box background instead of the ugly buttons
+* **Party Editor**
+  * Changed Stat < and > arrows to have a box background instead of the ugly buttons
+  * Fixed long standing crasher when editing stats in the text field and you hit enter
 * **Army Editor**
   * Moved Armies into its own Tab
   * Fixed bug where squads disclosure would never close
@@ -28,9 +35,7 @@
 * **Crusade Editor**
   * Reworked UI to match design of other parts of the mod
   * Fixed bug where it was displaying the Exp required for the current rank rather than the next rank
-* (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
-* (***ShadowRanger***) Added a vescavors-begone option, similar to spiders-begone, to replace all vescavor models 
-
+* (***ArcaneTrixter***) Made spell learning for spontaneous casters less buggy. Is currently tied to game load and level up, so if you're having issues with spells known try reloading.
 ### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
 * **Bag of Tricks**

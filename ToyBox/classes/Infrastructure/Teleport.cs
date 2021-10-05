@@ -20,10 +20,10 @@ using UnityModManagerNet;
 namespace ToyBox {
     public static class Teleport {
         public static Settings Settings => Main.settings;
-        private static HoverHandler _hover = new HoverHandler();
+        //private static readonly HoverHandler _hover = new();
 
         public static void TeleportUnit(UnitEntityData unit, Vector3 position) {
-            UnitEntityView view = unit.View;
+            var view = unit.View;
 
             if (view != null) view.StopMoving();
 
@@ -48,7 +48,7 @@ namespace ToyBox {
             }
         }
         public static void TeleportPartyToPlayer() {
-            GameModeType currentMode = Game.Instance.CurrentMode;
+            var currentMode = Game.Instance.CurrentMode;
             var partyMembers = Game.Instance.Player.m_PartyAndPets;
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 foreach (var unit in partyMembers) {
@@ -61,7 +61,7 @@ namespace ToyBox {
             }
         }
         public static void TeleportEveryoneToPlayer() {
-            GameModeType currentMode = Game.Instance.CurrentMode;
+            var currentMode = Game.Instance.CurrentMode;
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 foreach (var unit in Game.Instance.State.Units) {
                     if (unit != Game.Instance.Player.MainCharacter.Value) {
@@ -73,7 +73,7 @@ namespace ToyBox {
             }
         }
         public static void TeleportPartyOnGlobalMap() {
-            GlobalMapView mapView = GlobalMapView.Instance;
+            _ = GlobalMapView.Instance;
             var pointerPos = Utils.PointerPosition();
             var pointerTransform = (new GameObject()).transform;
             pointerTransform.position = pointerPos;
@@ -83,19 +83,19 @@ namespace ToyBox {
         public static void TeleportToGlobalMap(Action callback = null) {
             var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
             var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
-            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback != null ? callback : () => { });
+            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback ?? (() => { }));
         }
         public static bool TeleportToGlobalMapPoint(this BlueprintGlobalMapPoint destination) {
             if (GlobalMapView.Instance != null) {
                 var globalMapController = Game.Instance.GlobalMapController;
-                GlobalMapUI globalMapUI = Game.Instance.UI.GlobalMapUI;
-                GlobalMapView globalMapView = GlobalMapView.Instance;
-                GlobalMapState globalMapState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap);
+                var globalMapUI = Game.Instance.UI.GlobalMapUI;
+                var globalMapView = GlobalMapView.Instance;
+                var globalMapState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap);
 
-                GlobalMapPointState pointState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap).GetPointState(destination);
+                var pointState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap).GetPointState(destination);
                 pointState.EdgesOpened = true;
                 pointState.Reveal();
-                GlobalMapPointView pointView = globalMapView.GetPointView(destination);
+                var pointView = globalMapView.GetPointView(destination);
                 if ((bool)(UnityEngine.Object)globalMapView) {
                     if ((bool)(UnityEngine.Object)pointView)
                         globalMapView.RevealLocation(pointView);
@@ -142,9 +142,7 @@ namespace ToyBox {
             public HoverHandler() {
                 EventBus.Subscribe(this);
             }
-            public void Dispose() {
-                throw new NotImplementedException();
-            }
+            public void Dispose() => throw new NotImplementedException();
 
             public void HandleHoverChange([NotNull] UnitEntityView unitEntityView, bool isHover) {
                 if (isHover) _currentUnit = unitEntityView.Data;
@@ -152,7 +150,7 @@ namespace ToyBox {
 
             public void LockUnit() {
                 if (_currentUnit != null)
-                    Unit = _currentUnit;
+                    this.Unit = _currentUnit;
             }
         }
     }

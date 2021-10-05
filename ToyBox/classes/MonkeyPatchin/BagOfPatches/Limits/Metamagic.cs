@@ -15,7 +15,7 @@ using System;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    static class MetamagicPatches {
+    internal static class MetamagicPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
@@ -30,18 +30,16 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(RuleCollectMetamagic), "AddMetamagic")]
         public static class RuleCollectMetamagic_AddMetamagic_Patch {
-            public static bool Prefix() {
-                return !settings.toggleMetamagicIsFree;
-            }
+            public static bool Prefix() => !settings.toggleMetamagicIsFree;
             public static void Postfix(ref RuleCollectMetamagic __instance, int ___m_SpellLevel, Feature metamagicFeature) {
                 if (settings.toggleMetamagicIsFree) {
-                    AddMetamagicFeat component = metamagicFeature.GetComponent<AddMetamagicFeat>();
+                    var component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
-                        Mod.Trace(String.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
+                        Mod.Trace(string.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
                     }
                     else {
                         __instance.KnownMetamagics.Add(metamagicFeature);
-                        Metamagic metamagic = component.Metamagic;
+                        var metamagic = component.Metamagic;
                         if (___m_SpellLevel < 0 || ___m_SpellLevel >= 10 || (___m_SpellLevel + component.Metamagic.DefaultCost() > 10 || __instance.SpellMetamagics.Contains(metamagicFeature)) || (__instance.Spell.AvailableMetamagic & metamagic) != metamagic)
                             return;
                         __instance.SpellMetamagics.Add(metamagicFeature);
@@ -50,8 +48,8 @@ namespace ToyBox.BagOfPatches {
             }
         }
         [HarmonyPatch(typeof(MainMenuBoard), "Update")]
-        static class MainMenuButtons_Update_Patch {
-            static void Postfix() {
+        private static class MainMenuButtons_Update_Patch {
+            private static void Postfix() {
                 if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
                     var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
