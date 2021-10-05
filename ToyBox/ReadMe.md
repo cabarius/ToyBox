@@ -19,6 +19,7 @@
   * (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
   * (***ShadowRanger***) Added a vescavors-begone option, similar to spiders-begone, to replace all vescavor models 
   * (***Mafemergency***)* Tweak to highlight hidden interactable objects
+  * (***ArcaneTrixter***)* Added button to correctly reassign main character back to original main character when it's been broken by gestalt or other issues.
 * **Loot Coloring** - Improved legibility of colored loot in various loot views
 * **Loot Checklist**  - Containers and Units now sort with higest rarity loot at the top
 * **Multiple Classes Per Level Up** - added safey check where if all classes are gestalt (can happen if you set your original class gestalt and the load a save from before you gained your new main class) then we treat the first one as non gestalt

@@ -6,6 +6,7 @@ using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
 using Kingmaker.PubSubSystem;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
 using ModKit;
 using UnityEngine;
@@ -143,6 +144,16 @@ namespace ToyBox {
                 () => Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
                 () => Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
                 () => Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 0),
+                () => ActionButton("Fix Incorrect Main Character", () => {
+                    var probablyPlayer = Game.Instance.Player?.Party?
+                        .Where(x => !x.IsCustomCompanion())
+                        .Where(x => !x.IsStoryCompanion()).ToList();
+                    if (probablyPlayer is { Count: 1 }) {
+                        var newMainCharacter = probablyPlayer.First();
+                        Mod.Warning($"Promoting {newMainCharacter.CharacterName} to main character!");
+                        if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
+                    }
+                }, AutoWidth()),
                 () => {
                     using (VerticalScope()) {
                         Div(0, 25, 1280);
