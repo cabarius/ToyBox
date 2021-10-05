@@ -214,13 +214,113 @@ namespace ToyBox.BagOfPatches {
             };
         }
 
+        internal static class VescavorsBegone 
+        {
+            public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
+                BlueprintUnitType type = unitEntityData.Blueprint.Type;
+                bool isAVescavorGuard = VescavorsBegone.IsVescavorGuardType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isAVescavorQueen = VescavorsBegone.IsVescavorQueenType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isAVescavorSwarm = VescavorsBegone.IsVescavorSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isOtherVescavorGuardUnit = VescavorsBegone.IsVescavorGuardBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                bool isOtherVescavorQueenUnit = VescavorsBegone.IsVescavorQueenBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                bool isOtherVescavorSwarmUnit = VescavorsBegone.IsVescavorSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                if (isAVescavorGuard || isOtherVescavorGuardUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
+                }
+                else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintCR2RatSwarmGUID;
+                }
+                else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintDireWolfStandardGUID;
+                }
+            }
 
+            public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
+                BlueprintUnitType type = blueprintUnit.Type;
+                bool isAVescavorGuard = VescavorsBegone.IsVescavorGuardType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isAVescavorQueen = VescavorsBegone.IsVescavorQueenType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isAVescavorSwarm = VescavorsBegone.IsVescavorSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
+                bool isOtherVescavorGuardUnit = VescavorsBegone.IsVescavorGuardBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                bool isOtherVescavorQueenUnit = VescavorsBegone.IsVescavorQueenBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                bool isOtherVescavorSwarmUnit = VescavorsBegone.IsVescavorSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                if (isAVescavorGuard || isOtherVescavorGuardUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
+                }
+                else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintCR2RatSwarmGUID).Prefab;
+                }
+                else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintDireWolfStandardGUID).Prefab;
+                }
+            }
+
+            private static bool IsVescavorGuardType(string typeGuid) {
+                return typeGuid == VescavorGuardTypeGUID;
+            }
+
+            private static bool IsVescavorQueenType(string typeGuid) {
+                return typeGuid == VescavorQueenTypeGUID;
+            }
+
+            private static bool IsVescavorSwarmType(string typeGuid) {
+                return typeGuid == VescavorSwarmTypeGUID;
+            }
+
+            private static bool IsVescavorGuardBlueprintUnit(string blueprintUnitGuid) {
+                return VescavorsBegone.VescavorGuardGuids.Contains(blueprintUnitGuid);
+            }
+            private static bool IsVescavorQueenBlueprintUnit(string blueprintUnitGuid) {
+                return VescavorsBegone.VescavorQueenGuids.Contains(blueprintUnitGuid);
+            }
+            private static bool IsVescavorSwarmBlueprintUnit(string blueprintUnitGuid) {
+                return VescavorsBegone.VescavorSwarmGuids.Contains(blueprintUnitGuid);
+            }
+
+            private const string VescavorGuardTypeGUID = "6cc8fb5ba241e9340adfb908b5d0ef85";
+            private const string VescavorQueenTypeGUID = "c73d6ef065a177c4d89b251000192025";
+            private const string VescavorSwarmTypeGUID = "7885004e5fe98d044b279637976299cc";
+
+            private const string blueprintWolfStandardGUID = "ea610d9e540af4243b1310a3e6833d9f";
+            private const string blueprintDireWolfStandardGUID = "87b83e0e06432a44eb50fb03c71bc8f5";
+            private const string blueprintCR2RatSwarmGUID = "12a5944fa27307e4e8b6f56431d5cc8c";
+
+            private static readonly string[] VescavorSwarmGuids = new string[]
+             {
+                 "c148c12cb7914a50b2fccc39fa880b73",
+                 "f03d262634c93a340b85c4a93cd0ffe4",
+                 "204a57cdfd30fdc4da930a05f87b5a0b",
+                 "d1add298a78c9744c89c9b4f87df5316",
+                 "39ea2dcdc362421f94643abe52de9aed",
+
+                 "0264a9119a0737447a226cdd4ba1f79b"
+                 //Daeran's Other Swarm is this ID - replace this as well?
+
+             };
+
+
+            private static readonly string[] VescavorGuardGuids = new string[]
+            {
+                "17a0d2b9a532ff641bc122778fa80e05",
+                "0413e0164ae24d9d9d78348a186ce375"
+            };
+
+
+            private static readonly string[] VescavorQueenGuids = new string[]
+            {
+                "3d59b2d00f92a244ea887bd74f96dd85",
+                "e3cbfef493c4a3f4fa2abb660ba6aad6"
+            };
+        }
 
         [HarmonyPatch(typeof(UnitEntityData), "CreateView")]
         public static class UnitEntityData_CreateView_Patch {
             public static void Prefix(ref UnitEntityData __instance) {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref __instance);
+                }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref __instance);
                 }
             }
         }
@@ -230,6 +330,10 @@ namespace ToyBox.BagOfPatches {
             public static void Prefix(ref BlueprintUnit __instance) {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref __instance);
+                }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref __instance);
                 }
             }
         }
@@ -241,6 +345,10 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref unit);
                 }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref unit);
+                }
             }
         }
 
@@ -250,6 +358,10 @@ namespace ToyBox.BagOfPatches {
             public static void Prefix(ref BlueprintUnit unit) {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref unit);
+                }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref unit);
                 }
             }
         }

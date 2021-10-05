@@ -50,6 +50,7 @@ namespace ToyBox {
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleMultipleRomance = false;
         public bool toggleSpiderBegone = false;
+        public bool toggleVescavorsBegone = false;
         public bool togglAutoEquipConsumables = false;
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
