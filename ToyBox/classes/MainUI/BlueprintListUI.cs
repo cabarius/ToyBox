@@ -134,14 +134,26 @@ namespace ToyBox {
                     UI.Space(10);
                     var typeString = blueprint.GetType().Name;
                     if (typeFilter?.collator != null) {
-                        var collatorString = typeFilter.collator(blueprint);
-                        if (blueprint is BlueprintItem itemBP) {
-                            var rarity = itemBP.Rarity();
-                            typeString = $"{typeString} - {rarity}".Rarity(rarity);
+                        var names = typeFilter.collator(blueprint);
+                        if (names.Count > 0) {
+                            var collatorString = names.First();
+                            if (blueprint is BlueprintItem itemBP) {
+                                var rarity = itemBP.Rarity();
+                                typeString = $"{typeString} - {rarity}".Rarity(rarity);
+                            }
+                            if (!typeString.Contains(collatorString))
+                                typeString += $" : {collatorString}".yellow();
                         }
-                        if (!typeString.Contains(collatorString))
-                            typeString += $" : {collatorString}".yellow();
                     }
+                    var attributes = "";
+                    if (settings.showAttributes) {
+                        var attr = string.Join(" ", blueprint.Attributes());
+                        if (!typeString.Contains(attr)) 
+                            attributes = attr;
+                    }
+
+                    if (attributes.Length > 1) typeString += $" - {attributes.orange()}";
+
                     if (description != null && description.Length > 0) description = $"{description}";
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {

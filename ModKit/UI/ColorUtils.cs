@@ -39,7 +39,7 @@ namespace ModKit {
         white = 0xffffffff,
         none = silver,
         trash = 0x808080ff,     // 0x686868ff,  0x787878ff, // 0x734d26ff, // 0x86592dff, //0xA07040ff, // brown, 0x606060FF,
-        common = 0x505050ff,    // 0xd8d8d8a0,         //0xe8e8e8a0,
+        common = 0xd8d8d8a0, // 0x505050ff,    // 0xd8d8d8a0,         //0xe8e8e8a0,
         uncommon = 0x00882bff, // 0x00882bff,  //0x00802bff, //0x68b020ff, // 0x60B020ff,
         rare = 0x2060ffff,
         epic = 0xc260f1ff, // 0x79297bff, //0x9f608cff, // 0x885278ff, // 0xc260f1ff,      //0xc860fff,

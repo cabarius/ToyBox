@@ -127,7 +127,7 @@ namespace ToyBox.classes.MainUI {
                                 UI.Label(item.Name.bold(), UI.Width(400));
                                 var bp = item.Blueprint;
                                 using (UI.HorizontalScope()) {
-                                    var modifers = bp.Modifiers();
+                                    var modifers = bp.Attributes();
                                     if (item.IsEpic) modifers = modifers.Prepend("epic ");
                                     UI.Label(string.Join(" ", modifers).cyan(), UI.AutoWidth());
                                     //if (bp is BlueprintItemWeapon bpW) {
@@ -309,14 +309,14 @@ namespace ToyBox.classes.MainUI {
                     if (settings.showAssetIDs) {
                         using (UI.VerticalScope()) {
                             using (UI.HorizontalScope()) {
-                                UI.Label(enchant.CollationName().cyan(), UI.Width(300));
+                                UI.Label(enchant.CollationNames().First().cyan(), UI.Width(300));
                                 GUILayout.TextField(enchant.AssetGuid.ToString(), UI.AutoWidth());
                             }
                             if (enchant.Description.Length > 0) UI.Label(enchant.Description.StripHTML().green());
                         }
                     }
                     else {
-                        UI.Label(enchant.CollationName().cyan(), UI.Width(300));
+                        UI.Label(enchant.CollationNames().First().cyan(), UI.Width(300));
                         if (enchant.Description.Length > 0) UI.Label(enchant.Description.StripHTML().green());
                     }
 

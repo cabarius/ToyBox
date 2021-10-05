@@ -118,7 +118,7 @@ namespace ToyBox {
         }
         public static Color color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
         public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
-        public static string GetString(this RarityType rarity) => rarity.ToString().Rarity(rarity);
+        public static string GetString(this RarityType rarity, float adjust = 0) => rarity.ToString().Rarity(rarity, adjust);
     }
 }
 namespace ModKit {

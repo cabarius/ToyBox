@@ -21,13 +21,18 @@
   * (***Mafemergency***)* Tweak to highlight hidden interactable objects
   * (***ArcaneTrixter***)* Added button to correctly reassign main character back to original main character when it's been broken by gestalt or other issues.
 * **Multiple Classes Per Level Up** - added safey check where if all classes are gestalt (can happen if you set your original class gestalt and the load a save from before you gained your new main class) then we treat the first one as non gestalt
-* **Enchantment** now displays item modifers for the weapon you are editing
+* **Enchantment** now displays item attributes (magic, natural, etc) for the weapon you are editing
 * **Loot Coloring** - Improved legibility of colored loot in various loot views
 * **Loot Checklist**  - Containers and Units now sort with higest rarity loot at the top
 * **Party Editor**
   * Changed Stat < and > arrows to have a box background instead of the ugly buttons
   * Fixed long standing crasher when editing stats in the text field and you hit enter
   * (***ArcaneTrixter***) Added toggle to allow companions to take Mythic Classes
+* **Search 'n Pick** Massive improvements to sub-categories with a lot more things to filter by
+  * This is a first step towards being able to filter on more than one value in the subcategory at the same time
+  * Shows more data mining information including various attributes associated with blueprints such as ***IsMythic***, ***IsMagic***, and many more
+  * Sub-categories with numbers in them now sort properly
+  * You can see item costs binned into ranges with units of '⊙'
 * **Army Editor**
   * Moved Armies into its own Tab
   * Fixed bug where squads disclosure would never close

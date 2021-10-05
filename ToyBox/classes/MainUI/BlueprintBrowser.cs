@@ -26,18 +26,9 @@ using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
 using ModKit.Utility;
 using Kingmaker.DialogSystem.Blueprints;
+using Kingmaker.Blueprints.Items.Armors;
 
 namespace ToyBox {
-    public class KeyComparer : IComparer<string> {
-
-        public int Compare(string left, string right) {
-            if (int.TryParse(left, out var l) && int.TryParse(right, out var r))
-                return l.CompareTo(r);
-            else
-                return left.CompareTo(right);
-        }
-
-    }
     public class BlueprintBrowser {
         public static Settings settings => Main.settings;
 
@@ -55,76 +46,82 @@ namespace ToyBox {
         public static int currentPage = 0;
         public static string parameter = "";
         private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
-            new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => bp.ParameterType.ToString()),
-            new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.IsArcaneCaster ? "Arcane"
-                                                                              : bp.IsDivineCaster ? "Divine"
-                                                                              : bp.IsMythic ? "Mythic"
-                                                                              : bp.IsHigherMythic ? "Higher Mythic"
-                                                                              : "Standard"),
-            new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => string.Join(" ", bp.Classes.Select(cl => cl.Name))),
-            new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintAbility>("Actions", null, bp => bp.ActionType.ToString()),
-            new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.School.ToString()),
-            new NamedTypeFilter<BlueprintAbilityResource>("Ability Rsrc", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CharacterClass.Name.ToString()),
-            new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationName()),
+            new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string> {bp.ParameterType.ToString() }),
+            new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames("Standard")),
+                                                                          //bp => bp.IsArcaneCaster ? "Arcane"
+                                                                          //    : bp.IsDivineCaster ? "Divine"
+                                                                          //    : bp.IsMythic ? "Mythic"
+                                                                          //    : bp.IsHigherMythic ? "Higher Mythic"
+                                                                          //    : "Standard"),
+            new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => bp.Classes.Select(cl => cl.Name).ToList()),
+            new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.CollationNames(bp.School.ToString())),
+            new NamedTypeFilter<BlueprintAbilityResource>("Ability Rsrc", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CollationNames(bp.CharacterClass.Name.ToString())),
+            new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintItem>("Item", null,  (bp) => {
-                if (bp.m_NonIdentifiedNameText?.ToString().Length > 0) return bp.m_NonIdentifiedNameText;
-                return bp.ItemType.ToString();
+                if (bp.m_NonIdentifiedNameText?.ToString().Length > 0) return bp.CollationNames(bp.m_NonIdentifiedNameText);
+                return bp.CollationNames(bp.ItemType.ToString());
             }),
-            new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) => bp.ItemType.ToString()),
-            new NamedTypeFilter<BlueprintItemEquipment>("Equip (rarity)", null, (bp) => bp.Rarity().GetString()),
+            new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) =>  bp.CollationNames(bp.ItemType.ToString(), $"{bp.Cost.ToBinString("⊙".yellow())}")),
+            new NamedTypeFilter<BlueprintItemEquipment>("Equip (rarity)", null, (bp) => new List<string> {bp.Rarity().GetString() }),
+            new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
+                var type = bp.Type;
+                var category = type?.Category;
+                if (category != null) return bp.CollationNames(category.ToString(), $"{bp.Cost.ToBinString("⊙".yellow())}");
+                if (type != null) return bp.CollationNames(type.NameSafe(), $"{bp.Cost.ToBinString("⊙".yellow())}");
+                return bp.CollationNames("?", $"{bp.Cost.ToBinString("⊙".yellow())}");
+                }),
+            new NamedTypeFilter<BlueprintItemArmor>("Armor", null, (bp) => {
+                var type = bp.Type;
+                if (type != null) return bp.CollationNames(type.NameSafe(), $"{bp.Cost.ToBinString("⊙".yellow())}");
+                return bp.CollationNames("?", $"{bp.Cost.ToBinString("⊙".yellow())}");
+                }),
+            new NamedTypeFilter<BlueprintItemEquipmentUsable>("Usable", null, bp => bp.CollationNames(bp.SubtypeName, $"{bp.Cost.ToBinString("⊙".yellow())}")),
+            new NamedTypeFilter<BlueprintIngredient>("Ingredient", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintUnit>("Units", null, bp => bp.CollationNames(bp.Type?.Name ?? bp.Race?.Name ?? "?")),
+            new NamedTypeFilter<BlueprintRace>("Races", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintArea>("Areas", null, bp => bp.CollationNames()),
+            //new NamedTypeFilter<BlueprintAreaPart>("Area Parts", null, bp => bp.CollationName()),
+            new NamedTypeFilter<BlueprintAreaEnterPoint>("Area Entry", null, bp =>bp.CollationNames(bp.m_Area.NameSafe())),
+            //new NamedTypeFilter<BlueprintAreaEnterPoint>("AreaEntry ", null, bp => bp.m_Tooltip.ToString()),
+            new NamedTypeFilter<BlueprintGlobalMapPoint>("Map Points", null, bp => bp.CollationNames(bp.GlobalMapZone.ToString())),
+            new NamedTypeFilter<BlueprintGlobalMap>("Global Map"),
+            new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.CollationNames(bp.Priority.ToString())),
+            //new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
+            new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.CollationNames(bp.m_Type.ToString())),
+            new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp =>bp.CollationNames(bp.m_Type.ToString())),
+            new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp =>bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? "" )),
+            new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintDialog>("Dialog", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintCue>("Cues", null, bp => {
+                if (bp.Conditions.HasConditions) {
+                    return bp.CollationNames(bp.Conditions.Conditions.First().NameSafe().SubstringBetweenCharacters('$', '$'));
+                }
+                return new List<string> { "-" };
+                }),
+            new NamedTypeFilter<BlueprintAnswer>("Answer", null),
+            new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
+            new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp =>  bp.CollationNames()),
+#if false
             new NamedTypeFilter<BlueprintItemEquipment>("Equip (ench)", null, (bp) => {
                 try {
                     var enchants = bp.CollectEnchantments();
                     var value = enchants.Sum((e) => e.EnchantmentCost);
-                    return value.ToString();
+                    return new List<string> { value.ToString() };
                 }
                 catch {
-                    return "0";
+                    return new List<string> { "0" };
                 }
             }),
-            new NamedTypeFilter<BlueprintItemEquipment>("Equip (cost)", null, (bp) => bp.Cost.ToString()),  // > 1 ? $"{(int)Math.Floor(Math.Log(bp.Cost))}" : "0"),
-
-            new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
-                var type = bp.Type;
-                var category = type?.Category;
-                if (category != null) return category.ToString();
-                if (type != null) return type.NameSafe();
-                return "?";
-                }),
-            new NamedTypeFilter<BlueprintItemEquipmentUsable>("Usable", null, bp => bp.SubtypeName),
-            new NamedTypeFilter<BlueprintIngredient>("Ingredient", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintUnit>("Units", null, bp => bp.Type?.Name ?? bp.Race?.Name ?? "?"),
-            new NamedTypeFilter<BlueprintRace>("Races"),
-            new NamedTypeFilter<BlueprintArea>("Areas", null, bp => bp.CollationName()),
-            //new NamedTypeFilter<BlueprintAreaPart>("Area Parts", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintAreaEnterPoint>("Area Entry", null, bp => bp.m_Area.NameSafe()),
-            //new NamedTypeFilter<BlueprintAreaEnterPoint>("AreaEntry ", null, bp => bp.m_Tooltip.ToString()),
-            new NamedTypeFilter<BlueprintGlobalMapPoint>("Map Points", null, bp => bp.GlobalMapZone.ToString()),
-            new NamedTypeFilter<BlueprintGlobalMap>("Global Map"),
-            new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.Priority.ToString()),
-            //new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
-            new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.m_Type.ToString()),
-            new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp => bp.m_Type.ToString()),
-            new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp => bp.Parent?.GetBlueprint().NameSafe() ?? ""),
-            new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CollationName()),
-            new NamedTypeFilter<BlueprintDialog>("Dialog", null, bp => bp.Type.ToString()),
-            new NamedTypeFilter<BlueprintCue>("Cues", null, bp => {
-                if (bp.Conditions.HasConditions) {
-                    return bp.Conditions.Conditions.First().NameSafe().SubstringBetweenCharacters('$', '$');
-                }
-                return "-";
-                }),
-            new NamedTypeFilter<BlueprintAnswer>("Answer", null),
-            new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
-            new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.GetType().ToString()),
-            new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp => bp.GetType().ToString()),
+            new NamedTypeFilter<BlueprintItemEquipment>("Equip (cost)", null, (bp) => new List<string> {bp.Cost.ToBinString() }),  
+#endif
             //new NamedTypeFilter<SimpleBlueprint>("In Memory", null, bp => bp.CollationName(), () => ResourcesLibrary.s_LoadedBlueprints.Values.Where(bp => bp != null)),
 
         };
@@ -230,11 +227,16 @@ namespace ToyBox {
             }
             uncolatedMatchCount = matchCount;
             if (selectedTypeFilter.collator != null) {
-                collatedBPs = filtered.GroupBy(selectedTypeFilter.collator).OrderBy(bp => bp.Key, new KeyComparer());
-                // I could do something like this but I will leave it up to the UI when a collation is selected.
-                // GetItems().GroupBy(g => g.Type).Select(s => new { Type = s.Key, LastTen = s.Take(10).ToList() });
-                collationKeys = new List<string>() { "All" };
-                collationKeys = collationKeys.Concat(collatedBPs.Select(cbp => cbp.Key)).ToList();
+                collatedBPs = from bp in filtered
+                              from key in selectedTypeFilter.collator(bp)
+                              //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
+                              group bp by key into g
+                              orderby g.Key.IntSortKey(), g.Key
+                              select g;
+                _ = collatedBPs.Count();
+                var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
+                collationKeys = new List<string> { "All" };
+                collationKeys.AddRange(keys);
             }
             unpagedBPs = filteredBPs;
             UpdatePaginatedResults();
@@ -290,6 +292,8 @@ namespace ToyBox {
                         UI.Space(25);
                         if (UI.Toggle("Search Descriptions", ref settings.searchesDescriptions)) UpdateSearchResults();
                         UI.Space(25);
+                        if (UI.Toggle("Attributes", ref settings.showAttributes)) UpdateSearchResults();
+                        UI.Space(25);
                         UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
                         UI.Space(25);
                         UI.Toggle("Components", ref settings.showComponents);
@@ -344,6 +348,7 @@ namespace ToyBox {
 
                                 foreach (var group in collatedBPs) {
                                     if (group.Key == selectedKey) {
+                                        matchCount = group.Count();
                                         selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
                                         matchCount = selectedCollatedBPs.Count();
                                         UpdatePageCount();
