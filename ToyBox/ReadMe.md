@@ -19,6 +19,7 @@
   * (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
   * (***ShadowRanger***) Added a vescavors-begone option, similar to spiders-begone, to replace all vescavor models 
   * (***Mafemergency***)* Tweak to highlight hidden interactable objects
+  * (***ArcaneTrixter***)* Added button to correctly reassign main character back to original main character when it's been broken by gestalt or other issues.
 * **Multiple Classes Per Level Up** - added safey check where if all classes are gestalt (can happen if you set your original class gestalt and the load a save from before you gained your new main class) then we treat the first one as non gestalt
 * **Enchantment** now displays item modifers for the weapon you are editing
 * **Loot Coloring** - Improved legibility of colored loot in various loot views
@@ -26,6 +27,7 @@
 * **Party Editor**
   * Changed Stat < and > arrows to have a box background instead of the ugly buttons
   * Fixed long standing crasher when editing stats in the text field and you hit enter
+  * (***ArcaneTrixter***) Added toggle to allow companions to take Mythic Classes
 * **Army Editor**
   * Moved Armies into its own Tab
   * Fixed bug where squads disclosure would never close
@@ -37,7 +39,9 @@
 * **Crusade Editor**
   * Reworked UI to match design of other parts of the mod
   * Fixed bug where it was displaying the Exp required for the current rank rather than the next rank
-* (***ArcaneTrixter***) Made spell learning for spontaneous casters less buggy. Is currently tied to game load and level up, so if you're having issues with spells known try reloading.
+* **General Fixes**
+  * (***ArcaneTrixter***) Made spell learning for spontaneous casters less buggy. Is currently tied to game load and level up, so if you're having issues with spells known try reloading.
+
 ### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
 * **Bag of Tricks**
