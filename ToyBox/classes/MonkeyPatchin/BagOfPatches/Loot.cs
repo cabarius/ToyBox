@@ -103,11 +103,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(InventoryPCView __instance) {
                 if (!settings.toggleColorLootByRarity) return;
                 var decoration = __instance.gameObject?
-                    .transform.Find("Inventory")?
-                    .transform.Find("Stash")?
-                    .transform.Find("StashContainer")?
-                    .transform.Find("StashScrollView")?
-                    .transform.Find("decoration");
+                    .transform.Find("Inventory/Stash/StashContainer/StashScrollView/decoration");
                 var image = decoration?.GetComponent<UnityEngine.UI.Image>();
                 if (image != null) {
                     image.color = ColoredLootBackgroundColor;
@@ -144,9 +140,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(LootCollectorPCView __instance) {
                 if (!settings.toggleColorLootByRarity) return;
                 var image = __instance.gameObject?
-                    .transform.Find("Collector") ?
-                    .transform.Find("StashScrollView") ?
-                    .transform.Find("Decoration")?
+                    .transform.Find("Collector/StashScrollView/Decoration")?
                     .GetComponent<UnityEngine.UI.Image>();
                 image.color = ColoredLootBackgroundColor;
 
@@ -157,34 +151,33 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(VendorPCView __instance) {
                 if (!settings.toggleColorLootByRarity) return;
                 var vendorImage = __instance.gameObject?
-                    .transform.Find("MainContent")?
-                    .transform.Find("VendorBlock")?
-                    .transform.Find("VendorStashScrollView")?
-                    .transform.Find("decoration")?
+                    .transform.Find("MainContent/VendorBlock/VendorStashScrollView/decoration")?
                     .GetComponent<UnityEngine.UI.Image>();
                 vendorImage.color = ColoredLootBackgroundColor;
                 var playerImage = __instance.gameObject?
-                    .transform.Find("MainContent")?
-                    .transform.Find("PlayerStash")?
-                    .transform.Find("StashScrollView")?
-                    .transform.Find("decoration")?
+                    .transform.Find("MainContent/PlayerStash/StashScrollView/decoration")?
                     .GetComponent<UnityEngine.UI.Image>();
                 playerImage.color = ColoredLootBackgroundColor;
             }
         }
-    }
-}
-#if false
-
-            [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
+        [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
         private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
             public static void Postfix(TooltipBrickEntityHeaderView __instance) {
-                //__instance.m_MainTitle.text = "hi";
+                if (!settings.toggleColorLootByRarity) return;
+                var image = __instance.gameObject?
+                    .transform.Find("TextBlock/Back/ItemBackContainer")?
+                    .GetComponent<UnityEngine.UI.Image>();
+                image.color = ColoredLootBackgroundColor;
+
+#if false
                 __instance.m_MainTitle.color = (Color32)Color.green;
                 __instance.m_MainTitle.overrideColorTags = true;
                 __instance.m_MainTitle.outlineColor = (Color32)Color.magenta;
                 __instance.m_MainTitle.outlineWidth = 5;
+#endif
             }
 
         }
-#endif
+    }
+}
+
