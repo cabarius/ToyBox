@@ -18,7 +18,7 @@ namespace ModKit {
         public static bool SelectionGrid(ref int selected, string[] texts, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0)
                 xCols = texts.Count();
-            if (UI.IsNarrow)
+            if (IsNarrow)
                 xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
@@ -28,16 +28,16 @@ namespace ModKit {
             return sel != selected;
         }
         public static bool SelectionGrid(string title, ref int selected, string[] texts, int xCols, params GUILayoutOption[] options) {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-                return UI.SelectionGrid(ref selected, texts, xCols, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+                return SelectionGrid(ref selected, texts, xCols, options);
             }
         }
         public static bool SelectionGrid(ref int selected, string[] texts, int xCols, GUIStyle style, params GUILayoutOption[] options) {
             if (xCols <= 0)
                 xCols = texts.Count();
-            if (UI.IsNarrow)
+            if (IsNarrow)
                 xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
@@ -49,7 +49,7 @@ namespace ModKit {
         public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, params GUILayoutOption[] options) {
             if (xCols <= 0)
                 xCols = items.Count();
-            if (UI.IsNarrow)
+            if (IsNarrow)
                 xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
@@ -61,7 +61,7 @@ namespace ModKit {
         public static bool SelectionGrid<T>(ref int selected, T[] items, int xCols, GUIStyle style, params GUILayoutOption[] options) {
             if (xCols <= 0)
                 xCols = items.Count();
-            if (UI.IsNarrow)
+            if (IsNarrow)
                 xCols = Math.Min(4, xCols);
             int sel = selected;
             var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
@@ -96,7 +96,7 @@ namespace ModKit {
             var value = get();
             var names = Enum.GetNames(typeof(TEnum));
             int index = Array.IndexOf(names, value.ToString());
-            if (UI.SelectionGrid(ref index, names, xCols, options)) {
+            if (SelectionGrid(ref index, names, xCols, options)) {
                 if (Enum.TryParse(names[index], out TEnum newValue)) {
                     set(newValue);
                 }
@@ -110,7 +110,7 @@ namespace ModKit {
                 formatedNames = names.Select((n) => titleFormater(n, nameToEnum[n])).ToArray();
             int index = Array.IndexOf(names, value.ToString());
             var oldIndex = index;
-            if (style == null ? UI.SelectionGrid(ref index, formatedNames, xCols, options) : UI.SelectionGrid(ref index, formatedNames, xCols, style, options)) {
+            if (style == null ? SelectionGrid(ref index, formatedNames, xCols, options) : SelectionGrid(ref index, formatedNames, xCols, style, options)) {
                 if (Enum.TryParse(names[index], out TEnum newValue)) {
                     value = newValue;
                 }
@@ -124,40 +124,40 @@ namespace ModKit {
             EnumGrid(ref value, xCols, null, options);
         }
         public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-                UI.EnumGrid<TEnum>(ref value, xCols, null, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+                EnumGrid(ref value, xCols, null, options);
             }
         }
         public static void EnumGrid<TEnum>(string title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-                UI.EnumGrid<TEnum>(ref value, 0, null, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+                EnumGrid(ref value, 0, null, options);
             }
         }
 
         public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-                UI.EnumGrid<TEnum>(ref value, xCols, null, style, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+                EnumGrid(ref value, xCols, null, style, options);
             }
         }
 
         public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-                UI.EnumGrid<TEnum>(ref value, xCols, titleFormater, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+                EnumGrid(ref value, xCols, titleFormater, options);
             }
         }
         public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(25);
-                UI.EnumGrid<TEnum>(ref value, xCols, titleFormater, style, options);
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                Space(25);
+                EnumGrid(ref value, xCols, titleFormater, style, options);
             }
         }
         public static void EnumerablePicker<T>(
@@ -178,8 +178,8 @@ namespace ModKit {
                 xCols = range.Count();
             if (xCols <= 0)
                 xCols = range.Count();
-            UI.Label(title, UI.AutoWidth());
-            UI.Space(25);
+            Label(title, AutoWidth());
+            Space(25);
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
         public static NamedFunc<T> TypePicker<T>(string title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {

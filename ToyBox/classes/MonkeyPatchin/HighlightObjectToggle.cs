@@ -76,21 +76,21 @@ namespace ToyBox.classes.MonkeyPatchin {
     }
 
     [HarmonyPatch(typeof(MapObjectView), "UpdateHighlight")]
-    class HighlightHiddenObjects {
-        static string ObjName = "ToyBox.HiddenHighlighter";
-        static string DecalName = "ToyBox.DecalHiddenHighlighter";
-        static Color HighlightColor0 = new Color(1.0f, 0.0f, 1.0f, 0.8f);
-        static Color HighlightColor1 = new Color(0.0f, 0.0f, 1.0f, 1.0f);
+    internal class HighlightHiddenObjects {
+        private static readonly string ObjName = "ToyBox.HiddenHighlighter";
+        private static readonly string DecalName = "ToyBox.DecalHiddenHighlighter";
+        private static Color HighlightColor0 = new(1.0f, 0.0f, 1.0f, 0.8f);
+        private static Color HighlightColor1 = new(0.0f, 0.0f, 1.0f, 1.0f);
 
-        static void Postfix(MapObjectView __instance) {
-            MapObjectEntityData data = __instance.Data;
+        private static void Postfix(MapObjectView __instance) {
+            var data = __instance.Data;
             if(data == null) return;
 
-            PerceptionCheckComponent pcc = __instance.GetComponent<PerceptionCheckComponent>();
+            var pcc = __instance.GetComponent<PerceptionCheckComponent>();
 
             if (!data.IsPerceptionCheckPassed && pcc != null) {
-                bool? is_highlighting = Game.Instance?.InteractionHighlightController?.IsHighlighting;
-                bool should_highlight = (is_highlighting ?? false) && Main.settings.highlightHiddenObjects;
+                var is_highlighting = Game.Instance?.InteractionHighlightController?.IsHighlighting;
+                var should_highlight = (is_highlighting ?? false) && Main.settings.highlightHiddenObjects;
 
                 if (!Main.settings.highlightHiddenObjectsInFog && data.IsInFogOfWar) {
                     should_highlight = false;
@@ -106,79 +106,79 @@ namespace ToyBox.classes.MonkeyPatchin {
             }
         }
 
-        static void HighlightCreate(MapObjectView view) {
+        private static void HighlightCreate(MapObjectView view) {
             if (view.transform.Find(ObjName)) return;
-            GameObject obj = new GameObject(ObjName);
+            var obj = new GameObject(ObjName);
             Main.Objects.Add(obj);
             obj.transform.parent = view.transform;
-            Highlighter highlighter = obj.AddComponent<Highlighter>();
+            var highlighter = obj.AddComponent<Highlighter>();
 
-            foreach (ScriptZonePolygon polygon in view.transform.GetComponentsInChildren<ScriptZonePolygon>()) {
-                MeshFilter mesh = polygon.DecalMeshObject;
+            foreach (var polygon in view.transform.GetComponentsInChildren<ScriptZonePolygon>()) {
+                var mesh = polygon.DecalMeshObject;
                 if (mesh == null) continue;
 
-                MeshRenderer renderer = mesh.GetComponent<MeshRenderer>();
+                var renderer = mesh.GetComponent<MeshRenderer>();
                 if (renderer == null) continue;
 
-                GameObject decal = GameObject.Instantiate(renderer.gameObject, renderer.transform.parent);
+                var decal = UnityEngine.Object.Instantiate(renderer.gameObject, renderer.transform.parent);
                 decal.name = DecalName;
                 Main.Objects.Add(decal);
 
-                MeshRenderer decal_renderer = decal.GetComponent<MeshRenderer>();
+                var decal_renderer = decal.GetComponent<MeshRenderer>();
                 decal_renderer.enabled = false;
                 decal_renderer.forceRenderingOff = true;
             }
 
-            foreach (Renderer renderer in view.transform.GetComponentsInChildren<Renderer>()) {
+            foreach (var renderer in view.transform.GetComponentsInChildren<Renderer>()) {
                 highlighter.AddExtraRenderer(renderer);
             }
         }
 
-        static void HighlightDestroy(MapObjectView view) {
-            GameObject decal = view?.transform?.Find(DecalName)?.gameObject;
+        private static void HighlightDestroy(MapObjectView view) {
+            var decal = view?.transform?.Find(DecalName)?.gameObject;
             if (decal != null) {
-                GameObject.Destroy(decal);
+                UnityEngine.Object.Destroy(decal);
             }
 
-            GameObject obj = view?.transform?.Find(ObjName)?.gameObject;
+            var obj = view?.transform?.Find(ObjName)?.gameObject;
             if (obj != null) {
-                GameObject.Destroy(obj);
+                UnityEngine.Object.Destroy(obj);
             }
         }
 
-        static void HighlightOn(MapObjectView view) {
-            GameObject obj = view.transform.Find(ObjName)?.gameObject;
+        private static void HighlightOn(MapObjectView view) {
+            var obj = view.transform.Find(ObjName)?.gameObject;
             if (obj == null) {
                 HighlightCreate(view);
                 obj = view.transform.Find(ObjName)?.gameObject;
             }
 
-            Highlighter highlighter = obj.GetComponent<Highlighter>();
+            var highlighter = obj.GetComponent<Highlighter>();
             if (highlighter != null) {
                 highlighter.ConstantOnImmediate(HighlightColor0);
                 highlighter.FlashingOn(HighlightColor0, HighlightColor1, 1.0f);
 
-                GameObject decal = view?.transform?.Find(DecalName)?.gameObject;
+                var decal = view?.transform?.Find(DecalName)?.gameObject;
                 if (decal == null) return;
-                MeshRenderer renderer = decal.GetComponent<MeshRenderer>();
+                var renderer = decal.GetComponent<MeshRenderer>();
                 if (renderer == null) return;
                 renderer.enabled = true;
                 renderer.forceRenderingOff = true;
             }
         }
 
-        static void HighlightOff(MapObjectView view) {
-            GameObject obj = view.transform.Find(ObjName)?.gameObject;
+        private static void HighlightOff(MapObjectView view) {
+            var obj = view.transform.Find(ObjName)?.gameObject;
             if (obj == null) return;
 
-            Highlighter highlighter = obj.GetComponent<Highlighter>();
+            var highlighter = obj.GetComponent<Highlighter>();
             if (highlighter != null) {
                 highlighter.ConstantOff(0.0f);
                 highlighter.FlashingOff();
 
-                GameObject decal = view?.transform?.Find(DecalName)?.gameObject;
+                var decal = view?.transform?.Find(DecalName)?.gameObject;
                 if (decal == null) return;
-                MeshRenderer renderer = decal.GetComponent<MeshRenderer>();
+                var renderer = decal.GetComponent<MeshRenderer>();
                 if (renderer == null) return;
                 renderer.enabled = false;
                 renderer.forceRenderingOff = true;

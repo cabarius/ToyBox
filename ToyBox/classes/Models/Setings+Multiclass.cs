@@ -49,7 +49,7 @@ namespace ToyBox {
 
         public ArchetypeOptions ArchetypeOptions(BlueprintCharacterClass cl) => this.GetValueOrDefault(cl.HashKey(), new ArchetypeOptions());
         public void SetArchetypeOptions(BlueprintCharacterClass cl, ArchetypeOptions archOptions) => this[cl.HashKey()] = archOptions;
-        public bool Contains(BlueprintCharacterClass cl) => base.ContainsKey(cl.HashKey());
+        public bool Contains(BlueprintCharacterClass cl) => ContainsKey(cl.HashKey());
         public void Add(BlueprintCharacterClass cl) => Add(cl.HashKey(), new ArchetypeOptions());
         public void Remove(BlueprintCharacterClass cl) => Remove(cl.HashKey());
         public override string ToString() {

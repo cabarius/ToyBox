@@ -15,8 +15,8 @@ namespace ModKit {
         public class View : IDisposable {
             public View background { get; set; } = null;
             public Color color { get; set; } = Color.clear;
-            public float height { get; set; } = ui.Size.Automatic;
-            public float width { get; set; } = ui.Size.Automatic;
+            public float height { get; set; } = Size.Automatic;
+            public float width { get; set; } = Size.Automatic;
             public RectOffset padding { get; set; } = new RectOffset();
             public void Dispose() => throw new NotImplementedException();
             public static explicit operator View(Color c) => new() { color = c };

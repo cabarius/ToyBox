@@ -11,8 +11,8 @@ using System.IO;
 namespace ToyBox {
     public static class SmartConsoleCommands {
         public static void Register() {
-            SmartConsole.RegisterCommand("beep", "", "Plays the 'beep' system sound.", new SmartConsole.ConsoleCommandFunction(SmartConsoleCommands.Beep));
-            SmartConsole.RegisterCommand("bat", "bat fileName", "Executes commands from a file in the Bag of Tricks folder.", new SmartConsole.ConsoleCommandFunction(SmartConsoleCommands.CommandBatch));
+            SmartConsole.RegisterCommand("beep", "", "Plays the 'beep' system sound.", new SmartConsole.ConsoleCommandFunction(Beep));
+            SmartConsole.RegisterCommand("bat", "bat fileName", "Executes commands from a file in the Bag of Tricks folder.", new SmartConsole.ConsoleCommandFunction(CommandBatch));
 
         }
 

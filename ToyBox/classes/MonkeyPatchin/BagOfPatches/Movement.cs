@@ -112,7 +112,7 @@ namespace ToyBox.BagOfPatches {
                 IGlobalMapTraveler traveler,
                 ref float visualStepDistance) {
                 // TODO - can we get rid of the other map movement multipliers and do them all here?
-                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
+                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == ArmyFaction.Crusaders) {
                     var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                     visualStepDistance = speedMultiplier * visualStepDistance;
                 }
@@ -122,7 +122,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GlobalMapArmyState), "SpendMovementPoints", new Type[] { typeof(float) })]
         public static class GlobalMapArmyState_SpendMovementPoints_Patch {
             public static void Prefix(GlobalMapArmyState __instance, ref float points) {
-                if (__instance.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
+                if (__instance.Data.Faction == ArmyFaction.Crusaders) {
                     var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                     points /= speedMultiplier;
                 }

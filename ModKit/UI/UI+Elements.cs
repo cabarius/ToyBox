@@ -85,9 +85,9 @@ namespace ModKit {
                 divStyle.fixedWidth = width;
             else
                 divStyle.fixedWidth = 0;
-            UI.Space((2f * height) / 3f);
+            Space((2f * height) / 3f);
             GUILayout.Box(GUIContent.none, divStyle);
-            UI.Space(height / 3f);
+            Space(height / 3f);
         }
 
         public static void Div(float indent = 0, float height = 0, float width = 0) {
@@ -96,10 +96,10 @@ namespace ModKit {
 
         public static void Wrap(bool condition, float indent = 0, float space = 10) {
             if (condition) {
-                UI.EndHorizontal();
-                UI.Space(space);
-                UI.BeginHorizontal();
-                UI.Space(indent);
+                EndHorizontal();
+                Space(space);
+                BeginHorizontal();
+                Space(indent);
             }
         }
     }

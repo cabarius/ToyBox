@@ -28,7 +28,7 @@ using TMPro;
 
 namespace ToyBox {
     internal class PreviewManager {
-        private static GameDialogsSettings DialogSettings => Kingmaker.Settings.SettingsRoot.Game.Dialogs;
+        private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
         public static KingdomStats.Changes CalculateEventResult(KingdomEvent kingdomEvent, EventResult.MarginType margin, AlignmentMaskType alignment, LeaderType leaderType) {
             var checkMargin = EventResult.MarginToInt(margin);
             var result = new KingdomStats.Changes();

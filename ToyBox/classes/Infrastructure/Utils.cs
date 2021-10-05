@@ -27,7 +27,7 @@ namespace ToyBox {
 
         public static void SaveToFile<T>(this T obj, string filename = null) {
             if (filename == null) filename = $"{obj.GetType().Name}.json";
-            var toyboxFolder = Utils.ToyBoxUserPath;
+            var toyboxFolder = ToyBoxUserPath;
             Directory.CreateDirectory(toyboxFolder);
             var filePath = Path.Combine(toyboxFolder, filename);
             File.WriteAllText(filePath, JsonConvert.SerializeObject(obj, Formatting.Indented));
@@ -36,7 +36,7 @@ namespace ToyBox {
             T obj = default;
             if (filename == null) filename = $"{obj.GetType().Name}.json";
 
-            var toyboxFolder = Utils.ToyBoxUserPath;
+            var toyboxFolder = ToyBoxUserPath;
             Directory.CreateDirectory(toyboxFolder);
             var filePath = Path.Combine(toyboxFolder, filename);
             try {
@@ -51,10 +51,10 @@ namespace ToyBox {
         }
         public static void Export(this List<ItemEntity> items, string filename) {
             var bps = items.Select(i => i.Blueprint).ToList();
-            Utils.SaveToFile(bps, filename);
+            SaveToFile(bps, filename);
         }
         public static void Import(this ItemsCollection items, string filename, bool replace = false) {
-            var bps = Utils.LoadFromFile<List<BlueprintItem>>(filename);
+            var bps = LoadFromFile<List<BlueprintItem>>(filename);
             if (bps != null) {
                 if (replace) {
                     var doomed = items.Items.Where<ItemEntity>((x => x.HoldingSlot == null)).ToTempList<ItemEntity>();

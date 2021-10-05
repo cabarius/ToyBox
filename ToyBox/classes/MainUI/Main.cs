@@ -53,8 +53,8 @@ namespace ToyBox {
 #endif
                 modId = modEntry.Info.Id;
 
-                ModKit.Mod.OnLoad(modEntry);
-                settings = Settings.Load<Settings>(modEntry);
+                Mod.OnLoad(modEntry);
+                settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
@@ -78,8 +78,8 @@ namespace ToyBox {
         }
 #if DEBUG
         private static bool Unload(UnityModManager.ModEntry modEntry) {
-            foreach (GameObject obj in Objects) {
-                GameObject.DestroyImmediate(obj);
+            foreach (var obj in Objects) {
+                UnityEngine.Object.DestroyImmediate(obj);
             }
             HarmonyInstance.UnpatchAll(modId);
             NeedsActionInit = true;
@@ -94,7 +94,7 @@ namespace ToyBox {
         private static void ResetSearch() => BlueprintBrowser.ResetSearch();
 
         private static void ResetGUI(UnityModManager.ModEntry modEntry) {
-            settings = Settings.Load<Settings>(modEntry);
+            settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
             settings.searchText = "";
             settings.searchLimit = 100;
             BagOfTricks.ResetGUI();
@@ -206,7 +206,7 @@ namespace ToyBox {
             var currentMode = Game.Instance.CurrentMode;
             if (IsModGUIShown || Event.current == null || !Event.current.isKey) return;
             UI.KeyBindings.OnUpdate();
-            if (Main.IsInGame
+            if (IsInGame
                 && settings.toggleTeleportKeysEnabled
                 && (currentMode == GameModeType.Default
                     || currentMode == GameModeType.Pause

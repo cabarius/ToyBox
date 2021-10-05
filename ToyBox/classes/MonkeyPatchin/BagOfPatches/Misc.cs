@@ -132,10 +132,10 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 var type = unitEntityData.Blueprint.Type;
-                var isASpider = SpidersBegone.IsSpiderType(type?.AssetGuidThreadSafe);
-                var isASpiderSwarm = SpidersBegone.IsSpiderSwarmType(type?.AssetGuidThreadSafe);
-                var isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
-                var isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
+                var isASpiderSwarm = IsSpiderSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherSpiderUnit = IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
                 }
@@ -146,10 +146,10 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
                 var type = blueprintUnit.Type;
-                var isASpider = SpidersBegone.IsSpiderType(type?.AssetGuidThreadSafe);
-                var isASpiderSwarm = SpidersBegone.IsSpiderSwarmType(type?.AssetGuidThreadSafe);
-                var isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
-                var isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
+                var isASpiderSwarm = IsSpiderSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherSpiderUnit = IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
                 }
@@ -162,8 +162,8 @@ namespace ToyBox.BagOfPatches {
 
             private static bool IsSpiderSwarmType(string typeGuid) => typeGuid == spiderSwarmTypeGUID;
 
-            private static bool IsSpiderBlueprintUnit(string blueprintUnitGuid) => SpidersBegone.spiderGuids.Contains(blueprintUnitGuid);
-            private static bool IsSpiderSwarmBlueprintUnit(string blueprintUnitGuid) => SpidersBegone.spiderSwarmGuids.Contains(blueprintUnitGuid);
+            private static bool IsSpiderBlueprintUnit(string blueprintUnitGuid) => spiderGuids.Contains(blueprintUnitGuid);
+            private static bool IsSpiderSwarmBlueprintUnit(string blueprintUnitGuid) => spiderSwarmGuids.Contains(blueprintUnitGuid);
 
             private const string spiderTypeGUID = "243702bdc53e2574aaa34d1e3eafe6aa";
             private const string spiderSwarmTypeGUID = "0fd1473096fbdda4db770cca8366c5e1";
@@ -217,13 +217,13 @@ namespace ToyBox.BagOfPatches {
         internal static class VescavorsBegone 
         {
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
-                BlueprintUnitType type = unitEntityData.Blueprint.Type;
-                bool isAVescavorGuard = VescavorsBegone.IsVescavorGuardType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isAVescavorQueen = VescavorsBegone.IsVescavorQueenType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isAVescavorSwarm = VescavorsBegone.IsVescavorSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isOtherVescavorGuardUnit = VescavorsBegone.IsVescavorGuardBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
-                bool isOtherVescavorQueenUnit = VescavorsBegone.IsVescavorQueenBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
-                bool isOtherVescavorSwarmUnit = VescavorsBegone.IsVescavorSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var type = unitEntityData.Blueprint.Type;
+                var isAVescavorGuard = IsVescavorGuardType(type?.AssetGuidThreadSafe);
+                var isAVescavorQueen = IsVescavorQueenType(type?.AssetGuidThreadSafe);
+                var isAVescavorSwarm = IsVescavorSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherVescavorGuardUnit = IsVescavorGuardBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isOtherVescavorQueenUnit = IsVescavorQueenBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isOtherVescavorSwarmUnit = IsVescavorSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 if (isAVescavorGuard || isOtherVescavorGuardUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
                 }
@@ -236,13 +236,13 @@ namespace ToyBox.BagOfPatches {
             }
 
             public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
-                BlueprintUnitType type = blueprintUnit.Type;
-                bool isAVescavorGuard = VescavorsBegone.IsVescavorGuardType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isAVescavorQueen = VescavorsBegone.IsVescavorQueenType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isAVescavorSwarm = VescavorsBegone.IsVescavorSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isOtherVescavorGuardUnit = VescavorsBegone.IsVescavorGuardBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
-                bool isOtherVescavorQueenUnit = VescavorsBegone.IsVescavorQueenBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
-                bool isOtherVescavorSwarmUnit = VescavorsBegone.IsVescavorSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var type = blueprintUnit.Type;
+                var isAVescavorGuard = IsVescavorGuardType(type?.AssetGuidThreadSafe);
+                var isAVescavorQueen = IsVescavorQueenType(type?.AssetGuidThreadSafe);
+                var isAVescavorSwarm = IsVescavorSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherVescavorGuardUnit = IsVescavorGuardBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isOtherVescavorQueenUnit = IsVescavorQueenBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isOtherVescavorSwarmUnit = IsVescavorSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 if (isAVescavorGuard || isOtherVescavorGuardUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
                 }
@@ -254,27 +254,15 @@ namespace ToyBox.BagOfPatches {
                 }
             }
 
-            private static bool IsVescavorGuardType(string typeGuid) {
-                return typeGuid == VescavorGuardTypeGUID;
-            }
+            private static bool IsVescavorGuardType(string typeGuid) => typeGuid == VescavorGuardTypeGUID;
 
-            private static bool IsVescavorQueenType(string typeGuid) {
-                return typeGuid == VescavorQueenTypeGUID;
-            }
+            private static bool IsVescavorQueenType(string typeGuid) => typeGuid == VescavorQueenTypeGUID;
 
-            private static bool IsVescavorSwarmType(string typeGuid) {
-                return typeGuid == VescavorSwarmTypeGUID;
-            }
+            private static bool IsVescavorSwarmType(string typeGuid) => typeGuid == VescavorSwarmTypeGUID;
 
-            private static bool IsVescavorGuardBlueprintUnit(string blueprintUnitGuid) {
-                return VescavorsBegone.VescavorGuardGuids.Contains(blueprintUnitGuid);
-            }
-            private static bool IsVescavorQueenBlueprintUnit(string blueprintUnitGuid) {
-                return VescavorsBegone.VescavorQueenGuids.Contains(blueprintUnitGuid);
-            }
-            private static bool IsVescavorSwarmBlueprintUnit(string blueprintUnitGuid) {
-                return VescavorsBegone.VescavorSwarmGuids.Contains(blueprintUnitGuid);
-            }
+            private static bool IsVescavorGuardBlueprintUnit(string blueprintUnitGuid) => VescavorGuardGuids.Contains(blueprintUnitGuid);
+            private static bool IsVescavorQueenBlueprintUnit(string blueprintUnitGuid) => VescavorQueenGuids.Contains(blueprintUnitGuid);
+            private static bool IsVescavorSwarmBlueprintUnit(string blueprintUnitGuid) => VescavorSwarmGuids.Contains(blueprintUnitGuid);
 
             private const string VescavorGuardTypeGUID = "6cc8fb5ba241e9340adfb908b5d0ef85";
             private const string VescavorQueenTypeGUID = "c73d6ef065a177c4d89b251000192025";

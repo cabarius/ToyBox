@@ -5,7 +5,7 @@ namespace ModKit.Utility {
         private static void SafeDestroyInternal(GameObject obj) {
             obj.transform.SetParent(null, false);
             obj.SetActive(false);
-            UnityEngine.Object.Destroy(obj);
+            Object.Destroy(obj);
         }
 
         public static void SafeDestroy(this GameObject obj) {

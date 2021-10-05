@@ -138,7 +138,7 @@ namespace ToyBox {
 
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 UnityModManager.UI.Instance.ToggleWindow();
-                EventBus.RaiseEvent<IGroupChangerHandler>((Action<IGroupChangerHandler>)(h => h.HandleCall(new Action(Actions.HandleChangeParty), (Action)null, true)));
+                EventBus.RaiseEvent<IGroupChangerHandler>((Action<IGroupChangerHandler>)(h => h.HandleCall(new Action(HandleChangeParty), (Action)null, true)));
             }
         }
         public static void IdentifyAll() {
@@ -355,10 +355,10 @@ namespace ToyBox {
 
         // called when changing highlight settings so they take immediate effect
         public static void UpdateHighlights(bool on) {
-            foreach (MapObjectEntityData mapObjectEntityData in Game.Instance.State.MapObjects) {
+            foreach (var mapObjectEntityData in Game.Instance.State.MapObjects) {
                 mapObjectEntityData.View.UpdateHighlight();
             }
-            foreach (UnitEntityData unitEntityData in Game.Instance.State.Units) {
+            foreach (var unitEntityData in Game.Instance.State.Units) {
                 unitEntityData.View.UpdateHighlight(false);
             }
         }

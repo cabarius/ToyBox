@@ -8,7 +8,7 @@ namespace ModKit {
         private static GUIStyle linkStyle = null;
 
         public static bool LinkButton(string title, string url, Action action = null, params GUILayoutOption[] options) {
-            if (options.Length == 0) { options = new GUILayoutOption[] { UI.AutoWidth() }; }
+            if (options.Length == 0) { options = new GUILayoutOption[] { AutoWidth() }; }
             if (linkStyle == null) {
                 linkStyle = new GUIStyle(GUI.skin.label) {
                     wordWrap = false
@@ -20,7 +20,7 @@ namespace ModKit {
             }
             var result = GL.Button(title, linkStyle, options);
             var rect = GUILayoutUtility.GetLastRect();
-            UI.Div(linkStyle.normal.textColor, 4, 0, rect.width);
+            Div(linkStyle.normal.textColor, 4, 0, rect.width);
             if (result) {
                 Application.OpenURL(url);
                 action?.Invoke();

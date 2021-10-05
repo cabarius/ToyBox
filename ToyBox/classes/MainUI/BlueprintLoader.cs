@@ -19,7 +19,7 @@ namespace ToyBox {
             get {
                 if (_shared == null) {
                     _shared = new GameObject().AddComponent<BlueprintLoader>();
-                    UnityEngine.Object.DontDestroyOnLoad(_shared.gameObject);
+                    DontDestroyOnLoad(_shared.gameObject);
                 }
                 return _shared;
             }

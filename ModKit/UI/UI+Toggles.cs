@@ -34,12 +34,12 @@ namespace ModKit {
             ) {
             bool changed = false;
             if (width == 0 && !disclosureStyle) {
-                width = UI.toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
+                width = toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
             }
-            options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
+            options = options.AddItem(width == 0 ? AutoWidth() : Width(width)).ToArray();
             if (!disclosureStyle) {
                 title = value ? title.bold() : title.color(RGBA.medgrey).bold();
-                if (Private.UI.CheckBox(title, value, UI.toggleStyle, options)) { value = !value; changed = true; }
+                if (Private.UI.CheckBox(title, value, toggleStyle, options)) { value = !value; changed = true; }
             }
             else {
                 if (Private.UI.DisclosureToggle(title, value, isEmpty, options)) { value = !value; changed = true; }
@@ -49,7 +49,7 @@ namespace ModKit {
         public static void ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
             bool state = toggle.IsOn();
             bool isEmpty = toggle == ToggleState.None;
-            if (UI.TogglePrivate(title, ref state, isEmpty, true, 0, options))
+            if (TogglePrivate(title, ref state, isEmpty, true, 0, options))
                 toggle = toggle.Flip();
         }
         public static bool Toggle(string title, ref bool value, string on, string off, float width = 0, GUIStyle stateStyle = null, GUIStyle labelStyle = null, params GUILayoutOption[] options) {
@@ -59,9 +59,9 @@ namespace ModKit {
             if (labelStyle == null)
                 labelStyle = GUI.skin.box;
             if (width == 0) {
-                width = UI.toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
+                width = toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
             }
-            options = options.AddItem(width == 0 ? UI.AutoWidth() : UI.Width(width)).ToArray();
+            options = options.AddItem(width == 0 ? AutoWidth() : Width(width)).ToArray();
             title = value ? title.bold() : title.color(RGBA.medgrey).bold();
             if (Private.UI.Toggle(title, value, on, off, stateStyle, labelStyle, options)) { value = !value; changed = true; }
             return changed;
@@ -115,8 +115,8 @@ namespace ModKit {
             return bit != newBit;
         }
         public static bool DisclosureToggle(string title, ref bool value, float width = 175, params Action[] actions) {
-            bool changed = UI.TogglePrivate(title, ref value, false, true, width);
-            UI.If(value, actions);
+            bool changed = TogglePrivate(title, ref value, false, true, width);
+            If(value, actions);
             return changed;
         }
         public static bool DisclosureBitFieldToggle(string title, ref int bitfield, int offset, bool exclusive = true, float width = 175, params Action[] actions) {
@@ -131,7 +131,7 @@ namespace ModKit {
                     bitfield ^= (1 << offset);
                 }
             }
-            UI.If(newBit, actions);
+            If(newBit, actions);
             return bit != newBit;
         }
 
