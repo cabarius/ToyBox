@@ -46,6 +46,8 @@
   * Fixed bug where it was displaying the Exp required for the current rank rather than the next rank
 * **General Fixes**
   * (***ArcaneTrixter***) Made spell learning for spontaneous casters less buggy. Is currently tied to game load and level up, so if you're having issues with spells known try reloading.
+  * (***ArcaneTrixter***) Made it so you shouldn't be able to gestalt all non-mythic classes and become a level 0 character.
+  * (***ArcaneTrixter***) Fixed forced progressions such as Azata Life-Bonding friendship in cases where you aren't using the feat multiplier.
 
 ### Ver 1.3.18
 * **Key Bindings** - now shows conflicting keyBinds
