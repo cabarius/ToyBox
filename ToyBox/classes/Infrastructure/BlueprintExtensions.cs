@@ -13,6 +13,8 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using System.Runtime.CompilerServices;
 using ModKit;
+using Kingmaker.Blueprints.Items.Weapons;
+using HarmonyLib;
 
 namespace ToyBox {
 
@@ -64,6 +66,20 @@ namespace ToyBox {
             if (bp.IsGlobalMap) return $"GlobalMap";
             if (bp.IsIndoor) return "Indoor";
             return typeName;
+        }
+
+        public static IEnumerable<string> Modifiers(this SimpleBlueprint bp) {
+            List<string> modifers = new();
+            var traverse = Traverse.Create(bp);
+            foreach (var property in Traverse.Create(bp).Properties()) {
+                if (property.StartsWith("Is")) {
+                    var value = traverse.Property<bool>(property)?.Value;
+                    if (value.HasValue && value.GetValueOrDefault() ) {
+                        modifers.Add(property.ToLower().Substring(2));
+                    }
+                }
+            }
+            return modifers;
         }
 
         private static readonly Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new();

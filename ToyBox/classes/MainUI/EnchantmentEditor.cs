@@ -1,5 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
@@ -121,7 +122,28 @@ namespace ToyBox.classes.MainUI {
                         using (UI.HorizontalScope(GUI.skin.box, UI.MinHeight(125))) {
                             var rarity = item.Rarity();
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
-                            UI.Label(item.Name.bold(), UI.Width(400));
+                            UI.Space(25);
+                            using (UI.VerticalScope(UI.Width(400))) {
+                                UI.Label(item.Name.bold(), UI.Width(400));
+                                var bp = item.Blueprint;
+                                using (UI.HorizontalScope()) {
+                                    var modifers = bp.Modifiers();
+                                    if (item.IsEpic) modifers = modifers.Prepend("epic ");
+                                    UI.Label(string.Join(" ", modifers).cyan(), UI.AutoWidth());
+                                    //if (bp is BlueprintItemWeapon bpW) {
+                                    //    if (bpW.IsMagic) UI.Label("magic ".cyan(), UI.AutoWidth());
+                                    //    if (bpW.IsNotable) UI.Label("notable ".Rarity(RarityType.Notable), UI.AutoWidth());
+                                    //    if (bpW.IsNatural) UI.Label("natural ".grey(), UI.AutoWidth());
+                                    //    if (bpW.IsMelee) UI.Label("melee ".grey(), UI.AutoWidth());
+                                    //    if (bpW.IsRanged) UI.Label("ranged ".grey(), UI.AutoWidth());
+                                    //}
+                                    //if (bp is BlueprintItemArmor bpA) {
+                                    //    if (bpA.IsMagic) UI.Label("magic ".cyan(), UI.AutoWidth());
+                                    //    if (bpA.IsNotable) UI.Label("notable ".Rarity(RarityType.Notable), UI.AutoWidth());
+                                    //    if (bpA.IsShield) UI.Label("shield ".grey(), UI.AutoWidth());
+                                    //}
+                                }
+                            }
                             UI.Space(25);
                             if (item is ItemEntityShield shield) {
                                 using (UI.VerticalScope()) {
