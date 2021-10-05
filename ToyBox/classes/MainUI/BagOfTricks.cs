@@ -227,6 +227,15 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Cheats", 1,
                 () => {
+                    using (HorizontalScope()) {
+                        ToggleCallback("Highlight Hidden Objects", ref settings.highlightHiddenObjects, Actions.UpdateHighlights);
+                        if (settings.highlightHiddenObjects) {
+                            Space(100);
+                            ToggleCallback("In Fog Of War ", ref settings.highlightHiddenObjectsInFog, Actions.UpdateHighlights);
+                        }
+                    }
+                },
+                () => {
                     Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0);
                     if (settings.toggleTeleportKeysEnabled) {
                         Space(100);
@@ -275,15 +284,6 @@ namespace ToyBox {
                 () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
                 () => Toggle("Remove Level 20 Caster Level Cap", ref settings.toggleUncappedCasterLevel),
-                () => {
-                    using (HorizontalScope()) {
-                        ToggleCallback("Highlight Hidden Objects", ref settings.highlightHiddenObjects, Actions.UpdateHighlights);
-                        if (settings.highlightHiddenObjects) {
-                            Space(100);
-                            ToggleCallback("In Fog Of War ", ref settings.highlightHiddenObjectsInFog, Actions.UpdateHighlights);
-                        }
-                    }
-                },
                 () => { }
                 );
             Div(153, 25);

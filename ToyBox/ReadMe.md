@@ -18,6 +18,7 @@
   * You can now enable Developer Mode which enables the developer console which you can access by hitting tilde `
   * (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
   * (***ShadowRanger***) Added a vescavors-begone option, similar to spiders-begone, to replace all vescavor models 
+  * (***Mafemergency***)* Tweak to highlight hidden interactable objects
 * **Loot Coloring** - Improved legibility of colored loot in various loot views
 * **Loot Checklist**  - Containers and Units now sort with higest rarity loot at the top
 * **Multiple Classes Per Level Up** - added safey check where if all classes are gestalt (can happen if you set your original class gestalt and the load a save from before you gained your new main class) then we treat the first one as non gestalt

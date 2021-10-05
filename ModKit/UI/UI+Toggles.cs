@@ -46,7 +46,9 @@ namespace ModKit {
             }
             return changed;
         }
+#pragma warning disable IDE0060 // Remove unused parameter
         public static void ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
+#pragma warning restore IDE0060 // Remove unused parameter
             bool state = toggle.IsOn();
             bool isEmpty = toggle == ToggleState.None;
             if (TogglePrivate(title, ref state, isEmpty, true, 0, options))
