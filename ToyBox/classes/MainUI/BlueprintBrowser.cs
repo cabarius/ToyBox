@@ -344,9 +344,7 @@ namespace ToyBox {
                         if (selectedCollationIndex > 0) {
                             if (collationChanged) {
                                 var key = collationKeys.ElementAt(selectedCollationIndex);
-
                                 var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-
                                 foreach (var group in collatedBPs) {
                                     if (group.Key == selectedKey) {
                                         matchCount = group.Count();
