@@ -6,23 +6,21 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Designers.Mechanics.Facts;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
 using ModKit;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using ToyBox.classes.Infrastructure;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 //using Kingmaker.UI.LevelUp.Phase;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.Multiclass {
     internal static class LevelUp {
@@ -82,6 +80,21 @@ namespace ToyBox.Multiclass {
         }
 #endif
 
+        // This is to grab the spells known on load
+        [HarmonyPatch(typeof(UnitDescriptor), nameof(UnitDescriptor.PostLoad))]
+        public static class UnitDescriptor_PostLoad_Hook {
+            private static void Postfix(UnitEntityData entity) => CasterHelpers.CacheSpellsLearned(entity);
+        }
+
+        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
+        private static class LevelUpController_Commit_Posthook {
+            private static void Postfix(LevelUpController __instance) {
+                Mod.Warning("Clearing Cache because LevelUpController.Commit called");
+                CasterHelpers.ClearCachedSpellsLearned(__instance.Unit);
+                CasterHelpers.CacheSpellsLearned(__instance.Unit);
+            }
+        }
+
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
@@ -121,8 +134,10 @@ namespace ToyBox.Multiclass {
                         var spellsKnown = spellbook1.Blueprint.SpellsKnown;
                         var count = spellsKnown.GetCount(casterLevelAfter, index);
                         var expectedCount = count ?? 0;
-                        var known = spellbook1.SureKnownSpells(index).Where(x => !x.CopiedFromScroll).Distinct().ToList(); // Don't count scribed scrolls or free variants
-                        var actual = known.Count(x => !x.IsFromMythicSpellList); // Don't count the spells from any merged mythic spellbooks
+                        var actual = CasterHelpers.GetCachedSpellsKnown(unit, spellbook1, index);
+#if DEBUG
+                        Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {expectedCount-actual} spells of spell level:{index} based on expected={expectedCount} and actual={actual}");
+#endif
                         spellSelectionData.SetLevelSpells(index, Math.Max(0, expectedCount - actual));
                     }
                 }
