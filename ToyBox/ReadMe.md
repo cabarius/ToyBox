@@ -13,7 +13,8 @@
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
-### Ver 1.3.19 (Coming Soon)
+### Ver 1.3.20 (Coming Soon)
+### Ver 1.3.19
 * **Bag of Tricks** 
   * You can now enable Developer Mode which enables the developer console which you can access by hitting tilde `
   * (***ShadowRanger***) Bugfix for taking 10 out of combat: corrected missing IsInCombat flag
