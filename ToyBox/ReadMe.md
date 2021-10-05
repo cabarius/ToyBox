@@ -44,6 +44,7 @@
 * **Crusade Editor**
   * Reworked UI to match design of other parts of the mod
   * Fixed bug where it was displaying the Exp required for the current rank rather than the next rank
+  * (***Delth***) Added Crusade Cards (Events, Decrees etc) time multiplier (feature ported from KingdomResolution - thanks Spacehamster!)
 * **General Fixes**
   * (***ArcaneTrixter***) Made spell learning for spontaneous casters less buggy. Is currently tied to game load and level up, so if you're having issues with spells known try reloading.
   * (***ArcaneTrixter***) Made it so you shouldn't be able to gestalt all non-mythic classes and become a level 0 character.

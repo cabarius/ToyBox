@@ -166,7 +166,13 @@ namespace ToyBox.classes.MainUI {
                 },
                 () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent, 0),
                 () => {
-                    UI.Slider("Build Time Modifer", ref Settings.kingdomBuildingTimeModifier, -2, 2, 0, 2, "", UI.Width(400));
+
+                    UI.Slider("Crusade card resolution time multiplier", ref Settings.kingdomTaskResolutionLengthMultiplier, -1, 2, 0, 2, "", UI.Width(400));
+                    UI.Space(25);
+                    UI.Label("Multiplies crusade card resolution time by (1 + modifier). -1 will make things as fast as possible (minimum 1 day to avoid possible bugs)".green());
+                },
+            () => {
+                    UI.Slider("Build Time Modifer", ref Settings.kingdomBuildingTimeModifier, -1, 2, 0, 2, "", UI.Width(400));
                     var instance = KingdomState.Instance;
                     if (instance != null) {
                         instance.BuildingTimeModifier = Settings.kingdomBuildingTimeModifier;

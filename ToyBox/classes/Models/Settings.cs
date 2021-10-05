@@ -92,6 +92,7 @@ namespace ToyBox {
         public float armyExperienceMultiplier = 1;
         public float playerLeaderPowerMultiplier = 1;
         public float enemyLeaderPowerMultiplier = 1;
+        public float kingdomTaskResolutionLengthMultiplier = 0;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;

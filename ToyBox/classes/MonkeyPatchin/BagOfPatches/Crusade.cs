@@ -11,9 +11,9 @@ using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Buffs;
 using Kingmaker.Kingdom.Flags;
 using Kingmaker.Kingdom.Rules;
+using Kingmaker.Kingdom.Tasks;
 using System;
 using UnityEngine;
-
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     public static class Crusade {
         public static Settings Settings = Main.settings;
@@ -127,6 +127,17 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 if (Settings.toggleCrusadeFlagsStayGreen && daysDelta < 0) {
                     daysDelta = 0;
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(KingdomEvent), "CalculateResolutionTime")]
+        static class KingdomEvent_CalculateResolutionTime_Patch {
+            static void Postfix(KingdomEvent __instance, ref int __result) {
+                if (Settings.kingdomTaskResolutionLengthMultiplier == 0) return;
+                if (__instance.EventBlueprint.IsResolveByBaron) return; //this is a guard from KingdomResolution, not sure why it's there or if we still need it
+                //KingdomResolution split this into multiple settings, but this should be good enough until someone who cares checks what blueprint types we have
+                __result = Mathf.RoundToInt(__result * (Settings.kingdomTaskResolutionLengthMultiplier+1));
+                __result = __result < 1 ? 1 : __result;
             }
         }
     }
