@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Kingmaker;
@@ -43,6 +44,8 @@ namespace ToyBox {
 
         private static Exception caughtException = null;
 
+        public static List<GameObject> Objects;
+
         private static bool Load(UnityModManager.ModEntry modEntry) {
             try {
 #if DEBUG
@@ -62,6 +65,7 @@ namespace ToyBox {
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
+                Objects = new List<GameObject>();
                 UI.KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendly.EnsureFriendlyTypesContainAll();
@@ -74,6 +78,9 @@ namespace ToyBox {
         }
 #if DEBUG
         private static bool Unload(UnityModManager.ModEntry modEntry) {
+            foreach (GameObject obj in Objects) {
+                GameObject.DestroyImmediate(obj);
+            }
             HarmonyInstance.UnpatchAll(modId);
             NeedsActionInit = true;
             return true;
