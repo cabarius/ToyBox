@@ -214,8 +214,7 @@ namespace ToyBox.BagOfPatches {
             };
         }
 
-        internal static class VescavorsBegone 
-        {
+        internal static class VescavorsBegone {
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 var type = unitEntityData.Blueprint.Type;
                 var isAVescavorGuard = IsVescavorGuardType(type?.AssetGuidThreadSafe);

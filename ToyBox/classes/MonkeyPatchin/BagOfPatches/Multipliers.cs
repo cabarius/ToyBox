@@ -232,6 +232,7 @@ namespace ToyBox.BagOfPatches {
             private static readonly float BaseFovMin = 17.5f;
             private static readonly float BaseFovMax = 30;
             public static bool Prefix(CameraZoom __instance) {
+                if (settings.fovMultiplier == 1) return true;
                 if (firstCall) {
                     //Main.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
                     if (__instance.FovMin != BaseFovMin) {
