@@ -13,61 +13,109 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using System.Runtime.CompilerServices;
 using ModKit;
+using Kingmaker.Blueprints.Items.Weapons;
+using HarmonyLib;
+using Kingmaker.AreaLogic.Etudes;
 
 namespace ToyBox {
 
     public static partial class BlueprintExensions {
-        private static ConditionalWeakTable<object, string> cachedCollationNames = new ConditionalWeakTable<object, string> { };
-        public static String GetDisplayName(this SimpleBlueprint bp) { return bp.name; }
-        public static String GetDisplayName(this BlueprintSpellbook bp) {
+        public static Settings settings => Main.settings;
+
+        private static ConditionalWeakTable<object, List<string>> cachedCollationNames = new() { };
+        public static void ResetCollationCache() => cachedCollationNames = new() { };
+        private static void AddOrUpdateCachedNames(SimpleBlueprint bp, List<string> names) {
+            if (cachedCollationNames.TryGetValue(bp, out _)) {
+                cachedCollationNames.Remove(bp);
+            }
+            cachedCollationNames.Add(bp, names);
+        }
+        public static string GetDisplayName(this SimpleBlueprint bp) => bp.name;
+        public static string GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
             if (name == null || name.Length == 0) name = bp.name.Replace("Spellbook", "");
             return name;
         }
-        public static String CollationName(this SimpleBlueprint bp) {
-            string collationName;
-            cachedCollationNames.TryGetValue(bp, out collationName);
-            if (collationName != null) return collationName;
-            var typeName = bp.GetType().ToString();
-            var stripIndex = typeName.LastIndexOf("Blueprint");
-            if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
-            cachedCollationNames.Add(bp, typeName);
-            return typeName;
+        public static IEnumerable<string> Attributes(this SimpleBlueprint bp) {
+            List<string> modifers = new();
+            var traverse = Traverse.Create(bp);
+            foreach (var property in Traverse.Create(bp).Properties()) {
+                if (property.StartsWith("Is")) {
+                    try {
+                        var value = traverse.Property<bool>(property)?.Value;
+                        if (value.HasValue && value.GetValueOrDefault()) {
+                            modifers.Add(property); //.Substring(2));
+                        }
+                    }
+                    catch { }
+                }
+            }
+            return modifers;
         }
-        public static String CollationName(this BlueprintSpellbook bp) {
-            if (bp.IsMythic) return "Mythic";
-            if (bp.IsAlchemist) return "Alchemist";
-            if (bp.IsArcane) return "Arcane";
-            if (bp.IsSinMagicSpecialist) return "Specialist";
-            if (bp.CharacterClass.IsDivineCaster) return "Divine";
-            return bp.GetType().ToString();
-        }
-        public static String CollationName(this BlueprintBuff bp) {
-            if (bp.IsClassFeature) return "Class Feature";
-            if (bp.IsFromSpell) return "From Spell";
-            if (bp.Harmful) return "Harmful";
-            if (bp.RemoveOnRest) return "Rest Removes";
-            if (bp.RemoveOnResurrect) return "Res Removes";
-            if (bp.Ranks > 0) return $"{bp.Ranks} Ranks";
-            return bp.GetType().ToString();
-        }
-
-        public static String CollationName(this BlueprintIngredient bp) {
-            if (bp.IsNotable) return "Notable";
-            //if (bp.AllowMakeStackable) return "Stackable";
-            if (bp.Destructible) return "Destructible";
-            if (bp.FlavorText != null) return bp.FlavorText;
-            return bp.NonIdentifiedName;
-        }
-        public static String CollationName(this BlueprintArea bp) {
+        private static List<string> DefaultCollationNames(this SimpleBlueprint bp, params string[] extras) {
+            cachedCollationNames.TryGetValue(bp, out var names);
+            if (names != null) return names;
+            names = extras?.ToList() ?? new List<string> { };
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
-            if (typeName == "Area") return $"Area CR{bp.CR}";
-            if (bp.IsGlobalMap) return $"GlobalMap";
-            if (bp.IsIndoor) return "Indoor";
-            return typeName;
+            //var stripIndex = typeName.LastIndexOf("Blueprint");
+            //if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
+            names.Add(typeName);
+            foreach (var attribute in bp.Attributes())
+                names.Add(attribute.orange());
+            cachedCollationNames.Add(bp, names);
+            return names;
+        }
+        public static List<string> CollationNames(this SimpleBlueprint bp, params string[] extras) => DefaultCollationNames(bp, extras);
+        public static List<string> CollationNames(this BlueprintSpellbook bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            if (bp.CharacterClass.IsDivineCaster) names.Add("Divine");
+            AddOrUpdateCachedNames(bp, names);
+            return names;
+        }
+        public static List<string> CollationNames(this BlueprintBuff bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            if (bp.Harmful) names.Add("Harmful");
+            if (bp.RemoveOnRest) names.Add("Rest Removes");
+            if (bp.RemoveOnResurrect) names.Add("Res Removes");
+            if (bp.Ranks > 0) names.Add($"{bp.Ranks} Ranks");
+
+            AddOrUpdateCachedNames(bp, names);
+            return names;
         }
 
-        static Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new Dictionary<Type, List<SimpleBlueprint>>();
+        public static List<string> CollationNames(this BlueprintIngredient bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            if (bp.Destructible) names.Add("Destructible");
+            if (bp.FlavorText != null) names.Add(bp.FlavorText);
+            AddOrUpdateCachedNames(bp, names);
+            return names;
+        }
+        public static List<string> CollationNames(this BlueprintArea bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            var typeName = bp.GetType().Name.Replace("Blueprint", "");
+            if (typeName == "Area") names.Add($"Area CR{bp.CR}");
+            AddOrUpdateCachedNames(bp, names);
+            return names;
+        }
+        public static List<string> CollationNames(this BlueprintEtude bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            //foreach (var item in bp.ActivationCondition) {
+            //    names.Add(item.name.yellow());
+            //}
+            //names.Add(bp.ValidationStatus.ToString().yellow());
+            //if (bp.HasParent) names.Add($"P:".yellow() + bp.Parent.NameSafe());
+            //foreach (var sibling in bp.StartsWith) {
+            //    names.Add($"W:".yellow() + bp.Parent.NameSafe());
+            //}
+            //if (bp.HasLinkedAreaPart) names.Add($"area {bp.LinkedAreaPart.name}".yellow());
+            //foreach (var condition in bp.ActivationCondition?.Conditions)
+            //    names.Add(condition.GetCaption().yellow());
+            AddOrUpdateCachedNames(bp, names);
+            return names;
+        }
+
+
+        private static readonly Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new();
         public static List<SimpleBlueprint> BlueprintsOfType(Type type) {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();
@@ -82,27 +130,25 @@ namespace ToyBox {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintBrowser.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
-            var filtered = blueprints.Where((bp) => (bp is BPType) ? true : false).ToList();
+            var filtered = blueprints.Where((bp) => (bp is BPType)).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }
 
-        public static List<SimpleBlueprint> GetBlueprints<T>() where T : SimpleBlueprint {
-            return BlueprintsOfType<T>();
-        }
+        public static List<SimpleBlueprint> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
         public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
-            int count = 0;
-            NoSelectionIfAlreadyHasFeature component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();
+            var count = 0;
+            var component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();
             if (component == null)
                 return count;
             if (component.AnyFeatureFromSelection) {
-                foreach (BlueprintFeature allFeature in selection.AllFeatures) {
+                foreach (var allFeature in selection.AllFeatures) {
                     if (!unit.Progression.Features.HasFact((BlueprintFact)allFeature)) {
                         count++;
                     }
                 }
             }
-            foreach (BlueprintFeature feature in component.Features) {
+            foreach (var feature in component.Features) {
                 if (!unit.Progression.Features.HasFact((BlueprintFact)feature)) {
                     count++;
                 }

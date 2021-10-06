@@ -17,9 +17,7 @@ namespace ToyBox {
             NextClassLevel = state.NextClassLevel;
         }
 
-        public void Replace(BlueprintCharacterClass selectedClass) {
-            State.SelectedClass = selectedClass;
-        }
+        public void Replace(BlueprintCharacterClass selectedClass) => State.SelectedClass = selectedClass;
 
         public void Replace(BlueprintCharacterClass selectedClass, int nextClassLevel) {
             State.SelectedClass = selectedClass;

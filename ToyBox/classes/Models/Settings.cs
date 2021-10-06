@@ -50,6 +50,7 @@ namespace ToyBox {
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleMultipleRomance = false;
         public bool toggleSpiderBegone = false;
+        public bool toggleVescavorsBegone = false;
         public bool togglAutoEquipConsumables = false;
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
@@ -67,6 +68,8 @@ namespace ToyBox {
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
         public bool toggleBrutalUnfair = false;
+        public bool highlightHiddenObjects = false;
+        public bool highlightHiddenObjectsInFog = false;
 
         // Loot 
         public bool toggleColorLootByRarity = false;
@@ -89,6 +92,7 @@ namespace ToyBox {
         public float armyExperienceMultiplier = 1;
         public float playerLeaderPowerMultiplier = 1;
         public float enemyLeaderPowerMultiplier = 1;
+        public float kingdomTaskResolutionLengthMultiplier = 0;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
@@ -103,6 +107,7 @@ namespace ToyBox {
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnoreClassAndFeatRestrictions = false;
+        public bool toggleAllowCompanionsToBecomeMythic = false;
         public bool toggleIgnorePrerequisites = false;
         public bool toggleIgnoreCasterTypeSpellLevel = false;
         public bool toggleIgnoreForbiddenArchetype = false;
@@ -188,6 +193,7 @@ namespace ToyBox {
         public string searchText = "";
         public bool searchDescriptions = false; // keeping around for a bit to not break saves 
         public bool searchesDescriptions = true;
+        public bool showAttributes = false;
         public bool showAssetIDs = false;
         public bool showComponents = false;
         public bool showElements = false;
@@ -215,13 +221,13 @@ namespace ToyBox {
         //      Dictionary<CharacterName, 
         //          Dictionary<ClassID, HashSet<ArchetypeIDs>
         // For character gen config we use the following special key:
-        public SerializableDictionary<string, MulticlassOptions> multiclassSettings = new SerializableDictionary<string, MulticlassOptions>();
+        public SerializableDictionary<string, MulticlassOptions> multiclassSettings = new();
 
         // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
-        public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new SerializableDictionary<string, HashSet<string>>();
+        public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new();
 
         // Dictionary of Name/IsLegendaryHero for configuration per party member
-        public SerializableDictionary<string, bool> charIsLegendaryHero = new SerializableDictionary<string, bool>();
+        public SerializableDictionary<string, bool> charIsLegendaryHero = new();
 
         public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
@@ -255,17 +261,17 @@ namespace ToyBox {
 
         // Some of these look redundant.  It might be nice to add the fine grain configuration but part of the philosphy of ToyBox is to avoid too much kitchen sink options.  I would like to focus and simplify this.  Maybe see if there is a way to unify these into some broader groupings like I did in Cheap Tricks for patches that adopted CheckUnitEntityData (Off, You, Party, Enemies, etc)
         // public bool toggleIgnoreClassAndFeatRestrictions = false; 
-        public HashSet<string> ignoredPrerequisiteSet = new HashSet<string>(); // adding this granularity might be nice
+        public HashSet<string> ignoredPrerequisiteSet = new(); // adding this granularity might be nice
 
         public bool toggleIgnoreAbilityAlignmentRestriction = false;
         public bool toggleIgnoreAolityCasterCheckers = false;
-        public HashSet<string> ignoredAbilityCasterCheckerSet = new HashSet<string>();
+        public HashSet<string> ignoredAbilityCasterCheckerSet = new();
         public bool toggleIgnoreActivatableAbilityRestrictions = false;
-        public HashSet<string> ignoredActivatableAbilityRestrictionSet = new HashSet<string>();
+        public HashSet<string> ignoredActivatableAbilityRestrictionSet = new();
         public bool toggleIgnoreEquipmentRestrictions = false;
-        public HashSet<string> ignoredEquipmentRestrictionSet = new HashSet<string>();
+        public HashSet<string> ignoredEquipmentRestrictionSet = new();
         public bool toggleIgnoreBuildingRestrictions = false;
-        public HashSet<string> ignoredBuildingRestrictionSet = new HashSet<string>();
+        public HashSet<string> ignoredBuildingRestrictionSet = new();
 
         // Development
         public LogLevel loggingLevel = LogLevel.Info;
@@ -278,20 +284,24 @@ namespace ToyBox {
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-        public override void Save(UnityModManager.ModEntry modEntry) {
-            Save(this, modEntry);
-        }
+        public override void Save(UnityModManager.ModEntry modEntry) => Save(this, modEntry);
         public static void OnGUI() {
             Mod.logLevel = Main.settings.loggingLevel;
             UI.HStack("Settings", 1,
-#if DEBUG
+                () => {
+                    UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode);
+                    UI.Space(25);
+                    UI.Label("This turns on the developer console which lets you access cheat commands, shows a FPS window (hife with F11), etc".green());
+                },
+                () => UI.Label(""),
+                () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
+                () => UI.Label(""),
                 () => UI.Toggle("Strip HTML (colors) from Native Console", ref Main.settings.stripHtmlTagsFromNativeConsole),
+#if DEBUG
                 () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.settings.stripHtmlTagsFromUMMLogsTab),
 #endif
-                () => UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode),
-                () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
             () => { }
-            );
+            ); ;
 
         }
     }

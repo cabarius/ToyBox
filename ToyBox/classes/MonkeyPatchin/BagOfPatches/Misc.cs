@@ -51,12 +51,12 @@ using Kingmaker.Items.Slots;
 using ModKit;
 
 namespace ToyBox.BagOfPatches {
-    static class Misc {
+    internal static class Misc {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
         public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
-            ItemEntityUsable itemEntityUsable = item as ItemEntityUsable;
+            var itemEntityUsable = item as ItemEntityUsable;
             if (itemEntityUsable?.Blueprint.Type != UsableItemType.Scroll) {
                 return null;
             }
@@ -68,20 +68,20 @@ namespace ToyBox.BagOfPatches {
                 return actionName;
             }
 
-            BlueprintAbility spell = ExtractSpell(item);
+            var spell = ExtractSpell(item);
             if (spell == null) {
                 return actionName;
             }
 
-            List<Spellbook> spellbooks = unit.Descriptor.Spellbooks.Where(x => x.Blueprint.SpellList.Contains(spell)).ToList();
+            var spellbooks = unit.Descriptor.Spellbooks.Where(x => x.Blueprint.SpellList.Contains(spell)).ToList();
 
-            int count = spellbooks.Count;
+            var count = spellbooks.Count;
 
             if (count <= 0) {
                 return actionName;
             }
 
-            string actionFormat = "{0} <{1}>";
+            var actionFormat = "{0} <{1}>";
 
             return string.Format(actionFormat, actionName, count == 1 ? spellbooks.First().Blueprint.Name : "Multiple");
         }
@@ -90,10 +90,10 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Kingmaker.UI.ServiceWindow.ItemSlot), "ScrollContent", MethodType.Getter)]
         public static class ItemSlot_ScrollContent_Patch {
             [HarmonyPostfix]
-            static void Postfix(Kingmaker.UI.ServiceWindow.ItemSlot __instance, ref string __result) {
-                UnitEntityData currentCharacter = UIUtility.GetCurrentCharacter();
-                CopyItem component = __instance.Item.Blueprint.GetComponent<CopyItem>();
-                string actionName = component?.GetActionName(currentCharacter) ?? string.Empty;
+            private static void Postfix(Kingmaker.UI.ServiceWindow.ItemSlot __instance, ref string __result) {
+                var currentCharacter = UIUtility.GetCurrentCharacter();
+                var component = __instance.Item.Blueprint.GetComponent<CopyItem>();
+                var actionName = component?.GetActionName(currentCharacter) ?? string.Empty;
                 if (!string.IsNullOrWhiteSpace(actionName)) {
                     actionName = GetSpellbookActionName(actionName, __instance.Item, currentCharacter);
                 }
@@ -131,11 +131,11 @@ namespace ToyBox.BagOfPatches {
         internal static class SpidersBegone {
 
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
-                BlueprintUnitType type = unitEntityData.Blueprint.Type;
-                bool isASpider = SpidersBegone.IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isASpiderSwarm = SpidersBegone.IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
-                bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var type = unitEntityData.Blueprint.Type;
+                var isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
+                var isASpiderSwarm = IsSpiderSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherSpiderUnit = IsSpiderBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
                 }
@@ -145,11 +145,11 @@ namespace ToyBox.BagOfPatches {
             }
 
             public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
-                BlueprintUnitType type = blueprintUnit.Type;
-                bool isASpider = SpidersBegone.IsSpiderType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isASpiderSwarm = SpidersBegone.IsSpiderSwarmType((type != null) ? type.AssetGuidThreadSafe : null);
-                bool isOtherSpiderUnit = SpidersBegone.IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
-                bool isOtherSpiderSwarmUnit = SpidersBegone.IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var type = blueprintUnit.Type;
+                var isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
+                var isASpiderSwarm = IsSpiderSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherSpiderUnit = IsSpiderBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isOtherSpiderSwarmUnit = IsSpiderSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
                 if (isASpider || isOtherSpiderUnit) {
                     blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
                 }
@@ -158,20 +158,12 @@ namespace ToyBox.BagOfPatches {
                 }
             }
 
-            private static bool IsSpiderType(string typeGuid) {
-                return typeGuid == spiderTypeGUID;
-            }
+            private static bool IsSpiderType(string typeGuid) => typeGuid == spiderTypeGUID;
 
-            private static bool IsSpiderSwarmType(string typeGuid) {
-                return typeGuid == spiderSwarmTypeGUID;
-            }
+            private static bool IsSpiderSwarmType(string typeGuid) => typeGuid == spiderSwarmTypeGUID;
 
-            private static bool IsSpiderBlueprintUnit(string blueprintUnitGuid) {
-                return SpidersBegone.spiderGuids.Contains(blueprintUnitGuid);
-            }
-            private static bool IsSpiderSwarmBlueprintUnit(string blueprintUnitGuid) {
-                return SpidersBegone.spiderSwarmGuids.Contains(blueprintUnitGuid);
-            }
+            private static bool IsSpiderBlueprintUnit(string blueprintUnitGuid) => spiderGuids.Contains(blueprintUnitGuid);
+            private static bool IsSpiderSwarmBlueprintUnit(string blueprintUnitGuid) => spiderSwarmGuids.Contains(blueprintUnitGuid);
 
             private const string spiderTypeGUID = "243702bdc53e2574aaa34d1e3eafe6aa";
             private const string spiderSwarmTypeGUID = "0fd1473096fbdda4db770cca8366c5e1";
@@ -222,13 +214,101 @@ namespace ToyBox.BagOfPatches {
             };
         }
 
+        internal static class VescavorsBegone 
+        {
+            public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
+                var type = unitEntityData.Blueprint.Type;
+                var isAVescavorGuard = IsVescavorGuardType(type?.AssetGuidThreadSafe);
+                var isAVescavorQueen = IsVescavorQueenType(type?.AssetGuidThreadSafe);
+                var isAVescavorSwarm = IsVescavorSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherVescavorGuardUnit = IsVescavorGuardBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isOtherVescavorQueenUnit = IsVescavorQueenBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isOtherVescavorSwarmUnit = IsVescavorSwarmBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                if (isAVescavorGuard || isOtherVescavorGuardUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
+                }
+                else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintCR2RatSwarmGUID;
+                }
+                else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintDireWolfStandardGUID;
+                }
+            }
 
+            public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
+                var type = blueprintUnit.Type;
+                var isAVescavorGuard = IsVescavorGuardType(type?.AssetGuidThreadSafe);
+                var isAVescavorQueen = IsVescavorQueenType(type?.AssetGuidThreadSafe);
+                var isAVescavorSwarm = IsVescavorSwarmType(type?.AssetGuidThreadSafe);
+                var isOtherVescavorGuardUnit = IsVescavorGuardBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isOtherVescavorQueenUnit = IsVescavorQueenBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isOtherVescavorSwarmUnit = IsVescavorSwarmBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                if (isAVescavorGuard || isOtherVescavorGuardUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
+                }
+                else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintCR2RatSwarmGUID).Prefab;
+                }
+                else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintDireWolfStandardGUID).Prefab;
+                }
+            }
+
+            private static bool IsVescavorGuardType(string typeGuid) => typeGuid == VescavorGuardTypeGUID;
+
+            private static bool IsVescavorQueenType(string typeGuid) => typeGuid == VescavorQueenTypeGUID;
+
+            private static bool IsVescavorSwarmType(string typeGuid) => typeGuid == VescavorSwarmTypeGUID;
+
+            private static bool IsVescavorGuardBlueprintUnit(string blueprintUnitGuid) => VescavorGuardGuids.Contains(blueprintUnitGuid);
+            private static bool IsVescavorQueenBlueprintUnit(string blueprintUnitGuid) => VescavorQueenGuids.Contains(blueprintUnitGuid);
+            private static bool IsVescavorSwarmBlueprintUnit(string blueprintUnitGuid) => VescavorSwarmGuids.Contains(blueprintUnitGuid);
+
+            private const string VescavorGuardTypeGUID = "6cc8fb5ba241e9340adfb908b5d0ef85";
+            private const string VescavorQueenTypeGUID = "c73d6ef065a177c4d89b251000192025";
+            private const string VescavorSwarmTypeGUID = "7885004e5fe98d044b279637976299cc";
+
+            private const string blueprintWolfStandardGUID = "ea610d9e540af4243b1310a3e6833d9f";
+            private const string blueprintDireWolfStandardGUID = "87b83e0e06432a44eb50fb03c71bc8f5";
+            private const string blueprintCR2RatSwarmGUID = "12a5944fa27307e4e8b6f56431d5cc8c";
+
+            private static readonly string[] VescavorSwarmGuids = new string[]
+             {
+                 "c148c12cb7914a50b2fccc39fa880b73",
+                 "f03d262634c93a340b85c4a93cd0ffe4",
+                 "204a57cdfd30fdc4da930a05f87b5a0b",
+                 "d1add298a78c9744c89c9b4f87df5316",
+                 "39ea2dcdc362421f94643abe52de9aed",
+
+                 "0264a9119a0737447a226cdd4ba1f79b"
+                 //Daeran's Other Swarm is this ID - replace this as well?
+
+             };
+
+
+            private static readonly string[] VescavorGuardGuids = new string[]
+            {
+                "17a0d2b9a532ff641bc122778fa80e05",
+                "0413e0164ae24d9d9d78348a186ce375"
+            };
+
+
+            private static readonly string[] VescavorQueenGuids = new string[]
+            {
+                "3d59b2d00f92a244ea887bd74f96dd85",
+                "e3cbfef493c4a3f4fa2abb660ba6aad6"
+            };
+        }
 
         [HarmonyPatch(typeof(UnitEntityData), "CreateView")]
         public static class UnitEntityData_CreateView_Patch {
             public static void Prefix(ref UnitEntityData __instance) {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref __instance);
+                }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref __instance);
                 }
             }
         }
@@ -239,31 +319,43 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref __instance);
                 }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref __instance);
+                }
             }
         }
 
         [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
-        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
+        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(string) })]
         public static class EntityCreationControllert_SpawnUnit_Patch1 {
             public static void Prefix(ref BlueprintUnit unit) {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref unit);
                 }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref unit);
+                }
             }
         }
 
         [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
-        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(UnitEntityView), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(String) })]
+        [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(UnitEntityView), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(string) })]
         public static class EntityCreationControllert_SpawnUnit_Patch2 {
             public static void Prefix(ref BlueprintUnit unit) {
                 if (settings.toggleSpiderBegone) {
                     SpidersBegone.CheckAndReplace(ref unit);
                 }
+
+                if (settings.toggleVescavorsBegone) {
+                    VescavorsBegone.CheckAndReplace(ref unit);
+                }
             }
         }
         [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), "RemoveItem", new Type[] { typeof(bool), typeof(bool) })]
-        static class ItemSlot_RemoveItem_Patch {
-            static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
+        private static class ItemSlot_RemoveItem_Patch {
+            private static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
                 if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
                     __state = null;
                     var slot = __instance.Owner.Body.QuickSlots.FindOrDefault(s => s.HasItem && s.Item == __instance.m_ItemRef);
@@ -272,18 +364,20 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
             }
-            static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state) {
+
+            private static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state) {
                 if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
                     if (__state != null) {
-                        BlueprintItem blueprint = __state.Blueprint;
+                        var blueprint = __state.Blueprint;
                         var item = Game.Instance.Player.Inventory.Items.FindOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
                         if (item != null) {
-                            Game.Instance.ScheduleAction(() =>{ 
+                            Game.Instance.ScheduleAction(() => {
                                 try {
                                     Mod.Debug($"refill {item.m_Blueprint.Name.cyan()}");
-                                    __instance.InsertItem(item); 
-                                } 
-                                catch (Exception e) { Mod.Error($"{e}"); } } );
+                                    __instance.InsertItem(item);
+                                }
+                                catch (Exception e) { Mod.Error($"{e}"); }
+                            });
                         }
                         __state = null;
                     }
@@ -314,8 +408,8 @@ namespace ToyBox.BagOfPatches {
 
         // Turnbased Combat Start Delay
         [HarmonyPatch(typeof(TurnBasedModeUIController), nameof(TurnBasedModeUIController.ShowCombatStartWindow))]
-        static class Difficulty_Override_Patch {
-            static bool Prefix(TurnBasedModeUIController __instance) {
+        private static class Difficulty_Override_Patch {
+            private static bool Prefix(TurnBasedModeUIController __instance) {
                 if (settings.turnBasedCombatStartDelay == 4f) return true;
                 if (__instance.m_CombatStartWindowVM == null) {
                     __instance.HideTurnPanel();

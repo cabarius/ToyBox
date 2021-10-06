@@ -66,7 +66,7 @@ namespace ToyBox.Multiclass {
 
         public BlueprintCharacterClass[] MythicClasses => Game.Instance.BlueprintRoot.Progression.CharacterMythics.ToArray();
 
-        public BlueprintCharacterClass[] AllClasses => CharacterClasses.Concat(MythicClasses).ToArray();
+        public BlueprintCharacterClass[] AllClasses => this.CharacterClasses.Concat(this.MythicClasses).ToArray();
 
         public BlueprintScriptableObject LibraryObject => typeof(ResourcesLibrary).GetFieldValue<BlueprintScriptableObject>("s_LoadedResources");//("s_LibraryObject");
 
@@ -78,40 +78,34 @@ namespace ToyBox.Multiclass {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        public static bool IsCharGen(this LevelUpState state) {
-            return state.Mode == LevelUpState.CharBuildMode.CharGen || state.Unit.CharacterName == "Player Character";
-        }
+        public static bool IsCharGen(this LevelUpState state) => state.Mode == LevelUpState.CharBuildMode.CharGen || state.Unit.CharacterName == "Player Character";
 
-        public static bool IsLevelUp(this LevelUpState state) {
-            return state.Mode == LevelUpState.CharBuildMode.LevelUp;
-        }
+        public static bool IsLevelUp(this LevelUpState state) => state.Mode == LevelUpState.CharBuildMode.LevelUp;
 
-        public static bool IsPreGen(this LevelUpState state) {
-            return state.IsPregen;
-        }
-        static public bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
+        public static bool IsPreGen(this LevelUpState state) => state.IsPregen;
+        public static bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
-        static public void SetClassIsGestalt(this UnitEntityData ch, BlueprintCharacterClass cl, bool isGestalt) {
+        public static void SetClassIsGestalt(this UnitEntityData ch, BlueprintCharacterClass cl, bool isGestalt) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (isGestalt) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
-            Mod.Trace($"Set - key: {classID} -> {isGestalt} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
+            Mod.Trace($"Set - key: {classID} -> {isGestalt} excludeSet: ({string.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
 
-        static public bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
+        public static bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
-        static public void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {
+        public static void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
             var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
@@ -120,7 +114,7 @@ namespace ToyBox.Multiclass {
             // Main.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
             Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
-        static public bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
+        public static bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
             var chars = Game.Instance.Player.AllCharacters;
             foreach (var ch in chars) {
                 //Main.Log($"   {ch.Progression.Owner} vs { progression.Owner}");
@@ -132,17 +126,16 @@ namespace ToyBox.Multiclass {
             return false;
         }
     }
-    static partial class MultipleClasses {
+
+    public static partial class MultipleClasses {
 
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
         public static LevelUpController levelUpController { get; internal set; }
 
-        public static bool IsAvailable() {
-            return Main.Enabled &&
+        public static bool IsAvailable() => Main.Enabled &&
                 settings.toggleMulticlass &&
                 levelUpController.IsManualPlayerUnit(true);
-        }
 
         public static bool Enabled {
             get => settings.toggleMulticlass;
@@ -153,11 +146,11 @@ namespace ToyBox.Multiclass {
 #if true
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
-            StateReplacer stateReplacer = new StateReplacer(state);
+            StateReplacer stateReplacer = new(state);
             Mod.Trace($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
             Mod.Trace($"    mythic: {state.IsMythicClassSelected}");
             Mod.Trace($"    options: {options}");
-            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
+            foreach (var characterClass in Main.multiclassMod.AllClasses) {
                 if (characterClass != stateReplacer.SelectedClass && options.Contains(characterClass)) {
                     Mod.Trace($"       {characterClass.GetDisplayName()} ");
                     if (state.IsMythicClassSelected == characterClass.IsMythic) {
@@ -192,26 +185,26 @@ namespace ToyBox.Multiclass {
             progression.m_MythicLevel = new int?(0);
             int? nullable;
             // this logic is to work around a case where you may mark a character gestalt and then load an earlier save and have them get level 0 which breaks level up.  Here we will detect that you have no main class and prevent your first class from being gestalt
-            BlueprintCharacterClass classToEnsureNonGestalt = progression.Classes.FirstOrDefault()?.CharacterClass ?? null;
-            foreach (ClassData classData in progression.Classes) {
+            var classToEnsureNonGestalt = progression.Classes.FirstOrDefault()?.CharacterClass ?? null;
+            foreach (var classData in progression.Classes) {
                 if (!progression.IsClassGestalt(classData.CharacterClass)) {
                     classToEnsureNonGestalt = classData.CharacterClass;
                     break;
                 }
             }
-            foreach (ClassData classData in progression.Classes) {
+            foreach (var classData in progression.Classes) {
                 var cl = classData.CharacterClass;
                 var shouldSkip = progression.IsClassGestalt(cl) && cl != classToEnsureNonGestalt;
                 //Main.Log($"UpdateLevelsForGestalt - owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}".cyan().bold());
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = progression.m_MythicLevel;
-                        int level = classData.Level;
+                        var level = classData.Level;
                         progression.m_MythicLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
                     }
                     else {
                         nullable = progression.m_CharacterLevel;
-                        int level = classData.Level;
+                        var level = classData.Level;
                         progression.m_CharacterLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
                     }
                 }

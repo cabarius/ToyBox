@@ -24,12 +24,10 @@ namespace ToyBox {
             if ((int)rarity < (int)filter) return false;
             return item.IsLootable;
         }
-        public static List<ItemEntity> Lootable(this List<ItemEntity> loots, RarityType filter = RarityType.None) {
-            return loots.Where(l => l.IsLootable(filter)).ToList();
-        }
+        public static List<ItemEntity> Lootable(this List<ItemEntity> loots, RarityType filter = RarityType.None) => loots.Where(l => l.IsLootable(filter)).ToList();
         public static string GetName(this LootWrapper present) {
             if (present.InteractionLoot != null) {
-//                var name = present.InteractionLoot.Owner.View.name;
+                //                var name = present.InteractionLoot.Owner.View.name;
                 var name = present.InteractionLoot.Source.name;
                 if (name == null || name.Length == 0) name = "Ground";
                 return name;
@@ -49,10 +47,10 @@ namespace ToyBox {
             return null;
         }
         public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea() {
-            List<LootWrapper> lootWrapperList = new List<LootWrapper>();
+            List<LootWrapper> lootWrapperList = new();
             var units = Game.Instance.State.Units.All
                 .Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsInGame && !u.Descriptor.IsPartyOrPet()));
-                //.Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsRevealed && u.IsDeadAndHasLoot));
+            //.Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsRevealed && u.IsDeadAndHasLoot));
             foreach (var unitEntityData in units)
                 lootWrapperList.Add(new LootWrapper() {
                     Unit = unitEntityData
@@ -65,14 +63,14 @@ namespace ToyBox {
             var source = TempList.Get<InteractionLootPart>();
             foreach (var interactionLootPart in interactionLootParts) {
                 if (// interactionLootPart.Owner.IsRevealed && 
-                    interactionLootPart.Loot.HasLoot 
+                    interactionLootPart.Loot.HasLoot
                     //&& (
                     //    interactionLootPart.LootViewed || interactionLootPart.View is DroppedLoot && !(bool)(EntityPart)interactionLootPart.Owner.Get<DroppedLoot.EntityPartBreathOfMoney>() || (bool)(UnityEngine.Object)interactionLootPart.View.GetComponent<SkinnedMeshRenderer>()
                     //    )
                     )
                     source.Add(interactionLootPart);
             }
-            IEnumerable<LootWrapper> collection = source.Distinct<InteractionLootPart>((IEqualityComparer<InteractionLootPart>)new MassLootHelper.LootDuplicateCheck()).Select<InteractionLootPart, LootWrapper>((Func<InteractionLootPart, LootWrapper>)(i => new LootWrapper() {
+            var collection = source.Distinct<InteractionLootPart>((IEqualityComparer<InteractionLootPart>)new MassLootHelper.LootDuplicateCheck()).Select<InteractionLootPart, LootWrapper>((Func<InteractionLootPart, LootWrapper>)(i => new LootWrapper() {
                 InteractionLoot = i
             }));
             lootWrapperList.AddRange(collection);

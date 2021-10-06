@@ -3,19 +3,15 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ModKit.Utility
-{
-    public static partial class ReflectionCache
-    {
-        private static readonly DoubleDictionary<Type, string, WeakReference> _fieldCache = new DoubleDictionary<Type, string, WeakReference>();
+namespace ModKit.Utility {
+    public static partial class ReflectionCache {
+        private static readonly DoubleDictionary<Type, string, WeakReference> _fieldCache = new();
 
-        private static CachedField<TField> GetFieldCache<T, TField>(string name)
-        {
+        private static CachedField<TField> GetFieldCache<T, TField>(string name) {
             object cache = default;
-            if (_fieldCache.TryGetValue(typeof(T), name, out WeakReference weakRef))
+            if (_fieldCache.TryGetValue(typeof(T), name, out var weakRef))
                 cache = weakRef.Target;
-            if (cache == null)
-            {
+            if (cache == null) {
                 if (typeof(T).IsValueType)
                     cache = new CachedFieldOfStruct<T, TField>(name);
                 else
@@ -26,14 +22,12 @@ namespace ModKit.Utility
             return cache as CachedField<TField>;
         }
 
-        private static CachedField<TField> GetFieldCache<TField>(Type type, string name)
-        {
+        private static CachedField<TField> GetFieldCache<TField>(Type type, string name) {
             object cache = null;
-            if (_fieldCache.TryGetValue(type, name, out WeakReference weakRef))
+            if (_fieldCache.TryGetValue(type, name, out var weakRef))
                 cache = weakRef.Target;
-            if (cache == null)
-            {
-                cache = 
+            if (cache == null) {
+                cache =
                     IsStatic(type) ?
                     new CachedFieldOfStatic<TField>(type, name) :
                     type.IsValueType ?
@@ -45,72 +39,34 @@ namespace ModKit.Utility
             return cache as CachedField<TField>;
         }
 
-        public static FieldInfo GetFieldInfo<T, TField>(string name)
-        {
-            return GetFieldCache<T, TField>(name).Info;
-        }
+        public static FieldInfo GetFieldInfo<T, TField>(string name) => GetFieldCache<T, TField>(name).Info;
 
-        public static FieldInfo GetFieldInfo<TField>(this Type type, string name)
-        {
-            return GetFieldCache<TField>(type, name).Info;
-        }
+        public static FieldInfo GetFieldInfo<TField>(this Type type, string name) => GetFieldCache<TField>(type, name).Info;
 
-        public static ref TField GetFieldRef<T, TField>(this ref T instance, string name) where T : struct
-        {
-            return ref (GetFieldCache<T, TField>(name) as CachedFieldOfStruct<T, TField>).GetRef(ref instance);
-        }
+        public static ref TField GetFieldRef<T, TField>(this ref T instance, string name) where T : struct => ref (GetFieldCache<T, TField>(name) as CachedFieldOfStruct<T, TField>).GetRef(ref instance);
 
-        public static ref TField GetFieldRef<T, TField>(this T instance, string name) where T : class
-        {
-            return ref (GetFieldCache<T, TField>(name) as CachedFieldOfClass<T, TField>).GetRef(instance);
-        }
+        public static ref TField GetFieldRef<T, TField>(this T instance, string name) where T : class => ref (GetFieldCache<T, TField>(name) as CachedFieldOfClass<T, TField>).GetRef(instance);
 
-        public static TField GetFieldValue<T, TField>(this ref T instance, string name) where T : struct
-        {
-            return (GetFieldCache<T, TField>(name) as CachedFieldOfStruct<T, TField>).Get(ref instance);
-        }
+        public static TField GetFieldValue<T, TField>(this ref T instance, string name) where T : struct => (GetFieldCache<T, TField>(name) as CachedFieldOfStruct<T, TField>).Get(ref instance);
 
-        public static TField GetFieldValue<T, TField>(this T instance, string name) where T : class
-        {
-            return (GetFieldCache<T, TField>(name) as CachedFieldOfClass<T, TField>).Get(instance);
-        }
+        public static TField GetFieldValue<T, TField>(this T instance, string name) where T : class => (GetFieldCache<T, TField>(name) as CachedFieldOfClass<T, TField>).Get(instance);
 
-        public static TField GetFieldValue<T, TField>(string name)
-        {
-            return GetFieldCache<T, TField>(name).Get();
-        }
+        public static TField GetFieldValue<T, TField>(string name) => GetFieldCache<T, TField>(name).Get();
 
-        public static TField GetFieldValue<TField>(this Type type, string name)
-        {
-            return GetFieldCache<TField>(type, name).Get();
-        }
+        public static TField GetFieldValue<TField>(this Type type, string name) => GetFieldCache<TField>(type, name).Get();
 
-        public static void SetFieldValue<T, TField>(this ref T instance, string name, TField value) where T : struct
-        {
-            (GetFieldCache<T, TField>(name) as CachedFieldOfStruct<T, TField>).Set(ref instance, value);
-        }
+        public static void SetFieldValue<T, TField>(this ref T instance, string name, TField value) where T : struct => (GetFieldCache<T, TField>(name) as CachedFieldOfStruct<T, TField>).Set(ref instance, value);
 
-        public static void SetFieldValue<T, TField>(this T instance, string name, TField value) where T : class
-        {
-            (GetFieldCache<T, TField>(name) as CachedFieldOfClass<T, TField>).Set(instance, value);
-        }
+        public static void SetFieldValue<T, TField>(this T instance, string name, TField value) where T : class => (GetFieldCache<T, TField>(name) as CachedFieldOfClass<T, TField>).Set(instance, value);
 
-        public static void SetFieldValue<T, TField>(string name, TField value)
-        {
-            GetFieldCache<T, TField>(name).Set(value);
-        }
+        public static void SetFieldValue<T, TField>(string name, TField value) => GetFieldCache<T, TField>(name).Set(value);
 
-        public static void SetFieldValue<TField>(this Type type, string name, TField value)
-        {
-            GetFieldCache<TField>(type, name).Set(value);
-        }
+        public static void SetFieldValue<TField>(this Type type, string name, TField value) => GetFieldCache<TField>(type, name).Set(value);
 
-        private abstract class CachedField<TField>
-        {
+        private abstract class CachedField<TField> {
             public readonly FieldInfo Info;
 
-            public CachedField(Type type, string name)
-            {
+            public CachedField(Type type, string name) {
                 Info = type.GetFields(ALL_FLAGS).FirstOrDefault(item => item.Name == name);
 
                 if (Info == null || Info.FieldType != typeof(TField))
@@ -123,9 +79,8 @@ namespace ModKit.Utility
             // for static field
             public abstract void Set(TField value);
 
-            protected Delegate CreateGetter(Type delType, bool isInstByRef)
-            {
-                DynamicMethod method = new DynamicMethod(
+            protected Delegate CreateGetter(Type delType, bool isInstByRef) {
+                DynamicMethod method = new(
                     name: "get_" + Info.Name,
                     returnType: Info.FieldType,
                     parameterTypes: new[] { isInstByRef ? Info.DeclaringType.MakeByRefType() : Info.DeclaringType },
@@ -133,53 +88,47 @@ namespace ModKit.Utility
                     skipVisibility: true);
                 method.DefineParameter(1, ParameterAttributes.In, "instance");
 
-                ILGenerator il = method.GetILGenerator();
-                if (Info.IsStatic)
-                {
+                var il = method.GetILGenerator();
+                if (Info.IsStatic) {
                     il.Emit(OpCodes.Ldsfld, Info);
                 }
-                else
-                {
+                else {
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldfld, Info);
                 }
                 il.Emit(OpCodes.Ret);
-                
+
                 return method.CreateDelegate(delType);
             }
 
-            protected Delegate CreateRefGetter(Type delType, bool isInstByRef)
-            {
+            protected Delegate CreateRefGetter(Type delType, bool isInstByRef) {
                 // DynamicMethod does not allow ref return type before .Net Core 2.1
-                TypeBuilder typeBuilder = RequestTypeBuilder();
-                MethodBuilder methodBuilder = typeBuilder.DefineMethod(
+                var typeBuilder = RequestTypeBuilder();
+                var methodBuilder = typeBuilder.DefineMethod(
                     name: "getRef_" + Info.Name,
                     attributes: MethodAttributes.Static | MethodAttributes.Public,
                     returnType: Info.FieldType.MakeByRefType(),
-                    parameterTypes: new[] { isInstByRef? Info.DeclaringType.MakeByRefType() : Info.DeclaringType });
+                    parameterTypes: new[] { isInstByRef ? Info.DeclaringType.MakeByRefType() : Info.DeclaringType });
                 methodBuilder.DefineParameter(1, ParameterAttributes.In, "instance");
 
-                ILGenerator il = methodBuilder.GetILGenerator();
-                if (Info.IsStatic)
-                {
+                var il = methodBuilder.GetILGenerator();
+                if (Info.IsStatic) {
                     il.Emit(OpCodes.Ldsflda, Info);
                 }
-                else
-                {
+                else {
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldflda, Info);
                 }
                 il.Emit(OpCodes.Ret);
 
-                Type t = typeBuilder.CreateType();
-                MethodInfo method = t.GetMethod(methodBuilder.Name);
+                var t = typeBuilder.CreateType();
+                var method = t.GetMethod(methodBuilder.Name);
 
                 return method.CreateDelegate(delType);
             }
 
-            protected Delegate CreateSetter(Type delType, bool isInstByRef)
-            {
-                DynamicMethod method = new DynamicMethod(
+            protected Delegate CreateSetter(Type delType, bool isInstByRef) {
+                DynamicMethod method = new(
                     name: "set_" + Info.Name,
                     returnType: null,
                     parameterTypes: new[] { isInstByRef ? Info.DeclaringType.MakeByRefType() : Info.DeclaringType, Info.FieldType },
@@ -188,14 +137,12 @@ namespace ModKit.Utility
                 method.DefineParameter(1, ParameterAttributes.In, "instance");
                 method.DefineParameter(2, ParameterAttributes.In, "value");
 
-                ILGenerator il = method.GetILGenerator();
-                if (Info.IsStatic)
-                {
+                var il = method.GetILGenerator();
+                if (Info.IsStatic) {
                     il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Stsfld, Info);
                 }
-                else
-                {
+                else {
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Stfld, Info);
@@ -206,8 +153,7 @@ namespace ModKit.Utility
             }
         }
 
-        private class CachedFieldOfStruct<T, TField> : CachedField<TField>
-        {
+        private class CachedFieldOfStruct<T, TField> : CachedField<TField> {
             private delegate TField Getter(ref T instance);
             private delegate ref TField RefGetter(ref T instance);
             private delegate void Setter(ref T instance, TField value);
@@ -219,114 +165,73 @@ namespace ModKit.Utility
 
             public CachedFieldOfStruct(string name) : base(typeof(T), name) { }
 
-            public override TField Get()
-            {
-                return (_getter ?? (_getter = CreateGetter(typeof(Getter), true) as Getter))(ref _dummy);
-            }
+            public override TField Get() => (_getter ??= CreateGetter(typeof(Getter), true) as Getter)(ref _dummy);
 
-            public TField Get(ref T instance)
-            {
-                return (_getter ?? (_getter = CreateGetter(typeof(Getter), true) as Getter))(ref instance);
-            }
+            public TField Get(ref T instance) => (_getter ??= CreateGetter(typeof(Getter), true) as Getter)(ref instance);
 
-            public ref TField GetRef(ref T instance)
-            {
-                return ref (_refGetter ?? (_refGetter = CreateRefGetter(typeof(RefGetter), true) as RefGetter))(ref instance);
-            }
+            public ref TField GetRef(ref T instance) => ref (_refGetter ??= CreateRefGetter(typeof(RefGetter), true) as RefGetter)(ref instance);
 
-            public override void Set(TField value)
-            {
-                (_setter ?? (_setter = CreateSetter(typeof(Setter), true) as Setter))(ref _dummy, value);
-            }
+            public override void Set(TField value) => (_setter ??= CreateSetter(typeof(Setter), true) as Setter)(ref _dummy, value);
 
-            public void Set(ref T instance, TField value)
-            {
-                (_setter ?? (_setter = CreateSetter(typeof(Setter), true) as Setter))(ref instance, value);
-            }
+            public void Set(ref T instance, TField value) => (_setter ??= CreateSetter(typeof(Setter), true) as Setter)(ref instance, value);
         }
 
-        private class CachedFieldOfClass<T, TField> : CachedField<TField>
-        {
+        private class CachedFieldOfClass<T, TField> : CachedField<TField> {
             private delegate TField Getter(T instance);
             private delegate ref TField RefGetter(T instance);
             private delegate void Setter(T instance, TField value);
 
-            private T _dummy = default;
+            private readonly T _dummy = default;
             private Getter _getter;
             private RefGetter _refGetter;
             private Setter _setter;
 
             public CachedFieldOfClass(string name) : base(typeof(T), name) { }
 
-            public override TField Get()
-            {
-                return (_getter ?? (_getter = CreateGetter(typeof(Getter), false) as Getter))(_dummy);
-            }
+            public override TField Get() => (_getter ??= CreateGetter(typeof(Getter), false) as Getter)(_dummy);
 
-            public TField Get(T instance)
-            {
-                return (_getter ?? (_getter = CreateGetter(typeof(Getter), false) as Getter))(instance);
-            }
+            public TField Get(T instance) => (_getter ??= CreateGetter(typeof(Getter), false) as Getter)(instance);
 
-            public ref TField GetRef(T instance)
-            {
-                return ref (_refGetter ?? (_refGetter = CreateRefGetter(typeof(RefGetter), false) as RefGetter))(instance);
-            }
+            public ref TField GetRef(T instance) => ref (_refGetter ??= CreateRefGetter(typeof(RefGetter), false) as RefGetter)(instance);
 
-            public override void Set(TField value)
-            {
-                (_setter ?? (_setter = CreateSetter(typeof(Setter), false) as Setter))(_dummy, value);
-            }
+            public override void Set(TField value) => (_setter ??= CreateSetter(typeof(Setter), false) as Setter)(_dummy, value);
 
-            public void Set(T instance, TField value)
-            {
-                (_setter ?? (_setter = CreateSetter(typeof(Setter), false) as Setter))(instance, value);
-            }
+            public void Set(T instance, TField value) => (_setter ??= CreateSetter(typeof(Setter), false) as Setter)(instance, value);
         }
 
-        private class CachedFieldOfStatic<TField> : CachedField<TField>
-        {
+        private class CachedFieldOfStatic<TField> : CachedField<TField> {
             private delegate TField Getter();
             private delegate void Setter(TField value);
 
             private Getter _getter;
             private Setter _setter;
 
-            public CachedFieldOfStatic(Type type, string name) : base(type, name)
-            {
+            public CachedFieldOfStatic(Type type, string name) : base(type, name) {
                 //if (!IsStatic(type))
                 //    throw new InvalidOperationException();
             }
 
-            public override TField Get()
-            {
-                return (_getter ?? (_getter = CreateGetter()))();
-            }
+            public override TField Get() => (_getter ??= CreateGetter())();
 
-            public override void Set(TField value)
-            {
-                (_setter ?? (_setter = CreateSetter()))(value);
-            }
+            public override void Set(TField value) => (_setter ??= CreateSetter())(value);
 
-            private Getter CreateGetter()
-            {
-                DynamicMethod method = new DynamicMethod(
+            private Getter CreateGetter() {
+                DynamicMethod method = new(
                     name: "get_" + Info.Name,
                     returnType: Info.FieldType,
                     parameterTypes: null,
                     owner: typeof(CachedField<TField>),
                     skipVisibility: true);
 
-                ILGenerator il = method.GetILGenerator();
+                var il = method.GetILGenerator();
                 il.Emit(OpCodes.Ldsfld, Info);
                 il.Emit(OpCodes.Ret);
 
                 return method.CreateDelegate(typeof(Getter)) as Getter;
             }
 
-            private Setter CreateSetter()
-            {
-                DynamicMethod method = new DynamicMethod(
+            private Setter CreateSetter() {
+                DynamicMethod method = new(
                     name: "set_" + Info.Name,
                     returnType: null,
                     parameterTypes: new[] { Info.FieldType },
@@ -334,7 +239,7 @@ namespace ModKit.Utility
                     skipVisibility: true);
                 method.DefineParameter(1, ParameterAttributes.In, "value");
 
-                ILGenerator il = method.GetILGenerator();
+                var il = method.GetILGenerator();
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Stsfld, Info);
                 il.Emit(OpCodes.Ret);

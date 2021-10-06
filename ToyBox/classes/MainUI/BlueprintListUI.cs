@@ -15,7 +15,7 @@ using Kingmaker.Blueprints.Items;
 
 namespace ToyBox {
     public class BlueprintListUI {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
 
         public static int repeatCount = 1;
         public static bool hasRepeatableAction = false;
@@ -27,18 +27,18 @@ namespace ToyBox {
         public static void OnGUI(UnitEntityData ch,
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
-            Func<String, String> titleFormater = null,
+            Func<string, string> titleFormater = null,
             NamedTypeFilter typeFilter = null
         ) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             if (remainingWidth == 0) remainingWidth = UI.ummWidth - indent;
-            int index = 0;
+            var index = 0;
             IEnumerable<SimpleBlueprint> simpleBlueprints = blueprints.ToList();
             if (needsLayout) {
-                foreach (SimpleBlueprint blueprint in simpleBlueprints) {
+                foreach (var blueprint in simpleBlueprints) {
                     var actions = blueprint.GetActions();
                     if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
-                    int actionCount = actions.Sum(action => action.canPerform(blueprint, ch) ? 1 : 0);
+                    var actionCount = actions.Sum(action => action.canPerform(blueprint, ch) ? 1 : 0);
                     maxActions = Math.Max(actionCount, maxActions);
                 }
                 needsLayout = false;
@@ -59,9 +59,9 @@ namespace ToyBox {
                 UI.EndHorizontal();
             }
             UI.Div(indent);
-            int count = 0;
-            foreach (SimpleBlueprint blueprint in simpleBlueprints) {
-                int currentCount = count++;
+            var count = 0;
+            foreach (var blueprint in simpleBlueprints) {
+                var currentCount = count++;
                 var description = blueprint.GetDescription();
                 float titleWidth = 0;
                 var remWidth = remainingWidth - indent;
@@ -80,7 +80,7 @@ namespace ToyBox {
                     titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
                     UI.Label(title, UI.Width(titleWidth));
                     remWidth -= titleWidth;
-                    int actionCount = actions != null ? actions.Count() : 0;
+                    var actionCount = actions != null ? actions.Count() : 0;
                     var lockIndex = titles.IndexOf("Lock");
                     if (blueprint is BlueprintUnlockableFlag flagBP) {
                         // special case this for now
@@ -108,9 +108,9 @@ namespace ToyBox {
                         remWidth -= 300;
                     }
                     else {
-                        for (int ii = 0; ii < maxActions; ii++) {
+                        for (var ii = 0; ii < maxActions; ii++) {
                             if (ii < actionCount) {
-                                BlueprintAction action = actions.ElementAt(ii);
+                                var action = actions.ElementAt(ii);
                                 // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
                                 if (action.name == "<" || action.name == ">") {
                                     UI.Space(174); continue;
@@ -132,26 +132,38 @@ namespace ToyBox {
                         }
                     }
                     UI.Space(10);
-                    String typeString = blueprint.GetType().Name;
+                    var typeString = blueprint.GetType().Name;
                     if (typeFilter?.collator != null) {
-                        var collatorString = typeFilter.collator(blueprint);
-                        if (blueprint is BlueprintItem itemBP) {
-                            var rarity = itemBP.Rarity();
-                            typeString = $"{typeString} - {rarity.ToString()}".Rarity(rarity);    
+                        var names = typeFilter.collator(blueprint);
+                        if (names.Count > 0) {
+                            var collatorString = names.First();
+                            if (blueprint is BlueprintItem itemBP) {
+                                var rarity = itemBP.Rarity();
+                                typeString = $"{typeString} - {rarity}".Rarity(rarity);
+                            }
+                            if (!typeString.Contains(collatorString))
+                                typeString += $" : {collatorString}".yellow();
                         }
-                        if (!typeString.Contains(collatorString))
-                            typeString += $" : {collatorString}".yellow();
                     }
+                    var attributes = "";
+                    if (settings.showAttributes) {
+                        var attr = string.Join(" ", blueprint.Attributes());
+                        if (!typeString.Contains(attr)) 
+                            attributes = attr;
+                    }
+
+                    if (attributes.Length > 1) typeString += $" - {attributes.orange()}";
+
                     if (description != null && description.Length > 0) description = $"{description}";
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {
                         if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {
-                            String componentStr = String.Join<object>(" ", bpso.ComponentsArray).color(RGBA.teal);
+                            var componentStr = string.Join<object>(" ", bpso.ComponentsArray).color(RGBA.teal);
                             if (description.Length == 0) description = componentStr;
                             else description = componentStr + "\n" + description;
                         }
                         if (settings.showElements && bpso.ElementsArray?.Count > 0) {
-                            String elementsStr = String.Join<object>(" ", bpso.ElementsArray).magenta();
+                            var elementsStr = string.Join<object>(" ", bpso.ElementsArray).magenta();
                             if (description.Length == 0) description = elementsStr;
                             else description = elementsStr + "\n" + description;
                         }
@@ -180,7 +192,7 @@ namespace ToyBox {
                                 //UI.Space(indent + titleWidth - labelWidth - 25);
                                 UI.Label(content, UI.Width(labelWidth));
                                 UI.Space(25);
-                                string[] nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
+                                var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
                                 if (nameStrings == null) {
                                     nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray();
                                     paramBPValueNames[paramBP] = nameStrings;

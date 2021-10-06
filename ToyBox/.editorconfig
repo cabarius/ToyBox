@@ -63,14 +63,14 @@ csharp_preserve_single_line_statements = true
 #Style - Code block preferences
 
 #prefer curly braces even for one line of code
-csharp_prefer_braces = true:suggestion
+csharp_prefer_braces = false:suggestion
 
 #Style - expression bodied member options
 
 #prefer expression-bodied members for accessors
 csharp_style_expression_bodied_accessors = true:suggestion
 #prefer block bodies for methods
-csharp_style_expression_bodied_methods = false:suggestion
+csharp_style_expression_bodied_methods = true:suggestion
 #prefer expression-bodied members for properties
 csharp_style_expression_bodied_properties = true:suggestion
 
@@ -89,9 +89,9 @@ dotnet_style_object_initializer = true:suggestion
 #prefer var over explicit type in all cases, unless overridden by another code style rule
 csharp_style_var_elsewhere = true:suggestion
 #prefer explicit type over var to declare variables with built-in system types such as int
-csharp_style_var_for_built_in_types =false:suggestion
+csharp_style_var_for_built_in_types =true:suggestion
 #prefer explicit type over var when the type is already mentioned on the right-hand side of a declaration
-csharp_style_var_when_type_is_apparent = false:suggestion
+csharp_style_var_when_type_is_apparent =true:suggestion
 
 #Style - language keyword and framework type options
 
@@ -122,3 +122,16 @@ dotnet_style_qualification_for_method = false:suggestion
 #prefer properties to be prefaced with this. in C# or Me. in Visual Basic
 dotnet_style_qualification_for_property = true:suggestion
 csharp_space_after_semicolon_in_for_statement=true
+
+# Default severity for analyzer diagnostics with category 'Style'
+
+# IDE0051: Remove unused private members
+dotnet_diagnostic.IDE0051.severity = none
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none
+
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = none
+
+dotnet_diagnostic.IDE0079.severity = none

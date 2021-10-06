@@ -8,13 +8,13 @@ namespace ToyBox.Multiclass {
     public static class HPDice {
         public static void ApplyHPDice(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] appliedClasses) {
             if (appliedClasses.Count() <= 0) return;
-            int[] newClassLvls = appliedClasses.Select(cl => unit.Progression.GetClassLevel(cl)).ToArray();
-            int classCount = newClassLvls.Length;
-            int[] hitDies = appliedClasses.Select(cl => (int)(cl.HitDie)).ToArray();
+            var newClassLvls = appliedClasses.Select(cl => unit.Progression.GetClassLevel(cl)).ToArray();
+            var classCount = newClassLvls.Length;
+            var hitDies = appliedClasses.Select(cl => (int)(cl.HitDie)).ToArray();
 
-            int mainClassIndex = appliedClasses.ToList().FindIndex(ch => ch == state.SelectedClass);
+            var mainClassIndex = appliedClasses.ToList().FindIndex(ch => ch == state.SelectedClass);
             //Logger.ModLoggerDebug($"mainClassIndex = {mainClassIndex}");
-            int mainClassHPDie = hitDies[mainClassIndex];
+            var mainClassHPDie = hitDies[mainClassIndex];
 
             var currentHPIncrease = hitDies[mainClassIndex];
             var newIncrease = currentHPIncrease;

@@ -23,7 +23,7 @@ using System.Linq;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    static class NoFriendlyFire {
+    internal static class NoFriendlyFire {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
@@ -31,8 +31,8 @@ namespace ToyBox.BagOfPatches {
         public static class AbilityTargetsAround_Select_Patch {
             public static void Postfix(ref IEnumerable<TargetWrapper> __result, AbilityTargetsAround __instance, ConditionsChecker ___m_Condition, AbilityExecutionContext context, TargetWrapper anchor) {
                 if (settings.toggleNoFriendlyFireForAOE) {
-                    UnitEntityData caster = context.MaybeCaster;
-                    IEnumerable<UnitEntityData> targets = GameHelper.GetTargetsAround(anchor.Point, __instance.AoERadius);
+                    var caster = context.MaybeCaster;
+                    var targets = GameHelper.GetTargetsAround(anchor.Point, __instance.AoERadius);
                     if (caster == null) {
                         __result = Enumerable.Empty<TargetWrapper>();
                         return;
@@ -54,12 +54,12 @@ namespace ToyBox.BagOfPatches {
                     }
                     if (caster.Descriptor.IsPartyOrPet() && ((context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                         if (context.AbilityBlueprint.HasLogic<AbilityUseOnRest>()) {
-                            AbilityUseOnRestType componentType = context.AbilityBlueprint.GetComponent<AbilityUseOnRest>().Type;
+                            var componentType = context.AbilityBlueprint.GetComponent<AbilityUseOnRest>().Type;
                             //bool healDamage = componentType == AbilityUseOnRestType.HealDamage || componentType == AbilityUseOnRestType.HealDamage;
-                            bool healDamage = componentType == AbilityUseOnRestType.HealDamage;
+                            var healDamage = componentType == AbilityUseOnRestType.HealDamage;
                             targets = targets.Where(target => {
                                 if (target.Descriptor.IsPartyOrPet() && !healDamage) {
-                                    bool forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
+                                    var forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
                                     return (forUndead == target.Descriptor.IsUndead);
                                 }
                                 return true;
@@ -80,7 +80,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     SimpleBlueprint blueprint = __instance.Reason.Context?.AssociatedBlueprint;
                     if (!(blueprint is BlueprintBuff)) {
-                        BlueprintAbility blueprintAbility = __instance.Reason.Context?.SourceAbility;
+                        var blueprintAbility = __instance.Reason.Context?.SourceAbility;
                         if (blueprintAbility != null &&
                             __instance.Initiator.Descriptor.IsPartyOrPet() &&
                             __instance.Target.Descriptor.IsPartyOrPet() &&
@@ -92,7 +92,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-//        public bool IsSuccessRoll(int d20, int successBonus = 0) => d20 + this.TotalBonus + successBonus >= this.DC;
+        //        public bool IsSuccessRoll(int d20, int successBonus = 0) => d20 + this.TotalBonus + successBonus >= this.DC;
         [HarmonyPatch(typeof(RuleSkillCheck), "IsSuccessRoll")]
         [HarmonyPatch(new Type[] { typeof(int), typeof(int) })]
 
@@ -146,7 +146,7 @@ namespace ToyBox.BagOfPatches {
         }
         [HarmonyPatch(typeof(RuleSavingThrow), "IsPassed", MethodType.Getter)]
         public static class RuleSavingThrow_IsPassed_Patch {
-            static void Postfix(ref bool __result, RuleSavingThrow __instance) {
+            internal static void Postfix(ref bool __result, RuleSavingThrow __instance) {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     if (__instance.Reason != null) {
                         if (__instance.Reason.Ability != null) {

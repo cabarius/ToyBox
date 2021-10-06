@@ -11,7 +11,7 @@ using System;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    static class Unrestricted {
+    internal static class Unrestricted {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
@@ -44,7 +44,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityArmor __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
                     var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint == null ? false : blueprint.CanBeEquippedBy(owner);
+                    __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityShield __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
                     var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint == null ? false : blueprint.CanBeEquippedBy(owner);
+                    __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityWeapon __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
                     var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint == null ? false : blueprint.CanBeEquippedBy(owner);
+                    __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
                 }
             }
         }

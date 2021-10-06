@@ -8,10 +8,8 @@ using UnityEngine;
 using UnityModManagerNet;
 using ModKit.Utility;
 
-namespace ModKit
-{
-    public interface IMenuPage
-    {
+namespace ModKit {
+    public interface IMenuPage {
         string Name { get; }
 
         int Priority { get; }
@@ -25,37 +23,32 @@ namespace ModKit
 
     public interface IMenuBottomPage : IMenuPage { }
 
-    public class MenuManager : INotifyPropertyChanged  
-    {
+    public class MenuManager : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
 
         // This method is called by the Set accessor of each property.  
         // The CallerMemberName attribute that is applied to the optional propertyName  
         // parameter causes the property name of the caller to be substituted as an argument.  
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         #region Fields
         private int _tabIndex;
         public int tabIndex {
-            get { return this._tabIndex; }
+            get { return _tabIndex; }
             set { _tabIndex = value; NotifyPropertyChanged(); }
         }
-        private List<IMenuTopPage> _topPages = new List<IMenuTopPage>();
-        private List<IMenuSelectablePage> _selectablePages = new List<IMenuSelectablePage>();
-        private List<IMenuBottomPage> _bottomPages = new List<IMenuBottomPage>();
-        static Exception caughtException = null;
+        private readonly List<IMenuTopPage> _topPages = new();
+        private readonly List<IMenuSelectablePage> _selectablePages = new();
+        private readonly List<IMenuBottomPage> _bottomPages = new();
+        private static Exception caughtException = null;
 
         #endregion
 
         #region Toggle
 
-        public void Enable(UnityModManager.ModEntry modEntry, Assembly _assembly)
-        {
-            foreach (Type type in _assembly.GetTypes()
-                .Where(type => !type.IsInterface && !type.IsAbstract && typeof(IMenuPage).IsAssignableFrom(type)))
-            {
+        public void Enable(UnityModManager.ModEntry modEntry, Assembly _assembly) {
+            foreach (var type in _assembly.GetTypes()
+                .Where(type => !type.IsInterface && !type.IsAbstract && typeof(IMenuPage).IsAssignableFrom(type))) {
                 if (typeof(IMenuTopPage).IsAssignableFrom(type))
                     _topPages.Add(Activator.CreateInstance(type, true) as IMenuTopPage);
 
@@ -66,7 +59,7 @@ namespace ModKit
                     _bottomPages.Add(Activator.CreateInstance(type, true) as IMenuBottomPage);
             }
 
-            int comparison(IMenuPage x, IMenuPage y) => x.Priority - y.Priority;
+            static int comparison(IMenuPage x, IMenuPage y) => x.Priority - y.Priority;
             _topPages.Sort(comparison);
             _selectablePages.Sort(comparison);
             _bottomPages.Sort(comparison);
@@ -74,8 +67,7 @@ namespace ModKit
             modEntry.OnGUI += OnGUI;
         }
 
-        public void Disable(UnityModManager.ModEntry modEntry)
-        {
+        public void Disable(UnityModManager.ModEntry modEntry) {
             modEntry.OnGUI -= OnGUI;
 
             _topPages.Clear();
@@ -85,8 +77,7 @@ namespace ModKit
 
         #endregion
 
-        private void OnGUI(UnityModManager.ModEntry modEntry)
-        {
+        private void OnGUI(UnityModManager.ModEntry modEntry) {
             bool hasPriorPage = false;
             try {
                 if (caughtException != null) {
@@ -96,13 +87,13 @@ namespace ModKit
                     }
                     return;
                 }
-                Event e = Event.current;
+                var e = Event.current;
                 UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();
 
 
                 if (_topPages.Count > 0) {
-                    foreach (IMenuTopPage page in _topPages) {
+                    foreach (var page in _topPages) {
                         if (hasPriorPage)
                             GUILayout.Space(10f);
                         page.OnGUI(modEntry);
@@ -115,7 +106,7 @@ namespace ModKit
                         if (hasPriorPage)
                             GUILayout.Space(10f);
                         tabIndex = GUILayout.Toolbar(tabIndex, _selectablePages.Select(page => page.Name).ToArray());
-                    
+
                         GUILayout.Space(10f);
                     }
 
@@ -124,7 +115,7 @@ namespace ModKit
                 }
 
                 if (_bottomPages.Count > 0) {
-                    foreach (IMenuBottomPage page in _bottomPages) {
+                    foreach (var page in _bottomPages) {
                         if (hasPriorPage)
                             GUILayout.Space(10f);
                         page.OnGUI(modEntry);

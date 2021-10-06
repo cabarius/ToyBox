@@ -8,7 +8,7 @@ using ToyBox.Multiclass;
 
 namespace ToyBox {
     public class PhatLoot {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
         public static void ResetGUI() { }
         public static void OnGUI() {
 #if DEBUG
@@ -28,6 +28,10 @@ namespace ToyBox {
 #endif
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
+                () => {
+                    UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
+                    UI.Space(100); UI.Label("Some items might be invisible until looted".green());
+                },
                 () => {
                     UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
                     UI.Space(25);
@@ -63,10 +67,6 @@ namespace ToyBox {
                 () => UI.RarityGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
                 () => UI.RarityGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
 #endif
-                () => {
-                    UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
-                    UI.Space(100); UI.Label("Some items might be invisible until looted".green());
-                },
                 () => { }
             );
             UI.Div(0, 25);
@@ -118,8 +118,8 @@ namespace ToyBox {
                                         using (UI.VerticalScope()) {
                                             foreach (var lewt in pahtLewts) {
                                                 var description = lewt.Blueprint.Description;
-                                                bool showBP = settings.toggleLootChecklistFilterBlueprint;
-                                                bool showDesc = settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
+                                                var showBP = settings.toggleLootChecklistFilterBlueprint;
+                                                var showDesc = settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
                                                 using (UI.HorizontalScope()) {
                                                     //Main.Log($"rarity: {lewt.Blueprint.Rarity()} - color: {lewt.Blueprint.Rarity().color()}");
                                                     UI.Label(lewt.Name.Rarity(lewt.Blueprint.Rarity()), showDesc || showBP ? UI.Width(350) : UI.AutoWidth());

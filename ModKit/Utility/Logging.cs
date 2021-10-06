@@ -24,16 +24,14 @@ namespace ModKit {
 
         public static void OnLoad(UnityModManager.ModEntry modEntry) {
             Mod.modEntry = modEntry;
-            Mod.modLogger = modEntry.Logger;
-            Mod.modEntryPath = modEntry.Path;
+            modLogger = modEntry.Logger;
+            modEntryPath = modEntry.Path;
         }
         public static void Error(string str) {
-            str = str.red().bold();
-            modLogger?.Error(str + "\n" + System.Environment.StackTrace);
+            str = str.yellow().bold();
+            modLogger?.Error(str + "\n" + Environment.StackTrace);
         }
-        public static void Error(Exception ex) {
-            Error(ex.ToString());
-        }
+        public static void Error(Exception ex) => Error(ex.ToString());
         public static void Warning(string str) {
             if (logLevel >= LogLevel.Warning)
                 modLogger?.Warning(str.orange());
@@ -50,7 +48,6 @@ namespace ModKit {
             if (logLevel >= LogLevel.Trace)
                 modLogger?.Log(str);
         }
-
     }
 #if false
 

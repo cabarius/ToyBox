@@ -7,28 +7,28 @@ using ModKit;
 
 namespace ToyBox {
     public class NamedTypeFilter {
-        public String name { get; }
+        public string name { get; }
         public Type type { get; }
         public Func<SimpleBlueprint, bool> filter;
-        public Func<SimpleBlueprint, String> collator;
+        public Func<SimpleBlueprint, List<string>> collator;
         public Func<IEnumerable<SimpleBlueprint>> blueprintSource;
-        protected NamedTypeFilter(String name, Type type, Func<SimpleBlueprint, bool> filter = null, Func<SimpleBlueprint, String> collator = null, Func<IEnumerable<SimpleBlueprint>> blueprintSource = null) {
+        protected NamedTypeFilter(string name, Type type, Func<SimpleBlueprint, bool> filter = null, Func<SimpleBlueprint, List<string>> collator = null, Func<IEnumerable<SimpleBlueprint>> blueprintSource = null) {
             this.name = name;
             this.type = type;
-            this.filter = filter != null ? filter : (bp) => true;
+            this.filter = filter ?? ((bp) => true);
             this.collator = collator;
             this.blueprintSource = blueprintSource;
         }
     }
     public class NamedTypeFilter<TBlueprint> : NamedTypeFilter where TBlueprint : SimpleBlueprint {
-        public NamedTypeFilter(String name, Func<TBlueprint, bool> filter = null, Func<TBlueprint, String> collator = null, Func<IEnumerable<SimpleBlueprint>> blueprintSource = null)
+        public NamedTypeFilter(string name, Func<TBlueprint, bool> filter = null, Func<TBlueprint, List<string>> collator = null, Func<IEnumerable<SimpleBlueprint>> blueprintSource = null)
             : base(name, typeof(TBlueprint), null, null, blueprintSource) {
             if (filter != null) this.filter = (bp) => filter((TBlueprint)bp);
             if (collator != null) this.collator = (bp) => collator((TBlueprint)bp);
         }
     }
     public static class ActionButtons {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
         public static void ResetGUI() { }
 
         // convenience extensions for constructing UI for special types

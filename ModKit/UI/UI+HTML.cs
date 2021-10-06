@@ -5,14 +5,14 @@ using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
+        private static GUIStyle linkStyle = null;
 
-        static GUIStyle linkStyle = null;
-
-        public static bool LinkButton(String title, String url, Action action = null, params GUILayoutOption[] options) {
-            if (options.Length == 0) { options = new GUILayoutOption[] { UI.AutoWidth() }; }
+        public static bool LinkButton(string title, string url, Action action = null, params GUILayoutOption[] options) {
+            if (options.Length == 0) { options = new GUILayoutOption[] { AutoWidth() }; }
             if (linkStyle == null) {
-                linkStyle = new GUIStyle(GUI.skin.label);
-                linkStyle.wordWrap = false;
+                linkStyle = new GUIStyle(GUI.skin.label) {
+                    wordWrap = false
+                };
                 // Match selection color which works nicely for both light and dark skins
                 linkStyle.normal.textColor = new Color(0f, 0.75f, 1f);
                 linkStyle.stretchWidth = false;
@@ -20,10 +20,10 @@ namespace ModKit {
             }
             var result = GL.Button(title, linkStyle, options);
             var rect = GUILayoutUtility.GetLastRect();
-            UI.Div(linkStyle.normal.textColor, 4, 0, rect.width);
+            Div(linkStyle.normal.textColor, 4, 0, rect.width);
             if (result) {
                 Application.OpenURL(url);
-                if (action != null) action(); 
+                action?.Invoke();
             }
             return result;
         }
