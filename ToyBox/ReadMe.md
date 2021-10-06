@@ -20,6 +20,7 @@
   * Much more coming which I will talk about soon
 * **Bag of tricks**
   * (***ShadowRanger***) Added a fix that should resolve the zoomed out camera bug if you had both ToyBox and Free Camera installed.  You may need to reset Toybox's fovMultiplier to 1 for it to take effect.
+* **Loot Checklist** is now searchable
 
 ### Ver 1.3.19
 * **Bag of Tricks** 

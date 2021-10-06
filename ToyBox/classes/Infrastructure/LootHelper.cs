@@ -41,9 +41,10 @@ namespace ToyBox {
             if (present.Unit != null) return present.Unit.Inventory.Items;
             return null;
         }
-        public static List<ItemEntity> GetLewtz(this LootWrapper present) {
-            if (present.InteractionLoot != null) return present.InteractionLoot.Loot.Items; ;
-            if (present.Unit != null) return present.Unit.Inventory.Items;
+        public static IEnumerable<ItemEntity> Search(this IEnumerable<ItemEntity> items, string searchText) => items.Where(i => searchText.Length > 0 ? i.Name.ToLower().Contains(searchText.ToLower()) : true);
+        public static List<ItemEntity> GetLewtz(this LootWrapper present, string searchText = "") {
+            if (present.InteractionLoot != null) return present.InteractionLoot.Loot.Items.Search(searchText).ToList();
+            if (present.Unit != null) return present.Unit.Inventory.Items.Search(searchText).ToList();
             return null;
         }
         public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea() {

@@ -9,6 +9,7 @@ using ToyBox.Multiclass;
 namespace ToyBox {
     public class PhatLoot {
         public static Settings settings => Main.settings;
+        public static string searchText = "";
         public static void ResetGUI() { }
         public static void OnGUI() {
 #if DEBUG
@@ -82,9 +83,15 @@ namespace ToyBox {
                     UI.RarityGrid(ref settings.lootChecklistFilterRarity, 4, UI.AutoWidth());
                 },
                 () => {
+                    UI.ActionTextField(
+                    ref searchText,
+                    "itemSearchText",
+                    (text) => { },
+                    () => { },
+                    UI.Width(300));
                     //UI.Space(390); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
-                    UI.Space(390); UI.Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint);
-                    UI.Space(25); UI.Toggle("Description", ref settings.toggleLootChecklistFilterDescription);
+                    UI.Space(25); UI.Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint, UI.AutoWidth());
+                    UI.Space(25); UI.Toggle("Description", ref settings.toggleLootChecklistFilterDescription, UI.AutoWidth());
                 },
                 () => {
                     if (!Main.IsInGame) { UI.Label("Not available in the Main Menu".orange()); return; }
@@ -93,16 +100,16 @@ namespace ToyBox {
                     using (UI.VerticalScope()) {
                         foreach (var group in presentGroups.Reverse()) {
                             var presents = group.AsEnumerable().OrderByDescending(p => {
-                                var loot = p.GetLewtz();
+                                var loot = p.GetLewtz(searchText);
                                 if (loot.Count == 0) return 0;
                                 else return (int)loot.Max(l => l.Rarity());
                             });
                             var rarity = settings.lootChecklistFilterRarity;
-                            var count = presents.Count(p => p.GetLewtz().Lootable(rarity).Count() > 0);
+                            var count = presents.Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
                             UI.Label($"{group.Key.cyan()}: {count}");
                             UI.Div(indent);
                             foreach (var present in presents) {
-                                var pahtLewts = present.GetLewtz().Lootable(rarity);
+                                var pahtLewts = present.GetLewtz(searchText).Lootable(rarity);
                                 var unit = present.Unit;
                                 if (pahtLewts.Count > 0
                                     //&& (unit == null
