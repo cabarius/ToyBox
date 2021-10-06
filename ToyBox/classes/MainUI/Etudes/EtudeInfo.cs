@@ -33,6 +33,7 @@ namespace ToyBox {
         public bool CompleteParent;
         public string Comment;
         public bool Foldout;
+        public bool FoldoutAllChildren;
         public List<BlueprintGuid> ConflictingGroups = new();
         public int Priority;
     }

@@ -290,61 +290,95 @@ namespace ToyBox {
         private static void ShowBlueprintsTree() {
             using (UI.VerticalScope()) {
                 DrawEtude(rootEtudeId, loadedEtudes[rootEtudeId]);
-
                 using (UI.HorizontalScope()) {
-                    UI.Space(10f);
-
+                    UI.Space(65f);
                     using (UI.VerticalScope(GUI.skin.box)) {
                         ShowParentTree(loadedEtudes[rootEtudeId]);
                     }
                 }
             }
         }
+        private static void ShowParentTree(EtudeIdReferences etude) {
+            foreach (var childrenEtude in etude.ChildrenId) {
+                if (useFilter && !filteredEtudes.ContainsKey(childrenEtude))
+                    continue;
+                DrawEtude(childrenEtude, loadedEtudes[childrenEtude]);
 
+                if ((loadedEtudes[childrenEtude].ChildrenId.Count == 0) || (!loadedEtudes[childrenEtude].Foldout))
+                    continue;
+
+                using (UI.HorizontalScope()) {
+                    UI.Space(65);
+
+                    using (UI.VerticalScope(GUI.skin.box)) {
+                        ShowParentTree(loadedEtudes[childrenEtude]);
+                    }
+                }
+            }
+        }
         private static void DrawEtude(BlueprintGuid etudeID, EtudeIdReferences etude) {
-            var style = GUIStyle.none;
+            using (UI.HorizontalScope()) {
 
-            style.fontStyle = FontStyle.Normal;
+                var style = GUIStyle.none;
 
-            if (Application.isPlaying) {
-                UpdateEtudeState(etudeID, etude);
-            }
+                style.fontStyle = FontStyle.Normal;
 
-            var name = etude.Name;
-            if (selected == etudeID) name = name.orange().bold();
-
-            if (GUILayout.Button(name, UI.MaxWidth(300))) {
-                if (selected != etudeID) {
-                    selected = etudeID;
+                if (Application.isPlaying) {
+                    UpdateEtudeState(etudeID, etude);
                 }
-                else {
-                    parent = etudeID;
-                    //etudeChildrenDrawer.SetParent(parent, workspaceRect);
+                var etudeEntry = loadedEtudes[etudeID];
+                var name = etude.Name;
+                if (selected == etudeID) name = name.orange().bold();
+
+                using (UI.HorizontalScope(UI.Width(450))) {
+                    if (etudeEntry.ChildrenId.Count != 0 && etudeEntry.ParentId != null) {
+                        UI.Space(10);
+                        UI.DisclosureToggle("", ref etudeEntry.Foldout, 25);
+                        UI.Space(0);
+                        if (UI.DisclosureToggle("", ref etudeEntry.FoldoutAllChildren, 25)) {
+                            OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout);
+                        }
+                        UI.Space(15);
+                        UI.Label(name.orange().bold(), UI.AutoWidth());
+                    }
+                    else {
+                        UI.Label($"  {UI.DisclosureGlyphEmpty} ".bold(), UI.AutoWidth()); UI.Label(name.orange().bold());
+                    }
+                }
+                //UI.ActionButton(UI.DisclosureGlyphOff + ">", () => OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout), GUI.skin.box, UI.AutoWidth());
+                UI.Space(25);
+                if (GUILayout.Button("Select", GUI.skin.box, UI.Width(100))) {
+                    if (selected != etudeID) {
+                        selected = etudeID;
+                    }
+                    else {
+                        parent = etudeID;
+                        //etudeChildrenDrawer.SetParent(parent, workspaceRect);
+                    }
+                    selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
+                }
+                UI.Space(25);
+                UI.Label(etude.State.ToString(), UI.AutoWidth());
+                UI.Space(25);
+                if (EtudeValidationProblem(etudeID, etude)) {
+                    UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
+                    UI.Space(25);
                 }
 
-                selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
-            }
-            UI.Space(25);
-            UI.Label(etude.State.ToString(), UI.AutoWidth());
-            UI.Space(25);
-            if (EtudeValidationProblem(etudeID, etude)) {
-                UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
-                UI.Space(25);
-            }
+                //GUI.Label(GUILayoutUtility.GetLastRect(), content, style);
 
-            //GUI.Label(GUILayoutUtility.GetLastRect(), content, style);
-
-            if (etude.LinkedArea != BlueprintGuid.Empty)
-                UI.Label("🔗", UI.AutoWidth());
-            if (etude.CompleteParent)
-                UI.Label("⎌", UI.AutoWidth());
-            if (etude.AllowActionStart) {
-                UI.Space(25);
-                UI.Label("Can Start", UI.AutoWidth());
-            }
-            if (!string.IsNullOrEmpty(etude.Comment)) {
-                UI.Space(25);
-                UI.Label(etude.Comment, UI.AutoWidth());
+                if (etude.LinkedArea != BlueprintGuid.Empty)
+                    UI.Label("🔗", UI.AutoWidth());
+                if (etude.CompleteParent)
+                    UI.Label("⎌", UI.AutoWidth());
+                if (etude.AllowActionStart) {
+                    UI.Space(25);
+                    UI.Label("Can Start", UI.AutoWidth());
+                }
+                if (!string.IsNullOrEmpty(etude.Comment)) {
+                    UI.Space(25);
+                    UI.Label(etude.Comment, UI.AutoWidth());
+                }
             }
         }
 
@@ -376,42 +410,6 @@ namespace ToyBox {
             else if (Game.Instance.Player.EtudesSystem.EtudeIsCompleted(blueprintEtude))
                 etude.State = EtudeIdReferences.EtudeState.Completed;
         }
-
-        private static void ShowParentTree(EtudeIdReferences etude) {
-            foreach (var childrenEtude in etude.ChildrenId) {
-                if (useFilter && !filteredEtudes.ContainsKey(childrenEtude))
-                    continue;
-                using (UI.HorizontalScope()) {
-                    if (loadedEtudes[childrenEtude].ChildrenId.Count != 0) {
-                        if (GUILayout.Button("", GUIStyle.none, UI.MinWidth(15), UI.MinHeight(15), UI.MaxWidth(15))) {
-                            loadedEtudes[childrenEtude].Foldout = !loadedEtudes[childrenEtude].Foldout;
-                        }
-
-                        UI.DisclosureToggle("", ref loadedEtudes[childrenEtude].Foldout);
-
-                        UI.Space(10f);
-
-                        if (GUILayout.Button("", GUIStyle.none, UI.MinWidth(15), UI.MinHeight(15), UI.MaxWidth(15))) {
-                            OpenCloseAllChildren(loadedEtudes[childrenEtude], !loadedEtudes[childrenEtude].Foldout);
-                        }
-                    }
-
-                    DrawEtude(childrenEtude, loadedEtudes[childrenEtude]);
-                }
-
-                if ((loadedEtudes[childrenEtude].ChildrenId.Count == 0) || (!loadedEtudes[childrenEtude].Foldout))
-                    continue;
-
-                using (UI.HorizontalScope()) {
-                    UI.Space(60f);
-
-                    using (UI.VerticalScope(GUI.skin.box)) {
-                        ShowParentTree(loadedEtudes[childrenEtude]);
-                    }
-                }
-            }
-        }
-
         private static void OpenCloseAllChildren(EtudeIdReferences etude, bool foldoutState) {
             etude.Foldout = foldoutState;
 
