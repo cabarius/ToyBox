@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyBox", "ToyBox\ToyBox.csp
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModKitSrc", "ModKit\ModKitSrc.shproj", "{7D3F9428-C134-47FE-9D04-305B4D330401}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AA27760-A0FF-4EFA-B330-CCE957361EDD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ModKit\ModKitSrc.projitems*{22dcb4e1-d979-4ea9-913a-4ee1634b4ded}*SharedItemsImports = 4

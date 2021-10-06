@@ -16,35 +16,35 @@ namespace ToyBox.Multiclass {
         public static void ApplySingleStat(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] appliedClasses, StatType stat, BlueprintStatProgression[] statProgs, ProgressionPolicy policy = ProgressionPolicy.Largest) {
             if (appliedClasses.Count() <= 0) return;
             //Mod.Debug($"stat: {stat}  baseValue: {unit.Stats.GetStat(stat).BaseValue}");
-            int[] newClassLvls = appliedClasses.Select(cd => unit.Progression.GetClassLevel(cd)).ToArray();
-            int appliedClassCount = newClassLvls.Length;
-            int[] oldBonuses = new int[appliedClassCount];
-            int[] newBonuses = new int[appliedClassCount];
+            var newClassLvls = appliedClasses.Select(cd => unit.Progression.GetClassLevel(cd)).ToArray();
+            var appliedClassCount = newClassLvls.Length;
+            var oldBonuses = new int[appliedClassCount];
+            var newBonuses = new int[appliedClassCount];
 
-            for (int i = 0; i < appliedClassCount; i++) {
+            for (var i = 0; i < appliedClassCount; i++) {
                 newBonuses[i] = statProgs[i].GetBonus(newClassLvls[i]);
                 oldBonuses[i] = statProgs[i].GetBonus(newClassLvls[i] - 1);
             }
-            
-            int mainClassIndex = appliedClasses.ToList().FindIndex(cd => cd == state.SelectedClass);
+
+            var mainClassIndex = appliedClasses.ToList().FindIndex(cd => cd == state.SelectedClass);
             //v($"mainClassIndex = {mainClassIndex}");
-            int mainClassInc = newBonuses[mainClassIndex] - oldBonuses[mainClassIndex];
-            int increase = 0;
+            var mainClassInc = newBonuses[mainClassIndex] - oldBonuses[mainClassIndex];
+            var increase = 0;
 
             switch (policy) {
                 case ProgressionPolicy.Average:
-                    for (int i = 0; i < appliedClassCount; i++) increase += Math.Max(0, newBonuses[i] - oldBonuses[i]);
-                    unit.Stats.GetStat(stat).BaseValue += (increase/appliedClassCount - mainClassInc);
+                    for (var i = 0; i < appliedClassCount; i++) increase += Math.Max(0, newBonuses[i] - oldBonuses[i]);
+                    unit.Stats.GetStat(stat).BaseValue += (increase / appliedClassCount - mainClassInc);
                     break;
                 case ProgressionPolicy.Largest:
                     int maxOldValue = 0, maxNewValue = 0;
-                    for (int i = 0; i < appliedClassCount; i++) maxOldValue = Math.Max(maxOldValue, oldBonuses[i]);
-                    for (int i = 0; i < appliedClassCount; i++) maxNewValue = Math.Max(maxNewValue, newBonuses[i]);
+                    for (var i = 0; i < appliedClassCount; i++) maxOldValue = Math.Max(maxOldValue, oldBonuses[i]);
+                    for (var i = 0; i < appliedClassCount; i++) maxNewValue = Math.Max(maxNewValue, newBonuses[i]);
                     increase = maxNewValue - maxOldValue;
                     unit.Stats.GetStat(stat).BaseValue += (increase - mainClassInc);
                     break;
                 case ProgressionPolicy.Sum:
-                    for (int i = 0; i < appliedClassCount; i++) increase += Math.Max(0, newBonuses[i] - oldBonuses[i]);
+                    for (var i = 0; i < appliedClassCount; i++) increase += Math.Max(0, newBonuses[i] - oldBonuses[i]);
                     unit.Stats.GetStat(stat).BaseValue += (increase - mainClassInc);
                     break;
                 default:
@@ -54,35 +54,35 @@ namespace ToyBox.Multiclass {
 
         public static void ApplySaveBAB(UnitDescriptor unit, LevelUpState state, BlueprintCharacterClass[] classes) {
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.BaseAttackBonus, 
-                classes.Select(a => a.BaseAttackBonus).ToArray(), 
+                unit,
+                state,
+                classes,
+                StatType.BaseAttackBonus,
+                classes.Select(a => a.BaseAttackBonus).ToArray(),
                 Main.settings.multiclassBABPolicy
                 );
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.SaveFortitude, 
-                classes.Select(a => a.FortitudeSave).ToArray(), 
+                unit,
+                state,
+                classes,
+                StatType.SaveFortitude,
+                classes.Select(a => a.FortitudeSave).ToArray(),
                 Main.settings.multiclassSavingThrowPolicy
                 );
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.SaveReflex, 
+                unit,
+                state,
+                classes,
+                StatType.SaveReflex,
                 classes.Select(a => a.ReflexSave).ToArray(),
                 Main.settings.multiclassSavingThrowPolicy
                 );
             ApplySingleStat(
-                unit, 
-                state, 
-                classes, 
-                StatType.SaveWill, 
-                classes.Select(a => a.WillSave).ToArray(), 
+                unit,
+                state,
+                classes,
+                StatType.SaveWill,
+                classes.Select(a => a.WillSave).ToArray(),
                 Main.settings.multiclassSavingThrowPolicy
                 );
 

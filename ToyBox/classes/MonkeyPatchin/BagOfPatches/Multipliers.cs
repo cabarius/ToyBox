@@ -25,22 +25,18 @@ using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
 
 namespace ToyBox.BagOfPatches {
-    static class Multipliers {
+    internal static class Multipliers {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EncumbranceHelper), "GetHeavy")]
-        static class EncumbranceHelper_GetHeavy_Patch {
-            static void Postfix(ref int __result) {
-                __result = Mathf.RoundToInt(__result * settings.encumberanceMultiplier);
-            }
+        private static class EncumbranceHelper_GetHeavy_Patch {
+            private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * settings.encumberanceMultiplier);
         }
 
         [HarmonyPatch(typeof(UnitPartWeariness), "GetFatigueHoursModifier")]
-        static class EncumbranceHelper_GetFatigueHoursModifier_Patch {
-            static void Postfix(ref float __result) {
-                __result = __result * (float)Math.Round(settings.fatigueHoursModifierMultiplier, 1);
-            }
+        private static class EncumbranceHelper_GetFatigueHoursModifier_Patch {
+            private static void Postfix(ref float __result) => __result *= (float)Math.Round(settings.fatigueHoursModifierMultiplier, 1);
         }
 
         [HarmonyPatch(typeof(Player), "GainPartyExperience")]
@@ -63,7 +59,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(Spellbook), "GetSpellSlotsCount")]
         public static class BlueprintSpellsTable_GetCount_Patch {
-            static void Postfix(ref int __result, Spellbook __instance, int spellLevel) {
+            private static void Postfix(ref int __result, Spellbook __instance, int spellLevel) {
                 if (__result > 0 && __instance.Blueprint.IsArcanist) {
                     var spellsKnown = __instance.m_KnownSpells[spellLevel].Count;
                     __result = Math.Min(Mathf.RoundToInt(__result * settings.arcanistSpellslotMultiplier), spellsKnown);
@@ -72,21 +68,15 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
-        static class Spellbook_GetSpellsPerDay_Patch {
-            static void Postfix(ref int __result) {
-                __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.spellsPerDayMultiplier, 1));
-            }
+        private static class Spellbook_GetSpellsPerDay_Patch {
+            private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.spellsPerDayMultiplier, 1));
         }
 
         [HarmonyPatch(typeof(Player), "GetCustomCompanionCost")]
         public static class Player_GetCustomCompanionCost_Patch {
-            public static bool Prefix(ref bool __state) {
-                return !__state;    // FIXME - why did Bag of Tricks do this?
-            }
+            public static bool Prefix(ref bool __state) => !__state;    // FIXME - why did Bag of Tricks do this?
 
-            public static void Postfix(ref int __result) {
-                __result = Mathf.RoundToInt(__result * settings.companionCostMultiplier);
-            }
+            public static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * settings.companionCostMultiplier);
         }
 
         /**
@@ -129,9 +119,7 @@ namespace ToyBox.BagOfPatches {
                  "e6f2fc5d73d88064583cb828801212f4" //Fatigued
              };
 
-        private static bool isGoodBuff(BlueprintBuff blueprint) {
-            return !blueprint.Harmful && !badBuffs.Contains(blueprint.AssetGuidThreadSafe);
-        }
+        private static bool isGoodBuff(BlueprintBuff blueprint) => !blueprint.Harmful && !badBuffs.Contains(blueprint.AssetGuidThreadSafe);
 
         [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
             typeof(BlueprintBuff),
@@ -201,7 +189,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(DifficultyPresetsList), "GetAdjustmentPreset")]
         public static class DifficultyPresetList_EnemyHpMultiplier_Patch {
             public static void Postfix(ref DifficultyPresetsList.StatsAdjustmentPreset __result, StatsAdjustmentsType preset) {
-                float hp = preset switch {
+                var hp = preset switch {
                     StatsAdjustmentsType.ExtraDecline => 0.4f,
                     StatsAdjustmentsType.StrongDecline => 0.6f,
                     StatsAdjustmentsType.Decline => 0.8f,
@@ -221,36 +209,28 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(ItemEntity) })]
-        static class VendorLogic_GetItemSellPrice_Patch {
-            private static void Postfix(ref long __result) {
-                __result = (long)(__result * settings.vendorSellPriceMultiplier);
-            }
+        private static class VendorLogic_GetItemSellPrice_Patch {
+            private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorSellPriceMultiplier);
         }
         [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(BlueprintItem) })]
-        static class VendorLogic_GetItemSellPrice_Patch2 {
-            private static void Postfix(ref long __result) {
-                __result = (long)(__result * settings.vendorSellPriceMultiplier);
-            }
+        private static class VendorLogic_GetItemSellPrice_Patch2 {
+            private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorSellPriceMultiplier);
         }
 
         [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", new Type[] { typeof(ItemEntity) })]
-        static class VendorLogic_GetItemBuyPrice_Patch {
-            private static void Postfix(ref long __result) {
-                __result = (long)(__result * settings.vendorBuyPriceMultiplier);
-            }
+        private static class VendorLogic_GetItemBuyPrice_Patch {
+            private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorBuyPriceMultiplier);
         }
         [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", new Type[] { typeof(BlueprintItem) })]
-        static class VendorLogic_GetItemBuyPrice_Patc2h {
-            private static void Postfix(ref long __result) {
-                __result = (long)(__result * settings.vendorBuyPriceMultiplier);
-            }
+        private static class VendorLogic_GetItemBuyPrice_Patc2h {
+            private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorBuyPriceMultiplier);
         }
 
         [HarmonyPatch(typeof(CameraZoom), "TickZoom")]
-        static class CameraZoom_TickZoom {
-            static bool firstCall = true;
-            static float BaseFovMin = 17.5f;
-            static float BaseFovMax = 30;
+        private static class CameraZoom_TickZoom {
+            private static bool firstCall = true;
+            private static readonly float BaseFovMin = 17.5f;
+            private static readonly float BaseFovMax = 30;
             public static bool Prefix(CameraZoom __instance) {
                 if (firstCall) {
                     //Main.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
@@ -280,7 +260,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(CameraRig), "SetMode")]
-        static class CameraRig_SetMode_Apply {
+        private static class CameraRig_SetMode_Apply {
             public static void Postfix(CameraRig __instance, CameraMode mode) {
                 if (settings.fovMultiplierCutScenes == 1 && settings.fovMultiplier == 1) return;
                 if (mode == CameraMode.Default && Game.Instance.CurrentMode == GameModeType.Cutscene) {

@@ -10,15 +10,16 @@ using ModKit;
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
-        LoadBlueprintsCallback callback;
-        List<SimpleBlueprint> blueprints;
+
+        private LoadBlueprintsCallback callback;
+        private List<SimpleBlueprint> blueprints;
         public float progress = 0;
         private static BlueprintLoader _shared;
         public static BlueprintLoader Shared {
             get {
                 if (_shared == null) {
                     _shared = new GameObject().AddComponent<BlueprintLoader>();
-                    UnityEngine.Object.DontDestroyOnLoad(_shared.gameObject);
+                    DontDestroyOnLoad(_shared.gameObject);
                 }
                 return _shared;
             }
@@ -47,8 +48,8 @@ namespace ToyBox {
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 #if true    // TODO - Truinto for evaluation; my result improved from 2689 to 17 milliseconds
-            int loaded = 0;
-            int total = 1;
+            var loaded = 0;
+            var total = 1;
             var allGUIDs = new List<BlueprintGuid> { };
             foreach (var key in toc.Keys) {
                 allGUIDs.Add(key);
@@ -77,7 +78,7 @@ namespace ToyBox {
             watch.Stop();
 
             Mod.Debug($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
-            this.callback(blueprints);
+            callback(blueprints);
             yield return null;
             StopCoroutine(coroutine);
             coroutine = null;
@@ -104,7 +105,7 @@ namespace ToyBox {
     public static class BlueprintLoaderOld {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
 
-        static AssetBundleRequest LoadRequest;
+        private static AssetBundleRequest LoadRequest;
         public static float progress = 0;
         public static void Load(LoadBlueprintsCallback callback) {
 #if false

@@ -7,7 +7,7 @@ using ToyBox.Multiclass;
 
 namespace ToyBox {
     public class LevelUp {
-        public static Settings settings { get { return Main.settings; } }
+        public static Settings settings => Main.settings;
         public static void ResetGUI() { }
         public static void OnGUI() {
             UI.HStack("Character Creation", 1,
@@ -66,6 +66,7 @@ namespace ToyBox {
                     UI.Space(25);
                     UI.Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
                 }),
+                () => UI.Toggle("Allow Companions to Take Mythic Classes", ref settings.toggleAllowCompanionsToBecomeMythic, 0),
                 () => UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref settings.toggleFeaturesIgnorePrerequisites, 0),
                 () => UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref settings.toggleIgnoreCasterTypeSpellLevel, 0),
                 () => UI.Toggle("Ignore Forbidden Archetypes", ref settings.toggleIgnoreForbiddenArchetype, 0),

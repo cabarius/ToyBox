@@ -10,8 +10,8 @@ namespace ModKit {
         void AddMissingKeys(IUpdatableSettings from);
     }
 
-    static class ModSettings {
-        public static void SaveSettings<T>(this ModEntry modEntry, string fileName, T settings) { 
+    internal static class ModSettings {
+        public static void SaveSettings<T>(this ModEntry modEntry, string fileName, T settings) {
             string userConfigFolder = modEntry.Path + "UserSettings";
             Directory.CreateDirectory(userConfigFolder);
             var userPath = $"{userConfigFolder}{Path.DirectorySeparatorChar}{fileName}";
@@ -27,12 +27,12 @@ namespace ModKit {
                     //Logger.Log("found resource: " + res);
                     if (res.Contains(fileName)) {
                         var stream = assembly.GetManifestResourceStream(res);
-                        using (StreamReader reader = new StreamReader(stream)) {
-                            var text = reader.ReadToEnd();
-                            //Logger.Log($"read: {text}");
-                            settings = JsonConvert.DeserializeObject<T>(text);
-                            //Logger.Log($"read settings: {string.Join(Environment.NewLine, settings)}");
-                        }
+                        using StreamReader reader = new(stream);
+                        var text = reader.ReadToEnd();
+                        //Logger.Log($"read: {text}");
+                        settings = JsonConvert.DeserializeObject<T>(text);
+
+                        //Logger.Log($"read settings: {string.Join(Environment.NewLine, settings)}");
                     }
                 }
             }
@@ -41,17 +41,16 @@ namespace ModKit {
                 settings = new T { };
             }
             if (File.Exists(userPath)) {
-                using (StreamReader reader = File.OpenText(userPath)) {
-                    try {
-                        T userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-                        userSettings.AddMissingKeys(settings);
-                        settings = userSettings;
-                    }
-                    catch {
-                        Mod.Error("Failed to load user settings. Settings will be rebuilt.");
-                        try { File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true); }
-                        catch { Mod.Error("Failed to archive broken settings."); }
-                    }
+                using var reader = File.OpenText(userPath);
+                try {
+                    var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+                    userSettings.AddMissingKeys(settings);
+                    settings = userSettings;
+                }
+                catch {
+                    Mod.Error("Failed to load user settings. Settings will be rebuilt.");
+                    try { File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true); }
+                    catch { Mod.Error("Failed to archive broken settings."); }
                 }
             }
             File.WriteAllText(userPath, JsonConvert.SerializeObject(settings, Formatting.Indented));

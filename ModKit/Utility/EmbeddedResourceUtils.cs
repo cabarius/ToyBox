@@ -15,12 +15,11 @@ namespace ModKit {
                     continue;
                 }
 
-                using (var manifestResourceStream = assembly.GetManifestResourceStream(resourceName)) {
-                    if (manifestResourceStream == null) {
-                        continue;
-                    }
-                    return manifestResourceStream;
+                using var manifestResourceStream = assembly.GetManifestResourceStream(resourceName);
+                if (manifestResourceStream == null) {
+                    continue;
                 }
+                return manifestResourceStream;
             }
             return null;
         }

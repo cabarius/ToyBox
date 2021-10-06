@@ -20,16 +20,14 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 using ModKit;
 
 namespace ToyBox.BagOfPatches {
-    static class Summons {
+    internal static class Summons {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-
-
-        static bool SummonedByPlayerFaction = false;
+        private static bool SummonedByPlayerFaction = false;
 
         [HarmonyPatch(typeof(SummonPool), "Register")]
-        static class SummonPool_Register_Patch {
-            static void Postfix(ref UnitEntityData unit) {
+        private static class SummonPool_Register_Patch {
+            private static void Postfix(ref UnitEntityData unit) {
                 //if (settings.toggleSetSpeedOnSummon) {
                 //    unit.Descriptor.Stats.GetStat(StatType.Speed).BaseValue = settings.setSpeedOnSummonValue;
                 //}
@@ -59,11 +57,11 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleSummonUnit), MethodType.Constructor, new Type[] { 
-            typeof(UnitEntityData), 
-            typeof(BlueprintUnit), 
-            typeof(Vector3), 
-            typeof(Rounds), 
+        [HarmonyPatch(typeof(RuleSummonUnit), MethodType.Constructor, new Type[] {
+            typeof(UnitEntityData),
+            typeof(BlueprintUnit),
+            typeof(Vector3),
+            typeof(Rounds),
             typeof(int) }
         )]
         public static class RuleSummonUnit_Constructor_Patch {
@@ -90,7 +88,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMakeSummmonsControllable) {
                     SummonedByPlayerFaction = initiator.IsPlayerFaction;
                 }
-                Mod.Debug("Initiator: " + initiator.CharacterName + $"(PlayerFaction : {initiator.IsPlayerFaction})" + "\nBlueprint: " + blueprint.CharacterName  + "\nDuration: " + duration.Value);
+                Mod.Debug("Initiator: " + initiator.CharacterName + $"(PlayerFaction : {initiator.IsPlayerFaction})" + "\nBlueprint: " + blueprint.CharacterName + "\nDuration: " + duration.Value);
             }
         }
 

@@ -54,17 +54,17 @@ namespace ToyBox.classes.MainUI {
                     KingdomCheats.AddMorale();
                 },
                 () => {
-                    int value = moraleState.CurrentValue;
+                    var value = moraleState.CurrentValue;
                     UI.Slider("Morale", ref value, moraleState.MinValue, moraleState.MaxValue, 1, "", UI.AutoWidth());
                     moraleState.CurrentValue = value;
                 },
                 () => {
-                    int value = moraleState.MaxValue;
+                    var value = moraleState.MaxValue;
                     UI.Slider("Max Morale", ref value, -200, 200, 20, "", UI.AutoWidth());
                     moraleState.MaxValue = value;
                 },
                 () => {
-                    int value = moraleState.MinValue;
+                    var value = moraleState.MinValue;
                     UI.Slider("Min Morale", ref value, -200, 200, -100, "", UI.AutoWidth());
                     moraleState.MinValue = value;
                 },
@@ -89,7 +89,7 @@ namespace ToyBox.classes.MainUI {
                             UI.Label("Next Rank", UI.Width(150));
                         }
 
-                        foreach (KingdomStats.Stat kingdomStat in kingdom.Stats) {
+                        foreach (var kingdomStat in kingdom.Stats) {
                             var conditions = KingdomRoot.Instance.RankUps.Conditions[kingdomStat.Type];
                             using (UI.HorizontalScope()) {
                                 UI.Label(kingdomStat.Type.ToString().cyan(), UI.Width(283));
@@ -166,7 +166,13 @@ namespace ToyBox.classes.MainUI {
                 },
                 () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent, 0),
                 () => {
-                    UI.Slider("Build Time Modifer", ref Settings.kingdomBuildingTimeModifier, -2, 2, 0, 2, "", UI.Width(400));
+
+                    UI.Slider("Crusade card resolution time multiplier", ref Settings.kingdomTaskResolutionLengthMultiplier, -1, 2, 0, 2, "", UI.Width(400));
+                    UI.Space(25);
+                    UI.Label("Multiplies crusade card resolution time by (1 + modifier). -1 will make things as fast as possible (minimum 1 day to avoid possible bugs)".green());
+                },
+            () => {
+                    UI.Slider("Build Time Modifer", ref Settings.kingdomBuildingTimeModifier, -1, 2, 0, 2, "", UI.Width(400));
                     var instance = KingdomState.Instance;
                     if (instance != null) {
                         instance.BuildingTimeModifier = Settings.kingdomBuildingTimeModifier;
@@ -197,6 +203,5 @@ namespace ToyBox.classes.MainUI {
         );
 
         }
-
     }
 }

@@ -7,7 +7,7 @@ namespace ToyBox.classes.Infrastructure {
     public static class HumanFriendly {
         public static void EnsureFriendlyTypesContainAll() {
             if (Enum.GetValues(typeof(StatType)).Length != StatTypes.Count) {
-                HashSet<int> friendlyTypes = new HashSet<int>(StatTypes.Cast<int>().ToList());
+                HashSet<int> friendlyTypes = new(StatTypes.Cast<int>().ToList());
                 var missingTypes = Enum.GetValues(typeof(StatType)).Cast<int>().ToList()
                     .Where(orig => friendlyTypes.Contains(orig) == false)
                     .Select(x => (StatType)x);
@@ -15,7 +15,8 @@ namespace ToyBox.classes.Infrastructure {
             }
         }
 
-        public static List<StatType> StatTypes = new List<StatType> { StatType.Unknown,
+        public static List<StatType> StatTypes = new() {
+            StatType.Unknown,
             StatType.Strength,
             StatType.Dexterity,
             StatType.Constitution,
@@ -55,6 +56,7 @@ namespace ToyBox.classes.Infrastructure {
             StatType.SkillUseMagicDevice,
             StatType.CheckBluff,
             StatType.CheckDiplomacy,
-            StatType.CheckIntimidate };
+            StatType.CheckIntimidate
+        };
     }
 }

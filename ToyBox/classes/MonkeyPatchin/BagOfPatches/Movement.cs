@@ -21,7 +21,7 @@ using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    static class Movement {
+    internal static class Movement {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
@@ -31,7 +31,7 @@ namespace ToyBox.BagOfPatches {
                 //Main.Log($"UnitEntityData_CalculateSpeedModifier_Patch: isInParty:{__instance.Descriptor.IsPartyOrPet()} result:{__result}".cyan());
                 if (settings.partyMovementSpeedMultiplier == 1.0f || !__instance.Descriptor.IsPartyOrPet())
                     return;
-                UnitPartTacticalCombat partTacticalCombat = __instance.Get<UnitPartTacticalCombat>();
+                var partTacticalCombat = __instance.Get<UnitPartTacticalCombat>();
                 if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return;
                 __result *= settings.partyMovementSpeedMultiplier;
                 //Main.Log($"finalREsult: {__result}".cyan());
@@ -41,7 +41,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(ClickGroundHandler), "RunCommand")]
         public static class ClickGroundHandler_RunCommand_Patch {
-            static UnitMoveTo unitMoveTo = null;
+            private static UnitMoveTo unitMoveTo = null;
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
                 var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
                 //Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()} moveAsOne:{moveAsOne}");
@@ -51,11 +51,11 @@ namespace ToyBox.BagOfPatches {
                 if (!moveAsOne) {
                     return true;
                 }
-                UnitPartTacticalCombat partTacticalCombat = unit.Get<UnitPartTacticalCombat>();
+                var partTacticalCombat = unit.Get<UnitPartTacticalCombat>();
                 if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return true;
 
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
-                Mod.Trace($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {String.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
+                Mod.Trace($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {string.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
                 speedLimit *= Main.settings.partyMovementSpeedMultiplier;
 
                 unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
@@ -83,7 +83,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", new Type[] { })]
         public static class MovementSpeed_GetRegionalModifier_Patch1 {
             public static void Postfix(ref float __result) {
-                float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                 __result = speedMultiplier * __result;
             }
         }
@@ -91,7 +91,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", new Type[] { typeof(Vector3) })]
         public static class MovementSpeed_GetRegionalModifier_Patch2 {
             public static void Postfix(ref float __result) {
-                float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                 __result = speedMultiplier * __result;
             }
         }
@@ -112,8 +112,8 @@ namespace ToyBox.BagOfPatches {
                 IGlobalMapTraveler traveler,
                 ref float visualStepDistance) {
                 // TODO - can we get rid of the other map movement multipliers and do them all here?
-                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
-                    float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == ArmyFaction.Crusaders) {
+                    var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
                     visualStepDistance = speedMultiplier * visualStepDistance;
                 }
             }
@@ -122,9 +122,9 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GlobalMapArmyState), "SpendMovementPoints", new Type[] { typeof(float) })]
         public static class GlobalMapArmyState_SpendMovementPoints_Patch {
             public static void Prefix(GlobalMapArmyState __instance, ref float points) {
-                if (__instance.Data.Faction == Kingmaker.Armies.ArmyFaction.Crusaders) {
-                    float speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
-                    points = points / speedMultiplier;
+                if (__instance.Data.Faction == ArmyFaction.Crusaders) {
+                    var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                    points /= speedMultiplier;
                 }
             }
         }

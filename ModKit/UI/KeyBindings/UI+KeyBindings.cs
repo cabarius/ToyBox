@@ -13,9 +13,9 @@ using Newtonsoft.Json;
 using System.Linq;
 
 namespace ModKit {
-    static partial class UI {
-        static string selectedIdentifier = null;
-        static KeyBind oldValue = null;
+    public static partial class UI {
+        private static string selectedIdentifier = null;
+        private static KeyBind oldValue = null;
         public static KeyBind EditKeyBind(string identifier, bool showHint = true, params GUILayoutOption[] options) {
             if (Event.current.type == EventType.Layout)
                 KeyBindings.OnGUI();
@@ -25,9 +25,9 @@ namespace ModKit {
             string label = keyBind.IsEmpty ? (isEditing ? "Cancel" : "Bind") : keyBind.ToString().orange().bold();
             showHint = showHint && isEditing;
             var conflicts = keyBind.Conflicts();
-            using (UI.VerticalScope(options)) {
-                UI.Space(UnityModManager.UI.Scale(3));
-                if (GL.Button(label, hotkeyStyle, UI.AutoWidth())) {
+            using (VerticalScope(options)) {
+                Space(UnityModManager.UI.Scale(3));
+                if (GL.Button(label, hotkeyStyle, AutoWidth())) {
                     if (isEditing || isEditingOther) {
                         KeyBindings.SetBinding(selectedIdentifier, oldValue);
                         if (isEditing) {
@@ -42,13 +42,13 @@ namespace ModKit {
                     KeyBindings.SetBinding(identifier, keyBind);
                 }
                 if (conflicts.Count() > 0) {
-                    UI.Label("conflicts".orange().bold() + "\n" + String.Join("\n", conflicts));
+                    Label("conflicts".orange().bold() + "\n" + string.Join("\n", conflicts));
                 }
                 if (showHint) {
                     var hint = "";
                     if (keyBind.IsEmpty)
                         hint = oldValue == null ? "set key binding".green() : "press key".green();
-                    UI.Label(hint);
+                    Label(hint);
                 }
             }
             if (isEditing && keyBind.IsEmpty && Event.current != null) {
@@ -88,27 +88,27 @@ namespace ModKit {
             return keyBind;
         }
         public static void KeyBindPicker(string identifier, string title, float indent = 0, float titleWidth = 0) {
-            using (UI.HorizontalScope()) {
-                UI.Space(indent);
-                UI.Label(title.bold(), titleWidth == 0 ? UI.ExpandWidth(false) : UI.Width(titleWidth));
-                UI.Space(25);
-                var keyBind = EditKeyBind(identifier, true);
+            using (HorizontalScope()) {
+                Space(indent);
+                Label(title.bold(), titleWidth == 0 ? ExpandWidth(false) : Width(titleWidth));
+                Space(25);
+                EditKeyBind(identifier, true);
             }
         }
 
-        // One stop shop for making an instant button that you want to let a player bind to a key in game
-        public static void BindableActionButton(String title, bool showHint = false, params GUILayoutOption[] options) {
+        // One stop shopping for making an instant button that you want to let a player bind to a key in game
+        public static void BindableActionButton(string title, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             var action = KeyBindings.GetAction(title);
             if (GL.Button(title, options)) { action(); }
-            EditKeyBind(title, true, UI.Width(200));
+            EditKeyBind(title, true, Width(200));
         }
 
         // Action button designed to live in a collection with a BindableActionButton
-        public static void NonBindableActionButton(String title, Action action, params GUILayoutOption[] options) {
+        public static void NonBindableActionButton(string title, Action action, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             if (GL.Button(title, options)) { action(); }
-            UI.Space(204);
+            Space(204);
             if (Event.current.type == EventType.Layout)
                 KeyBindings.RegisterAction(title, action);
         }

@@ -7,7 +7,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
@@ -15,7 +15,6 @@ using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
@@ -31,7 +30,7 @@ namespace ToyBox.BagOfPatches {
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(LevelUpController), "CanLevelUp")]
-        static class LevelUpController_CanLevelUp_Patch {
+        private static class LevelUpController_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleNoLevelUpRestrictions) {
                     __result = true;
@@ -40,11 +39,11 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(UnitProgressionData))]
-        static class UnitProgressionData_LegendaryHero_Patch {
+        private static class UnitProgressionData_LegendaryHero_Patch {
             [HarmonyPatch("ExperienceTable", MethodType.Getter)]
             private static void Postfix(ref BlueprintStatProgression __result, UnitProgressionData __instance) {
-                settings.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out bool isFakeLegendaryHero);
-                bool legendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
+                settings.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
+                var legendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
                 __result = !legendaryHero
                         ? Game.Instance.BlueprintRoot.Progression.XPTable
                         : Game.Instance.BlueprintRoot.Progression.LegendXPTable.Or(null)
@@ -53,8 +52,8 @@ namespace ToyBox.BagOfPatches {
 
             [HarmonyPatch("MaxCharacterLevel", MethodType.Getter)]
             private static void Postfix(ref int __result, UnitProgressionData __instance) {
-                settings.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out bool isFakeLegendaryHero);
-                bool isLegendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
+                settings.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
+                var isLegendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
                 if (isLegendaryHero) {
                     __result = 40;
                 }
@@ -69,9 +68,9 @@ namespace ToyBox.BagOfPatches {
             private static readonly FieldInfo BlueprintStatProgression_GetBonuses =
                 AccessTools.Field(typeof(BlueprintStatProgression), "Bonuses");
 
-            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+            private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
                 var codes = new List<CodeInstruction>(instructions);
-                int target = FindInsertionPoint(codes);
+                var target = FindInsertionPoint(codes);
                 if (target < 0) {
                     Mod.Error("UnitProgressionData_AddClassLevel_Patch Transpiler unable to find target!");
                     return codes;
@@ -87,7 +86,7 @@ namespace ToyBox.BagOfPatches {
             }
 
             private static int FindInsertionPoint(List<CodeInstruction> codes) {
-                for (int i = 0; i < codes.Count; i++) {
+                for (var i = 0; i < codes.Count; i++) {
                     if (codes[i].opcode == OpCodes.Ldfld && codes[i].LoadsField(BlueprintStatProgression_GetBonuses)) {
                         return i - 3;
                     }
@@ -99,19 +98,19 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(CharSheetCommonLevel), "Initialize")]
-        static class CharSheetCommonLevel_FixExperienceBar_Patch {
+        private static class CharSheetCommonLevel_FixExperienceBar_Patch {
             public static void Postfix(UnitProgressionData data, ref CharSheetCommonLevel __instance) {
                 __instance.Level.text = "Level " + data.CharacterLevel;
-                int nextLevel = data.ExperienceTable.Bonuses[data.CharacterLevel + 1];
-                int currentLevel = data.ExperienceTable.Bonuses[data.CharacterLevel];
-                int experience = data.Experience;
+                var nextLevel = data.ExperienceTable.Bonuses[data.CharacterLevel + 1];
+                var currentLevel = data.ExperienceTable.Bonuses[data.CharacterLevel];
+                var experience = data.Experience;
                 __instance.Exp.text = $"{experience as object}/{nextLevel as object}";
                 __instance.Bar.value = (float)(experience - currentLevel) / (float)(nextLevel - currentLevel);
             }
         }
 
         [HarmonyPatch(typeof(CharInfoExperienceVM), "RefreshData")]
-        static class CharInfoExperienceVM_FixExperienceBar_Patch {
+        private static class CharInfoExperienceVM_FixExperienceBar_Patch {
             public static void Postfix(ref CharInfoExperienceVM __instance) {
                 var unit = __instance.Unit.Value;
                 __instance.NextLevelExp = unit.Progression.ExperienceTable.Bonuses[Mathf.Min(unit.Progression.CharacterLevel + 1, unit.Progression.ExperienceTable.Bonuses.Length - 1)];
@@ -121,7 +120,7 @@ namespace ToyBox.BagOfPatches {
 
         // ignoreAttributesPointsRemainng
         [HarmonyPatch(typeof(StatsDistribution), "IsComplete")]
-        static class StatsDistribution_IsComplete_Patch {
+        private static class StatsDistribution_IsComplete_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreAttributePointsRemaining) {
                     __result = true;
@@ -130,7 +129,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(SpendAttributePoint), "Check")]
-        static class SpendAttributePoint_Check_Patch {
+        private static class SpendAttributePoint_Check_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreAttributePointsRemaining) {
                     __result = true;
@@ -139,7 +138,7 @@ namespace ToyBox.BagOfPatches {
         }
         // ignoreAttributeCap
         [HarmonyPatch(typeof(StatsDistribution), "CanAdd", new Type[] { typeof(StatType) })]
-        static class StatsDistribution_CanAdd_Patch {
+        private static class StatsDistribution_CanAdd_Patch {
             /*
             public static bool Prefix() {
                 return !settings.toggleIgnoreAttributeCap;
@@ -159,7 +158,7 @@ namespace ToyBox.BagOfPatches {
         }
         // ignoreSkillPointsRemaining
         [HarmonyPatch(typeof(CharGenSkillsPhaseVM), "SelectionStateIsCompleted")]
-        static class CharGenSkillsPhaseVM_SelectionStateIsCompleted_Patch {
+        private static class CharGenSkillsPhaseVM_SelectionStateIsCompleted_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreSkillPointsRemaining) {
                     __result = true;
@@ -168,24 +167,20 @@ namespace ToyBox.BagOfPatches {
         }
         // ignoreSkillPointsRemaing, ignoreSkillCap
         [HarmonyPatch(typeof(SpendSkillPoint), "Check", new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        static class SpendSkillPoint_Check_Patch {
-            public static bool Prefix(SpendSkillPoint __instance) {
-                return !(settings.toggleIgnoreSkillCap || settings.toggleIgnoreSkillPointsRemaining);
-            }
-            private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) {
-                __result = (StatTypeHelper.Skills).Contains<StatType>(__instance.Skill)
+        private static class SpendSkillPoint_Check_Patch {
+            public static bool Prefix(SpendSkillPoint __instance) => !(settings.toggleIgnoreSkillCap || settings.toggleIgnoreSkillPointsRemaining);
+            private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) => __result = (StatTypeHelper.Skills).Contains<StatType>(__instance.Skill)
                     && (settings.toggleIgnoreSkillCap || unit.Stats.GetStat(__instance.Skill).BaseValue < state.NextCharacterLevel)
                     && (settings.toggleIgnoreSkillPointsRemaining || state.SkillPointsRemaining > 0);
-            }
         }
         // ignoreSkillCap
         [HarmonyPatch(typeof(CharGenSkillAllocatorVM), "UpdateSkillAllocator")]
-        static class CharGenSkillAllocatorVM_UpdateSkillAllocator_Patch {
+        private static class CharGenSkillAllocatorVM_UpdateSkillAllocator_Patch {
             public static bool Prefix(CharGenSkillAllocatorVM __instance) {
                 if (settings.toggleIgnoreSkillCap) {
                     __instance.IsClassSkill.Value = (bool)__instance.Skill?.ClassSkill;
-                    ModifiableValue stat1 = __instance.m_LevelUpController.Unit.Stats.GetStat(__instance.StatType);
-                    ModifiableValue stat2 = __instance.m_LevelUpController.Preview.Stats.GetStat(__instance.StatType);
+                    var stat1 = __instance.m_LevelUpController.Unit.Stats.GetStat(__instance.StatType);
+                    var stat2 = __instance.m_LevelUpController.Preview.Stats.GetStat(__instance.StatType);
                     __instance.CanAdd.Value = !__instance.m_LevelUpController.State.IsSkillPointsComplete() && __instance.m_LevelUpController.State.SkillPointsRemaining > 0;
                     __instance.CanRemove.Value = stat2.BaseValue > stat1.BaseValue;
                     return false;
@@ -196,10 +191,10 @@ namespace ToyBox.BagOfPatches {
 
         // full HD
         [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyHitPoints", new Type[] { typeof(LevelUpState), typeof(ClassData), typeof(UnitDescriptor) })]
-        static class ApplyClassMechanics_ApplyHitPoints_Patch {
+        private static class ApplyClassMechanics_ApplyHitPoints_Patch {
             private static void Postfix(LevelUpState state, ClassData classData, ref UnitDescriptor unit) {
                 if (settings.toggleFullHitdiceEachLevel && unit.IsPartyOrPet() && state.NextClassLevel > 1) {
-                    int newHitDie = ((int)classData.CharacterClass.HitDie / 2) - 1;
+                    var newHitDie = ((int)classData.CharacterClass.HitDie / 2) - 1;
                     unit.Stats.HitPoints.BaseValue += newHitDie;
                 }
 #if false
@@ -215,7 +210,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         [HarmonyPatch(typeof(PrerequisiteFeature), "CheckInternal")]
-        static class PrerequisiteFeature_CanLevelUp_Patch {
+        private static class PrerequisiteFeature_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreFeaturePrerequisites) {
                     __result = true;
@@ -223,7 +218,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         [HarmonyPatch(typeof(PrerequisiteFeaturesFromList), "CheckInternal")]
-        static class PrerequisiteFeaturesFromList_CanLevelUp_Patch {
+        private static class PrerequisiteFeaturesFromList_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreFeatureListPrerequisites) {
                     __result = true;
@@ -232,7 +227,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(FeatureSelectionState), "IgnorePrerequisites", MethodType.Getter)]
-        static class FeatureSelectionState_IgnorePrerequisites_Patch {
+        private static class FeatureSelectionState_IgnorePrerequisites_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleFeaturesIgnorePrerequisites) {
                     __result = true;
@@ -240,7 +235,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         [HarmonyPatch(typeof(IgnorePrerequisites), "Ignore", MethodType.Getter)]
-        static class IgnorePrerequisites_Ignore_Patch {
+        private static class IgnorePrerequisites_Ignore_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreClassAndFeatRestrictions) {
                     __result = true;
@@ -279,14 +274,41 @@ namespace ToyBox.BagOfPatches {
 #endif
 
         [HarmonyPatch(typeof(LevelUpController), "IsPossibleMythicSelection", MethodType.Getter)]
-        static class LevelUpControllerIsPossibleMythicSelection_Patch {
-            private static void Postfix(ref bool __result) {
-                //Logger.Log($"LevelUpController.IsPossibleMythicSelection {settings.toggleIgnoreClassAndFeatRestrictions}");
-                if (settings.toggleIgnoreClassAndFeatRestrictions) {
+        private static class LevelUpControllerIsPossibleMythicSelection_Patch {
+            private static void Postfix(ref bool __result, LevelUpController __instance) {
+                if (settings.toggleIgnoreClassAndFeatRestrictions || settings.toggleAllowCompanionsToBecomeMythic && !__instance.Unit.IsMainCharacter) {
                     __result = true;
                 }
             }
         }
+
+        [HarmonyPatch(typeof(BlueprintCharacterClass), nameof(BlueprintCharacterClass.MeetsPrerequisites))]
+        private static class BlueprintCharacterClass_MeetsPrerequisites_Patch {
+            private static void Postfix(ref bool __result, BlueprintCharacterClass __instance, [NotNull] UnitDescriptor unit, [NotNull] LevelUpState state) {
+                if (!settings.toggleAllowCompanionsToBecomeMythic || unit.IsMainCharacter || !__instance.IsMythic) return;
+
+                if (__instance == BlueprintRoot.Instance.Progression.MythicCompanionClass &&
+                    unit.Progression.LastMythicClass != __instance && unit.Progression.LastMythicClass != null) {
+                    __result = false;
+                    return;
+                }
+
+                if (state.NextMythicLevel == 8 && __instance.m_IsHigherMythic) {
+                    __result = true;
+                    return;
+                }
+
+                if (unit.Progression.LastMythicClass == __instance) {
+                    __result = true;
+                    return;
+                }
+
+                if (state.NextMythicLevel == 3 && !__instance.m_IsHigherMythic) {
+                    __result = true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "CheckInternal")]
         public static class PrerequisiteCasterTypeSpellLevel_Check_Patch {
             public static void Postfix(
@@ -411,7 +433,7 @@ namespace ToyBox.BagOfPatches {
 #endif
         [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
         public static class SpellSelectionData_CanSelectAnything_Patch {
-            public static void Postfix(UnitDescriptor unit, bool __result) {
+            public static void Postfix(UnitDescriptor unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
                 if (settings.toggleSkipSpellSelection) {
                     __result = false;
@@ -421,7 +443,7 @@ namespace ToyBox.BagOfPatches {
 
         // Let user advance if no options left for feat selection
         [HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM), "CheckIsCompleted")]
-        static class CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch {
+        private static class CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch {
             private static void Postfix(CharGenFeatureSelectorPhaseVM __instance, ref bool __result) {
                 if (settings.toggleOptionalFeatSelection) {
                     __result = true;
@@ -503,14 +525,14 @@ namespace ToyBox.BagOfPatches {
                 [NotNull] IList<BlueprintFeatureBase> features,
                 FeatureSource source,
                 int level) {
-                //if (settings.featsMultiplier < 2) return true;
+                if (settings.featsMultiplier < 2) return true;
                 //Main.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
                 if (!unit.IsPartyOrPet()) return true;
                 Mod.Trace($"Log adding {settings.featsMultiplier}x features from {source.Blueprint.name.orange()} : {source.Blueprint.GetType().Name.yellow()} for {unit.CharacterName.green()} {string.Join(", ", state.Selections.Select(s => $"{s.Selection}")).cyan()}");
-                foreach (BlueprintFeature featureBP in features.OfType<BlueprintFeature>()) {
+                foreach (var featureBP in features.OfType<BlueprintFeature>()) {
                     Mod.Trace($"    checking {featureBP.NameSafe().cyan()} : {featureBP.GetType().Name.yellow()}");
                     var multiplier = settings.featsMultiplier;
-                    for (int i = 0; i < multiplier; ++i) {
+                    for (var i = 0; i < multiplier; ++i) {
                         if (featureBP.MeetsPrerequisites(null, unit, state, true)) {
                             if (featureBP is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
                                 Mod.Trace($"    adding: {featureBP.NameSafe().cyan()}".orange());
@@ -518,9 +540,9 @@ namespace ToyBox.BagOfPatches {
                             }
                         }
                     }
-                    Kingmaker.UnitLogic.Feature feature = (Kingmaker.UnitLogic.Feature)unit.AddFact(featureBP);
-                    FeatureSource source1 = source;
-                    int level1 = level;
+                    var feature = (Kingmaker.UnitLogic.Feature)unit.AddFact(featureBP);
+                    var source1 = source;
+                    var level1 = level;
                     feature.SetSource(source1, level1);
                     if (featureBP is BlueprintProgression progression) {
                         Mod.Trace($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {featureBP.NameSafe()}".cyan());

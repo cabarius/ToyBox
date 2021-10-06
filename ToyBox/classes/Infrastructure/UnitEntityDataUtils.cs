@@ -16,10 +16,8 @@ using Kingmaker.UnitLogic.Parts;
 using Kingmaker.ElementsSystem;
 using ModKit;
 
-namespace ToyBox 
-{
-    public enum UnitSelectType
-    {
+namespace ToyBox {
+    public enum UnitSelectType {
         Off,
         You,
         Party,
@@ -29,9 +27,7 @@ namespace ToyBox
     }
 
     public static class UnitEntityDataUtils {
-        public static float GetMaxSpeed(List<UnitEntityData> data) {
-            return (data.Select((u => u.ModifiedSpeedMps)).Max());
-        }
+        public static float GetMaxSpeed(List<UnitEntityData> data) => (data.Select((u => u.ModifiedSpeedMps)).Max());
 
         public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType) {
             if (unitEntityData == null) return false;
@@ -62,24 +58,16 @@ namespace ToyBox
                     return false;
             }
         }
-        
-        public static void Kill(UnitEntityData unit) {
-            unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue +
+
+        public static void Kill(UnitEntityData unit) => unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue +
                                      unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
-        }
 
-        public static void ForceKill(UnitEntityData unit) {
-            unit.Descriptor.State.ForceKill = true;
-        }
+        public static void ForceKill(UnitEntityData unit) => unit.Descriptor.State.ForceKill = true;
 
-        public static void ResurrectAndFullRestore(UnitEntityData unit) {
-            unit.Descriptor.ResurrectAndFullRestore();
-        }
+        public static void ResurrectAndFullRestore(UnitEntityData unit) => unit.Descriptor.ResurrectAndFullRestore();
 
-        public static void Buff(UnitEntityData unit, string buffGuid) {
-            unit.Descriptor.AddFact((BlueprintUnitFact)Utilities.GetBlueprintByGuid<BlueprintBuff>(buffGuid),
+        public static void Buff(UnitEntityData unit, string buffGuid) => unit.Descriptor.AddFact((BlueprintUnitFact)Utilities.GetBlueprintByGuid<BlueprintBuff>(buffGuid),
                 (MechanicsContext)null, new FeatureParam());
-        }
 
         public static void Charm(UnitEntityData unit) {
             if (unit != null)
@@ -94,7 +82,7 @@ namespace ToyBox
         }
 #if true
         public static void AddCompanion(UnitEntityData unit) {
-            GameModeType currentMode = Game.Instance.CurrentMode;
+            var currentMode = Game.Instance.CurrentMode;
             Game.Instance.Player.AddCompanion(unit);
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 var pets = unit.Pets;
@@ -102,7 +90,7 @@ namespace ToyBox
                 unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
                 unit.LeaveCombat();
                 Charm(unit);
-                UnitPartCompanion unitPartCompanion = unit.Get<UnitPartCompanion>();
+                var unitPartCompanion = unit.Get<UnitPartCompanion>();
                 unitPartCompanion.State = CompanionState.InParty;
                 if (unit.IsDetached) {
                     Game.Instance.Player.AttachPartyMember(unit);
@@ -113,8 +101,7 @@ namespace ToyBox
             }
         }
         public static void RecruitCompanion(UnitEntityData unit) {
-            var player = Game.Instance.Player;
-            GameModeType currentMode = Game.Instance.CurrentMode;
+            var currentMode = Game.Instance.CurrentMode;
             unit = Game.Instance.EntityCreator.RecruitNPC(unit, unit.Blueprint);
             // this line worries me but the dev said I should do it
             //unit.HoldingState.RemoveEntityData(unit);  
@@ -161,7 +148,7 @@ namespace ToyBox
 #endif
 
         public static void RemoveCompanion(UnitEntityData unit) {
-            GameModeType currentMode = Game.Instance.CurrentMode;
+            _ = Game.Instance.CurrentMode;
             Game.Instance.Player.RemoveCompanion(unit);
         }
 
@@ -173,10 +160,6 @@ namespace ToyBox
             return Game.Instance.Player.AllCharacters
                 .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null ||
                     Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
-        }
-
-        public static void Rename(UnitEntityData unit, string newName) {
-
         }
     }
 }

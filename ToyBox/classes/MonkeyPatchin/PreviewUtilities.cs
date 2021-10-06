@@ -11,9 +11,9 @@ using System;
 using ModKit;
 
 namespace ToyBox {
-    class PreviewUtilities {
-        static private GUIStyle m_BoldLabel;
-        static public GUIStyle BoldLabel {
+    internal class PreviewUtilities {
+        private static GUIStyle m_BoldLabel;
+        public static GUIStyle BoldLabel {
             get {
                 if (m_BoldLabel == null) {
                     m_BoldLabel = new GUIStyle(GUI.skin.label) {
@@ -23,8 +23,8 @@ namespace ToyBox {
                 return m_BoldLabel;
             }
         }
-        static private GUIStyle m_BoxLabel;
-        static public GUIStyle BoxLabel {
+        private static GUIStyle m_BoxLabel;
+        public static GUIStyle BoxLabel {
             get {
                 if (m_BoxLabel == null) {
                     m_BoxLabel = new GUIStyle(GUI.skin.box) {
@@ -34,8 +34,8 @@ namespace ToyBox {
                 return m_BoxLabel;
             }
         }
-        static private GUIStyle m_YellowBoxLabel;
-        static public GUIStyle YellowBoxLabel {
+        private static GUIStyle m_YellowBoxLabel;
+        public static GUIStyle YellowBoxLabel {
             get {
                 if (m_YellowBoxLabel == null) {
                     m_YellowBoxLabel = new GUIStyle(GUI.skin.box) {
@@ -67,22 +67,14 @@ namespace ToyBox {
             result.Add(caption);
             return result;
         }
-        public static string FormatActions(ActionList actions) {
-            return FormatActions(actions.Actions);
-        }
-        public static string FormatActions(GameAction[] actions) {
-            return actions
+        public static string FormatActions(ActionList actions) => FormatActions(actions.Actions);
+        public static string FormatActions(GameAction[] actions) => actions
                 .SelectMany(action => FormatActionAsList(action))
                 .Select(actionText => actionText == "" ? "EmptyAction" : actionText)
                 .Join();
-        }
 
-        public static string FormatConditions(Condition[] conditions) {
-            return conditions.Join(c => c.GetCaption());
-        }
-        public static string FormatConditions(ConditionsChecker conditions) {
-            return FormatConditions(conditions.Conditions);
-        }
+        public static string FormatConditions(Condition[] conditions) => conditions.Join(c => c.GetCaption());
+        public static string FormatConditions(ConditionsChecker conditions) => FormatConditions(conditions.Conditions);
         public static bool CausesGameOver(BlueprintKingdomEventBase blueprint) {
             var results = blueprint.GetComponent<EventFinalResults>();
             if (results == null) return false;
@@ -97,12 +89,12 @@ namespace ToyBox {
             private readonly Stopwatch m_Stopwatch;
             private readonly string m_Text;
             public CodeTimer(string text) {
-                this.m_Text = text;
-                this.m_Stopwatch = Stopwatch.StartNew();
+                m_Text = text;
+                m_Stopwatch = Stopwatch.StartNew();
             }
             public void Dispose() {
-                this.m_Stopwatch.Stop();
-                string message = string.Format("Profiled {0}: {1:0.00}ms", this.m_Text, this.m_Stopwatch.ElapsedMilliseconds);
+                m_Stopwatch.Stop();
+                var message = string.Format("Profiled {0}: {1:0.00}ms", m_Text, m_Stopwatch.ElapsedMilliseconds);
                 Mod.Trace(message);
             }
         }

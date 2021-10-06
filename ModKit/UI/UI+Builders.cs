@@ -6,14 +6,14 @@ using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
-        static public bool userHasHitReturn = false;
-        static public String focusedControlName = null;
+        public static bool userHasHitReturn = false;
+        public static string focusedControlName = null;
 
-        public static Rect ummRect = new Rect();
+        public static Rect ummRect = new();
         public static float ummWidth = 960f;
         public static int ummTabID = 0;
-        public static bool IsNarrow { get { return ummWidth < 1200; } }
-        public static bool IsWide { get { return ummWidth >= 1920; } }
+        public static bool IsNarrow => ummWidth < 1200;
+        public static bool IsWide => ummWidth >= 1920;
 
         public static Vector2[] ummScrollPosition;
         /*** UI Builders
@@ -57,45 +57,47 @@ namespace ModKit {
                 action();
             }
         }
-        public static void HStack(String title = null, int stride = 0, params Action[] actions) {
+        public static void HStack(string title = null, int stride = 0, params Action[] actions) {
             var length = actions.Length;
             if (stride < 1) { stride = length; }
-            if (UI.IsNarrow) stride = Math.Min(3, stride);
+            if (IsNarrow)
+                stride = Math.Min(3, stride);
             for (int ii = 0; ii < actions.Length; ii += stride) {
                 bool hasTitle = title != null;
-                UI.BeginHorizontal();
+                BeginHorizontal();
                 if (hasTitle) {
-                    if (ii == 0) { UI.Label(title.bold(), UI.Width(150f)); }
-                    else { UI.Space(153); }
+                    if (ii == 0) { Label(title.bold(), Width(150f)); }
+                    else { Space(153); }
                 }
                 var filteredActions = actions.Skip(ii).Take(stride);
                 foreach (var action in filteredActions) {
                     action();
                 }
-                UI.EndHorizontal();
+                EndHorizontal();
             }
         }
-        public static void VStack(String title = null, params Action[] actions) {
-            UI.BeginVertical();
-            if (title != null) { UI.Label(title); }
-            UI.Group(actions);
-            UI.EndVertical();
+        public static void VStack(string title = null, params Action[] actions) {
+            BeginVertical();
+            if (title != null) { Label(title); }
+            Group(actions);
+            EndVertical();
         }
-        public static void Section(String title, params Action[] actions) {
-            UI.Space(25);
-            UI.Label($"====== {title} ======".bold(), GL.ExpandWidth(true));
-            UI.Space(25);
-            foreach (Action action in actions) { action(); }
-            UI.Space(10);
+        public static void Section(string title, params Action[] actions) {
+            Space(25);
+            Label($"====== {title} ======".bold(), GL.ExpandWidth(true));
+            Space(25);
+            foreach (var action in actions) { action(); }
+            Space(10);
         }
 
         public static void TabBar(ref int selected, Action header = null, params NamedAction[] actions) {
-            if (selected >= actions.Count()) selected = 0;
+            if (selected >= actions.Count())
+                selected = 0;
             int sel = selected;
             var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             selected = GL.Toolbar(selected, titles.ToArray());
             GL.BeginVertical("box");
-            if (header != null) header();
+            header?.Invoke();
             actions[selected].action();
             GL.EndVertical();
         }
