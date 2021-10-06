@@ -14,6 +14,9 @@
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
 ### Ver 1.3.20 (Coming Soon)
+* **Bag of tricks**
+  * (***ShadowRanger***) Added a fix that should resolve the zoomed out camera bug if you had both ToyBox and Free Camera installed.  You may need to reset Toybox's fovMultiplier to 1 for it to take effect.
+
 ### Ver 1.3.19
 * **Bag of Tricks** 
   * You can now enable Developer Mode which enables the developer console which you can access by hitting tilde `
