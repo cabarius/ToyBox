@@ -83,7 +83,8 @@ namespace ToyBox.classes.MainUI {
                                     var displayName = army.Location?.GetDisplayName() ?? "traveling on a path";
                                     UI.Label(displayName.yellow(), UI.Width(400));
                                     UI.Space(25);
-                                    UI.Label($"{distance:0.#}", UI.Width(50));
+                                    var distStr = distance >= 0 ? $"{distance:0.#}" : "?";
+                                    UI.Label(distStr, UI.Width(50));
                                     UI.Space(50 );
                                     UI.ActionButton("Teleport", () => TeleportToArmy(army), UI.Width(150));
                                     UI.Space(25);
@@ -184,7 +185,7 @@ namespace ToyBox.classes.MainUI {
             var armies = mainMapState.Armies;
             var position = mainMapState.PlayerPosition;
             var results = from army in armies select (army, mainMapState.ArmyDistance(army, position));
-            results = from result in results where result.Item2 >= 0 select result;
+            results = from item in results where item.Item2 >= 0 || item.army.IsRevealed select item;
             results = results.OrderBy(r => r.Item2).ThenBy(r => r.army.Location?.GetDisplayName() ?? "traveling on a path");
             return results;
         }
