@@ -47,16 +47,5 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(MainMenuBoard), "Update")]
-        private static class MainMenuButtons_Update_Patch {
-            private static void Postfix() {
-                if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
-                    Main.freshlyLaunched = false;
-                    var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
-                    mainMenuVM.EnterGame(new Action(mainMenuVM.LoadLastSave));
-                }
-                Main.freshlyLaunched = false;
-            }
-        }
     }
 }

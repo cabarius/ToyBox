@@ -77,6 +77,8 @@ namespace ToyBox {
                     var areaName = "";
                     if (Main.IsInGame) {
                         areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
+                        var areaPrivateName = Game.Instance.CurrentlyLoadedArea.name;
+                        if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }
                     UI.Label(areaName.orange().bold(), UI.Width(300));
                     UI.Label("Rarity: ".cyan(), UI.AutoWidth());
