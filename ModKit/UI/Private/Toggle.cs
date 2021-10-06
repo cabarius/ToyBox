@@ -2,20 +2,15 @@
 
 namespace ModKit.Private {
     public static partial class UI {
-        public const string ChecklyphOn = "<color=green><b>✔</b></color>";
-        public const string CheckGlyphOff = "<color=#B8B8B8FF>✖</color>";      // #A0A0A0E0
-        private const string DisclosureGlyphOn = "<color=orange><b>▼</b></color>";      // ▼▲∧⋀
-        private const string DisclosureGlyphOff = "<color=#C0C0C0FF><b>▶</b></color>";  // ▶▲∨⋁
-        private const string DisclosureGlyphEmpty = " <color=#B8B8B8FF>▪</color> ";
 
         // Helper functionality.
 
         private static readonly GUIContent _LabelContent = new();
-        public static readonly GUIContent CheckOn = new(ChecklyphOn);
-        public static readonly GUIContent CheckOff = new(CheckGlyphOff);
-        public static readonly GUIContent DisclosureOn = new(DisclosureGlyphOn);
-        public static readonly GUIContent DisclosureOff = new(DisclosureGlyphOff);
-        public static readonly GUIContent DisclosureEmpty = new(DisclosureGlyphEmpty);
+        public static readonly GUIContent CheckOn = new(ModKit.UI.ChecklyphOn);
+        public static readonly GUIContent CheckOff = new(ModKit.UI.CheckGlyphOff);
+        public static readonly GUIContent DisclosureOn = new(ModKit.UI.DisclosureGlyphOn);
+        public static readonly GUIContent DisclosureOff = new(ModKit.UI.DisclosureGlyphOff);
+        public static readonly GUIContent DisclosureEmpty = new(ModKit.UI.DisclosureGlyphEmpty);
         private static GUIContent LabelContent(string text) {
             _LabelContent.text = text;
             _LabelContent.image = null;
@@ -26,8 +21,8 @@ namespace ModKit.Private {
         private static readonly int s_ButtonHint = "MyGUI.Button".GetHashCode();
 
         public static bool Toggle(Rect rect, GUIContent label, bool value, bool isEmpty, GUIContent on, GUIContent off, GUIStyle stateStyle, GUIStyle labelStyle) {
-            int controlID = GUIUtility.GetControlID(s_ButtonHint, FocusType.Passive, rect);
-            bool result = false;
+            var controlID = GUIUtility.GetControlID(s_ButtonHint, FocusType.Passive, rect);
+            var result = false;
             switch (Event.current.GetTypeForControl(controlID)) {
                 case EventType.MouseDown:
                     if (GUI.enabled && rect.Contains(Event.current.mousePosition)) {
@@ -67,14 +62,14 @@ namespace ModKit.Private {
                         //                || stateStyle.alignment == TextAnchor.UpperLeft
                         //                || stateStyle.alignment == TextAnchor.LowerLeft
                         //                ;
-                        bool rightAlign = stateStyle.alignment == TextAnchor.MiddleRight
+                        var rightAlign = stateStyle.alignment == TextAnchor.MiddleRight
                                         || stateStyle.alignment == TextAnchor.UpperRight
                                         || stateStyle.alignment == TextAnchor.LowerRight
                                         ;
                         // stateStyle.alignment determines position of state element
                         var state = isEmpty ? DisclosureEmpty : value ? on : off;
                         var stateSize = stateStyle.CalcSize(value ? on : off);  // don't use the empty content to calculate size so titles line up in lists
-                        float x = rightAlign ? rect.xMax - stateSize.x : rect.x;
+                        var x = rightAlign ? rect.xMax - stateSize.x : rect.x;
                         Rect stateRect = new(x, rect.y, stateSize.x, stateSize.y);
 
                         // layout state before or after following alignment

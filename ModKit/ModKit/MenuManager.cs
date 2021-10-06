@@ -78,7 +78,7 @@ namespace ModKit {
         #endregion
 
         private void OnGUI(UnityModManager.ModEntry modEntry) {
-            bool hasPriorPage = false;
+            var hasPriorPage = false;
             try {
                 if (caughtException != null) {
                     GUILayout.Label("ERROR".Red().Bold() + $": caught exception {caughtException}");

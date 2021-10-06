@@ -19,7 +19,7 @@ namespace ModKit {
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
         public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
-            bool changed = false;
+            var changed = false;
             if (editState.Item1 != label) {
                 using (HorizontalScope(options)) {
                     Label(formatter(label), style, AutoWidth());
@@ -56,15 +56,15 @@ namespace ModKit {
             return text;
         }
         public static int IntTextField(ref int value, string name = null, params GUILayoutOption[] options) {
-            string text = $"{value}";
+            var text = $"{value}";
             TextField(ref text, name, options);
             int.TryParse(text, out value);
             return value;
         }
         public static float FloatTextField(ref float value, string name = null, params GUILayoutOption[] options) {
-            string text = $"{value}";
+            var text = $"{value}";
             TextField(ref text, name, options);
-            if (float.TryParse(text, out float val)) {
+            if (float.TryParse(text, out var val)) {
                 value = val;
             }
             return value;
@@ -89,7 +89,7 @@ namespace ModKit {
                 params GUILayoutOption[] options
             ) {
             GUI.SetNextControlName(name);
-            string newText = GL.TextField(text, options);
+            var newText = GL.TextField(text, options);
             if (newText != text) {
                 text = newText;
                 action?.Invoke(text);
@@ -107,9 +107,9 @@ namespace ModKit {
                 int max = int.MaxValue,
                 params GUILayoutOption[] options
             ) {
-            bool changed = false;
-            bool hitEnter = false;
-            string str = $"{value}";
+            var changed = false;
+            var hitEnter = false;
+            var str = $"{value}";
             ActionTextField(ref str,
                 name,
                 (text) => { changed = true; },
@@ -131,7 +131,7 @@ namespace ModKit {
             var inc = increment;
             Label(title.cyan(), Width(titleWidth));
             Space(25);
-            float fieldWidth = GUI.skin.textField.CalcSize(new GUIContent(max.ToString())).x;
+            var fieldWidth = GUI.skin.textField.CalcSize(new GUIContent(max.ToString())).x;
             ActionButton(" < ", () => { set(Math.Max(value - inc, min)); }, AutoWidth());
             Space(20);
             Label($"{value}".orange().bold(), AutoWidth());
@@ -144,7 +144,7 @@ namespace ModKit {
         }
         public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
-            float newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, Width(200)), decimals);
+            var newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, Width(200)), decimals);
             using (HorizontalScope(options)) {
                 Space(25);
                 FloatTextField(ref newValue, null, Width(75));
@@ -153,7 +153,7 @@ namespace ModKit {
                 Space(25);
                 ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
             }
-            bool changed = value != newValue;
+            var changed = value != newValue;
             value = newValue;
             return changed;
         }
@@ -162,7 +162,7 @@ namespace ModKit {
         private const int sliderBottom = -7;
         public static bool Slider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
-            float newValue = value;
+            var newValue = value;
             using (HorizontalScope(options)) {
                 using (VerticalScope(Width(300))) {
                     Space(UnityModManager.UI.Scale(sliderTop - 1));
@@ -190,19 +190,19 @@ namespace ModKit {
                     Space(UnityModManager.UI.Scale(sliderBottom));
                 }
             }
-            bool changed = value != newValue;
+            var changed = value != newValue;
             value = newValue;
             return changed;
         }
         public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            bool changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
+            var changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }
         public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            bool changed = Slider(ref fvalue, min, max, (float)defaultValue, 0, units, options);
+            var changed = Slider(ref fvalue, min, max, (float)defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }
@@ -244,7 +244,7 @@ namespace ModKit {
                 Space(UnityModManager.UI.Scale(sliderBottom));
             }
             EndHorizontal();
-            bool changed = value != newValue;
+            var changed = value != newValue;
             value = newValue;
             return changed;
         }

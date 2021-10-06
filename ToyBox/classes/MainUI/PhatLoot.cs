@@ -33,7 +33,7 @@ namespace ToyBox {
                     UI.Space(100); UI.Label("Some items might be invisible until looted".green());
                 },
                 () => {
-                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, 0);
+                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity);
                     UI.Space(25);
                     using (UI.VerticalScope()) {
                         UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());

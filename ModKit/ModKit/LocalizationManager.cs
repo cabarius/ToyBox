@@ -70,7 +70,7 @@ namespace ModKit {
         public string this[string key] {
             get {
                 if (IsDefault ?
-                    _localDefault.Strings.TryGetValue(key, out string text) :
+                    _localDefault.Strings.TryGetValue(key, out var text) :
                     _local.Strings.TryGetValue(key, out text))
                     return text;
                 else
@@ -79,7 +79,7 @@ namespace ModKit {
         }
 
         public void Enable(UnityModManager.ModEntry modEntry) {
-            char separator = Path.DirectorySeparatorChar;
+            var separator = Path.DirectorySeparatorChar;
             _localFolderPath = modEntry.Path + "Localization" + separator;
             _localDefault = new TDefaultLanguage { Version = modEntry.Version };
         }
@@ -94,8 +94,8 @@ namespace ModKit {
         public string[] GetFileNames(string searchPattern) {
             try {
                 if (Directory.Exists(_localFolderPath)) {
-                    string[] files = Directory.GetFiles(_localFolderPath, searchPattern);
-                    for (int i = 0; i < files.Length; i++) {
+                    var files = Directory.GetFiles(_localFolderPath, searchPattern);
+                    for (var i = 0; i < files.Length; i++) {
                         files[i] = Path.GetFileName(files[i]);
                     }
                     return files;
@@ -114,8 +114,8 @@ namespace ModKit {
         public void Sort() {
             if (_local != null) {
                 Dictionary<string, string> temp = new();
-                foreach (string key in _localDefault.Strings.Keys) {
-                    if (_local.Strings.TryGetValue(key, out string text))
+                foreach (var key in _localDefault.Strings.Keys) {
+                    if (_local.Strings.TryGetValue(key, out var text))
                         temp[key] = text;
                     else
                         temp[key] = _localDefault.Strings[key];
@@ -126,7 +126,7 @@ namespace ModKit {
 
         public bool Import(string fileName, Action<Exception> onError = null) {
             try {
-                string path = _localFolderPath + fileName;
+                var path = _localFolderPath + fileName;
 
                 if (File.Exists(path)) {
                     using (StreamReader reader = new(path)) {
@@ -135,7 +135,7 @@ namespace ModKit {
 
                     FileName = fileName;
 
-                    foreach (string key in _localDefault.Strings.Keys.Except(_local.Strings.Keys)) {
+                    foreach (var key in _localDefault.Strings.Keys.Except(_local.Strings.Keys)) {
                         _local.Strings[key] = _localDefault.Strings[key];
                     }
 
@@ -155,7 +155,7 @@ namespace ModKit {
                     Directory.CreateDirectory(_localFolderPath);
                 }
 
-                string path = _localFolderPath + fileName;
+                var path = _localFolderPath + fileName;
 
                 if (File.Exists(path)) {
                     File.Delete(path);

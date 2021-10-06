@@ -25,15 +25,15 @@ namespace ModKit {
         public static void BeginHorizontal(GUIStyle style, params GUILayoutOption[] options) => GL.BeginHorizontal(style, options);
         public static void BeginHorizontal(params GUILayoutOption[] options) => GL.BeginHorizontal(options);
         public static void EndHorizontal() => GL.EndHorizontal();
-        public static GL.AreaScope AreaScope(Rect screenRect) => new GL.AreaScope(screenRect);
-        public static GL.AreaScope AreaScope(Rect screenRect, string text) => new GL.AreaScope(screenRect, text);
+        public static GL.AreaScope AreaScope(Rect screenRect) => new(screenRect);
+        public static GL.AreaScope AreaScope(Rect screenRect, string text) => new(screenRect, text);
         public static GL.HorizontalScope HorizontalScope(params GUILayoutOption[] options) => new(options);
 
-        public static GL.HorizontalScope HorizontalScope(GUIStyle style, params GUILayoutOption[] options) => new GL.HorizontalScope(style, options);
-        public static GL.VerticalScope VerticalScope(params GUILayoutOption[] options) => new GL.VerticalScope(options);
-        public static GL.VerticalScope VerticalScope(GUIStyle style, params GUILayoutOption[] options) => new GL.VerticalScope(style, options);
-        public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options) => new GL.ScrollViewScope(scrollPosition, options);
-        public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, GUIStyle style, params GUILayoutOption[] options) => new GL.ScrollViewScope(scrollPosition, style, options);
+        public static GL.HorizontalScope HorizontalScope(GUIStyle style, params GUILayoutOption[] options) => new(style, options);
+        public static GL.VerticalScope VerticalScope(params GUILayoutOption[] options) => new(options);
+        public static GL.VerticalScope VerticalScope(GUIStyle style, params GUILayoutOption[] options) => new(style, options);
+        public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options) => new(scrollPosition, options);
+        public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, GUIStyle style, params GUILayoutOption[] options) => new(scrollPosition, style, options);
         public static void BeginVertical(params GUILayoutOption[] options) => GL.BeginHorizontal(options);
         public static void BeginVertical(GUIStyle style, params GUILayoutOption[] options) => GL.BeginHorizontal(style, options);
 

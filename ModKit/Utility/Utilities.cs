@@ -15,7 +15,7 @@ namespace ModKit {
             return dictionary.TryGetValue(key, out var value) ? value : defaultValue;
         }
         public static object GetPropValue(this object obj, string name) {
-            foreach (string part in name.Split('.')) {
+            foreach (var part in name.Split('.')) {
                 if (obj == null) { return null; }
 
                 var type = obj.GetType();
@@ -27,7 +27,7 @@ namespace ModKit {
             return obj;
         }
         public static T GetPropValue<T>(this object obj, string name) {
-            object retval = GetPropValue(obj, name);
+            var retval = GetPropValue(obj, name);
             if (retval == null) { return default; }
             // throws InvalidCastException if types are incompatible
             return (T)retval;
@@ -37,7 +37,7 @@ namespace ModKit {
             var final = parts.Last();
             if (final == null)
                 return null;
-            foreach (string part in parts) {
+            foreach (var part in parts) {
                 if (obj == null) { return null; }
                 var type = obj.GetType();
                 var info = type.GetProperty(part);
@@ -70,25 +70,25 @@ namespace ModKit {
         }
         public static string[] getObjectInfo(object o) {
 
-            string fields = "";
-            foreach (string field in Traverse.Create(o).Fields()) {
+            var fields = "";
+            foreach (var field in Traverse.Create(o).Fields()) {
                 fields = fields + field + ", ";
             }
-            string methods = "";
-            foreach (string method in Traverse.Create(o).Methods()) {
+            var methods = "";
+            foreach (var method in Traverse.Create(o).Methods()) {
                 methods = methods + method + ", ";
             }
-            string properties = "";
-            foreach (string property in Traverse.Create(o).Properties()) {
+            var properties = "";
+            foreach (var property in Traverse.Create(o).Properties()) {
                 properties = properties + property + ", ";
             }
             return new string[] { fields, methods, properties };
         }
         public static string SubstringBetweenCharacters(this string input, char charFrom, char charTo) {
-            int posFrom = input.IndexOf(charFrom);
+            var posFrom = input.IndexOf(charFrom);
             if (posFrom != -1) //if found char
             {
-                int posTo = input.IndexOf(charTo, posFrom + 1);
+                var posTo = input.IndexOf(charTo, posFrom + 1);
                 if (posTo != -1) //if found char
                 {
                     return input.Substring(posFrom + 1, posTo - posFrom - 1);

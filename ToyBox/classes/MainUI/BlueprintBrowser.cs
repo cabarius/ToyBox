@@ -130,34 +130,6 @@ namespace ToyBox {
         public static NamedTypeFilter selectedTypeFilter = null;
 
         public static IEnumerable<SimpleBlueprint> blueprints = null;
-        public static IEnumerable<SimpleBlueprint> GetBlueprints() {
-            if (blueprints == null) {
-#if false
-                if (BlueprintLoaderOld.LoadInProgress()) { return null; }
-                else {
-                    Main.Log($"calling BlueprintLoader.Load");
-                    BlueprintLoaderOld.Load((bps) => {
-                        blueprints = bps;
-                        UpdateSearchResults();
-                        Main.Log($"success got {bps.Count()} blueprints");
-                    });
-                    return null;
-                }
-#else
-                if (BlueprintLoader.Shared.IsLoading) { return null; }
-                else {
-                    Mod.Debug($"calling BlueprintLoader.Load");
-                    BlueprintLoader.Shared.Load((bps) => {
-                        blueprints = bps;
-                        UpdateSearchResults();
-                        Mod.Debug($"success got {bps.Count()} bluerints");
-                    });
-                    return null;
-                }
-#endif
-            }
-            return blueprints;
-        }
 
         public static void ResetSearch() {
             filteredBPs = null;
@@ -203,7 +175,9 @@ namespace ToyBox {
             var selectedType = selectedTypeFilter.type;
             IEnumerable<SimpleBlueprint> bps = null;
             if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
-            else bps = BlueprintExensions.BlueprintsOfType(selectedType).Where((bp) => selectedTypeFilter.filter(bp));
+            else bps = from bp in BlueprintExensions.BlueprintsOfType(selectedType)
+                       where selectedTypeFilter.filter(bp)
+                       select bp;
             var filtered = new List<SimpleBlueprint>();
             foreach (var blueprint in bps) {
                 if (blueprint.AssetGuid.ToString().Contains(searchText)
@@ -244,7 +218,7 @@ namespace ToyBox {
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
-            if (blueprints == null) GetBlueprints();
+            if (blueprints == null) blueprints = BlueprintLoader.Shared.GetBlueprints(() => UpdateSearchResults());
             // Stackable browser
             using (UI.HorizontalScope(UI.Width(350))) {
                 var remainingWidth = UI.ummWidth;

@@ -16,7 +16,7 @@ namespace ModKit {
                 xCols = texts.Count();
             if (IsNarrow)
                 xCols = Math.Min(4, xCols);
-            int sel = selected;
+            var sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0)
                 xCols = texts.Count();
@@ -35,7 +35,7 @@ namespace ModKit {
                 xCols = texts.Count();
             if (IsNarrow)
                 xCols = Math.Min(4, xCols);
-            int sel = selected;
+            var sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0)
                 xCols = texts.Count();
@@ -47,7 +47,7 @@ namespace ModKit {
                 xCols = items.Count();
             if (IsNarrow)
                 xCols = Math.Min(4, xCols);
-            int sel = selected;
+            var sel = selected;
             var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
             if (xCols <= 0)
                 xCols = items.Count();
@@ -59,7 +59,7 @@ namespace ModKit {
                 xCols = items.Count();
             if (IsNarrow)
                 xCols = Math.Min(4, xCols);
-            int sel = selected;
+            var sel = selected;
             var titles = items.Select((a, i) => i == sel ? $"{a}".orange().bold() : $"{a}");
             if (xCols <= 0)
                 xCols = items.Count();
@@ -67,7 +67,7 @@ namespace ModKit {
             return sel != selected;
         }
         public static void ActionSelectionGrid(ref int selected, string[] texts, int xCols, Action<int> action, params GUILayoutOption[] options) {
-            int sel = selected;
+            var sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0)
                 xCols = texts.Count();
@@ -78,7 +78,7 @@ namespace ModKit {
             }
         }
         public static void ActionSelectionGrid(ref int selected, string[] texts, int xCols, Action<int> action, GUIStyle style, params GUILayoutOption[] options) {
-            int sel = selected;
+            var sel = selected;
             var titles = texts.Select((a, i) => i == sel ? a.orange().bold() : a);
             if (xCols <= 0)
                 xCols = texts.Count();
@@ -91,7 +91,7 @@ namespace ModKit {
         public static void EnumGrid<TEnum>(Func<TEnum> get, Action<TEnum> set, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             var value = get();
             var names = Enum.GetNames(typeof(TEnum));
-            int index = Array.IndexOf(names, value.ToString());
+            var index = Array.IndexOf(names, value.ToString());
             if (SelectionGrid(ref index, names, xCols, options)) {
                 if (Enum.TryParse(names[index], out TEnum newValue)) {
                     set(newValue);
@@ -104,7 +104,7 @@ namespace ModKit {
             var nameToEnum = value.NameToValueDictionary();
             if (titleFormater != null)
                 formatedNames = names.Select((n) => titleFormater(n, nameToEnum[n])).ToArray();
-            int index = Array.IndexOf(names, value.ToString());
+            var index = Array.IndexOf(names, value.ToString());
             var oldIndex = index;
             if (style == null ? SelectionGrid(ref index, formatedNames, xCols, options) : SelectionGrid(ref index, formatedNames, xCols, style, options)) {
                 if (Enum.TryParse(names[index], out TEnum newValue)) {
@@ -163,7 +163,7 @@ namespace ModKit {
                 titleFormater = (a) => $"{a}";
             if (selected > range.Count())
                 selected = 0;
-            int sel = selected;
+            var sel = selected;
             var titles = range.Select((a, i) => i == sel ? titleFormater(a).orange().bold() : titleFormater(a));
             if (xCols > range.Count())
                 xCols = range.Count();
@@ -174,11 +174,61 @@ namespace ModKit {
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
         public static NamedFunc<T> TypePicker<T>(string title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
-            int sel = selectedIndex;
+            var sel = selectedIndex;
             var titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();
             if (title?.Length > 0) { Label(title); }
             selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
             return items[selectedIndex];
+        }
+        public static bool VPicker<T>(
+            string title, 
+            ref T selected, List<T> items,
+            string unselectedTitle,
+            Func<T, string> titler, 
+            ref string searchText,
+            GUIStyle style = null, params GUILayoutOption[] options
+            ) where T : class {
+            var changed = false;
+            using (UI.VerticalScope(style, options)) {
+                if (title != null)
+                    UI.Label(title, style, options);
+                if (searchText != null) {
+                    UI.ActionTextField(
+                        ref searchText,
+                        "itemSearchText",
+                        (text) => { changed = true; },
+                        () => { },
+                        options);
+                    if (searchText?.Length > 0) {
+                        var searchStr = searchText;
+                        items = items.Where(i => titler(i).Contains(searchStr)).ToList();
+                    }
+                }
+                var selectedItemIndex = items.IndexOf(selected);
+                if (items.Count() > 0) {
+                    selectedItemIndex = Math.Max(0, selectedItemIndex);
+                    var newSelected = selected;
+                    var titles = items.Select(i => titler(i));
+                    bool hasUnselectedTitle = unselectedTitle != null;
+                    if (hasUnselectedTitle)
+                        titles.Prepend<string>(unselectedTitle);
+                    UI.ActionSelectionGrid(
+                        ref selectedItemIndex,
+                        titles.ToArray(),
+                        1,
+                        index => { changed = true; },
+                        style,
+                        options);
+                    if (hasUnselectedTitle)
+                        selectedItemIndex -= 1;
+
+                    selected = selectedItemIndex >= 0 ? items[selectedItemIndex] : null;
+                }
+                else {
+                    UI.Label("No Items".grey(), options);
+                }
+            }
+            return changed;
         }
     }
 }

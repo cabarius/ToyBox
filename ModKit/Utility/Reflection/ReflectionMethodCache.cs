@@ -143,7 +143,7 @@ namespace ModKit.Utility {
                 if (@params.Length != delParams.Length) {
                     return false;
                 }
-                for (int i = 0; i < @params.Length; i++) {
+                for (var i = 0; i < @params.Length; i++) {
                     if (!@params[i].ParameterType.IsGenericParameter) {
                         if (@params[i].ParameterType != delParams[i].ParameterType) {
                             return false;
@@ -177,7 +177,7 @@ namespace ModKit.Utility {
                     skipVisibility: true);
 
                 var il = method.GetILGenerator();
-                for (int i = 0; i < parameters.Length; i++)
+                for (var i = 0; i < parameters.Length; i++)
                     il.Emit(OpCodes.Ldarg, i);
                 il.Emit(OpCodes.Call, Info);
                 il.Emit(OpCodes.Ret);
@@ -204,13 +204,13 @@ namespace ModKit.Utility {
 
                 var il = method.GetILGenerator();
                 if (Info.IsStatic) {
-                    for (int i = 1; i <= parameters.Length; i++)
+                    for (var i = 1; i <= parameters.Length; i++)
                         il.Emit(OpCodes.Ldarg, i);
                     il.Emit(OpCodes.Call, Info);
                 }
                 else {
                     il.Emit(OpCodes.Ldarg_0);
-                    for (int i = 1; i <= parameters.Length; i++)
+                    for (var i = 1; i <= parameters.Length; i++)
                         il.Emit(OpCodes.Ldarg, i);
                     if (Info.IsVirtual)
                         il.Emit(OpCodes.Callvirt, Info);

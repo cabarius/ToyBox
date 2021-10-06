@@ -13,13 +13,13 @@ namespace ModKit.Utility {
         public static IEnumerable<CodeInstruction> Dump(this IEnumerable<CodeInstruction> codes, Action<string> print) {
             Dictionary<Label, string> labels = new();
             var ie = codes.GetEnumerator();
-            for (int i = 0; ie.MoveNext(); i++)
+            for (var i = 0; ie.MoveNext(); i++)
                 foreach (var l in ie.Current.labels)
                     labels[l] = $"L_{i:X4}";
 
             print("==== Begin Dumping Instructions ====");
             ie = codes.GetEnumerator();
-            for (int i = 0; ie.MoveNext(); i++)
+            for (var i = 0; ie.MoveNext(); i++)
                 print($"L_{i:X4}: {ie.Current.opcode}" +
                     (ie.Current.operand == null ?
                     string.Empty : $" {(ie.Current.operand is Label l ? labels[l] : ie.Current.operand)}"));
@@ -156,10 +156,10 @@ namespace ModKit.Utility {
             replaced = 0;
             if (comparer == null)
                 comparer = new CodeInstructionMatchComparer();
-            int findingCodesCount = findingCodes.Count();
-            int newCodesCount = newCodes.Count();
+            var findingCodesCount = findingCodes.Count();
+            var newCodesCount = newCodes.Count();
             if (findingCodesCount > 0) {
-                int i = codes.Count() - findingCodesCount;
+                var i = codes.Count() - findingCodesCount;
                 while (i >= 0) {
                     if (codes.MatchCodes(i, findingCodes, comparer)) {
                         codes = (newCodesCount > 0) ?
@@ -214,7 +214,7 @@ namespace ModKit.Utility {
             var source = codes.Item(index).labels;
             var target = targetCodes.Item(targetIndex).labels;
             HashSet<Label> skip = new(skipLabels);
-            int i = 0;
+            var i = 0;
             while (i < source.Count) {
                 if (skip.Contains(source[i])) {
                     i++;
@@ -272,8 +272,8 @@ namespace ModKit.Utility {
         public static int FindCodes(this IEnumerable<CodeInstruction> codes,
             int startIndex, IEnumerable<CodeInstruction> findingCodes, IEqualityComparer<CodeInstruction> comparer) {
             if (findingCodes.Any()) {
-                int ubound = codes.Count() - findingCodes.Count();
-                for (int i = startIndex; i <= ubound; i++) {
+                var ubound = codes.Count() - findingCodes.Count();
+                for (var i = startIndex; i <= ubound; i++) {
                     if (codes.MatchCodes(i, findingCodes, comparer))
                         return i;
                 }
@@ -287,8 +287,8 @@ namespace ModKit.Utility {
         public static int FindLastCodes(this IEnumerable<CodeInstruction> codes,
             IEnumerable<CodeInstruction> findingCodes, IEqualityComparer<CodeInstruction> comparer) {
             if (findingCodes.Any()) {
-                int ubound = codes.Count() - findingCodes.Count();
-                for (int i = ubound; i >= 0; i--) {
+                var ubound = codes.Count() - findingCodes.Count();
+                for (var i = ubound; i >= 0; i--) {
                     if (codes.MatchCodes(i, findingCodes, comparer))
                         return i;
                 }

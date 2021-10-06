@@ -62,8 +62,8 @@ namespace ModKit {
             if (stride < 1) { stride = length; }
             if (IsNarrow)
                 stride = Math.Min(3, stride);
-            for (int ii = 0; ii < actions.Length; ii += stride) {
-                bool hasTitle = title != null;
+            for (var ii = 0; ii < actions.Length; ii += stride) {
+                var hasTitle = title != null;
                 BeginHorizontal();
                 if (hasTitle) {
                     if (ii == 0) { Label(title.bold(), Width(150f)); }
@@ -93,7 +93,7 @@ namespace ModKit {
         public static void TabBar(ref int selected, Action header = null, params NamedAction[] actions) {
             if (selected >= actions.Count())
                 selected = 0;
-            int sel = selected;
+            var sel = selected;
             var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             selected = GL.Toolbar(selected, titles.ToArray());
             GL.BeginVertical("box");

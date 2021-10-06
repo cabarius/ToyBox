@@ -12,14 +12,14 @@ namespace ModKit {
 
     internal static class ModSettings {
         public static void SaveSettings<T>(this ModEntry modEntry, string fileName, T settings) {
-            string userConfigFolder = modEntry.Path + "UserSettings";
+            var userConfigFolder = modEntry.Path + "UserSettings";
             Directory.CreateDirectory(userConfigFolder);
             var userPath = $"{userConfigFolder}{Path.DirectorySeparatorChar}{fileName}";
             File.WriteAllText(userPath, JsonConvert.SerializeObject(settings, Formatting.Indented));
         }
         public static void LoadSettings<T>(this ModEntry modEntry, string fileName, ref T settings) where T : IUpdatableSettings, new() {
             var assembly = Assembly.GetExecutingAssembly();
-            string userConfigFolder = modEntry.Path + "UserSettings";
+            var userConfigFolder = modEntry.Path + "UserSettings";
             Directory.CreateDirectory(userConfigFolder);
             var userPath = $"{userConfigFolder}{Path.DirectorySeparatorChar}{fileName}";
             try {

@@ -291,7 +291,7 @@ namespace ToyBox {
                     UI.Div(100, 20);
                     using (UI.HorizontalScope()) {
                         UI.Space(100);
-                        UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass, 0);
+                        UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass);
                         if (settings.toggleMulticlass) {
                             UI.Space(40);
                             if (UI.DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {

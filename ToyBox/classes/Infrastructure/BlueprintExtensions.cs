@@ -115,27 +115,27 @@ namespace ToyBox {
         }
 
 
-        private static readonly Dictionary<Type, List<SimpleBlueprint>> blueprintsByType = new();
-        public static List<SimpleBlueprint> BlueprintsOfType(Type type) {
+        private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
+        public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
-            var blueprints = BlueprintBrowser.GetBlueprints();
+            var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
             var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }
 
-        public static List<SimpleBlueprint> BlueprintsOfType<BPType>() where BPType : SimpleBlueprint {
+        public static IEnumerable<BPType> BlueprintsOfType<BPType>() where BPType : SimpleBlueprint {
             var type = typeof(BPType);
-            if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
-            var blueprints = BlueprintBrowser.GetBlueprints();
-            if (blueprints == null) return new List<SimpleBlueprint>();
+            if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type].OfType<BPType>();
+            var blueprints = BlueprintLoader.Shared.GetBlueprints<BPType>();
+            if (blueprints == null) return new List<BPType>();
             var filtered = blueprints.Where((bp) => (bp is BPType)).ToList();
             blueprintsByType[type] = filtered;
             return filtered;
         }
 
-        public static List<SimpleBlueprint> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
+        public static IEnumerable<SimpleBlueprint> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
         public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
             var count = 0;
             var component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();

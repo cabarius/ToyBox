@@ -21,7 +21,7 @@ namespace ModKit.Utility {
             XmlSerializer keySerializer = new(typeof(TKey));
             XmlSerializer valueSerializer = new(typeof(TValue));
 
-            bool wasEmpty = reader.IsEmptyElement;
+            var wasEmpty = reader.IsEmptyElement;
             reader.Read();
 
             if (wasEmpty)
@@ -31,11 +31,11 @@ namespace ModKit.Utility {
                 reader.ReadStartElement("item");
 
                 reader.ReadStartElement("key");
-                TKey key = (TKey)keySerializer.Deserialize(reader);
+                var key = (TKey)keySerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 reader.ReadStartElement("value");
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                var value = (TValue)valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 Add(key, value);

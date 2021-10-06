@@ -44,7 +44,7 @@ namespace ToyBox.classes.MainUI {
 
             // load blueprints
             if (enchantments == null) {
-                BlueprintBrowser.GetBlueprints();
+                BlueprintLoader.Shared.GetBlueprints();
                 if (BlueprintBrowser.blueprints == null) return;
 
                 enchantments = new List<BlueprintItemEnchantment>();
@@ -86,7 +86,7 @@ namespace ToyBox.classes.MainUI {
                 using (UI.VerticalScope(GUI.skin.box)) {
                     UI.ActionTextField(
                         ref itemSearchText,
-                        "itemSearhText",
+                        "itemSearchText",
                         (text) => UpdateItems(),
                         () => UpdateItems(),
                         UI.Width(375));

@@ -20,9 +20,9 @@ namespace ModKit {
             if (Event.current.type == EventType.Layout)
                 KeyBindings.OnGUI();
             var keyBind = KeyBindings.GetBinding(identifier);
-            bool isEditing = identifier == selectedIdentifier;
-            bool isEditingOther = selectedIdentifier != null && identifier != selectedIdentifier && oldValue != null;
-            string label = keyBind.IsEmpty ? (isEditing ? "Cancel" : "Bind") : keyBind.ToString().orange().bold();
+            var isEditing = identifier == selectedIdentifier;
+            var isEditingOther = selectedIdentifier != null && identifier != selectedIdentifier && oldValue != null;
+            var label = keyBind.IsEmpty ? (isEditing ? "Cancel" : "Bind") : keyBind.ToString().orange().bold();
             showHint = showHint && isEditing;
             var conflicts = keyBind.Conflicts();
             using (VerticalScope(options)) {

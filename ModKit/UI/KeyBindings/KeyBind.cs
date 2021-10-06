@@ -99,7 +99,7 @@ namespace ModKit {
                     if (allowedMouseButtons.Contains(Key)) {
                         return Input.GetKey(Key);
                     }
-                    bool active = Key == Event.current.keyCode;
+                    var active = Key == Event.current.keyCode;
                     return active;
                 }
             }
@@ -117,7 +117,7 @@ namespace ModKit {
                     var cmdDown = Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
                     var shiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
                     // note we already checked Key above
-                    bool active = ctrlDown == Ctrl
+                    var active = ctrlDown == Ctrl
                                 && altDown == Alt
                                 && cmdDown == Cmd
                                 && shiftDown == Shift;

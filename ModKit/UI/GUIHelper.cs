@@ -26,7 +26,7 @@ namespace ModKit.Utility {
         }
 
         public static bool AdjusterButton(ref int value, string text, int min = int.MinValue, int max = int.MaxValue) {
-            int oldValue = value;
+            var oldValue = value;
             GUILayout.Label(text, GUILayout.ExpandWidth(false));
             if (GUILayout.Button("-", GUILayout.ExpandWidth(false)) && value > min)
                 value--;
@@ -57,7 +57,7 @@ namespace ModKit.Utility {
         public static void TextField(ref string value, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options) => TextField(ref value, null, onChanged, style, options);
 
         public static void TextField(ref string value, Action onClear, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options) {
-            string old = value;
+            var old = value;
             TextField(ref value, style, options);
             if (value != old) {
                 if (onClear != null && string.IsNullOrEmpty(value))
@@ -164,7 +164,7 @@ namespace ModKit.Utility {
         public static void SelectionGrid(ref int selected, string[] texts, int xCount, GUIStyle style = null, params GUILayoutOption[] options) => selected = GUILayout.SelectionGrid(selected, texts, xCount, style ?? GUI.skin.button, options);
 
         public static void SelectionGrid(ref int selected, string[] texts, int xCount, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options) {
-            int old = selected;
+            var old = selected;
             SelectionGrid(ref selected, texts, xCount, style, options);
             if (selected != old) {
                 onChanged?.Invoke();
@@ -173,7 +173,7 @@ namespace ModKit.Utility {
 
         public static float RoundedHorizontalSlider(float value, int digits, float leftValue, float rightValue, params GUILayoutOption[] options) {
             if (digits < 0) {
-                float num = (float)Math.Pow(10d, -digits);
+                var num = (float)Math.Pow(10d, -digits);
                 return (float)Math.Round(GUILayout.HorizontalSlider(value, leftValue, rightValue, options) / num, 0) * num;
             }
             else {

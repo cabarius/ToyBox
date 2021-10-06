@@ -187,7 +187,7 @@ namespace ToyBox {
             toValues.Clear();
         }
         public static void OnGUI(UnitEntityData ch, List<Feature> facts) {
-            var blueprints = BlueprintBrowser.GetBlueprints();
+            var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Feature>("Features", ch, facts,
                 (fact) => fact.Blueprint,
@@ -199,7 +199,7 @@ namespace ToyBox {
                 );
         }
         public static void OnGUI(UnitEntityData ch, List<Buff> facts) {
-            var blueprints = BlueprintBrowser.GetBlueprints();
+            var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Buff>("Features", ch, facts,
                 (fact) => fact.Blueprint,
@@ -211,7 +211,7 @@ namespace ToyBox {
                 );
         }
         public static void OnGUI(UnitEntityData ch, List<Ability> facts) {
-            var blueprints = BlueprintBrowser.GetBlueprints();
+            var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Ability>("Abilities", ch, facts,
                 (fact) => fact.Blueprint,
@@ -234,7 +234,7 @@ namespace ToyBox {
                 .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
 
             var learnable = settings.showFromAllSpellbooks ? normal.Concat(mythic).Distinct() : spellbookBP.SpellList.GetSpells(level);
-            var blueprints = BlueprintBrowser.GetBlueprints();
+            var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
 
             OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
@@ -247,7 +247,7 @@ namespace ToyBox {
                 );
         }
         public static void OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
-            var blueprints = BlueprintBrowser.GetBlueprints();
+            var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
             OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
                 (sb) => sb.Blueprint,

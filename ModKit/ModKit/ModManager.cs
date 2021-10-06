@@ -92,7 +92,7 @@ namespace ModKit {
                 _eventHandlers.Sort((x, y) => x.Priority - y.Priority);
 
                 process.Log("Raising events: OnEnable()");
-                for (int i = 0; i < _eventHandlers.Count; i++) {
+                for (var i = 0; i < _eventHandlers.Count; i++) {
                     _eventHandlers[i].HandleModEnable();
                 }
             }
@@ -116,7 +116,7 @@ namespace ModKit {
             // use try-catch to prevent the progression being disrupt by exceptions
             if (_eventHandlers != null) {
                 process.Log("Raising events: OnDisable()");
-                for (int i = _eventHandlers.Count - 1; i >= 0; i--) {
+                for (var i = _eventHandlers.Count - 1; i >= 0; i--) {
                     try { _eventHandlers[i].HandleModDisable(); }
                     catch (Exception e) { Error(e); }
                 }

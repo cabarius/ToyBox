@@ -6,6 +6,7 @@ using System.Linq;
 using Kingmaker.Blueprints;
 using Kingmaker.BundlesLoading;
 using ModKit;
+using System;
 
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {
@@ -100,6 +101,29 @@ namespace ToyBox {
                 return false;
             }
         }
+        public IEnumerable<SimpleBlueprint> GetBlueprints(Action callback = null) {
+            if (blueprints == null) {
+                if (BlueprintLoader.Shared.IsLoading) { return null; }
+                else {
+                    Mod.Debug($"calling BlueprintLoader.Load");
+                    BlueprintLoader.Shared.Load((bps) => {
+                        blueprints = bps.ToList();
+                        callback?.Invoke();
+                        Mod.Debug($"success got {bps.Count()} bluerints");
+                    });
+                    return null;
+                }
+            }
+            return blueprints;
+        }
+        public IEnumerable<BPType> GetBlueprints<BPType>(Action callback = null) {
+            var bps = GetBlueprints(callback);
+            return bps?.OfType<BPType>() ?? null;
+        }
+    }
+
+    public static class BlueprintLoader<BPType> {
+        public static IEnumerable<BPType> blueprints = null;
     }
 
     public static class BlueprintLoaderOld {

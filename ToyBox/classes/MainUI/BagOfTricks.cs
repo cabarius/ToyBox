@@ -121,29 +121,29 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Preview", 0, () => {
-                Toggle("Dialog Results", ref settings.previewDialogResults, 0);
+                Toggle("Dialog Results", ref settings.previewDialogResults);
                 Space(25);
-                Toggle("Dialog Alignment", ref settings.previewAlignmentRestrictedDialog, 0);
+                Toggle("Dialog Alignment", ref settings.previewAlignmentRestrictedDialog);
                 Space(25);
-                Toggle("Random Encounters", ref settings.previewRandomEncounters, 0);
+                Toggle("Random Encounters", ref settings.previewRandomEncounters);
                 Space(25);
-                Toggle("Events", ref settings.previewEventResults, 0);
+                Toggle("Events", ref settings.previewEventResults);
             });
             Div(0, 25);
             HStack("Quality of Life", 1,
                 () => {
-                    Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 0);
+                    Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);
                     Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
-                () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle, 0),
-                () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls, 0),
-                () => Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone, 0),
-                () => Toggle("Vescavors begone (experimental)", ref settings.toggleVescavorsBegone, 0),
+                () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
+                () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
+                () => Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone),
+                () => Toggle("Vescavors begone (experimental)", ref settings.toggleVescavorsBegone),
                 () => Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
-                () => Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave, 0),
-                () => Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 0),
-                () => Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 0),
+                () => Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave),
+                () => Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot),
+                () => Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer),
                 () => ActionButton("Fix Incorrect Main Character", () => {
                     var probablyPlayer = Game.Instance.Player?.Party?
                         .Where(x => !x.IsCustomCompanion())
@@ -185,7 +185,7 @@ namespace ToyBox {
                         using (HorizontalScope()) {
                             using (VerticalScope()) {
                                 Div(0, 25, 1280);
-                                if (Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair, 0)) {
+                                if (Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair)) {
                                     EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
                                         h.HandleDifficultyChanged();
                                         Main.SetNeedsResetGameUI();
@@ -231,8 +231,8 @@ namespace ToyBox {
             );
             Div(0, 25);
             HStack("Alignment", 1,
-                () => { Toggle("Fix Alignment Shifts", ref settings.toggleAlignmentFix, 0); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
-                () => { Toggle("Prevent Alignment Changes", ref settings.togglePreventAlignmentChanges, 0); Space(25); Label("See Party Editor for more fine grained alignment locking per character".green()); },
+                () => { Toggle("Fix Alignment Shifts", ref settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
+                () => { Toggle("Prevent Alignment Changes", ref settings.togglePreventAlignmentChanges); Space(25); Label("See Party Editor for more fine grained alignment locking per character".green()); },
                 () => { }
                 );
             Div(0, 25);
@@ -247,7 +247,7 @@ namespace ToyBox {
                     }
                 },
                 () => {
-                    Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled, 0);
+                    Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled);
                     if (settings.toggleTeleportKeysEnabled) {
                         Space(100);
                         using (VerticalScope()) {
@@ -257,39 +257,39 @@ namespace ToyBox {
                         }
                     }
                 },
-                () => Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities, 0),
-                () => Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts, 0),
-                () => Toggle("No Material Components", ref settings.toggleMaterialComponent, 0),
-                () => Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure, 0),
-                () => Toggle("Disable Party Negative Levels", ref settings.togglePartyNegativeLevelImmunity, 0),
-                () => Toggle("Disable Party Ability Damage", ref settings.togglePartyAbilityDamageImmunity, 0),
+                () => Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities),
+                () => Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts),
+                () => Toggle("No Material Components", ref settings.toggleMaterialComponent),
+                () => Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure),
+                () => Toggle("Disable Party Negative Levels", ref settings.togglePartyNegativeLevelImmunity),
+                () => Toggle("Disable Party Ability Damage", ref settings.togglePartyAbilityDamageImmunity),
 
-                () => Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn, 0),
-                () => Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems, 0),
+                () => Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn),
+                () => Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems),
 
-                () => Toggle("Instant Cooldown", ref settings.toggleInstantCooldown, 0),
+                () => Toggle("Instant Cooldown", ref settings.toggleInstantCooldown),
 
-                () => Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls, 0),
+                () => Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls),
 
-                () => Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions, 0),
-                () => Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity, 0),
+                () => Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions),
+                () => Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity),
 
-                () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions, 0),
-                () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic, 0),
+                () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
+                () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
 #if DEBUG
-                () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything, 0),
+                () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything),
 #endif
-                () => Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE, 0),
-                () => Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree, 0),
+                () => Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE),
+                () => Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree),
 
-                () => Toggle("No Fog Of War", ref settings.toggleNoFogOfWar, 0),
-                () => Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat, 0),
-                //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat, 0),
+                () => Toggle("No Fog Of War", ref settings.toggleNoFogOfWar),
+                () => Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat),
+                //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat),
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
-                () => Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat, 0),
-                () => Toggle("Disallow Companions Leaving Party (experimental; only enable while needed)", ref settings.toggleBlockUnrecruit, 0),
-                () => Toggle("Disable Romance IsLocked Flag (experimental)", ref settings.toggleMultipleRomance, 0),
+                () => Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat),
+                () => Toggle("Disallow Companions Leaving Party (experimental; only enable while needed)", ref settings.toggleBlockUnrecruit),
+                () => Toggle("Disable Romance IsLocked Flag (experimental)", ref settings.toggleMultipleRomance),
                 () => Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
                 () => ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
@@ -334,7 +334,7 @@ namespace ToyBox {
                 () => {
                     LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
                     Space(25);
-                    Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne, 0);
+                    Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne);
                     Space(25);
                     Label("Adjusts the movement speed of your party in area maps".green());
                 },
@@ -375,7 +375,7 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Summons", 1,
-                () => Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable, 0),
+                () => Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable),
                 () => {
                     using (VerticalScope()) {
                         Div(0, 25);

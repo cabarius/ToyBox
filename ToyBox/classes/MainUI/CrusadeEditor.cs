@@ -164,7 +164,7 @@ namespace ToyBox.classes.MainUI {
                         UI.Div(0, 0, 800);
                     }
                 },
-                () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent, 0),
+                () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent),
                 () => {
 
                     UI.Slider("Crusade card resolution time multiplier", ref Settings.kingdomTaskResolutionLengthMultiplier, -1, 2, 0, 2, "", UI.Width(400));
