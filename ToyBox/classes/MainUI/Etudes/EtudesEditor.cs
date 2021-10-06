@@ -17,10 +17,9 @@ namespace ToyBox {
 
         private static BlueprintGuid parent;
         private static BlueprintGuid selected;
-        private static Vector2 m_ScrollPos;
-        private static Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = new();
+        private static Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = null;
         private static Dictionary<BlueprintGuid, EtudeIdReferences> filteredEtudes = new();
-        private static BlueprintGuid rootEtudeId = BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
+        private static readonly BlueprintGuid rootEtudeId = BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
         private static bool useFilter;
         private static bool showOnlyTargetAreaEtudes;
         private static bool showOnlyFlagLikes;
@@ -31,32 +30,32 @@ namespace ToyBox {
         private static BlueprintArea selectedArea;
         private static string areaSearchText;
         //private EtudeChildrenDrawer etudeChildrenDrawer;
-        private static Rect workspaceRect;
-
-        private static float currentScrollViewWidth = 450f;
-        private static bool resize = false;
-        private static Rect cursorChangeRect;
 
         public static string searchText = "";
         private static void Update() {
             //etudeChildrenDrawer?.Update();
         }
 
-        private static void ReloadEtudes() {
-            EtudesTreeLoader.Instance.ReloadBlueprintsTree();
-            loadedEtudes = EtudesTreeLoader.Instance.LoadedEtudes;
+        private static void ReloadEtudes() => EtudesTreeModel.Instance.ReloadBlueprintsTree(etudes => {
+            loadedEtudes = etudes;
+            Mod.Warning($"loadedEtudes: {loadedEtudes.Count}".cyan());
             //etudeChildrenDrawer = new EtudeChildrenDrawer(loadedEtudes, this);
             //etudeChildrenDrawer.ReferenceGraph = ReferenceGraph.Reload();
             ApplyFilter();
-        }
+        });
 
         public static void OnGUI() {
-            if (loadedEtudes == null) loadedEtudes = EtudesTreeLoader.Instance.LoadedEtudes;
-            if (areas == null) areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>().ToList();
+            if (loadedEtudes == null) { ReloadEtudes(); return; }
+            Mod.Warning("1");
+            if (areas == null) areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.ToList();
+            Mod.Warning("2");
+            if (areas == null) return;
+            Mod.Warning("3");
+            if (loadedEtudes.Count == 0) return;
+            Mod.Warning("4");
             //if (Event.current.type == EventType.Layout && etudeChildrenDrawer != null) {
             //    etudeChildrenDrawer.UpdateBlockersInfo();
             //}
-
             if (parent == BlueprintGuid.Empty) {
                 parent = rootEtudeId;
                 selected = parent;
@@ -149,7 +148,6 @@ namespace ToyBox {
                         foreach (var etude in Game.Instance.Player.EtudesSystem.Etudes.RawFacts) {
                             FillPlaymodeEtudeData(etude);
                         }
-
                     }
 
                     ShowBlueprintsTree();
@@ -170,7 +168,7 @@ namespace ToyBox {
         }
 
         private static void ApplyFilter() {
-            Dictionary<BlueprintGuid, EtudeIdReferences> etudesOfArea = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+            var etudesOfArea = new Dictionary<BlueprintGuid, EtudeIdReferences>();
 
             filteredEtudes = loadedEtudes;
 
@@ -179,7 +177,7 @@ namespace ToyBox {
                 filteredEtudes = etudesOfArea;
             }
 
-            Dictionary<BlueprintGuid, EtudeIdReferences> flaglikeEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+            var flaglikeEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
 
             if (showOnlyFlagLikes) {
                 flaglikeEtudes = GetFlaglikeEtudes();
@@ -199,10 +197,10 @@ namespace ToyBox {
         //}
 
         private static Dictionary<BlueprintGuid, EtudeIdReferences> GetFlaglikeEtudes() {
-            Dictionary<BlueprintGuid, EtudeIdReferences> etudesFlaglike = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+            var etudesFlaglike = new Dictionary<BlueprintGuid, EtudeIdReferences>();
 
             foreach (var etude in loadedEtudes) {
-                bool flaglike = etude.Value.ChainedTo == BlueprintGuid.Empty &&
+                var flaglike = etude.Value.ChainedTo == BlueprintGuid.Empty &&
                                 // (etude.Value.ChainedId.Count == 0) &&
                                 etude.Value.LinkedTo == BlueprintGuid.Empty &&
                                 etude.Value.LinkedArea == BlueprintGuid.Empty && !ParentHasArea(etude.Value);
@@ -228,7 +226,7 @@ namespace ToyBox {
         }
 
         private static Dictionary<BlueprintGuid, EtudeIdReferences> GetAreaEtudes() {
-            Dictionary<BlueprintGuid, EtudeIdReferences> etudesWithAreaLink = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+            var etudesWithAreaLink = new Dictionary<BlueprintGuid, EtudeIdReferences>();
 
             foreach (var etude in loadedEtudes) {
                 if (etude.Value.LinkedArea == selectedArea.AssetGuid) {
@@ -266,11 +264,11 @@ namespace ToyBox {
         }
 
         private static void FillPlaymodeEtudeData(Etude etude) {
-            EtudeIdReferences etudeIdReferences = loadedEtudes[etude.Blueprint.AssetGuid];
+            var etudeIdReferences = loadedEtudes[etude.Blueprint.AssetGuid];
             UpdateStateInRef(etude, etudeIdReferences);
         }
 
-        static void UpdateStateInRef(Etude etude, EtudeIdReferences etudeIdReferences) {
+        private static void UpdateStateInRef(Etude etude, EtudeIdReferences etudeIdReferences) {
             if (etude.IsCompleted) {
                 etudeIdReferences.State = EtudeIdReferences.EtudeState.Completed;
                 return;
@@ -327,7 +325,7 @@ namespace ToyBox {
                 selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
             }
             UI.Space(25);
-            UI.Label(etude.State.ToString());
+            UI.Label(etude.State.ToString(), UI.AutoWidth());
             UI.Space(25);
             if (EtudeValidationProblem(etudeID, etude)) {
                 UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
@@ -368,7 +366,7 @@ namespace ToyBox {
         }
 
         public static void UpdateEtudeState(BlueprintGuid etudeID, EtudeIdReferences etude) {
-            BlueprintEtude blueprintEtude = (BlueprintEtude)ResourcesLibrary.TryGetBlueprint(etudeID);
+            var blueprintEtude = (BlueprintEtude)ResourcesLibrary.TryGetBlueprint(etudeID);
 
             var item = Game.Instance.Player.EtudesSystem.Etudes.GetFact(blueprintEtude);
             if (item != null)

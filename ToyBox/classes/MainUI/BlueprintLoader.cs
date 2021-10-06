@@ -13,7 +13,7 @@ namespace ToyBox {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
 
         private LoadBlueprintsCallback callback;
-        private List<SimpleBlueprint> blueprints;
+        public List<SimpleBlueprint> blueprints;
         public float progress = 0;
         private static BlueprintLoader _shared;
         public static BlueprintLoader Shared {
@@ -101,14 +101,14 @@ namespace ToyBox {
                 return false;
             }
         }
-        public IEnumerable<SimpleBlueprint> GetBlueprints(Action callback = null) {
+        public IEnumerable<SimpleBlueprint> GetBlueprints(Action<List<SimpleBlueprint>> callback = null) {
             if (blueprints == null) {
                 if (BlueprintLoader.Shared.IsLoading) { return null; }
                 else {
                     Mod.Debug($"calling BlueprintLoader.Load");
                     BlueprintLoader.Shared.Load((bps) => {
                         blueprints = bps.ToList();
-                        callback?.Invoke();
+                        callback?.Invoke(blueprints);
                         Mod.Debug($"success got {bps.Count()} bluerints");
                     });
                     return null;
@@ -116,8 +116,8 @@ namespace ToyBox {
             }
             return blueprints;
         }
-        public IEnumerable<BPType> GetBlueprints<BPType>(Action callback = null) {
-            var bps = GetBlueprints(callback);
+        public IEnumerable<BPType> GetBlueprints<BPType>(Action<List<BPType>> callback = null) {
+            var bps = GetBlueprints(bps => callback(bps.OfType<BPType>().ToList()));
             return bps?.OfType<BPType>() ?? null;
         }
     }

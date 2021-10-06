@@ -1,6 +1,7 @@
 ﻿using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,51 +10,55 @@ using System.Threading.Tasks;
 
 namespace ToyBox {
 
-    public class EtudesTreeLoader {
+    public class EtudesTreeModel {
         public IEnumerable<BlueprintEtude> etudes;
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));
-        public Dictionary<BlueprintGuid, EtudeIdReferences> LoadedEtudes = new();
-        public Dictionary<BlueprintGuid, ConflictingGroupIdReferences> ConflictingGroups = new();
+        public Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = new();
+        public Dictionary<BlueprintGuid, ConflictingGroupIdReferences> conflictingGroups = new();
 
-        private EtudesTreeLoader() {
-            ReloadBlueprintsTree();
+        private EtudesTreeModel() {
+            //ReloadBlueprintsTree(bps => { });
         }
 
-        private static EtudesTreeLoader instance;
+        private static EtudesTreeModel instance;
 
-        public static EtudesTreeLoader Instance {
+        public static EtudesTreeModel Instance {
             get {
                 if (instance == null) {
-                    instance = new EtudesTreeLoader();
+                    instance = new EtudesTreeModel();
 
                 }
                 return instance;
             }
         }
 
-        public void ReloadBlueprintsTree() {
-            if (etudes == null) etudes = BlueprintLoader.Shared.GetBlueprints<BlueprintEtude>();
-            LoadedEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
-            var filtedEtudes = from bp in etudes
-                               where etudeFilter.filter(bp)
-                               select bp;
-            foreach (var etude in filtedEtudes) {
+        public void ReloadBlueprintsTree(Action<Dictionary<BlueprintGuid, EtudeIdReferences>> callback) => BlueprintLoader.Shared.GetBlueprints<BlueprintEtude>(bps => {
+            Mod.Warning($"etudes: {bps.Count}");
+            etudes = bps;
+            loadedEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+            var filteredEtudes = (from bp in etudes
+                                  where etudeFilter.filter(bp)
+                                  select bp).ToList();
+            Mod.Warning($"filteredEtudes: {filteredEtudes.Count}");
+            foreach (var etude in filteredEtudes) {
                 AddEtudeToLoaded(etude);
             }
 
-            foreach (var loadedEtude in LoadedEtudes) {
+            foreach (var loadedEtude in loadedEtudes) {
                 foreach (var etude in loadedEtude.Value.ChainedId) {
-                    LoadedEtudes[etude].ChainedTo = loadedEtude.Key;
+                    loadedEtudes[etude].ChainedTo = loadedEtude.Key;
                 }
 
                 foreach (var etude in loadedEtude.Value.LinkedId) {
-                    LoadedEtudes[etude].LinkedTo = loadedEtude.Key;
+                    loadedEtudes[etude].LinkedTo = loadedEtude.Key;
                 }
             }
-        }
+            Mod.Warning($"loadedEtudes: {loadedEtudes.Count} -> ${callback}");
+            callback(loadedEtudes);
+        });
 
         public void UpdateEtude(BlueprintEtude blueprintEtude) {
-            if (LoadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
+            if (loadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
                 UpdateEtudeData(blueprintEtude);
             }
             else {
@@ -63,24 +68,24 @@ namespace ToyBox {
 
         private void UpdateEtudeData(BlueprintEtude blueprintEtude) {
             var etudeIdReference = PrepareNewEtudeData(blueprintEtude);
-            var oldEtude = LoadedEtudes[blueprintEtude.AssetGuid];
+            var oldEtude = loadedEtudes[blueprintEtude.AssetGuid];
             //Remove old data
-            if (etudeIdReference.ChainedTo != oldEtude.ChainedTo && oldEtude.ChainedTo != BlueprintGuid.Empty && LoadedEtudes[oldEtude.ChainedTo].ChainedId.Contains(blueprintEtude.AssetGuid))
-                LoadedEtudes[oldEtude.ChainedTo].ChainedId.Remove(blueprintEtude.AssetGuid);
-            if (etudeIdReference.LinkedTo != oldEtude.LinkedTo && oldEtude.LinkedTo != BlueprintGuid.Empty && LoadedEtudes[oldEtude.LinkedTo].LinkedId.Contains(blueprintEtude.AssetGuid))
-                LoadedEtudes[oldEtude.LinkedTo].LinkedId.Remove(blueprintEtude.AssetGuid);
-            if (etudeIdReference.ParentId != oldEtude.ParentId && oldEtude.ParentId != BlueprintGuid.Empty && LoadedEtudes[oldEtude.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
-                LoadedEtudes[oldEtude.ParentId].ChildrenId.Remove(blueprintEtude.AssetGuid);
+            if (etudeIdReference.ChainedTo != oldEtude.ChainedTo && oldEtude.ChainedTo != BlueprintGuid.Empty && loadedEtudes[oldEtude.ChainedTo].ChainedId.Contains(blueprintEtude.AssetGuid))
+                loadedEtudes[oldEtude.ChainedTo].ChainedId.Remove(blueprintEtude.AssetGuid);
+            if (etudeIdReference.LinkedTo != oldEtude.LinkedTo && oldEtude.LinkedTo != BlueprintGuid.Empty && loadedEtudes[oldEtude.LinkedTo].LinkedId.Contains(blueprintEtude.AssetGuid))
+                loadedEtudes[oldEtude.LinkedTo].LinkedId.Remove(blueprintEtude.AssetGuid);
+            if (etudeIdReference.ParentId != oldEtude.ParentId && oldEtude.ParentId != BlueprintGuid.Empty && loadedEtudes[oldEtude.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
+                loadedEtudes[oldEtude.ParentId].ChildrenId.Remove(blueprintEtude.AssetGuid);
 
             foreach (var etude in oldEtude.ChainedId) {
                 if (!etudeIdReference.ChainedId.Contains(etude)) {
-                    LoadedEtudes[etude].ChainedTo = BlueprintGuid.Empty;
+                    loadedEtudes[etude].ChainedTo = BlueprintGuid.Empty;
                 }
             }
 
             foreach (var etude in oldEtude.LinkedId) {
                 if (!etudeIdReference.LinkedId.Contains(etude)) {
-                    LoadedEtudes[etude].LinkedTo = BlueprintGuid.Empty;
+                    loadedEtudes[etude].LinkedTo = BlueprintGuid.Empty;
                 }
             }
 
@@ -90,54 +95,54 @@ namespace ToyBox {
             etudeIdReference.ChainedTo = oldEtude.ChainedTo;
             etudeIdReference.LinkedTo = oldEtude.LinkedTo;
             if (oldEtude.ChainedTo != BlueprintGuid.Empty)
-                LoadedEtudes[etudeIdReference.ChainedTo].ChainedId.Add(blueprintEtude.AssetGuid);
+                loadedEtudes[etudeIdReference.ChainedTo].ChainedId.Add(blueprintEtude.AssetGuid);
 
             if (oldEtude.LinkedTo != BlueprintGuid.Empty)
-                LoadedEtudes[etudeIdReference.LinkedTo].LinkedId.Add(blueprintEtude.AssetGuid);
+                loadedEtudes[etudeIdReference.LinkedTo].LinkedId.Add(blueprintEtude.AssetGuid);
 
-            LoadedEtudes[blueprintEtude.AssetGuid] = etudeIdReference;
+            loadedEtudes[blueprintEtude.AssetGuid] = etudeIdReference;
 
-            foreach (var etude in LoadedEtudes[blueprintEtude.AssetGuid].ChainedId) {
-                LoadedEtudes[etude].ChainedTo = blueprintEtude.AssetGuid;
+            foreach (var etude in loadedEtudes[blueprintEtude.AssetGuid].ChainedId) {
+                loadedEtudes[etude].ChainedTo = blueprintEtude.AssetGuid;
             }
 
-            foreach (var etude in LoadedEtudes[blueprintEtude.AssetGuid].LinkedId) {
-                LoadedEtudes[etude].LinkedTo = blueprintEtude.AssetGuid;
+            foreach (var etude in loadedEtudes[blueprintEtude.AssetGuid].LinkedId) {
+                loadedEtudes[etude].LinkedTo = blueprintEtude.AssetGuid;
             }
         }
 
         private void AddEtudeToLoaded(BlueprintEtude blueprintEtude) {
-            if (!LoadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
+            if (!loadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
                 var etudeIdReference = PrepareNewEtudeData(blueprintEtude);
 
-                LoadedEtudes.Add(blueprintEtude.AssetGuid, etudeIdReference);
+                loadedEtudes.Add(blueprintEtude.AssetGuid, etudeIdReference);
             }
         }
 
         public void RemoveEtudeData(BlueprintGuid SelectedId) {
-            if (!LoadedEtudes.ContainsKey(SelectedId))
+            if (!loadedEtudes.ContainsKey(SelectedId))
                 return;
 
-            var etudeToRemove = LoadedEtudes[SelectedId];
-            LoadedEtudes[etudeToRemove.ParentId].ChildrenId.Remove(SelectedId);
+            var etudeToRemove = loadedEtudes[SelectedId];
+            loadedEtudes[etudeToRemove.ParentId].ChildrenId.Remove(SelectedId);
 
             if (etudeToRemove.LinkedTo != BlueprintGuid.Empty) {
-                LoadedEtudes[etudeToRemove.LinkedTo].LinkedId.Remove(SelectedId);
+                loadedEtudes[etudeToRemove.LinkedTo].LinkedId.Remove(SelectedId);
             }
 
             if (etudeToRemove.ChainedTo != BlueprintGuid.Empty) {
-                LoadedEtudes[etudeToRemove.ChainedTo].ChainedId.Remove(SelectedId);
+                loadedEtudes[etudeToRemove.ChainedTo].ChainedId.Remove(SelectedId);
             }
 
             foreach (var linkedTo in etudeToRemove.LinkedId) {
-                LoadedEtudes[linkedTo].LinkedTo = BlueprintGuid.Empty;
+                loadedEtudes[linkedTo].LinkedTo = BlueprintGuid.Empty;
             }
 
             foreach (var chainedTo in etudeToRemove.ChainedId) {
-                LoadedEtudes[chainedTo].ChainedTo = BlueprintGuid.Empty;
+                loadedEtudes[chainedTo].ChainedTo = BlueprintGuid.Empty;
             }
 
-            LoadedEtudes.Remove(SelectedId);
+            loadedEtudes.Remove(SelectedId);
         }
 
         private EtudeIdReferences PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
@@ -158,13 +163,13 @@ namespace ToyBox {
 
                 etudeIdReference.ConflictingGroups.Add(conflictingGroupBlueprint.AssetGuid);
 
-                if (!ConflictingGroups.ContainsKey(conflictingGroupBlueprint.AssetGuid))
-                    ConflictingGroups.Add(conflictingGroupBlueprint.AssetGuid, new ConflictingGroupIdReferences());
+                if (!conflictingGroups.ContainsKey(conflictingGroupBlueprint.AssetGuid))
+                    conflictingGroups.Add(conflictingGroupBlueprint.AssetGuid, new ConflictingGroupIdReferences());
 
-                ConflictingGroups[conflictingGroupBlueprint.AssetGuid].Name = conflictingGroupBlueprint.name;
+                conflictingGroups[conflictingGroupBlueprint.AssetGuid].Name = conflictingGroupBlueprint.name;
 
-                if (!ConflictingGroups[conflictingGroupBlueprint.AssetGuid].Etudes.Contains(blueprintEtude.AssetGuid))
-                    ConflictingGroups[conflictingGroupBlueprint.AssetGuid].Etudes.Add(blueprintEtude.AssetGuid);
+                if (!conflictingGroups[conflictingGroupBlueprint.AssetGuid].Etudes.Contains(blueprintEtude.AssetGuid))
+                    conflictingGroups[conflictingGroupBlueprint.AssetGuid].Etudes.Add(blueprintEtude.AssetGuid);
             }
 
             if (blueprintEtude.LinkedAreaPart != null) {
@@ -172,11 +177,11 @@ namespace ToyBox {
             }
 
             if (etudeIdReference.ParentId != BlueprintGuid.Empty) {
-                if (!LoadedEtudes.ContainsKey(blueprintEtude.Parent.Get().AssetGuid))
+                if (!loadedEtudes.ContainsKey(blueprintEtude.Parent.Get().AssetGuid))
                     AddEtudeToLoaded(blueprintEtude.Parent.Get());
 
-                if (!LoadedEtudes[etudeIdReference.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
-                    LoadedEtudes[etudeIdReference.ParentId].ChildrenId.Add(blueprintEtude.AssetGuid);
+                if (!loadedEtudes[etudeIdReference.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
+                    loadedEtudes[etudeIdReference.ParentId].ChildrenId.Add(blueprintEtude.AssetGuid);
             }
 
             foreach (var chainedStart in blueprintEtude.StartsOnComplete) {

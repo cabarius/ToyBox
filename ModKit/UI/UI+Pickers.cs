@@ -209,7 +209,7 @@ namespace ModKit {
                     selectedItemIndex = Math.Max(0, selectedItemIndex);
                     var newSelected = selected;
                     var titles = items.Select(i => titler(i));
-                    bool hasUnselectedTitle = unselectedTitle != null;
+                    var hasUnselectedTitle = unselectedTitle != null;
                     if (hasUnselectedTitle)
                         titles.Prepend<string>(unselectedTitle);
                     UI.ActionSelectionGrid(

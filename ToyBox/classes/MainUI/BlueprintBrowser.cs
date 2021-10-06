@@ -218,7 +218,7 @@ namespace ToyBox {
             firstSearch = false;
         }
         public static IEnumerable OnGUI() {
-            if (blueprints == null) blueprints = BlueprintLoader.Shared.GetBlueprints(() => UpdateSearchResults());
+            if (blueprints == null) blueprints = BlueprintLoader.Shared.GetBlueprints(bps => UpdateSearchResults());
             // Stackable browser
             using (UI.HorizontalScope(UI.Width(350))) {
                 var remainingWidth = UI.ummWidth;
