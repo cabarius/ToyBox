@@ -20,6 +20,7 @@
   * Much more coming which I will talk about soon
 * **Bag of tricks**
   * (***ShadowRanger***) Added a fix that should resolve the zoomed out camera bug if you had both ToyBox and Free Camera installed.  You may need to reset Toybox's fovMultiplier to 1 for it to take effect.
+* **Party Editor** fixed crasher when you lowered caster level multiple times
 * **Loot Checklist** is now searchable
 * **Loot Checklist** now shows the private name of the area you are in so you can find it in Search 'n Pick
 

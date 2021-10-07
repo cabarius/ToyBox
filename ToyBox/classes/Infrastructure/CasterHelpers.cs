@@ -5,6 +5,7 @@ using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
@@ -86,7 +87,8 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static void RemoveSpellsOfLevel(Spellbook spellbook, int level) {
-            var spells = spellbook.GetKnownSpells(level);
+            var spells = new List<AbilityData>(spellbook.GetKnownSpells(level));
+            // copy constructor is needed to avoid self mutation here
             spells.ForEach(x => spellbook.RemoveSpell(x.Blueprint));
         }
 
