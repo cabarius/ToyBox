@@ -265,15 +265,15 @@ namespace ToyBox {
                             UI.MinWidth(75), UI.MaxWidth(250));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
-                        if (UI.Toggle("Search Descriptions", ref settings.searchesDescriptions)) UpdateSearchResults();
+                        if (UI.Toggle("Search Descriptions", ref settings.searchesDescriptions, UI.AutoWidth())) UpdateSearchResults();
                         UI.Space(25);
-                        if (UI.Toggle("Attributes", ref settings.showAttributes)) UpdateSearchResults();
+                        if (UI.Toggle("Attributes", ref settings.showAttributes, UI.AutoWidth())) UpdateSearchResults();
                         UI.Space(25);
-                        UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
+                        UI.Toggle("Show GUIDs", ref settings.showAssetIDs, UI.AutoWidth());
                         UI.Space(25);
-                        UI.Toggle("Components", ref settings.showComponents);
+                        UI.Toggle("Components", ref settings.showComponents, UI.AutoWidth());
                         UI.Space(25);
-                        UI.Toggle("Elements", ref settings.showElements);
+                        UI.Toggle("Elements", ref settings.showElements, UI.AutoWidth());
                     }
                     // Search Button and Results Summary
                     using (UI.HorizontalScope()) {

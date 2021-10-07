@@ -101,6 +101,8 @@ namespace ToyBox {
                 return false;
             }
         }
+
+        // TODO - change this to proper asysnc
         public IEnumerable<SimpleBlueprint> GetBlueprints(Action<List<SimpleBlueprint>> callback = null) {
             if (blueprints == null) {
                 if (BlueprintLoader.Shared.IsLoading) { return null; }
@@ -114,6 +116,7 @@ namespace ToyBox {
                     return null;
                 }
             }
+            callback?.Invoke(blueprints);
             return blueprints;
         }
         public IEnumerable<BPType> GetBlueprints<BPType>(Action<List<BPType>> callback = null) {

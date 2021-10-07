@@ -51,7 +51,7 @@ namespace ToyBox {
             Mod.Warning("2");
             if (areas == null) return;
             Mod.Warning("3");
-            if (loadedEtudes.Count == 0) return;
+            if (loadedEtudes.Count == 0) { ReloadEtudes(); return; }
             Mod.Warning("4");
             //if (Event.current.type == EventType.Layout && etudeChildrenDrawer != null) {
             //    etudeChildrenDrawer.UpdateBlockersInfo();
