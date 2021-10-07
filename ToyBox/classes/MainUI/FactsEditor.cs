@@ -89,7 +89,7 @@ namespace ToyBox {
                 UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
                 UI.Space(25);
                 if (showAll && typeof(T) == typeof(AbilityData)) { // This is obviously tech debt, but I don't want to deal with Search All Spellbooks/Add All being on the facts editor as it is now
-                    UI.Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks);
+                    if (UI.Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks, UI.AutoWidth())) { searchChanged = true; }
                     UI.Space(25);
                     UI.ActionButton("Add All", () => { CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList()); }, UI.AutoWidth());
                 }
@@ -226,14 +226,8 @@ namespace ToyBox {
         public static void OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
-            var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
-                .Where(x => ((BlueprintSpellbook)x).SpellList != null)
-                .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level));
-            var mythic = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
-                .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
-                .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
 
-            var learnable = settings.showFromAllSpellbooks ? normal.Concat(mythic).Distinct() : spellbookBP.SpellList.GetSpells(level);
+            var learnable = settings.showFromAllSpellbooks ? CasterHelpers.GetAllSpells(level) : spellbookBP.SpellList.GetSpells(level);
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
 

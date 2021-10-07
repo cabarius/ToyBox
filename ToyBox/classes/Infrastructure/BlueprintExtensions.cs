@@ -121,7 +121,8 @@ namespace ToyBox {
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
             var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
-            blueprintsByType[type] = filtered;
+            if (filtered.Count > 0)
+                blueprintsByType[type] = filtered;
             return filtered;
         }
 
@@ -131,11 +132,12 @@ namespace ToyBox {
             var blueprints = BlueprintLoader.Shared.GetBlueprints<BPType>();
             if (blueprints == null) return new List<BPType>();
             var filtered = blueprints.Where((bp) => (bp is BPType)).ToList();
-            blueprintsByType[type] = filtered;
+            if (filtered.Count > 0)
+                blueprintsByType[type] = filtered;
             return filtered;
         }
 
-        public static IEnumerable<SimpleBlueprint> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
+        public static IEnumerable<T> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
         public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
             var count = 0;
             var component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();

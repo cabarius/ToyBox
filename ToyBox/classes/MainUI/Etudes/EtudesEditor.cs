@@ -28,7 +28,7 @@ namespace ToyBox {
 
         private static List<BlueprintArea> areas;
         private static BlueprintArea selectedArea;
-        private static string areaSearchText;
+        private static string areaSearchText = "";
         //private EtudeChildrenDrawer etudeChildrenDrawer;
 
         public static string searchText = "";
@@ -317,69 +317,70 @@ namespace ToyBox {
             }
         }
         private static void DrawEtude(BlueprintGuid etudeID, EtudeIdReferences etude) {
-            using (UI.HorizontalScope()) {
+            var etudeEntry = loadedEtudes[etudeID];
+            var name = etude.Name;
+            if (searchText.Length == 0 || name.ToLower().Contains(searchText.ToLower()))
+                using (UI.HorizontalScope()) {
 
-                var style = GUIStyle.none;
+                    var style = GUIStyle.none;
 
-                style.fontStyle = FontStyle.Normal;
+                    style.fontStyle = FontStyle.Normal;
 
-                if (Application.isPlaying) {
-                    UpdateEtudeState(etudeID, etude);
-                }
-                var etudeEntry = loadedEtudes[etudeID];
-                var name = etude.Name;
-                if (selected == etudeID) name = name.orange().bold();
+                    if (Application.isPlaying) {
+                        UpdateEtudeState(etudeID, etude);
+                    }
+                    if (selected == etudeID) name = name.orange().bold();
 
-                using (UI.HorizontalScope(UI.Width(450))) {
-                    if (etudeEntry.ChildrenId.Count != 0 && etudeEntry.ParentId != null) {
-                        UI.Space(10);
-                        UI.DisclosureToggle("", ref etudeEntry.Foldout, 25);
-                        UI.Space(0);
-                        if (UI.DisclosureToggle("", ref etudeEntry.FoldoutAllChildren, 25)) {
-                            OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout);
+                    using (UI.HorizontalScope(UI.Width(450))) {
+                        if (etudeEntry.ChildrenId.Count != 0 && etudeEntry.ParentId != null) {
+                            UI.Space(10);
+                            UI.DisclosureToggle("", ref etudeEntry.Foldout, 25);
+                            UI.Space(0);
+                            if (UI.DisclosureToggle("", ref etudeEntry.FoldoutAllChildren, 25)) {
+                                OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout);
+                            }
+                            UI.Space(15);
+                            UI.Label(name.orange().bold(), UI.AutoWidth());
                         }
-                        UI.Space(15);
-                        UI.Label(name.orange().bold(), UI.AutoWidth());
+                        else {
+                            UI.Label($"  {UI.DisclosureGlyphEmpty} ".bold(), UI.AutoWidth()); UI.Label(name.orange().bold());
+                        }
                     }
-                    else {
-                        UI.Label($"  {UI.DisclosureGlyphEmpty} ".bold(), UI.AutoWidth()); UI.Label(name.orange().bold());
-                    }
-                }
-                //UI.ActionButton(UI.DisclosureGlyphOff + ">", () => OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout), GUI.skin.box, UI.AutoWidth());
-                UI.Space(25);
-                if (GUILayout.Button("Select", GUI.skin.box, UI.Width(100))) {
-                    if (selected != etudeID) {
-                        selected = etudeID;
-                    }
-                    else {
-                        parent = etudeID;
-                        //etudeChildrenDrawer.SetParent(parent, workspaceRect);
-                    }
-                    selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
-                }
-                UI.Space(25);
-                UI.Label(etude.State.ToString(), UI.AutoWidth());
-                UI.Space(25);
-                if (EtudeValidationProblem(etudeID, etude)) {
-                    UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
+                    //UI.ActionButton(UI.DisclosureGlyphOff + ">", () => OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout), GUI.skin.box, UI.AutoWidth());
                     UI.Space(25);
-                }
+                    if (GUILayout.Button("Select", GUI.skin.box, UI.Width(100))) {
+                        if (selected != etudeID) {
+                            selected = etudeID;
+                        }
+                        else {
+                            parent = etudeID;
+                            //etudeChildrenDrawer.SetParent(parent, workspaceRect);
+                        }
+                        selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
+                    }
+                    UI.Space(25);
+                    UI.Label(etude.State.ToString(), UI.AutoWidth());
+                    UI.Space(25);
+                    if (EtudeValidationProblem(etudeID, etude)) {
+                        UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
+                        UI.Space(25);
+                    }
 
-                //GUI.Label(GUILayoutUtility.GetLastRect(), content, style);
+                    //GUI.Label(GUILayoutUtility.GetLastRect(), content, style);
 
-                if (etude.LinkedArea != BlueprintGuid.Empty)
-                    UI.Label("🔗", UI.AutoWidth());
-                if (etude.CompleteParent)
-                    UI.Label("⎌", UI.AutoWidth());
-                if (etude.AllowActionStart) {
-                    UI.Space(25);
-                    UI.Label("Can Start", UI.AutoWidth());
+                    if (etude.LinkedArea != BlueprintGuid.Empty)
+                        UI.Label("🔗", UI.AutoWidth());
+                    if (etude.CompleteParent)
+                        UI.Label("⎌", UI.AutoWidth());
+                    if (etude.AllowActionStart) {
+                        UI.Space(25);
+                        UI.Label("Can Start", UI.AutoWidth());
+                    }
+                    if (!string.IsNullOrEmpty(etude.Comment)) {
+                        UI.Space(25);
+                        UI.Label(etude.Comment, UI.AutoWidth());
+                    }
                 }
-                if (!string.IsNullOrEmpty(etude.Comment)) {
-                    UI.Space(25);
-                    UI.Label(etude.Comment, UI.AutoWidth());
-                }
-            }
         }
 
         private static bool EtudeValidationProblem(BlueprintGuid etudeID, EtudeIdReferences etude) {

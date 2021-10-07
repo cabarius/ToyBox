@@ -5,6 +5,7 @@ using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
@@ -86,7 +87,8 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static void RemoveSpellsOfLevel(Spellbook spellbook, int level) {
-            var spells = spellbook.GetKnownSpells(level);
+            var spells = new List<AbilityData>(spellbook.GetKnownSpells(level));
+            // copy constructor is needed to avoid self mutation here
             spells.ForEach(x => spellbook.RemoveSpell(x.Blueprint));
         }
 
@@ -107,6 +109,9 @@ namespace ToyBox.classes.Infrastructure {
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
             }
         }
+        public static void AddIfUnknown(this Spellbook spellbook, int level, BlueprintAbility ability) { 
+            if (!spellbook.IsKnown(ability))spellbook.AddKnown(level, ability); 
+        }
 
         public static void AddAllSpellsOfSelectedLevel(Spellbook spellbook, int level) {
             List<BlueprintAbility> toLearn;
@@ -123,7 +128,7 @@ namespace ToyBox.classes.Infrastructure {
                 toLearn = spellbook.Blueprint.SpellList.GetSpells(level);
             }
 
-            toLearn.ForEach(x => spellbook.AddKnown(level, x));
+            toLearn.ForEach(x => spellbook.AddIfUnknown(level, x));
         }
 
         public static void HandleAddAllSpellsOnPartyEditor(UnitDescriptor unit, List<BlueprintAbility> abilities) {
@@ -132,7 +137,7 @@ namespace ToyBox.classes.Infrastructure {
             }
 
             if (abilities != null) {
-                abilities.ForEach(x => selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, x));
+                abilities.ForEach(x => selectedSpellbook.AddIfUnknown(PartyEditor.selectedSpellbookLevel, x));
             }
             else {
                 AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
@@ -221,6 +226,32 @@ namespace ToyBox.classes.Infrastructure {
             }
 
             unit.DeleteSpellbook(oldMythicSpellbookBp);
+        }
+
+        private static Dictionary<int, List<BlueprintAbility>> AllSpellsCache = new();
+        public static List<BlueprintAbility> GetAllSpells(int level) {
+            if (AllSpellsCache.TryGetValue(level, out var spells))
+                return spells;
+            else {
+                var spellbooks = BlueprintExensions.GetBlueprints<BlueprintSpellbook>();
+                if (spellbooks == null) return null;
+                Mod.Log($"spellbooks: {spellbooks.Count()}");
+
+                var normal = from spellbook in spellbooks
+                             where spellbook.SpellList != null
+                             from spell in spellbook.SpellList.GetSpells(level)
+                             select spell;
+                Mod.Log($"normal: {normal.Count()}");
+                var mythic = from spellbook in spellbooks
+                             where spellbook.MythicSpellList != null
+                             from spell in spellbook.MythicSpellList.GetSpells(level)
+                             select spell;
+                Mod.Log($"mythic: {mythic.Count()}");
+                spells = normal.Concat(mythic).ToList();
+                if (spells.Count() > 0)
+                    AllSpellsCache[level] = spells;
+                return spells;
+            }
         }
     }
 }
