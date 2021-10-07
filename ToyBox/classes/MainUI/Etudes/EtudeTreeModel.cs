@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ToyBox {
 
     public class EtudesTreeModel {
-        public IEnumerable<BlueprintEtude> etudes;
+        public List<BlueprintEtude> etudes;
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));
         public Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = new();
         public Dictionary<BlueprintGuid, ConflictingGroupIdReferences> conflictingGroups = new();
@@ -32,9 +32,10 @@ namespace ToyBox {
             }
         }
 
-        public void ReloadBlueprintsTree(Action<Dictionary<BlueprintGuid, EtudeIdReferences>> callback) => BlueprintLoader.Shared.GetBlueprints<BlueprintEtude>(bps => {
-            Mod.Warning($"etudes: {bps.Count}");
-            etudes = bps;
+        public void ReloadBlueprintsTree() {
+            etudes = BlueprintLoader.Shared.GetBlueprints<BlueprintEtude>();
+            if (etudes == null) return;
+            Mod.Warning($"etudes: {etudes.Count()}");
             loadedEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
             var filteredEtudes = (from bp in etudes
                                   where etudeFilter.filter(bp)
@@ -53,9 +54,8 @@ namespace ToyBox {
                     loadedEtudes[etude].LinkedTo = loadedEtude.Key;
                 }
             }
-            Mod.Warning($"loadedEtudes: {loadedEtudes.Count} -> ${callback}");
-            callback(loadedEtudes);
-        });
+            Mod.Warning($"loadedEtudes: {loadedEtudes.Count}");
+        }
 
         public void UpdateEtude(BlueprintEtude blueprintEtude) {
             if (loadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
@@ -152,6 +152,7 @@ namespace ToyBox {
                 AllowActionStart = blueprintEtude.AllowActionStart,
                 CompleteParent = blueprintEtude.CompletesParent,
                 Comment = blueprintEtude.Comment,
+                //Comment = blueprintEtude.Comment.Length > 0 ? blueprintEtude.Comment.Translate() : blueprintEtude.Comment,
                 Priority = blueprintEtude.Priority
             };
 

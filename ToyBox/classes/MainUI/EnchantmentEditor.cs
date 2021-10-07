@@ -44,11 +44,11 @@ namespace ToyBox.classes.MainUI {
 
             // load blueprints
             if (enchantments == null) {
-                BlueprintLoader.Shared.GetBlueprints();
-                if (BlueprintLoader.Shared.blueprints == null) return;
+                var blueprints = BlueprintLoader.Shared.GetBlueprints();
+                if (blueprints == null) return;
 
                 enchantments = new List<BlueprintItemEnchantment>();
-                foreach (var bp in BlueprintBrowser.blueprints) {
+                foreach (var bp in blueprints) {
                     if (bp is BlueprintItemEnchantment enchantBP) {
                         enchantments.Add(enchantBP);
                     }

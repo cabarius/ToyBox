@@ -254,7 +254,7 @@ namespace ToyBox.classes.Infrastructure {
                              from spell in spellbook.MythicSpellList.GetSpells(level)
                              select spell;
                 Mod.Log($"mythic: {mythic.Count()}");
-                spells = normal.Concat(mythic).ToList();
+                spells = normal.Concat(mythic).Distinct().ToList();
                 if (spells.Count() > 0)
                     AllSpellsCache[level] = spells;
                 return spells;

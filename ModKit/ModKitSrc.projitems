@@ -47,6 +47,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionFieldCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionMethodCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionPropertyCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Translator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,7 +13,9 @@ namespace ToyBox {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
 
         private LoadBlueprintsCallback callback;
-        public List<SimpleBlueprint> blueprints;
+        private List<SimpleBlueprint> _blueprintsInProcess;
+        private List<SimpleBlueprint> blueprints;
+        //private List<SimpleBlueprint> blueprints;
         public float progress = 0;
         private static BlueprintLoader _shared;
         public static BlueprintLoader Shared {
@@ -40,7 +42,7 @@ namespace ToyBox {
                 yield return null;
                 bpCache = ResourcesLibrary.BlueprintsCache;
             }
-            blueprints = new List<SimpleBlueprint> { };
+            _blueprintsInProcess = new List<SimpleBlueprint> { };
             var toc = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints;
             while (toc == null) {
                 yield return null;
@@ -56,6 +58,7 @@ namespace ToyBox {
                 allGUIDs.Add(key);
             }
             total = allGUIDs.Count;
+            Mod.Warning($"total: {total}");
             UpdateProgress(loaded, total);
             foreach (var guid in allGUIDs) {
                 SimpleBlueprint bp;
@@ -66,25 +69,25 @@ namespace ToyBox {
                     Mod.Warning($"cannot load GUID: {guid}");
                     continue;
                 }
-                blueprints.Add(bp);
+                _blueprintsInProcess.Add(bp);
                 loaded += 1;
                 UpdateProgress(loaded, total);
                 if (loaded % 1000 == 0) {
                     yield return null;
                 }
             }
+            Mod.Warning("done");
 #else
             blueprints = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints.Values.Select(s => s.Blueprint).ToList();
 #endif
             watch.Stop();
-
-            Mod.Debug($"loaded {blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
-            callback(blueprints);
+            Mod.Debug($"loaded {_blueprintsInProcess.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
+            callback(_blueprintsInProcess);
             yield return null;
             StopCoroutine(coroutine);
             coroutine = null;
         }
-        public void Load(LoadBlueprintsCallback callback) {
+        private void Load(LoadBlueprintsCallback callback) {
             if (coroutine != null) {
                 StopCoroutine(coroutine);
                 coroutine = null;
@@ -102,26 +105,24 @@ namespace ToyBox {
             }
         }
 
-        // TODO - change this to proper asysnc
-        public IEnumerable<SimpleBlueprint> GetBlueprints(Action<List<SimpleBlueprint>> callback = null) {
+        public List<SimpleBlueprint> GetBlueprints() {
             if (blueprints == null) {
                 if (BlueprintLoader.Shared.IsLoading) { return null; }
                 else {
                     Mod.Debug($"calling BlueprintLoader.Load");
                     BlueprintLoader.Shared.Load((bps) => {
-                        blueprints = bps.ToList();
-                        callback?.Invoke(blueprints);
+                        _blueprintsInProcess = bps.ToList();
+                        blueprints = _blueprintsInProcess;
                         Mod.Debug($"success got {bps.Count()} bluerints");
                     });
                     return null;
                 }
             }
-            callback?.Invoke(blueprints);
             return blueprints;
         }
-        public IEnumerable<BPType> GetBlueprints<BPType>(Action<List<BPType>> callback = null) {
-            var bps = GetBlueprints(bps => callback?.Invoke(bps.OfType<BPType>().ToList()));
-            return bps?.OfType<BPType>() ?? null;
+        public List<BPType> GetBlueprints<BPType>() {
+            var bps = GetBlueprints();
+            return bps?.OfType<BPType>().ToList() ?? null;
         }
     }
 

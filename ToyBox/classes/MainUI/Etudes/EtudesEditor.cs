@@ -17,7 +17,7 @@ namespace ToyBox {
 
         private static BlueprintGuid parent;
         private static BlueprintGuid selected;
-        private static Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = null;
+        private static Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes => EtudesTreeModel.Instance.loadedEtudes;
         private static Dictionary<BlueprintGuid, EtudeIdReferences> filteredEtudes = new();
         private static readonly BlueprintGuid rootEtudeId = BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
         private static bool useFilter;
@@ -36,23 +36,25 @@ namespace ToyBox {
             //etudeChildrenDrawer?.Update();
         }
 
-        private static void ReloadEtudes() => EtudesTreeModel.Instance.ReloadBlueprintsTree(etudes => {
-            loadedEtudes = etudes;
+        private static void ReloadEtudes() {
+            EtudesTreeModel.Instance.ReloadBlueprintsTree();
             Mod.Warning($"loadedEtudes: {loadedEtudes.Count}".cyan());
             //etudeChildrenDrawer = new EtudeChildrenDrawer(loadedEtudes, this);
             //etudeChildrenDrawer.ReferenceGraph = ReferenceGraph.Reload();
             ApplyFilter();
-        });
+        }
 
         public static void OnGUI() {
-            if (loadedEtudes == null) { ReloadEtudes(); return; }
-            Mod.Warning("1");
+            if (loadedEtudes?.Count == 0) { 
+                ReloadEtudes();                
+            }
+            //Mod.Warning("1");
             if (areas == null) areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.ToList();
-            Mod.Warning("2");
+            //Mod.Warning("2");
             if (areas == null) return;
-            Mod.Warning("3");
-            if (loadedEtudes.Count == 0) { ReloadEtudes(); return; }
-            Mod.Warning("4");
+            //Mod.Warning("3");
+            //if (loadedEtudes.Count > 0 && loadedEtudes.Count < 100) { ReloadEtudes(); return; }
+            //Mod.Warning("4");
             //if (Event.current.type == EventType.Layout && etudeChildrenDrawer != null) {
             //    etudeChildrenDrawer.UpdateBlockersInfo();
             //}
@@ -132,7 +134,6 @@ namespace ToyBox {
                 //    }
                 //}
             }
-
             using (UI.HorizontalScope()) {
                 using (UI.VerticalScope(GUI.skin.box)) {
                     //using (var scope = UI.ScrollViewScope(m_ScrollPos, GUI.skin.box)) {
@@ -167,7 +168,7 @@ namespace ToyBox {
             }
         }
 
-        private static void ApplyFilter() {
+            private static void ApplyFilter() {
             var etudesOfArea = new Dictionary<BlueprintGuid, EtudeIdReferences>();
 
             filteredEtudes = loadedEtudes;
