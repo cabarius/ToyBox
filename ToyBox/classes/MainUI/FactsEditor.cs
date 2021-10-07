@@ -91,7 +91,9 @@ namespace ToyBox {
                 if (showAll && typeof(T) == typeof(AbilityData)) { // This dynamic type check is obviously tech debt and should be refactored, but we don't want to deal with Search All Spellbooks/Add All being on the facts editor as it is now
                     if (UI.Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks, UI.AutoWidth())) { searchChanged = true; }
                     UI.Space(25);
-                    UI.ActionButton("Add All", () => { CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList()); }, UI.AutoWidth());
+                    UI.ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList()), UI.AutoWidth());
+                    UI.Space(25);
+                    UI.ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor), UI.AutoWidth());
                 }
                 if (matchCount > 0 && searchText.Length > 0) {
                     var matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();

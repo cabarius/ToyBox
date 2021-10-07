@@ -86,7 +86,7 @@ namespace ToyBox.classes.Infrastructure {
             return 1;
         }
 
-        public static void RemoveSpellsOfLevel(Spellbook spellbook, int level) {
+        public static void RemoveSpellsOfLevel(this Spellbook spellbook, int level) {
             var spells = new List<AbilityData>(spellbook.GetKnownSpells(level));
             // copy constructor is needed to avoid self mutation here
             spells.ForEach(x => spellbook.RemoveSpell(x.Blueprint));
@@ -142,6 +142,13 @@ namespace ToyBox.classes.Infrastructure {
             else {
                 AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
             }
+        }
+        
+        public static void HandleAddAllSpellsOnPartyEditor(UnitDescriptor unit) {
+            if (!PartyEditor.SelectedSpellbook.TryGetValue(unit.HashKey(), out var selectedSpellbook)) {
+                return;
+            }
+            selectedSpellbook.RemoveSpellsOfLevel(PartyEditor.selectedSpellbookLevel);
         }
 
         public static int GetCachedSpellsKnown(UnitDescriptor unit, Spellbook spellbook, int level) {

@@ -121,8 +121,9 @@ namespace ToyBox {
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
             var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
-            if (filtered.Count > 0)
-                blueprintsByType[type] = filtered;
+            // FIXME - why do we get inconsistent partial results if we cache here
+            //if (filtered.Count > 0)
+            //    blueprintsByType[type] = filtered;
             return filtered;
         }
 
@@ -132,8 +133,9 @@ namespace ToyBox {
             var blueprints = BlueprintLoader.Shared.GetBlueprints<BPType>();
             if (blueprints == null) return new List<BPType>();
             var filtered = blueprints.Where((bp) => (bp is BPType)).ToList();
-            if (filtered.Count > 0)
-                blueprintsByType[type] = filtered;
+            // FIXME - why do we get inconsistent partial results if we cache here
+            //if (filtered.Count > 0)
+            //    blueprintsByType[type] = filtered;
             return filtered;
         }
 
