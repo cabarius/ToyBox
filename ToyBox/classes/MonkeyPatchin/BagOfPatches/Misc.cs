@@ -213,7 +213,6 @@ namespace ToyBox.BagOfPatches {
                 "a027b1b189e95c64a9323da021bd7a9a",
             };
         }
-
         internal static class VescavorsBegone {
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 var type = unitEntityData.Blueprint.Type;
@@ -298,6 +297,75 @@ namespace ToyBox.BagOfPatches {
                 "e3cbfef493c4a3f4fa2abb660ba6aad6"
             };
         }
+        internal static class RetrieversBegone {
+            public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
+                var type = unitEntityData.Blueprint.Type;
+                var isARetriever= IsRetrieverType(type?.AssetGuidThreadSafe);
+                var isAAreshkagelRetriever = IsRetrieverAreshkagelType(type?.AssetGuidThreadSafe);
+                var isOtherRetrieverUnit = IsRetrieverBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                var isAreshkagelRetrieverUnit = IsRetrieverAreshkagelBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                if (isARetriever || isOtherRetrieverUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintBearStandardGUID;
+                }
+                else if (isAAreshkagelRetriever || isAreshkagelRetrieverUnit) {
+                    unitEntityData.Descriptor.CustomPrefabGuid = blueprintOwlBearStandardGUID;
+                }
+            }
+
+            public static void CheckAndReplace(ref BlueprintUnit blueprintUnit) {
+                var type = blueprintUnit.Type;
+                var isARetriever = IsRetrieverType(type?.AssetGuidThreadSafe);
+                var isAAreshkagelRetriever = IsRetrieverAreshkagelType(type?.AssetGuidThreadSafe);
+                var isOtherRetrieverUnit = IsRetrieverBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                var isAreshkagelRetrieverUnit = IsRetrieverAreshkagelBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+
+                if (isARetriever || isOtherRetrieverUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintBearStandardGUID).Prefab;
+                }
+                else if (isAAreshkagelRetriever || isAreshkagelRetrieverUnit) {
+                    blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintOwlBearStandardGUID).Prefab;
+                }
+            }
+
+            private static bool IsRetrieverType(string typeGuid) => typeGuid == RetrieverTypeGUID;
+            private static bool IsRetrieverAreshkagelType(string typeGuid) => typeGuid == RetrieverAreshkagelTypeGUID;
+            private static bool IsRetrieverBlueprintUnit(string blueprintUnitGuid) => RetrieverGuids.Contains(blueprintUnitGuid);
+            private static bool IsRetrieverAreshkagelBlueprintUnit(string blueprintUnitGuid) => RetrieverAreshkagelGuids.Contains(blueprintUnitGuid);
+
+            private const string RetrieverTypeGUID = "92ab3c61406a420288f6277cae48efdf";
+            private const string RetrieverAreshkagelTypeGUID = "a1f8e3fdf9288e342b70b44e7cb67b0f";
+
+            private const string blueprintBearStandardGUID = "cbaf7673c1c75a746b195af100bfab32";
+            private const string blueprintOwlBearStandardGUID = "d6e0acbdbdb56114898922063ae2cba0";
+
+            private static readonly string[] RetrieverGuids = new string[]
+            {
+                // Standard Units
+                "5b6a2b0c6c8aa28438a4b65b3afb02c1",
+                "2f79139e8f8f3514d8f751975cca5a29",
+                "d0f630b8893f35843b44f81e1d78e55c",
+                "427ae028e138789438a4688d579bed90",
+                "e40064497ffc3a749a6e5e6ac5f2666a",
+                "683e76fa7ae24d9899ab64c41d2878be",
+                "fde2aabdc2dd1e74ebf045cd34183b62",
+                "81115449d26349d4ca1a0066b94efe46",
+                "76ff7605e93d426bb841a9f44dc527f5",
+                "90c9f482ed41458da2c203ca604a6614",
+
+                // Army Units
+                "b4633d6d8ca7e95479cc156808b0da3e",
+            };
+
+            private static readonly string[] RetrieverAreshkagelGuids = new string[]
+            {
+                // Areshkagel Version
+                "9876513c09509954bb3330dc650fb9ae",
+                "1e4cafbd06b16cb4c9ba27538203a42d"
+            };
+
+            
+
+        }
 
         [HarmonyPatch(typeof(UnitEntityData), "CreateView")]
         public static class UnitEntityData_CreateView_Patch {
@@ -308,6 +376,10 @@ namespace ToyBox.BagOfPatches {
 
                 if (settings.toggleVescavorsBegone) {
                     VescavorsBegone.CheckAndReplace(ref __instance);
+                }
+
+                if (settings.toggleRetrieversBegone) {
+                    RetrieversBegone.CheckAndReplace(ref __instance);
                 }
             }
         }
@@ -321,6 +393,10 @@ namespace ToyBox.BagOfPatches {
 
                 if (settings.toggleVescavorsBegone) {
                     VescavorsBegone.CheckAndReplace(ref __instance);
+                }
+
+                if (settings.toggleRetrieversBegone) {
+                    RetrieversBegone.CheckAndReplace(ref __instance);
                 }
             }
         }
@@ -336,6 +412,10 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleVescavorsBegone) {
                     VescavorsBegone.CheckAndReplace(ref unit);
                 }
+
+                if (settings.toggleRetrieversBegone) {
+                    RetrieversBegone.CheckAndReplace(ref unit);
+                }
             }
         }
 
@@ -349,6 +429,10 @@ namespace ToyBox.BagOfPatches {
 
                 if (settings.toggleVescavorsBegone) {
                     VescavorsBegone.CheckAndReplace(ref unit);
+                }
+
+                if (settings.toggleRetrieversBegone) {
+                    RetrieversBegone.CheckAndReplace(ref unit);
                 }
             }
         }

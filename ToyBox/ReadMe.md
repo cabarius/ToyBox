@@ -20,6 +20,8 @@
   * Much more coming which I will talk about soon
 * **Bag of tricks**
   * (***ShadowRanger***) Added a fix that should resolve the zoomed out camera bug if you had both ToyBox and Free Camera installed.  You may need to reset Toybox's fovMultiplier to 1 for it to take effect.
+  * (***ShadowRanger***) Added a new sub-menu for all 'begone' versions
+  * (***ShadowRanger***) Added retrievers begone
 * **Party Editor** fixed crasher when you lowered caster level multiple times
 * **Party Editor** ***Add All*** spells no longer adds extra copies of spells you already learned
 * **Party Editor** Fixed layout issue that would push ***Add All*** to the right side of the screen

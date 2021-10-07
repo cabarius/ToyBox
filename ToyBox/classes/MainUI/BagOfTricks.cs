@@ -137,8 +137,17 @@ namespace ToyBox {
                 },
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
-                () => Toggle("Spiders begone (experimental)", ref settings.toggleSpiderBegone),
-                () => Toggle("Vescavors begone (experimental)", ref settings.toggleVescavorsBegone),
+                () => {
+                    Toggle("Replace Models (experimental)", ref settings.toggleReplaceModelMenu, UI.AutoWidth());
+                    if (settings.toggleReplaceModelMenu) {
+                        Space(25);
+                        using (VerticalScope()) {
+                            Toggle("Spiders begone", ref settings.toggleSpiderBegone);
+                            Toggle("Vescavors begone", ref settings.toggleVescavorsBegone);
+                            Toggle("Retrievers begone", ref settings.toggleRetrieversBegone);
+                        }
+                    }
+                },
                 () => Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave),
