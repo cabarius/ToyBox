@@ -109,6 +109,9 @@ namespace ToyBox.classes.Infrastructure {
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
             }
         }
+        public static void AddIfUnknown(this Spellbook spellbook, int level, BlueprintAbility ability) { 
+            if (!spellbook.IsKnown(ability))spellbook.AddKnown(level, ability); 
+        }
 
         public static void AddAllSpellsOfSelectedLevel(Spellbook spellbook, int level) {
             List<BlueprintAbility> toLearn;
@@ -125,7 +128,7 @@ namespace ToyBox.classes.Infrastructure {
                 toLearn = spellbook.Blueprint.SpellList.GetSpells(level);
             }
 
-            toLearn.ForEach(x => spellbook.AddKnown(level, x));
+            toLearn.ForEach(x => spellbook.AddIfUnknown(level, x));
         }
 
         public static void HandleAddAllSpellsOnPartyEditor(UnitDescriptor unit, List<BlueprintAbility> abilities) {
@@ -134,7 +137,7 @@ namespace ToyBox.classes.Infrastructure {
             }
 
             if (abilities != null) {
-                abilities.ForEach(x => selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, x));
+                abilities.ForEach(x => selectedSpellbook.AddIfUnknown(PartyEditor.selectedSpellbookLevel, x));
             }
             else {
                 AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
