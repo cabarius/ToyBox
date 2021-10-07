@@ -138,9 +138,9 @@ namespace ToyBox {
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
                 () => {
-                    Toggle("Replace Models (experimental)", ref settings.toggleReplaceModelMenu);
+                    Toggle("Replace Models (experimental)", ref settings.toggleReplaceModelMenu, UI.AutoWidth());
                     if (settings.toggleReplaceModelMenu) {
-                        Space(0);
+                        Space(25);
                         using (VerticalScope()) {
                             Toggle("Spiders begone", ref settings.toggleSpiderBegone);
                             Toggle("Vescavors begone", ref settings.toggleVescavorsBegone);
