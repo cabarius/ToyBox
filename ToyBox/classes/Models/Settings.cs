@@ -49,8 +49,10 @@ namespace ToyBox {
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleMultipleRomance = false;
+        public bool toggleReplaceModelMenu = false;
         public bool toggleSpiderBegone = false;
         public bool toggleVescavorsBegone = false;
+        public bool toggleRetrieversBegone = false;
         public bool togglAutoEquipConsumables = false;
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
