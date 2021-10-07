@@ -83,7 +83,7 @@ namespace ToyBox.classes.MainUI {
                                     var displayName = army.Location?.GetDisplayName() ?? "traveling on a path";
                                     UI.Label(displayName.yellow(), UI.Width(400));
                                     UI.Space(25);
-                                    var distStr = distance >= 0 ? $"{distance:0.#}" : "?";
+                                    var distStr = distance >= 0 ? $"{distance:0.#}" : "-";
                                     UI.Label(distStr, UI.Width(50));
                                     UI.Space(50 );
                                     UI.ActionButton("Teleport", () => TeleportToArmy(army), UI.Width(150));

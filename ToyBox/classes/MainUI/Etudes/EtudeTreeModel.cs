@@ -5,17 +5,18 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ToyBox {
-
     public class EtudesTreeModel {
         public List<BlueprintEtude> etudes;
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));
         public Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = new();
         public Dictionary<BlueprintGuid, ConflictingGroupIdReferences> conflictingGroups = new();
-
+        public HashSet<string> commentKeys = new();
         private EtudesTreeModel() {
             //ReloadBlueprintsTree(bps => { });
         }
@@ -35,12 +36,10 @@ namespace ToyBox {
         public void ReloadBlueprintsTree() {
             etudes = BlueprintLoader.Shared.GetBlueprints<BlueprintEtude>();
             if (etudes == null) return;
-            Mod.Warning($"etudes: {etudes.Count()}");
             loadedEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
             var filteredEtudes = (from bp in etudes
                                   where etudeFilter.filter(bp)
                                   select bp).ToList();
-            Mod.Warning($"filteredEtudes: {filteredEtudes.Count}");
             foreach (var etude in filteredEtudes) {
                 AddEtudeToLoaded(etude);
             }
@@ -54,7 +53,7 @@ namespace ToyBox {
                     loadedEtudes[etude].LinkedTo = loadedEtude.Key;
                 }
             }
-            Mod.Warning($"loadedEtudes: {loadedEtudes.Count}");
+            //Translater.MassTranslate(commentKeys.ToList());
         }
 
         public void UpdateEtude(BlueprintEtude blueprintEtude) {
@@ -152,9 +151,11 @@ namespace ToyBox {
                 AllowActionStart = blueprintEtude.AllowActionStart,
                 CompleteParent = blueprintEtude.CompletesParent,
                 Comment = blueprintEtude.Comment,
-                //Comment = blueprintEtude.Comment.Length > 0 ? blueprintEtude.Comment.Translate() : blueprintEtude.Comment,
                 Priority = blueprintEtude.Priority
             };
+
+            if (blueprintEtude.Comment.Length > 0)
+                commentKeys.Add(blueprintEtude.Comment);
 
             foreach (var conflictingGroup in blueprintEtude.ConflictingGroups) {
                 var conflictingGroupBlueprint = conflictingGroup.GetBlueprint();

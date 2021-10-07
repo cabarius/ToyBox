@@ -58,7 +58,7 @@ namespace ToyBox {
                 allGUIDs.Add(key);
             }
             total = allGUIDs.Count;
-            Mod.Warning($"total: {total}");
+            Mod.Log($"Loading {total} Blueprints");
             UpdateProgress(loaded, total);
             foreach (var guid in allGUIDs) {
                 SimpleBlueprint bp;
@@ -76,12 +76,11 @@ namespace ToyBox {
                     yield return null;
                 }
             }
-            Mod.Warning("done");
 #else
             blueprints = ResourcesLibrary.BlueprintsCache.m_LoadedBlueprints.Values.Select(s => s.Blueprint).ToList();
 #endif
             watch.Stop();
-            Mod.Debug($"loaded {_blueprintsInProcess.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
+            Mod.Log($"loaded {_blueprintsInProcess.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             callback(_blueprintsInProcess);
             yield return null;
             StopCoroutine(coroutine);

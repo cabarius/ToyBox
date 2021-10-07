@@ -80,9 +80,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Services">
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -161,9 +163,11 @@
     <Compile Include="classes\MainUI\ArmiesEditor.cs" />
     <Compile Include="classes\MainUI\CrusadeEditor.cs" />
     <Compile Include="classes\MainUI\EnchantmentEditor.cs" />
+    <Compile Include="classes\MainUI\Etudes\EtudeChildrenDrawer.cs" />
     <Compile Include="classes\MainUI\Etudes\EtudeInfo.cs" />
     <Compile Include="classes\MainUI\Etudes\EtudesEditor.cs" />
     <Compile Include="classes\MainUI\Etudes\EtudeTreeModel.cs" />
+    <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
     <Compile Include="classes\MainUI\FeaturesTreeEditor.cs" />
     <Compile Include="classes\MainUI\PhatLoot.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />

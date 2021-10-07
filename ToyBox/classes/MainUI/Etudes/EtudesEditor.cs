@@ -38,7 +38,6 @@ namespace ToyBox {
 
         private static void ReloadEtudes() {
             EtudesTreeModel.Instance.ReloadBlueprintsTree();
-            Mod.Warning($"loadedEtudes: {loadedEtudes.Count}".cyan());
             //etudeChildrenDrawer = new EtudeChildrenDrawer(loadedEtudes, this);
             //etudeChildrenDrawer.ReferenceGraph = ReferenceGraph.Reload();
             ApplyFilter();
@@ -379,7 +378,15 @@ namespace ToyBox {
                     }
                     if (!string.IsNullOrEmpty(etude.Comment)) {
                         UI.Space(25);
-                        UI.Label(etude.Comment, UI.AutoWidth());
+#if DEBUG
+                        var comment = Translater.cachedTranslations.GetValueOrDefault(etude.Comment, etude.Comment);
+#endif
+                        GUILayout.TextField(comment, UI.ExpandWidth(false));
+#if DEBUG
+                        UI.Space(25);
+                        UI.ActionButton("Tanslate", () => Translater.Translate(etude.Comment), UI.AutoWidth());
+#endif
+                        //UI.UITextField(etude.Comment, UI.AutoWidth());
                     }
                 }
         }

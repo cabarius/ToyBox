@@ -37,4 +37,10 @@ namespace ToyBox {
         public List<BlueprintGuid> ConflictingGroups = new();
         public int Priority;
     }
+    public class EtudeDrawerData {
+        public bool ShowChildren;
+        public Dictionary<BlueprintGuid, EtudeIdReferences> ChainStarts = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+        public bool NeedToPaint;
+        public int Depth;
+    }
 }

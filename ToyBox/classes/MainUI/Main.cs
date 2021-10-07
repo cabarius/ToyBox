@@ -155,9 +155,7 @@ namespace ToyBox {
                     new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
                     new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
                     new NamedAction("Armies", () => ArmiesEditor.OnGUI()),
-#if DEBUG
                     new NamedAction("Etudes", () => EtudesEditor.OnGUI()),
-#endif
                     new NamedAction("Quests", () => QuestEditor.OnGUI())
                     );
             }
