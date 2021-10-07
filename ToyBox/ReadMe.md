@@ -16,7 +16,7 @@
 ### Ver 1.4.0 (Coming Soon)
 * **New Etude Editor** is a powerful way to view and edit Etude progression
   * Tree view that shows the dependencies and some state
-  * No editiing yet but is coming as part of 1.4.0
+  * No editing yet but is coming soon
   * Much more coming which I will talk about soon
 * **Bag of tricks**
   * (***ShadowRanger***) Added a fix that should resolve the zoomed out camera bug if you had both ToyBox and Free Camera installed.  You may need to reset Toybox's fovMultiplier to 1 for it to take effect.
