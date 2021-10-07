@@ -227,5 +227,31 @@ namespace ToyBox.classes.Infrastructure {
 
             unit.DeleteSpellbook(oldMythicSpellbookBp);
         }
+
+        private static Dictionary<int, List<BlueprintAbility>> AllSpellsCache = new();
+        public static List<BlueprintAbility> GetAllSpells(int level) {
+            if (AllSpellsCache.TryGetValue(level, out var spells))
+                return spells;
+            else {
+                var spellbooks = BlueprintExensions.GetBlueprints<BlueprintSpellbook>();
+                if (spellbooks == null) return null;
+                Mod.Log($"spellbooks: {spellbooks.Count()}");
+
+                var normal = from spellbook in spellbooks
+                             where spellbook.SpellList != null
+                             from spell in spellbook.SpellList.GetSpells(level)
+                             select spell;
+                Mod.Log($"normal: {normal.Count()}");
+                var mythic = from spellbook in spellbooks
+                             where spellbook.MythicSpellList != null
+                             from spell in spellbook.MythicSpellList.GetSpells(level)
+                             select spell;
+                Mod.Log($"mythic: {mythic.Count()}");
+                spells = normal.Concat(mythic).ToList();
+                if (spells.Count() > 0)
+                    AllSpellsCache[level] = spells;
+                return spells;
+            }
+        }
     }
 }

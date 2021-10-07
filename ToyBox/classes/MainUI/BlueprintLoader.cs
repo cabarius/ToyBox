@@ -117,7 +117,7 @@ namespace ToyBox {
             return blueprints;
         }
         public IEnumerable<BPType> GetBlueprints<BPType>(Action<List<BPType>> callback = null) {
-            var bps = GetBlueprints(bps => callback(bps.OfType<BPType>().ToList()));
+            var bps = GetBlueprints(bps => callback?.Invoke(bps.OfType<BPType>().ToList()));
             return bps?.OfType<BPType>() ?? null;
         }
     }

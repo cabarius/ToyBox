@@ -23,6 +23,7 @@
 * **Party Editor** fixed crasher when you lowered caster level multiple times
 * **Party Editor** ***Add All*** spells no longer adds extra copies of spells you already learned
 * **Party Editor** Fixed layout issue that would push ***Add All*** to the right side of the screen
+* **Party Editor** ***Select From All Spellbooks*** now shows the spells from all spellbooks
 * **Loot Checklist** is now searchable
 * **Loot Checklist** now shows the private name of the area you are in so you can find it in Search 'n Pick
 
