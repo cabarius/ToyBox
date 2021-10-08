@@ -20,7 +20,6 @@ namespace ToyBox {
         private static Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes => EtudesTreeModel.Instance.loadedEtudes;
         private static Dictionary<BlueprintGuid, EtudeInfo> filteredEtudes = new();
         private static readonly BlueprintGuid rootEtudeId = BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
-        private static bool showOnlyTargetAreaEtudes;
         private static bool showOnlyFlagLikes;
 
         private static BlueprintEtude selectedEtude;
@@ -46,7 +45,7 @@ namespace ToyBox {
             if (loadedEtudes?.Count == 0) {
                 ReloadEtudes();
             }
-            if (areas == null) areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.ToList();
+            if (areas == null) areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.OrderBy(a => a.CR).ToList();
             if (areas == null) return;
             if (parent == BlueprintGuid.Empty) {
                 parent = rootEtudeId;
@@ -55,14 +54,17 @@ namespace ToyBox {
             using (UI.HorizontalScope()) {
                 if (parent == BlueprintGuid.Empty)
                     return;
-
+                UI.Label("Search");
+                UI.Space(25);
+                UI.TextField(ref searchText, "Find", UI.Width(250));
+                UI.Space(25);
                 UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
                 UI.Label(
                     $"H : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[selected].Name)}");
 
-                if (loadedEtudes.Count != 0) {
-                    UI.ActionButton("Refresh", () => ReloadEtudes(), UI.AutoWidth());
-                }
+                //if (loadedEtudes.Count != 0) {
+                //    UI.ActionButton("Refresh", () => ReloadEtudes(), UI.AutoWidth());
+                //}
 
                 //if (UI.Button("Update DREAMTOOL Index", UI.MinWidth(300), UI.MaxWidth(300))) {
                 //    ReferenceGraph.CollectMenu();
@@ -72,14 +74,6 @@ namespace ToyBox {
                 //}
             }
             using (UI.HorizontalScope(GUI.skin.box, UI.AutoWidth())) {
-
-                using (UI.VerticalScope(GUI.skin.box, UI.MinHeight(60),
-                    UI.MinWidth(300))) {
-                    UI.Label("Search");
-                    UI.TextField(ref searchText, "Find", UI.MinWidth(250));
-                }
-                UI.Space(25);
-
                 //if (etudeChildrenDrawer != null) {
                 //    using (UI.VerticalScope(GUI.skin.box, UI.MinHeight(60),
                 //        UI.MinWidth(300))) {
@@ -109,12 +103,17 @@ namespace ToyBox {
                 //}
             }
             using (UI.HorizontalScope()) {
-                UI.Space(25);
-                showOnlyFlagLikes = UI.Toggle("Flags Only", ref showOnlyFlagLikes);
-                UI.Space(25);
-    
-                if (showOnlyTargetAreaEtudes) {
-                    UI.VPicker<BlueprintArea>("Areas", ref selectedArea, areas, "All", bp => bp.AreaDisplayName, ref areaSearchText, GUI.skin.box, UI.Width(350));
+                using (UI.VerticalScope(GUI.skin.box)) {
+                    showOnlyFlagLikes = UI.Toggle("Flags Only", ref showOnlyFlagLikes);
+                    UI.Space(25);
+                    if (UI.VPicker<BlueprintArea>("Areas", ref selectedArea, areas, "All", bp => {
+                        var name = bp.NameSafe(); // bp.AreaDisplayName;
+                        if (name?.Length == 0) name = bp.AreaName;
+                        if (name?.Length == 0) name = bp.NameSafe();
+                        return name;
+                    }, ref areaSearchText, UI.rarityButtonStyle, UI.Width(350))) {
+                        ApplyFilter();
+                    }
                 }
                 using (UI.VerticalScope(GUI.skin.box)) {
                     //using (var scope = UI.ScrollViewScope(m_ScrollPos, GUI.skin.box)) {
@@ -157,7 +156,7 @@ namespace ToyBox {
 
             filteredEtudes = loadedEtudes;
 
-            if (showOnlyTargetAreaEtudes && selectedArea != null) {
+            if (selectedArea != null) {
                 etudesOfArea = GetAreaEtudes();
                 filteredEtudes = etudesOfArea;
             }

@@ -256,7 +256,7 @@ namespace ToyBox {
                             "searhText",
                             (text) => { },
                             () => UpdateSearchResults(),
-                            UI.MinWidth(100), UI.MaxWidth(400));
+                            UI.Width(200));
                         UI.Space(50);
                         UI.Label("Limit", UI.AutoWidth());
                         UI.Space(15);
@@ -265,7 +265,7 @@ namespace ToyBox {
                             "searchLimit",
                             (limit) => { },
                             () => UpdateSearchResults(),
-                            UI.MinWidth(75), UI.MaxWidth(250));
+                            UI.Width(75));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         UI.Space(25);
                         if (UI.Toggle("Search Descriptions", ref settings.searchesDescriptions, UI.AutoWidth())) UpdateSearchResults();

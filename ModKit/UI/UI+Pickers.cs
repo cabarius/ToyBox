@@ -186,15 +186,15 @@ namespace ModKit {
             string unselectedTitle,
             Func<T, string> titler,
             ref string searchText,
-            GUIStyle style, 
+            GUIStyle style,
             params GUILayoutOption[] options
             ) where T : class {
             if (style == null)
                 style = GUI.skin.button;
             var changed = false;
-            using (UI.VerticalScope(style, options)) {
+            using (UI.VerticalScope(GUI.skin.box, options)) {
                 if (title != null)
-                    UI.Label(title, style, options);
+                    UI.Label(title, options);
                 if (searchText != null) {
                     UI.ActionTextField(
                         ref searchText,
@@ -209,12 +209,14 @@ namespace ModKit {
                 }
                 var selectedItemIndex = items.IndexOf(selected);
                 if (items.Count() > 0) {
-                    selectedItemIndex = Math.Max(0, selectedItemIndex);
                     var newSelected = selected;
                     var titles = items.Select(i => titler(i));
                     var hasUnselectedTitle = unselectedTitle != null;
-                    if (hasUnselectedTitle)
-                        titles.Prepend<string>(unselectedTitle);
+                    if (hasUnselectedTitle) {
+                        titles = titles.Prepend<string>(unselectedTitle);
+                        selectedItemIndex += 1;
+                    }
+                    selectedItemIndex = Math.Max(0, selectedItemIndex);
                     UI.ActionSelectionGrid(
                         ref selectedItemIndex,
                         titles.ToArray(),
@@ -224,8 +226,8 @@ namespace ModKit {
                         options);
                     if (hasUnselectedTitle)
                         selectedItemIndex -= 1;
-
                     selected = selectedItemIndex >= 0 ? items[selectedItemIndex] : null;
+                    //if (changed) Mod.Log($"sel index: {selectedItemIndex} sel: {selected}");
                 }
                 else {
                     UI.Label("No Items".grey(), options);
@@ -240,6 +242,6 @@ namespace ModKit {
             Func<T, string> titler,
             ref string searchText,
             params GUILayoutOption[] options
-            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText);
+            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, UI.rarityButtonStyle, options);
     }
 }

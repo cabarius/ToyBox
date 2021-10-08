@@ -27,7 +27,7 @@ namespace ToyBox {
                 characters.Select((ch) => ch.CharacterName).ToArray(),
                 8,
                 (index) => { BlueprintBrowser.UpdateSearchResults(); },
-                UI.MinWidth(200));
+                UI.AutoWidth());
             var selectedCharacter = GetSelectedCharacter();
             if (selectedCharacter != null) {
                 UI.Space(10);
