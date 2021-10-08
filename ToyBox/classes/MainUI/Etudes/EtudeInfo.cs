@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using ModKit;
 
@@ -13,15 +14,16 @@ namespace ToyBox {
     }
     public class EtudeInfo {
         public enum EtudeState {
-            NotStated = 0,
+            NotStarted = 0,
             Started = 1,
             Active = 2,
             CompleteBeforeActive = 3,
             Completed = 4,
-            ComplitionBlocked = 5
+            CompletionBlocked = 5
         }
 
         public string Name;
+        public BlueprintEtude Blueprint;
         public BlueprintGuid ParentId;
         public List<BlueprintGuid> LinkedId = new();
         public List<BlueprintGuid> ChainedId = new();
@@ -34,6 +36,7 @@ namespace ToyBox {
         public bool CompleteParent;
         public string Comment;
         public ToggleState ShowChildren;
+        public ToggleState ShowElements;
         bool hasSearchResults;
         public List<BlueprintGuid> ConflictingGroups = new();
         public int Priority;

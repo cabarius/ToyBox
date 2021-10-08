@@ -186,15 +186,18 @@ namespace ModKit {
             string unselectedTitle,
             Func<T, string> titler,
             ref string searchText,
+            Action extras,
             GUIStyle style,
             params GUILayoutOption[] options
             ) where T : class {
             if (style == null)
                 style = GUI.skin.button;
             var changed = false;
-            using (UI.VerticalScope(GUI.skin.box, options)) {
+            using (UI.VerticalScope(GUI.skin.box, UI.Width(250))) {
                 if (title != null)
                     UI.Label(title, options);
+                extras?.Invoke();
+                UI.Div();
                 if (searchText != null) {
                     UI.ActionTextField(
                         ref searchText,
@@ -203,8 +206,8 @@ namespace ModKit {
                         () => { },
                         options);
                     if (searchText?.Length > 0) {
-                        var searchStr = searchText;
-                        items = items.Where(i => titler(i).Contains(searchStr)).ToList();
+                        var searchStr = searchText.ToLower();
+                        items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();
                     }
                 }
                 var selectedItemIndex = items.IndexOf(selected);
@@ -241,7 +244,8 @@ namespace ModKit {
             string unselectedTitle,
             Func<T, string> titler,
             ref string searchText,
+            Action extras,
             params GUILayoutOption[] options
-            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, UI.rarityButtonStyle, options);
+            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, UI.rarityButtonStyle, options);
     }
 }

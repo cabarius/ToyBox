@@ -66,40 +66,40 @@ namespace ToyBox {
         }
 
         private void UpdateEtudeData(BlueprintEtude blueprintEtude) {
-            var etudeIdReference = PrepareNewEtudeData(blueprintEtude);
+            var etudeInfo = PrepareNewEtudeData(blueprintEtude);
             var oldEtude = loadedEtudes[blueprintEtude.AssetGuid];
             //Remove old data
-            if (etudeIdReference.ChainedTo != oldEtude.ChainedTo && oldEtude.ChainedTo != BlueprintGuid.Empty && loadedEtudes[oldEtude.ChainedTo].ChainedId.Contains(blueprintEtude.AssetGuid))
+            if (etudeInfo.ChainedTo != oldEtude.ChainedTo && oldEtude.ChainedTo != BlueprintGuid.Empty && loadedEtudes[oldEtude.ChainedTo].ChainedId.Contains(blueprintEtude.AssetGuid))
                 loadedEtudes[oldEtude.ChainedTo].ChainedId.Remove(blueprintEtude.AssetGuid);
-            if (etudeIdReference.LinkedTo != oldEtude.LinkedTo && oldEtude.LinkedTo != BlueprintGuid.Empty && loadedEtudes[oldEtude.LinkedTo].LinkedId.Contains(blueprintEtude.AssetGuid))
+            if (etudeInfo.LinkedTo != oldEtude.LinkedTo && oldEtude.LinkedTo != BlueprintGuid.Empty && loadedEtudes[oldEtude.LinkedTo].LinkedId.Contains(blueprintEtude.AssetGuid))
                 loadedEtudes[oldEtude.LinkedTo].LinkedId.Remove(blueprintEtude.AssetGuid);
-            if (etudeIdReference.ParentId != oldEtude.ParentId && oldEtude.ParentId != BlueprintGuid.Empty && loadedEtudes[oldEtude.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
+            if (etudeInfo.ParentId != oldEtude.ParentId && oldEtude.ParentId != BlueprintGuid.Empty && loadedEtudes[oldEtude.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
                 loadedEtudes[oldEtude.ParentId].ChildrenId.Remove(blueprintEtude.AssetGuid);
 
             foreach (var etude in oldEtude.ChainedId) {
-                if (!etudeIdReference.ChainedId.Contains(etude)) {
+                if (!etudeInfo.ChainedId.Contains(etude)) {
                     loadedEtudes[etude].ChainedTo = BlueprintGuid.Empty;
                 }
             }
 
             foreach (var etude in oldEtude.LinkedId) {
-                if (!etudeIdReference.LinkedId.Contains(etude)) {
+                if (!etudeInfo.LinkedId.Contains(etude)) {
                     loadedEtudes[etude].LinkedTo = BlueprintGuid.Empty;
                 }
             }
 
             //Add new data
 
-            etudeIdReference.ChildrenId = oldEtude.ChildrenId;
-            etudeIdReference.ChainedTo = oldEtude.ChainedTo;
-            etudeIdReference.LinkedTo = oldEtude.LinkedTo;
+            etudeInfo.ChildrenId = oldEtude.ChildrenId;
+            etudeInfo.ChainedTo = oldEtude.ChainedTo;
+            etudeInfo.LinkedTo = oldEtude.LinkedTo;
             if (oldEtude.ChainedTo != BlueprintGuid.Empty)
-                loadedEtudes[etudeIdReference.ChainedTo].ChainedId.Add(blueprintEtude.AssetGuid);
+                loadedEtudes[etudeInfo.ChainedTo].ChainedId.Add(blueprintEtude.AssetGuid);
 
             if (oldEtude.LinkedTo != BlueprintGuid.Empty)
-                loadedEtudes[etudeIdReference.LinkedTo].LinkedId.Add(blueprintEtude.AssetGuid);
+                loadedEtudes[etudeInfo.LinkedTo].LinkedId.Add(blueprintEtude.AssetGuid);
 
-            loadedEtudes[blueprintEtude.AssetGuid] = etudeIdReference;
+            loadedEtudes[blueprintEtude.AssetGuid] = etudeInfo;
 
             foreach (var etude in loadedEtudes[blueprintEtude.AssetGuid].ChainedId) {
                 loadedEtudes[etude].ChainedTo = blueprintEtude.AssetGuid;
@@ -112,9 +112,8 @@ namespace ToyBox {
 
         private void AddEtudeToLoaded(BlueprintEtude blueprintEtude) {
             if (!loadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
-                var etudeIdReference = PrepareNewEtudeData(blueprintEtude);
-
-                loadedEtudes.Add(blueprintEtude.AssetGuid, etudeIdReference);
+                var etudeInfo = PrepareNewEtudeData(blueprintEtude);
+                loadedEtudes.Add(blueprintEtude.AssetGuid, etudeInfo);
             }
         }
 
@@ -145,8 +144,9 @@ namespace ToyBox {
         }
 
         private EtudeInfo PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
-            var etudeIdReference = new EtudeInfo {
+            var etudeInfo = new EtudeInfo {
                 Name = blueprintEtude.name,
+                Blueprint = blueprintEtude,
                 ParentId = blueprintEtude.Parent?.Get()?.AssetGuid ?? BlueprintGuid.Empty,
                 AllowActionStart = blueprintEtude.AllowActionStart,
                 CompleteParent = blueprintEtude.CompletesParent,
@@ -163,7 +163,7 @@ namespace ToyBox {
                 if (conflictingGroupBlueprint == null)
                     continue;
 
-                etudeIdReference.ConflictingGroups.Add(conflictingGroupBlueprint.AssetGuid);
+                etudeInfo.ConflictingGroups.Add(conflictingGroupBlueprint.AssetGuid);
 
                 if (!conflictingGroups.ContainsKey(conflictingGroupBlueprint.AssetGuid))
                     conflictingGroups.Add(conflictingGroupBlueprint.AssetGuid, new ConflictingGroupIdReferences());
@@ -175,22 +175,22 @@ namespace ToyBox {
             }
 
             if (blueprintEtude.LinkedAreaPart != null) {
-                etudeIdReference.LinkedArea = blueprintEtude.LinkedAreaPart.AssetGuid;
+                etudeInfo.LinkedArea = blueprintEtude.LinkedAreaPart.AssetGuid;
             }
 
-            if (etudeIdReference.ParentId != BlueprintGuid.Empty) {
+            if (etudeInfo.ParentId != BlueprintGuid.Empty) {
                 if (!loadedEtudes.ContainsKey(blueprintEtude.Parent.Get().AssetGuid))
                     AddEtudeToLoaded(blueprintEtude.Parent.Get());
 
-                if (!loadedEtudes[etudeIdReference.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
-                    loadedEtudes[etudeIdReference.ParentId].ChildrenId.Add(blueprintEtude.AssetGuid);
+                if (!loadedEtudes[etudeInfo.ParentId].ChildrenId.Contains(blueprintEtude.AssetGuid))
+                    loadedEtudes[etudeInfo.ParentId].ChildrenId.Add(blueprintEtude.AssetGuid);
             }
 
             foreach (var chainedStart in blueprintEtude.StartsOnComplete) {
                 if (chainedStart.Get() == null)
                     continue;
 
-                etudeIdReference.ChainedId.Add(chainedStart.Get().AssetGuid);
+                etudeInfo.ChainedId.Add(chainedStart.Get().AssetGuid);
             }
 
             foreach (var linkedStart in blueprintEtude.StartsWith) {
@@ -198,10 +198,10 @@ namespace ToyBox {
                     continue;
 
 
-                etudeIdReference.LinkedId.Add(linkedStart.Get().AssetGuid);
+                etudeInfo.LinkedId.Add(linkedStart.Get().AssetGuid);
             }
 
-            return etudeIdReference;
+            return etudeInfo;
         }
     }
 }
