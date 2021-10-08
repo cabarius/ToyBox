@@ -3,17 +3,35 @@ using UnityEngine;
 using System;
 using GL = UnityEngine.GUILayout;
 using UnityModManagerNet;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ModKit {
     public static partial class UI {
+        private static HashSet<Type> widthTypes = new() {
+            UI.Width(0).GetType(),
+            UI.MinWidth(0).GetType(),
+            UI.MaxWidth(0).GetType(),
+            UI.AutoWidth().GetType()
+        };
+        public static GUILayoutOption[] AddDefaults(this GUILayoutOption[] options, params GUILayoutOption[] desired) {
+            foreach (var option in options) {
+                if (widthTypes.Contains(option.GetType()))
+                    return options;
+            }
+            if (desired.Length > 0)
+                options = options.Concat(desired).ToArray();
+            else
+                options = options.Append(AutoWidth()).ToArray();
+            return options;
+        }
         public static void Label(string title, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
-            //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
-            GL.Label(title, options);
+            GL.Label(title, options.AddDefaults());
         public static void Label(string title, GUIStyle style, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
-            GL.Label(title, style, options);
+            GL.Label(title, style, options.AddDefaults());
         public static void Label(GUIContent content, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
@@ -21,7 +39,7 @@ namespace ModKit {
         public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
             var changed = false;
             if (editState.Item1 != label) {
-                using (HorizontalScope(options)) {
+                using (HorizontalScope(options.AddDefaults())) {
                     Label(formatter(label), style, AutoWidth());
                     Space(5);
                     if (GL.Button("✎", GUI.skin.box, AutoWidth())) {
@@ -52,7 +70,7 @@ namespace ModKit {
         // Controls
         public static string TextField(ref string text, string name = null, params GUILayoutOption[] options) {
             if (name != null) { GUI.SetNextControlName(name); }
-            text = GL.TextField(text, options);
+            text = GL.TextField(text, options.AddDefaults());
             return text;
         }
         public static int IntTextField(ref int value, string name = null, params GUILayoutOption[] options) {
@@ -70,17 +88,14 @@ namespace ModKit {
             return value;
         }
         public static bool Button(string title, ref bool pressed, params GUILayoutOption[] options) {
-            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
-            if (GL.Button(title, options)) { pressed = true; }
+            if (GL.Button(title, options.AddDefaults())) { pressed = true; }
             return pressed;
         }
         public static void ActionButton(string title, Action action, params GUILayoutOption[] options) {
-            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
-            if (GL.Button(title, options)) { action(); }
+            if (GL.Button(title, options.AddDefaults())) { action(); }
         }
         public static void ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
-            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
-            if (GL.Button(title, style, options)) { action(); }
+            if (GL.Button(title, style, options.AddDefaults())) { action(); }
         }
         public static void ActionTextField(ref string text,
                 string name,
@@ -89,7 +104,7 @@ namespace ModKit {
                 params GUILayoutOption[] options
             ) {
             GUI.SetNextControlName(name);
-            var newText = GL.TextField(text, options);
+            var newText = GL.TextField(text, options.AddDefaults());
             if (newText != text) {
                 text = newText;
                 action?.Invoke(text);
