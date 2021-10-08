@@ -181,13 +181,16 @@ namespace ModKit {
             return items[selectedIndex];
         }
         public static bool VPicker<T>(
-            string title, 
+            string title,
             ref T selected, List<T> items,
             string unselectedTitle,
-            Func<T, string> titler, 
+            Func<T, string> titler,
             ref string searchText,
-            GUIStyle style = null, params GUILayoutOption[] options
+            GUIStyle style, 
+            params GUILayoutOption[] options
             ) where T : class {
+            if (style == null)
+                style = GUI.skin.button;
             var changed = false;
             using (UI.VerticalScope(style, options)) {
                 if (title != null)
@@ -230,5 +233,13 @@ namespace ModKit {
             }
             return changed;
         }
+        public static bool VPicker<T>(
+            string title,
+            ref T selected, List<T> items,
+            string unselectedTitle,
+            Func<T, string> titler,
+            ref string searchText,
+            params GUILayoutOption[] options
+            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText);
     }
 }

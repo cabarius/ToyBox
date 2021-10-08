@@ -25,19 +25,19 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Mythic Paths", 1,
                 () => UI.Label("Warning! Using these might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".green()),
-                () => UI.ActionButton("Unlock Aeon", Actions.UnlockAeon),
-                () => UI.ActionButton("Unlock Azata", Actions.UnlockAzata),
-                () => UI.ActionButton("Unlock Trickster", Actions.UnlockTrickster),
-                () => { UI.ActionButton("Unlock Swarm", Actions.UnlockSwarm); UI.Space(25); UI.Label("Only available at Mythic level 8 or higher".green()); },
-                () => { UI.ActionButton("Unlock Gold Dragon", Actions.UnlockGoldDragon); UI.Space(25); UI.Label("Only available at Mythic level 8 or higher".green()); },
+                () => UI.ActionButton("Unlock Aeon", Actions.UnlockAeon, UI.Width(300)),
+                () => UI.ActionButton("Unlock Azata", Actions.UnlockAzata, UI.Width(300)),
+                () => UI.ActionButton("Unlock Trickster", Actions.UnlockTrickster, UI.Width(300)),
+                () => { UI.ActionButton("Unlock Swarm", Actions.UnlockSwarm, UI.Width(300)); UI.Space(25); UI.Label("Only available at Mythic level 8 or higher".green()); },
+                () => { UI.ActionButton("Unlock Gold Dragon", Actions.UnlockGoldDragon, UI.Width(300)); UI.Space(25); UI.Label("Only available at Mythic level 8 or higher".green()); },
                 () => {
-                    UI.ActionButton("All Mythic Paths".orange(), Actions.UnlockAllBasicMythicPaths);
+                    UI.ActionButton("All Mythic Paths".orange(), Actions.UnlockAllBasicMythicPaths, UI.Width(300));
                     UI.Space(25);
                     UI.Label("Unlock mythic paths besides Legend and Devil which block progression".green());
                 },
                 () => UI.Label("", UI.Height(10)),
-                () => { UI.ActionButton("Unlock Devil", Actions.UnlockDevil); UI.Space(25); UI.Label("Prevents you from advancing in Aeon or Azata".green()); },
-                () => { UI.ActionButton("Unlock Legend", Actions.UnlockLegend); UI.Space(25); UI.Label("Prevents you from advancing all other Mythic Path".green()); },
+                () => { UI.ActionButton("Unlock Devil", Actions.UnlockDevil, UI.Width(300)); UI.Space(25); UI.Label("Prevents you from advancing in Aeon or Azata".green()); },
+                () => { UI.ActionButton("Unlock Legend", Actions.UnlockLegend, UI.Width(300)); UI.Space(25); UI.Label("Prevents you from advancing all other Mythic Path".green()); },
                 () => { }
                 );
             UI.Div(0, 25);

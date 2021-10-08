@@ -191,6 +191,7 @@ namespace ModKit {
                 }
             }
             var changed = value != newValue;
+            value = Math.Min(max, Math.Max(min, newValue));
             value = newValue;
             return changed;
         }
@@ -245,7 +246,7 @@ namespace ModKit {
             }
             EndHorizontal();
             var changed = value != newValue;
-            value = newValue;
+            value = Math.Min(max, Math.Max(min, newValue));
             return changed;
         }
     }

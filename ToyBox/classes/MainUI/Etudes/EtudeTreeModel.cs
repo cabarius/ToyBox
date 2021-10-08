@@ -14,7 +14,7 @@ namespace ToyBox {
     public class EtudesTreeModel {
         public List<BlueprintEtude> etudes;
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));
-        public Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = new();
+        public Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = new();
         public Dictionary<BlueprintGuid, ConflictingGroupIdReferences> conflictingGroups = new();
         public HashSet<string> commentKeys = new();
         private EtudesTreeModel() {
@@ -36,7 +36,7 @@ namespace ToyBox {
         public void ReloadBlueprintsTree() {
             etudes = BlueprintLoader.Shared.GetBlueprints<BlueprintEtude>();
             if (etudes == null) return;
-            loadedEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+            loadedEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
             var filteredEtudes = (from bp in etudes
                                   where etudeFilter.filter(bp)
                                   select bp).ToList();
@@ -144,8 +144,8 @@ namespace ToyBox {
             loadedEtudes.Remove(SelectedId);
         }
 
-        private EtudeIdReferences PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
-            var etudeIdReference = new EtudeIdReferences {
+        private EtudeInfo PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
+            var etudeIdReference = new EtudeInfo {
                 Name = blueprintEtude.name,
                 ParentId = blueprintEtude.Parent?.Get()?.AssetGuid ?? BlueprintGuid.Empty,
                 AllowActionStart = blueprintEtude.AllowActionStart,

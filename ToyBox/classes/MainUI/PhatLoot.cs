@@ -111,9 +111,9 @@ namespace ToyBox {
                             UI.Label($"{group.Key.cyan()}: {count}");
                             UI.Div(indent);
                             foreach (var present in presents) {
-                                var pahtLewts = present.GetLewtz(searchText).Lootable(rarity);
+                                var pahtLewts = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity());
                                 var unit = present.Unit;
-                                if (pahtLewts.Count > 0
+                                if (pahtLewts.Count() > 0
                                     //&& (unit == null
                                     //    || settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy
                                     //    )

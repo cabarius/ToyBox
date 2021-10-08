@@ -26,8 +26,12 @@
 * **Party Editor** ***Add All*** spells no longer adds extra copies of spells you already learned
 * **Party Editor** Fixed layout issue that would push ***Add All*** to the right side of the screen
 * **Party Editor** ***Select From All Spellbooks*** now shows the spells from all spellbooks
-* **Loot Checklist** is now searchable
-* **Loot Checklist** now shows the private name of the area you are in so you can find it in Search 'n Pick
+* **Loot Checklist** 
+  * Checklist is now searchable
+  * now shows the private name of the area you are in so you can find it in Search 'n Pick
+  * Items within a container or unit sort by rarity
+* **Misc**
+  * Fixed crasher when editing slider values via keyboard
 
 ### Ver 1.3.19
 * **Bag of Tricks** 

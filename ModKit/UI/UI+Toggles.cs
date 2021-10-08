@@ -45,13 +45,41 @@ namespace ModKit {
             }
             return changed;
         }
-
         public static void ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
-            var state = toggle.IsOn();
+            var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
-            if (TogglePrivate(title, ref state, isEmpty, true, 0, options))
+            if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options))
                 toggle = toggle.Flip();
         }
+        public static void ToggleButton(ref ToggleState toggle, string title, params GUILayoutOption[] options) {
+            var isOn = toggle.IsOn();
+            var isEmpty = toggle == ToggleState.None;
+            if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options))
+                toggle = toggle.Flip();
+        }
+        public static void ToggleButton(ref ToggleState toggle, string title, Action<ToggleState> applyToChildren, params GUILayoutOption[] options) {
+            var isOn = toggle.IsOn();
+            var isEmpty = toggle == ToggleState.None;
+            var state = toggle;
+            if (TogglePrivate("", ref isOn, isEmpty, true, 0, options))
+                state = state.Flip();
+            if (state == ToggleState.None)
+                UI.Space(15);
+            else {
+                var deepTitle = state switch {
+                    ToggleState.On => "≪",
+                    ToggleState.Off => "≫",
+                    _ => ""
+                };
+                UI.ActionButton(deepTitle, () => {
+                    state = state.Flip();
+                    applyToChildren(state);
+                }, toggleStyle, UI.Width(15));
+            }
+            UI.Label(title, toggleStyle);
+            toggle = state;
+        }
+
         public static bool Toggle(string title, ref bool value, string on, string off, float width = 0, GUIStyle stateStyle = null, GUIStyle labelStyle = null, params GUILayoutOption[] options) {
             var changed = false;
             if (stateStyle == null)
@@ -111,6 +139,11 @@ namespace ModKit {
         }
         public static bool DisclosureToggle(string title, ref bool value, float width = 175, params Action[] actions) {
             var changed = TogglePrivate(title, ref value, false, true, width);
+            If(value, actions);
+            return changed;
+        }
+        public static bool DisclosureToggle(string title, ref bool value, params Action[] actions) {
+            var changed = TogglePrivate(title, ref value, false, true, 175);
             If(value, actions);
             return changed;
         }

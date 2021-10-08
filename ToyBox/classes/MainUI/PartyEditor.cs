@@ -375,7 +375,19 @@ namespace ToyBox {
                             UI.Div(100, 20);
                             using (UI.HorizontalScope()) {
                                 UI.Space(100);
-                                UI.Label(cd.CharacterClass.Name.orange(), UI.Width(250));
+                                using (UI.VerticalScope(UI.Width(250))) {
+                                    var className = cd.CharacterClass.Name;
+                                    var archetype = cd.Archetypes.FirstOrDefault<BlueprintArchetype>();
+                                    if (archetype != null) {
+                                        var archName = archetype.Name;
+                                        UI.Label(archName.orange(), UI.Width(250));
+                                        if (!archName.Contains(className))
+                                            UI.Label(className.yellow(), UI.Width(250));
+                                    }
+                                    else {
+                                        UI.Label(className.orange(), UI.Width(250));
+                                    }
+                                }
                                 UI.ActionButton("<", () => cd.Level = Math.Max(0, cd.Level - 1), UI.AutoWidth());
                                 UI.Space(25);
                                 UI.Label("level".green() + $": {cd.Level}", UI.Width(100f));

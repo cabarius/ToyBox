@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ToyBox {
 
     public class EtudeChildrenDrawer {
-        private Dictionary<BlueprintGuid, EtudeIdReferences> loadedEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+        private Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
         private Dictionary<BlueprintGuid, EtudeDrawerData> etudeDrawerData = new Dictionary<BlueprintGuid, EtudeDrawerData>();
         private BlueprintGuid parentEtude;
         //private float chainedShift = 40;
@@ -38,7 +38,7 @@ namespace ToyBox {
         private bool conflictingGroupFoldout = false;
 
         private string oldFind = "";
-        private Dictionary<BlueprintGuid, EtudeIdReferences> foundedEtudes = new Dictionary<BlueprintGuid, EtudeIdReferences>();
+        private Dictionary<BlueprintGuid, EtudeInfo> foundedEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
 
         public static bool newParentFromContestComand = false;
         public static BlueprintGuid newParentID;
@@ -49,7 +49,7 @@ namespace ToyBox {
         private EtudeChildrenDrawer() {
         }
 
-        public EtudeChildrenDrawer(Dictionary<BlueprintGuid, EtudeIdReferences> etudes) {
+        public EtudeChildrenDrawer(Dictionary<BlueprintGuid, EtudeInfo> etudes) {
             loadedEtudes = etudes;
         }
 
