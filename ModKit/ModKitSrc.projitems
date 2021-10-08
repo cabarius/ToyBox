@@ -9,7 +9,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>ModMaker</Import_RootNamespace>
+    <Import_RootNamespace>ModKit</Import_RootNamespace>
     <Version>1.0.7</Version>
     <Description>A game agnostic toolkit for building Mod UI for unity mod manager based mods.  Builds on ModMaker (https://github.com/cabarius/WrathModMaker and all past repos it was forked from)</Description>
   </PropertyGroup>
@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Elements.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\KeyBindings\KeyBind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Pickers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Styles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Toggles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Wrappers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\EmbeddedResourceUtils.cs" />
@@ -36,7 +37,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\RichTextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\GUIHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\KeyBindings\UI+KeyBindings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Logging.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\ModSettings.cs" />

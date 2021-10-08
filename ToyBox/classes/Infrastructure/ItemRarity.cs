@@ -123,38 +123,6 @@ namespace ToyBox {
 }
 namespace ModKit {
     public static partial class UI {
-        private static Texture2D _rarityTexture = null;
-        public static Texture2D RarityTexture {
-            get {
-                if (_rarityTexture == null) _rarityTexture = new Texture2D(1, 1);
-                _rarityTexture.SetPixel(0, 0, RGBA.black.color());
-                _rarityTexture.Apply();
-                return _rarityTexture;
-            }
-        }
-        private static GUIStyle _rarityStyle;
-        public static GUIStyle rarityStyle {
-            get {
-                if (_rarityStyle == null) {
-                    _rarityStyle = new GUIStyle(GUI.skin.button);
-                    _rarityStyle.normal.background = RarityTexture;
-                }
-                return _rarityStyle;
-            }
-        }
-        private static GUIStyle _rarityButtonStyle;
-        public static GUIStyle rarityButtonStyle {
-            get {
-                if (_rarityButtonStyle == null) {
-                    _rarityButtonStyle = new GUIStyle(GUI.skin.button) {
-                        alignment = TextAnchor.MiddleLeft
-                    };
-                    _rarityButtonStyle.normal.background = RarityTexture;
-                }
-                return _rarityButtonStyle;
-            }
-        }
-
         public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(ref rarity, xCols, (n, rarity) => n.Rarity(rarity), rarityStyle, options);
         public static void RarityGrid(string title, ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(title, ref rarity, xCols, (n, rarity) => n.Rarity(rarity), rarityStyle, options);
     }
