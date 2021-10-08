@@ -133,20 +133,23 @@ namespace ToyBox {
             HStack("Quality of Life", 1,
                 () => {
                     Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);
+                    UI.Space(25);
                     Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
                 () => {
-                    Toggle("Replace Models (experimental)", ref settings.toggleReplaceModelMenu, UI.AutoWidth());
+                    Toggle("Icky Stuff Begone!!!", ref settings.toggleReplaceModelMenu, UI.AutoWidth());
                     if (settings.toggleReplaceModelMenu) {
                         Space(25);
-                        using (VerticalScope()) {
-                            Toggle("Spiders begone", ref settings.toggleSpiderBegone);
-                            Toggle("Vescavors begone", ref settings.toggleVescavorsBegone);
-                            Toggle("Retrievers begone", ref settings.toggleRetrieversBegone);
+                        using (VerticalScope(UI.Width(250))) {
+                            Toggle("Spiders Begone!", ref settings.toggleSpiderBegone);
+                            Toggle("Vescavors Begone!", ref settings.toggleVescavorsBegone);
+                            Toggle("Retrievers Begone!", ref settings.toggleRetrieversBegone);
                         }
                     }
+                    UI.Space(25);
+                    UI.Label("Some players find spiders and other swarms icky. This replaces them with something more pleasent".green());
                 },
                 () => Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),

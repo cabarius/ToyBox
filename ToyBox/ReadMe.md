@@ -15,12 +15,15 @@
 
 ### Ver 1.4.0 (Coming Soon)
 * **New Etude Editor** is a powerful way to view and edit Etude progression
-  * Tree view that shows the dependencies and some state
-  * No editing yet but is coming soon
+  * Tree view 
+    * etudes and their childern 
+    * can expand immediate children or go all the way down
+    * can reveal the various conditions involved with the etude which is very powerful for understanding their mechanics. This will be improved to let you manipulate the conditions as much as spossible
+  * Actions to start, unstart and complete etudes are available
   * Much more coming which I will talk about soon
 * **Bag of tricks**
   * (***ShadowRanger***) Added a fix that should resolve the zoomed out camera bug if you had both ToyBox and Free Camera installed.  You may need to reset Toybox's fovMultiplier to 1 for it to take effect.
-  * (***ShadowRanger***) Added a new sub-menu for all 'begone' versions
+  * (***ShadowRanger***) Added a new sub-menu for all 'begone' versions called ***Icky Stuff Begone!!!*** and added green explainer text
   * (***ShadowRanger***) Added retrievers begone
 * **Party Editor** 
   * fixed crasher when you lowered caster level multiple times

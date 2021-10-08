@@ -31,6 +31,7 @@ namespace ModKit {
                 float width = 0,
                 params GUILayoutOption[] options
             ) {
+            options = options.AddDefaults();
             var changed = false;
             if (width == 0 && !disclosureStyle) {
                 width = toggleStyle.CalcSize(new GUIContent(title.bold())).x + GUI.skin.box.CalcSize(Private.UI.CheckOn).x + 10;
