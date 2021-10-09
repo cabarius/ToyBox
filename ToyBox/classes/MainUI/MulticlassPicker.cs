@@ -37,6 +37,7 @@ namespace ToyBox {
             if (showDesc) UI.Div(indent);
             var cd = ch?.Progression.GetClassData(cl);
             var chArchetype = cd?.Archetypes.FirstOrDefault<BlueprintArchetype>();
+            var archetypeOptions = options.ArchetypeOptions(cl);
             var showGestaltToggle = false;
             if (ch != null && cd != null) {
                 var classes = ch?.Progression.Classes;
@@ -44,11 +45,12 @@ namespace ToyBox {
                 var gestaltCount = classes?.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                 showGestaltToggle = !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1 || ch.IsClassGestalt(cd.CharacterClass) || cd.CharacterClass.IsMythic;
             }
+            var hasClass = cd != null && chArchetype == null;
             using (UI.HorizontalScope()) {
                 UI.Space(indent);
                 UI.ActionToggle(
-                    cd != null && chArchetype == null ? cl.Name.orange() : cl.Name,
-                    () => options.Contains(cl),
+                     hasClass ? cl.Name.orange() : cl.Name,
+                    () => options.Contains(cl) && (chArchetype == null || archetypeOptions.Contains(chArchetype)),
                     (v) => {
                         if (v) options.Add(cl);
                         else options.Remove(cl);
@@ -72,9 +74,8 @@ namespace ToyBox {
                 if (options.Contains(cl) && archetypes.Any() || chArchetype != null) {
                     UI.Space(50);
                     using (UI.VerticalScope()) {
-                        var archetypeOptions = options.ArchetypeOptions(cl);
                         foreach (var archetype in cl.Archetypes) {
-                            if (chArchetype == null || chArchetype == archetype) {
+                            if (!hasClass && chArchetype == null || chArchetype == archetype) {
                                 if (showDesc) UI.Div();
                                 using (UI.HorizontalScope()) {
                                     UI.ActionToggle(
