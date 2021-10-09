@@ -88,6 +88,9 @@ namespace ModKit {
                 action(selected);
             }
         }
+
+        // EnumGrids
+
         public static void EnumGrid<TEnum>(Func<TEnum> get, Action<TEnum> set, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             var value = get();
             var names = Enum.GetNames(typeof(TEnum));
@@ -98,7 +101,9 @@ namespace ModKit {
                 }
             }
         }
-        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+            bool changed = false;
+            options = options.AddDefaults();
             var names = Enum.GetNames(typeof(TEnum));
             var formatedNames = names;
             var nameToEnum = value.NameToValueDictionary();
@@ -109,48 +114,75 @@ namespace ModKit {
             if (style == null ? SelectionGrid(ref index, formatedNames, xCols, options) : SelectionGrid(ref index, formatedNames, xCols, style, options)) {
                 if (Enum.TryParse(names[index], out TEnum newValue)) {
                     value = newValue;
+                    changed = true;
                 }
             }
+            return changed;
         }
-        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, titleFormater, null, options);
-        public static void EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, null, options);
-        public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, titleFormater, null, options);
+        public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, null, options);
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
+            var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                Space(25);
-                EnumGrid(ref value, xCols, null, options);
+                UI.Space(25);
+                changed = EnumGrid(ref value, xCols, null, options);
             }
+            return changed;
         }
-        public static void EnumGrid<TEnum>(string title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
+            var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                Space(25);
-                EnumGrid(ref value, 0, null, options);
+                UI.Space(25);
+                changed = EnumGrid(ref value, 0, null, options);
             }
+            return changed;
         }
 
-        public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+            bool changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                Space(25);
-                EnumGrid(ref value, xCols, null, style, options);
+                UI.Space(25);
+                changed = EnumGrid(ref value, xCols, null, style, options);
             }
+            return changed;
         }
 
-        public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
+            var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                Space(25);
-                EnumGrid(ref value, xCols, titleFormater, options);
+                UI.Space(25);
+                changed = EnumGrid(ref value, xCols, titleFormater, options);
             }
+            return changed;
         }
-        public static void EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+            var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                Space(25);
-                EnumGrid(ref value, xCols, titleFormater, style, options);
+                UI.Space(25);
+                changed = EnumGrid(ref value, xCols, titleFormater, style, options);
             }
+            return changed;
+         }
+        public static bool EnumGrid<TEnum>(string title, Func<TEnum> get, Action<TEnum> set, params GUILayoutOption[] options) where TEnum : struct {
+            var changed = false;
+            using (HorizontalScope()) {
+                Label(title.cyan(), Width(300));
+                UI.Space(25);
+                var value = get();
+                changed = EnumGrid(ref value, 0, null, options);
+                if (changed)
+                    set(value);
+            }
+            return changed;
         }
+
+        // EnumerablePicker
+
         public static void EnumerablePicker<T>(
                 string title,
                 ref int selected,

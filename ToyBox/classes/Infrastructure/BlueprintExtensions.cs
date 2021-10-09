@@ -23,6 +23,7 @@ namespace ToyBox {
         public static Settings settings => Main.settings;
 
         private static ConditionalWeakTable<object, List<string>> cachedCollationNames = new() { };
+        private static HashSet<BlueprintGuid> badList = new();
         public static void ResetCollationCache() => cachedCollationNames = new() { };
         private static void AddOrUpdateCachedNames(SimpleBlueprint bp, List<string> names) {
             if (cachedCollationNames.TryGetValue(bp, out _)) {
@@ -38,16 +39,21 @@ namespace ToyBox {
         }
         public static IEnumerable<string> Attributes(this SimpleBlueprint bp) {
             List<string> modifers = new();
+            if (badList.Contains(bp.AssetGuid)) return modifers;
             var traverse = Traverse.Create(bp);
             foreach (var property in Traverse.Create(bp).Properties()) {
-                if (property.StartsWith("Is")) {
+                    if (property.StartsWith("Is")) {
                     try {
                         var value = traverse.Property<bool>(property)?.Value;
                         if (value.HasValue && value.GetValueOrDefault()) {
                             modifers.Add(property); //.Substring(2));
                         }
                     }
-                    catch { }
+                    catch (Exception e) {
+                        Mod.Warning($"${bp.name}.{property} thew an exception: {e.Message}");
+                        badList.Add(bp.AssetGuid);
+                        break;
+                    }
                 }
             }
             return modifers;

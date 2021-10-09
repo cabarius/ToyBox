@@ -39,6 +39,19 @@
   * now shows the private name of the area you are in so you can find it in Search 'n Pick
   * Items within a container or unit sort by rarity
 * **Search 'n Pick** cleaned up some layout behavior that would make the character picker get wider than necessary
+* **Kingdom Editor** now has a bunch of new adjustments including:
+  * Current Day
+  * Current Turn
+  * Claim Cost Modifier
+  * Claim Time Modifier
+  * Rankup Time Modifer
+  * Build Time Modifier
+  * Random Encounter Chance Modifier (Unclaimed, Claimed, Upgraded)
+  * Confidence (Royal Court)
+  * Confidence (Nobles)
+  * Victories This Week
+  * Unrest
+  * Kingdom Alignment
 * **Misc**
   * Fixed crasher when editing slider values via keyboard
 

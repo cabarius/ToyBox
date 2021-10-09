@@ -39,6 +39,14 @@ namespace ModKit {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
+        public static void DescriptiveLabel(string title, string description, params GUILayoutOption[] options) {
+            options = options.AddDefaults(UI.Width(300));
+            using (UI.HorizontalScope()) {
+                UI.Label(title, options);
+                UI.Space(25);
+                UI.Label(description);
+            }
+        }
         public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
             var changed = false;
             if (editState.Item1 != label) {
@@ -170,18 +178,37 @@ namespace ModKit {
 
         public static bool ValueAdjuster(ref int value, int increment = 1, int min = 0, int max = int.MaxValue) {
             var v = value;
-            ActionButton(" - ", () => { v = Math.Max(v - increment, min); }, UI.textBoxStyle, AutoWidth());
+            if (v > min)
+                ActionButton(" < ", () => { v = Math.Max(v - increment, min); }, UI.textBoxStyle, AutoWidth());
+            else {
+                UI.Space(-21);
+                ActionButton("min ".cyan(), () => { }, UI.textBoxStyle, AutoWidth());
+            }
             Space(-8);
             bool temp = false;
             UI.Button($"{v}".orange().bold(), ref temp, UI.textBoxStyle, AutoWidth());
             Space(-8);
-            ActionButton(" + ", () => { v = Math.Min(v + increment, max); }, UI.textBoxStyle, AutoWidth());
+            if (v < max)
+                ActionButton(" > ", () => { v = Math.Min(v + increment, max); }, UI.textBoxStyle, AutoWidth());
+            else {
+                ActionButton(" max".cyan(), () => { }, UI.textBoxStyle, AutoWidth());
+                UI.Space(-27);
+            }
             if (v != value) {
                 value = v;
                 return true;
             }
             return false;
         }
+        public static bool ValueAdjuster(Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue) {
+            bool changed = false;
+            var value = get();
+            changed = ValueAdjuster(ref value, increment, min, max);
+            if (changed)
+                set(value);
+            return changed;
+        }
+
         public static bool ValueAdjuster(string title, ref int value, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             bool changed = false;
             using (UI.HorizontalScope(options)) {
@@ -190,7 +217,22 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool ValueEditor(string title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+        public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+            bool changed = false;
+            using (UI.HorizontalScope(UI.Width(400))) {
+                UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(15);
+                var value = get();
+                changed = UI.ValueAdjuster(ref value, increment, min, max);
+                if (changed)
+                    set(value);
+            }
+            return changed;
+        }
+
+        // Value Editors 
+
+        public static bool ValueEditor(string title, Func<int> get, Action<int> set, ref int increment, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             bool changed = false;
             var value = get();
             var inc = increment;
@@ -264,12 +306,28 @@ namespace ModKit {
             value = newValue;
             return changed;
         }
+        public static bool Slider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+            bool changed = false;
+            var value = get();
+            changed = Slider(title, ref value, min, max, defaultValue, decimals, units, options);
+            if (changed)
+                set(value);
+            return changed;
+        }
         public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
             var changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }
+        public static bool Slider(string title, Func<int> get, Action<int> set, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
+            float fvalue = get();
+            var changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
+            if (changed)
+                set((int)fvalue);
+            return changed;
+        }
+
         public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
             var changed = Slider(ref fvalue, min, max, (float)defaultValue, 0, units, options);
@@ -317,6 +375,15 @@ namespace ModKit {
             var changed = value != newValue;
             value = Math.Min(max, Math.Max(min, newValue));
             return changed;
+        }
+        public static bool LogSlider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+            bool changed = false;
+            var value = get();
+            changed = LogSlider(title, ref value, min, max, defaultValue, decimals, units, options);
+            if (changed)
+                set(value);
+            return changed;
+
         }
     }
 }

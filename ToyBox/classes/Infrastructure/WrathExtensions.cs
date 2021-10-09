@@ -1,5 +1,6 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using System;
+using UnityEngine;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Entities;
@@ -10,16 +11,12 @@ using Kingmaker.UnitLogic;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
 using Kingmaker.UnitLogic.Alignments;
-
-namespace ToyBox {
-    public static class WrathExtensions {
-        public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
-        public static string HashKey(this UnitDescriptor ch) => ch.CharacterName;
-        public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
-        public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();
-
+using System.Linq;
+namespace ModKit {
+    public partial class UI {
         public static string Name(this Alignment a) => UIUtility.GetAlignmentName(a);
         public static string Acronym(this Alignment a) => UIUtility.GetAlignmentAcronym(a);
+
 
         public static Alignment[] Alignments = new Alignment[] {
                     Alignment.LawfulGood,       Alignment.NeutralGood,      Alignment.ChaoticGood,
@@ -66,6 +63,31 @@ namespace ToyBox {
             }
             return RGBA.grey;
         }
+        public static void AlignmentGrid(string title, Alignment alignment, Action<Alignment> action, params GUILayoutOption[] options) {
+            using (UI.HorizontalScope()) {
+                if (title?.Length > 0) {
+                    UI.Label(title.cyan(), options);
+                }
+                var alignmentIndex = Array.IndexOf(Alignments, alignment);
+                var titles = Alignments.Select(
+                    a => a.Acronym().color(a.Color()).bold()).ToArray();
+                if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
+                    action(Alignments[alignmentIndex]);
+                }
+            }
+        }
+        public static void AlignmentGrid(Alignment alignment, Action<Alignment> action, params GUILayoutOption[] options)
+            => AlignmentGrid(null, alignment, action, options);
+    }
+}
+
+namespace ToyBox {
+    public static class WrathExtensions {
+        public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
+        public static string HashKey(this UnitDescriptor ch) => ch.CharacterName;
+        public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
+        public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();
+
         public static string GetDescription(this SimpleBlueprint bp)
         // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
         {

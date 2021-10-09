@@ -17,8 +17,8 @@ namespace ToyBox.classes.MainUI {
         public static Settings Settings => Main.settings;
 
         public static void OnGUI() {
-            var kingdom = KingdomState.Instance;
-            if (kingdom == null) {
+            var ks = KingdomState.Instance;
+            if (ks == null) {
                 UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());
                 return;
             }
@@ -47,7 +47,7 @@ namespace ToyBox.classes.MainUI {
                 () => UI.Slider("Enemy Leader Ability Strength", ref Settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
             );
             UI.Div(0, 25);
-            var moraleState = kingdom.MoraleState;
+            var moraleState = ks.MoraleState;
             UI.HStack("Morale", 1,
                 () => {
                     UI.Toggle("Flags always green", ref Settings.toggleCrusadeFlagsStayGreen);
@@ -88,25 +88,13 @@ namespace ToyBox.classes.MainUI {
                             UI.Label("Experience", UI.Width(150));
                             UI.Label("Next Rank", UI.Width(150));
                         }
-
-                        foreach (var kingdomStat in kingdom.Stats) {
+                        foreach (var kingdomStat in ks.Stats) {
                             var conditions = KingdomRoot.Instance.RankUps.Conditions[kingdomStat.Type];
                             using (UI.HorizontalScope()) {
-                                UI.Label(kingdomStat.Type.ToString().cyan(), UI.Width(283));
                                 var rank = kingdomStat.Rank;
                                 var exp = kingdomStat.Value.ToString().orange();
                                 var required = conditions.GetRequiredStatValue(kingdomStat.Rank + 1).ToString().cyan();
-                                if (kingdomStat.Rank > 1) {
-                                    UI.ActionButton("<", () => { kingdomStat.Rank--; }, GUI.skin.box, UI.Width(63));
-                                }
-                                else { UI.Label("<", GUI.skin.box, UI.Width(63)); }
-                                UI.Space(-10);
-                                UI.Label($"{kingdomStat.Rank}".orange().bold(), GUI.skin.box, UI.Width(35));
-                                UI.Space(-10);
-                                if (kingdomStat.Rank < 8) {
-                                    UI.ActionButton(">", () => { kingdomStat.Rank++; }, GUI.skin.box, UI.Width(63));
-                                }
-                                else { UI.Label("max".cyan(), GUI.skin.box, UI.Width(63)); }
+                                UI.ValueAdjuster(kingdomStat.Type.ToString(), () => kingdomStat.Rank, v => kingdomStat.Rank = v, 1, 0, 8);
                                 UI.Space(42);
                                 UI.Label(exp, UI.Width(150));
                                 UI.Label(required, UI.Width(150));
@@ -119,6 +107,23 @@ namespace ToyBox.classes.MainUI {
                                 }, UI.AutoWidth());
                             }
                         }
+                        UI.Div(0, 0, 800);
+                        UI.DescriptiveLabel("Cost Modifiers", "The following modifiers all work on ".green() + "cost = cost (1 + modifier) ".yellow() + "so a value of ".green() + "-1".yellow() + " means the cost is free, ".green() + "0".yellow() +" is normal cost and ".green() + "2".yellow() + " increases it 3x".green());
+                        UI.Slider("Claim Cost Modifier", () => ks.ClaimCostModifier, v => ks.ClaimCostModifier = v, -1, 2, 0, 1);
+                        UI.Slider("Claim Time Modifier", () => ks.ClaimTimeModifier, v => ks.ClaimTimeModifier = v, -1, 2, 0, 1);
+                        UI.Slider("Rankup Time Modifer", () => ks.RankupTimeModifier, v => ks.RankupTimeModifier = v, -1, 2, 0, 1);
+                        UI.Slider("Build Time Modifier", () => ks.BuildingTimeModifier, v => ks.BuildingTimeModifier = v, -1, 2, 0, 1);
+                        UI.Div(0, 0, 800);
+                        UI.DescriptiveLabel("Random Encounters", "The following modifiers all work on ".green() + "chance = chance (1 + modifier) ".yellow() + "so a value of ".green() + "-1".yellow() + " means the chance is 0, ".green() + "0".yellow() + " is chance cost and ".green() + "2".yellow() + " increases it 3x".green());
+                        UI.Slider("% Chance (Unclaimed)", () => ks.REModifierUnclaimed, v => ks.REModifierUnclaimed = v, -1f, 2f, 0f, 1);
+                        UI.Slider("% Chance (Claimed)", () => ks.REModifierClaimed, v => ks.REModifierClaimed = v, -1, 2, -0.5f, 1);
+                        UI.Slider("% Chance (Upgraded)", () => ks.REModifierUpgraded, v => ks.REModifierUnclaimed = v, -1f, 2f, -1f, 1);
+                        UI.Div(0, 0, 800);
+                        UI.ValueAdjuster("Confidence (Royal Court)", () => ks.RoyalCourtConfidence, v => ks.RoyalCourtConfidence = v, 1, 0, int.MaxValue);
+                        UI.ValueAdjuster("Confidence (Nobles)", () => ks.NobilityConfidence, v => ks.NobilityConfidence = v, 1, 0, int.MaxValue);
+                        UI.ValueAdjuster("Victories This Week", () => ks.VictoriesThisWeek, v => ks.VictoriesThisWeek = v, 1, 0, int.MaxValue);
+                        UI.EnumGrid("Unrest", () => ks.Unrest, (u) => ks.Unrest = u);
+                        UI.AlignmentGrid("Alignment", ks.Alignment, (a) => ks.Alignment = a, UI.Width(325));
                     }
                 },
                 () => {
@@ -130,32 +135,32 @@ namespace ToyBox.classes.MainUI {
                 },
                 () => {
                     UI.Label("Finances".cyan(), UI.Width(325));
-                    UI.Label(kingdom.Resources.Finances.ToString().orange().bold(), UI.Width(100));
+                    UI.Label(ks.Resources.Finances.ToString().orange().bold(), UI.Width(100));
                     UI.ActionButton($"Gain {Settings.increment}", () => {
-                        kingdom.Resources += KingdomResourcesAmount.FromFinances(Settings.increment);
+                        ks.Resources += KingdomResourcesAmount.FromFinances(Settings.increment);
                     }, UI.AutoWidth());
                     UI.ActionButton($"Lose {Settings.increment}", () => {
-                        kingdom.Resources -= KingdomResourcesAmount.FromFinances(Settings.increment);
+                        ks.Resources -= KingdomResourcesAmount.FromFinances(Settings.increment);
                     }, UI.AutoWidth());
                 },
                 () => {
                     UI.Label("Materials".cyan(), UI.Width(325));
-                    UI.Label(kingdom.Resources.Materials.ToString().orange().bold(), UI.Width(100));
+                    UI.Label(ks.Resources.Materials.ToString().orange().bold(), UI.Width(100));
                     UI.ActionButton($"Gain {Settings.increment}", () => {
-                        kingdom.Resources += KingdomResourcesAmount.FromMaterials(Settings.increment);
+                        ks.Resources += KingdomResourcesAmount.FromMaterials(Settings.increment);
                     }, UI.AutoWidth());
                     UI.ActionButton($"Lose {Settings.increment}", () => {
-                        kingdom.Resources -= KingdomResourcesAmount.FromMaterials(Settings.increment);
+                        ks.Resources -= KingdomResourcesAmount.FromMaterials(Settings.increment);
                     }, UI.AutoWidth());
                 },
                 () => {
                     UI.Label("Favors".cyan(), UI.Width(325));
-                    UI.Label(kingdom.Resources.Favors.ToString().orange().bold(), UI.Width(100));
+                    UI.Label(ks.Resources.Favors.ToString().orange().bold(), UI.Width(100));
                     UI.ActionButton($"Gain {Settings.increment}", () => {
-                        kingdom.Resources += KingdomResourcesAmount.FromFavors(Settings.increment);
+                        ks.Resources += KingdomResourcesAmount.FromFavors(Settings.increment);
                     }, UI.AutoWidth());
                     UI.ActionButton($"Lose {Settings.increment}", () => {
-                        kingdom.Resources -= KingdomResourcesAmount.FromFavors(Settings.increment);
+                        ks.Resources -= KingdomResourcesAmount.FromFavors(Settings.increment);
                     }, UI.AutoWidth());
                 },
                 () => {
@@ -190,13 +195,13 @@ namespace ToyBox.classes.MainUI {
                         using (UI.HorizontalScope()) {
                             UI.Label("Date".cyan(), UI.Width(325));
                             UI.Label(dateText.orange().bold(), UI.AutoWidth());
-                        }
-                        using (UI.HorizontalScope()) {
                             UI.ActionButton($"+1 Day", () => { Actions.KingdomTimelineAdvanceDays(1); }, UI.Width(150));
                             UI.ActionButton($"+1 Month", () => {
                                 Actions.KingdomTimelineAdvanceDays(KingdomState.Instance.DaysTillNextMonth);
                             }, UI.Width(150));
                         }
+                        UI.ValueAdjuster("Current Day", () => ks.CurrentDay, v => ks.CurrentDay = v, 1, 0, int.MaxValue);
+                        UI.ValueAdjuster("Current Turn", () => ks.CurrentTurn, v => ks.CurrentTurn = v, 1, 0, int.MaxValue);
                     }
                 },
                () => { }

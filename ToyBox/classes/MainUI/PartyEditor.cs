@@ -420,12 +420,7 @@ namespace ToyBox {
                     }
                     using (UI.HorizontalScope()) {
                         UI.Space(528);
-                        var alignmentIndex = Array.IndexOf(WrathExtensions.Alignments, alignment);
-                        var titles = WrathExtensions.Alignments.Select(
-                            a => a.Acronym().color(a.Color()).bold()).ToArray();
-                        if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
-                            ch.Descriptor.Alignment.Set(WrathExtensions.Alignments[alignmentIndex]);
-                        }
+                        UI.AlignmentGrid(alignment, (a) => ch.Descriptor.Alignment.Set(a));
                     }
                     UI.Div(100, 20, 755);
                     var alignmentMask = ch.Descriptor.Alignment.m_LockedAlignmentMask;
@@ -438,11 +433,11 @@ namespace ToyBox {
 
                     using (UI.HorizontalScope()) {
                         UI.Space(528);
-                        var maskIndex = Array.IndexOf(WrathExtensions.AlignmentMasks, alignmentMask);
-                        var titles = WrathExtensions.AlignmentMasks.Select(
+                        var maskIndex = Array.IndexOf(UI.AlignmentMasks, alignmentMask);
+                        var titles = UI.AlignmentMasks.Select(
                             a => a.ToString().color(a.Color()).bold()).ToArray();
                         if (UI.SelectionGrid(ref maskIndex, titles, 3, UI.Width(800))) {
-                            ch.Descriptor.Alignment.LockAlignment(WrathExtensions.AlignmentMasks[maskIndex], new Alignment?());
+                            ch.Descriptor.Alignment.LockAlignment(UI.AlignmentMasks[maskIndex], new Alignment?());
                         }
                     }
                     UI.Div(100, 20, 755);
