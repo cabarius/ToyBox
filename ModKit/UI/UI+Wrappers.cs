@@ -22,6 +22,7 @@ namespace ModKit {
         public static GUILayoutOption MinHeight(float v) => GL.MinHeight(v);
 
         public static void Space(float size = 150f) => GL.Space(size);
+        public static void Indent(int indent, float size = 75f) => GL.Space(indent * size);
         public static void BeginHorizontal(GUIStyle style, params GUILayoutOption[] options) => GL.BeginHorizontal(style, options);
         public static void BeginHorizontal(params GUILayoutOption[] options) => GL.BeginHorizontal(options);
         public static void EndHorizontal() => GL.EndHorizontal();

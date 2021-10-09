@@ -112,11 +112,10 @@ namespace ToyBox.classes.MainUI {
                                                 UI.Label(squad.Unit.NameSafe(), UI.Width(475));
                                                 UI.Space(25);
                                                 var count = squad.Count;
-                                                UI.ActionIntTextField(ref count, null,
+                                                UI.ActionIntTextField(ref count,
                                                     (value) => {
                                                         squad.SetCount(value);
-                                                    },
-                                                    null, UI.Width(225)
+                                                    }, UI.Width(225)
                                                 );
                                                 UI.Space(25);
                                                 UI.ActionButton("Remove", () => {

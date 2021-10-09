@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace ModKit {
     public static partial class UI {
-        private static HashSet<Type> widthTypes = new() {
+        private static readonly HashSet<Type> widthTypes = new() {
             UI.Width(0).GetType(),
             UI.MinWidth(0).GetType(),
             UI.MaxWidth(0).GetType(),
@@ -25,6 +25,9 @@ namespace ModKit {
                 options = options.Append(AutoWidth()).ToArray();
             return options;
         }
+
+        // Labels
+
         public static void Label(string title, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             GL.Label(title, options.AddDefaults());
@@ -67,7 +70,8 @@ namespace ModKit {
         }
         public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, Func<string, string> formatter = null, params GUILayoutOption[] options) => EditableLabel(ref label, ref editState, minWidth, GUI.skin.label, formatter, options);
 
-        // Controls
+        // Text Fields
+
         public static string TextField(ref string text, string name = null, params GUILayoutOption[] options) {
             if (name != null) { GUI.SetNextControlName(name); }
             text = GL.TextField(text, options.AddDefaults());
@@ -87,41 +91,40 @@ namespace ModKit {
             }
             return value;
         }
-        public static bool Button(string title, ref bool pressed, params GUILayoutOption[] options) {
-            if (GL.Button(title, options.AddDefaults())) { pressed = true; }
-            return pressed;
-        }
-        public static void ActionButton(string title, Action action, params GUILayoutOption[] options) {
-            if (GL.Button(title, options.AddDefaults())) { action(); }
-        }
-        public static void ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
-            if (GL.Button(title, style, options.AddDefaults())) { action(); }
-        }
+
+        // Action Text Fields
+
         public static void ActionTextField(ref string text,
                 string name,
                 Action<string> action,
                 Action enterAction,
                 params GUILayoutOption[] options
             ) {
-            GUI.SetNextControlName(name);
+            if (name != null)
+                GUI.SetNextControlName(name);
             var newText = GL.TextField(text, options.AddDefaults());
             if (newText != text) {
                 text = newText;
                 action?.Invoke(text);
             }
-            if (enterAction != null && userHasHitReturn && focusedControlName == name) {
+            if (name != null && enterAction != null && userHasHitReturn && focusedControlName == name) {
                 enterAction();
             }
         }
+        public static void ActionTextField(ref string text,
+            Action<string> action,
+            params GUILayoutOption[] options) {
+            ActionTextField(ref text, null, action, null, options);
+        }
         public static void ActionIntTextField(
-                ref int value,
-                string name,
-                Action<int> action,
-                Action enterAction,
-                int min = 0,
-                int max = int.MaxValue,
-                params GUILayoutOption[] options
-            ) {
+            ref int value,
+            string name,
+            Action<int> action,
+            Action enterAction,
+            int min = 0,
+            int max = int.MaxValue,
+            params GUILayoutOption[] options
+        ) {
             var changed = false;
             var hitEnter = false;
             var str = $"{value}";
@@ -141,22 +144,73 @@ namespace ModKit {
                 Action<int> action,
                 Action enterAction,
                 params GUILayoutOption[] options) => ActionIntTextField(ref value, name, action, enterAction, int.MinValue, int.MaxValue, options);
-        public static void ValueEditor(string title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, float titleWidth = 500) {
+        public static void ActionIntTextField(
+                ref int value,
+                Action<int> action,
+                params GUILayoutOption[] options) => ActionIntTextField(ref value, null, action, null, int.MinValue, int.MaxValue, options);
+
+        // Buttons
+
+        public static bool Button(string title, ref bool pressed, params GUILayoutOption[] options) {
+            if (GL.Button(title, options.AddDefaults())) { pressed = true; }
+            return pressed;
+        }
+        public static bool Button(string title, ref bool pressed, GUIStyle style, params GUILayoutOption[] options) {
+            if (GL.Button(title, style, options.AddDefaults())) { pressed = true; }
+            return pressed;
+        }
+        public static void ActionButton(string title, Action action, params GUILayoutOption[] options) {
+            if (GL.Button(title, options.AddDefaults())) { action(); }
+        }
+        public static void ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
+            if (GL.Button(title, style, options.AddDefaults())) { action(); }
+        }
+
+        // Value Adjusters
+
+        public static bool ValueAdjuster(ref int value, int increment = 1, int min = 0, int max = int.MaxValue) {
+            var v = value;
+            ActionButton(" - ", () => { v = Math.Max(v - increment, min); }, UI.textBoxStyle, AutoWidth());
+            Space(-8);
+            bool temp = false;
+            UI.Button($"{v}".orange().bold(), ref temp, UI.textBoxStyle, AutoWidth());
+            Space(-8);
+            ActionButton(" + ", () => { v = Math.Min(v + increment, max); }, UI.textBoxStyle, AutoWidth());
+            if (v != value) {
+                value = v;
+                return true;
+            }
+            return false;
+        }
+        public static bool ValueAdjuster(string title, ref int value, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+            bool changed = false;
+            using (UI.HorizontalScope(options)) {
+                UI.Label(title);
+                changed = UI.ValueAdjuster(ref value, increment, min, max);
+            }
+            return changed;
+        }
+        public static bool ValueEditor(string title, ref int increment, Func<int> get, Action<long> set, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+            bool changed = false;
             var value = get();
             var inc = increment;
-            Label(title.cyan(), Width(titleWidth));
-            Space(25);
-            var fieldWidth = GUI.skin.textField.CalcSize(new GUIContent(max.ToString())).x;
-            ActionButton(" < ", () => { set(Math.Max(value - inc, min)); }, AutoWidth());
-            Space(20);
-            Label($"{value}".orange().bold(), AutoWidth());
-            ;
-            Space(20);
-            ActionButton(" > ", () => { set(Math.Min(value + inc, max)); }, AutoWidth());
-            Space(50);
-            ActionIntTextField(ref inc, title, (v) => { }, null, Width(fieldWidth + 25));
-            increment = inc;
+            using (UI.HorizontalScope(options)) {
+                Label(title.cyan(), UI.ExpandWidth(true));
+                Space(25);
+                var fieldWidth = GUI.skin.textField.CalcSize(new GUIContent(max.ToString())).x;
+                if (ValueAdjuster(ref value, inc, min, max)) {
+                    set(value);
+                    changed = true;
+                }
+                Space(50);
+                ActionIntTextField(ref inc, title, (v) => { }, null, Width(fieldWidth + 25));
+                increment = inc;
+            }
+            return changed;
         }
+
+        // Sliders
+
         public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, Width(200)), decimals);
@@ -180,29 +234,29 @@ namespace ModKit {
             var newValue = value;
             using (HorizontalScope(options)) {
                 using (VerticalScope(Width(300))) {
-                    Space(UnityModManager.UI.Scale(sliderTop - 1));
+                    Space((sliderTop - 1).point());
                     Label(title.cyan(), Width(300));
-                    Space(UnityModManager.UI.Scale(sliderBottom));
+                    Space(sliderBottom.point());
                 }
                 Space(25);
                 using (VerticalScope(Width(200))) {
-                    Space(UnityModManager.UI.Scale(sliderTop + 4));
+                    Space((sliderTop + 4).point());
                     newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, Width(200)), decimals);
-                    Space(UnityModManager.UI.Scale(sliderBottom));
+                    Space(sliderBottom.point());
                 }
                 Space(25);
                 using (VerticalScope(Width(75))) {
-                    Space(UnityModManager.UI.Scale(sliderTop + 2));
+                    Space((sliderTop + 2).point());
                     FloatTextField(ref newValue, null, Width(75));
-                    Space(UnityModManager.UI.Scale(sliderBottom));
+                    Space(sliderBottom.point());
                 }
                 if (units.Length > 0)
                     Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
                 Space(25);
                 using (VerticalScope(AutoWidth())) {
-                    Space(UnityModManager.UI.Scale(sliderTop - 0));
+                    Space((sliderTop - 0).point());
                     ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
-                    Space(UnityModManager.UI.Scale(sliderBottom));
+                    Space(sliderBottom.point());
                 }
             }
             var changed = value != newValue;
@@ -227,9 +281,9 @@ namespace ModKit {
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             BeginHorizontal(options);
             using (VerticalScope(Width(300))) {
-                Space(UnityModManager.UI.Scale(sliderTop - 1));
+                Space((sliderTop - 1).point());
                 Label(title.cyan(), Width(300));
-                Space(UnityModManager.UI.Scale(sliderBottom));
+                Space(sliderBottom.point());
             }
             Space(25);
             value = Math.Max(min, Math.Min(max, value));    // clamp it
@@ -240,24 +294,24 @@ namespace ModKit {
             var logValue = 100f * (float)Math.Log10(value + offset);
             var logNewValue = logValue;
             using (VerticalScope(Width(200))) {
-                Space(UnityModManager.UI.Scale(sliderTop + 4));
+                Space((sliderTop + 4).point());
                 logNewValue = (float)(GL.HorizontalSlider(logValue, logMin, logMax, Width(200)));
-                Space(UnityModManager.UI.Scale(sliderBottom));
+                Space(sliderBottom.point());
             }
             var newValue = (float)Math.Round(Math.Pow(10, logNewValue / 100f) - offset, places);
             Space(25);
             using (VerticalScope(Width(75))) {
-                Space(UnityModManager.UI.Scale(sliderTop + 2));
+                Space((sliderTop + 2).point());
                 FloatTextField(ref newValue, null, Width(75));
-                Space(UnityModManager.UI.Scale(sliderBottom));
+                Space(sliderBottom.point());
             }
             if (units.Length > 0)
                 Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
             Space(25);
             using (VerticalScope(AutoWidth())) {
-                Space(UnityModManager.UI.Scale(sliderTop + 0));
+                Space((sliderTop + 0).point());
                 ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
-                Space(UnityModManager.UI.Scale(sliderBottom));
+                Space(sliderBottom.point());
             }
             EndHorizontal();
             var changed = value != newValue;

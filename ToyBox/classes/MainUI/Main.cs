@@ -171,6 +171,7 @@ namespace ToyBox {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
             ArmiesEditor.OnShowGUI();
+            EtudesEditor.OnShowGUI();
         }
 
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;

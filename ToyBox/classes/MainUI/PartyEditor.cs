@@ -512,9 +512,9 @@ namespace ToyBox {
                                 storedValue = modifiableValue.BaseValue;
                             }, GUI.skin.box, UI.AutoWidth());
                             UI.Space(25);
-                            UI.ActionIntTextField(ref storedValue, statType.ToString(), (v) => {
+                            UI.ActionIntTextField(ref storedValue, (v) => {
                                 modifiableValue.BaseValue = v;
-                            }, null, UI.Width(75));
+                            }, UI.Width(75));
                             statEditorStorage[key] = storedValue;
                         }
                     }

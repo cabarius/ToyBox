@@ -26,7 +26,7 @@ namespace ModKit {
             showHint = showHint && isEditing;
             var conflicts = keyBind.Conflicts();
             using (VerticalScope(options)) {
-                Space(UnityModManager.UI.Scale(3));
+                Space(3.point());
                 if (GL.Button(label, hotkeyStyle, AutoWidth())) {
                     if (isEditing || isEditingOther) {
                         KeyBindings.SetBinding(selectedIdentifier, oldValue);

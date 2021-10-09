@@ -14,14 +14,6 @@ namespace ModKit {
         // Basic UI Elements (box, div, etc.)
 
         public static void GUIDrawRect(Rect position, Color color) => GUI.Box(position, GUIContent.none, FillStyle(color));
-        private static GUIStyle _buttonStyle;
-        public static GUIStyle buttonStyle {
-            get {
-                if (_buttonStyle == null)
-                    _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft };
-                return _buttonStyle;
-            }
-        }
 
         public static void Div(float indent = 0, float height = 0, float width = 0) => Div(fillColor, indent, height, width);
 

@@ -34,6 +34,9 @@ namespace ToyBox {
         public static string searchText = "";
         public static Dictionary<string, SimpleBlueprint> toValues = new();
         public static Dictionary<string, BlueprintAction> actionLookup = new();
+        public static void OnShowGUI() => UpdateEtudeStates();
+        public static int lineNumber = 0;
+        public static Rect firstRect;
         private static void Update() {
             //etudeChildrenDrawer?.Update();
         }
@@ -108,6 +111,7 @@ namespace ToyBox {
             }
             var remainingWidth = UI.ummWidth;
             using (UI.HorizontalScope()) {
+                UI.Label(""); firstRect = GUILayoutUtility.GetLastRect();
                 using (UI.VerticalScope(GUI.skin.box)) {
                     if (UI.VPicker<BlueprintArea>("Areas".orange().bold(), ref selectedArea, areas, "All", bp => {
                         var name = bp.name; // bp.AreaDisplayName;
@@ -137,7 +141,7 @@ namespace ToyBox {
                             FillPlaymodeEtudeData(etude);
                         }
                     }
-
+                    lineNumber = 0;
                     ShowBlueprintsTree();
 
                     //m_ScrollPos = scope.scrollPosition;
@@ -162,142 +166,130 @@ namespace ToyBox {
                     try { mutator.action(item.Value, null); }
                     catch (Exception e) { Mod.Error(e); }
             }
+            if (toValues.Count > 0) {
+                UpdateEtudeStates();
+            }
             toValues.Clear();
         }
-
-        private static void ShowBlueprintsTree() {
-            using (UI.VerticalScope()) {
-                DrawEtude(rootEtudeId, loadedEtudes[rootEtudeId]);
-                using (UI.HorizontalScope()) {
-                    UI.Space(65f);
-                    using (UI.VerticalScope(GUI.skin.box)) {
-                        ShowParentTree(loadedEtudes[rootEtudeId]);
-                    }
-                }
-            }
-        }
-        private static void ShowParentTree(EtudeInfo etude) {
-            foreach (var childrenEtude in etude.ChildrenId) {
-                if (!filteredEtudes.ContainsKey(childrenEtude))
-                    continue;
-                DrawEtude(childrenEtude, loadedEtudes[childrenEtude]);
-
-                if ((loadedEtudes[childrenEtude].ChildrenId.Count == 0) || (loadedEtudes[childrenEtude].ShowChildren.IsOff()))
-                    continue;
-
-                using (UI.HorizontalScope()) {
-                    UI.Space(65);
-
-                    using (UI.VerticalScope(GUI.skin.box)) {
-                        ShowParentTree(loadedEtudes[childrenEtude]);
-                    }
-                }
-            }
-        }
-        private static void DrawEtude(BlueprintGuid etudeID, EtudeInfo etude) {
-            var etudeInfo = loadedEtudes[etudeID];
-            var name = etude.Name;
-            if (searchText.Length == 0 || name.ToLower().Contains(searchText.ToLower())) {
-                using (UI.HorizontalScope()) {
-
-                    var style = GUIStyle.none;
-
-                    style.fontStyle = FontStyle.Normal;
-
-                    if (Application.isPlaying) {
-                        UpdateEtudeState(etudeID, etude);
-                    }
-                    if (selected == etudeID) name = name.orange().bold();
-
-                    using (UI.HorizontalScope(UI.Width(350))) {
-                        if (etudeInfo.ChildrenId.Count == 0 || etudeInfo.ParentId == null) etudeInfo.ShowChildren = ToggleState.None;
-                        UI.ToggleButton(ref etudeInfo.ShowChildren, name.orange().bold(), (state) => OpenCloseAllChildren(etudeInfo, state));
-                    }
-                    //UI.ActionButton(UI.DisclosureGlyphOff + ">", () => OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout), GUI.skin.box, UI.AutoWidth());
-                    UI.Space(25);
-                    //if (GUILayout.Button("Select", GUI.skin.box, UI.Width(100))) {
-                    //    if (selected != etudeID) {
-                    //        selected = etudeID;
-                    //    }
-                    //    else {
-                    //        parent = etudeID;
-                    //        //etudeChildrenDrawer.SetParent(parent, workspaceRect);
-                    //    }
-                    //    selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
-                    //}
-                    UI.Space(25);
-                    if (etude.Blueprint.m_AllElements.Count > 0) {
-                        UI.ToggleButton(ref etude.ShowElements, etude.State.ToString().yellow());
-                    }
-                    else
-                        UI.Label(etude.State.ToString().yellow(), UI.AutoWidth());
-                    UI.Space(25);
-                    if (EtudeValidationProblem(etudeID, etude)) {
-                        UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
-                        UI.Space(25);
-                    }
-
-                    if (etude.LinkedArea != BlueprintGuid.Empty)
-                        UI.Label("🔗", UI.AutoWidth());
-                    if (etude.CompleteParent)
-                        UI.Label("⎌", UI.AutoWidth());
-                    if (etude.AllowActionStart) {
-                        UI.Space(25);
-                        UI.Label("Can Start", UI.AutoWidth());
-                    }
-#if !DEBUG
-                    if (etudeInfo.ParentId != null) {
+        private static void DrawEtude(BlueprintGuid etudeID, EtudeInfo etude, int indent) {
+            var viewPort = UI.ummRect;
+            var topLines = firstRect.y / 30;
+            var linesVisible = 1 + viewPort.height / 30;
+            var scrollOffset = UI.ummScrollPosition[0].y / 30 - topLines;
+            var viewPortLine = lineNumber - scrollOffset;
+            var isVisible = viewPortLine >= 0 && viewPortLine < linesVisible;
+#if DEBUG
+            Mod.Log($"line: {lineNumber} - topLines: {topLines} scrollOffset: {scrollOffset} - {Event.current.type} - isVisible: {isVisible}");
 #endif
-                    var actions = etude.Blueprint.GetActions().Where(action => action.canPerform(etude.Blueprint, null));
-                    foreach (var action in actions) {
-                        actionLookup[action.name] = action;
-                        UI.ActionButton(action.name, () => toValues[action.name] = etude.Blueprint);
-                        UI.Space(25);
-                    }
-#if !DEBUG
-                    }
-#endif
-                    if (!string.IsNullOrEmpty(etude.Comment)) {
-                        UI.Space(25);
-                        var comment = Translater.cachedTranslations.GetValueOrDefault(etude.Comment, etude.Comment);
-                        UI.Label(comment.green());
-                    }
-                }
-                if (etude.ShowElements.IsOn()) {
+            if (true || isVisible) {
+                var etudeInfo = loadedEtudes[etudeID];
+                var name = etude.Name;
+                if (etude.hasSearchResults || searchText.Length == 0 || name.ToLower().Contains(searchText.ToLower())) {
                     using (UI.HorizontalScope()) {
-                        UI.Space(130f);
-                        using (UI.VerticalScope()) {
-                            foreach (var element in etude.Blueprint.m_AllElements) {
-                                using (UI.HorizontalScope()) {
-                                    // UI.Label(element.NameSafe().orange()); -- this is useless at the moment
-                                    UI.Label(element.ToString().yellow() ?? "?", UI.Width(450));
-                                    UI.Space(25);
-                                    UI.Label(element.GetType().Name.cyan(), UI.Width(250));
-                                    UI.Space(25);
-                                    UI.Label(element.GetDescription().green());
-                                }
-                                using (UI.VerticalScope()) {
+                        using (UI.HorizontalScope(UI.Width(310))) {
+                            var actions = etude.Blueprint.GetActions().Where(action => action.canPerform(etude.Blueprint, null));
+                            foreach (var action in actions) {
+                                actionLookup[action.name] = action;
+                                UI.ActionButton(action.name, () => toValues[action.name] = etude.Blueprint, UI.Width(150));
+                            }
+                        }
+                        UI.Indent(indent);
+                        var style = GUIStyle.none;
+                        style.fontStyle = FontStyle.Normal;
+                        if (selected == etudeID) name = name.orange().bold();
+
+                        using (UI.HorizontalScope(UI.Width(500))) {
+                            if (etudeInfo.ChildrenId.Count == 0) etudeInfo.ShowChildren = ToggleState.None;
+                            UI.ToggleButton(ref etudeInfo.ShowChildren, name.orange().bold(), (state) => OpenCloseAllChildren(etudeInfo, state));
+                        }
+                        //UI.ActionButton(UI.DisclosureGlyphOff + ">", () => OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout), GUI.skin.box, UI.AutoWidth());
+                        UI.Space(25);
+                        //if (GUILayout.Button("Select", GUI.skin.box, UI.Width(100))) {
+                        //    if (selected != etudeID) {
+                        //        selected = etudeID;
+                        //    }
+                        //    else {
+                        //        parent = etudeID;
+                        //        //etudeChildrenDrawer.SetParent(parent, workspaceRect);
+                        //    }
+                        //    selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
+                        //}
+                        UI.Space(25);
+                        if (etude.Blueprint.m_AllElements.Count > 0) {
+                            UI.ToggleButton(ref etude.ShowElements, etude.State.ToString().yellow());
+                        }
+                        else
+                            UI.Label(etude.State.ToString().yellow(), UI.AutoWidth());
+                        UI.Space(25);
+                        if (EtudeValidationProblem(etudeID, etude)) {
+                            UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
+                            UI.Space(25);
+                        }
+
+                        if (etude.LinkedArea != BlueprintGuid.Empty)
+                            UI.Label("🔗", UI.AutoWidth());
+                        if (etude.CompleteParent)
+                            UI.Label("⎌", UI.AutoWidth());
+                        if (etude.AllowActionStart) {
+                            UI.Space(25);
+                            UI.Label("Can Start", UI.AutoWidth());
+                        }
+                        if (!string.IsNullOrEmpty(etude.Comment)) {
+                            UI.Space(25);
+                            var comment = Translater.cachedTranslations.GetValueOrDefault(etude.Comment, etude.Comment);
+                            UI.Label(comment.green());
+                        }
+                    }
+                    if (etude.ShowElements.IsOn()) {
+                        using (UI.HorizontalScope()) {
+                            UI.Space(310);
+                            UI.Indent(indent + 2);
+                            using (UI.VerticalScope()) {
+                                foreach (var element in etude.Blueprint.m_AllElements) {
+                                    using (UI.HorizontalScope()) {
+                                        // UI.Label(element.NameSafe().orange()); -- this is useless at the moment
+                                        UI.Label(element.ToString().yellow() ?? "?", UI.Width(450));
+                                        UI.Space(25);
+                                        UI.Label(element.GetType().Name.cyan(), UI.Width(250));
+                                        UI.Space(25);
+                                        UI.Label(element.GetDescription().green());
+                                    }
                                     if (element is StartEtude started) {
-                                        using (UI.HorizontalScope()) {
-                                            DrawEtude(started.Etude.Guid, loadedEtudes[started.Etude.Guid]);
-                                        }
+                                        DrawEtude(started.Etude.Guid, loadedEtudes[started.Etude.Guid], indent + 2);
                                     }
                                     if (element is EtudeStatus status) {
-                                        using (UI.HorizontalScope()) {
-                                            DrawEtude(status.m_Etude.Guid, loadedEtudes[status.m_Etude.Guid]);
-                                        }
+                                        DrawEtude(status.m_Etude.Guid, loadedEtudes[status.m_Etude.Guid], indent + 2);
                                     }
                                     if (element is CompleteEtude completed) {
-                                        using (UI.HorizontalScope()) {
-                                            DrawEtude(completed.Etude.Guid, loadedEtudes[completed.Etude.Guid]);
-                                        }
+                                        DrawEtude(completed.Etude.Guid, loadedEtudes[completed.Etude.Guid], indent + 2);
                                     }
+                                    UI.Div();
                                 }
-                                UI.Div();
                             }
                         }
                     }
                 }
+            }
+            lineNumber += 1;
+        }
+        private static void ShowBlueprintsTree() {
+            using (UI.VerticalScope()) {
+                DrawEtude(rootEtudeId, loadedEtudes[rootEtudeId], 0);
+                using (UI.VerticalScope(GUI.skin.box)) {
+                    ShowParentTree(loadedEtudes[rootEtudeId], 1);
+                }
+            }
+        }
+        private static void ShowParentTree(EtudeInfo etude, int indent) {
+            foreach (var childrenEtude in etude.ChildrenId) {
+                if (!filteredEtudes.ContainsKey(childrenEtude))
+                    continue;
+                DrawEtude(childrenEtude, loadedEtudes[childrenEtude], indent);
+
+                if ((loadedEtudes[childrenEtude].ChildrenId.Count == 0) || (loadedEtudes[childrenEtude].ShowChildren.IsOff()))
+                    continue;
+
+                ShowParentTree(loadedEtudes[childrenEtude], indent + 1);
             }
         }
 
@@ -437,7 +429,12 @@ namespace ToyBox {
 
             return false;
         }
-
+        private static void UpdateEtudeStates() {
+            if (Application.isPlaying) {
+                foreach (var etude in loadedEtudes)
+                    UpdateEtudeState(etude.Key, etude.Value);
+            }
+        }
         public static void UpdateEtudeState(BlueprintGuid etudeID, EtudeInfo etude) {
             var blueprintEtude = (BlueprintEtude)ResourcesLibrary.TryGetBlueprint(etudeID);
 

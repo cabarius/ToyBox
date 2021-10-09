@@ -246,6 +246,6 @@ namespace ModKit {
             ref string searchText,
             Action extras,
             params GUILayoutOption[] options
-            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, UI.rarityButtonStyle, options);
+            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, UI.buttonStyle, options);
     }
 }

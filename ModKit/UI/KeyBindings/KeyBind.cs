@@ -38,8 +38,8 @@ namespace ModKit {
                         margin = new RectOffset(3, 3, 3, 3),
                         richText = true
                     };
-                _hotkeyStyle.fontSize = UnityModManager.UI.Scale(11);
-                _hotkeyStyle.fixedHeight = UnityModManager.UI.Scale(17);
+                _hotkeyStyle.fontSize = 11.point();
+                _hotkeyStyle.fixedHeight = 17.point();
 
                 return _hotkeyStyle;
             }
