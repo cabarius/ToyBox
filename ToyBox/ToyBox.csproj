@@ -251,6 +251,7 @@
     <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
             xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
             xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb*"
+            xcopy /Y "$(ProjectDir)\Info.json" "$(WrathPath)\Mods\0$(ProjectName)0\Info.json"
             cd "$(TargetDir)"
             powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
 </PostBuildEvent>
