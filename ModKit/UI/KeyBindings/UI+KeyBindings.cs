@@ -1,15 +1,6 @@
 ﻿using UnityEngine;
-using Kingmaker;
-using Kingmaker.UI;
-using Kingmaker.Settings;
 using System;
-using System.Collections.Generic;
 using GL = UnityEngine.GUILayout;
-using ModKit;
-using ModKit.Utility;
-using UnityModManagerNet;
-using static UnityModManagerNet.UnityModManager;
-using Newtonsoft.Json;
 using System.Linq;
 
 namespace ModKit {

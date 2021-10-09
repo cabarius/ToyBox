@@ -1,6 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
-using System;
 
 using GL = UnityEngine.GUILayout;
 

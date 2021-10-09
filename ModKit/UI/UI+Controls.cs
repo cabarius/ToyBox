@@ -2,7 +2,6 @@
 using UnityEngine;
 using System;
 using GL = UnityEngine.GUILayout;
-using UnityModManagerNet;
 using System.Collections.Generic;
 using System.Linq;
 

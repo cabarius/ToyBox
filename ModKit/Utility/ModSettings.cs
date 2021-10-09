@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Linq;
 using System.IO;
 using System.Reflection;
 using static UnityModManagerNet.UnityModManager;
