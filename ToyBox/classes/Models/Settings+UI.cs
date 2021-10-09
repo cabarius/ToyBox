@@ -28,6 +28,7 @@ namespace ToyBox {
 #endif
               () => { }
             );
+#if DEBUG
             UI.HStack("Localizaton", 1,
                 () => {
                     var cultureInfo = Thread.CurrentThread.CurrentUICulture;
@@ -36,6 +37,7 @@ namespace ToyBox {
                 },
                 () => { }
             );
+#endif
         }
     }
 }
