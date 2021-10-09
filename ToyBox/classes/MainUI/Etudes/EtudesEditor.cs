@@ -295,7 +295,6 @@ namespace ToyBox {
             }
         }
         private static void UpdateSearchResults() {
-            Mod.Log($"UpdateSearchResults - {searchText}");
             var searchTextLower = searchText.ToLower();
             foreach (var entry in loadedEtudes)
                 entry.Value.hasSearchResults = false;

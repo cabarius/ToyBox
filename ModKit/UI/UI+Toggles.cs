@@ -97,6 +97,7 @@ namespace ModKit {
             return changed;
         }
         public static bool Toggle(string title, ref bool value, params GUILayoutOption[] options) {
+            options = options.AddDefaults();
             var changed = false;
             if (Private.UI.CheckBox(title, value, toggleStyle, options)) { value = !value; changed = true; }
             return changed;

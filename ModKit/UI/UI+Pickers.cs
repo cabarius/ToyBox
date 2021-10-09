@@ -180,72 +180,119 @@ namespace ModKit {
             selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
             return items[selectedIndex];
         }
-        public static bool VPicker<T>(
-            string title,
-            ref T selected, List<T> items,
-            string unselectedTitle,
-            Func<T, string> titler,
-            ref string searchText,
-            Action extras,
-            GUIStyle style,
-            params GUILayoutOption[] options
-            ) where T : class {
+
+        // GridPicker
+
+        public static bool GridPicker<T>(
+                string title,
+                ref T selected, List<T> items,
+                string unselectedTitle,
+                Func<T, string> titler,
+                ref string searchText,
+                int xCols,
+                GUIStyle style,
+                params GUILayoutOption[] options
+                ) where T : class {
+            options = options.AddDefaults();
             if (style == null)
                 style = GUI.skin.button;
             var changed = false;
-            using (UI.VerticalScope(GUI.skin.box, UI.Width(250))) {
-                if (title != null)
-                    UI.Label(title, options);
-                extras?.Invoke();
-                UI.Div();
-                if (searchText != null) {
-                    UI.ActionTextField(
-                        ref searchText,
-                        "itemSearchText",
-                        (text) => { changed = true; },
-                        () => { },
-                        options);
-                    if (searchText?.Length > 0) {
-                        var searchStr = searchText.ToLower();
-                        items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();
-                    }
+            var selectedItemIndex = items.IndexOf(selected);
+            if (items.Count() > 0) {
+                var newSelected = selected;
+                var titles = items.Select(i => titler(i));
+                var hasUnselectedTitle = unselectedTitle != null;
+                if (hasUnselectedTitle) {
+                    titles = titles.Prepend<string>(unselectedTitle);
+                    selectedItemIndex += 1;
                 }
-                var selectedItemIndex = items.IndexOf(selected);
-                if (items.Count() > 0) {
-                    var newSelected = selected;
-                    var titles = items.Select(i => titler(i));
-                    var hasUnselectedTitle = unselectedTitle != null;
-                    if (hasUnselectedTitle) {
-                        titles = titles.Prepend<string>(unselectedTitle);
-                        selectedItemIndex += 1;
-                    }
-                    selectedItemIndex = Math.Max(0, selectedItemIndex);
-                    UI.ActionSelectionGrid(
-                        ref selectedItemIndex,
-                        titles.ToArray(),
-                        1,
-                        index => { changed = true; },
-                        style,
-                        options);
-                    if (hasUnselectedTitle)
-                        selectedItemIndex -= 1;
-                    selected = selectedItemIndex >= 0 ? items[selectedItemIndex] : null;
-                    //if (changed) Mod.Log($"sel index: {selectedItemIndex} sel: {selected}");
-                }
-                else {
-                    UI.Label("No Items".grey(), options);
+                selectedItemIndex = Math.Max(0, selectedItemIndex);
+                UI.ActionSelectionGrid(
+                    ref selectedItemIndex,
+                    titles.ToArray(),
+                    xCols,
+                    index => { changed = true; },
+                    style,
+                    options);
+                if (hasUnselectedTitle)
+                    selectedItemIndex -= 1;
+                selected = selectedItemIndex >= 0 ? items[selectedItemIndex] : null;
+                //if (changed) Mod.Log($"sel index: {selectedItemIndex} sel: {selected}");
+            }
+            else {
+                UI.Label("No Items".grey(), options);
+            }
+            return changed;
+        }
+        public static bool GridPicker<T>(
+                string title,
+                ref T selected, List<T> items,
+                string unselectedTitle,
+                Func<T, string> titler,
+                ref string searchText,
+                int xCols,
+                params GUILayoutOption[] options
+                ) where T : class 
+            => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, xCols, UI.buttonStyle, options);
+        public static bool GridPicker<T>(
+                string title,
+                ref T selected, List<T> items,
+                string unselectedTitle,
+                Func<T, string> titler,
+                ref string searchText,
+                params GUILayoutOption[] options
+                ) where T : class 
+            => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 6, UI.buttonStyle, options);
+
+        // VPicker
+        public static bool VPicker<T>(
+                string title,
+                ref T selected, List<T> items,
+                string unselectedTitle,
+                Func<T, string> titler,
+                ref string searchText,
+                Action extras,
+                GUIStyle style,
+                params GUILayoutOption[] options) {
+            if (style == null)
+                style = GUI.skin.button;
+            var changed = false;
+            if (title != null)
+                UI.Label(title, options);
+            extras?.Invoke();
+            UI.Div();
+            if (searchText != null) {
+                UI.ActionTextField(
+                    ref searchText,
+                    "itemSearchText",
+                    (text) => { changed = true; },
+                    () => { },
+                    options);
+                if (searchText?.Length > 0) {
+                    var searchStr = searchText.ToLower();
+                    items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();
                 }
             }
             return changed;
         }
         public static bool VPicker<T>(
-            string title,
-            ref T selected, List<T> items,
-            string unselectedTitle,
-            Func<T, string> titler,
-            ref string searchText,
-            Action extras,
-            params GUILayoutOption[] options
-            ) where T : class => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, UI.buttonStyle, options);
+                string title,
+                ref T selected, List<T> items,
+                string unselectedTitle,
+                Func<T, string> titler,
+                ref string searchText,
+                Action extras,
+                params GUILayoutOption[] options
+                ) where T : class 
+            => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, UI.buttonStyle, options);
+        public static bool VPicker<T>(
+                string title,
+                ref T selected, List<T> items,
+                string unselectedTitle,
+                Func<T, string> titler,
+                ref string searchText,
+                params GUILayoutOption[] options
+                ) where T : class
+            => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, () => { }, UI.buttonStyle, options);
     }
 }

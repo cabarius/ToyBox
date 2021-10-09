@@ -339,7 +339,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
                     var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
-                    mainMenuVM.EnterGame(new Action(mainMenuVM.LoadLastSave));
+                    mainMenuVM?.EnterGame(new Action(mainMenuVM.LoadLastSave));
                 }
                 Main.freshlyLaunched = false;
             }

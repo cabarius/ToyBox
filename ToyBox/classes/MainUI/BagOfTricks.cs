@@ -412,9 +412,6 @@ namespace ToyBox {
                 },
                 () => { }
              );
-            // Show config options here for now. Consider moving to its own tab someday
-            Div(0, 25);
-            Settings.OnGUI();
         }
     }
 }

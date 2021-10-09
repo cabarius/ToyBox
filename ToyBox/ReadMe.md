@@ -26,6 +26,9 @@
   * (***ShadowRanger***) Added a new sub-menu for all 'begone' versions called ***Icky Stuff Begone!!!*** and added green explainer text
   * (***ShadowRanger***) Added retrievers begone
   * (***Mafemergency***) Tweak to reset interaction skill checks
+* **Multiclass & Gestalt** 
+  * Multiclass config list marks the classes you have in orange and shows the state of the gestalt flag
+  * Note these remain separate for now but I hope showing them in a unified UI will make this more clear
 * **Party Editor** 
   * fixed crasher when you lowered caster level multiple times
   * ***Add All*** spells no longer adds extra copies of spells you already learned

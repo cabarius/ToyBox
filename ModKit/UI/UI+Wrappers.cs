@@ -29,8 +29,11 @@ namespace ModKit {
         public static GL.AreaScope AreaScope(Rect screenRect) => new(screenRect);
         public static GL.AreaScope AreaScope(Rect screenRect, string text) => new(screenRect, text);
         public static GL.HorizontalScope HorizontalScope(params GUILayoutOption[] options) => new(options);
+        public static GL.HorizontalScope HorizontalScope(float width) => new(UI.Width(width));
 
         public static GL.HorizontalScope HorizontalScope(GUIStyle style, params GUILayoutOption[] options) => new(style, options);
+        public static GL.HorizontalScope HorizontalScope(GUIStyle style, float width) => new(style, UI.Width(width));
+
         public static GL.VerticalScope VerticalScope(params GUILayoutOption[] options) => new(options);
         public static GL.VerticalScope VerticalScope(GUIStyle style, params GUILayoutOption[] options) => new(style, options);
         public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options) => new(scrollPosition, options);

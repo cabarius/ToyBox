@@ -152,9 +152,8 @@ namespace ToyBox {
                          UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
                      }
                  );
-                var options = MulticlassOptions.Get(selectedChar);
-                MulticlassPicker.OnGUI(options, 150);
-                MulticlassOptions.Set(selectedChar, options);
+
+                MulticlassPicker.OnGUI(selectedChar, 150);
             }
 #endif
         }

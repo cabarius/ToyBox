@@ -324,9 +324,7 @@ namespace ToyBox {
 #endif
                     UI.Div(100, 20);
                     if (editMultiClass) {
-                        var options = MulticlassOptions.Get(ch);
-                        MulticlassPicker.OnGUI(options);
-                        MulticlassOptions.Set(ch, options);
+                        MulticlassPicker.OnGUI(ch);
                     }
                     else {
                         var prog = ch.Descriptor.Progression;

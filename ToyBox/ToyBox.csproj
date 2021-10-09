@@ -188,7 +188,8 @@
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
-    <Compile Include="classes\Models\Setings+Multiclass.cs" />
+    <Compile Include="classes\Models\Settings+Multiclass.cs" />
+    <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Alignment.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
@@ -223,7 +224,7 @@
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="classes\Models\settings.cs" />
+    <Compile Include="classes\Models\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -256,7 +257,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

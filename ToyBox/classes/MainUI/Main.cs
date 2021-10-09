@@ -156,7 +156,8 @@ namespace ToyBox {
                     new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
                     new NamedAction("Armies", () => ArmiesEditor.OnGUI()),
                     new NamedAction("Etudes", () => EtudesEditor.OnGUI()),
-                    new NamedAction("Quests", () => QuestEditor.OnGUI())
+                    new NamedAction("Quests", () => QuestEditor.OnGUI()),
+                    new NamedAction("Settings", () => SettingsUI.OnGUI())
                     );
             }
             catch (Exception e) {
