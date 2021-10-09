@@ -13,7 +13,12 @@
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 
-### Ver 1.4.0 (Coming Soon)
+### Ver 1.4.1 (Coming Soon)
+* **Multiclasss & Gestalt** moved save state from settings into Owlcats save file extensions for save files so now your gestalt state will live in your save and never get out of sync due to toybox settings changes
+* **Etude Editor** 
+  * Show translated comments
+  * Show other Etude info and links 
+### Ver 1.4.0 
 * **New Etude Editor** is a powerful way to view and edit Etude progression
   * Tree view 
     * etudes and their children 
