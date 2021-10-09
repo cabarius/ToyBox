@@ -22,6 +22,7 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
+using Kingmaker.View.MapObjects;
 using UnityModManagerNet;
 using ToyBox.BagOfPatches;
 using ModKit;
@@ -359,6 +360,17 @@ namespace ToyBox {
             }
             foreach (var unitEntityData in Game.Instance.State.Units) {
                 unitEntityData.View.UpdateHighlight(false);
+            }
+        }
+
+        public static void RerollInteractionSkillChecks() {
+            foreach (var obj in Game.Instance.State.MapObjects) {
+                foreach (var part in obj.Parts.GetAll<InteractionSkillCheckPart>()) {
+                    if (part.AlreadyUsed && !part.CheckPassed) {
+                        part.AlreadyUsed = false;
+                        part.Enabled = true;
+                    }
+                }
             }
         }
     }

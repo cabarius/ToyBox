@@ -32,6 +32,7 @@ namespace ToyBox {
         private const string TeleportPartyToYou = "Teleport Party To You";
         private const string GoToGlobalMap = "Go To Global Map";
         private const string RerollPerception = "Reroll Perception";
+        private const string RerollInteractionSkillChecks = "Reroll Interaction Skill Checks";
         private const string ChangeParty = "Change Party";
 
         // other
@@ -52,6 +53,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(TeleportPartyToYou, () => Teleport.TeleportPartyToPlayer());
             KeyBindings.RegisterAction(GoToGlobalMap, () => Teleport.TeleportToGlobalMap());
             KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
+            KeyBindings.RegisterAction(RerollInteractionSkillChecks, () => Actions.RerollInteractionSkillChecks());
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
             // Other
             KeyBindings.RegisterAction(TimeScaleMultToggle, () => {
