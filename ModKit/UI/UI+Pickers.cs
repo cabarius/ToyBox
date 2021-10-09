@@ -217,7 +217,8 @@ namespace ModKit {
 
         public static bool GridPicker<T>(
                 string title,
-                ref T selected, List<T> items,
+                ref T selected, 
+                List<T> items,
                 string unselectedTitle,
                 Func<T, string> titler,
                 ref string searchText,
@@ -285,7 +286,8 @@ namespace ModKit {
                 ref string searchText,
                 Action extras,
                 GUIStyle style,
-                params GUILayoutOption[] options) {
+                params GUILayoutOption[] options
+            ) where T : class {
             if (style == null)
                 style = GUI.skin.button;
             var changed = false;
@@ -305,6 +307,7 @@ namespace ModKit {
                     items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();
                 }
             }
+            changed = UI.GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 1, options);
             return changed;
         }
         public static bool VPicker<T>(

@@ -219,8 +219,11 @@ namespace ToyBox {
                         if (etude.Blueprint.m_AllElements.Count > 0) {
                             UI.ToggleButton(ref etude.ShowElements, etude.State.ToString().yellow());
                         }
-                        else
+                        else {
+                            UI.Space(40);
                             UI.Label(etude.State.ToString().yellow(), UI.AutoWidth());
+                            UI.Space(-2);
+                        }
                         UI.Space(25);
                         if (EtudeValidationProblem(etudeID, etude)) {
                             UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
