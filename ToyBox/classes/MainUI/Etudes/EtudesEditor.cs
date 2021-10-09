@@ -22,6 +22,8 @@ namespace ToyBox {
         private static Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes => EtudesTreeModel.Instance.loadedEtudes;
         private static Dictionary<BlueprintGuid, EtudeInfo> filteredEtudes = new();
         private static readonly BlueprintGuid rootEtudeId = BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
+        public static string searchText = "";
+        public static string searrchTextInput = "";
         private static bool showOnlyFlagLikes;
 
         private static BlueprintEtude selectedEtude;
@@ -31,7 +33,6 @@ namespace ToyBox {
         private static string areaSearchText = "";
         //private EtudeChildrenDrawer etudeChildrenDrawer;
 
-        public static string searchText = "";
         public static Dictionary<string, SimpleBlueprint> toValues = new();
         public static Dictionary<string, BlueprintAction> actionLookup = new();
         public static void OnShowGUI() => UpdateEtudeStates();
@@ -63,7 +64,7 @@ namespace ToyBox {
                     return;
                 UI.Label("Search");
                 UI.Space(25);
-                UI.TextField(ref searchText, "Find", UI.Width(200));
+                UI.ActionTextField(ref searrchTextInput, "Search", (s) => { }, () => { searchText = searrchTextInput;  UpdateSearchResults(); }, UI.Width(200));
                 UI.Space(25);
                 if (UI.Toggle("Flags Only", ref showOnlyFlagLikes)) ApplyFilter();
                 //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
@@ -178,7 +179,7 @@ namespace ToyBox {
             var scrollOffset = UI.ummScrollPosition[0].y / 30 - topLines;
             var viewPortLine = lineNumber - scrollOffset;
             var isVisible = viewPortLine >= 0 && viewPortLine < linesVisible;
-#if DEBUG
+#if false
             Mod.Log($"line: {lineNumber} - topLines: {topLines} scrollOffset: {scrollOffset} - {Event.current.type} - isVisible: {isVisible}");
 #endif
             if (true || isVisible) {
@@ -281,19 +282,34 @@ namespace ToyBox {
             }
         }
         private static void ShowParentTree(EtudeInfo etude, int indent) {
-            foreach (var childrenEtude in etude.ChildrenId) {
-                if (!filteredEtudes.ContainsKey(childrenEtude))
+            foreach (var childID in etude.ChildrenId) {
+                if (!filteredEtudes.ContainsKey(childID))
                     continue;
-                DrawEtude(childrenEtude, loadedEtudes[childrenEtude], indent);
+                var childEtude = loadedEtudes[childID];
+                DrawEtude(childID, childEtude, indent);
 
-                if ((loadedEtudes[childrenEtude].ChildrenId.Count == 0) || (loadedEtudes[childrenEtude].ShowChildren.IsOff()))
-                    continue;
+                if (childEtude.ChildrenId.Count > 0 && (childEtude.ShowChildren.IsOn() || childEtude.hasSearchResults)) {
+                    ShowParentTree(childEtude, indent + 1);
 
-                ShowParentTree(loadedEtudes[childrenEtude], indent + 1);
+                }
             }
         }
-
+        private static void UpdateSearchResults() {
+            Mod.Log($"UpdateSearchResults - {searchText}");
+            var searchTextLower = searchText.ToLower();
+            foreach (var entry in loadedEtudes)
+                entry.Value.hasSearchResults = false;
+            if (searchText.Length != 0) {
+                foreach (var entry in loadedEtudes) {
+                    var etude = entry.Value;
+                    if (etude.Name.ToLower().Contains(searchTextLower)) {
+                       etude.TraverseParents(e => e.hasSearchResults = true);
+                    }
+                }
+            }
+        }
         private static void ApplyFilter() {
+            UpdateSearchResults();
             var etudesOfArea = new Dictionary<BlueprintGuid, EtudeInfo>();
 
             filteredEtudes = loadedEtudes;
@@ -462,8 +478,5 @@ namespace ToyBox {
             => etude.Traverse((e) => e.ShowChildren = state);
         private static void OpenCloseParents(this EtudeInfo etude, ToggleState state)
             => etude.TraverseParents((e) => e.ShowChildren = state);
-        private static void RevealMatches(string searchText) {
-
-        }
     }
 }
