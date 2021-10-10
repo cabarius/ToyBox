@@ -31,8 +31,8 @@ namespace ToyBox {
             if (filename == null) filename = $"{obj.GetType().Name}.json";
             var toyboxFolder = ToyBoxUserPath;
             Directory.CreateDirectory(toyboxFolder);
-            var filePath = Path.Combine(toyboxFolder, filename);
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(obj, Formatting.Indented));
+            var path = Path.Combine(toyboxFolder, filename);
+            File.WriteAllText(path, JsonConvert.SerializeObject(obj, Formatting.Indented));
         }
         public static T LoadFromFile<T>(string filename) {
             T obj = default;
@@ -40,10 +40,10 @@ namespace ToyBox {
 
             var toyboxFolder = ToyBoxUserPath;
             Directory.CreateDirectory(toyboxFolder);
-            var filePath = Path.Combine(toyboxFolder, filename);
+            var path = Path.Combine(toyboxFolder, filename);
             try {
 
-                using StreamReader reader = new(filePath); var text = reader.ReadToEnd();
+                using StreamReader reader = new(path); var text = reader.ReadToEnd();
                 obj = JsonConvert.DeserializeObject<T>(text);
             }
             catch (Exception e) {

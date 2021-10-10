@@ -305,15 +305,17 @@ namespace ToyBox {
                         UI.Space(100);
                         UI.ActionToggle("Allow Levels Past 20",
                             () => {
-                                var hasValue = settings.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
+                                var hasValue = settings.perSave.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
                                 return hasValue && isLegendaryHero;
                             },
                             (val) => {
-                                if (settings.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
-                                    settings.charIsLegendaryHero[ch.HashKey()] = val;
+                                if (settings.perSave.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
+                                    settings.perSave.charIsLegendaryHero[ch.HashKey()] = val;
+                                    Settings.SavePerSaveSettings();
                                 }
                                 else {
-                                    settings.charIsLegendaryHero.Add(ch.HashKey(), val);
+                                    settings.perSave.charIsLegendaryHero.Add(ch.HashKey(), val);
+                                    Settings.SavePerSaveSettings();
                                 }
                             },
                             0f,

@@ -4,11 +4,69 @@ using System.Collections.Generic;
 using UnityModManagerNet;
 using UnityEngine;
 using ModKit;
-using System.Globalization;
-using System.Threading;
+using System.Collections;
+using Newtonsoft.Json;
+using Kingmaker.EntitySystem;
+using Kingmaker;
+using Kingmaker.Armies.TacticalCombat.Parts;
+using Kingmaker.UnitLogic.Parts;
 
 namespace ToyBox {
+    public class PerSaveSettings : EntityPart {
+        public const string ID = "ToyBox.PerSaveSettings";
+
+        // schema for storing multiclass settings
+        //      Dictionary<CharacterName, 
+        //          Dictionary<ClassID, HashSet<ArchetypeIDs>
+        // For character gen config we use the following special key:
+        [JsonProperty]
+        public Dictionary<string, MulticlassOptions> multiclassSettings = new();
+
+        // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
+        [JsonProperty]
+        public Dictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new();
+
+        // Dictionary of Name/IsLegendaryHero for configuration per party member
+        [JsonProperty]
+        public Dictionary<string, bool> charIsLegendaryHero = new();
+    }
+
     public class Settings : UnityModManager.ModSettings {
+        private static PerSaveSettings current = null;
+        public static string perSaveFileName => $"SettingsPerSave.{Game.Instance?.Player?.MainCharacter.Value.CharacterName ?? "?"}.{Game.Instance?.Player?.GameId ?? "default"}.json";
+        public static void ReloadPerSaveSettings() {
+            var filename = perSaveFileName;
+            Mod.Debug($"reloading per save settings from {filename.orange()}");
+            current = Utils.LoadFromFile<PerSaveSettings>(filename);
+            if (current == null) {
+                Mod.Warning("pre save settings not found, creating new...");
+                current = new PerSaveSettings {
+                    multiclassSettings = Main.settings.multiclassSettings,
+                    excludeClassesFromCharLevelSets = Main.settings.excludeClassesFromCharLevelSets,
+                    charIsLegendaryHero = Main.settings.charIsLegendaryHero
+                };
+                SavePerSaveSettings();
+            }
+            else
+                Mod.Debug($"read successfully from {filename.orange()}");
+        }
+        public static void SavePerSaveSettings() {
+            if (current == null)
+                ReloadPerSaveSettings();
+            var filename = perSaveFileName;
+            current.SaveToFile(filename);
+            //var json = JsonConvert.SerializeObject(current);
+            //Game.Instance?.Player?.SettingsList.Add("ToyBoxPerSave", json  );
+            Mod.Debug($"saved to {filename.orange()}");
+        }
+        public PerSaveSettings perSave {
+            get {
+                if (current != null) return current;
+                ReloadPerSaveSettings();
+                return current;
+            }
+        }
+
         // Main
         public int selectedTab = 0;
 

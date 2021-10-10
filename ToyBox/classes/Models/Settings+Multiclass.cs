@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Kingmaker.UnitLogic;
 using ModKit;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.EntitySystem;
+using Newtonsoft.Json;
 
 namespace ToyBox {
     public class ArchetypeOptions : HashSet<string> {
@@ -32,7 +34,7 @@ namespace ToyBox {
             }
             else {
                 if (ch.HashKey() == null) return null;
-                options = Main.settings.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
+                options = Main.settings.perSave.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
             }
             return options;
@@ -42,7 +44,8 @@ namespace ToyBox {
             if (ch == null) Main.settings.multiclassSettings[CharGenKey] = options;
             else {
                 if (ch.HashKey() == null) return;
-                Main.settings.multiclassSettings[ch.HashKey()] = options;
+                Main.settings.perSave.multiclassSettings[ch.HashKey()] = options;
+                Settings.SavePerSaveSettings();
             }
         }
 

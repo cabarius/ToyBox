@@ -69,6 +69,7 @@ namespace ToyBox {
                 UI.KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendly.EnsureFriendlyTypesContainAll();
+                Mod.logLevel = Main.settings.loggingLevel;
             }
             catch (Exception e) {
                 Mod.Error(e);
@@ -178,6 +179,7 @@ namespace ToyBox {
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
 
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
+            Mod.logLevel = Main.settings.loggingLevel;
             if (NeedsActionInit) {
                 BagOfTricks.OnLoad();
                 NeedsActionInit = false;

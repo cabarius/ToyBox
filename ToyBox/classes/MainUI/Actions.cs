@@ -126,7 +126,6 @@ namespace ToyBox {
                 }
             }
         }
-
         public static void HandleChangeParty() {
             var partyCharacters = Game.Instance.Player.Party.Select<UnitEntityData, UnitReference>((Func<UnitEntityData, UnitReference>)(u => (UnitReference)u)).ToList<UnitReference>(); ;
             if ((partyCharacters != null ? (partyCharacters.Select<UnitReference, UnitEntityData>((Func<UnitReference, UnitEntityData>)(r => r.Value)).SequenceEqual<UnitEntityData>((IEnumerable<UnitEntityData>)Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)

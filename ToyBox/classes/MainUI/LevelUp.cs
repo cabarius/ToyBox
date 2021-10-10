@@ -144,13 +144,7 @@ namespace ToyBox {
                              else selectedChar = characters[settings.selectedClassToConfigMulticlass - 1];
                          }
                      },
-                     () => {
-                         var targetString = selectedChar == null
-                         ? "creation of ".green() + "new characters".orange().bold() : $"when leveling up ".green() + selectedChar.CharacterName.orange().bold();
-                         UI.Label($"Configure gestalt classes to use during {targetString}".green(), UI.AutoWidth());
-                         UI.Space(25);
-                         UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
-                     }
+                     () => { }
                  );
 
                 MulticlassPicker.OnGUI(selectedChar, 150);

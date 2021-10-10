@@ -12,7 +12,6 @@ namespace ToyBox {
         public static CultureInfo uiCulture;
         public static string cultureSearchText = "";
         public static void OnGUI() {
-            Mod.logLevel = Main.settings.loggingLevel;
             UI.HStack("Settings", 1,
                 () => {
                     UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode);

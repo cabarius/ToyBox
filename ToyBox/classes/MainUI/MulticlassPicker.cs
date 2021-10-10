@@ -12,12 +12,27 @@ namespace ToyBox {
         public static Settings settings => Main.settings;
 
         public static void OnGUI(UnitEntityData ch, float indent = 100) {
+            var targetString = ch == null
+                    ? "creation of ".green() + "new characters" + "\nNote:".yellow().bold()
+                        + " This value applies to ".orange() + "all saves".yellow().bold() + " and in the main menu".orange()
+                   : $"when leveling up ".green() + ch.CharacterName.orange().bold() + "\nNote:".yellow().bold() 
+                        + " This applies only to the ".orange() + "current save.".yellow().bold();
+            using (UI.HorizontalScope()) {
+                UI.Space(indent);
+                UI.Label($"Configure multiclass classes and gestalt flags to use during {targetString}".green());
+                UI.Space(25);
+                UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
+            }
+            UI.Space(15);
             var options = MulticlassOptions.Get(ch);
             var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
             var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
             var showDesc = settings.toggleMulticlassShowClassDescriptions;
             foreach (var cl in classes) {
-                PickerRow(ch, cl, options, indent);
+                if (PickerRow(ch, cl, options, indent)){
+                    MulticlassOptions.Set(ch, options);
+                    Mod.Log("MulticlassOptions.Set");
+                }
             }
             UI.Div(indent);
             if (showDesc) {
@@ -26,9 +41,11 @@ namespace ToyBox {
                 }
             }
             foreach (var mycl in mythicClasses) {
-                PickerRow(ch, mycl, options, indent);
+                if (PickerRow(ch, mycl, options, indent)) {
+                    MulticlassOptions.Set(ch, options);
+                    Mod.Log("MulticlassOptions.Set");
+                }
             }
-            MulticlassOptions.Set(ch, options);
         }
 
         public static bool PickerRow(UnitEntityData ch, BlueprintCharacterClass cl, MulticlassOptions options, float indent = 100) {
@@ -55,13 +72,14 @@ namespace ToyBox {
                         if (v) options.Add(cl);
                         else options.Remove(cl);
                         Mod.Trace($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
-                        changed = true;
+                         changed = true;
                     }, 350);
                 if (showGestaltToggle && chArchetype == null) {
                     UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
                         (v) => {
                             ch.SetClassIsGestalt(cd.CharacterClass, v);
                             ch.Progression.UpdateLevelsForGestalt();
+                            changed = true;
                         }, 125);
                     UI.Space(25);
                 }
@@ -85,6 +103,7 @@ namespace ToyBox {
                                         if (v) archetypeOptions.AddExclusive(archetype);
                                         else archetypeOptions.Remove(archetype);
                                         Mod.Trace($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
+                                        changed = true;
                                     }, 300);
                                     options.SetArchetypeOptions(cl, archetypeOptions);
                                     if (showGestaltToggle && chArchetype != null) {
@@ -92,6 +111,7 @@ namespace ToyBox {
                                             (v) => {
                                                 ch.SetClassIsGestalt(cd.CharacterClass, v);
                                                 ch.Progression.UpdateLevelsForGestalt();
+                                                changed = true;
                                             }, 125);
                                         UI.Space(25);
                                     }

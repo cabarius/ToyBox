@@ -85,34 +85,34 @@ namespace ToyBox.Multiclass {
         public static bool IsPreGen(this LevelUpState state) => state.IsPregen;
         public static bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
-            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
         public static void SetClassIsGestalt(this UnitEntityData ch, BlueprintCharacterClass cl, bool isGestalt) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
-            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (isGestalt) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
             Mod.Trace($"Set - key: {classID} -> {isGestalt} excludeSet: ({string.Join(" ", excludeSet.ToArray())})");
-            Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
+            Main.settings.perSave.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
 
         public static bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
-            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
         public static void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
-            var excludeSet = Main.settings.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (exclude) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
             // Main.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
-            Main.settings.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
+            Main.settings.perSave.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
         public static bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
             var chars = Game.Instance.Player.AllCharacters;

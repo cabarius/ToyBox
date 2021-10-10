@@ -31,19 +31,19 @@ namespace ModKit {
         public static void Error(Exception ex) => Error(ex.ToString());
         public static void Warning(string str) {
             if (logLevel >= LogLevel.Warning)
-                modLogger?.Warning(str.orange());
+                modLogger?.Log("[Warning] ".orange().bold() + str);
         }
         public static void Log(string str) {
             if (logLevel >= LogLevel.Info)
-                modLogger?.Log(str);
+                modLogger?.Log("[Info] " + str);
         }
         public static void Debug(string str) {
             if (logLevel >= LogLevel.Debug)
-                modLogger?.Log(str);
+                modLogger?.Log("[Debug] ".green() + str);
         }
         public static void Trace(string str) {
             if (logLevel >= LogLevel.Trace)
-                modLogger?.Log(str);
+                modLogger?.Log("[Trace] ".color(RGBA.lightblue) + str);
         }
     }
 #if false
