@@ -15,7 +15,7 @@ namespace ToyBox {
             var targetString = ch == null
                     ? "creation of ".green() + "new characters" + "\nNote:".yellow().bold()
                         + " This value applies to ".orange() + "all saves".yellow().bold() + " and in the main menu".orange()
-                   : $"when leveling up ".green() + ch.CharacterName.orange().bold() + "\nNote:".yellow().bold() 
+                   : $"when leveling up ".green() + ch.CharacterName.orange().bold() + "\nNote:".yellow().bold()
                         + " This applies only to the ".orange() + "current save.".yellow().bold();
             using (UI.HorizontalScope()) {
                 UI.Space(indent);
@@ -24,12 +24,49 @@ namespace ToyBox {
                 UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
             }
             UI.Space(15);
+            var hasMulticlassMigration = settings.perSave.multiclassSettings.Count == 0 && settings.multiclassSettings.Count > 0;
+            var hasGestaltMigration = settings.perSave.excludeClassesFromCharLevelSets.Count == 0 && settings.excludeClassesFromCharLevelSets.Count > 0;
+            var hasLevelAsLegendMigration = settings.perSave.charIsLegendaryHero.Count == 0 && settings.perSave.charIsLegendaryHero.Count > 0;
+            if (hasMulticlassMigration || hasGestaltMigration || hasLevelAsLegendMigration) {
+                UI.Div(indent);
+                using (UI.HorizontalScope()) {
+                    UI.Space(indent);
+                    using (UI.VerticalScope()) {
+                        UI.Label("the following options allow you to migrate previous settings that were stored in toybox to the new per setting save mechanism for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan() + "\nNote:".orange() + "you may have configured this for a different save so use care in doing this migration".green());
+                        if (hasMulticlassMigration)
+                            using (UI.HorizontalScope()) {
+                                UI.Label("Multi-class settings", UI.Width(300));
+                                UI.Space(25);
+                                UI.Label($"{settings.multiclassSettings.Count}".cyan());
+                                UI.Space(25);
+                                UI.ActionButton("Migrate", () => settings.perSave.multiclassSettings = settings.multiclassSettings);
+                            }
+                        if (hasGestaltMigration)
+                            using (UI.HorizontalScope()) {
+                                UI.Label("Gesalt Flags", UI.Width(300));
+                                UI.Space(25);
+                                UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
+                                UI.Space(25);
+                                UI.ActionButton("Migrate", () => settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets);
+                            }
+                        if (hasLevelAsLegendMigration)
+                            using (UI.HorizontalScope()) {
+                                UI.Label("Chars Able To Exceed Level 20", UI.Width(300));
+                                UI.Space(25);
+                                UI.Label($"{settings.charIsLegendaryHero.Count}".cyan());
+                                UI.Space(25);
+                                UI.ActionButton("Migrate", () => settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero);
+                            }
+                    }
+                }
+                UI.Div(indent);
+            }
             var options = MulticlassOptions.Get(ch);
             var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
             var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
             var showDesc = settings.toggleMulticlassShowClassDescriptions;
             foreach (var cl in classes) {
-                if (PickerRow(ch, cl, options, indent)){
+                if (PickerRow(ch, cl, options, indent)) {
                     MulticlassOptions.Set(ch, options);
                     Mod.Log("MulticlassOptions.Set");
                 }
@@ -72,7 +109,7 @@ namespace ToyBox {
                         if (v) options.Add(cl);
                         else options.Remove(cl);
                         Mod.Trace($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
-                         changed = true;
+                        changed = true;
                     }, 350);
                 if (showGestaltToggle && chArchetype == null) {
                     UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),

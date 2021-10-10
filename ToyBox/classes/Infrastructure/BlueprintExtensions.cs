@@ -50,7 +50,7 @@ namespace ToyBox {
                         }
                     }
                     catch (Exception e) {
-                        Mod.Warning($"${bp.name}.{property} thew an exception: {e.Message}");
+                        Mod.Warn($"${bp.name}.{property} thew an exception: {e.Message}");
                         badList.Add(bp.AssetGuid);
                         break;
                     }

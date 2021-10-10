@@ -164,7 +164,7 @@ namespace ToyBox {
                         .Where(x => !x.IsStoryCompanion()).ToList();
                     if (probablyPlayer is { Count: 1 }) {
                         var newMainCharacter = probablyPlayer.First();
-                        Mod.Warning($"Promoting {newMainCharacter.CharacterName} to main character!");
+                        Mod.Warn($"Promoting {newMainCharacter.CharacterName} to main character!");
                         if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
                     }
                 }, AutoWidth()),

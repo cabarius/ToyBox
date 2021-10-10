@@ -29,7 +29,7 @@ namespace ModKit {
             modLogger?.Error(str + "\n" + Environment.StackTrace);
         }
         public static void Error(Exception ex) => Error(ex.ToString());
-        public static void Warning(string str) {
+        public static void Warn(string str) {
             if (logLevel >= LogLevel.Warning)
                 modLogger?.Log("[Warning] ".orange().bold() + str);
         }

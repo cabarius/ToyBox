@@ -66,7 +66,7 @@ namespace ToyBox {
                     bp = bpCache.Load(guid);
                 }
                 catch {
-                    Mod.Warning($"cannot load GUID: {guid}");
+                    Mod.Warn($"cannot load GUID: {guid}");
                     continue;
                 }
                 _blueprintsInProcess.Add(bp);

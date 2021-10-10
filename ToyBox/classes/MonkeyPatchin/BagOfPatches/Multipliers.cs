@@ -236,11 +236,11 @@ namespace ToyBox.BagOfPatches {
                 if (firstCall) {
                     //Main.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
                     if (__instance.FovMin != BaseFovMin) {
-                        Mod.Warning($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
+                        Mod.Warn($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMin = __instance.FovMin;
                     }
                     if (__instance.FovMax != BaseFovMax) {
-                        Mod.Warning($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
+                        Mod.Warn($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMax = __instance.FovMax;
                     }
                     firstCall = false;
