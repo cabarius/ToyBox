@@ -63,6 +63,9 @@ namespace ToyBox {
         }
         public static void ResetGUI() { }
         public static void OnGUI() {
+#if BUILD_CRUI
+            ActionButton("Demo crUI", () => ModKit.crUI.Demo());
+#endif
             if (Main.IsInGame) {
                 BeginHorizontal();
                 Space(25);
