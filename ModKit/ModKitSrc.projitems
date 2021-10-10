@@ -10,7 +10,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>ModKit</Import_RootNamespace>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Description>A game agnostic toolkit for building Mod UI for unity mod manager based mods.  Builds on ModMaker (https://github.com/cabarius/WrathModMaker and all past repos it was forked from)</Description>
   </PropertyGroup>
   <ItemGroup>
