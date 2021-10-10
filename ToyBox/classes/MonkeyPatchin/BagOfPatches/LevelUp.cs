@@ -54,7 +54,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch("MaxCharacterLevel", MethodType.Getter)]
             private static void Postfix(ref int __result, UnitProgressionData __instance) {
                 settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
-                Mod.Trace($"UnitProgressionData_MaxCharacterLevel - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
+                Mod.Trace ($"UnitProgressionData_MaxCharacterLevel - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
                 var isLegendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
                 if (isLegendaryHero) {
                     __result = 40;

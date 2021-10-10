@@ -46,11 +46,11 @@ namespace ToyBox {
                 Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
             }
             if (cachedPerSave == null) {
-                Mod.Warning("pre save settings not found, creating new...");
+                Mod.Warning("per save settings not found, creating new...");
                 cachedPerSave = new PerSaveSettings {
-                    //multiclassSettings = Main.settings.multiclassSettings,
-                    //excludeClassesFromCharLevelSets = Main.settings.excludeClassesFromCharLevelSets,
-                    //charIsLegendaryHero = Main.settings.charIsLegendaryHero
+                    multiclassSettings = Main.settings.multiclassSettings,
+                    excludeClassesFromCharLevelSets = Main.settings.excludeClassesFromCharLevelSets,
+                    charIsLegendaryHero = Main.settings.charIsLegendaryHero
                 };
                 SavePerSaveSettings();
             }
