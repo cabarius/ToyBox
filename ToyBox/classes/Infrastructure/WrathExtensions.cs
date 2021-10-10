@@ -12,6 +12,8 @@ using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
 using Kingmaker.UnitLogic.Alignments;
 using System.Linq;
+using Kingmaker;
+
 namespace ModKit {
     public partial class UI {
         public static string Name(this Alignment a) => UIUtility.GetAlignmentName(a);

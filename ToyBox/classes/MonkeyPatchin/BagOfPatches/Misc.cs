@@ -59,8 +59,8 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Player), nameof(Player.OnAreaLoaded))]
         internal static class Player_OnAreaLoaded_Patch {
             private static void Postfix() {
-                Mod.Log("Player_OnAreaLoaded_Patch");
-                Settings.ReloadPerSaveSettings(); 
+                Mod.Debug("Player_OnAreaLoaded_Patch");
+                Settings.ClearCachedPerSave(); 
             }
         }
 

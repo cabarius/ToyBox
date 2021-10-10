@@ -43,6 +43,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch("ExperienceTable", MethodType.Getter)]
             private static void Postfix(ref BlueprintStatProgression __result, UnitProgressionData __instance) {
                 settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
+                Mod.Trace($"UnitProgressionData_ExperienceTable - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
                 var legendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
                 __result = !legendaryHero
                         ? Game.Instance.BlueprintRoot.Progression.XPTable
@@ -53,6 +54,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch("MaxCharacterLevel", MethodType.Getter)]
             private static void Postfix(ref int __result, UnitProgressionData __instance) {
                 settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
+                Mod.Trace($"UnitProgressionData_MaxCharacterLevel - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
                 var isLegendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
                 if (isLegendaryHero) {
                     __result = 40;

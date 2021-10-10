@@ -181,6 +181,7 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<(GlobalMapArmyState, float)> ArmiesByDistanceFromPlayer() {
             if (!Main.IsInGame) return null;
             var mainMapState = MainGlobalMapState();
+            if (mainMapState == null) return null;
             var armies = mainMapState.Armies;
             var position = mainMapState.PlayerPosition;
             var results = from army in armies select (army, mainMapState.ArmyDistance(army, position));

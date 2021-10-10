@@ -10,6 +10,8 @@ using Kingmaker.EntitySystem;
 using Kingmaker;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.UnitLogic.Parts;
+using JetBrains.Annotations;
+using Kingmaker.EntitySystem.Persistence;
 
 namespace ToyBox {
     public class PerSaveSettings : EntityPart {
@@ -32,38 +34,41 @@ namespace ToyBox {
     }
 
     public class Settings : UnityModManager.ModSettings {
-        private static PerSaveSettings current = null;
-        public static string perSaveFileName => $"SettingsPerSave.{Game.Instance?.Player?.MainCharacter.Value.CharacterName ?? "?"}.{Game.Instance?.Player?.GameId ?? "default"}.json";
+        private static PerSaveSettings cachedPerSave = null;
+        public const string PerSaveKey = "ToyBox";
+        public static void ClearCachedPerSave() => cachedPerSave = null;
         public static void ReloadPerSaveSettings() {
-            var filename = perSaveFileName;
-            Mod.Debug($"reloading per save settings from {filename.orange()}");
-            current = Utils.LoadFromFile<PerSaveSettings>(filename);
-            if (current == null) {
+            var player = Game.Instance?.Player;
+            if (player == null || Game.Instance.SaveManager.CurrentState == SaveManager.State.Loading) return;
+            Mod.Debug($"reloading per save settings from Player.SettingsList[{PerSaveKey}]");
+            if (player.SettingsList.TryGetValue(PerSaveKey, out var obj) && obj is string json) {
+                cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
+                Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
+            }
+            if (cachedPerSave == null) {
                 Mod.Warning("pre save settings not found, creating new...");
-                current = new PerSaveSettings {
-                    multiclassSettings = Main.settings.multiclassSettings,
-                    excludeClassesFromCharLevelSets = Main.settings.excludeClassesFromCharLevelSets,
-                    charIsLegendaryHero = Main.settings.charIsLegendaryHero
+                cachedPerSave = new PerSaveSettings {
+                    //multiclassSettings = Main.settings.multiclassSettings,
+                    //excludeClassesFromCharLevelSets = Main.settings.excludeClassesFromCharLevelSets,
+                    //charIsLegendaryHero = Main.settings.charIsLegendaryHero
                 };
                 SavePerSaveSettings();
             }
-            else
-                Mod.Debug($"read successfully from {filename.orange()}");
         }
         public static void SavePerSaveSettings() {
-            if (current == null)
+            var player = Game.Instance?.Player;
+            if (player == null) return;
+            if (cachedPerSave == null)
                 ReloadPerSaveSettings();
-            var filename = perSaveFileName;
-            current.SaveToFile(filename);
-            //var json = JsonConvert.SerializeObject(current);
-            //Game.Instance?.Player?.SettingsList.Add("ToyBoxPerSave", json  );
-            Mod.Debug($"saved to {filename.orange()}");
+            var json = JsonConvert.SerializeObject(cachedPerSave);
+            player.SettingsList[PerSaveKey] = json;
+            Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
         }
-        public PerSaveSettings perSave {
+        public PerSaveSettings? perSave{
             get {
-                if (current != null) return current;
+                if (cachedPerSave != null) return cachedPerSave;
                 ReloadPerSaveSettings();
-                return current;
+                return cachedPerSave;
             }
         }
 
