@@ -21,6 +21,7 @@
   * Added descriptive string for gestalt flag in Level Up and Party Editor
   * Improved new multiclass selection UI to allow you to select other archetypes for a class that you have an existing archetype. This will only apply during respect.
     * Added orange warning message to inform user of this behavior
+  * ***Note*** this should make ToyBox Multiclass and Gestalt play better with respecing
 * **Etude Editor** 
   * Show translated comments
   * Show other Etude info and links 

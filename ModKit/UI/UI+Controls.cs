@@ -179,7 +179,7 @@ namespace ModKit {
         public static void DangerousActionButton(string title, string warning, ref bool areYouSureState ,Action action, params GUILayoutOption[] options) {
             using (UI.HorizontalScope()) {
                 var areYouSure = areYouSureState;
-                ActionButton(title, () => { areYouSure = true; });
+                ActionButton(title, () => { areYouSure = !areYouSure; });
                 if (areYouSureState) {
                     UI.Space(25);
                     UI.Label("Are you sure?".yellow());

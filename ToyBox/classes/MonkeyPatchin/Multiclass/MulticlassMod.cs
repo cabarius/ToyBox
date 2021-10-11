@@ -97,6 +97,7 @@ namespace ToyBox.Multiclass {
             else excludeSet.Remove(classID);
             Mod.Trace($"Set - key: {classID} -> {isGestalt} excludeSet: ({string.Join(" ", excludeSet.ToArray())})");
             Main.settings.perSave.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
+            Settings.SavePerSaveSettings();
         }
 
         public static bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
