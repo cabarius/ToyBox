@@ -12,19 +12,21 @@
 **Please backup early and backup often.**
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
-
-### Ver 1.4.1 (Coming Soon)
+### Ver 1.4.2 (Coming Soon)
+* **Etude Editor** 
+  * Show translated comments
+  * Show other Etude info and links 
+### Ver 1.4.1
+* **Important** 
+  * This release changes where settings for ***gestalt, multiclass, allow level past 20*** state is saved from ToyBox settings to your game save. This will **RESET all these settings** to their **DEFAULT** state. We provide a way to migrate your settings from legacy ToyBox settings to your current save file. Look for it under **Level Up** in the multiclass config area.  **Note** you will need to do this the first time you load any save that you wish to continue using these features.
 * **Multiclasss & Gestalt** 
-  * moved save state from settings into Owlcats save file extensions for save files so now your gestalt state will live in your save and never get out of sync due to toybox settings changes
+  * Moved save state from settings into Owlcats save file extensions for save files so now your gestalt state will live in your save and never get out of sync due to toybox settings changes
   * Added migration buttons if ToyBox detects that you have old save state in your settings and nothing in the current save. Please use these with care.
     * You also have the option to remove the migration data
   * Added descriptive string for gestalt flag in Level Up and Party Editor
   * Improved new multiclass selection UI to allow you to select other archetypes for a class that you have an existing archetype. This will only apply during respect.
     * Added orange warning message to inform user of this behavior
   * ***Note*** this should make ToyBox Multiclass and Gestalt play better with respecing
-* **Etude Editor** 
-  * Show translated comments
-  * Show other Etude info and links 
 ### Ver 1.4.0 
 * **New Etude Editor** is a powerful way to view and edit Etude progression
   * Tree view 
