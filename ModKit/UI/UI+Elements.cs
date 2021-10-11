@@ -15,7 +15,10 @@ namespace ModKit {
         public static void GUIDrawRect(Rect position, Color color) => GUI.Box(position, GUIContent.none, FillStyle(color));
 
         public static void Div(float indent = 0, float height = 0, float width = 0) => Div(fillColor, indent, height, width);
-
+        public static void DivLast(float height = 0) {
+            var rect = GUILayoutUtility.GetLastRect();
+            Div(fillColor, rect.x, height, rect.width + 3);
+        }
         public static void Wrap(bool condition, float indent = 0, float space = 10) {
             if (condition) {
                 EndHorizontal();

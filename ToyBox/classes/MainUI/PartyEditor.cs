@@ -372,6 +372,7 @@ namespace ToyBox {
                         var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
                         var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                         foreach (var cd in classData) {
+                            bool showedGestalt = false;
                             UI.Div(100, 20);
                             using (UI.HorizontalScope()) {
                                 UI.Space(100);
@@ -404,10 +405,19 @@ namespace ToyBox {
                                         },
                                         125
                                         );
+                                    showedGestalt = true;
                                 }
                                 else UI.Space(125);
                                 UI.Space(27);
-                                UI.Label(cd.CharacterClass.Description.StripHTML().green(), UI.AutoWidth());
+                                using (UI.VerticalScope()) {
+                                    if (showedGestalt) {
+                                        if (showedGestalt) {
+                                            UI.Label("this flag lets you not count this class in computing character level".green());
+                                            UI.DivLast();
+                                        }
+                                    }
+                                    UI.Label(cd.CharacterClass.Description.StripHTML().green(), UI.AutoWidth());
+                                }
                             }
                         }
                     }

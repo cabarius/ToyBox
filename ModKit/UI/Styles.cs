@@ -93,7 +93,7 @@ namespace ModKit {
             divStyle.margin = new RectOffset((int)indent, 0, 4, 4);
         }
         else {
-            divStyle.margin.left = (int)indent;
+            divStyle.margin.left = (int)indent + 3;
         }
         if (width > 0)
             divStyle.fixedWidth = width;

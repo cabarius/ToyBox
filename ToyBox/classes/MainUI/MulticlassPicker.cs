@@ -6,6 +6,7 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Utility;
 using ModKit;
 using ToyBox.Multiclass;
+using UnityEngine;
 
 namespace ToyBox {
     public class MulticlassPicker {
@@ -129,6 +130,8 @@ namespace ToyBox {
                     using (UI.VerticalScope()) {
                         if (showedGestalt) {
                             UI.Label("this flag lets you not count this class in computing character level".green());
+                            UI.DivLast();
+                            UI.Space(5);
                             UI.Div();
                         }
                         UI.Label(cl.Description.StripHTML().green());
@@ -173,7 +176,7 @@ namespace ToyBox {
                                         using (UI.VerticalScope()) {
                                             if (showedGestalt) {
                                                 UI.Label("this flag lets you not count this class in computing character level".green());
-                                                UI.Div();
+                                                UI.DivLast();
                                             }
                                             UI.Label(archetype.Description.StripHTML().green());
                                         }
