@@ -14,7 +14,6 @@
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 ### Ver 1.4.2 (Coming Soon)
 * **Etude Editor** 
-  * Show translated comments
   * Show other Etude info and links 
 ### Ver 1.4.1
 * **Important** 
@@ -29,6 +28,8 @@
   * Now shows overall character level and level of each class or archetype that you have
   * Fixed bug where we were not syncing gestalt state at some key times like after loading and during migration
   * ***Note*** this should make ToyBox Multiclass and Gestalt play better with respecing
+* **Etude Editor**
+  * Show translated comments (not 100% but much better than nothing)
 ### Ver 1.4.0 
 * **New Etude Editor** is a powerful way to view and edit Etude progression
   * Tree view 

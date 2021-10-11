@@ -230,6 +230,18 @@ namespace ModKit {
             if (style == null)
                 style = GUI.skin.button;
             var changed = false;
+            if (searchText != null) {
+                UI.ActionTextField(
+                    ref searchText,
+                    "itemSearchText",
+                    (text) => { changed = true; },
+                    () => { },
+                    UI.Width(300));
+                if (searchText?.Length > 0) {
+                    var searchStr = searchText.ToLower();
+                    items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();
+                }
+            }
             var selectedItemIndex = items.IndexOf(selected);
             if (items.Count() > 0) {
                 var newSelected = selected;
@@ -295,18 +307,6 @@ namespace ModKit {
                 UI.Label(title, options);
             extras?.Invoke();
             UI.Div();
-            if (searchText != null) {
-                UI.ActionTextField(
-                    ref searchText,
-                    "itemSearchText",
-                    (text) => { changed = true; },
-                    () => { },
-                    options);
-                if (searchText?.Length > 0) {
-                    var searchStr = searchText.ToLower();
-                    items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();
-                }
-            }
             changed = UI.GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 1, options);
             return changed;
         }

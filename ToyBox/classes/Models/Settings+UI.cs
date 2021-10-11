@@ -32,7 +32,9 @@ namespace ToyBox {
                 () => {
                     var cultureInfo = Thread.CurrentThread.CurrentUICulture;
                     var cultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures).OrderBy(ci => ci.DisplayName).ToList();
-                    UI.GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 4);
+                    using (UI.VerticalScope()) {
+                        UI.GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 8, UI.rarityButtonStyle, UI.Width(UI.ummWidth - 350));
+                    }
                 },
                 () => { }
             );
