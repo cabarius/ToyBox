@@ -50,6 +50,7 @@ using Kingmaker.UI._ConsoleUI.CombatStartScreen;
 using Kingmaker.Items.Slots;
 using ModKit;
 using Kingmaker.EntitySystem.Persistence;
+using ToyBox.Multiclass;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
@@ -60,7 +61,8 @@ namespace ToyBox.BagOfPatches {
         internal static class Player_OnAreaLoaded_Patch {
             private static void Postfix() {
                 Mod.Debug("Player_OnAreaLoaded_Patch");
-                Settings.ClearCachedPerSave(); 
+                Settings.ClearCachedPerSave();
+                MultipleClasses.SyncAllGestaltState();
             }
         }
 

@@ -118,10 +118,11 @@ namespace ToyBox.Multiclass {
         public static bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
             var chars = Game.Instance.Player.AllCharacters;
             foreach (var ch in chars) {
-                //Main.Log($"   {ch.Progression.Owner} vs { progression.Owner}");
+                //Mod.Debug($"   {ch.Progression.Owner} vs { progression.Owner}");
                 if (ch.Progression.Owner == progression.Owner) {
-                    //Main.Log($"   found: {ch.HashKey()} - {ch.Progression.Owner}");
-                    return ch.IsClassGestalt(cl);
+                    var result = ch.IsClassGestalt(cl);
+                    //Mod.Debug($"   found: {ch.HashKey()} - {cl.Name.orange()} - IsGestalt: {result.ToString().cyan()}");
+                    return result;
                 }
             }
             return false;
@@ -144,7 +145,6 @@ namespace ToyBox.Multiclass {
         }
         #region Utilities
 
-#if true
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
             StateReplacer stateReplacer = new(state);
@@ -162,25 +162,6 @@ namespace ToyBox.Multiclass {
             }
             stateReplacer.Restore();
         }
-#else
-        private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
-            var multiclassSet = MulticlassUtils.SelectedMulticlassSet(unit, state.IsCharGen());
-            StateReplacer stateReplacer = new StateReplacer(state);
-            Main.Log($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
-            Main.Log($"    mythic: {state.IsMythicClassSelected}");
-            Main.Log($"    multiclass set: {multiclassSet.Count}");
-            foreach (BlueprintCharacterClass characterClass in Main.multiclassMod.AllClasses) {
-                if (characterClass != stateReplacer.SelectedClass && MulticlassUtils.GetMulticlassSet(unit).Contains(characterClass.AssetGuid.ToString())) {
-                    Main.Log($"       {characterClass.GetDisplayName()} ");
-                    if (state.IsMythicClassSelected == characterClass.IsMythic) {
-                        stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
-                        action();
-                    }
-                }
-            }
-            stateReplacer.Restore();
-        }
-#endif
         public static void UpdateLevelsForGestalt(this UnitProgressionData progression) {
             progression.m_CharacterLevel = new int?(0);
             progression.m_MythicLevel = new int?(0);
@@ -196,7 +177,6 @@ namespace ToyBox.Multiclass {
             foreach (var classData in progression.Classes) {
                 var cl = classData.CharacterClass;
                 var shouldSkip = progression.IsClassGestalt(cl) && cl != classToEnsureNonGestalt;
-                //Main.Log($"UpdateLevelsForGestalt - owner: {__instance.Owner} class: {classData.CharacterClass.Name} shouldSkip: {shouldSkip}".cyan().bold());
                 if (!shouldSkip) {
                     if (classData.CharacterClass.IsMythic) {
                         nullable = progression.m_MythicLevel;
@@ -210,6 +190,10 @@ namespace ToyBox.Multiclass {
                     }
                 }
             }
+        }
+        public static void SyncAllGestaltState() {
+            var chars = Game.Instance?.Player.AllCharacters;
+            chars?.ForEach(ch => ch.Progression.UpdateLevelsForGestalt());
         }
         #endregion
     }

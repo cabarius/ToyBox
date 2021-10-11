@@ -30,6 +30,15 @@ namespace ToyBox {
             var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
             var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
             var showDesc = settings.toggleMulticlassShowClassDescriptions;
+            if (ch != null) {
+                using (UI.HorizontalScope()) {
+                    UI.Space(indent);
+                    UI.Label($"Character Level".cyan().bold(), UI.Width(300));
+                    UI.Space(25);
+                    UI.Label(ch.Progression.CharacterLevel.ToString().orange().bold());
+                }
+                UI.Space(25);
+            }
             foreach (var cl in classes) {
                 if (PickerRow(ch, cl, options, indent)) {
                     MulticlassOptions.Set(ch, options);
@@ -71,7 +80,7 @@ namespace ToyBox {
                 UI.Space(indent);
                 var optionsHasClass = options.Contains(cl);
                 UI.ActionToggle(
-                     charHasClass ? cl.Name.orange() : cl.Name,
+                     charHasClass ? cl.Name.orange() + $" ({cd.Level})".orange() : cl.Name,
                     () => optionsHasClass,
                     (v) => {
                         if (v) {
@@ -127,7 +136,7 @@ namespace ToyBox {
                             using (UI.HorizontalScope()) {
                                 bool hasArch = archetypeOptions.Contains(archetype);
                                 UI.ActionToggle(
-                                archetype == chArchetype ? archetype.Name.orange() : archetype.Name,
+                                archetype == chArchetype ? archetype.Name.orange() + $" ({cd.Level})".orange() : archetype.Name,
                                 () => hasArch,
                                 (v) => {
                                     if (v) archetypeOptions.AddExclusive(archetype);
@@ -214,7 +223,10 @@ namespace ToyBox {
                                     UI.Space(25);
                                     UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
                                     UI.Space(25);
-                                    UI.ActionButton("Migrate", () => { settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings(); });
+                                    UI.ActionButton("Migrate", () => { 
+                                        settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings();
+                                        MultipleClasses.SyncAllGestaltState();
+                                    });
                                     UI.Space(25);
                                     UI.DangerousActionButton("Remove", "this will remove your old gestalt flags from ToyBox settings but does not affect any other saves that have already migrated them", ref areYouSure2, () => settings.excludeClassesFromCharLevelSets.Clear());
                                 }
