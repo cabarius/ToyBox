@@ -49,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Reflection\ReflectionPropertyCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Translator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Utilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)crUI\crUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)UI\KeyBindings\" />
