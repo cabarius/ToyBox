@@ -31,7 +31,7 @@ namespace ModKit {
         public static void Error(Exception ex) => Error(ex.ToString());
         public static void Warn(string str) {
             if (logLevel >= LogLevel.Warning)
-                modLogger?.Log("[Warning] ".orange().bold() + str);
+                modLogger?.Log("[Warn] ".orange().bold() + str);
         }
         public static void Log(string str) {
             if (logLevel >= LogLevel.Info)

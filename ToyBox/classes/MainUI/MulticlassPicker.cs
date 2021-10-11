@@ -25,7 +25,7 @@ namespace ToyBox {
             }
             UI.Space(15);
             var hasMulticlassMigration = settings.perSave.multiclassSettings.Count == 0 && settings.multiclassSettings.Count > 0;
-            var hasGestaltMigration = settings.perSave.excludeClassesFromCharLevelSets.Count == 0 && settings.excludeClassesFromCharLevelSets.Count > 0;
+            var hasGestaltMigration = settings.perSave.excludeClassesFromCharLevelSets.Count >= 0 && settings.excludeClassesFromCharLevelSets.Count > 0;
             var hasLevelAsLegendMigration = settings.perSave.charIsLegendaryHero.Count == 0 && settings.perSave.charIsLegendaryHero.Count > 0;
             if (hasMulticlassMigration || hasGestaltMigration || hasLevelAsLegendMigration) {
                 UI.Div(indent);
@@ -39,7 +39,7 @@ namespace ToyBox {
                                 UI.Space(25);
                                 UI.Label($"{settings.multiclassSettings.Count}".cyan());
                                 UI.Space(25);
-                                UI.ActionButton("Migrate", () => settings.perSave.multiclassSettings = settings.multiclassSettings);
+                                UI.ActionButton("Migrate", () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
                             }
                         if (hasGestaltMigration)
                             using (UI.HorizontalScope()) {
@@ -47,7 +47,7 @@ namespace ToyBox {
                                 UI.Space(25);
                                 UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
                                 UI.Space(25);
-                                UI.ActionButton("Migrate", () => settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets);
+                                UI.ActionButton("Migrate", () => { settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings(); });
                             }
                         if (hasLevelAsLegendMigration)
                             using (UI.HorizontalScope()) {
@@ -55,7 +55,7 @@ namespace ToyBox {
                                 UI.Space(25);
                                 UI.Label($"{settings.charIsLegendaryHero.Count}".cyan());
                                 UI.Space(25);
-                                UI.ActionButton("Migrate", () => settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero);
+                                UI.ActionButton("Migrate", () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
                             }
                     }
                 }
