@@ -1,0 +1,1579 @@
+`Грейбор не в гильдии `:`Grabor's not in the guild `
+` Анлок локации DryCrossroads `:` DryCrossroads Anchor `
+` если читали LEXICON_Part2_name `:` if you have read LEXICON_Part2_name `
+` отключает маунтов и петов `:` disables junta and pelt `
+` включается через диалог - Epilogues_afterlogues_dialogue - 
+ `:` enabled through conversation-Epilogues_afterlogues_diague- 
+ `
+` 
+ `:` 
+ `
+` 30_BattlefieldVictory = 30_HeroicVictory
+ `:` 30__dattlefieldVictory = 30_HeroicVictory
+ `
+` Ачивка включается через механику этюда, а условие коплитется в этюде IvorySanctum_MainEtude `:` The upholstery is included through the mechanic, and the condition is being smoked in '' IvorySanctum_MainEtude ''. `
+` выдается в диалоге Kiny Freed `:` appears in the Kiny Freed dialog `
+` Ачивка включается через механику этюда `:` Actnox is included through study mechanic `
+` Ачивка выдается через механику ачивки `:` The nod is issued through the [ [ Almashko Mechanic]] `
+` AreeluAndChild
+ `:` AreeluAndChild
+ `
+` ChildDeath  `:` ChildDeath  `
+` Ачивка включается через этюды компаньонов
+ `:` The beers are included through the [ [ etudes]] of the [ [ Companions]]
+ `
+` Проверяtт боссов на комплит
+ `:` Check the bosses on the computer.
+ `
+` Ачивка срабатывает в механике ачивки, после перевода этюда в play `:` The beatdown works in the mechanical engineer, after the translation of the sketch to play `
+` После Иза. Конец 5 главы в Дрезене `:` After From. End of Chapter 5 in Dresen `
+` Аневия и Ирабет будут помогать в Трешхолде `:` Anevia and Irabet will assist in the Treshold `
+` Аневия расстроилась и ушла из крузэйда и от нас `:` Anevia was upset and left the circle and away from us. `
+` Сменили Азатистый мифик на другой `:` 'The Azatistas' have been replaced by another `
+` Отбирание Айву для Локуста и Дракона `:` Aisu's Retain for Locust and the Dragon `
+` Отбираем дракона когда игрок стал Легендой (выполнил квест) `:` Take the dragon when the player becomes Legend `
+` Пофейлили Азатистый мифик `:` The '' 'Azatista' ' `
+` Апгрейд финнеана первый (3 глава) `:` Appgreed Finnane first (3 chapters) `
+` Апгрейд финнеана второй (5 глава) `:` Appgreed Finnane Second (5 Chapter) `
+` Апгрейд финнеана второй (5 глава) Нет диалога + личевский инчант `:` Appgreed Finnane Second (5 Chapter) No Dialogue + Lychevsky Inchant `
+` Разбили череп, отпустив Финнеана. 
+Финнеан превратиля в реликвию. `:` We broke the skull, letting Finnahan go. Finnane turned into a relic. `
+` Разбили череп, закараптив Финнеана. 
+Финнеан превратиля в личевскую реликвию. `:` The skull was broken, and Finnean's carp. Finnane was turned into a lycheville relic. `
+` Убедили Финнеана в том, что он классный. Он остается с нами и получает ЛевелАп. `:` Convinced by Finney that he's cool. He stays with us and gets Levelap. `
+` Отдали Финнеана Оружейнику. `:` They gave it to Finnian Organger. `
+` Откладывает коронацию на одно посещение тронного зала, чтобы дать возможность случитсья отсечке 5 главы `:` Postponing a coronation for one trip to the throne room so that you can give the chance to the 5-chapter compartment. `
+` Стонтон Вейн `:` Stoneton Vane `
+` специальная коллекция мусора, которую мы удалим ПЕРЕД релизом `:` a special collection of garbage that we remove from the release of the release `
+` Мержит вендор таблицы из 1 и 2 главы в 3 `:` Table 1 and 2 chapters in 3 hold `
+` Мержит вендор таблицы в 5 главу `:` Hold a table vendor in 5 `
+` Тут еще кладем доп лут в стартовый сундук `:` There's a place where they put the pudt in the launch trunk. `
+` выбран ангел в финале пролога `:` selected an angel in the final of the prologue `
+` Отказались от арбалета Ариилу `:` Disappeared from Ariel's crossbow `
+` Взяли арбалет Ариилу `:` They took Ariel's crossbow `
+` выбран демон в финале пролога `:` selected daemon in prolog final `
+` Скрыли Мифик Ангела от Вождя Сула. С нами останется Вендуаг, а Ланн уйдет. `:` The Mifik Angel from Leader of the Soul. Wenduag will stay with us, and Leanne will leave. `
+` Показали Мифик Ангела вождю Суллу. С нами останется Ланн, а Вендуаг уйдет. `:` Show the Myfik Angel to Chief Sulla. Lanne will stay with us, and Wendduag will leave. `
+` У нас есть Рэдианс `:` We have a Redance. `
+` пикали возмездие в проложном букивента `:` retributing in a false book `
+` пикали спасение в проложном букивента `:` rescue in a false bookie `
+` Финальная катсцена главы в таверне с Голври `:` The final stage of the chapter in the tavern with Golvry `
+` Когда заработает этот этюд, должен случиться SE про нападение на DH `:` When this sketch comes up, it must happen to SE about the attack on the DH. `
+` Таймер до нападения на DH `:` Timer before the attack on DH `
+` Если согласились спасать DH `:` If we agreed to save the DH `
+` SE в котором нас встречает гонец и сообщает что надо двигать в Таверну т.к. её скоро атакуют. `:` The SE in which the messenger meets us and says we have to move to the Tavern, because it will soon be attacked. `
+` Первое посещение таверны `:` First visit to the tavern `
+` Этюд, который стратует через 1 день, после пролога. Показывает барко сценку где крестоносцы травят Стонтона. `:` Eutid, who's suffering from one day after the prologue. It shows the baro scene where the Crusaders weed Stonton. `
+` Поспавнить Аранку в Кенабрес-бёрнинг после встречи с ней в особняке Даэрана. `:` The Aranka flood in Kensabres-Burning after meeting her at the Daaran mansion. `
+` Построили мост в Kenabres Burning и открыли проход во вторую половину города `:` The bridge was built in Kenabres Burning and opened in the second half of the city `
+` Если спасли DH `:` If you save the DH `
+` Если отказались спасать DH или Проиграли `:` If they refused to rescue DH or Proplay `
+` Этюд, для включения звуков резни `:` Eutid, to include the sound of the massacres `
+` Player made a decision about wardstone `:` Player made a decision about wardstone `
+` Напряжённая осадная музыка + дополнительные звуки боя в фоне `:` Tension music + additional sounds of battle in the background `
+` Играем тему Мифика с разрушения Вардстоуна и до финального диалога с Минаго `:` We are playing the theme of the Mifique from the destruction of Vardstone and to the final dialogue with Minago `
+` Маги пылающего копья следуют за нами `:` The magic of the burning spear follows us. `
+` Отключает мозги Стонтона для дуэлей игрока `:` Disables Stonton's brains for a duel player. `
+` Отключает мозги компаньонов и Ирабет с отрядом для дуэлей игрока `:` Disables the brains of companions and Irabet with a duel player. `
+` Если спрашивали Илекса о Летре `:` If you asked Ileks about Lettre. `
+` Игрок может видеть печати Зонтира `:` The player can see the print of the [ [ Zontir]] `
+` Жрец-заговорщик, пытавшийся прокрасться к Страж-каменю, убит `:` The priest, who tried to sneak up to the Guardian, was killed `
+` Йоран делает ножны для Сияния. Флаг чекается в Цитадели Дрезен в С2 `:` Yöran makes the sheath for Siyani. Flag in Citadel Dresen at C2 `
+` Если посетили кенабрис бернинг до атаки на Таверну. (для кондишенов в диалогах) `:` If you visited the kenbras before the attack on the Tavern. (for confectionery in dialogs) `
+` Если игрок общался с Телдоном в Teldon_dialogue в 1 главе `:` If the player communicated with Teldon_dialogue in 1 chapter `
+` Сказали Харлану на Кенабрис бернинге, что ЖрецАдепт1 убит. (чтобы не видеть тот же самый ансвер в таверне) `:` Said Harlan to the Cannabs berning that JretzAdelp1 was killed. (not to see the same tower in the tavern) `
+` Вендуаг: "Я запомню эти слова, тварь. И я верну их тебе" `:` Wendduag: " I'll remember those words, bitch. And I'll give it back to you. " `
+` "Словно раздавленный жук". {n}Вендуаг кривится.{/n} "Идем отсюда, госпо{mf`:` "Like a crushed bug." { n } Wendages curve. { /n } " Let' s get out of here, state { mf`
+`дин`:`Dine`
+`жа}. Это жалкое существо не стоит даже плевка". `:`Well, I do. This pitiless creature is not worth even a spit. " `
+` Печати Зонтира в EstrodTower `:` EstrodTower seals `
+` освободили Ангелов из Вардстоуна (Аеон всё портит) `:` Angelov was released from Vardstone. `
+` Возможно тут должен быт ьЧун `:` Maybe this is the home of the Chun. `
+` Для проверки на старте 3 главы. Нужен для проверки успешности крузейда `:` To test at the start of Chapter 3. Needed to verify the success of the cruise `
+` Родительский этюд варкэмпа `:` Warkamp's Parental Ethica `
+` второе перемещение варкэмпа + триггер на запуск Gargoyle attack `:` second mover warkamp + trigger to start Gargoyle attack `
+` первый триггер на перемещение лагеря и эвент с Региллом `:` First trigger to move the camp and away with Regell `
+` Когда пошли с хелнайтами `:` When you went with the hellothi. `
+` Поддержка звуком и музыкой сюжетного этюда `:` Sound and music support `
+` основной этюд Лост Чапель
+завершается в конце Anevia_Congratulations_Dialogue `:` at the end of Anevia_Congratulations_Dialogue `
+` завершется в конце диалога Boss_End_Dialogue `:` stop at the end of the Boss_End_Dialogue dialog `
+` Когда пошли с паладинами `:` When we went with the palanies. `
+` Внешний этюд. Который говорит, что на варкемп нападают гаргульки. `:` Outside sketch. Who says the wardrobe is being attacked by the wardrobe. `
+`   `:`   `
+` События осады Дрезена, которые происходят во всех вариантах `:` The events of the siege of Dresen, which take place in all options `
+` Озвучка пока нет осады `:` The call hasn't been under siege yet. `
+` Озвучка пока идет осада `:` The impostor is under siege. `
+` Раскрыт способ проникнуть в тюрьму через дом
+ `:` A way to infiltrate the prison through the house.
+ `
+` Катсцена с объявлением 5-го Крестового Похода. Голфри и все-все-все. `:` Cattstage with the announcement of the 5th Crusade. Golfrey and everything-everything. `
+` Сценка во время экскурсии - Сиила бухает и шуткует с новобранцами из Неросиана. `:` The scene during the tour-Siila is buzzing and jesting with the new recruits from the Nerossian. `
+` Труппа неудачливого театра, которых мы спасем в Кенабресе и которые потом потащатся за нами в поход. Они ставят представление про командора и будут раз в главу приходит спрашивать совета. Их надо воткнуть в варкамп и желательно так, чтобы игрок мимо них не прошел. Если игрок пропустил этот диалог в главе 2, они с ним же появятся в Дрезене. После диалога труппа всегда сваливает и больше не стоит в кэмпе/Дрезене - до следующего момента, когда им придет пора появляться. `:` The troupe of the unsuccessful theater that we will save in Kenabrese and then follow us camping. They give an idea of the commander, and they will come to the head to ask for advice. They need to be put into the barkamp and preferably so that the player does not pass. If the player has missed this dialog in Chapter 2, they will appear in Dresen. After the dialogue, the troupe always dumps and no longer is in the Camp/Dresen-until the next moment when it is time for them to appear. `
+` Таймер перед стартом Q2 Сосиэля `:` The timer before the start of the Sosiel's Q2 `
+` Механика столицы `:` The Mechanic of the Capital `
+` Дефолтный мирный стейт варкэмпа `:` warkamp `
+` Общий аудио-этюд мирного варкэмпа `:` General Audi-sketch of the peace warkamp `
+` Дефолтовый мирный зональный этюд командного шатра `:` A Defolt Peaceful Area from the Command Centre `
+` Хеллнайтовый кусок лагеря БЕЗ хеллнайтов `:` Hell Bell Camp `
+` Зональный этюд мирного дефолтового варкэмпа `:` The regional sketch of the peaceful warkamp `
+` Если победили армии перед Дрезеном
+ `:` If the Army is defeated in front of Dresen
+ `
+` Когда Голфри с нами во второй главе `:` When Golfrey is with us in chapter two. `
+` Ирабет не сражается в Дрезене. Но вообще она с нами `:` Irabet doesn't fight in Dresen. But she's with us. `
+` Активируется, когда игрок убивает опционального босса демона в таверне. `:` Activated when the player kills an optional demon boss in the tavern. `
+` напали на Закариуса в третьей главе и убили его `:` attacked Zacarius in the third chapter and killed him `
+` Дейран в зале, бухает с народом. Танцы `:` Deeran is in the audience, buzing with the people. Dance `
+` Дейран в спальне, народ бухает в зале `:` It's in the bedroom, the people are in the room. `
+` Подожгли бухло и активировали водяных элементалей `:` Bury the booze and activated the water elemental `
+` В диалоге с Дейраном ParkDistract_DaeranQ2_dialog узнали про водяных элементалей. `:` In a conversation with Deiran ParkDistract_DaeranQ2_dialog, we learned about the water elemental. `
+` Стартовый стейт. Дейран толкает речь и спускается вниз к народу. `:` The starter button. Deiran pushes the speech and goes down to the people. `
+` Дейран стоит в парке с народом `:` Deiran is standing in the park with the people. `
+` Дейран ушёл подышать воздухом. `:` Deeran went to get some air. `
+` Ждем пока игрок выйдет с зоны `:` We're waiting for the player to get out of the zone. `
+` слепой в гибберинг сварм выжил `:` The blind in a boil survived. `
+` При убеждении Ирабет использовали реинфорсед Айона `:` Irabet was used by the Reinformford Ayon `
+` При убеждении Ирабет использовали реинфорсед Ангела `:` In the persuasion of Irabet, the reinformathered Angel was used `
+` При убеждении Ирабет использовали реинфорсед Ангела Возмездия `:` The Irabet used the Reigenor Angel of the Renaissance `
+` При убеждении Ирабет использовали реинфорсед Ангела Спасения `:` The Irathor Angel of the Salvation was used `
+` При убеждении Ирабет использовали реинфорсед Демона `:` The Reinformford Demon was used by Irabet `
+` При убеждении Ирабет использовали дипломатию `:` In the belief, Irabet used diplomacy `
+` Нура под прекрытием в лагере. Всё хорошо. `:` Noora is in the camp. It's okay. `
+` Мы раскрыли Нуру `:` We've solved Noura. `
+` зональный этюд убивающий Нюру `:` zonal ethudes killing Nyuru `
+` Этюд про события, когда мы решили пойти с Нюрой. Включается в совете перед Дрезеном `:` It's about the events when we decided to go with Nyuro. Included in the board before Dresen `
+` VendorTableMagic `:` VendorTableMagic `
+` VendorTableArmor `:` VendorTableArmor `
+` VendorTableExotic `:` VendorTableExotic `
+` VendorTableRanged `:` VendorTableRanged `
+` Интро в Дрезене на старте 3 главы `:` Intra in Dresen on the start of 3 chapters `
+` Сайдквест с рыцарями негаснущего света (преквест к событиям лича) `:` Sidekvest with Disnefus knights `
+` Если пришли по реинфорседу+ `:` If they came for the reinformform + `
+` Если этот этюд работает, то в Фейне есть лаборатория Зантира(ТЕПЕРЬ УЖЕ ВСЕГДА У ВСЕХ ЕСТЬ ЛАБА) `:` If this sketch works, there's a lab in the Face of the Fair (YOU ALREADY ALREADY ALL ALL IS LABAR) `
+` Если игрок зафелит айона, нужно комплитить этот этюд `:` If the player makes the ione, you need to be compliant with this. `
+` Если пришли не по реинфорседу `:` If we're not here for the reinformeda. `
+` TempleOfDelamereAfter и TempleOfDelamereAfterLichReinforced - взаимоисключающие, должны стартовать после Санктума в зависимости от того есть флаг DelamereLeftInTomb или нет `:` TempleOfDelamereAfter and TempleOfDelamereAfterReinforced-mutually exclusive, must start after Sanktum, depending on the flag DelamereLeftInTomb or not `
+` протухнет со всеми детьи после 3-ей главы `:` will die with all the children after the 3rd chapter `
+` не протухающий зональный этюд Арилу `:` not Airyu's sobering sketch `
+` от попадания в AL, до получения мифика (анлока выхода из лабы) `:` from a hit in AL, before the receipt of the mitfik (an end of the labia) `
+` активен пока компаньона не вернули `:` is active until the partner is returned `
+` теперь можно открывать "разрывы" `:` can now open "breaks" `
+` Если колокол из арушалай редабта хоть раз привозили. Заменяется визуал башни для колокла `:` If the bell from the arushalal rarest was brought in at least once. Replaced by the tower for a bell tower `
+` Когда по Столице ходят дефолтные человечки `:` When the Capital goes out, there's a defaulting little man. `
+` Когда колокол еще не привозили `:` When the bell wasn't brought in yet `
+` Когда вардстон еще не привозили в дрезен `:` When the wardstone was not brought to the dresden yet `
+` Когда привезли вардстон в Дрезен `:` When the wardstone was brought to Dresen `
+` Сайдквест с рыцарями Пылающего копья `:` Saidquest with the Knights of the Burning Spear `
+` Убрали обычную массовку, заменили на личёвую `:` The usual crowd was taken, replaced by the massier. `
+` управление скелетом `:` skeleton management `
+` "Эвент стартует сразу после саммита, при этом игрок не может выйти из Дрезена, не увидев этого эвента" `:` "Event will start immediately after the summit, and the player cannot leave Dresen without seeing the euent." `
+` Старт ивента в крусейде где игроку выдается письмо  и квест обж `:` Start of ivent in a circle where the player is given a letter and a quest `
+` Капитан, выдающий наемников `:` The Captain of the Mercenaries `
+` Нотификатор для LichRankUp_3.9 `:` Notifier for LichRankUp_3.9 `
+` Нотификатор для LichRankUp_4 `:` Notifier for LichRankUp_4 `
+` Нотификатор для LichRankUp_5
+ `:` Notifier for LichRankUp_5
+ `
+` Нотификатор для LichRankUp_6
+ `:` Notifier for LichRankUp_6
+ `
+` таймер перед LichRankUp_3.9 `:` timer before LichRankUp_3.9 `
+` таймер перед LichRankUp_4
+ `:` timer before LichRankUp_4
+ `
+` таймер перед LichRankUp_5
+ `:` timer before LichRankUp_5
+ `
+` таймер перед LichRankUp_6
+
+ `:` timer before LichRankUp_6
+
+ `
+` этюд/сцена для всяких потенциально заменяемых NPC `:` to/stage for all potentially replaceable NPC `
+` этюд-флаг, используется в рангапах Дипломаси 6, 7, 8, в ансвере про Неросиан. Обеспечивает, чтобы игрок мог тыкнуть в этот ансвер только 1 раз `:` This is a flag that is used in the rangapps of the Diplomashy 6, 7, 8, in the Ansere on the Nerosian. Ensures that the player can pin in this hangover only once `
+` Дефолтная толпа для аутдора Дрезена `:` Dresen's Defolate Crowd `
+` В Дрезене нет зиккурата и района азаты `:` There are no zikkurata and azaty districts in Dresen `
+` Нотификейшн у этого ивента не нужен! (https://jira.owlcat.local/browse/PF-164295) `:` There is no need for this ivent! (https: //jira.owlcat.local/browse/PF-164295) `
+` Комплитить после КТС с рыцарями немеркнущего света `:` Replicate after the CTS with the Knights of the Intent Light `
+` Киар пришел и стоит в Дрезене `:` The Keir came and stood in Dresen `
+` Киар спровоцирован Личём `:` The Kire was provoked by the Lachem `
+` Это Грейбор, которого не брали в партию и он пока еще NPC `:` It's the Greybor, who wasn't in the party, and he's still a NPC. `
+` Морвег пришел и стоит в Дрезене `:` Morverg came and was in Dresen. `
+` Морвег пропал `:` Morweg is missing. `
+` Со старта 3 главы запрещаем выход из столицы пока не проиграет КТЦ Винтерсана `:` Since the start of the chapter, the exit from the capital will not be lost to the Wintersan KTZ. `
+` КТС приезда короля-дурака `:` The King's Fool's Return `
+` Зося зовет смотреть картины `:` Zosia wants to see pictures. `
+` Зося приходит рвать романс со злым мификом `:` Zosia has come to tear the romance with the evil world. `
+` дварфийка зовет смотреть представление `:` The dwarwick wants to see the show. `
+` [Draft] Аневия с сообщением о смерти Тревера `:` [ Draft] Anevia with a message about the death of Traver `
+` Миаммир мертва. (Главный этюд флаг) `:` Miamir is dead. (Main sketch of the flag) `
+` Зональный этюд, чтобы похайдить юнита и положитьтруп с лутом `:` Zonal etude to haunt the Yukon and put the body with a lute `
+` Таймер до смерти миаммир. (Сиабр высасывает из нее душу) `:` Timer to death, Miamir. (Siabre's sucking the soul out of her) `
+` Отправили Миаммир на лечение (Главный этюд флаг) `:` Send Miamir for treatment (Main sketch of the flag) `
+` Отправили Миаммир на суд (Главный этюд флаг) `:` Send Miamir to trial (Main sketch) `
+` таймер перед 3м КТЦ Аруши `:` Timer before the 3rd CTAC Arusha `
+` таймер перед первым романтическим эвентом `:` timer before first romantic enting `
+` таймер перед квестом на редут `:` this timer on the red thread `
+` Бук Эвент от Аруши во время сна `:` Buk Event from Arusha during sleep `
+` Таймеры для событий, не относящимся к мификами или компаньонам `:` Timers for non-mythical events or companions `
+` Не дает компаньонским КТЦ 3 главы вываливаться пачками `:` Doesn't give KTPS three chapters to fall out of packs. `
+` Отсечки, стартующие стартующие ивенты не по времени, а по пройденному игроком контенту `:` The splits, the older, old-timey verdant is not the time, but the content driven by the player `
+` Бук Эвент где Хепзамирах саммонит игрока во время сна `:` Event where Hepzamiamah sammones a player while sleeping `
+` Камелия предлагает выпить и сходить на балкон `:` Camellia offers to drink and go to the balcony `
+` Камелия убежала навсегда / WIP `:` Camellia ran away forever/WIP `
+` CamelliaVSAeon `:` CamelaVSAeon `
+` Эвент про убийство в Дрезене `:` The Dresen murder `
+` Камелия пробует "обычное свидание" (финал) `:` Camellia tries a "normal date" `
+` Камелия пробует "обычное свидание" `:` Camellia tries a "normal date." `
+` Камелия зовёт домой к Хоргусу `:` Camellia's calling home to Horgusu. `
+` финальный эвент романса с Камелией `:` final event of romance with Camellia `
+` финальный эвент романса с Камелией
+outside lock control `:` final event of romance with Camellia outside lock control `
+` таймер перед бонусным убийством CamelliaQ1_NewMurder `:` CamelliaQ1_NewMurder Timer `
+` таймер перед разговором с Аневией в Camellia Q1
+Запускается после статрта королевского эвента WaitForCrime `:` The timer before talking to the Anevia in Camellia Q1 Runs after the royal euent of WaitForCrime `
+` таймер перед стартом финального квеста Камелии
+если есть романс, то тикает только после NormalDate эвентов `:` The timer before the start of the final quest of Camellia, if there is a romance, then ticks only after NormalDate of the heents `
+` таймер перед CamelliaVSAeon
+после успешного завершения Q1_NobleIntent (189129cc7a4afa6418ef0c162598e935) `:` CamelliaVSAeon timer after successful completion of Q1_Noble Intent (189129cc7a4afa6418ef0162598e935) `
+` таймер перед королевским эвентом WaitForCrime `:` timer before the royal euent of WaitForCrime `
+` таймер перед первым романтическим эвентом Камелии
+после АрилуЛаб и старта романса Камелии (первый квест + диалог с ней)
+ `:` Timer before the first romantic Eent of Camellia after Arilubab and the start of the Romance of Camellia (first quest + dialogue with her)
+ `
+` таймер перед побегом Камелии `:` Camellia's timer `
+` 5-ая глава
+таймер перед продолжением второго романтического эвента Камелии ( ImNotNormal )
+
+ `:` The 5th is the head of the timer before continuing the second romantic euent Camellia (ImNotNormal)
+
+ `
+` 5-ая глава
+таймер перед вторым романтическим эвентом Камелии
+
+(проставить кондишен на главу потом) `:` The 5th is the head of the timer before the second romantic enting of Camellia. `
+` 5-ая глава
+таймер перед третьим романтическим эвентом Камелии
+
+(проставить кондишен на главу потом) `:` The 5th is the head of the timer in front of the third romantic Eent of Camellia. `
+` Таймер приезда Голфри `:` The Timer of the Fry `
+` Таймер до появления крестоносцев Негаснущего пламени (Каир и Морвег) `:` Timer before the advent of the Crusaders (Cairo and Morweg) `
+` Таймер до появления крестоносцев Пылающего копья (Клейм ИЛИ Нистра) `:` Taimer until the Crusaders of the Burning Spear (Klame OR Nstra) `
+` Таймер перед КТЦ, в котором Ирабет снова верит в себя `:` The timer before the TCC, in which the Irawet believes in himself again `
+` Таймер до автоматической пропажи Морвега `:` Tymer until Morvega's automatic disappearance `
+` Таймер перед КТЦ где аневия приходит рассказать о играющем в карты зосе `:` The timer in front of the ETC where the anevia comes to tell about playing cards `
+` таймер для KTC_Malessa
+начало 5-ой главы
+ `:` KTC_Malessa timer starts 5th head
+ `
+` таймер для KTC_Markyll `:` timer for KTC_Maryll `
+` Таймер перед помощью из Кенабреса, привозом вардстона и подобного. `:` A timer before aid from Canabrassa, mooring bardstone and similar. `
+` Таймер перед КТЦ где Зося приходит разрывать отношения `:` Timer in front of the TSC where Zosya comes to break the relationship `
+` Таймер перед КТЦ где Зося приходит разрывать отношения со злым мификом `:` Timer in front of the TSC where Zosya comes to break the relationship with evil `
+` Таймер перед КТЦ где Зося зовет эскизировать `:` The timer of the TSC where Zosia wants to eatize `
+` Таймер перед КТЦ где театр зовет на представление `:` The timer before the ETC where the theatre is calling for `
+` Таймер перед КТЦ где театр приходит с диалогом про представление  `:` Timer in front of the ETC where the theatre comes with dialogue about the presentation  `
+` Таймер перед КТЦ гдеаневия сообщает что Тревер убит `:` Tremer before the ETC of Gudeanevia reports that Traver was killed `
+` Романс c3 `:` Romance c3 `
+` таймер перед проповедями Эмбер в столице `:` Amber timer in front of Amber's sermons. `
+` таймер перед похищением Эмбер, стартуется после того, как игрок увидел проповеди Эмбер `:` The timer in front of Amber's abduction starts after the player sees the sermon, Amber `
+` таймер перед LannAndDate (романс)
+после Q3 Ланна `:` timer before LannAndDate (novel) after Q3 Lanna `
+` таймер перед KTC LannCantDo
+ `:` timer before KTC LannCantDo
+ `
+` таймер перед KTC с первым квестом Ланна
+ `:` timer before KTC with first quest of Lanna
+ `
+` таймер перед LannWantsTraining (романс) `:` timer before LannWantsTraining (Romance) `
+` таймер перед KTC MamaDrezen
+ `:` timer before KTC MamaDrezen
+ `
+` Таймер перед: Квест начинается в Дрезене,  Aeon_KTC_Irabeth_Ravon_dialogue - Ирабет приходит и рассказывает, что семья ноблей из Неросиана прислала письмо `:` Before: Quest begins in Dresen, Aeon_KCT_Irabeth_Ravon_dialogue-Irabet arrives and tells us that the family of noblies from Nerosiana sent a letter `
+` Таймер перед: Квест начинается в Дрезене KTC_AeonWintersunLady - двое варваров, тех же, что в Q2 приходят и говорят что дрезенские солдаты убили приезжего из гальта ни за что ни про что, и его труп лежит возле деревни. `:` The Kvast begins in Dresden KTC_AeonWintersunLady-two barbarians, the same as Q2 comes and says that Dresden soldiers have killed a carriageway of a carriageway of no way, and his corpse lies near the village. `
+` Таймер перед: Квест начинается в Дрезене. КТС - в кабинет командора приходит Аверис, женщина-солдат. Аверис рассказывает, что её сестра Силлин погибла при взятии Дрезена, а недавно Аверис увидела у Рэмли, мужика, которого считают мародёром, амулет погибшей сестры.  `:` Timer before: Quest begins in Dresen. The CU is coming to the commander's office by Averis, a female soldier. Averys says that her sister, Sellin, was killed at the capture of Dresen, and recently Averis saw at the Ram, the man who is considered a marauder, the amulet of the dead sister.  `
+` Таймер перед: Квест начинается в Дрезене. KTC - офицер Леллан приводит на суд рядового Горво `:` Timer before: Quest begins in Dresen. KTC-officer Lellan brings Private Gorvo to trial `
+` Таймер до прилета геральда к ангелу `:` A timer until the arrival of herald to the angel `
+` KTC про первый прихд Элянки. Вызывается по времени в механике столицы `:` KTC about the first wharfade of Elanky. Called by time in the mechanics of the capital `
+` KTC про звонок от столпа черепов про атаку на Зиккурат
+ `:` KTC about a pillar of turtle attacks on Zigkurat
+ `
+` 5-ая глава
+KTC про предупреждение жрецов `:` 5th Head of KTC about the Warnings `
+` KTC про первый приход Септимуса. Вызывается по времени в механике столицы `:` KTC about the first parish of Septimus. Called by time in the mechanics of the capital `
+` KTC про звонок бунт нежити `:` KTC about the mutiny. `
+` KTC про звонок от Захариуса. Вызывается по времени в механике столицы
+( он же Spiritual Links ) `:` KTC about the call from Zacharius. Called by time in the mechanics of the capital (it is the Spiritual Links) `
+` KTC про звонок от Захариуса. Вызывается по времени в механике столицы
+Выдает королевский эвент про постройку Зиккурата `:` KTC about the call from Zacharius. Called by time in the mechanics of the capital, [ [ Royal Evening]] about the construction of Zieckurat `
+` таймер перед приходом Elyanka, стартует после того как нас посылают в АрилуЛаб по квесту Spiritual Links `:` The timer, before the arrival of Eilanka, starts after we are sent to [ [ Arilubab]] at [ [ Spiritual Links]] `
+` таймер перед LichRankUp_1 `:` timer before LichRankUp_1 `
+` таймер перед LichRankUp_2 `:` timer before LichRankUp_2 `
+` таймер перед LichRankUp_3 `:` timer before LichRankUp_3 `
+` 5-ая глава
+таймер перед звонком от предупреждением жрецов `:` The 5th is the head of the timer before the call from the priests `
+` таймер перед приходом Septimus `:` timer before Septimus arrives `
+` таймер перед KTC_SkullPillarAboutUndeadRiot
+Стартует после того, как будут сыгран KTC_SeptimusComing + завершен квест SkullPillar `:` KTC_SSkullPellarAboutUndeadRiot timer is starting after the KTC_SeptimusComing + completed the SkullPillar quest `
+` таймер перед KTC_ZachariusCallToRitual (стартует из финала квеста AbodeOfDeath) `:` KTC_ZachariusCallToRitual timer (starts at the end of the AbodeOfDeath quests) `
+` таймер перед звонком от Захариуса `:` timer before calling from Zacharius `
+` Вторая отсечка `:` Second drop `
+` Первая отсечка `:` First compartment `
+` Третья отсейчка `:` Third Diet `
+` таймер перед KTC с первым квестом Вендуаг
+ `:` timer before KTC with Wenduag's first quest
+ `
+` таймер перед KTC с эвентом из романса Вендуаг
+ `:` timer before KTC with the romance of Wenduag
+ `
+` таймер перед KTC с первым большим эвентом из романса Вендуаг
+начинается после комплита Q1 Венду (и активном романсе) `:` The timer before the KTC with the first big euent from the novel Wenduag begins after Q1 Wendy (and the active romance) `
+` таймер перед тем как Вендуаг начнёт тренировки по ночам
+ `:` Timer before Wenduag begins training at night
+ `
+` командир Everbright Crusaders, приводит игроку подкрепу из Мендева в начале 3 главы `:` Everbright Crusaders commander, leads the player to Mendev at the beginning of 3 `
+` Игрок получает подкрепление в Армию под руководством рыцаря Киара `:` The player receives reinforcements into the Army under the direction of Knight Kiara `
+` Стартуем квест в Диалоге Киара, если Морвег пропал или мы его нашли сами в Винтерсане `:` Stardite quests in the Dialogue of Ciara, if Morweg is missing, or we found him in Wintersan `
+` Технический этюд, чтобы не завершать событие, пока не договорили с Геральдом `:` Technical etude not to complete the event until agreed with the Herald `
+` Не помогли Герольду в первый раз `:` They didn' t help Herold for the first time. `
+` До первого рога `:` To the first horn `
+` Финальное столкновение с Дарразандом `:` Darrahand's Final Clash `
+` Не помогли Герольду во второй раз `:` They didn' t help Herold for the second time. `
+` После первого рога и до второго `:` After the first horn and the second `
+` После второго рога `:` After the second horn `
+` Иллюзии оставлены улучшены (Люди видят Демонов как людей, людей как людей) `:` The illusions are improved (People see Demons as people, people as humans) `
+` События решений по винтерсану `:` Wintersan Solution Events `
+` Резчица мертва `:` The mustard is dead. `
+` Если игрок демон и убрал в винтерсане Иллюзии. (перенести потом в нужное место) `:` If the devil is a demon and put it in the intersane of the Illusion. (move to the right place later) `
+` Если подслушали разговор мужиков в Таверне `:` If you overheard the men talking in the Tavern. `
+` Иллюзии сняты (Люди видят Демонов как демонов, людей как людей) `:` The illusions have been removed (People see Demons as demons, people like humans) `
+` Мархевок убит `:` Marchewok killed `
+` Мархевока забрала Жерибет в Санктум `:` Marhewok took Zeriblet to Sankum. `
+` Мархевок остался вождем `:` Marheok remained chief. `
+` Получили ключ от санктума в Винтерсане `:` Got a key from the Sanktum in Wintersan. `
+` Драка с мобами на первой арене. После драки открываются двери в первыой части данжа `:` The darkness with the moss in the first arena. After the fight, doors are opened in the first part of the danja `
+` Корневой этюд Кохх данжа `:` Kohch's Roots `
+` Драка на второй арене. Старт фхов во второй части данжа `:` The stage of the second arenas. Start of fchs in the second part of the danj `
+` Игрок получил отмычку от Шва `:` The player received a jumper from Shwe `
+` Добавление диалога с побитым киборгов мед лабе `:` To add a dialogue with the beaten cyborgs of the honey `
+` Имморталити на нейтрального моба в хим лабе `:` Immortalichi on a neutral bowl in his hand `
+` Драка с вторым боссом данжа. Иммпорталити и старт диалога после его смерти `:` Drac with the second boss. Importalitti and launch of dialogue after his death `
+` Ciar - враг
+ `:` Ciar-Enemy
+ `
+` Ciar убит в зиккурате `:` Ciar killed in zikkurat `
+` Ciar победили в зиккурате и отпустили `:` Ciar win in zikkate and released `
+` Ciar сделали undead в зиккурате `:` Ciar made undead in a zigkurate `
+` отпустили Деламер (до пятой главы)
+Если мы отпустили ее до 5 главы, то она нападет в 5 главе
+Если мы отпустили ее после 5 главы, про нее будет эпилог `:` dismissed Delamer (up to the fifth chapter)
+If we let her go before 5 chapters, she will attack 5. If we let her go after 5 chapters, she'll have an epilogue. `
+` отпустили Деламер  (в пятой главе)
+Если мы отпустили ее до 5 главы, то она нападет в 5 главе
+Если мы отпустили ее после 5 главы, про нее будет эпилог `:` Delamer's release (in chapter five)
+If we let her go before 5 chapters, she will attack 5. If we let her go after 5 chapters, she'll have an epilogue. `
+` Отпущенная Деламер стоит в Пулуре `:` Delamer's downside is standing in Pullouus. `
+` Деламер живет в зиккурате `:` Delamer lives in a zigkurat `
+` Деламер нас уважает `:` Delamer respects us. `
+` Опустить форс филд когда отключены 4 генератора `:` Omit field forfield when 4 generators are turned off `
+` Битва с ласт боссом `:` Battle of the Boss `
+` Поднимает форсфилд, через который нельзя пройти к боссу `:` Res a forsfield through which you can't go to the boss. `
+` Драка с мобами в кузне `:` The Doorak with the Mob in the Teach `
+` Драка с мобами в плавильне `:` The Drac with the Mob in the Plaid `
+` Трек отключения генератора `:` Gen Disablement `
+` https://confluence.owlcat.local/display/PF2/Hall+of+Fame `:` https://confluence.owlcat.local/display/PF2/Hall+of+Fame `
+` Флаг если получили код от столикого в финальном диалоге `:` Flag if received code from table in final dialogue `
+` Кестоглир живет в зиккурате `:` He lives in a zigkurat. `
+` Если попали в данж через персепшен, а не потому что локация ревильнулась через КТЦ `:` If they hit the dang through the peppers, not because the location was relocated through the TCC. `
+` Kyado может стать торговцем в Дрезене `:` Kyado may become a trader in Dresen `
+` Отключение ловушек (если не выключили руками) и стоп боя `:` Disabling traps (if not turned off) and stop fighting `
+` Этюд для проекта с киборгами `:` A Project with a Cyborg Project `
+` Нейтральные киборги `:` Neutral cyborgs `
+` Если Голфри оставила игрока в должности Коммандора после Фейна `:` If Golfrey left the player in the position of Commandor after Fain `
+` Уговорили Алфри называть щупальца - щупальцами `:` I told Alfrey to call tentacles. `
+` Staunton живет в зиккурате `:` Staunton lives in a zigkurat `
+` Флаг если сломали финальную машину `:` Flag if the final machine is broken `
+` Стоп катсцен для отключенных киборгов в подсобке `:` Stop trouscenes for disabled cyborgs in the back room `
+` вское дополнительное для AreeluLabReturn (5-ая глава) на основной локации (AreeluLab) `:` AreluLabReturn (5th chapter) in the main location (AreeluLab) `
+` Барк на Дверь и ее открытие `:` The door to the door and its opening `
+` Бэйкерский квест с яйцом дракона в 3 главе и продолжение его в 5 главе по бейкерсокму или квесту мифик дракона `:` Baker quest with dragon's egg in 3 chapter and continuation of it in the 5 chapter on beaker or quests of the dragon `
+` Драконий квест в 5 главе `:` Draconian quests in 5 `
+` Квест в 3 главе `:` Quest in 3 `
+` Открыть проход в драконью пещеру по квесту в 3 главе `:` Open a cave entrance to the dragon's cave in 3 chapter `
+` Фоллоу НПЦ Латимас `:` Latimas NFP Follow `
+` Выдать дракончика `:` Issue Draconian `
+` Файт с драконом. Отслеживание смерти одного из них `:` A dragon with a dragon. Monitoring the death of one of them `
+` Бафф на хокугола `:` Buff to the Khokola `
+` Старт катсцены - Латимас атакует колокол. Играется если сражаемся с Хокуголом `:` The scene is Latimas attacking the bell. Playing if we fight the Hokola `
+` Если убили медведя `:` If the Bear was killed `
+` Взяли письмо дочери шаманки `:` They took a letter from the shaman's daughter. `
+` Убили Гесмерху `:` Killed by Hesmerhu `
+` Гесмерха Жива. В лесу Новый защитник `:` Hesmerch Alive. In the Forest New Protector `
+` Гесмерха Жива. В лесу Старый защитник `:` Hesmerch Alive. In the woods, the Old Protector `
+` Если просрали армии во 2 главе `:` If there was an army in the 2nd. `
+` Если просрали армии в 3 главе `:` If there was an army in three, `
+` Если мы в Фейне спасли минотавра и он выжил. `:` If we were in Feynot to save the minotaur and he survived. `
+` Когда нас отправили в молтен скар, но мы его еще не нашли `:` When we were sent to the car, a skar, but we haven't found it yet. `
+` Убили Дракона в WW `:` The Dragon was killed in WW `
+` активно нападение Ciar на зиккурат `:` Actively attacked by the jiar on the zikkurat `
+` Зиккурат построен `:` Zieckurath buildings `
+` общий сэйт последнего нападения на Зиккурат `:` general seite of the latest attack on Zigkurat `
+` Труп романса в Зиккурате `:` The Trup of the Romance in Zigurat `
+` Труп романса в Зиккурате (таймер) `:` The Pieces of the Romance in Zigkurat (timer) `
+` работает только если мы перестали быть Личом `:` It only works if we stop being Leech. `
+` бунт нежити `:` mutinies of the Jews `
+` в Зиккурате кровавые скелеты `:` in the Sikkurat Blood skeletons `
+` в Зиккурате обычные скелеты `:` in Zigurate, conventional skeletons `
+` в Зиккурате скелеты Ургатоа `:` Zikkurat skeletons of Urgacoa `
+` 2-ая атака на Зиггурат `:` 2nd attack on Ziggurat `
+` Зиккурат проапгрейдили `:` Zikkurat propgradjaly `
+` выставляет Закариуса в Зиккурат `:` will present Zacarius in Zigkurat `
+` В Дрезене появляется зиккурат `:` Zikkurat appears in Dresen `
+` поапгрейдили столб `:` ramp of the pole `
+` построили столб черепов в Зиккурате `:` Buila skull stake in Zigurat `
+` Шов в шахтах и Арилу знает где он `:` The shafts in the mines and Arile know where he is. `
+` Вошли в бордель через портал верхнего города `:` It was in the brothel through the portal of the upper city `
+` Летит на корабле из дворца Нокты `:` He is flying a ship from the palace of Nokta `
+` Минаго и Чиварро живы и всё у них хорошос `:` Minago and Chivarro are alive and they're all good. `
+` Этюд, который выдает обжективы квеста ConquestOfalushinirra по набору определенного значения Renown
+ `:` [ [ ConquestOfalushirra]]'s quest for a set of '' Renown ''
+ `
+` Поговорили с Сарзаксисом `:` Taltalked to Sarzaxis. `
+` Миэлара 150k `:` Millar 150k `
+` Керз -110k `:` Kerz -110k `
+` Миэлара 100k `:` Millar 100k `
+` Керз - 80k `:` Kerz-80k `
+` Герольд Йомедай `:` Herold Yomeday `
+` ` `:` ` `
+` ProfaneGift выданный повторно ` `:` ProfaneGift from reissued ` `
+` Отображает какую концовку игрок получил в 3 кв Зосиеля `:` The player won 3 square meters in [ [ Zysiel]] `
+` Арена пройдена, Зеклекс стал за главного `:` Arena passed, Zekleks was in charge. `
+` Лифт стоит внизу `:` Elevator's downstairs. `
+` Лифт стоит наверху `:` The elevator's upstairs. `
+` Знаем о иллюзии в драконьем логове `:` We know about the illusion in the dragon's lair. `
+` Хепзамира мертва `:` Hepzamira's dead. `
+` Отпустили калавакуса-повара `:` A catapulacu-chefs have been released `
+` Убили дракона `:` Killed the Dragon `
+` Спасли-освободили рабов `:` They freed the slaves. `
+` суккубы в Арене `:` succubus in Arena `
+` мы сделали операцию демонграфта `:` We made the dismantling operation. `
+` гладиаторы в Арене `:` Gladiators in Arena `
+` гладиаторы в Нексусе `:` Gladiators in Nexus `
+` голарионские рабы в Арене `:` Goranos in Arena `
+` голарионские рабы в Нексусе `:` Gholarion's slaves in the Nexus `
+` Анхпйдит и спавнит мобов на арене `:` Anxiet and the Fauns in the Arena `
+` Unhide clean map objects `:` Unhide clean map objects `
+` затыкает Геральда/убирает все его интеррапты `:` Herales/cleans all his interferes. `
+` завершается стартом обжектива Obj1_ReturnToNexus  `:` end with Obj1_ReturnToNexus  `
+` стартует вместе с обжективом Obj1_ReturnToNexus `:` starts with Obj1_ReturnToNexus `
+` Разрушаем портальную арку после Колифира `:` Destroy the Arch after Colifir `
+` начинается в Нексусе, актуально до 3-его эвента `:` begins in Nexus, actually up to 3 `
+` стэйты романса
+завершение этого этюда == fail романса `:` the romance of the completion of this sketch == `
+` KTC Вендуаг Q2 `:` KTC Wenduag Q2 `
+` Lann Q2 `:` Lann Q2 `
+` заменить амулет здесь и в Answer_0235 (8a39f16f1e6f6b947b14836bfd0362bd) `:` replace the amulet here and in Answer_0235 (8a39f161fo e6f6b947b14836bfd0362bd) `
+` стартуется любым из -
+BattleBlissAS_Gladiators_Nexus, BattleBlissAS_GolarionSlaves_Nexus, Nexus_Aasimars, Nexus_AzataSlaves, Nexus_PleasureSlaves
+ `:` starts with any of the BattleBlissAS_Gladiators_Nexus, BattlelBlisAS_GolarionSlaves_Nexus, Nexus_Aasimars, Nexus_Azatavlaves, Nexus_PleasureSlaves
+ `
+` Геральд убежал и его поймали враги `:` The Herald ran away and was caught by the enemy `
+` портал в Алушинирру открыт `:` Portal at Alushinirra open `
+` Цепочка ангельских квестов и механик, которая не работает, если игрок ушёл с пути Ангела `:` A chain of angel quests and a mechanic who does not work if the player leaves the path of Angel `
+` Игрок стал Ангелом `:` The Player became Angel `
+` Выключает портал к кораблю Миэлары `:` Disables the portal to the ship, Milary. `
+` выдача Add4B_NoGladiators_TalkWithZeklex `:` issuing Add4B_NoGladiators_TalkWithZeklex `
+` Рваный `:` The Ransy `
+` наверное лишний этюд `:` Must be the extra one. `
+` Бафомета убила Ноктикула
+ `:` Baphomet killed Noctykul
+ `
+` Бафомета убил игрок `:` Baphomet killed the player `
+` Гладиаторы из Нексуса в Дрезене `:` Gladiators from Nexus in Dresen `
+` Рабы  из Нексуса в Дрезене `:` Slazos from the Nexus in Dresen `
+` Нексус был в победном стэйте `:` Nexus was a poor man. `
+` Прокинули волю против profane gift'а в диалоге с Бафометом на Колифире `:` The will against the profane gift'in dialogue with Bafumet on Colifiire `
+` Игрок отдал лексикон Нокте `:` The player gave the Lexicon to Nota `
+` Группа этюдов, которые показывают, что мифик изменил свой визуал `:` A group of sketches that show that the world changed his visuals `
+` Добавить Аминасу трейд таблицу `:` Add Aminous Table `
+` Начальный стэйт `:` Initial article `
+` Корневой этюд запускает две механики `:` The root sketch starts two mechanics `
+` Призрачный стэйт `:` Ghost Stein `
+` Дефолт этюд Кенабрес Ребилдед `:` Dette Ethyud of Canabes Rebilia `
+` Убийство босса демона Глабрезу (2 фаза) `:` The assassination of the boss of the Glabyrese daemon (phase 2) `
+` Дефолтный стэйт `:` The Defolite state `
+` На коронации решил/обещал остаться, когда все закончится `:` On the coronation he decided to stay when it was over. `
+` На коронации решил/обещал уйти, когда все закончится `:` The coronation decided to leave when it was over. `
+` Срабатывает только после помощи и жениху, и невесте. `:` Only works after the bride and groom. `
+` Игрок принял предложение Арешкагаль стать ее Аватаром и получил MaskOfNothing `:` The player accepted the offer to become [ [ Avatar]] and received [ [ MaskOfNothing]] `
+` зональный AreeluLabReturn (5-ая глава) `:` area of AreeluLabReturn (5th chapter) `
+` Кнопки 1-4 символа `:` Buttons 1-4 characters `
+` Кнопки 5-8 символа `:` 5-8 character buttons `
+` зональный DemonicCommando `:` zone DemonicCommando `
+` Зональный этюд SE_MeetAnemora (Mythic Locust) `:` Zonal sketch SE_MeetAnemora (Mythic Locust) `
+` мы заходим в Трешхолд и 5-ая глава заканчивается `:` We go to the Treshold and the 5th chapter is running out. `
+` Мехника ConnectingElements `:` Mehnica ConnectingElements `
+` Заменяем диалоги/барки у отряда Голфри в случае успешной победы над монстром `:` Replaces the diology/barca of Golfray's squad in the event of a successful victory over the monster `
+` Лагерь разгромили, знамя унесли `:` The camp was trashed and the banner was taken away `
+` Чун в лагере у знамени `:` The Chung in the Camp by the Banner `
+` Дескари побежден любым из способов `:` Descary vanquished in any way `
+` Стейт "после" - вылез Дескари `:` State "after"-Deskari's coming out. `
+` дескари не сможет сбежать из боя пока не умрет `:` The paratroopers won't be able to escape the fight until they die. `
+` механика для убивания всех к кому игрок не пришёл и они умерли за кадром `:` the mechanics to kill everyone to whom the player didn' t come and they died by the frame. `
+` Ивент в одной из точек прошел, готов к переходу зоны в стейт "после" `:` Ivent in one of the points has passed, is ready to move of the zone to the "after" `
+` Голфри дралась сама без помощи игрока `:` Galfrey was in a fight without the help of the player `
+` Голфри пошла в храм манускриптов `:` Golfrey went to the temple of the manuscripts `
+` Ирабет пошла к логову Теренделев/Монстра `:` Irabet has gone to the den of Terendelev/Monster `
+` Халран в лагере у знамени `:` Halran at Camp by the Banner `
+` Anemora killed `:` Anemora killed `
+` Monster (Terendelev or Dragon) killed `:` Monster (Terendelv or Dragon) killed `
+` Запускаем диалог Иры/Голфри после смерти монстра `:` Launching the Ira/Golfrey dialogue after the death of the monster `
+` Голфри билась с помощью игрока `:` Golfrey fought with the help of the player `
+` Демоны забрали клинок доблести `:` Demons picked up the sword of valor. `
+` Дескари убит в Изе `:` The Deskari was killed in the From `
+` Ирабет пожертвовала собой спасая Голфри `:` The Gottfried has sacrificed himself to save Golfrey `
+` Ирабет умерла `:` Iran has died. `
+` Патруль из Иза ушел и вынес лейр марилитов `:` The patrol left and delivered the [ [ maryliolite]] leer `
+` Пройден букивент Verbovezzor `:` Proyeden Verbosezzor `
+` между насильственной смертью Арилу и закрытием МЯ ещё трепались в диалоге `:` between the violent death of Ariel and the closure of the MJ are still in the dialogue `
+` Арилу пожертвовали для открытия новых разрывов `:` Arila donated to open up new gaps `
+` он же DemonMythDesicion  `:` It is a DemonMythDeicion  `
+` не стал закрывать язву (без дополнительных решений) `:` did not close the ulcer (without additional solutions) `
+` закрыли МЯ пожетвовав PC `:` closed CMI by batting PC `
+` нищебродский финал с Нирваной `:` Nirvana Finals `
+` запускает Ending_Trickster_AllPlanes или Ending_Trickster_AllPlanesAndFW `:` runs Ending_Trickster_AllPlanes or Ending_Tickster_AllPlanesAndFW `
+` финал - "все планы" `:` Finals-All Plans `
+` финал - "все планы и Первый мир" `:` Finals-All Plans and First World `
+` чтобы меньше тормозило, вынес в ThresholdCamp_Scripts01..03 всякие огромные массивы с экшенами `:` to make it less slow, put it in ThresholdCamp_Scripts01.03, all huge amounts of ecstasy `
+` должен стартовать при выполнении проекта NorthernLights_Pulura `:` must start while running the Northern Lights_Pulura project `
+` всякие ноунэймы в лагере
+(и баннер наверное сюда же) `:` all noonomes in the camp (and the banner is probably the same) `
+` нэймеды `:` Nedamed `
+` Mythic-specific NPC `:` Mythic-specific NPC `
+` механика финальной зоны `:` mechanics of the final zone `
+` Комплит значит фэйл романса `:` Comslab means the romance novel. `
+` Флаг для рангапов `:` Flag for ranking `
+` сон в 4-ой  главе `:` fourth chapter `
+` ждём 2 дня до эрранда `:` Waiting for 2 days to errand `
+` Аневия говорит что Арушалай самоизолировалась в казематах (романс) `:` Anevia says that Arushalai is self-contained in casemates `
+` KTC, в котором Аруша просит нас посетить ее сны. `:` KTC, in which Arusha asks us to visit her dreams. `
+` Романс начат и не завершен или не зафейлен.
+ `:` Romance has been started and has not been completed or failed.
+ `
+` Мы успокоили Арушу после Арилабы `:` We calmed Arusha after Arilaba. `
+` после финала романса / в тронном зале (спальне)
+т.к. юзается в Злой Аруше - живёт в стэйтах `:` after the final of the Romance/in the [ [ Throne Hall]] (the bedroom), as he lives in the [ [ Zilla]] `
+` Мы подсказали Аруше сделать в Алушинирре доброе дело `:` We have told Arusha to do a good job in Alushinirra. `
+` Мы защитили Арушу от знакомцев в борделе `:` We protected Arusha from the strangers in the brothel. `
+` Игрок был демоном, но заредимился `:` The player was a demon, but he was not `
+` романс в одном шаге от фэйла
+(но ещё не зафэйлен) `:` Romance in one step from the Fale (but not yet sealed) `
+` Романс закончен `:` Romance finished. `
+` Романс закончен тру эндингом `:` Romance finished with three endings. `
+` Мы успокоили Арушу после Винтерсана `:` We have reassured Arusha after Wintersana. `
+` EX + вне активной партии и с отключённым мозгом (Nexus) `:` EX + outside the active lot and with the disconnected brain (Nexus) `
+` Это касается только событий второй главы, в третьей главе за рекрут отвечает другой этюд `:` This applies only to the events of the second chapter, and the third chapter is the responsibility of the other `
+` Если аруша померла посреди локации и улетела в дрезен `:` If the aroush died in the middle of the location and flew away to the drench `
+` Аневия ловит нас и заставляет расследовать всякое `:` Anavius catches us and forces us to investigate. `
+` Спавн Камелии и ее механики при атаке Гаргулий во 2 главе `:` Camellia and her mechanics at the Gargouli attack in Chapter 2 `
+` после финала романса / в тронном зале (спальне) `:` after the final of the Romance/Throne Room (Bedroom) `
+` Игрок трахнул Камелию во время NormalDate `:` The gambler fucked Camellia during NormalDate `
+` Игрок трахнул Камелию во время ее Ку1 `:` The player fucked Camellia during her Ku1. `
+` Не сошлись во взглядах, Камелия считает, что игрок ее не понимает `:` They did not agree, Camellia believes that the player does not understand `
+` Придумали тупую идею про эвент 1 `:` You thought a stupid idea about eent1. `
+` Камелия закончила романс в дефолтном руте `:` Camellia finished the romance in the default rut. `
+` Пытались заромансить в 1 главе `:` Tried to romancy in chapter 1. `
+` Поддержали ее мнение об Алушинирре, показали, что мы понимаем, что ей движет `:` Support her opinion of Alushinirre, showing that we understand that she is moving `
+` Если усердно трахаем ее второй раз на трупе `:` If she's banging her for a second time on a corpse. `
+` Камелия полностью уверена, что игрок хорошо ее понимает `:` Camellia fully believes that the player understands her well `
+` Игрок просил Камелию постараться быть адекватной, признавшись в любви `:` The player asked Kameli to try to be adequate by recognizing her love `
+` Придумали клевую идею где провести эвент 1 `:` You think about the cool idea where you could spend your time on eent1. `
+` Поговорили с ней про любовь в межэвентии 1-2 `:` We talked to her about love in the interventil 1-2. `
+` Правильно поговорили про наше общее будущее `:` You were right to talk about our common future. `
+` Камелия согласилась постараться вести себя хорошо `:` Camellia has agreed to try to be good. `
+` пререквизит для старта романса CamelliaRomance_Start `:` interrupt to start Romance's CamelliaRomance_Start `
+` старт романса `:` start of romance `
+` стэйт Камелии `:` Camelie's wall `
+` для трупа в подвале `:` For a dead body in a basement. `
+` EX + вне активной партии и с отключённым мозгом (LostChapel) `:` EX + outside the active party and with the disconnected brain (LostChapel) `
+` Камелия получила завещание Хоргуса `:` The Camellia received the will of the Horus `
+` стэйт Хоргуса `:` Khorus's stair `
+` Романс начат и не завершен или не зафейлен.
+Комплит значит зафейлен `:` Romance has been started and has not been completed or failed.
+It's a fae. `
+` Трупы лемонов в комнате командора `:` The Corpses of the lemons in the Room of the Commander `
+` Какой-то Серёгин этюд :) `:` Some Serogin sketch:) `
+` Командор чуть не спалил Барабашку `:` The Commander almost burned Barabashka. `
+` Дейран был в партии когда командора украли в Бэтлблисе. Используется для триггера диалога после Бэтлблисса `:` Deeran was in the party when the commander was stolen in Batlblis. Used for dialog trigger after BEthnic `
+` Видели CueSequence_0095 (8add2c2c1c2600a4aac4d525226902b7) `:` SeeSequence_0095 (8add2c2c1c2600a4aac4d525226902b7) `
+` Реакция игрока на Дейрана ангстящего из-за отправки в крестовый поход `:` The reaction of the player to Deeran is angstowing by sending to the Crusade `
+` Мы хотим жениться `:` We want to get married. `
+` Романс закончен см флагом Bitch `:` Romance is over with the Bitch flag `
+` Романс закончен см флагом Nice `:` Romance is over with the Nice flag `
+` В Дрезену дали Дейранк понять что рады его обществу и тому что он в кои-то веки не язвит `:` In Dresen, he was given a sense of the pleasure of his society and the fact that he had never been in ulcers for ever `
+` Дейран и купальни `:` Deiran and the baths `
+` Удачный ивент2 - "суммирует" предыдущие флаги `:` Removed ivent2-"sums up" previous flags `
+` Дейран волновался за командора `:` Deeran was worried about the commander. `
+` Командор носит амулет - подарок Дейрана `:` Commander carries a gift from Deeran `
+` Дейран намекает что может полюбить командора `:` Deeran implied that he could love the commodore. `
+` Командор нашел тайник с запиской `:` Commander found a stash of the note. `
+` Командор считает что у них есть будущее `:` The Commander thinks they have a future. `
+` Встретились с Голфри в Сердце Защитника `:` Met with Golfrey in the Protector's heart. `
+` Решили добивать Чужого `:` Decided to get Chaugo. `
+` Решили отпустить Чужого `:` They decided to let go of the Jojo. `
+` Простой бой с Чужим `:` A simple battle with the Zuzim `
+` Дейран сам убил инквизитора, не послушав игрока. `:` Deeran killed the Inquisitor himself without listening to the player. `
+` Убили Дейрана любым способом. `:` Killed Deeran in any way. `
+` Мы убили инквизитора Летра. У Дейрана все хорошо - он не лишен титула и вообще.  `:` We killed the Inquisitor, Létre. Deeran's all right, he's not stripped of his title or anything.  `
+` Отдали Дейрана на суд инквизиции `:` To the Court of Inquisition `
+` Сложный бой с Чужим `:` Hard fight with Zhuzm `
+` Спросили Ирабет про Дейрана `:` We asked for Irabet about the Dalan. `
+` Эмбер жива и с игроком. Является нашим полноценным компаньоном `:` Amber's alive and with a player. He is our full partner `
+` Эмбер жива но ушла от игрока по сюжету. `:` Amber's alive, but she left the story player. `
+` Эмбер мертва `:` Amber's dead. `
+` Эмбер жива, но игрок ее выгнал `:` Amber's alive, but the player kicked her out. `
+` культисты EmberQ1 сидят в тюрьме `:` [ [ EmberQ1]] `
+` культисты EmberQ1 сидят в тюрьме, Эмбер читает им проповедь
+работает по выходным, днём и вечером `:` [ [ EmberQ1]] is in prison, and Amber reads his sermon on weekends, day and night `
+` культистка из КТЦ EmberQ1 на свободе `:` CST EmberQ1 `
+` культистка из КТЦ EmberQ1 сидит в тюрьме `:` CST EmberQ1 is in prison `
+` эвент в Алушинирре `:` Evening at Alushinirre `
+` зона Алтарь Бафомета, в пятой главе `:` Altar Baphomet, fifth chapter `
+` SE в пятой главе `:` SE in the fifth chapter `
+` активен Q1 стартуется по таймеру в столице
+(зональный этюд алтаря - EmberWaywardBaphomentsAltar) `:` The Q1 starts on a timer in the capital (Zonal etudes-EmberWaywardBaphomentsAltar) `
+` KTC про похищение Эмбер. Вызывается по времени в механике столицы `:` KTC about Amber's abduction. Called by time in the mechanics of the capital `
+` активен Q1 / в столице `:` active Q1/in the capital `
+` плохая концовка
+нельзя использовать в процессе выполнения квеста `:` Bad ending cannot be used during quests `
+` хорошая концовка
+нельзя использовать в процессе выполнения квеста `:` Good ending cannot be used in the quest process `
+` нейтральная концовка
+нельзя использовать в процессе выполнения квеста `:` Neutral endings may not be used in the quest process `
+` EX + вне активной партии и с отключённым мозгом (Alushinirra Lower City) `:` EX + outside the active party and with the Brain (Alushinirra Lower City) `
+` Стоп катсцен умирающего йозза `:` Stop the dying Yosse scene `
+` Грейбор убит игроком в 3 главе `:` Greybor was killed by a player in the third chapter `
+` Этот этюд стартует если мы убиваем грейбора и лутаем с него ключ от его комнаты, где лежит голда за нашу голову. `:` This sketch is going to starve if we kill the grapplet and get the key to his room from his room, where the head lies behind our head. `
+` Дракон улетел в ИвориСанктум `:` The Dragon has gone to Ivoriskum. `
+` Когда убили дракона в IvorySanctum `:` When the dragon was killed in the IvorySanctum `
+` Наняли Грейбора на постоянку (Дракон убит) `:` Hired Grayboron to the Apostle (Dragon Killed) `
+` Наняли Грейбора для поимки дракона `:` Hire Grabor to capture the dragon. `
+` Наняли Грейбора на постоянку с доплатой (Дракон убит) `:` Hired Graybora on a postcard with a dockboard (Dragon killed) `
+` Наняли Грейбора на постоянку (Дракон НЕ убит) `:` Nanning the Greybor on a Apostolic (Dragon has NOT been killed) `
+` Деньги грейбора за голову игрока `:` The Money of the Grow over the Player's Head `
+` Наняли Грейбора на постоянку с доплатой (Дракон НЕ убит) `:` Nanjali Greyboru on a dockboard with a dockboard (Dragon has NOT been killed) `
+` Когда у Грейбора урезанный компаньонский диалог на время охоты на дракона
+Этот этюд надо комплитить в местах, где мы нанимаем Грейбора на постоянку `:` When Greibor has a reduced companion dialogue for the time of the dragon's hunt, This sketch needs to be in compliance with the places where we hire Greyboru. `
+` Когда у Грейбора нормальный компаньонский диалог `:` When Grábor is a normal companion `
+` События с засадой на дракона `:` Dragon-ambush events `
+` Когда Грейбор стоит в таверне как NPC
+ `:` When Greibor is standing in a tavern as a NPC
+ `
+` Удалить `:` Delete `
+` Выдать 4 обжектив (выследить дракона) закрываем этюд с SE Нападениями дракона `:` Issue 4: (track the dragon) close the sketch with the SE Attack of the Dragon `
+` КТЦ нападения ассасина в спальне игрока `:` Hassassin's Assassin attack in the player's bedroom `
+` Грейбор в гильдии и лоялен `:` Grabor in the Guild and Loyalist `
+` Таймер боя на 4 раунда. Работет через катчцену FightTimer, где этюд и комплитится `:` The battle timer for four rounds. Works through the FightTimer, where the sketch is `
+` Грейбор не в гильдии и предатель `:` Grabor is not in the guild and the traitor. `
+` рыцари из МолтенСкара у Ланна ИЛИ Вендуаг (только в диалоге) `:` Knights of MaltenScar at Lanne OR Wenduag (dialogue only) `
+` Ланн перед входом в Bad Luck `:` Lanne before entering Bad Luck `
+` Ланн пропал из Нексуса `:` Lannes is missing from the Nexus. `
+` Ланн essential `:` Lanne essential `
+` комплит этого этюда выключает всех его детей и этим фэйлит романс `:` a companion of this sketch turns off all his children and that flyful of romance `
+` KTC LannWantsTraining (романс) `:` KTC LannWantsTraining (Romance) `
+` Ланн новый вождь монгрельмэнов `:` The New Chief of the Montralmen `
+` Монгрелы в Дрезене
+зональный `:` Mongrel in Dresden zonal `
+` Монгрелы в Дрезене после последнего квеста Ланна/Вендуаг `:` Mongrel in Dresen after last quest of Lanna/Wenduag `
+` убили Сулла `:` killed Sulla `
+` KTC LannAndDate (романс) `:` KTC LannAndDate (Romance) `
+` KTC_LannCanDo `:` KTC_LannCanDo `
+` KTC_LannComeNeathholm
+ `:` KTC_LannComeNeathholm
+ `
+` KTC_MamaDrezen `:` KTC_MamaDrezen `
+` Ланн приходит к Маме
+вероятно не нужен и полностью дублируется LannMamaAfter (ef79fe4615b617c4fb166d271095b817) `:` Lannes probably don't need to see LannamaAfter (ef79fe4615b617c4fb166d271095b817) `
+` Романтический визит Ланна в Варкэмпе `:` Lanna's romantic visit to Warkamp `
+` стартует вместе к КТС этюдом `:` starts working together for the CTS study `
+` используется в квестах Ланна и Вендуаг `:` Used in the quests of Lanna and Wenduag. `
+` DateWithLann (романс) `:` DateWithLann `
+` Романс начат/активен `:` Romance Start/Active `
+` Если не был поднят LannShy или позволили Ланну открыть бутылку. `:` If you didn' t raise the LannShy or let Leanne open the bottle. `
+` Если не был поднят LannShy или попробовали пирожки Ланна. `:` If you didn' t pick up the Lannshy or tried Lanna's pie. `
+` Задоминировали Ланна в спарринге или Позвали Ланна драться в кабак
+
+(Ланн немного стесняется командора) `:` Lanna was dominated in the sparring, or called Lanna to fight in the cabak (Lann is a little bit shy of the commander) `
+` Ланн почувствовал себя уютно рядом с командором. `:` Lananne felt comfortable beside the commander. `
+` Сказал Ланну, что тот будет хорошим отцом. `:` Said to Lannu that he would be a good father. `
+` 	
+Назвалась девушкой Ланна в письме матери
+И/ИЛИ
+
+Ланн дарит свои чётки `:` 	
+Lanna's girlfriend was named in her mother's letter, AND/OR Lannes gave her rosy `
+` Смерть ненио геймовер `:` The Death of the Nio Geimover `
+` EX + вне активной партии и с отключённым мозгом (Во время боя с арешкой если она ее контролирует) `:` EX + outside the active lot and with the disconnected brain (during the battle with the areal if it controls it) `
+` Прошли данж Арешки `:` It's been a moment. `
+` Этюд, который скрывает что Ненио лиса. Комплитится в Безымянных руинах, открывая фичи лисы и прочее.
+ `:` Eutid, who's hiding that Neenio is the fox. He was in the Unnamed ruins, opening the foxes of foxes and so on.
+ `
+` Убита игроком при первой встрече.  (как NPC) `:` Killed by the player in the first meeting.  (as NPC) `
+` Игрок был в руинах без лисы `:` The player was in the rubies without the fox `
+` Флаг в компаньонском диалоге `:` Flag of the Company Dialogue `
+` Поспавнить лису рядом с Арешкой `:` Visit the fox next to Areshkou `
+` Игрок не стал брать в партию Ненио при первой встрече и она ушла. (как NPC) `:` The player did not join the Nenio party at the first meeting and she left. (as NPC) `
+` Первый эксперемент Нению про экзамен культистам Бафомета `:` The first blunder of the Baphomet cultists `
+` Хеллнайты в лагере `:` Hellnats in Camp `
+` Добавляет Аминаса с диалогом на выходе из столицы в случае если Регилл убит на момент Ку2 `:` Add Aminas with dialogue at the exit of the capital in case Regill is killed at Ku2 `
+` Не взяли Регилла в партию и убили его в добавок `:` They didn' t pick up the record, and they killed him in addition to killing him. `
+` Первый визит Якера в варкэмп.
+Стартует на данный момент экшном из GlobalmapBeforeSwarm `:` Yakera's first visit to the warkamp.
+Starting at this moment in the GlobalmapBeforeSarm `
+` Взяли Регилла в партию на карте HellknightsUnderAttack (не в Лост Чапели!!!) `:` They took a Vellet into a game on the HellknowtsUnderAttack map (not in Leosta Chapley!!) `
+` Не взяли Регилла в партию на карте HellknightsUnderAttack (не в Лост Чапели!!!) `:` Do not take the Case in a party on the HellknistsUnderAttack card (not in Leost Chapley!!) `
+` Мы казнили Якера в KTC2_HellknightsYakerInWarCamp `:` We executed Yaker in KTC2_HellknersYakerInWarCamp. `
+` После старта 5 главы и до момента старта Q3 `:` After the start of the fifth chapter and before the start of Q3 `
+` Спавн Сиилы и ее механики при атаке Гаргулий во 2 главе `:` The Sailor and Mechanics of the Gargoyle attack in Chapter 2 `
+` Встретили друзей Сиилы на Кенабрис Бернинг и они уехали в таверну `:` Met Siila's friends at the Cannes Burning, and they went to the tavern. `
+` Узнать про тревера от Аминаса `:` Learn about Aminas trusts `
+` Узнать про тревера от Регилла `:` Find out about the trust from Regell. `
+` Рисующий Сосиэль в Варкэмпе 2 главы `:` Drawing Sosiel in Warkamp 2 Chapter `
+` Рисующий Сосиэль в Дрезене 3 главы `:` Drawing Sosiel in Dresen 3 chapters `
+` Таймер на КТЦ в Нексусе которое играется если игрок долго тупит и не начинает делать квест `:` The tycoon at the Nexus in the Nexus that plays if the player takes a long time to be stupid and does not start quests `
+` Сосиэль рисует жрецов `:` The Sosiel draws the priests `
+` Сосиэль рисует мертвецов `:` Sausel paints the dead `
+` Сосиэль рисует Арона Кира `:` Sosiel draws Aron Kira `
+` Сосиэль рисует жрецов после разговора на протяжении 1 дня `:` Sosiel draws the priests after a conversation for 1 day `
+` Сосиэль стоит рядом с мальбертом после разговора на протяжении 1 дня `:` Sosiel is standing next to the malbert after the conversation for 1 day `
+` Сосиэль стоит в госпитале 1 день `:` Sosiel is in hospital 1 day `
+` Сосиэль стоит на своём обычном месте 1 день `:` Sosiel is standing in his usual place 1 day `
+` Сосиэль катсценой идёт в госпиталь `:` Sosiel goes to the hospital `
+` Сосиэль рисует Аневию `:` Sosiel draws an Anevia `
+` Как выяснилось, по тексту она всё-таки не в платье. А жаль. `:` It turns out she's not wearing a dress. That's a shame. `
+` Сосиэль рисует Лост Чапель `:` Sostiel paints a Loost Chapel `
+` Сосиэль рисует Ирабет `:` Saosiel painting the Irabet `
+` Сосиэль рисует Лост Чапель после разговора на протяжении 1 дня `:` Sosiel draws the [ [ Loast Cup]] after a conversation for 1 day `
+` Сосиэль рисует Аневию после разговора на протяжении 1 дня `:` Sosiel draws Anavius after 1 day of conversation `
+` Сосиэль рисует Ирабет после разговора на протяжении 1 дня `:` Sosiel draws Iranbet after conversation for 1 day `
+` Висит пока мы не поговорим с Самозванцем первый раз. Оверрайдит диалог Сосиэля. `:` It's until we talk to the impostor for the first time. Overridet Sosiel's dialogue. `
+` КТЦ где игроку стартует диалог Dialogue_Sosiel_Q3_KTC и выдаёт Obj_00a_TalkBlackmask, поговорить с чёрной маской. `:` The ETC where the player starts the Dialoe_Sosiel_Q3_KTC dialog and gives Obj_00a_TalkBlackmask to talk to the black mask. `
+` Концовка квеста: Выход с Арене и запуск последнего диалога `:` Bride end: Exit Arena and launch of final dialogue `
+` Отслеживание смерти Зосиеля или Тревера в варианте Victim. `:` Track the death of Zoshyel or Traver in the Victim version. `
+` Старт катсцены если игрок выбрал вариант Betrayer в диалоге MeetTrever `:` Start of the stage if the player chose Betrayer in the MeetTrever dialog `
+` Драка с Тревером, если игрок выбрал напасть в диалоге MeetTrever `:` The battle with Traver, if the player chose to attack MeetTrever `
+` Встреча Зосиеля и Тревера на арене `:` Meet Zoshilya and Traver in the Arena `
+` Старт катсцены если игрок выбрал вариант Hero в диалоге MeetTrever `:` Start stage if player selects Hero in MeetTrever's dialog `
+` Старт катсцены если игрок выбрал вариант Victim в диалоге MeetTrever `:` Start stage if player chose Victim in MeetTrever's dialog `
+` Монгрелы Вендуаг в Дрезене
+зональный `:` Wendduag Mongrel in Dresende zonal `
+` посрались с Венудаг во время ночной тренировки `:` I had a fight with Wenduck during the night training. `
+` после боя или после обвинения Вендуаг в убийстве / зональный `:` After the battle or after the Wanduan accusation of murder/zonal `
+` монгрелы ушли из столицы и крузэйда
+also см. WenduagDrillFightAfter `:` the mongrel left the capital and the circle of also, see. WenduagallFightAfter `
+` Венду essential `:` Wendy essential `
+` отпустили / блочит романс с ней `:` let go/bleach the romance with her. `
+` корневой этюд романса - комплит фэйлит романс `:` The root sketch of the romance is the Romance of the Romance `
+` взяли в группу / блочит романс с ней
+также, запускает WenduagCapitalTraitorPosition `:` in a group/bleach romance with it, launches WenduagCapitalTraitorPosition `
+` самоубийство Вендуаг в Return2Drezen `:` Wendouag suicide in Return2Drezen `
+` waiting 4 rest
+Венду уходит, ждёт Waiting_WenduagInterlude03 `:` waiting 4 rest of Venda leaves, waiting for Waiting_WenduagInterlude03 `
+` waiting 4 rest
+Венду возвращается `:` waiting 4 rest Wendy returns `
+` KTC_WenduagComeNeathholm `:` KTC_WenduagComeNeathholm `
+` WenduagRomance_CantUnderstand `:` WenduagRomance_CantUnderstand `
+` WenduagRomance_TroublesInTheTavern `:` WenduagRomance_Troubles `
+` стартует вместе к КТС этюдом (живёт в States т.к. по ходу квеста Вендуаг может временно отваливатся от нас) `:` is starting with the CTS Ethyude (living in States because of the quest of Wenduag may be temporarily detached from us) `
+` финальный романтический эвент `:` final romantic euent `
+` лочит флаг `:` bleach flag `
+` HavocInTheTavern  (романс) `:` HavocInTheTavern `
+` второй романтический эвент, в Нексусе `:` The second romantic euenta, in the Nexus `
+` WenduRom_PersonalPunishment  (романс) `:` WenduRom_PersonalPunishment (Romance) `
+` Романс закончен
+(он же WenduRom_Default) `:` Romance is finished (it's WenduRom_Default) `
+` Романс закончен тру эндингом
+(он же WenduRom_ItIsTrue) `:` The Romance has finished with the three endings (he is WenduRom_ItIsTrue) `
+` склонил Венду к попытке исправиться (в будущем) `:` inclined Wendy to try to change (in the future) `
+` утешил Вендуаг, когда она комплексовала, что ничего не понимает в жизни на поверхности `:` to console Wendduag, when she integrated her, that she didn' t understand anything in life on the surface `
+` дал Вендуаг помучать Кьядо `:` I gave Wenduag to Kyado. `
+` убедительно поговорил с Вендуаг во время пьянки в таверне в Алушинирре `:` I spoke to Wendduag during a drinking party at the Alushinirre. `
+` успокоил ревность Вендуаг касательно Веллексии `:` I calmed Wendduag's jealousy over Vallexia. `
+` вдохновил Вендуаг быть лидером племени `:` inspired Wenduag to be the leader of the tribe `
+` не лез Вендуаг под кожу с разговорами об отце, дал созреть и рассказать все самой `:` It wasn't the way Wendduag went into the skin with talking about his father, and he was ready to talk about it all by himself. `
+` утащил к себе Вендуаг для "личного наказания" после убийства в таверне и имел более откровенный разговор `:` He drags Wenduag for "personal punishment" after the murder in the tavern and had a more open conversation `
+` откровенно поговорил с Вендуаг после драки в Нексусе `:` I had a frank conversation with Wendduag after the fight in the Nexus. `
+` откровенно поговорил с Вендуаг после причащения ядом Савамелеха `:` I had a frank conversation with Wendduag after the tea-house of Sawameleh. `
+` Флаг из рангапов `:` Flag from rank `
+` Банда плутифлингов убита `:` The Utilla Banda killed `
+` Жрица Абадара `:` Priestess of Abadar `
+` Столица, когда Chun ушел в Из и еще не вернулся `:` The capital, when Chun left and did not return `
+` Столица, когда Циар ушел в Из и еще не вернулся `:` The capital, when the Cyar left and has not yet returned `
+` Актеры из театра, первый раз встречаем в 1 главе (Горящий кенабрис) `:` Actors from the theatre, the first time we meet in 1 chapter `
+` Полуэльф Культист писарь. Первый раз встречаем в 1 главе (Estrod Tower) `:` Semi-Elf Kultiste Episoar. First time we meet in 1 chapter (Estrod Tower) `
+` Эхо Дескари `:` Echo Dessari `
+` Герольда украл Бафомет и теперь его нет в Дрезене `:` The herald stole Baphomet and now it is not in Dresen `
+` Прелат Кенабриса, встречаем в первой главе на зоне Горящий Кенабрис `:` 'The first chapter in the Burning Kenbris' `
+` Столица, когда Харлан ушел в Из и еще не вернулся `:` The capital, when Harlan left and has not yet returned `
+` Когда ирабет пришлось уйти в Голфри из-за того, что игрок не командир `:` When the irabet had to go to Golfrey because the player is not a commander `
+` зональный `:` zonal `
+` Юный крестоносец из ордена Пылающего копья (крестоносцы маги, возглавляет их Миамир).
+Первый раз втречаем в 1 главе (BlackWingRuins) и спасаем их от сожжения. `:` A young crusader from the Order of the Flaming Spear (the Mage Crusaders leads them). `
+` Хороший Зам Харалана, если не выбрали никого между Харланои и Ремьеном `:` Good Zam Haralan, if there is no one between Harlano and Remen `
+` Тифлинг-предатель из квеста Вольжифа `:` Tiffling is a traitor from the quest of Wolzhyf. `
+` Ноктикула мертва `:` The Nocticulus is dead. `
+` крестоносец из ордена Flamelance. Она - один из двух претендентов на командование орденом ввиду пропажи их предводителя Миамир `:` A crusader from the Order of Flamelance. She is one of the two candidates for command of the Order in view of the disappearance of their leader Miamir `
+` Аазимар, жрец Дезны, встречаем в первой главе на зоне Горящий Кенабрис `:` Aazimar, Priest of Desna, meet in the first chapter in the area of the burning kenbris `
+` Если убили Соану `:` If Soanu was killed, `
+` Сказитель вернулся в столицу в 3 главе. Через КТЦ или квест Грейбора `:` The mischief returned to the capital in 3. Through the TCC or the quest of Greybora `
+` Ангел, заточенный в Арилу лабе `:` An Angel Wrecked in Ariel Laba `
+` Чун мёртв `:` Chun is dead `
+` Чун - прелат Дрезена `:` Chung-prelat Dresen `
+` Циар мертв. Не важно по какой причине `:` The circus is dead. No matter why. `
+` Циар ушел и не вернётся. Не важно по какой причине `:` The circus is gone and he's not coming back. No matter why. `
+` "Вот видите, это никакой не демон! Здравствуйте, {mf`:` " You see, it's not a demon! Hello, { mf`
+`добрый друг`:`good friend`
+`добрая подруга} и спаситель{mf`:`a good friend } and the savior { mf`
+``:``
+`ница}! Я — бабуля Гретлин, режиссер, а это — члены моей труппы". `:`nica }! I'm Granny Gretlin, the director, and these are the members of my troupe. " `
+` Когда Голфри приехала в Дрезен до посещения фейна `:` When Golfrey came to Dresen before she went to the Feyne `
+` Голфри мертва не важно каким способом. Если зомби, то тоже мертва `:` The Golfray is dead no matter what. If the zombie is dead, too. `
+` Galfrey освободит ангелов из Вардстоунов, после конца игры `:` Galfree will free the Angels from the Wardstones, after the end of the game `
+` механика в катсцене PlayerComesToGalfrey `:` mechanics in PlayerComesToGalfree `
+` Galfrey живет в зиккурате `:` Galfree lives in a zigkurat `
+` Голфри узнала про лексикон `:` Golfrey found out about the lexicon. `
+` Galfrey знает что в Страж-камне заключены души ангелов `:` Galfrey knows that the souls of angels are surrounded by the Guardians `
+` Irabeth_C3_Intro_Dialogue Cue_0028, Cue_0037- нужно пометить флагом что мы видели этот куй, проверяется в другом диалоге
+GalfreyArrives_Drezen_c3_dialog Cue_0052 - нужно подключить! `:` Irabeth_C3_Intro_Dialogue Cue_0028, Cue_0037-you need to flag the flag that we have seen this cookie is checked in another GalfreyArrives_Drezen_c3_dialog Cue_0052-connect! `
+` Игрок сделал Голфри бабулей `:` The player made the Golfry Maw Maw `
+` Когда Голфри еще не приехала перед походом в фейн `:` When the Golfrey hasn't arrived yet before going to the Feyne `
+` Этюд, который закомплитится при выходе из локации башни сказителя `:` Eutid, who is in the process of coming out of the location of the narrator `
+` Хал дракон стоит в столице `:` Hal of the Dragon is in the capital `
+` Флаг - убили Хэла в 3 главе `:` Flag was killed by Hal in 3 `
+` Хал ушел в кенабрес по квесту. Хайд в столице `:` Halo went to the quests on the questa. Hyde in the Capital `
+` Когда прошли санктум и герольд улетел в Дрезен `:` When the Sanskum passed and the herald flew to Dresen `
+` Герольд не верит игроку `:` Herold does not trust the player `
+` Герольд удалился в изгнание `:` The Herold went into exile `
+` Убили Герольда в Лабиринте `:` Gerold was killed in the Labyrinth `
+` Герольд вернулся на небеса `:` Herold has returned to heaven `
+` Герольд верит игроку `:` Herald believes the player `
+`  Таргона в городе может стоять только у Ангела `:`  Targon in the city can only be in Angel's face. `
+` Халран - прелат Дрезена `:` Halran-Prelat Dresen `
+` Зафейлились в подбадривании Ирабет на старте 3 главы `:` It's been faked in Irabet's subrosion at the start of the chapter three. `
+` Ирабет ушла от нас `:` Irabet has left us. `
+` Игрок лично убил Ирабет `:` The player personally killed Irabet `
+` "На кого ты охотишься здесь, в Мендеве?" `:` "Who are you hunting here in Mendev?" `
+` "Я знаю, кто ты. Ты — Кайлесса, культистка Дескари". `:` " I know who you are. You're a kayless, a cult of Deskari. " `
+` "Что тебе от меня нужно, солдат?!" `:` "What do you want from me, soldier?" `
+` Мы отпустили Минаго по реинфорседу Азаты (MinaghoHappyEnd) `:` We released Minago from the Reine to Azat (MinaghoHappyEnd) `
+` Просто отпустили в C4 `:` Just let go to C4. `
+` Рамьен - прелат Дрезена
+если закомпличен - то Рамьен был прелатом, но теперь уже нет. Дрезен без правителя. `:` Ramien-prelate Dresenis, if the need to be compliant, Ramien was a prelate, but now it's gone. Dresen without governor. `
+` Игрок знает что Арилу чувствует раскаяние из-за Шва `:` The player knows that Ariel feels remorse because of Shwe `
+` Шов отправлен в шахты `:` Shiv's sent to the mines. `
+` Шов освобожден из рабства `:` Shov was released from slavery `
+` Шов умер `:` Show died `
+` Шов стал мификом (и любит нас) `:` The Shah became a [ [ mythical]] (and loves us) `
+` Шов НЕ стал мификом и обижен на нас `:` Shaow has NOT become a mifique and resented at us `
+` Нашли страничку лексикона в башне дракона. (3 глава) `:` We found a lexicon page in the dragon tower. (3 chapter) `
+` рассказали Сказителю про Kiny / или наоборот `:` told the Kiny/or vice versa `
+` в диалоге уговорили его "принять предложение Фаразмы" `:` in the dialogue, persuaded him to "accept the Phasma proposal" `
+` в диалоге уговорили его "принять предложение Фаразмы", но умрёт он через несколько лет `:` in the dialogue, persuaded him to "accept the Phasma proposal," but he will die in a few years `
+` в диалоге уговорили его "отказаться от предложения Фаразмы" `:` In the dialogue, they persuaded him to "give up the Phasma proposal" `
+` Когда мы осудили Таргону Аэоном в Лабе и сожгли ей крылос `:` When we condemned Targon Aéon in Laba and burned down her wing `
+` Таргона с концами умерла в Mutasafen Lair `:` The Targon has died at the Mutaafen Lair `
+` У Таргоны нормальные ангельские крылья `:` The Targon has normal angel wings `
+` Когда освободили Таргону `:` When the Targon was released `
+` Когда мы напали на Таргону в Арилу лабе `:` When we attacked Targon in Ariel's lab `
+` В лабе Мутасафена дали Таргоне убиться `:` Muthasafen's lab has killed Targon `
+` В лабе Мутасафена не дали Таргоне убиться `:` Mutasafen's lab has not given the Targon to the murder. `
+` Теренделев была воскрешена и на находится в дрезене  `:` Terendel was resurrected and was in a Dresen  `
+` Спасли Яниэль в Фейне `:` Saved by Yaniel in Fein `
+` Убили Яниэль в Фейне `:` Killed Yaniel in Fein `
+` Выдает аддендум про разговор с зеркалом после трех судов `:` Issue a Addenum conversation with a mirror after three ships `
+` Тут все суды 5 главы `:` There are five chapters in the courts. `
+` Когда зафейлили путь айона
+https://confluence.owlcat.local/pages/viewpage.action?spaceKey=PF2&title=Broken+Mythics `:` When the path of the ayon https://confluence.owlcat.local/pages/viewpage.action?spaceKey=PF2&title=Broken+Mythics `
+` Игрок сменил мифика на другого в 5 главе
+https://confluence.owlcat.local/pages/viewpage.action?spaceKey=PF2&title=Broken+Mythics `:` The player has changed the mythic to another in the 5-chapter https://confluence.owlcat.local/pages/viewpage.action?spaceKey=PF2&title=Broken+Mythics `
+` Ноктикула осудила Зелекса на суде `:` Noctikus condemned Zelèks at trial. `
+` "Я не помню". `:` "I don't remember." `
+` Что отвечал игрок в первом диалоге
+ `:` What the player responded in the first dialogue
+ `
+` "Кто я — не твое дело". `:` "Who I am none of your business." `
+` "Спасибо за помощь". `:` "Thanks for your help." `
+` "Кто ты?" `:` "Who are you?" `
+` "Что со мной случилось?" `:` "What happened to me?" `
+` "Крестоносец. Я приш{mf`:` " The Crusaders. I am in { mf`
+`ел`:`el`
+`ла} воевать с демонами". `:`I will fight with demons. " `
+` "Странни{mf`:` " Stranno { mf`
+`к`:`to`
+`ца}. Я просто проходил{mf`:`c }. I was just passing { mf.`
+``:``
+`а} мимо". `:`a } by ". `
+` "Я прибыл{mf`:` " I arrived { mf`
+``:``
+`а} в город по делам". `:`a } to the city of business. " `
+` "Я давно живу в этом городе". `:` "I've lived in this town for a long time." `
+` "Я {name}". `:` "I { name }". `
+` "Ты действительно дракон?" `:` "Are you really a dragon?" `
+` Айон прогнал взяточников `:` He ran the bribe-takers. `
+` Когда чувак с неизвестным преступлением уехал после суда `:` When a dude with an unknown crime left after the trial. `
+` Айон прогнал лжецов `:` Aion ran the liars. `
+` Айон пронал мародеров `:` Aion of the Marauders `
+` Айон прогнал клятвопреступников `:` Aion sent the perps. `
+` Айон прогнал всех воров `:` Aion sent all the thieves out. `
+` Если в ГГ профукали айона `:` If the GG is a quayton. `
+` Если этот этюд работает, то в Фейне есть лаборатория Зантира `:` If this sketch works, there's a Zantira lab in Fae. `
+` Цена зданий уменьшена на 20% `:` The price of buildings has been reduced by 20% `
+` Первое здание дает в три раза больше юнитов в прирост `:` The first building is three times more units `
+` Армии имеют на 10 больше мув пойнтов, генералы имеют на 1 больше атаку, защиту и силу магии. `:` The army has ten more points of the point, the generals have 1 more attack, protection and magic. `
+` Солдаты получают иммун к страху, компулшену, конфужону.
+Проект по призыву мифических существ: Водные элементали `:` The soldiers get an immun for fear, compumulsion, confusson.
+A project on the conscription of mythical creatures: Water elenements `
+` Солдаты получают иммун к ядам, стуну и параличу.
+Проект по призыву мифических существ: Огненные элементали `:` The soldiers receive the immun to the poisons, the snitch and the paralysis.
+Project on the conscription of mythical creatures: Fire elements `
+` Каждый юнит в армии получает +1 АС за каждого союзного юнита рядом (в соседних клетках по вертикали и горизонтали). `:` Each young man in the army gets + 1 AU for each union unit adjacent (vertical and horizontal in the neighboring cells). `
+` Увеличивает приток всех ресурсов на 25% `:` Increases the flow of all resources by 25% `
+` Генерал в любой момент боя может дать всей армии джаджмент `:` The general can give the entire army a jezement at any time `
+` анлок найма водных и воздушных элементалей `:` Recruitment of water and air elemental `
+` анлок найма огненных и земляных элементалей `:` The recruitment of firemen and earth elements `
+` анлок найма кинетиков
+какой-то баф, связанный с радиацией Язвы `:` kinetics of some kind of Yazza radiation `
+` Армии игрока становятся bane of demons `:` The player's army becomes bane of demars `
+` Армии игрока становятся bane of magic `:` The players ' armies become bane of magic `
+` дает эонов в найм `:` gives the eons an employment `
+` дает иневитаблов в найм `:` gives the inforvitable to the hire `
+` Этот этюд анлокает айона в механике `:` This is an ione anon in mechanics. `
+` Что мы сказали Стонтону в прошлом `:` What we said to Stonton in the past. `
+` Дьявол прибыл к айону `:` The devil has come to the ayon `
+` Если помиловали влюбленных `:` If the lovers have pardoned `
+` Если неправильно назвали Рэмли список из стэша `:` If they mislabeled Ram's list from the wall `
+` Осудили жрицу и ее больше нет в городе `:` Condemed the priestess, and she is no longer in the city `
+` Когда учеником Ариилу стал Мустафа и в фэйне его лаборатория `:` When Ariel was a student, Mustafa and his laboratory were in the [ [ Faine]] `
+` Игрок отменил смерть Теренделев `:` The player canceled the death of Terendell `
+` Когда сходили в прошлое и разделили Зантира. Потом сказали ему ихучать кристаллы и чтобы нас нашел в будущем `:` When I went to the past and divided the Zantyr. Then they told him to learn the crystals and to find us in the future `
+` Фай в таверне начал светиться `:` The fay in the tavern began to glow `
+` "Я твой друг, и я приш{mf`:` " I am your friend, and I am a { mf`
+`ел`:`el`
+`ла}, чтобы не дать тебе совершить ужасную ошибку". `:`l } to keep you from making a terrible mistake. " `
+` "Я т{mf`:` " I t { mf`
+`от`:`from`
+`а}, кому придется убить тебя, если ты не остановишься". `:`"Who will have to kill you if you don't stop." `
+` "Я — т{mf`:` " I am { mf`
+`от`:`from`
+`а}, кто возглавит Пятый крестовый поход после того, как сейчас по твоей вине провалится Второй". `:`and } who will lead the Fifth Crusade after you fail the Second. " `
+` "Я — эон. Голос разума. Я здесь, чтобы остановить это безумие". `:` " I'm an Eon. The voice of reason. I'm here to stop this madness. " `
+` Спрашивал ли игрок про Арушу при возвращении из прошлого `:` Whether or not the player asked about Arusha on his return from the past `
+` Спрашивал ли игрок про Грейбора при возвращении из прошлого `:` Whether or not the player asked about the Greybor back from the past `
+` Второй стейт столицы мифика 
+https://confluence.owlcat.local/pages/viewpage.action?pageId=8921190 `:` https://confluence.owlcat.local/pages/viewpage.action?pageId=8921190 `
+` Когда проанлочили Ариилу лаб и там появился рифт `:` When Ariel's anus was broken and there was a rift `
+` В 3 главе когда светится зеркало 2 первых суда `:` In the third chapter, when the mirror of two first vessels mirrors `
+` После двух первых судов `:` After the first two vessels `
+` С3 Аэон - Q10Орвенн Далмора против Дрезена `:` P-3 Aéon-Q10Orlando Dalmor v. Dresen `
+` С3 Аэон - Q11Дрезен против убийцы гальтского гостя `:` C3 Aéon-Q11Dresen v. the murderer of a galvanic guest `
+` С3 Аэон - Q3Дрезен против заговора молчания `:` C3 Aéon-Q3Dresen v. conspiracy of silence `
+` С3 Аэон - Q5Рядовой Аверис против рядового Рэмли `:` C3 Aéon-Q5Private Averis v. Private Ramley `
+` С3 Аэон - Q7Дрезен против поющей жрицы `:` C3 Aeon-Q7Dresen v. Singing `
+` С3 Аэон - Q9Рядовой Горво против армии Дрезена `:` P-3 Aéon-Q9, Gorvo v. the Dresen army `
+` Скриптзона перед зеркалом `:` CryptZone in front of the mirror `
+` Выключалка свечения зеркала `:` The mirror illumination of the mirror `
+` Диалог с зеркалом, если игрок еще не сделал реинфорс айона `:` Dialogue with the mirror if the player has not yet made a redevelopment of the ione `
+` Когда Фай решил торговать наркотой и попал в тюрьму `:` When Fai decided to sell drugs and go to prison `
+` Рифт в процессе `:` Rift in process `
+` Когда надо поговорить с зеркалом после двух судов второй волны `:` When we need to talk to the mirror after two vessels of the second wave `
+` Компаньонский диалог с зеркалом `:` The Dialogue with the Mirror `
+` Суд Шаксы `:` Shaksa's Court `
+` Суд Миелары `:` Court of Myelara `
+` Суд Зеклекса `:` The Zekleks Court `
+` Случился ли первый суд `:` Whether the first trial has happened `
+` На коронации выбрали "действия возмездия" `:` The coronation has chosen "action of retribution" `
+` На коронации выбрали "действие спасения" `:` The coronation has chosen a "rescue action" `
+` Сменили Ангельский мифик на другой `:` I've changed the Angel to another. `
+` Зафейлили ангельский мифик
+ `:` The World's Faith
+ `
+` Позволяет делать реинфорседы когда игрок может стать ангелом `:` Allows you to make reinformers when the player can become an angel `
+` Спрашивали Герольда про мутацию Таргоны `:` Asking Herold about the mutation of the Targon `
+` Взяли паларский проект `:` They've got the tent project. `
+` INACTIVE `:` INACTIVE `
+` Этот этюд фейлит мифик Ангела `:` This is a fake Angel's sketch. `
+` Если Эхо нападало на Ангела в SE Алушенирры `:` If Echo was attacking Angel in SE Alushenirra. `
+` Эхо Дескари похитил Элиандру `:` Echo Deskari kidnapped Elianry `
+` Эхо Дескари похитил Катайра `:` Echo Deskari abducted the Cataira `
+` Скупили весь общак `:` I bought the whole dorm. `
+` Сдавали лут в общак `:` Led in the dorm. `
+` Не сдавали лут в общак `:` They didn' t give up in the dorm. `
+` Выбрали "правильные" реплики во втором диалоге `:` Select "correct" replicas in the second dialog `
+` 02_StopMutasafen (2fe2f0d628cfb07458ee8e21b4f50b2c) - completed `:` 02_StopMutafen (2fe2f0d628cfb07458e8e21b4f50b2c)-completed `
+` Прилет Геральда к ангелу. Стартуется по таймеру `:` The Herald will come to the angel. Starting on a timer. `
+` Яниэль будет нам помогать с Минаго `:` Yaniel will help us with Minago. `
+` Позитивная мораль имеет х1.5 эффект на прирост рекрутов. `:` Positive morale has x1.5 effects on the growth of recruits. `
+` Позитивная мораль имеет двойной эффект на прирост ресурсов. `:` Positive morality has a double effect on resource growth. `
+` Позитивная мораль имеет двойной эффект на прирост финансов. `:` Positive morality has a double effect on the growth of finance. `
+` Генерал получает пассивную абилку дающую бонус +1 к АС и дополнительно +1 к АС за каждых союзников на поле боя (максимум +3) всем юнитам
+Проект по призыву мифических существ: Мованик Дева `:` The general receives a passive abik giving bonus + 1 to the AU and an additional + 1 to the AU for every ally on the battlefield (maximum + 3) all units of the project on the conscription of mythical creatures: `
+` Позитивная мораль имеет двойной эффект на шанс прока второго хода в бою.
+Проект по призыву мифических существ: Мованик Дева
+ `:` Positive morality has a double effect on the chance of a second move in battle.
+Project on the conscription of mythical creatures: Movanik Deva
+ `
+` Появляется ритуал "Призвать небесное воинство", вызывающий ангелов на глобал мап. Появляется ритуал призыва ангелов в бою. `:` The ritual of "Call the Heavenly Host", which calls the angels on the global mop, appears. The call of angels in battle is a ritual. `
+` Появляется глобальный ритуал Storm of Justice, наносящий каждому отряду целевой армии (d6 damage formula) если цель обычная, d8 если злая, d10 если демон или нежить, d12 если высший демон, злой дракон или супернежить (дракон скелет или лич).
+Появляется боевой ритуал Bolt of Justice, наносящий такой же урон, но в одну цель.
+ `:` The Storm of Justice is a global ritual that causes every target army (d6 damage formula) if the target is ordinary, d8 if it is a mean, d10 if the demon or not to live, d12 if the supreme demon, the evil dragon, or the supernatural (dragon skeleton or lime).
+ `
+` Дает боевые ритуалы Blade of the Sun (наносит холи d8 damage formula урон по линии через все поле боя)
+Все инфантри и кавалерия имеют Smite Evil применемый один раз за бой. `:` Provides combat rituals of the Blade of the Sun (deals the d8 damage formula damage through the entire battlefield)
+All the infantrs and cavalry have a Smite Evil in a fight. `
+` +15% к размеру госпиталя `:` + 15 per cent of the hospital `
+` Дает боевые ритуалы Ward from Weakness (дает цели иммунитет к негативным воздействиям)
+Все стрелки имеют Smite Evil применемый один раз за бой.  `:` gives combat rituals Ward from Weakness
+All the arrows have a Smit Evil, once for a fight.  `
+` Сурово карать. Они - враги
+
+Появляется глобальный ритуал Bestow Wrath. Выбранная союзная армия получает бафф, в этот день в начале боя враги получат заряд урона 4d6 мифик лвл `:` A harsh punishment. They are enemies of the global ritual of Bestow Wrath. The [ [ allied army]] is receiving the [ [ Baff]], the day at the beginning of the battle, the enemy will be charged with a 4d6 [ [ blubl]] loss `
+` Спасать и прощать. Мы бьемся за жизни смертных
+
+Появляется глобальный ритуал Bestow Protection. Бафф, дающий каждому юниту в армии буфер на (d10 *мифик лвл) хп на следующий бой сегодня. `:` To save and to forgive. We are fighting for the life of the mortal Pois is the global ritual of Bestow Protection. Buff, which gives every juniper in the army a buffer on (d10 * world) hp to the next fight tonight. `
+` Всех казнить без разбору `:` All executions without distinction `
+` Монадик девы - милишники с огенными мечами и баффами клериков. `:` Monks of the Mir-Minsters with swords and swords of clerics. `
+` Астрал девы - средние милишники (но очень крутые против нежити - молот убивает часть нежити с прока), имеют хил и блейд барьер в заклинаниях. `:` The Astral of the Minster-the average mylichans (but very steep against the nolita-the hammer kills part of the gap), has a chil and a blade barrier in spells. `
+` Только пришли, инициация зоны `:` Only the Zone Initiation arrived. `
+` Сайдовые квесты `:` Cod quests `
+` Мейн квест `:` Mayne Bride `
+` Финал мейн квеста `:` Family Quest Final `
+` Ритуал `:` Ritual `
+` Тревога после ритуала `:` Alarm after the Ritual `
+` Идем бить культистов `:` Let' s hit the cult. `
+` Надо поговорить с культистом `:` We need to talk to the cult. `
+` Лидер культистов творит фигню `:` The leader of the cult artists does the thing. `
+` Этот этюд анлокает азату в механике `:` This sketch is for the asatu in mechanics. `
+` Азата принемает контракт Мефисто и убивает всех своих Вольных крестоносцев `:` Azata is forced to accept Mephisto's contract and kill all his Crusaders `
+` Азата убивает всех своих вольных крестоносцев, потому что Мефисто его обманул `:` Azata is killing all his crusaders because Mephisto deceived him `
+` Азата дерется с Мефисто, все счастливы `:` Azat fights with Mephisto, everyone is happy. `
+` Игрок разоблачил наставника в квесте с4 азаты `:` The player unmasked a mentor in the quests of the four azaths `
+` Мы хорошая правильная азата `:` We're a good right azut. `
+` "Хаос победил" `:` "Chaos has won." `
+` выключается после начала осады Дрезена `:` shuts down after the onset of the siege of Dresen `
+` Игрок отказался менять Алаймент на нужный. Фейл всей цепочки. `:` The player refused to change the Alinement to the right one. The entire chain. `
+` "Дьявол победил" `:` The Devil Wins. `
+` Тихоня погиб в Фейне `:` Tikhon died in Fein `
+` Тестовый Этюд для азаты С5 `:` Test Eutid for the P5 `
+` В Дрезене появляется район Азаты `:` Azaty's area appears in Drezene `
+` В Midnight Fane нам помагают бандиты.
+Стартует в RobinHoodArrives_azata_c3_dialog - в ансверах 9 и 10 `:` In the Midnight Fane, we're a gangster.
+Starituth in RobinHoodArrives_azata_c3_dialog-in ancores 9 and 10 `
+` В Midnight Fane нам помогают дети.
+Выдается в ChildCrusadersArrive_azata_c3_dialog - в ансвере 5 `:` We have kids in Midnight Fane.
+Issuing in the ChildCrusadersArrive_azata_c3_dialog-in ansere 5 `
+` Уговорили вольных крестоносцев отступить `:` The freestall crusaders retreated. `
+` В Midnight Fane нам помагают мимики.
+Выдается в MimicsArrive_azata_c3_dialog - в ансвенре 5 `:` In the Midnight Fane, we're a little gay.
+Embodied in MimicsArrive_azata_c3_dialog-in ansire 5 `
+` Вольные крестоносцы ломанулись вперед `:` The crusaders loited forward `
+` В Midnight Fane нам помагают треанты.
+Выдается в TrentsArrive_azata_c3_dialog - арсверы 11, 12, 25  `:` In the Midnight Fane, we're all in awe.
+Issuers to TrentsArrive_azata_c3_dialog-arsverts 11, 12, 25  `
+` Принять Робин Гуда и разбойников в крестоносцы `:` Take Robin Hood and the Robbers to the Crusaders `
+` Принять детей в полноценные крестоносцы `:` To take children into full crusaders `
+` Сказать трентам отпустить быстродрева на волю `:` Tell the trents to let go of the fast. `
+` Сдать Робин Гуда хеллнайтам `:` Robin Hood of hellnatus `
+` Отослать Робин Гуда `:` [ [ Robin Hood]] `
+` Отослать детей `:` Send children `
+` Отругать валхалфлингов `:` Scuss of the Walkhalflings `
+` Выгнать мимиков `:` Eject Mimics `
+` Взять в заложники рощи трентов `:` Take the groves of the trenes hostage. `
+` Выгнать трентов `:` Eject the Trents `
+` Тераформинг Молтенскара `:` Moltenscara bombing `
+` Включенный этюд запускает функционал острова летающего на ГМ. `:` The included sketch launches the functionality of the island flying to the GM. `
+` Новая абилка для генерала - Inspired Advance (дает всем юнитам +2 movement speed и абилку увеличивающую урон за каждую пройденную клетку) `:` The General's new [ [ ibilka]] is an Advance Advance (which gives all the units + 2 movement speed and a [ [ billboard]]) `
+` Дает песню - Song of Seasons (каждый юнит лечит своих и дамажит врагов в конце хода вокруг себя). `:` Song of Seasons (every young man cures his or her enemies at the end of the day). `
+` Новая абилка для генерала - Song of the People (все юниты получают фланкинг бонус +4 к атаке и урону) `:` The new general is the "Song of the People" (all units receive a flanking bonus + 4 to attack and damage) `
+` Искать союзников
+
+Теперь можно нанимать как наемников Халфлингов из беллфлауера, бывших рабов. Они роги со слингстаффами.. `:` The search for Allies can now be hired as Halfling mercenaries from the Bellevauer, former slaves. They're antlers with shingles. `
+` Проводить разведку
+
+Армии теперь ходят в полтора раза дальше, а юниты на 1 клетку дальше. `:` Intelligence of the Army now goes one and a half times further, and the units are 1 cell further. `
+` Воевать
+
+Теперь можно нанимать как наемников жрецов Десны. Они клерики, которые умеют очень хорошо диспеллить негативные эффекты. `:` The war can now be hired as a mercenary of the gums of Desna. They're clerics who can very well dispel negative effects. `
+` Каких звать Ореадов
+
+Ореадов-монахов - средней мощности, с ентанглами и throrn body.
+ `:` What are the names of Oreadov's monks-monks-average strength, with the entrants and the thorn body.
+ `
+` Каких звать Ореадов
+
+Ореадов-воинов - очень мощные, с очень болезненной атакой.
+ `:` The names of Oreadov's warriors are very powerful, with a very painful attack.
+ `
+` Каких звать Ореадов
+
+Ореадов-жрецов - средней мощности, с баффами и лечением. `:` What are the names of Oreadov's average power, the baffees, and the treatment? `
+` Кого позвать из Элизиума на помощь?
+
+Лилиенд - барды, они умеют петь Inspire Courage, лечить, парализовать врагов, кастить Sound Burst. `:` Who is going to get help from Elysium?
+
+They can sing Inspire Courage, treat, paralyze enemies, sown Sound Burst. `
+` Кого позвать из Элизиума на помощь?
+
+Бралани азаты - крутые стрелки которые еще могут баффать и кастить Lightning Bolt `:` Who is going to get help from Elysium?
+
+Lightning Bolts can also use the Lightning Bolt Brough `
+` Сон о новой жизни
+
+Добавляется еще одна песня - Song of the Second Breath- Дает выбранному юниту временные 3*power max hp. После применения этой песни больше песни применять нельзя. `:` Dream of the Second Breath song-Song of the Second Breath song is added to the chosen iunites of temporary 3 *power max hp. Once this song has been used, no more songs can be used. `
+` Сон о победе
+
+Добавляется еще одна песня - Song of the the Last Push - выбранный юнит в этом ходу походит еще два раза. После применения этой песни больше песни применять нельзя. `:` Song of the the Last Push is a song about the winning of the song two more times. Once this song has been used, no more songs can be used. `
+` Сон о доме
+
+Добавляется еще одна песня - Song of the Last Step - Song of the Last Step - все юниты получают телепортацию, штраф к инициативе -5. После применения этой песни больше песни применять нельзя. `:` Song of the Last Step-Song of the Last Step. Once this song has been used, no more songs can be used. `
+` Веселимся тихо
+
+Azata Veranalia (делаем ларджовую женщину эльфийку в робе и накрываем ее ФХом из PF:KM autumn treant creature) - сверхмощный кастер с масс хилом, destruction'ом, чейн лайтнингами. `:` We have fun quietly, Azata Veranalia (make a largeness flake in the robe and cover her with FX from PF:KM autumn train)-a superpower kaster with a lot of chil, destruction', honkies. `
+` Веселимся буйно
+
+Хавок драконов - топового юнита с очень крутыми статами. `:` The fun of the dragon's hoof-top dragons with very cool articles. `
+` в "After release" - надо просто линкануть к родителю.
++в MoveAzataIslandToLocation надо будет указать глобал мапу `:` in "After release"-you just have to link to parent. + MoveAzatIslandToLocation will need to specify the global Mapu `
+` 3 дня до финального обжектива (запускается, если 3 обжектива-задания выполнены) `:` 3 days ahead of the final obsession (run if 3 of the jobs are completed) `
+` Дефолтное состояние всех NPC + обжи `:` Defolate status of all NPC + s `
+` 1 день на установку лагеря `:` 1 day for camp installation `
+` Стейт который говорит, что нет боевки `:` Stite, who says there's no clot. `
+` Если этюд закомпличен, значит игрок терраформировал остров `:` If the sketch is compliant, then the player terraforming the island `
+` Запускает эмбиенс на первый визит(пустыня) и эмиттер на корапшене
+Стартует в ЭТЮДЕ AzataIsland_FirstVisit
+Завершается в КАТСЦЕНЕ AzataIsland_FirstVisit `:` Embiens starts the first visit (desert) and the emitter on the corapeni startuts at AzzataIsland_FirstVisit Ends at the Azatasad_FirstVisit CENSUS. `
+` Запускает эмбиенс, эмиттеры для терраформированного острова.
+Стартует в КАТСЦЕНЕ AzataIsland_FirstVisit
+Завершется в ЭТЮДЕ IslandFly `:` Runs the embens, the emitters for the terraformed island.
+Startoth at Azataslyand_FirstVisit will end in ETYDE IslandFly. `
+` Включает эмбиенс и эмиттеры на взлетевший остров.
+Стартует в ЭТЮДЕ IslandFly `:` Enables the embiens and the emitters to take off the island.
+Startute at ETIE IslandFly `
+` Выдача аддендума - возвращайся на остров `:` return to the island `
+` 14 дня для продолжения квеста азаты и старт таймер до прихода КТС Трентов `:` 14 days to continue the quests of azaty and start timer until the arrival of the CTS Trent `
+` Третий обжектив основого квеста - поле чудес `:` The third pillar of the foundation of the quest is the field of miracles `
+` Таймер до 5 обжектива. Стартует если 3 и 4 выполнены или колокол привезли в дрезен `:` A timer of up to five. Stargates if 3 and 4 are executed or the bell is delivered to the dresen `
+` Стартует 5 обжектив с Колоколом и Арфой `:` Staritet 5s with the Bell and the Arfa `
+` Таймер до постройки Источника или Поляны трентов `:` Timer pending the construction of the Source or the Trent `
+` Запускает эмбиенс для состояния локации перед полетом острова `:` Runs the embens for the location of the location before the island's flight `
+` Загрузка банка аудио для катсцены взлета `:` Loading the audio bank for the takeoff stage of takeoff `
+` Валхахфлинги и мимики в Ивори санктум `:` The Walkhfelling and the Mimics in Ivori Sachkta `
+` Вольыне крестоносцы в Молтен скаре `:` Volyn Volyn of the Crusaders in the Molten Scouts `
+` Этюд, который говорит, что что ментор Азаты стоит в зале собраний КТС `:` Eutid, who says that Azaty's mentor stands in the meeting room of the [ [ TC]] `
+` Этюд позволяющий делать реинфорседы, когда игрок может стать демоном `:` A [ [ Eutie]] allowing the player to become a reinformer when the player can become a demon `
+` Звуки толпы для демона `:` The sound of crowds for the demon. `
+` Катсцены боя для массовки `:` Cutscenes of the fight for the fight. `
+` Чилексы выгнаны из города `:` The Chiles are out of town. `
+` был раньше Аеоном `:` He used to be Aeon. `
+` был раньше Азатой `:` Azatoy's earlier `
+` Механически можем стать дьяволом `:` Mechanically able to become the devil `
+` Отказался стать генерал-губернатором `:` Defer to becoming a Governor-General `
+` При становлении дьяволом игрок теряет все бонусы ранг апов от азаты,
+
+Ему так же дают нанимать дьяволов Ериний - крутых, но немногочисленных лучниц. `:` When the devil is established, the player loses all bonuses to the rank of apps,
+
+He is also allowed to hire the devils of Jerusalem-the cool but not numerous archers. `
+` Анлокается здание infernal forge, увеличивающее приток финансов на 100 и материалов на 3. `:` The infernal forge building is growing, increasing the flow of finance into 100 and materials by 3. `
+` Игроку дают 50000 золота. `:` The player is given 50,000 gold. `
+` Выбранный игроком апгрейд пехоты в рангапе Military 1 меняется на Devil Infantry - тяжелую пехоту с очень крутыми статами - хаендовый юнит с высоким АС. `:` The infantry chosen by the player in the Military 1 rank changes to Devil Infantry, a heavy infantry with very cool articles-hustle young with a high AU. `
+` Выбранный игроком апгрейд кавалерии в рангапе Military 3 меняется на Devil Cavalry - тяжелую кавалерию с очень крутыми статами - хаендовый юнит с высоким дамагом и смайт хаос. `:` The chosen player of the [ [ cavalry]] of the [ [ Military Hotel]] in the '' Military '' [ [ Military]], the [ [ Military Cavalry]] is changed to Devil Cavalry-a heavy cavalry with a very cool statue-a chainte young with a high damage, and savor the chaos. `
+` Выбранный игроком апгрейд лучников в рангапе Military 2 меняется на Devil Archers - лучников с очень крутыми статами - хаендовый юнит с высоким дамагом. `:` The player selected by the gamer of archers in the rank of Military 2 is changed to Devil Archers-archers with a very cool statue-chaenoon young with a high damage. `
+` Игроку предлагают организовать собственный орден подобный хеллайтам
+
+Справимся и так.
+
+Мораль и макс мораль увеличиваются на 30. `:` The player is offered to organize his own order similar to hellites in the right and so on.
+
+Morals and Morals increase by 30. `
+` Становятся доступны наемники Slaves
+
+Это пехота с DRом и высоким уроном, но не очень быстрая и с плохой моралью. `:` Slaves mercenaries is available with DR and high damage, but not very fast and with bad morals. `
+` Infernal forge помимо своих бонусов начинает давать +1 к атаке, АС, сейвам и инициативе всем тренируемым юнитам (стекается) `:` Infernal forge, in addition to its bonuses, starts to give + 1 to attack, AU, Saewis and the initiative to all the units trained `
+` Игроку дают 200000 золота. `:` The player is given 200,000 gold. `
+` Что делать с реликвиями Саркориса?
+
+Построить реликварий.
+
+Здание, дающее +3 к атаке, АС, сейвам и инициативе всем мифическим юнитам (стекается) `:` What do you do with the Sarcoris relic?
+
+Build a relic.
+
+The building that gives + 3 to the attack, the AU, the Seycheis and the initiative all the mythical units `
+` Игрок получает универсально крутой предмет. `:` The player gets a versatile object. `
+` Нужны ли игроку в армию клерики Асмодея?
+
+Да, давайте клериков.
+
+Игроку даются клерики Асмодея - хаендовые дивайн кастеры с высокой защитой и которые могут кастить доминейт в добавок к обычным дивайновым спеллам. `:` Do you need a player in the armies of Asmodeus?
+
+Yeah, let' s do the clerics.
+
+The player is given the Asmodeya-Haender marvellings with high protection and who can muse a blow job in addition to ordinary special spellings. `
+` Нужны ли игроку в армию клерики Асмодея?
+
+Дайте лучше дьяволов.
+
+Игрок теперь может нанимать Executioner Devil - очень мощных милишниц с бонусом на атаки если они не двигаются. `:` Do you need a player in the armies of Asmodeus?
+
+Let the devils be better.
+
+The player can now hire the Executioner Devil-very powerful mills with an attack bonus if they do not move. `
+` Корневой этюд для квеста дракона в 3 главе `:` Root sketch for the dragon's quest in the third chapter `
+` Флаг - убили культиста в квесте дракона 3 главы `:` The flag was killed by a 3-chapter cult in the dragon's quest `
+` Механически разблокирует дракона `:` Mechanically unlocks a dragon `
+` Чек флага - пощадили ли мы культиста в квесте дракона 3 главы `:` Do we have a chek of a flag in the dragon's quest? `
+` пытался поредимить в ALR `:` tried in ALR `
+` Кенабрес ребилдед: Квесты драконов в 5 главе `:` Kenabres Rabilgrandfather: The Dragons of Dragons in Chapter 5 `
+` Полиморф драконов в людей и смена их имен. По завершению полиморф в драконов `:` Polymorpheme of dragons in humans and change of their names. By the end of the polymorphus in the dragons `
+` Хал стоит в отстроенном кенабресе `:` Hal is standing in the rebuilt kenabrese. `
+` Анлок Sevalros Lair по квесту дракона `:` Anlock Sevelros Lore by dragon's quests `
+` Ревил локации Terendelev Lair для квеста дракона в 3 главе `:` Relaved Terendelevv Lair's location for dragon's quest in 3 chapter `
+` Квест дракона Тивандис на цветы в лэер. Открыть AngelFlowersLair `:` The dragon's quest for the flowers in the laèer. Open AngelFlowersLair `
+` Квест от дракона Оргомандиаса на книгу в айвори лабиринт `:` Quest from the Orgomandias dragon to a book in an aiven maze `
+` Флаг на правильные ответ в диалоге с Нидалинн `:` Flag for correct answers in dialog with NidTallinn `
+` Флаг на правильный ответ в диалоге с Оргомандиасом `:` Flag for correct answer in dialogue with Orgomandiaz `
+` Выдача обжа на диалог с Хэлом когда выполнил или не выполнил квесты драконов `:` The issuance of a dialogue with Hal when he performed or did not perform the dragons ' quests `
+` Флаг на правильный ответ в диалоге с Тивандис `:` Flag for correct answer in dialogue with Tiwanis `
+` Квест от Нидалинн на сыр `:` Kveston from Nidylinna to cheese `
+` Драка с Севалросом `:` Coval with Cevalros `
+` Флаг - Севалрос остался коррапченым и улетел `:` The flag-Sevalros remained corruped and flew away `
+` Флаг - Севалрос умирает, но стал серебряным драконом `:` The flag of Cevalros is dying, but has become a silver dragon `
+` Флаг - Севалрос стал серебряным драконом и улетел `:` Sevalros became a silver dragon and flew away `
+` Флаг - Севалрос умер коррпаченым драконом `:` The flag of Sevalros died of a dragon. `
+` Старт боя с культистами (начинается через скрипт зону в механике)
+Вешаем бафф бессмертия на 1 культиста, т.к. он должен выжить и его судьба решается в диалоге
+приходи Хэла при смерти всех культистов `:` Start of the battle with the cultists (starts through the script zone in mechanics)
+The [ [ batff]] of the [ [ immortality]] on the 1 [ [ cult]], because he must survive and his fate is decided in the [ [ Hal's Parish]] in the death of all cultists `
+` Добавление механики с кулльтистами в логово теренделев `:` Adding mechanics with coultists in the lair of the terendes `
+` Атакуем дракона Хэла, бой `:` Hal's dragon, fight. `
+` Убиваем оставшегося культиста `:` Kill the rest of the cult. `
+` Этюд который стартуется если мы отпускаем последнего выжившего культиста `:` That's the one that's gonna start if we release the last survivor. `
+` Механически разблокирует выбор легенды для игрока `:` Mechanically unlock the player's legend `
+` Отказались брать Лексикон `:` You were supposed to take the Lexicon. `
+` выдаёт эрранд если полутали череп Альдерпаша `:` issues an errand if the skull is crawling with Alderpaşa's skull `
+` Этот этюд анлокает лича в механике
+Может быть залочен в том же диалоге где его выдали `:` This sketch of the lić in the mechanic may be locked in the same dialogue where he was issued `
+` не стал настоящим Личём (отказался от превращения в андеда) `:` did not become a real Lachchem (renounced turning into an andeda) `
+` нам сломали филактерию `:` we broke the philter. `
+` Влияние мифика на столицу `:` Influence of the Mifiq on the Capital `
+` зональный (столица) `:` zonal (capital) `
+` Элянка пришла и стала нашим советником `:` The elank came and became our advisor. `
+` мы поссорились с Elyanka
+она придёт воевать с нами после Личефикации `:` We quarreled with the Elyanka she would come to fight with us after Leitacia `
+` управляет эвентами в UnloyalCounselor  `:` manages eents in UnloyalCounselor  `
+` по тем или иным причинам эвенты Лича закончились (например из-за неправильного алаймента) `:` For some reason, the Litch's heals ran out (for example, due to wrong alayment) `
+` Мы подружились с Элянкой `:` We made friends with Elanka. `
+` Мы подружились с Септимусом `:` We made friends with Septimus. `
+` Прогнать
+
+Все генералы получают бонус к силе магии и мане 
+
+Все генералы получают Bone Explosion, Siphon Time, Bone Spear `:` All generals get a bonus to magic and all generals get Bone Explosion, Siphon Time, Bone Spear `
+` Всех принять
+
+Некромансия воскрешает на 40% больше нежити.
+
+Все генералы получают Bone Shield и False Grace  `:` The Necromancy is resurrecting 40% more.
+
+All generals get Bone Shield and False Grace  `
+` Скелеты лучники.
+
+Часть нежити ресается скелетами лучниками - они не очень сильные, но лучники. `:` Skeletas are the archers.
+
+A part of the unliving is a skeleton of archers-they are not very strong, but the archers. `
+` Скелеты чемпионы
+
+Часть нежити (10%) ресается скелетал чемпионами - достаточно мощной нежитью с высокой защитой. `:` Skeletas champions part of the undead (10%) was skims of the champions-quite a powerful non-jitus with high protection. `
+` Вампиры.
+
+Часть нежити ресается вампирами - они имеют спец атаки дебаффающие врагов и хилящие их. `:` The vampires, part of the unliving are vampires, they have a special attack of debaffling enemies and preying them. `
+` Хоронить героев
+
+Плюс 10 морали, снижает негативную мораль от нежити в армии в два раза. `:` To bury the heroes plus 10 morals, reduces the negative morale of the army twice. `
+` В самом начале 5ой главы лич получает армию скелетов, зомби и выбранных юнитов во втором рангапе стоимостью в 25000 финансов `:` At the beginning of the 5th chapter, Lich receives an army of skeletons, zombie and selected units in the second rangep cost of 25,000 `
+` Вскрыть могильники Саркориса
+
+Дает пассивный прирост скелетов `:` Warm up the Sarcoris mists give us passive skeletons. `
+` Жатва
+
+Дает пассивный прирост зомби `:` Zatova's a passive zombie growth. `
+` Законы Мертвых
+
+Дает пассивный прирост нежити из рангапа 2 `:` The Dead's laws give us a passive growth rate of 2. `
+` Скормить жрецов нежити
+
+Дает всей нежити в армиях абилку с 33% вероятностью позволяющую сделать дополнительный ход, как при положительной морали `:` To grimace the priests in the army, the Abilka, with a 33% chance of making an extra move, as with positive morals, is the most likely `
+` Коррумировать церковь
+
+Дает новый ритуал Animate Dead `:` Corruize the church with the new ritual of Animate Dead `
+` Выгнать и обокрасть
+
+Дает артефакт `:` Remove and remove the Artifact `
+` Тайное общество магов
+
+Часть нежити (2%) восрешается в виде личей - мощных кастеров, которые так же могут бесконечно стрелять лучами негативной энергии.
+
+За каждые 40000 опыта - один лич (оценивается в 200 финансов) `:` The secret society of the mages is part of the non-housing (2%) is solved in the form of lich-powerful stasters, which can also endlessly shoot negative energy beams.
+
+For every 40,000 experience-one Lic (estimated in 200) `
+` Орден грейвнайтов
+
+Часть нежити (2%) воскрешается в виде Grave Knight'ов - очень сильной пехоты, которая усиливает всю нежить в армии.
+
+За каждые 40000 опыта - один grave knight (оценивается в 200 финансов) `:` The Order of the Greywaines (2%) is resurrect as the Grave Knightly-a very strong infantry that reinforces the entire army.
+
+For every 40,000 experience-one grave knowledge (estimated in 200 finance) `
+` Культ фараона
+
+Часть нежити (2%) воскрешается в виде Мумий-клериков
+
+За каждые 40000 опыта - одна мумия (оценивается в 200 финансов) `:` The cult of the pharaoh Part of the nezhychi (2%) is revived in the form of [ [ Mummies]] for every 40,000 experience-one mummy (estimated in 200 finance) `
+` Дает найм равенеров `:` -The Rabeners are hired. `
+` Дает найм чумных драконов `:` She's hiring some lumber dragons. `
+` Дает найм Nightshade, Nightwalker (визуально - балор с ФХом от спектра). `:` I'm hiring Nightshade, Nightwalker (a visually-pamper with FX from the spectrum). `
+` "Кровавая свадьба" `:` "Blood Wedding" `
+` баркосцены между Элянкой и Септимусом `:` Barcosus between Elyanka and Septimus `
+` Септимус пришёл и стал нашим советником `:` Septimus has come and became our advisor. `
+` мы поссорились с Septimus
+он придёт воевать с нами после Личефикации `:` We had a fight with Septimus, he would come to fight with us after the Licification. `
+` НекроДрезен `:` Necrodresen `
+` мы стали нежитью и получили 9 мифик у Захара `:` We became undead and received nine Mifiq from Zahara `
+` труп Стонтона на площади Дрезена `:` Stonton's corpse in Dresen Square `
+` труп Стонтона лежит в тюрьме Дрезена `:` Stonton's corpse is in Dresen prison `
+` призраки в AL `:` phantoms in AL `
+` Призраки на разных зонах `:` Ghosts in different zones `
+` призраки в AR `:` ghosts in the AR `
+` призраки в DC `:` ghosts in DC `
+` призраки в GS `:` GGS ghosts `
+` призраки в Iz `:` Ghosts in Iz `
+` для подвала Лича до того как ты стал Личем `:` Lich's basement before you became a Lachem. `
+` призраки в LC `:` ghosts in LC `
+` Отключаем слизь через день после убийства королевы `:` Disengaging the slime the day after the queen's murder. `
+` Выдаем проект про эксперименты Зантира, если полутали его заметки в Костяной Ложе `:` We're running an Xanter project if he's a little stickup in Kostya Lie. `
+` Оставлю культистов в своем войске живыми.
+
+Культисты это такие походные рационы для армии сварма - наехав на них свармы дамажат их, баффаются и лечатся. Статы культистов аналогичны культистам демона - они умеют делать ченнел негатив и кастовать клерические баффы. `:` I'll leave the cultists in my army alive.
+
+Cultists are such meals for the army of the welt-they give them the welms of damagthem, the baffalo and cures. The art of cultists is the same as the Demon's cultists-they know how to make the negativity and to knock out the Clerical Baffes. `
+` Я скормлю их рою - паукам.
+
+Пауков становится больше на 500. Свармы пауков могут кастовать клерические спеллы (до 3 уровня) и делать ченнел негатив. Убитые ченнел негатив враги считаются съеденными этим свармом. `:` I feed them to the spiders.
+
+Spiders are getting bigger by 500. Spiders can be scled in clerical specials (up to 3 levels) and made a negative. The dead negativity of the enemy are considered to be eaten by this welt. `
+` Я скормлю их рою - саранче.
+
+Саранчи становится больше на 500. Свармы саранчи могут кастовать клерические спеллы (до 3 уровня) и делать ченнел негатив. Убитые ченнел негатив враги считаются съеденными этим свармом. `:` I feed them to the saunas.
+
+The ranches are bigger by 500. The locusts can be scleric hasty (up to 3 levels) and made a negative. The dead negativity of the enemy are considered to be eaten by this welt. `
+` Я скормлю их рою - вескаворам.
+
+Вескаворов становится больше на 500. Свармы вескаворов могут кастовать клерические спеллы (до 3 уровня) и делать ченнел негатив. Убитые ченнел негатив враги считаются съеденными этим свармом. `:` I feed them to their faces.
+
+The vespacers are getting bigger by 500. The swarms of gaily thieves may be cysterical (up to 3 levels) and made to the negativity. The dead negativity of the enemy are considered to be eaten by this welt. `
+` Оставлю рейнджеров в своем войске живыми.
+
+Эти культисты про быстрое убийство конкретных врагов и большой урон с первой атаки (у свармов с их АоЕ уроном могут быть проблемы с этим). `:` I'll leave the Rangers in my army alive.
+
+These cultists for the swift killing of specific enemies and the great loss of the first attack (with their AoE damage could be a problem with that). `
+` Я скормлю их рою - паукам.
+
+Пауков становится больше на 500. Свармы пауков теперь могут один раз в бой переместиться в конкретного врага и заодно нанести ему много урона и подебаффить его. `:` I feed them to the spiders.
+
+Spiders are getting bigger by 500. Spidings can now be moved to a specific enemy once in the battle, and to do a lot of damage to it and debit it. `
+` Я скормлю их рою - саранче.
+
+Саранчи становится больше на 500. Свармы саранчи теперь могут один раз в бой переместиться в конкретного врага и заодно нанести ему и всему на линии до него много урона. `:` I feed them to the saunas.
+
+The ranches are bigger by 500. The swarms of locusts can now be shot once in the fight to a particular enemy and also inflict a lot of damage on him and the rest of the line. `
+` Я скормлю их рою - вескаворам.
+
+Вескаворов становится больше на 500. Свармы вескаворов теперь могут один раз в бой переместиться в конкретного врага и заодно нанести ему много урона. `:` I feed them to their faces.
+
+The vespacers are getting bigger by 500. The swarms of the oars can now be moved once into the fight to a particular enemy and to inflict a lot of damage. `
+` Я съем вас сам.
+
+Игрок получает бонус на первую атаку в бою (автокрит), абилки ассасина 7 уровня. `:` I'll eat you myself.
+
+The player receives a bonus for the first attack in the battle (Autocrit), the Hassassin's level' s 7. `
+` Оставлю их в своем войске живыми.
+
+Это мощные кастеры, которых очень тяжело убить, но которых мало. `:` I'll keep them alive.
+
+These are powerful posters, which are very hard to kill, but they are not enough. `
+` Я скормлю их рою - паукам.
+
+Пауков становится больше на 1000. Свармы пауков теперь могут кастовать арканические заклинания. Заклинания слабее чем у worm-that-walks, но усиливаются от количества свармов. `:` I feed them to the spiders.
+
+Spiders are becoming more than 1,000. The spiders can now cover the arkanical spells. The spells are weaker than the storm-that-walks, but are amplified by the number of welds. `
+` Я скормлю их рою - саранче.
+
+Саранчи становится больше на 1000. Свармы саранчи теперь могут кастовать арканические заклинания. Заклинания слабее чем у worm-that-walks, но усиливаются от количества свармов. `:` I feed them to the saunas.
+
+The ranches are bigger by 1000. The locusts are now able to cover the arkanical spells. The spells are weaker than the storm-that-walks, but are amplified by the number of welds. `
+` Я скормлю их рою - вескаворам.
+
+Вескаворов становится больше на 1000. Свармы вескаворов теперь могут кастовать арканические заклинания. Заклинания слабее чем у worm-that-walks, но усиливаются от количества свармов. `:` I feed them to their faces.
+
+The vespacers are becoming more than 1,000. The savory welding can now cover the arkanical spells. The spells are weaker than the storm-that-walks, but are amplified by the number of welds. `
+` Я съем вас сам.
+
+Игрок получает арканные заклинания как 17 уровня визард. `:` I'll eat you myself.
+
+The player receives arcanna spells like 17 levels of virgard. `
+` Преклониться.
+
+Теперь все свармы армии игрока разносят чуму - все враги с ней получают урон и разлагаются, дебаффясь все сильнее каждый ход. Однако убитые чумой враги не прибавляются к рою. `:` Now all the warms of the player's army spread the plague-all the enemies with it get the damage and decompose, the debaffe is growing more and more every move. But the plague killed by the enemy is not added to the face. `
+` Подчинить культистов Глаундера
+
+дает элитных культистов одноразово и много `:` Gladder's cultists give elite cultists a one-time and a lot of `
+` Я скормлю их рою - паукам.
+
+Пауков становится больше на 1000. Свармы пауков могут кастовать клерические спеллы (до 5 уровня) и делать ченнел негатив. Убитые ченнел негатив враги считаются съеденными этим свармом. Если в первом ранг апе игрок уже кормил пауков культистами - ранг доступных спеллов повышается до 7-ого. `:` I feed them to the spiders.
+
+Spiders are becoming more than 1,000. Spiders can be scled in clerical specials (up to 5 levels) and can be done with negativity. The dead negativity of the enemy are considered to be eaten by this welt. If in the first rank the player has already fed the spiders with cultists-the rank of the available spells rises to 7th. `
+` Я скормлю их рою - саранче.
+
+Саранчи становится больше на 1000. Свармы саранчи могут кастовать клерические клерические спеллы (до 5 уровня) и делать ченнел негатив. Убитые ченнел негатив враги считаются съеденными этим свармом. Если в первом ранг апе игрок уже кормил саранчу культистами - ранг доступных спеллов повышается до 7-ого. `:` I feed them to the saunas.
+
+The ranches are bigger by 1000. The locusts can be sclerical clerical clerical specials (up to 5 levels) and made a negative. The dead negativity of the enemy are considered to be eaten by this welt. If in the first grade the player has already fed locusts cultists-the rank of the available ripe sappers is raised to 7th. `
+` Я скормлю их рою - вескаворам.
+
+Вескаворов становится больше на 1000. Свармы вескаворов могут кастовать клерические клерические спеллы (до 5 уровня) и делать ченнел негатив. Убитые ченнел негатив враги считаются съеденными этим свармом. Если в первом ранг апе игрок уже кормил вескаворов культистами - ранг доступных спеллов повышается до 7-ого. `:` I feed them to their faces.
+
+The vespacers are becoming more than 1,000. The swarms of gaily thieves may be stoveped the clerical clerical hurrs (up to 5 levels) and the negativity was done. The dead negativity of the enemy are considered to be eaten by this welt. If in the first place the player has already fed the johs, the ranks of the cultists-the ranks of the available spla-can be raised to 7th. `
+` Я съем вас сам.
+
+Игрок получает диванные заклинания как 17 уровня клерик. `:` I'll eat you myself.
+
+The player gets a couch spell as 17-level cleric. `
+` Приму их дары и их службу.
+
+Игрок получает большую армию рыцарей. Рыцари достаточно сильные кавалеристские юниты и их очень много (4000) - Demonic Knights. `:` I'll take their gifts and their service.
+
+The player gets a large army of knights. The knights are strong enough to be strong, and there are a lot of them (4000)-Demonic Knights. `
+` Я скормлю их рою - паукам.
+
+Пауков становится больше на 4000. Свармы пауков теперь движуться быстрее на 2. `:` I feed them to the spiders.
+
+Spiders become more than 4000. Spiders now move faster by 2. `
+` Я скормлю их рою - саранче.
+
+Саранчи становится больше на 4000. Свармы саранчи теперь движуться быстрее на 2. `:` I feed them to the saunas.
+
+The ranches are bigger on 4000. The locusts are now moving faster by two. `
+` Я скормлю их рою - вескаворам.
+
+Вескаворов становится больше на 4000. Свармы вескаворов теперь движуться быстрее на 2. `:` I feed them to their faces.
+
+Vespacore gets bigger by 4,000. The savory welding is now moving faster to 2. `
+` Я съем вас сам.
+
+Игрок получает 200 дополнительных ХП. `:` I'll eat you myself.
+
+The player receives 200 additional CPs. `
+` заткнули голос Дескари у нас в голове `:` will shut the Descari's voice in our heads. `
+` Когда решили использовать гадость вескаворов в Дрезене `:` When we decided to use the gavel in Dresen `
+` Использовали ферамоны в Дрезене `:` Use of the Drezene Dramones `
+` На момент перерождения командора в отряде были Сиила или Регилл. Анлочит ивент SE_LocustMythic_Reckoning (69f26a560623b174586cdc74ec81b331) `:` At the time of the rebirth, the commander in the detachment was Siila or Regell. Anloys SE_LocustMythic_Reckoning (69f26a560623b174586cdc74ec81b331) `
+` Локуст механически доступен для выбора `:` Locust mechanic is available for selection `
+` Когда решили сохранить гадость вескаворов `:` When we decided to keep the joys of the gavel. `
+` Зантир уходит, чтобы самостоятельно превратиться в сварма и прийти помогать нам в Трешолде. `:` Zandir is leaving to turn himself into a weld and come to help us in Tresold. `
+` Выполнили проект после получени записок Зантира в Костяной Ложе `:` The project was completed after the [ [ Costya Lie]] notes were written `
+` Игрок знает что Сокот - брат и любовник Ноктикулы `:` The player knows that Sokot is a brother and lover of Nocticula `
+` Вызвал короля-дурака бить демонов в начале 5й главы `:` Called the king-fool to beat the demons at the beginning of the 5th chapter `
+` Солдаты начинают приносить доход. Каждый из них приносит свой тир в неделю (т.е. пехота и лучники приносят по 1 в неделю, а паладины 2 в неделю). `:` The soldiers are beginning to generate income. Each of them brings its own shooting range in a week (that is, infantry and archers bring 1 per week, and paladins 2 per week). `
+` Офицеры получают случайное число опыта каждый день (Левел d100). `:` Officers get random experience every day (Lewell d100). `
+` Пивоварня - жрецы `:` Priests and priests `
+` Пивоварня - маги `:` brewery-Mages `
+` Пивоварня - солдаты
+ `:` brewery-soldiers
+ `
+` В каждом бою есть один из случайных модификаторов.
+
+Порядок убийств: Один из врагов отмечается специальной меткой. Он должен умереть первым - после его убийства всю армию баффает 20% шансом нанести двойной урон. Если убить другого юнита перед ним - бонус пропадет и у всей армии упадет мораль на 50.
+
+Интересное место: На карте отмечается случайная клетка. Встав в нее юнит до конца боя получает 20% шанс нанести двойной урон.
+
+Полиморф: У юнитов игрока появляется абилка сделать полиморф - она превращает юнитов до конца боя в случайное существо из списка (волк, медведь, смилодон, дракон, пони).
+
+Клад: На стороне карты противника случайная точка отмечается как клад. Если в нее зайти - за победу дадут доп ресурсы (случайные).
+
+Ферзь: Пехота дошедшая до вражеского края карты превращается в драконов до конца боя.
+
+Неожиданный эффект: Лучники теряют возможность стрелять, наносят четверной урон в мили.
+
+Сумасшествие: Все свои атакуют случайных врагов. Враги атакуют просто случайные цели. Никто не управляет юнитами. `:` Every battle has one of the random modifiers.
+
+Murder Order: One of the enemies is marked by a special mark. He must die first-after he is killed, the entire army is baffled by a 20% chance of causing a double damage. If you kill another young man in front of him, the bonus will be lost, and the entire army will have a moral fall of 50.
+
+An interesting place: A random cell is marked on the map. The boy gets a 20% chance of double damage before the end of the fight.
+
+Polymorph: The youth of the player will have a polymorphe-it turns the units into a random creature from the list (the wolf, the bear, the dragon, the dragon, the ponies). If she gets into her, they will get the resources (random) for victory. Fearings: The Pechota that reached the enemy edge of the map turns into dragons until the end of the battle.
+
+The unexpected effect: Archers lose the ability to shoot, do four-mile damage.
+
+It's crazy: all of them are attacking the random enemy. Enemige attacks are just random targets. Nobody controls the units. `
+` На крусейд каждую неделю вешается один из случайных баффов.
+
+Распродажа: Юниты определенного типа (кавалерия, пехота, лучники и т.д.) стоят на 90% дешевле.
+
+Архитектурное вдохновление: Конкретное здание из доступных стоит на 90% дешевле.
+
+Люди хотят: Если игрок за неделю построит определенное здание - ему дадут 7 доходов в деньгах и ресурсах, повысят мораль на 20.
+
+Тур: На карте отмечается точка, если туда зайти генералом - ему дадут половину опыта до следующего уровня. `:` One of the random Buffoffs hangs out every week.
+
+Sale: Unites of a certain type (cavalry, infantry, archers, etc.) are 90% cheaper.
+
+Architectural inspiration: A concrete building from affordable costs is 90% cheaper.
+
+People want: If a player builds a certain building in a week-he will be given 7 income in money and resources-it will increase morale by 20.
+
+Thor: On the map there is a point, if a general-he is given half the experience to the next level. `
+` Включаются бонусы от обоих предыдущих вариантов, однако всегда поднят красный флаг на -1 морали в день "Все в крусейде работает как попало". `:` The bonus includes bonuses from both previous versions, but the red flag is always raised on the first day "Everyone in the circle works as if". `
+` Foot Heavy Scout Bardruids Dragonriders - пешие друиды в тяжелой броне (БЕЗ ДРАКОНОВ). Имеет друидские и бардовские баффы, вообще отлично баффает и дерется. `:` Foot Heavy Scot Bardruids Dragonriders-foot druids in heavy armour (BES DRACONOV). It has Druid and Bardovska baffles, and it's a very good fight. `
+` Warlocks Warwarpriests - воины в тяжелой броне, с башенными щитами, скоростью 1 и кучей баффов которые можно кастить только на себя. Очень мощные (если пробаффаются), очень медленные. `:` Warlocks Warwarpriessts are warriors in heavy armor, with bated shields, speed 1, and a bunch of beaks that can only be fused for themselves. Very powerful (if perforated), very slow. `
+` Vampiric Ninja Pirates `:` Vampire Ninja Pirates `
+` Сворд сейнт с фаухардом! `:` Sold is with the Fauhard! `
+` Иллюзионисты убивающие все Phantasmal Killer'ом. `:` The Illusionists kill all Phantasmal Killer' s. `
+` Скейлед фист, который еще и dragon disciple, и eldritch knight, и паладин `:` Skeleda is a fixer who is also the dragon disciple, and the eldritch knight and the paladin `
+` Паладины с дипом в thug'а. `:` The paladins with the dip in the thug' s. `
+` Дурацкая экипировка
+
+Солдаты получают себе рандомные шлемы и светящееся оружие. Шлемы рандомятся из всего списка шлемов игры, енчанты на оружие из всего списка енчантов оружия. `:` The Soldier's outfits get their own helmets and light weapons. Helmets are from the entire list of helmets of the game, the enchants on the arms from the entire list of the arms of the weapon. `
+` Петы
+
+Каждый солдат может позвать себе (за стандарт) пета на поле боя. 1 тир вызывает ???, 2 тир вызывает ???, 3 и 4 тир вызывает мамонтов.
+
+Звери 1 и 2 тиров - олени, сороконожки `:` Pets each soldier can call himself (for a standard) pausing on the battlefield. 1 dash causes? ??, 2 dashes are called? ??, 3 and 4 is calling mammoths.
+
+Beast 1 and 2 dashes, centipede `
+` Артефакт `:` Artifact `
+` КТС первого визита Сокотбенота, которыйначинает линейку совета `:` Sokoto's first visit to the board of Sokótbenot `
+` КТС Сокота в пятой главе `:` Co-Cattle CV in the Fifth Chapter `
+` КТС Короля дурака про поиск арилу лабы `:` The King of the Fool's quest for the Aril of the Laba `
+` КТС Короля дурака про поиск арилу лабы если его прогнал игрок, а не посадил на трон `:` The CU of the King is a fool to search for the Aril of the lab if the player did not put him on the throne `
+` Пошучено `:` Received `
+` Бой против совета `:` Fight Against the Board `
+` Бой против совета, Нокта за нас `:` Fight against the council, Nota for us. `
+` Бой против нокты, совет за нас `:` The fight against the legs, the council for us. `
+` Выдается в Blackwing Ruins - добавляет диверсию Калеба в Серый Гарнизон `:` Disbursing in the Blackwing Ruins-adds Caleb's diversion to the Grey Garrison `
+` Пошучено над Ноктой в 5й главе `:` The Head of the Nota in the 5th chapter `
+` Нокта явится на совет в 5й главе `:` The night will be on the council in the 5th chapter. `
+` Сокот покинул совет `:` The cocoon left the council `
+` Трикстер создал свое знамя из носка `:` The Trickster made his banner out of his sock. `
+` Этюд, который фейлит трикстера `:` The Hail of the Tricster `
+` Этот этюд анлокает трикстера в механике `:` This sketch is an anlocus of the trixster in mechanics. `
+` получил TE `:` received the TE `
+` Военный совет вперед Дрезеном `:` Military Council Forward by Dresen `
+` Сейчас идёт какой-то кингдом-турн`:` It's going to be some kind of a movie tour.`

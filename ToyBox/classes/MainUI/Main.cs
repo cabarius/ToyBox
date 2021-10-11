@@ -25,7 +25,6 @@ namespace ToyBox {
         private static Harmony HarmonyInstance;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         private static string modId;
-        public static UnityModManager.ModEntry modEntry = null;
         public static Settings settings;
         public static MulticlassMod multiclassMod;
         public static bool Enabled;
@@ -111,7 +110,6 @@ namespace ToyBox {
         }
 
         private static void OnGUI(UnityModManager.ModEntry modEntry) {
-            Main.modEntry = modEntry;
             if (!Enabled) return;
             IsModGUIShown = true;
             if (!IsInGame) {

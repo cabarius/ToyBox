@@ -16,9 +16,10 @@ namespace ToyBox {
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));
         public Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = new();
         public Dictionary<BlueprintGuid, ConflictingGroupIdReferences> conflictingGroups = new();
-        public HashSet<string> commentKeys = new();
+        public Dictionary<string, string> commentTranslations;
         private EtudesTreeModel() {
-            //ReloadBlueprintsTree(bps => { });
+            commentTranslations = Utils.ReadTranslations();
+            Mod.Debug($"loaded {commentTranslations.Count} key/value pairs");
         }
 
         private static EtudesTreeModel instance;
@@ -27,7 +28,6 @@ namespace ToyBox {
             get {
                 if (instance == null) {
                     instance = new EtudesTreeModel();
-
                 }
                 return instance;
             }
@@ -53,7 +53,6 @@ namespace ToyBox {
                     loadedEtudes[etude].LinkedTo = loadedEtude.Key;
                 }
             }
-            //Translater.MassTranslate(commentKeys.ToList());
         }
 
         public void UpdateEtude(BlueprintEtude blueprintEtude) {
@@ -154,8 +153,11 @@ namespace ToyBox {
                 Priority = blueprintEtude.Priority
             };
 
-            if (blueprintEtude.Comment.Length > 0)
-                commentKeys.Add(blueprintEtude.Comment);
+            if (etudeInfo.Comment.Length > 0) {
+                if (commentTranslations.TryGetValue(etudeInfo.Comment.Trim(), out var translatedComment)) {
+                    etudeInfo.Comment = translatedComment;
+                }
+            }
 
             foreach (var conflictingGroup in blueprintEtude.ConflictingGroups) {
                 var conflictingGroupBlueprint = conflictingGroup.GetBlueprint();

@@ -243,8 +243,7 @@ namespace ToyBox {
 #if DEBUG
                         if (!string.IsNullOrEmpty(etude.Comment)) {
                             UI.Space(25);
-                            var comment = Translater.cachedTranslations.GetValueOrDefault(etude.Comment, etude.Comment);
-                            UI.Label(comment.green());
+                            UI.Label(etude.Comment.green());
                         }
 #endif
                     }
@@ -261,6 +260,7 @@ namespace ToyBox {
                                         UI.Label(element.GetType().Name.cyan(), UI.Width(250));
                                         UI.Space(25);
                                         UI.Label(element.GetDescription().green());
+                                       
                                     }
                                     if (element is StartEtude started) {
                                         DrawEtude(started.Etude.Guid, loadedEtudes[started.Etude.Guid], indent + 2);

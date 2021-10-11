@@ -241,6 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
+    <Content Include="Localizaton\etude-comments.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="zmisc\api.txt" />
     <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
