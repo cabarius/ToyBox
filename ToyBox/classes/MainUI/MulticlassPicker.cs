@@ -101,6 +101,7 @@ namespace ToyBox {
             }
             var hasClass = cd != null && chArchetype == null;
             using (UI.HorizontalScope()) {
+                bool showedGestalt = false;
                 UI.Space(indent);
                 UI.ActionToggle(
                      hasClass ? cl.Name.orange() : cl.Name,
@@ -119,11 +120,23 @@ namespace ToyBox {
                             changed = true;
                         }, 125);
                     UI.Space(25);
+                    if (!showDesc)
+                        UI.Label("this flag lets you not count this class in computing character level".green());
+                    showedGestalt = true;
                 }
                 else UI.Space(157);
-                if (showDesc) UI.Label(cl.Description.StripHTML().green());
+                if (showDesc) {
+                    using (UI.VerticalScope()) {
+                        if (showedGestalt) {
+                            UI.Label("this flag lets you not count this class in computing character level".green());
+                            UI.Div();
+                        }
+                        UI.Label(cl.Description.StripHTML().green());
+                    }
+                }
             }
             using (UI.HorizontalScope()) {
+                bool showedGestalt = false;
                 UI.Space(indent);
                 var archetypes = cl.Archetypes;
                 if (options.Contains(cl) && archetypes.Any() || chArchetype != null) {
@@ -151,9 +164,20 @@ namespace ToyBox {
                                                 changed = true;
                                             }, 125);
                                         UI.Space(25);
+                                        if (!showDesc)
+                                            UI.Label("this flag lets you not count this class in computing character level".green());
+                                        showedGestalt = true;
                                     }
                                     else UI.Space(157);
-                                    if (showDesc) UI.Label(archetype.Description.StripHTML().green());
+                                    if (showDesc) {
+                                        using (UI.VerticalScope()) {
+                                            if (showedGestalt) {
+                                                UI.Label("this flag lets you not count this class in computing character level".green());
+                                                UI.Div();
+                                            }
+                                            UI.Label(archetype.Description.StripHTML().green());
+                                        }
+                                    }
                                 }
                             }
                         }
