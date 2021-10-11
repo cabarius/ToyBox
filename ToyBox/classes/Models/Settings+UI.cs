@@ -28,13 +28,14 @@ namespace ToyBox {
               () => { }
             );
 #if DEBUG
+            UI.Div(0, 25);
             UI.HStack("Localizaton", 1,
                 () => {
                     var cultureInfo = Thread.CurrentThread.CurrentUICulture;
                     var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(ci => ci.DisplayName).ToList();
                     using (UI.VerticalScope()) {
                         using (UI.HorizontalScope()) {
-                            UI.Label("Current Cultrue".cyan(), UI.Width(100));
+                            UI.Label("Current Cultrue".cyan(), UI.Width(275));
                             UI.Space(25);
                             UI.Label($"{cultureInfo.DisplayName}({cultureInfo.Name})".orange());
 
