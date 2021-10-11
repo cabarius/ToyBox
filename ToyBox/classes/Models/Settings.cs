@@ -60,6 +60,7 @@ namespace ToyBox {
             var json = JsonConvert.SerializeObject(cachedPerSave);
             player.SettingsList[PerSaveKey] = json;
             Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
+            Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
         }
         public PerSaveSettings? perSave{
             get {

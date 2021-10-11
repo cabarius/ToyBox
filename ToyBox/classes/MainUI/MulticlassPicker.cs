@@ -25,43 +25,7 @@ namespace ToyBox {
                 UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
             }
             UI.Space(15);
-            var hasMulticlassMigration = settings.perSave.multiclassSettings.Count == 0 && settings.multiclassSettings.Count > 0;
-            var hasGestaltMigration = settings.perSave.excludeClassesFromCharLevelSets.Count >= 0 && settings.excludeClassesFromCharLevelSets.Count > 0;
-            var hasLevelAsLegendMigration = settings.perSave.charIsLegendaryHero.Count == 0 && settings.perSave.charIsLegendaryHero.Count > 0;
-            if (hasMulticlassMigration || hasGestaltMigration || hasLevelAsLegendMigration) {
-                UI.Div(indent);
-                using (UI.HorizontalScope()) {
-                    UI.Space(indent);
-                    using (UI.VerticalScope()) {
-                        UI.Label("the following options allow you to migrate previous settings that were stored in toybox to the new per setting save mechanism for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan() + "\nNote:".orange() + "you may have configured this for a different save so use care in doing this migration".green());
-                        if (hasMulticlassMigration)
-                            using (UI.HorizontalScope()) {
-                                UI.Label("Multi-class settings", UI.Width(300));
-                                UI.Space(25);
-                                UI.Label($"{settings.multiclassSettings.Count}".cyan());
-                                UI.Space(25);
-                                UI.ActionButton("Migrate", () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
-                            }
-                        if (hasGestaltMigration)
-                            using (UI.HorizontalScope()) {
-                                UI.Label("Gesalt Flags", UI.Width(300));
-                                UI.Space(25);
-                                UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
-                                UI.Space(25);
-                                UI.ActionButton("Migrate", () => { settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings(); });
-                            }
-                        if (hasLevelAsLegendMigration)
-                            using (UI.HorizontalScope()) {
-                                UI.Label("Chars Able To Exceed Level 20", UI.Width(300));
-                                UI.Space(25);
-                                UI.Label($"{settings.charIsLegendaryHero.Count}".cyan());
-                                UI.Space(25);
-                                UI.ActionButton("Migrate", () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
-                            }
-                    }
-                }
-                UI.Div(indent);
-            }
+            MigrationOptions(indent);
             var options = MulticlassOptions.Get(ch);
             var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
             var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
@@ -69,7 +33,7 @@ namespace ToyBox {
             foreach (var cl in classes) {
                 if (PickerRow(ch, cl, options, indent)) {
                     MulticlassOptions.Set(ch, options);
-                    Mod.Log("MulticlassOptions.Set");
+                    Mod.Trace("MulticlassOptions.Set");
                 }
             }
             UI.Div(indent);
@@ -81,7 +45,7 @@ namespace ToyBox {
             foreach (var mycl in mythicClasses) {
                 if (PickerRow(ch, mycl, options, indent)) {
                     MulticlassOptions.Set(ch, options);
-                    Mod.Log("MulticlassOptions.Set");
+                    Mod.Trace("MulticlassOptions.Set");
                 }
             }
         }
@@ -100,19 +64,31 @@ namespace ToyBox {
                 var gestaltCount = classes?.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                 showGestaltToggle = !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1 || ch.IsClassGestalt(cd.CharacterClass) || cd.CharacterClass.IsMythic;
             }
-            var hasClass = cd != null && chArchetype == null;
+            var charHasClass = cd != null && chArchetype == null;
+            // Class Toggle
             using (UI.HorizontalScope()) {
                 bool showedGestalt = false;
                 UI.Space(indent);
+                var optionsHasClass = options.Contains(cl);
                 UI.ActionToggle(
-                     hasClass ? cl.Name.orange() : cl.Name,
-                    () => options.Contains(cl) && (chArchetype == null || archetypeOptions.Contains(chArchetype)),
+                     charHasClass ? cl.Name.orange() : cl.Name,
+                    () => optionsHasClass,
                     (v) => {
-                        if (v) options.Add(cl);
+                        if (v) {
+                            options.Add(cl);
+                            if (chArchetype != null) {
+                                archetypeOptions.Add(chArchetype);
+                                options.SetArchetypeOptions(cl, archetypeOptions);
+                            }
+                        }
                         else options.Remove(cl);
-                        Mod.Trace($"PickerRow - multiclassOptions - class: {cl.HashKey()} - {options}>");
+                        var action = v ? "Add".green() : "Del".yellow();
+                        Mod.Trace($"PickerRow - {action} class: {cl.HashKey()} - {options} -> {options.Contains(cl)}");
                         changed = true;
                     }, 350);
+                if (optionsHasClass && chArchetype != null && archetypeOptions.Empty()) {
+                    UI.Label($"due to existing archetype, {chArchetype.Name.yellow()},  this multiclass option will only be applied during respec.".orange());
+                }
                 if (showGestaltToggle && chArchetype == null) {
                     UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
                         (v) => {
@@ -138,6 +114,7 @@ namespace ToyBox {
                     }
                 }
             }
+            // Archetypes
             using (UI.HorizontalScope()) {
                 bool showedGestalt = false;
                 UI.Space(indent);
@@ -146,48 +123,91 @@ namespace ToyBox {
                     UI.Space(50);
                     using (UI.VerticalScope()) {
                         foreach (var archetype in cl.Archetypes) {
-                            if (!hasClass && chArchetype == null || chArchetype == archetype) {
-                                if (showDesc) UI.Div();
-                                using (UI.HorizontalScope()) {
-                                    UI.ActionToggle(
-                                    chArchetype != null ? archetype.Name.orange() : archetype.Name,
-                                    () => archetypeOptions.Contains(archetype),
-                                    (v) => {
-                                        if (v) archetypeOptions.AddExclusive(archetype);
-                                        else archetypeOptions.Remove(archetype);
-                                        Mod.Trace($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
-                                        changed = true;
-                                    }, 300);
+                            if (showDesc) UI.Div();
+                            using (UI.HorizontalScope()) {
+                                bool hasArch = archetypeOptions.Contains(archetype);
+                                UI.ActionToggle(
+                                archetype == chArchetype ? archetype.Name.orange() : archetype.Name,
+                                () => hasArch,
+                                (v) => {
+                                    if (v) archetypeOptions.AddExclusive(archetype);
+                                    else archetypeOptions.Remove(archetype);
                                     options.SetArchetypeOptions(cl, archetypeOptions);
-                                    if (showGestaltToggle && chArchetype != null) {
-                                        UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
-                                            (v) => {
-                                                ch.SetClassIsGestalt(cd.CharacterClass, v);
-                                                ch.Progression.UpdateLevelsForGestalt();
-                                                changed = true;
-                                            }, 125);
-                                        UI.Space(25);
-                                        if (!showDesc)
+                                    var action = v ? "Add".green() : "Del".yellow();
+                                    Mod.Trace($"PickerRow -  {action}  - arch: {archetype.HashKey()} - {archetypeOptions}");
+                                    changed = true;
+                                }, 300);
+                                if (hasArch && archetype != chArchetype) {
+                                    UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
+                                }
+                                else if (showGestaltToggle && archetype == chArchetype) {
+                                    UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
+                                        (v) => {
+                                            ch.SetClassIsGestalt(cd.CharacterClass, v);
+                                            ch.Progression.UpdateLevelsForGestalt();
+                                            changed = true;
+                                        }, 125);
+                                    UI.Space(25);
+                                    if (!showDesc)
+                                        UI.Label("this flag lets you not count this class in computing character level".green());
+                                    showedGestalt = true;
+                                }
+                                else UI.Space(157);
+                                if (showDesc) {
+                                    using (UI.VerticalScope()) {
+                                        if (showedGestalt) {
                                             UI.Label("this flag lets you not count this class in computing character level".green());
-                                        showedGestalt = true;
-                                    }
-                                    else UI.Space(157);
-                                    if (showDesc) {
-                                        using (UI.VerticalScope()) {
-                                            if (showedGestalt) {
-                                                UI.Label("this flag lets you not count this class in computing character level".green());
-                                                UI.DivLast();
-                                            }
-                                            UI.Label(archetype.Description.StripHTML().green());
+                                            UI.DivLast();
                                         }
+                                        UI.Label(archetype.Description.StripHTML().green());
                                     }
                                 }
                             }
+                            //}
                         }
                     }
                 }
             }
             return changed;
+        }
+        public static void MigrationOptions(float indent) {
+            var hasMulticlassMigration = settings.perSave.multiclassSettings.Count == 0 && settings.multiclassSettings.Count > 0;
+            var hasGestaltMigration = settings.perSave.excludeClassesFromCharLevelSets.Count >= 0 && settings.excludeClassesFromCharLevelSets.Count > 0;
+            var hasLevelAsLegendMigration = settings.perSave.charIsLegendaryHero.Count == 0 && settings.perSave.charIsLegendaryHero.Count > 0;
+            if (hasMulticlassMigration || hasGestaltMigration || hasLevelAsLegendMigration) {
+                UI.Div(indent);
+                using (UI.HorizontalScope()) {
+                    UI.Space(indent);
+                    using (UI.VerticalScope()) {
+                        UI.Label("the following options allow you to migrate previous settings that were stored in toybox to the new per setting save mechanism for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan() + "\nNote:".orange() + "you may have configured this for a different save so use care in doing this migration".green());
+                        if (hasMulticlassMigration)
+                            using (UI.HorizontalScope()) {
+                                UI.Label("Multi-class settings", UI.Width(300));
+                                UI.Space(25);
+                                UI.Label($"{settings.multiclassSettings.Count}".cyan());
+                                UI.Space(25);
+                                UI.ActionButton("Migrate", () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
+                            }
+                        if (hasGestaltMigration)
+                            using (UI.HorizontalScope()) {
+                                UI.Label("Gestalt Flags", UI.Width(300));
+                                UI.Space(25);
+                                UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
+                                UI.Space(25);
+                                UI.ActionButton("Migrate", () => { settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings(); });
+                            }
+                        if (hasLevelAsLegendMigration)
+                            using (UI.HorizontalScope()) {
+                                UI.Label("Chars Able To Exceed Level 20", UI.Width(300));
+                                UI.Space(25);
+                                UI.Label($"{settings.charIsLegendaryHero.Count}".cyan());
+                                UI.Space(25);
+                                UI.ActionButton("Migrate", () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
+                            }
+                    }
+                }
+                UI.Div(indent);
+            }
         }
     }
 #if false

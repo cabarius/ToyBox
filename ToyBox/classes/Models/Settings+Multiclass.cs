@@ -44,7 +44,9 @@ namespace ToyBox {
             if (ch == null) Main.settings.multiclassSettings[CharGenKey] = options;
             else {
                 if (ch.HashKey() == null) return;
+                Mod.Debug($"options: {options}");
                 Main.settings.perSave.multiclassSettings[ch.HashKey()] = options;
+                Mod.Trace($"multiclass options: {string.Join(" ", Main.settings.perSave.multiclassSettings)}");
                 Settings.SavePerSaveSettings();
             }
         }
