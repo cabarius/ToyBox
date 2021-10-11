@@ -137,7 +137,7 @@ namespace ToyBox {
                                     Mod.Trace($"PickerRow -  {action}  - arch: {archetype.HashKey()} - {archetypeOptions}");
                                     changed = true;
                                 }, 300);
-                                if (hasArch && archetype != chArchetype) {
+                                if (hasArch && archetype != chArchetype && chArchetype != null) {
                                     UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
                                 }
                                 else if (showGestaltToggle && archetype == chArchetype) {
@@ -170,43 +170,68 @@ namespace ToyBox {
             }
             return changed;
         }
+        public static bool areYouSure1 = false;
+        public static bool areYouSure2 = false;
+        public static bool areYouSure3 = false;
         public static void MigrationOptions(float indent) {
-            var hasMulticlassMigration = settings.perSave.multiclassSettings.Count == 0 && settings.multiclassSettings.Count > 0;
-            var hasGestaltMigration = settings.perSave.excludeClassesFromCharLevelSets.Count >= 0 && settings.excludeClassesFromCharLevelSets.Count > 0;
-            var hasLevelAsLegendMigration = settings.perSave.charIsLegendaryHero.Count == 0 && settings.perSave.charIsLegendaryHero.Count > 0;
-            if (hasMulticlassMigration || hasGestaltMigration || hasLevelAsLegendMigration) {
-                UI.Div(indent);
+            if (!Main.IsInGame) return;
+            var hasMulticlassMigration = settings.multiclassSettings.Count > 0
+                && (settings.toggleAlwaysShowMigration || settings.perSave.multiclassSettings.Count == 0);
+            var hasGestaltMigration = settings.excludeClassesFromCharLevelSets.Count > 0
+                && (settings.toggleAlwaysShowMigration || settings.perSave.excludeClassesFromCharLevelSets.Count == 0);
+            var hasLevelAsLegendMigration = settings.perSave.charIsLegendaryHero.Count > 0
+                && (settings.toggleAlwaysShowMigration || settings.perSave.charIsLegendaryHero.Count == 0);
+            var hasAvailableMigrations = hasMulticlassMigration || hasGestaltMigration || hasLevelAsLegendMigration;
+            var migrationCount = settings.multiclassSettings.Count + settings.excludeClassesFromCharLevelSets.Count + settings.charIsLegendaryHero.Count;
+            if (migrationCount> 0) {
                 using (UI.HorizontalScope()) {
                     UI.Space(indent);
-                    using (UI.VerticalScope()) {
-                        UI.Label("the following options allow you to migrate previous settings that were stored in toybox to the new per setting save mechanism for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan() + "\nNote:".orange() + "you may have configured this for a different save so use care in doing this migration".green());
-                        if (hasMulticlassMigration)
-                            using (UI.HorizontalScope()) {
-                                UI.Label("Multi-class settings", UI.Width(300));
-                                UI.Space(25);
-                                UI.Label($"{settings.multiclassSettings.Count}".cyan());
-                                UI.Space(25);
-                                UI.ActionButton("Migrate", () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
-                            }
-                        if (hasGestaltMigration)
-                            using (UI.HorizontalScope()) {
-                                UI.Label("Gestalt Flags", UI.Width(300));
-                                UI.Space(25);
-                                UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
-                                UI.Space(25);
-                                UI.ActionButton("Migrate", () => { settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings(); });
-                            }
-                        if (hasLevelAsLegendMigration)
-                            using (UI.HorizontalScope()) {
-                                UI.Label("Chars Able To Exceed Level 20", UI.Width(300));
-                                UI.Space(25);
-                                UI.Label($"{settings.charIsLegendaryHero.Count}".cyan());
-                                UI.Space(25);
-                                UI.ActionButton("Migrate", () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
-                            }
-                    }
+                    UI.Toggle("Show Migrations", ref settings.toggleAlwaysShowMigration);
+                    UI.Space(25);
+                        UI.Label("toggle this if you want show older ToyBox settings for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan());
                 }
+            }
+            if (migrationCount > 0) {
                 UI.Div(indent);
+                if (hasAvailableMigrations) {
+                    using (UI.HorizontalScope()) {
+                        UI.Space(indent);
+                        using (UI.VerticalScope()) {
+                            UI.Label("the following options allow you to migrate previous settings that were stored in toybox to the new per setting save mechanism for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan() + "\nNote:".orange() + "you may have configured this for a different save so use care in doing this migration".green());
+                            if (hasMulticlassMigration)
+                                using (UI.HorizontalScope()) {
+                                    UI.Label("Multi-class settings", UI.Width(300));
+                                    UI.Space(25);
+                                    UI.Label($"{settings.multiclassSettings.Count}".cyan());
+                                    UI.Space(25);
+                                    UI.ActionButton("Migrate", () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
+                                    UI.Space(25);
+                                    UI.DangerousActionButton("Remove", "this will remove your old multiclass settings from ToyBox settings", ref areYouSure1, () => settings.multiclassSettings.Clear());
+                                }
+                            if (hasGestaltMigration)
+                                using (UI.HorizontalScope()) {
+                                    UI.Label("Gestalt Flags", UI.Width(300));
+                                    UI.Space(25);
+                                    UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
+                                    UI.Space(25);
+                                    UI.ActionButton("Migrate", () => { settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings(); });
+                                    UI.Space(25);
+                                    UI.DangerousActionButton("Remove", "this will remove your old gestalt flags from ToyBox settings", ref areYouSure2, () => settings.excludeClassesFromCharLevelSets.Clear());
+                                }
+                            if (hasLevelAsLegendMigration)
+                                using (UI.HorizontalScope()) {
+                                    UI.Label("Chars Able To Exceed Level 20", UI.Width(300));
+                                    UI.Space(25);
+                                    UI.Label($"{settings.charIsLegendaryHero.Count}".cyan());
+                                    UI.Space(25);
+                                    UI.ActionButton("Migrate", () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
+                                    UI.Space(25);
+                                UI.DangerousActionButton("Remove", "this will remove your old Allow Level Past 20 flags from ToyBox settings", ref areYouSure3, () => settings.charIsLegendaryHero.Clear());
+                            }
+                        }
+                    }
+                    UI.Div(indent);
+                }
             }
         }
     }

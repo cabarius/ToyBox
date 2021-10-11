@@ -17,6 +17,7 @@
 * **Multiclasss & Gestalt** 
   * moved save state from settings into Owlcats save file extensions for save files so now your gestalt state will live in your save and never get out of sync due to toybox settings changes
   * Added migration buttons if ToyBox detects that you have old save state in your settings and nothing in the current save. Please use these with care.
+    * You also have the option to remove the migration data
   * Added descriptive string for gestalt flag in Level Up and Party Editor
   * Improved new multiclass selection UI to allow you to select other archetypes for a class that you have an existing archetype. This will only apply during respect.
     * Added orange warning message to inform user of this behavior

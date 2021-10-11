@@ -166,11 +166,32 @@ namespace ModKit {
             if (GL.Button(title, style, options.AddDefaults())) { pressed = true; }
             return pressed;
         }
+
+        // Action Buttons
+
         public static void ActionButton(string title, Action action, params GUILayoutOption[] options) {
             if (GL.Button(title, options.AddDefaults())) { action(); }
         }
         public static void ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
             if (GL.Button(title, style, options.AddDefaults())) { action(); }
+        }
+
+        public static void DangerousActionButton(string title, string warning, ref bool areYouSureState ,Action action, params GUILayoutOption[] options) {
+            using (UI.HorizontalScope()) {
+                var areYouSure = areYouSureState;
+                ActionButton(title, () => { areYouSure = true; });
+                if (areYouSureState) {
+                    UI.Space(25);
+                    UI.Label("Are you sure?".yellow());
+                    UI.Space(25);
+                    ActionButton("YES".yellow().bold(), action);
+                    UI.Space(10);
+                    ActionButton("NO".green(), () => areYouSure = false);
+                    UI.Space(25);
+                    UI.Label(warning.orange());
+                }
+                areYouSureState = areYouSure;
+            }
         }
 
         // Value Adjusters
