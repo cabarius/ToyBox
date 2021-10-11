@@ -183,12 +183,12 @@ namespace ToyBox {
                 && (settings.toggleAlwaysShowMigration || settings.perSave.charIsLegendaryHero.Count == 0);
             var hasAvailableMigrations = hasMulticlassMigration || hasGestaltMigration || hasLevelAsLegendMigration;
             var migrationCount = settings.multiclassSettings.Count + settings.excludeClassesFromCharLevelSets.Count + settings.charIsLegendaryHero.Count;
-            if (migrationCount> 0) {
+            if (migrationCount > 0) {
                 using (UI.HorizontalScope()) {
                     UI.Space(indent);
                     UI.Toggle("Show Migrations", ref settings.toggleAlwaysShowMigration);
                     UI.Space(25);
-                        UI.Label("toggle this if you want show older ToyBox settings for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan());
+                    UI.Label("toggle this if you want show older ToyBox settings for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan());
                 }
             }
             if (migrationCount > 0) {
@@ -206,7 +206,7 @@ namespace ToyBox {
                                     UI.Space(25);
                                     UI.ActionButton("Migrate", () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
                                     UI.Space(25);
-                                    UI.DangerousActionButton("Remove", "this will remove your old multiclass settings from ToyBox settings", ref areYouSure1, () => settings.multiclassSettings.Clear());
+                                    UI.DangerousActionButton("Remove", "this will remove your old multiclass settings from ToyBox settings but does not affect any other saves that have already migrated them", ref areYouSure1, () => settings.multiclassSettings.Clear());
                                 }
                             if (hasGestaltMigration)
                                 using (UI.HorizontalScope()) {
@@ -216,7 +216,7 @@ namespace ToyBox {
                                     UI.Space(25);
                                     UI.ActionButton("Migrate", () => { settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings(); });
                                     UI.Space(25);
-                                    UI.DangerousActionButton("Remove", "this will remove your old gestalt flags from ToyBox settings", ref areYouSure2, () => settings.excludeClassesFromCharLevelSets.Clear());
+                                    UI.DangerousActionButton("Remove", "this will remove your old gestalt flags from ToyBox settings but does not affect any other saves that have already migrated them", ref areYouSure2, () => settings.excludeClassesFromCharLevelSets.Clear());
                                 }
                             if (hasLevelAsLegendMigration)
                                 using (UI.HorizontalScope()) {
@@ -226,8 +226,8 @@ namespace ToyBox {
                                     UI.Space(25);
                                     UI.ActionButton("Migrate", () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
                                     UI.Space(25);
-                                UI.DangerousActionButton("Remove", "this will remove your old Allow Level Past 20 flags from ToyBox settings", ref areYouSure3, () => settings.charIsLegendaryHero.Clear());
-                            }
+                                    UI.DangerousActionButton("Remove", "this will remove your old Allow Level Past 20 flags from ToyBox settings but does not affect any other saves that have already migrated them", ref areYouSure3, () => settings.charIsLegendaryHero.Clear());
+                                }
                         }
                     }
                     UI.Div(indent);
@@ -235,69 +235,4 @@ namespace ToyBox {
             }
         }
     }
-#if false
-    public class MulticlassPickerOld {
-
-        public static void OnGUI(HashSet<string> multiclassSet, float indent = 100) {
-            var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
-            var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
-
-            foreach (var cl in classes) {
-                PickerRow(cl, multiclassSet, indent);
-            }
-            UI.Div(indent, 20);
-            foreach (var mycl in mythicClasses) {
-                using (UI.HorizontalScope()) {
-                    PickerRow(mycl, multiclassSet, indent);
-                }
-            }
-        }
-
-        public static bool PickerRow(BlueprintCharacterClass cl, HashSet<string> multiclassSet, float indent = 100) {
-            bool changed = false;
-            bool showDesc = settings.toggleMulticlassShowClassDescriptions;
-            if (showDesc) UI.Div(indent);
-            using (UI.HorizontalScope()) {
-                UI.Space(indent);
-                UI.ActionToggle(
-                    cl.Name,
-                    () => multiclassSet.Contains(cl.AssetGuid.ToString()),
-                    (v) => {
-                        if (v) multiclassSet.Add(cl.AssetGuid.ToString());
-                        else multiclassSet.Remove(cl.AssetGuid.ToString());
-                        Main.Log($"multiclassSet - class: {cl.AssetGuid.ToString()}- <{String.Join(", ", multiclassSet)}>");
-
-                        changed = true;
-                    },
-                    350
-                    );
-                var archetypes = cl.Archetypes;
-                if (multiclassSet.Contains(cl.AssetGuid.ToString()) && archetypes.Any()) {
-                    UI.Space(50);
-                    using (UI.VerticalScope()) {
-                        var archetypeOptions = options.ArchetypeOptions(cl);
-                        foreach (var archetype in cl.Archetypes) {
-                            if (showDesc) UI.Div();
-                            using (UI.HorizontalScope()) {
-                                UI.ActionToggle(
-                                archetype.Name,
-                                () => archetypeOptions.Contains(archetype),
-                                (v) => {
-                                    if (v) archetypeOptions.AddExclusive(archetype);
-                                    else archetypeOptions.Remove(archetype);
-                                    Main.Log($"PickerRow - archetypeOptions - {{{archetypeOptions}}}");
-                                },
-                                350
-                                );
-                                options.SetArchetypeOptions(cl, archetypeOptions);
-                                if (showDesc) UI.Label(archetype.Description.RemoveHtmlTags().green());
-                            }
-                        }
-                    }
-                }
-            }
-            return changed;
-        }
-    }
-#endif
 }
