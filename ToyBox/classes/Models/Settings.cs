@@ -48,7 +48,7 @@ namespace ToyBox {
             if (cachedPerSave == null) {
                 Mod.Warn("per save settings not found, creating new...");
                 cachedPerSave = new PerSaveSettings {
-                };
+                };   
                 SavePerSaveSettings();
             }
         }
