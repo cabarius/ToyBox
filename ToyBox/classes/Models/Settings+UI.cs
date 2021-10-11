@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ToyBox {
     public partial class SettingsUI {
-        public static CultureInfo uiCulture;
+        public static CultureInfo uiCulture = Thread.CurrentThread.CurrentUICulture;
         public static string cultureSearchText = "";
         public static void OnGUI() {
             UI.HStack("Settings", 1,
@@ -31,9 +31,17 @@ namespace ToyBox {
             UI.HStack("Localizaton", 1,
                 () => {
                     var cultureInfo = Thread.CurrentThread.CurrentUICulture;
-                    var cultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures).OrderBy(ci => ci.DisplayName).ToList();
+                    var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(ci => ci.DisplayName).ToList();
                     using (UI.VerticalScope()) {
-                        UI.GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 8, UI.rarityButtonStyle, UI.Width(UI.ummWidth - 350));
+                        using (UI.HorizontalScope()) {
+                            UI.Label("Current Cultrue".cyan(), UI.Width(100));
+                            UI.Space(25);
+                            UI.Label($"{cultureInfo.DisplayName}({cultureInfo.Name})".orange());
+
+                        }
+                        if (UI.GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 8, UI.rarityButtonStyle, UI.Width(UI.ummWidth - 350))) {
+                            // can we set it?
+                        }
                     }
                 },
                 () => { }
