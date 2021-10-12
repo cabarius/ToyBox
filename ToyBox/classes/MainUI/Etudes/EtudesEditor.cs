@@ -60,7 +60,7 @@ namespace ToyBox {
                 selected = parent;
             }
             UI.Label("Note".orange().bold() + " this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of ".green() + "Etudes".cyan().bold() + " and other ".green() + "Elements".cyan().bold() + " that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of ".green() + "Elements".cyan().bold() + " that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have ".green() + "Elements".cyan().bold() + " will offer a second disclosure triangle next to the status that will show them to you.".green());
-            UI.Label("WARNING".yellow().bold() + " this tool can both miraclously fix your broken progression or it can break it even further. Save and back up your save before using.".orange());
+            UI.Label("WARNING".yellow().bold() + " this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using.".orange());
             using (UI.HorizontalScope()) {
                 if (parent == BlueprintGuid.Empty)
                     return;
