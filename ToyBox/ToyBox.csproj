@@ -243,7 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
-    <Content Include="Localizaton\etude-comments.txt">
+    <Content Include="Localization\etude-comments.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="zmisc\api.txt" />
