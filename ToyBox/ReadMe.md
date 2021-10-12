@@ -13,6 +13,7 @@
 
 **Important**: *Make sure you are on the latest version of the game 1.07f or newer*
 ### Ver 1.4.2 (Coming Soon)
+* **Armies Editor** allow editing of leader skills
 * **Etude Editor** 
   * Show other Etude info and links 
 ### Ver 1.4.1
@@ -29,7 +30,7 @@
   * Fixed bug where we were not syncing gestalt state at some key times like after loading and during migration
   * ***Note*** this should make ToyBox Multiclass and Gestalt play better with respecing
 * **Search 'n Pick** made collation keys searchable
-* **Army Editor** now show leader info and lets you edit their skills
+* **Army Editor** now show leader info and lets you view their skills (editing is coming in 1.4.2)
 * **Etude Editor**
   * Show translated comments (not 100% but much better than nothing)
 ### Ver 1.4.0 

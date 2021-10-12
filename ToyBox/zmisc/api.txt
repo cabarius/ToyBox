@@ -1,1 +1,1 @@
-﻿ dotnet nuget push .\bin\Debug\ModKit.1.0.8.nupkg --api-key oy2oo23jdkcyd4l6x7ealgcjdtnv7v4eblsvajnopwgjjy --source https://api.nuget.org/v3/index.json
+﻿ dotnet nuget push .\bin\Debug\ModKit.1.0.8.nupkg --api-key <key> --source https://api.nuget.org/v3/index.json
