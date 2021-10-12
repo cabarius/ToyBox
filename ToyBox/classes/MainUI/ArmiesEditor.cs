@@ -33,7 +33,9 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
-        private static readonly Dictionary<string, GlobalMapArmyState> armySelection = new() { };
+        private static readonly Dictionary<string, GlobalMapArmyState> armySelection = new();
+        private static Dictionary<object, bool> toggleStates = new();
+
         public static void OnGUI() {
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
@@ -58,6 +60,7 @@ namespace ToyBox.classes.MainUI {
                     () => {
                         UI.Label("Name", UI.MinWidth(100), UI.MaxWidth(250));
                         UI.Label("Type", UI.MinWidth(100), UI.MaxWidth(250));
+                        UI.Label("Leader", UI.Width(350));
                         UI.Label("Squad Count", UI.Width(150));
                         UI.Space(55);
                         UI.Label("Location", UI.Width(400));
@@ -68,16 +71,29 @@ namespace ToyBox.classes.MainUI {
                         using (UI.VerticalScope()) {
                             var last = armies.Last().Item1;
                             foreach (var armyEntry in armies) {
-                                var army = armyEntry.Item1;
-                                var distance = armyEntry.Item2;
+                                var showLeader = false;
                                 var showSquads = false;
+                                var army = armyEntry.Item1;
+                                var leader = army.Data.Leader;
+                                var distance = armyEntry.Item2;
                                 using (UI.HorizontalScope()) {
                                     UI.Label(army.Data.ArmyName.ToString().orange().bold(), UI.MinWidth(100), UI.MaxWidth(250));
                                     UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(250));
-                                    UI.Label(army.Data.Squads.Count.ToString().cyan(), UI.Width(35));
-                                    showSquads = army == selectedArmy;
+                                    if (leader != null) {
+                                        showLeader = toggleStates.GetValueOrDefault(leader, false);
+                                        if (UI.DisclosureToggle(leader.LocalizedName, ref showLeader, 350)) {
+                                            selectedArmy = army == selectedArmy ? null : army;
+                                            toggleStates[leader] = showLeader;
+                                        }
+                                    }
+                                    else UI.Space(353);
+                                    var squads = army.Data.Squads;
+                                    UI.Label(squads.Count.ToString().cyan(), UI.Width(35));
+                                    showSquads = toggleStates.GetValueOrDefault(squads, false);
                                     if (UI.DisclosureToggle("Squads", ref showSquads, 125)) {
-                                        selectedArmy = selectedArmy == army ? null : army;
+                                        selectedArmy = army == selectedArmy ? null : army;
+                                        toggleStates[squads] = showSquads;
+
                                     }
                                     UI.Space(50);
                                     var displayName = army.Location?.GetDisplayName() ?? "traveling on a path";
@@ -85,27 +101,42 @@ namespace ToyBox.classes.MainUI {
                                     UI.Space(25);
                                     var distStr = distance >= 0 ? $"{distance:0.#}" : "-";
                                     UI.Label(distStr, UI.Width(50));
-                                    UI.Space(50 );
+                                    UI.Space(50);
                                     UI.ActionButton("Teleport", () => TeleportToArmy(army), UI.Width(150));
                                     UI.Space(25);
                                     if (GlobalMapView.Instance != null) {
                                         UI.ActionButton("Summon", () => SummonArmy(army), UI.Width(150));
                                     }
                                 }
+                                if (showLeader) {
+                                    UI.Div(0, 10);
+                                    using (UI.VerticalScope()) {
+                                        UI.Label(leader.LocalizedName.yellow(), UI.Width(475));
+                                    }
+                                    using (UI.VerticalScope()) {
+                                        var skills = leader.Skills;
+                                        foreach (var skill in skills) {
+                                            using (UI.HorizontalScope()) {
+                                                UI.Space(100);
+                                                UI.Label(skill.GetDisplayName().cyan(), UI.Width(350));
+                                                UI.Space(25);
 
+                                            }
+                                            UI.Div(100, 10);
+                                        }
+                                    }
+                                }
                                 if (showSquads) {
                                     UI.Div(0, 10);
-
                                     using (UI.VerticalScope()) {
-                                        UI.BeginHorizontal();
-                                        UI.Label("Squad Name".yellow(), UI.Width(475));
-                                        UI.Space(25);
-                                        UI.Label("Unit Count".yellow(), UI.Width(250));
-                                        UI.EndHorizontal();
+                                        using (UI.HorizontalScope()) {
+                                            UI.Label("Squad Name".yellow(), UI.Width(475));
+                                            UI.Space(25);
+                                            UI.Label("Unit Count".yellow(), UI.Width(250));
+                                        }
                                     }
-
                                     using (UI.VerticalScope()) {
-                                        var squads = selectedArmy.Data.m_Squads;
+                                        var squads = army.Data.m_Squads;
                                         SquadState squadToRemove = null;
                                         foreach (var squad in squads) {
                                             using (UI.HorizontalScope()) {

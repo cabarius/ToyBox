@@ -236,7 +236,7 @@ namespace ModKit {
                     "itemSearchText",
                     (text) => { changed = true; },
                     () => { },
-                    UI.Width(300));
+                    xCols == 1 ? options : new GUILayoutOption[] { UI.Width(300) });
                 if (searchText?.Length > 0) {
                     var searchStr = searchText.ToLower();
                     items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();

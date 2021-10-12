@@ -28,6 +28,8 @@
   * Now shows overall character level and level of each class or archetype that you have
   * Fixed bug where we were not syncing gestalt state at some key times like after loading and during migration
   * ***Note*** this should make ToyBox Multiclass and Gestalt play better with respecing
+* **Search 'n Pick** made collation keys searchable
+* **Army Editor** now show leader info and lets you edit their skills
 * **Etude Editor**
   * Show translated comments (not 100% but much better than nothing)
 ### Ver 1.4.0 

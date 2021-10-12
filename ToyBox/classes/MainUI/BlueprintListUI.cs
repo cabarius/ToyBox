@@ -24,7 +24,7 @@ namespace ToyBox {
         public static int[] ParamSelected = new int[1000];
         public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
 
-        public static void OnGUI(UnitEntityData ch,
+        public static void OnGUI(UnitEntityData unit,
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
             Func<string, string> titleFormater = null,
@@ -38,7 +38,7 @@ namespace ToyBox {
                 foreach (var blueprint in simpleBlueprints) {
                     var actions = blueprint.GetActions();
                     if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
-                    var actionCount = actions.Sum(action => action.canPerform(blueprint, ch) ? 1 : 0);
+                    var actionCount = actions.Sum(action => action.canPerform(blueprint, unit) ? 1 : 0);
                     maxActions = Math.Max(actionCount, maxActions);
                 }
                 needsLayout = false;
@@ -68,7 +68,7 @@ namespace ToyBox {
                 using (UI.HorizontalScope()) {
                     UI.Space(indent);
                     var actions = blueprint.GetActions()
-                        .Where(action => action.canPerform(blueprint, ch));
+                        .Where(action => action.canPerform(blueprint, unit));
                     var titles = actions.Select(a => a.name);
                     var title = blueprint.NameSafe();
                     if (titles.Contains("Remove") || titles.Contains("Lock")) {
@@ -92,7 +92,7 @@ namespace ToyBox {
                             UI.Label($"{flags.GetFlagValue(flagBP)}".orange().bold(), UI.MinWidth(50));
                             UI.ActionButton(">", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) + 1); }, UI.Width(50));
                             UI.Space(50);
-                            UI.ActionButton(lockAction.name, () => { lockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
+                            UI.ActionButton(lockAction.name, () => { lockAction.action(blueprint, unit, repeatCount); }, UI.Width(120));
                             UI.Space(100);
 #if DEBUG
                             UI.Label(flagBP.GetDescription().green());
@@ -102,7 +102,7 @@ namespace ToyBox {
                             var unlockIndex = titles.IndexOf("Unlock");
                             var unlockAction = actions.ElementAt(unlockIndex);
                             UI.Space(240);
-                            UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, ch, repeatCount); }, UI.Width(120));
+                            UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, unit, repeatCount); }, UI.Width(120));
                             UI.Space(100);
                         }
                         remWidth -= 300;
@@ -121,7 +121,7 @@ namespace ToyBox {
                                     actionName += (action.isRepeatable ? $" {repeatCount}" : "");
                                     extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
                                 }
-                                UI.ActionButton(actionName, () => action.action(blueprint, ch, repeatCount, currentCount), UI.Width(160 + extraSpace));
+                                UI.ActionButton(actionName, () => action.action(blueprint, unit, repeatCount, currentCount), UI.Width(160 + extraSpace));
                                 UI.Space(10);
                                 remWidth -= 174.0f + extraSpace;
 

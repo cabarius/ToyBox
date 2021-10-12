@@ -44,6 +44,7 @@ namespace ToyBox {
         public static int matchCount = 0;
         public static int pageCount = 0;
         public static int currentPage = 0;
+        public static string collationSearchText = "";
         public static string parameter = "";
         private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames()),
@@ -238,11 +239,20 @@ namespace ToyBox {
                 var collationChanged = false;
                 if (collatedBPs != null) {
                     using (UI.VerticalScope(GUI.skin.box)) {
+                        var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
+                        if (UI.VPicker<string>("Categories", ref selectedKey, collationKeys, null, s => s, ref collationSearchText, UI.Width(200))) {
+                            collationChanged = true; BlueprintListUI.needsLayout = true;
+                        }
+                        if (selectedKey != null)
+                            selectedCollationIndex = collationKeys.IndexOf(selectedKey);
+
+#if false
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(),
                             1,
                             (selected) => { collationChanged = true; BlueprintListUI.needsLayout = true; },
                             UI.buttonStyle,
                             UI.Width(200));
+#endif
                     }
                     remainingWidth -= 350;
                 }
@@ -256,7 +266,7 @@ namespace ToyBox {
                             "searhText",
                             (text) => { },
                             () => UpdateSearchResults(),
-                            UI.Width(200));
+                            UI.Width(400));
                         UI.Space(50);
                         UI.Label("Limit", UI.AutoWidth());
                         UI.Space(15);

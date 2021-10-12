@@ -85,6 +85,7 @@ namespace ToyBox.Multiclass {
         public static bool IsPreGen(this LevelUpState state) => state.IsPregen;
         public static bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
+            if (Main.settings.perSave == null) return false;
             var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
