@@ -62,7 +62,7 @@ namespace ToyBox {
             Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
             Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
         }
-        public PerSaveSettings? perSave{
+        public PerSaveSettings perSave{
             get {
                 if (cachedPerSave != null) return cachedPerSave;
                 ReloadPerSaveSettings();
