@@ -1,14 +1,14 @@
 # ToyBox
-### Now with 300+ Cheats, Tweaks and Quality of Life Improvements
-* **Tweaks**: 98 (or 139 depending on how you count)
-* **Level Up & Multiclass**: 34 
+### Now with 400+ Cheats, Tweaks and Quality of Life Improvements
+* **Tweaks**: 113 (or 144 depending on how you count)
+* **Level Up & Multiclass**: 57
 * **Party Editor**: 67
-* **Loot Checklist**: 2
+* **Loot Checklist**: 4
 * **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
 * **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
 * **Crusade**: 36
 * **Armies**: 4
-* **Etudes**: 6225 (start, unstart, complete)
+* **Etudes**: 6225 x 3 (start, unstart, complete)
 * **Quest Resolution**: 1
 
 **Please backup early and backup often.**
