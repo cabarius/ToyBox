@@ -1,6 +1,6 @@
 # ToyBox
 ### Now with 400+ Cheats, Tweaks and Quality of Life Improvements
-* **Back of Tricks**: 113 (or 144 depending on how you count)
+* **Bag of Tricks**: 113 (or 144 depending on how you count)
 * **Level Up & Multiclass**: 57
 * **Party Editor**: 67
 * **Loot Checklist**: 4
