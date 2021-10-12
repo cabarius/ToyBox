@@ -367,7 +367,7 @@ namespace ToyBox {
 
                 },
                 () => LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 999, 1, 1, "", AutoWidth()),
+                () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
                 () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => { }
