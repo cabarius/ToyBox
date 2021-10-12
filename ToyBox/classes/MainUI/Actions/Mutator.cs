@@ -1,30 +1,34 @@
-﻿using System;
+﻿using ModKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ToyBox {
+#if false
     public abstract class Mutator {
-        public delegate void Perform(object source, object target = default, int count = 1, object value = default);
+        // the return value is intended to single the enclosing UI that something has changed 
+        public delegate bool MainGUI(ref bool showDetail, object source, object target, object value = default, int count = 1);
+        public delegate bool DetailGUI(ref bool showDetail, object source, object target, object value = default, int count = 1);
 
-        public delegate bool CanPerform(object source, object target = default, object value = default);
+        // for now we will assume that the source type takes precedence. We may want to generalize this later to do the full lattice thing
+        private static Dictionary<Type, Dictionary<Type, List<Mutator>>> actionsForTypes;
 
-        private static Dictionary<Type, List<Mutator>> actionsForType;
-
-        public static List<Mutator> ActionsForType(Type type) {
-            if (actionsForType == null) {
-                actionsForType = new Dictionary<Type, List<Mutator>> { };
-                BlueprintActions.InitializeActions();
+        public static List<Mutator> ActionsForTypes(Type source, Type target) {
+            if (actionsForTypes == null) {
+                actionsForTypes = new Dictionary<Type, Dictionary<Type, List<Mutator>>> { };
+                MutatorActions.InitializeActions();
             }
 
-            actionsForType.TryGetValue(type, out var result);
+            var actionsForTargetType = actionsForTypes.GetValueOrDefault(source, new Dictionary<Type, List<Mutator>> { });
+            actionsForTargetType.TryGetValue(target, out var result);
 
             if (result == null) {
-                var baseType = type.BaseType;
+                var sourceBase = source.BaseType;
 
-                if (baseType != null) {
-                    result = ActionsForType(baseType);
+                if (sourceBase != null) {
+                    result = ActionsForTypes(sourceBase, target);
                 }
 
                 result ??= new List<Mutator> { };
@@ -37,9 +41,10 @@ namespace ToyBox {
 
         public static IEnumerable<Mutator> ActionsForSource(object source) => ActionsForType(source.GetType());
 
-        public static void Register<Source, Target>(string name, Mutator<Source, Target>.Perform perform, Mutator<Source, Target>.CanPerform canPerform = null, bool isRepeatable = false) {
-            var action = new Mutator<Source, Target>(name, perform, canPerform, isRepeatable);
-            var type = action.BlueprintType;
+        public static void Register<Source, Target>(string name, Mutator<Source, Target>.OnGUIAction action, bool isRepeatable = false) {
+            var mutator = new Mutator<Source, Target>(name, action, isRepeatable);
+            var sourceType = mutator.SourceType;
+            var targetType = mutator.TargetType;
             actionsForType.TryGetValue(type, out var existing);
             existing ??= new List<Mutator> { };
             existing.Add(action);
@@ -48,9 +53,8 @@ namespace ToyBox {
 
         public string name { get; protected set; }
 
-        public Perform action;
-
-        public CanPerform canPerform;
+        public MainGUI OnGUI;
+        public DetailGUI OnDetailGUI;
 
         protected Mutator(string name, bool isRepeatable) {
             this.name = name;
@@ -59,19 +63,17 @@ namespace ToyBox {
 
         public bool isRepeatable;
 
-        public abstract Type BlueprintType { get; }
+        public abstract Type SourceType { get; }
+        public abstract Type TargetType { get; }
     }
 
     public class Mutator<Source, Target> : Mutator {
-        public new delegate void Perform(Source bp, Target target, int count = 1, object value = default);
+        public new delegate bool OnGUIAction(Source source, Target target, ref bool showDetail, object value = default, int count = 1);
 
-        public new delegate bool CanPerform(Source bp, Target target, object value = default);
-
-        public Mutator(string name, Perform action, CanPerform canPerform = null, bool isRepeatable = false) : base(name, isRepeatable) {
-            this.action = (bp, target, n, value) => action((Source)bp, (Target)target, n, value);
-            this.canPerform = (bp, target, value) => Main.IsInGame && bp is Source bpt && (canPerform?.Invoke(bpt, (Target)target, value) ?? true);
-        }
+        public Mutator(string name, OnGUIAction action, bool isRepeatable = false) : base(name, isRepeatable) =>
+            this.OnGUI = (source, target, showDetail, value, count) => OnGUI((Source)source, (Target)target, value, count);
 
         public override Type BlueprintType => typeof(Source);
     }
+#endif
 }
