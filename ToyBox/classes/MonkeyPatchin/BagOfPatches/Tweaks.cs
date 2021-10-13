@@ -1,4 +1,4 @@
-﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
@@ -46,6 +46,7 @@ using System.Linq;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.RuleSystem.Rules.Abilities;
 using UnityEngine;
+using Kingmaker.EntitySystem.Stats;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -264,12 +265,53 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintArmorType), "MaxDexterityBonus", MethodType.Getter)]
-        public static class BlueprintArmorType_MaxDexterityBonus_Patch {
-            public static void Prefix(ref int ___m_MaxDexterityBonus) {
+        [HarmonyPatch(typeof(BlueprintArmorType), "HasDexterityBonusLimit", MethodType.Getter)]
+        public static class BlueprintArmorType_HasDexterityBonusLimit_Patch {
+            public static bool Prefix(ref bool __result) {
                 if (settings.toggleIgnoreMaxDexterity) {
-                    ___m_MaxDexterityBonus = 99;
+                    __result = false;
+                    return false;
                 }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintArmorType), "ArmorChecksPenalty", MethodType.Getter)]
+        public static class BlueprintArmorType_ArmorChecksPenalty_Patch {
+            public static bool Prefix(ref int __result) {
+                if (settings.toggleIgnoreArmorChecksPenalty) {
+                    __result = 0;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemEntityArmor), "RecalculateStats")]
+        public static class ItemEntityArmor_RecalculateStats_Patch {
+            public static void Postfix(ItemEntityArmor __instance) {
+                if (settings.toggleIgnoreSpeedReduction) {
+                    if (__instance.m_Modifiers != null) {
+                        __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m)
+                        {
+                            ModifiableValue appliedTo = m.AppliedTo;
+                            if (appliedTo == __instance.Wielder.Stats.Speed) {
+                                m.Remove();
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(BlueprintArmorType), "ArcaneSpellFailureChance", MethodType.Getter)]
+        public static class BlueprintArmorType_ArcaneSpellFailureChance_Patch {
+            public static bool Prefix(ref int __result) {
+                if (settings.toggleIgnoreSpellFailure) {
+                    __result = 0;
+                    return false;
+                }
+                return true;
             }
         }
 
