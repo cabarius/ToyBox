@@ -33,7 +33,7 @@ namespace ToyBox {
         private const string TeleportPartyToYou = "Teleport Party To You";
         private const string GoToGlobalMap = "Go To Global Map";
         private const string RerollPerception = "Reroll Perception";
-        private const string RerollInteractionSkillChecks = "Reroll Interaction Skill Checks";
+        private const string RerollInteractionSkillChecks = "Reset Interactables";
         private const string ChangeParty = "Change Party";
 
         // other
@@ -132,8 +132,13 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Common", 2,
                 () => BindableActionButton(GoToGlobalMap),
-                () => BindableActionButton(RerollPerception),
                 () => BindableActionButton(ChangeParty),
+                () => BindableActionButton(RerollPerception),
+                () => {
+                    BindableActionButton(RerollInteractionSkillChecks);
+                    UI.Space(-75);
+                    UI.Label("This resets all the skill check rolls for all interactable objects in the area".green());
+                    },
                 () => {
                     NonBindableActionButton("Set Perception to 40", () => {
                         CheatsCommon.StatPerception();

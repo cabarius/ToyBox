@@ -17,6 +17,9 @@ using System.Reflection;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using ModKit.Utility;
 using ModKit;
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Class;
+using TMPro;
+using UnityEngine;
 
 namespace ToyBox.Multiclass {
     public static partial class MultipleClasses {
@@ -33,13 +36,10 @@ namespace ToyBox.Multiclass {
                 if (IsAvailable()) {
                     Main.multiclassMod.AppliedMulticlassSet.Clear();
                     Main.multiclassMod.UpdatedProgressions.Clear();
-                    var companionNames = Game.Instance?.Player?.AllCharacters.Where(c => !c.IsMainCharacter).Select(c => c.CharacterName).ToList();
-                    Mod.Debug($"companions: {string.Join(", ", companionNames)}");
                     // get multi-class setting
-                    bool isCompanion = companionNames?.Contains(unit.Unit.CharacterName) ?? false;
-                    bool useDefaultMulticlassOptions = state.IsCharGen() && !isCompanion;
+                    bool useDefaultMulticlassOptions = state.IsCharGen();
                     var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
-                    Mod.Trace($"SelectClass.Apply.Postfix, unit: {unit.CharacterName} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isCompan: {isCompanion} isPHChar: {unit.CharacterName == "Player Character"}".cyan().bold());
+                    Mod.Trace($"SelectClass.Apply.Postfix, unit: {unit.CharacterName} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isPHChar: {unit.CharacterName == "Player Character"}".cyan().bold());
 
                     if (options == null || options.Count == 0)
                         return;
@@ -256,5 +256,27 @@ namespace ToyBox.Multiclass {
                 return false;
             }
         }
+
+#if false
+        [HarmonyPatch(typeof(CharGenClassSelectorItemPCView), nameof(CharGenClassSelectorItemPCView.BindViewImplementation))]
+        private static class CharGenClassSelectorItemPCView_CharGenClassSelectorItemPCView_Patch {
+            private static void Postfix(CharGenClassSelectorItemPCView __instance) {
+                Mod.Warn("CharGenClassSelectorItemPCView_CharGenClassSelectorItemPCView_Patch");
+                var multicheckbox = __instance.transform.Find("MulticlassCheckbox-ToyBox");
+                if (multicheckbox == null) {
+                    var checkbox = Game.Instance.UI.Canvas.transform.Find("ServiceWindowsPCView/SpellbookView/SpellbookScreen/MainContainer/KnownSpells/Toggle");
+                    var sibling = __instance.transform.Find("LevelPlace");
+                    var siblingIndex = sibling.transform.GetSiblingIndex();
+                    multicheckbox = GameObject.Instantiate(checkbox, __instance.transform);
+                    Mod.Debug($"made new multiCheckbox: {multicheckbox}".yellow());
+                    multicheckbox.transform.SetSiblingIndex(siblingIndex);
+                    multicheckbox.name = "MulticlassCheckbox-ToyBox";
+                    multicheckbox.GetComponentInChildren<TextMeshProUGUI>().text = "multi";
+                }
+                else Mod.Debug($"found multiCheckbox: {multicheckbox}".green());
+                multicheckbox.gameObject.SetActive(true);
+            }
+        }
+#endif
     }
 }

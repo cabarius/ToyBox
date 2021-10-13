@@ -47,7 +47,7 @@ namespace ToyBox.BagOfPatches {
 
 #if false
         public static class PartyVM_Construtor_Patch {
-            public static void PostFix(PartyVM __instance) {
+            public static void Postfix(PartyVM __instance) {
                 Game.Instance.UI.PartyBarkManager = (Kingmaker.Assets.Code.UI.Overtip.IBarkPlayer)__instance;
                 for (int index = 6; index < SlotsInParty; ++index)
                     __instance.CharactersVM.Add(new PartyCharacterVM(new Action<bool>(__instance.NextPrev), index));

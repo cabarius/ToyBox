@@ -41,8 +41,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.2 (Coming Soon)
-* **Bag of Tricks**
+* **Bag of Tricks** 
   * moved teleport keys to go with teleport party to me and gave it its own section with explainer text
+  * Added common cheat to reset interaction point skill checks in an area
   * (***Aephiex***) Renamed 'Disable Arcane Spell Failure' into 'Disable Armor & Shield Arcane Spell Failure' to make it more clear
   * (***Aephiex***) Fixed issue where 'Disable Armor Max Dexterity' permanently changes armor max dexterity into 99 even after disabling this option
   * (***Aephiex***) Added new option 'Disable Armor Speed Reduction' which disables the -10 speed while wearing medium and heavy armor

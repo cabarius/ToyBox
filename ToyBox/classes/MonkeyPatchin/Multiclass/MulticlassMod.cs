@@ -78,7 +78,12 @@ namespace ToyBox.Multiclass {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        public static bool IsCharGen(this LevelUpState state) => state.Mode == LevelUpState.CharBuildMode.CharGen || state.Unit.CharacterName == "Player Character";
+        public static bool IsCharGen(this LevelUpState state) {
+            var companionNames = Game.Instance?.Player?.AllCharacters.Where(c => !c.IsMainCharacter).Select(c => c.CharacterName).ToList();
+            bool isCompanion = companionNames?.Contains(state.Unit.CharacterName) ?? false;
+            if (isCompanion) return false;
+            return state.Mode == LevelUpState.CharBuildMode.CharGen || state.Unit.CharacterName == "Player Character";
+        }
 
         public static bool IsLevelUp(this LevelUpState state) => state.Mode == LevelUpState.CharBuildMode.LevelUp;
 
