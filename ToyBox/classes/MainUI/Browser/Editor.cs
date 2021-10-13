@@ -28,45 +28,50 @@ namespace ToyBox {
                 editorsForType = new Dictionary<Type, List<Editor>>();
                 BlueprintActions.InitializeActions();
             }
-
             editorsForType.TryGetValue(type, out var editors);
-
             if (editors == null) {
                 var baseType = type.BaseType;
-
                 if (baseType != null) {
                     editors = EditorsForType(baseType);
                 }
-
                 editors ??= new List<Editor> { };
-
                 editorsForType[type] = editors;
             }
-
             return editors;
         }
 
         public static IEnumerable<object> EditorsFor(object obj) => EditorsForType(obj.GetType());
+        public static IEnumerable<object> EditorsFor(object source, object target)
+            => EditorsForType((source.GetType(), target.GetType()).GetType());
 
-        public static void Register<T>(string name, Editor<T>.MainGUI main, Editor<T>.DetailGUI detail) {
-            var action = new Editor<T>(name, main, detail);
-            var type = action.EditorType;
+        public static void Register(Editor editor) {
+            var type = editor.EditorType;
             editorsForType.TryGetValue(type, out var existing);
             existing ??= new List<Editor> { };
-            existing.Add(action);
+            existing.Add(editor);
             editorsForType[type] = existing;
         }
+        public static void Register<T>(string name, Editor<T>.MainGUI main, Editor<T>.DetailGUI detail)
+            => Register((Editor)new Editor<T>(name, main, detail));
+        public static void Register<Source, Target>(string name, Editor<Source, Target>.MainGUI main, Editor<Source, Target>.DetailGUI detail) => Register(new Editor<Source, Target>(name, main, detail));
     }
-
     public class Editor<T> : Editor {
         public new delegate bool MainGUI(ref bool showDetail, T arg, object[] argv);
         public new delegate bool DetailGUI(ref bool showDetail, T arg, object[] argv);
-
+        public override Type EditorType => typeof(T);
         public Editor(string name, MainGUI main, DetailGUI detail) : base(name) {
             OnGUI = (ref bool showDetail, object[] argv) => main(ref showDetail, (T)argv[0], argv.Skip(1).ToArray());
             OnDetail = (ref bool showDetail, object[] argv) => detail(ref showDetail, (T)argv[0], argv.Skip(1).ToArray());
         }
+    }
 
-        public override Type EditorType => typeof(T);
+    public class Editor<Source, Target> : Editor {
+        public new delegate bool MainGUI(ref bool showDetail, Source source, Target target, object[] argv);
+        public new delegate bool DetailGUI(ref bool showDetail, Source source, Target target, object[] argv);
+        public override Type EditorType => typeof((Source, Target));
+        public Editor(string name, MainGUI main, DetailGUI detail) : base(name) {
+            OnGUI = (ref bool showDetail, object[] argv) => main(ref showDetail, (Source)argv[0], (Target)argv[1], argv.Skip(2).ToArray());
+            OnDetail = (ref bool showDetail, object[] argv) => detail(ref showDetail, (Source)argv[0], (Target)argv[1], argv.Skip(2).ToArray());
+        }
     }
 }
