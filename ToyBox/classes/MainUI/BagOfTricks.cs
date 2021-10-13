@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
+// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using System;
 using System.Linq;
@@ -289,7 +289,6 @@ namespace ToyBox {
                 () => Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities),
                 () => Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts),
                 () => Toggle("No Material Components", ref settings.toggleMaterialComponent),
-                () => Toggle("Disable Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure),
                 () => Toggle("Disable Party Negative Levels", ref settings.togglePartyNegativeLevelImmunity),
                 () => Toggle("Disable Party Ability Damage", ref settings.togglePartyAbilityDamageImmunity),
 
@@ -302,6 +301,9 @@ namespace ToyBox {
 
                 () => Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions),
                 () => Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity),
+                () => Toggle("Disable Armor Speed Reduction", ref settings.toggleIgnoreSpeedReduction),
+                () => Toggle("Disable Armor & Shield Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure),
+                () => Toggle("Disable Armor & Shield Checks Penalty", ref settings.toggleIgnoreArmorChecksPenalty),
 
                 () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
                 () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
