@@ -108,8 +108,23 @@ namespace ToyBox {
                 () => { }
                 );
             Div(0, 25);
-            HStack("Common", 2,
+            HStack("Teleport", 2,
                 () => BindableActionButton(TeleportPartyToYou),
+                () => {
+                    Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled);
+                    Space(100);
+                    if (settings.toggleTeleportKeysEnabled) {
+                        using (VerticalScope()) {
+                            KeyBindPicker("TeleportMain", "Main Character", 0, 200);
+                            KeyBindPicker("TeleportSelected", "Selected Chars", 0, 200);
+                            KeyBindPicker("TeleportParty", "Whole Party", 0, 200);
+                        }
+                    }
+                    UI.Space(25);
+                    UI.Label("You can enable hot keys to teleport members of your party to your mouse cursor on Area or the Global Map".green());
+                });
+            Div(0, 25);
+            HStack("Common", 2,
                 () => BindableActionButton(GoToGlobalMap),
                 () => BindableActionButton(RerollPerception),
                 () => BindableActionButton(ChangeParty),
@@ -263,17 +278,6 @@ namespace ToyBox {
                         }
                     }
                 },
-                () => {
-                    Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled);
-                    if (settings.toggleTeleportKeysEnabled) {
-                        Space(100);
-                        using (VerticalScope()) {
-                            KeyBindPicker("TeleportMain", "Main Character", 0, 200);
-                            KeyBindPicker("TeleportSelected", "Selected Chars.", 0, 200);
-                            KeyBindPicker("TeleportParty", "Whole Party", 0, 200);
-                        }
-                    }
-                },
                 () => Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities),
                 () => Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts),
                 () => Toggle("No Material Components", ref settings.toggleMaterialComponent),
@@ -315,23 +319,24 @@ namespace ToyBox {
                 () => { }
                 );
             Div(153, 25);
-            HStack("", 1,
-                () => EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, AutoWidth()),
+        HStack("", 1,
+            () => EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, AutoWidth()),
                 () => EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, AutoWidth()),
-                () => { Space(328); Label("This allows characters you control to move through the selected category of units during combat".green(), AutoWidth()); }
+                () => { Space(328); Label("This allows characters you control to move through the selected category of units during combat".green(), AutoWidth());
+    }
 #if false
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
 #endif
                 );
             Div(0, 25);
-            HStack("Class Specific", 1,
-                () => Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 1, "", AutoWidth()),
+    HStack("Class Specific", 1,
+        () => Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 1, "", AutoWidth()),
                 () => Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f,
                         1f, 1, "", AutoWidth()),
                 () => {
                     Space(25);
-                    Label("Please rest after adjusting to recalculate your spell slots.".green());
-                },
+    Label("Please rest after adjusting to recalculate your spell slots.".green());
+},
                 () => Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)", ref settings.toggleExtendHexes),
                 () => Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)", ref settings.toggleAllowAllActivatable),
                 () => Toggle("Kineticist: Allow Gather Power Without Hands", ref settings.toggleKineticistGatherPower),
@@ -340,81 +345,81 @@ namespace ToyBox {
                 () => Toggle("Magus: Always Allow Spell Combat", ref settings.toggleAlwaysAllowSpellCombat),
                 () => { }
                 );
-            Div(0, 25);
-            HStack("Multipliers", 1,
-                () => LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => Slider("Increase Carry Capacity", ref settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
-                () => LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => {
-                    LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
-                    Space(25);
-                    Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne);
-                    Space(25);
-                    Label("Adjusts the movement speed of your party in area maps".green());
-                },
-                () => {
-                    LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
-                    Space(25);
-                    Label("Adjusts the movement speed of your party on world maps".green());
-                },
-                () => {
-                    LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", Width(600));
-                    Space(25);
-                    Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".green());
+Div(0, 25);
+HStack("Multipliers", 1,
+    () => LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+    () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+    () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+    () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+    () => Slider("Increase Carry Capacity", ref settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
+    () => LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+    () => {
+        LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
+        Space(25);
+        Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne);
+        Space(25);
+        Label("Adjusts the movement speed of your party in area maps".green());
+    },
+    () => {
+        LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
+        Space(25);
+        Label("Adjusts the movement speed of your party on world maps".green());
+    },
+    () => {
+        LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", Width(600));
+        Space(25);
+        Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".green());
 
-                },
-                () => LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
-                () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                () => { }
-                );
-            Actions.ApplyTimeScale();
+    },
+    () => LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
+    () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
+    () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+    () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+    () => { }
+    );
+Actions.ApplyTimeScale();
+Div(0, 25);
+HStack("Dice Rolls", 1,
+    () => EnumGrid("All Attacks Hit", ref settings.allAttacksHit, AutoWidth()),
+    () => EnumGrid("All Hits Critical", ref settings.allHitsCritical, AutoWidth()),
+    () => EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, AutoWidth()),
+    () => EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, AutoWidth()),
+    () => EnumGrid("Always Roll 20", ref settings.alwaysRoll20, AutoWidth()),
+    () => EnumGrid("Always Roll 1", ref settings.alwaysRoll1, AutoWidth()),
+    () => EnumGrid("Never Roll 20", ref settings.neverRoll20, AutoWidth()),
+    () => EnumGrid("Never Roll 1", ref settings.neverRoll1, AutoWidth()),
+    () => EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, AutoWidth()),
+    () => EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, AutoWidth()),
+    () => EnumGrid("Always Roll 20 Out Of Combat", ref settings.alwaysRoll20OutOfCombat, AutoWidth()),
+    () => EnumGrid("Take 10 Out of Combat (Always)", ref settings.take10always, AutoWidth()),
+    () => EnumGrid("Take 10 Out of Combat (Minimum)", ref settings.take10minimum, AutoWidth()),
+    () => { }
+    );
+Div(0, 25);
+HStack("Summons", 1,
+    () => Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable),
+    () => {
+        using (VerticalScope()) {
             Div(0, 25);
-            HStack("Dice Rolls", 1,
-                () => EnumGrid("All Attacks Hit", ref settings.allAttacksHit, AutoWidth()),
-                () => EnumGrid("All Hits Critical", ref settings.allHitsCritical, AutoWidth()),
-                () => EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, AutoWidth()),
-                () => EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, AutoWidth()),
-                () => EnumGrid("Always Roll 20", ref settings.alwaysRoll20, AutoWidth()),
-                () => EnumGrid("Always Roll 1", ref settings.alwaysRoll1, AutoWidth()),
-                () => EnumGrid("Never Roll 20", ref settings.neverRoll20, AutoWidth()),
-                () => EnumGrid("Never Roll 1", ref settings.neverRoll1, AutoWidth()),
-                () => EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, AutoWidth()),
-                () => EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, AutoWidth()),
-                () => EnumGrid("Always Roll 20 Out Of Combat", ref settings.alwaysRoll20OutOfCombat, AutoWidth()),
-                () => EnumGrid("Take 10 Out of Combat (Always)", ref settings.take10always, AutoWidth()),
-                () => EnumGrid("Take 10 Out of Combat (Minimum)", ref settings.take10minimum, AutoWidth()),
-                () => { }
-                );
+            using (HorizontalScope()) {
+                Label("Primary".orange(), AutoWidth()); Space(215); Label("good for party".green());
+            }
+            Space(25);
+            EnumGrid("Modify Summons For", ref settings.summonTweakTarget1, AutoWidth());
+            LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", AutoWidth());
+            Slider("Level Increase/Decrease", ref settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", AutoWidth());
             Div(0, 25);
-            HStack("Summons", 1,
-                () => Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable),
-                () => {
-                    using (VerticalScope()) {
-                        Div(0, 25);
-                        using (HorizontalScope()) {
-                            Label("Primary".orange(), AutoWidth()); Space(215); Label("good for party".green());
-                        }
-                        Space(25);
-                        EnumGrid("Modify Summons For", ref settings.summonTweakTarget1, AutoWidth());
-                        LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease", ref settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", AutoWidth());
-                        Div(0, 25);
-                        using (HorizontalScope()) {
-                            Label("Secondary".orange(), AutoWidth()); Space(215); Label("good for larger group or to reduce enemies".green());
-                        }
-                        Space(25);
-                        EnumGrid("Modify Summons For", ref settings.summonTweakTarget2, AutoWidth());
-                        LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease", ref settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", AutoWidth());
-                    }
-                },
-                () => { }
-             );
+            using (HorizontalScope()) {
+                Label("Secondary".orange(), AutoWidth()); Space(215); Label("good for larger group or to reduce enemies".green());
+            }
+            Space(25);
+            EnumGrid("Modify Summons For", ref settings.summonTweakTarget2, AutoWidth());
+            LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", AutoWidth());
+            Slider("Level Increase/Decrease", ref settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", AutoWidth());
+        }
+    },
+    () => { }
+ );
         }
     }
 }
