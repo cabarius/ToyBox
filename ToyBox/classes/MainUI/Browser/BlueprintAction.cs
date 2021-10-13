@@ -10,6 +10,7 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Quests;
 using Kingmaker.Designers;
@@ -116,12 +117,19 @@ namespace ToyBox {
                                                     (bp, ch, n, index) => Actions.SpawnUnit(bp, n), isRepeatable: true);
 
             BlueprintAction.Register<BlueprintFeature>("Add",
-                                                       (bp, ch, n, index) => ch.Descriptor.AddFact(bp),
+                                                       (bp, ch, n, index) => ch.Progression.Features.AddFeature(bp),
                                                        (bp, ch, index) => !ch.Progression.Features.HasFact(bp));
 
             BlueprintAction.Register<BlueprintFeature>("Remove",
                                                        (bp, ch, n, index) => ch.Progression.Features.RemoveFact(bp),
                                                        (bp, ch, index) => ch.Progression.Features.HasFact(bp));
+            BlueprintAction.Register<BlueprintUnitFact>("Add",
+                                                       (bp, ch, n, index) => ch.AddFact(bp),
+                                                       (bp, ch, index) => !ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
+
+            BlueprintAction.Register<BlueprintUnitFact>("Remove",
+                                                       (bp, ch, n, index) => ch.RemoveFact(bp),
+                                                       (bp, ch, index) => ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
             BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
                 (bp, ch, n, index) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param),

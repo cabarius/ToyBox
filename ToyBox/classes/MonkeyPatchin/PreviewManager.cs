@@ -17,6 +17,7 @@ using Kingmaker.UI.Common;
 using Kingmaker.UI.Dialog;
 using Kingmaker.UI.GlobalMap;
 using Kingmaker.UI.Kingdom;
+using Kingmaker.UI.MVVM._PCView.Dialog.Dialog;
 using Kingmaker.UI.Tooltip;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.Utility;
@@ -25,6 +26,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace ToyBox {
     internal class PreviewManager {

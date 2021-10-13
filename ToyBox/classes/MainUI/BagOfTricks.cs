@@ -8,6 +8,7 @@ using Kingmaker.Kingdom;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
+using Kingmaker.UI.Dialog;
 using ModKit;
 using UnityEngine;
 using UnityModManagerNet;
@@ -37,6 +38,7 @@ namespace ToyBox {
 
         // other
         private const string TimeScaleMultToggle = "Main/Alt Timescale";
+        private const string PreviewDialogResults = "Preview Results";
 
         public static void OnLoad() {
             // Combat
@@ -59,6 +61,10 @@ namespace ToyBox {
             KeyBindings.RegisterAction(TimeScaleMultToggle, () => {
                 settings.useAlternateTimeScaleMultiplier = !settings.useAlternateTimeScaleMultiplier;
                 Actions.ApplyTimeScale();
+            });
+            KeyBindings.RegisterAction(PreviewDialogResults, () => {
+                settings.previewDialogResults = !settings.previewDialogResults;
+                var dialogController = Game.Instance.DialogController;
             });
         }
         public static void ResetGUI() { }
@@ -148,6 +154,8 @@ namespace ToyBox {
                 Toggle("Random Encounters", ref settings.previewRandomEncounters);
                 Space(25);
                 Toggle("Events", ref settings.previewEventResults);
+                Space(25);
+                BindableActionButton(PreviewDialogResults);
             });
             Div(0, 25);
             HStack("Quality of Life", 1,

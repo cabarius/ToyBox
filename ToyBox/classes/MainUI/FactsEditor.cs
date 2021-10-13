@@ -15,6 +15,8 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using ModKit;
 using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
+using Kingmaker.EntitySystem;
+using Kingmaker.Blueprints.Facts;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -188,10 +190,23 @@ namespace ToyBox {
             }
             toValues.Clear();
         }
-        public static void OnGUI(UnitEntityData ch, List<Feature> facts) {
+        public static void OnGUI(UnitEntityData ch, List<EntityFact> facts) {
+            var blueprints = BlueprintLoader.Shared.GetBlueprints();
+
+            if (blueprints == null) return;
+            OnGUI<EntityFact>("Features", ch, facts,
+                (fact) => fact.Blueprint,
+                BlueprintExensions.GetBlueprints<BlueprintUnitFact>(),
+                (fact) => fact.Name,
+                (fact) => fact.Description,
+                (fact) => fact.GetRank(),
+                BlueprintAction.ActionsForType(typeof(BlueprintUnitFact))
+                );
+        }
+        public static void OnGUI(UnitEntityData ch, List<Feature> feature) {
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<Feature>("Features", ch, facts,
+            OnGUI<Feature>("Features", ch, feature,
                 (fact) => fact.Blueprint,
                 BlueprintExensions.GetBlueprints<BlueprintFeature>(),
                 (fact) => fact.Name,
@@ -200,10 +215,10 @@ namespace ToyBox {
                 BlueprintAction.ActionsForType(typeof(BlueprintFeature))
                 );
         }
-        public static void OnGUI(UnitEntityData ch, List<Buff> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Buff> buff) {
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<Buff>("Features", ch, facts,
+            OnGUI<Buff>("Features", ch, buff,
                 (fact) => fact.Blueprint,
                 BlueprintExensions.GetBlueprints<BlueprintBuff>(),
                 (fact) => fact.Name,
@@ -212,10 +227,10 @@ namespace ToyBox {
                BlueprintAction.ActionsForType(typeof(BlueprintBuff))
                 );
         }
-        public static void OnGUI(UnitEntityData ch, List<Ability> facts) {
+        public static void OnGUI(UnitEntityData ch, List<Ability> ability) {
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return;
-            OnGUI<Ability>("Abilities", ch, facts,
+            OnGUI<Ability>("Abilities", ch, ability,
                 (fact) => fact.Blueprint,
                 BlueprintExensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
                 (fact) => fact.Name,

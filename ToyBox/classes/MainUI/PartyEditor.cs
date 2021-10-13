@@ -26,6 +26,7 @@ namespace ToyBox {
             Classes,
             Stats,
             Facts,
+            Features,
             Buffs,
             Abilities,
             Spells,
@@ -248,9 +249,14 @@ namespace ToyBox {
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     UI.Wrap(UI.IsNarrow, 279);
-                    var showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
-                    if (UI.DisclosureToggle("Facts", ref showFacts, 125)) {
-                        if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
+                    //var showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
+                    //if (UI.DisclosureToggle("Facts", ref showFacts, 125)) {
+                    //    if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
+                    //    else { selectedToggle = ToggleChoice.None; }
+                    //}
+                    var showFeatures = ch == selectedCharacter && selectedToggle == ToggleChoice.Features;
+                    if (UI.DisclosureToggle("Features", ref showFeatures, 150)) {
+                        if (showFeatures) { selectedCharacter = ch; selectedToggle = ToggleChoice.Features; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
@@ -524,7 +530,10 @@ namespace ToyBox {
                         }
                     }
                 }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
+                //if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
+                //    FactsEditor.OnGUI(ch, ch.Facts.m_Facts);
+                //}
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Features) {
                     FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {

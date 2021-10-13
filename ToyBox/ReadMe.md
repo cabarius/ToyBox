@@ -39,6 +39,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 **Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.2 (Coming Soon)
 * **Bag of Tricks** moved teleport keys to go with teleport party to me and gave it its own section with explainer text
+* **Party Editor** renamed 'Facts' to the more correct name 'Features'
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** 
   * Show other Etude info and links 

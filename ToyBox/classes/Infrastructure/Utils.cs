@@ -84,7 +84,7 @@ namespace ToyBox {
                 var value = chunks[ii + 3].Trim();
                 if (key.Length == 0 || value.Length == 0) continue;
                 result[key] = value;
-                Mod.Debug($"'{key}' => '{value}'");
+                //Mod.Debug($"'{key}' => '{value}'");
             }
             return result;
         }
