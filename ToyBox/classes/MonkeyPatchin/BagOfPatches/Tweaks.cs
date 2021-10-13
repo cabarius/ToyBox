@@ -295,7 +295,8 @@ namespace ToyBox.BagOfPatches {
                         __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m)
                         {
                             ModifiableValue appliedTo = m.AppliedTo;
-                            if (appliedTo == __instance.Wielder.Stats.Speed) {
+                            ModifierDescriptor desc = m.ModDescriptor;
+                            if (appliedTo == __instance.Wielder.Stats.Speed && (desc == ModifierDescriptor.Shield || desc == ModifierDescriptor.Armor)) {
                                 m.Remove();
                             }
                         });
