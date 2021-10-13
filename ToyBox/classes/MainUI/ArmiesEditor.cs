@@ -122,8 +122,9 @@ namespace ToyBox.classes.MainUI {
                                                 UI.Space(25);
 
                                             }
-                                            UI.Div(100, 10);
                                         }
+                                        if (!showSquads)
+                                            UI.Div(0, 10);
                                     }
                                 }
                                 if (showSquads) {
