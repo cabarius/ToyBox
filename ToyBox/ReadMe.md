@@ -36,7 +36,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
-**Important**: *Make sure you are on the latest version of the game 1.07f or newer*
+**Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.2 (Coming Soon)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** 

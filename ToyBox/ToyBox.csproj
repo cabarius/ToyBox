@@ -160,8 +160,8 @@
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
-    <Compile Include="classes\MainUI\Actions\MutatorActions.cs" />
-    <Compile Include="classes\MainUI\Actions\Mutator.cs" />
+    <Compile Include="classes\MainUI\Browser\EditorActions.cs" />
+    <Compile Include="classes\MainUI\Browser\Editor.cs" />
     <Compile Include="classes\MainUI\ArmiesEditor.cs" />
     <Compile Include="classes\MainUI\CrusadeEditor.cs" />
     <Compile Include="classes\MainUI\EnchantmentEditor.cs" />
@@ -174,7 +174,7 @@
     <Compile Include="classes\MainUI\PhatLoot.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
-    <Compile Include="classes\MainUI\Actions\BlueprintAction.cs" />
+    <Compile Include="classes\MainUI\Browser\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
     <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />

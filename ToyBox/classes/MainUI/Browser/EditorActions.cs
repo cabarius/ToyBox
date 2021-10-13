@@ -29,11 +29,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace ToyBox {
-#if false
-
-    public static class MutatorActions {
+    public static class EditorActions {
 
         public static void InitializeActions() {
+#if false
             var flags = Game.Instance.Player.UnlockableFlags;
             BlueprintAction.Register<BlueprintItem>("Add",
                                                     (bp, ch, n, index) => Game.Instance.Player.Inventory.Add(bp, n), isRepeatable: true);
@@ -264,7 +263,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintLeaderSkill>("Remove",
                 (bp, ch, n, l) => Actions.RemoveSkillFromLeader(bp),
                 (bp, ch, index) => Actions.LeaderSelected(bp) && Actions.LeaderHasSkill(bp));
+#endif
         }
     }
-#endif
 }

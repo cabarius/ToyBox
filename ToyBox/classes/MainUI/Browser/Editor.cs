@@ -1,0 +1,72 @@
+﻿using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ToyBox {
+    // This class encapsulates the ability to show GUI for displaying and or editing an object.  Not all editors will actually modify values but they will be included here to keep things simple
+    public abstract class Editor {
+
+        // the return value is intended to single the enclosing UI that something has changed 
+        public delegate bool MainGUI(ref bool showDetail, object[] argv);
+        public delegate bool DetailGUI(ref bool showDetail, object[] argv);
+        public string name { get; protected set; }
+
+        public MainGUI OnGUI;
+        public DetailGUI OnDetail;
+        protected Editor(string name) {
+            this.name = name;
+        }
+        public abstract Type EditorType { get; }
+
+        private static Dictionary<Type, List<Editor>> editorsForType;
+
+        public static List<Editor> EditorsForType(Type type) {
+            if (editorsForType == null) {
+                editorsForType = new Dictionary<Type, List<Editor>>();
+                BlueprintActions.InitializeActions();
+            }
+
+            editorsForType.TryGetValue(type, out var editors);
+
+            if (editors == null) {
+                var baseType = type.BaseType;
+
+                if (baseType != null) {
+                    editors = EditorsForType(baseType);
+                }
+
+                editors ??= new List<Editor> { };
+
+                editorsForType[type] = editors;
+            }
+
+            return editors;
+        }
+
+        public static IEnumerable<object> EditorsFor(object obj) => EditorsForType(obj.GetType());
+
+        public static void Register<T>(string name, Editor<T>.MainGUI main, Editor<T>.DetailGUI detail) {
+            var action = new Editor<T>(name, main, detail);
+            var type = action.EditorType;
+            editorsForType.TryGetValue(type, out var existing);
+            existing ??= new List<Editor> { };
+            existing.Add(action);
+            editorsForType[type] = existing;
+        }
+    }
+
+    public class Editor<T> : Editor {
+        public new delegate bool MainGUI(ref bool showDetail, T arg, object[] argv);
+        public new delegate bool DetailGUI(ref bool showDetail, T arg, object[] argv);
+
+        public Editor(string name, MainGUI main, DetailGUI detail) : base(name) {
+            OnGUI = (ref bool showDetail, object[] argv) => main(ref showDetail, (T)argv[0], argv.Skip(1).ToArray());
+            OnDetail = (ref bool showDetail, object[] argv) => detail(ref showDetail, (T)argv[0], argv.Skip(1).ToArray());
+        }
+
+        public override Type EditorType => typeof(T);
+    }
+}
