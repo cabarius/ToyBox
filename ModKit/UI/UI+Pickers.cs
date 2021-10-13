@@ -102,7 +102,7 @@ namespace ModKit {
             }
         }
         public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
-            bool changed = false;
+            var changed = false;
             options = options.AddDefaults();
             var names = Enum.GetNames(typeof(TEnum));
             var formatedNames = names;
@@ -141,7 +141,7 @@ namespace ModKit {
         }
 
         public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
-            bool changed = false;
+            var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
                 UI.Space(25);

@@ -66,7 +66,7 @@ namespace ToyBox {
 
 
         public void Update() {
-            BlueprintEtude oldSelectedEtude = (BlueprintEtude)ResourcesLibrary.TryGetBlueprint(SelectedId);
+            var oldSelectedEtude = (BlueprintEtude)ResourcesLibrary.TryGetBlueprint(SelectedId);
             if (oldSelectedEtude == null) {
                 EtudesTreeModel.Instance.RemoveEtudeData(SelectedId);
                 return;

@@ -353,7 +353,7 @@ namespace ToyBox {
                         var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
                         var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                         foreach (var cd in classData) {
-                            bool showedGestalt = false;
+                            var showedGestalt = false;
                             UI.Div(100, 20);
                             using (UI.HorizontalScope()) {
                                 UI.Space(100);

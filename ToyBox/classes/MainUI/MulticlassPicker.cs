@@ -76,7 +76,7 @@ namespace ToyBox {
             var charHasClass = cd != null && chArchetype == null;
             // Class Toggle
             using (UI.HorizontalScope()) {
-                bool showedGestalt = false;
+                var showedGestalt = false;
                 UI.Space(indent);
                 var optionsHasClass = options.Contains(cl);
                 UI.ActionToggle(
@@ -125,7 +125,7 @@ namespace ToyBox {
             }
             // Archetypes
             using (UI.HorizontalScope()) {
-                bool showedGestalt = false;
+                var showedGestalt = false;
                 UI.Space(indent);
                 var archetypes = cl.Archetypes;
                 if (options.Contains(cl) && archetypes.Any() || chArchetype != null) {
@@ -134,7 +134,7 @@ namespace ToyBox {
                         foreach (var archetype in cl.Archetypes) {
                             if (showDesc) UI.Div();
                             using (UI.HorizontalScope()) {
-                                bool hasArch = archetypeOptions.Contains(archetype);
+                                var hasArch = archetypeOptions.Contains(archetype);
                                 UI.ActionToggle(
                                 archetype == chArchetype ? archetype.Name.orange() + $" ({cd.Level})".orange() : archetype.Name,
                                 () => hasArch,

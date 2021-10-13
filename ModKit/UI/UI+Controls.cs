@@ -120,9 +120,7 @@ namespace ModKit {
         }
         public static void ActionTextField(ref string text,
             Action<string> action,
-            params GUILayoutOption[] options) {
-            ActionTextField(ref text, null, action, null, options);
-        }
+            params GUILayoutOption[] options) => ActionTextField(ref text, null, action, null, options);
         public static void ActionIntTextField(
             ref int value,
             string name,
@@ -205,7 +203,7 @@ namespace ModKit {
                 ActionButton("min ".cyan(), () => { }, UI.textBoxStyle, AutoWidth());
             }
             Space(-8);
-            bool temp = false;
+            var temp = false;
             UI.Button($"{v}".orange().bold(), ref temp, UI.textBoxStyle, AutoWidth());
             Space(-8);
             if (v < max)
@@ -221,16 +219,15 @@ namespace ModKit {
             return false;
         }
         public static bool ValueAdjuster(Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue) {
-            bool changed = false;
             var value = get();
-            changed = ValueAdjuster(ref value, increment, min, max);
+            var changed = ValueAdjuster(ref value, increment, min, max);
             if (changed)
                 set(value);
             return changed;
         }
 
         public static bool ValueAdjuster(string title, ref int value, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
-            bool changed = false;
+            var changed = false;
             using (UI.HorizontalScope(options)) {
                 UI.Label(title);
                 changed = UI.ValueAdjuster(ref value, increment, min, max);
@@ -238,7 +235,7 @@ namespace ModKit {
             return changed;
         }
         public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
-            bool changed = false;
+            var changed = false;
             using (UI.HorizontalScope(UI.Width(400))) {
                 UI.Label(title.cyan(), UI.Width(300));
                 UI.Space(15);
@@ -253,7 +250,7 @@ namespace ModKit {
         // Value Editors 
 
         public static bool ValueEditor(string title, Func<int> get, Action<int> set, ref int increment, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
-            bool changed = false;
+            var changed = false;
             var value = get();
             var inc = increment;
             using (UI.HorizontalScope(options)) {
@@ -327,9 +324,8 @@ namespace ModKit {
             return changed;
         }
         public static bool Slider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
-            bool changed = false;
             var value = get();
-            changed = Slider(title, ref value, min, max, defaultValue, decimals, units, options);
+            var changed = Slider(title, ref value, min, max, defaultValue, decimals, units, options);
             if (changed)
                 set(value);
             return changed;
@@ -397,9 +393,8 @@ namespace ModKit {
             return changed;
         }
         public static bool LogSlider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
-            bool changed = false;
             var value = get();
-            changed = LogSlider(title, ref value, min, max, defaultValue, decimals, units, options);
+            var changed = LogSlider(title, ref value, min, max, defaultValue, decimals, units, options);
             if (changed)
                 set(value);
             return changed;
