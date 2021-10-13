@@ -42,7 +42,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.2 (Coming Soon)
 * **Bag of Tricks** moved teleport keys to go with teleport party to me and gave it its own section with explainer text
-* **Level Up & Multiclass** removed unimplemented flags in the multi-class config to avoid confusion. Please file feature requests if there are any that you really wanted.
+* **Level Up & Multiclass** 
+  * Fixed issue where char gen class choices would get applied to companions during some level ups. Please give feedback if you see issues respecing your companions
+  * removed unimplemented flags in the multi-class config to avoid confusion. Please file feature requests if there are any that you really wanted.
 * **Party Editor** renamed 'Facts' to the more correct name 'Features'
 * **Search 'n Pick** made categories for 'Features' much more useful. Choose Search 'n Pick > Features and see all the interesting categories to explore ^_^
 ### Ver 1.4.1

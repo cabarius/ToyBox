@@ -33,10 +33,13 @@ namespace ToyBox.Multiclass {
                 if (IsAvailable()) {
                     Main.multiclassMod.AppliedMulticlassSet.Clear();
                     Main.multiclassMod.UpdatedProgressions.Clear();
-
+                    var companionNames = Game.Instance?.Player?.AllCharacters.Where(c => !c.IsMainCharacter).Select(c => c.CharacterName).ToList();
+                    Mod.Debug($"companions: {string.Join(", ", companionNames)}");
                     // get multi-class setting
-                    var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
-                    Mod.Trace($"SelectClass.Apply.Postfix, unit: {unit.CharacterName} isCharGen: {state.IsCharGen()} isPHChar: {unit.CharacterName == "Player Character"}".cyan().bold());
+                    bool isCompanion = companionNames?.Contains(unit.Unit.CharacterName) ?? false;
+                    bool useDefaultMulticlassOptions = state.IsCharGen() && !isCompanion;
+                    var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
+                    Mod.Trace($"SelectClass.Apply.Postfix, unit: {unit.CharacterName} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isCompan: {isCompanion} isPHChar: {unit.CharacterName == "Player Character"}".cyan().bold());
 
                     if (options == null || options.Count == 0)
                         return;
