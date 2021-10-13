@@ -60,7 +60,7 @@ namespace ToyBox {
             var bps = LoadFromFile<List<BlueprintItem>>(filename);
             if (bps != null) {
                 if (replace) {
-                    var doomed = items.Items.Where<ItemEntity>((x => x.HoldingSlot == null)).ToTempList<ItemEntity>();
+                    var doomed = items.Items.Where<ItemEntity>(x => x.HoldingSlot == null).ToTempList<ItemEntity>();
                     foreach (var toDie in doomed) {
                         items.Remove(toDie);
                     }

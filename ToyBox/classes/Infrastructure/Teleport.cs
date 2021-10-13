@@ -75,7 +75,7 @@ namespace ToyBox {
         public static void TeleportPartyOnGlobalMap() {
             _ = GlobalMapView.Instance;
             var pointerPos = Utils.PointerPosition();
-            var pointerTransform = (new GameObject()).transform;
+            var pointerTransform = new GameObject().transform;
             pointerTransform.position = pointerPos;
             var locationToObject = GlobalMapView.Instance.GetNearestLocationToObject(pointerTransform);
             locationToObject.Blueprint.TeleportToGlobalMapPoint();

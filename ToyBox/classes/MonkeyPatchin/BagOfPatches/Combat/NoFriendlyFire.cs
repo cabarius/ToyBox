@@ -60,7 +60,7 @@ namespace ToyBox.BagOfPatches {
                             targets = targets.Where(target => {
                                 if (target.Descriptor.IsPartyOrPet() && !healDamage) {
                                     var forUndead = componentType == AbilityUseOnRestType.HealMassUndead || componentType == AbilityUseOnRestType.HealSelfUndead || componentType == AbilityUseOnRestType.HealUndead;
-                                    return (forUndead == target.Descriptor.IsUndead);
+                                    return forUndead == target.Descriptor.IsUndead;
                                 }
                                 return true;
                             });

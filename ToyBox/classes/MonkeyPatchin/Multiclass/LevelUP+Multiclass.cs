@@ -173,7 +173,7 @@ namespace ToyBox.Multiclass {
                         && p.IsChildProgressionOf(unit, blueprintCharacterClass) // Mod Line replacing above
                         )
                         unit.Progression.Features.Enumerable.FirstItem<Feature>(
-                            (f => f.Blueprint == p))?.SetSource((FeatureSource)blueprintCharacterClass, 1
+                            f => f.Blueprint == p)?.SetSource((FeatureSource)blueprintCharacterClass, 1
                             );
                     LevelUpHelper.UpdateProgression(state, unit, p);
                 }

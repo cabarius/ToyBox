@@ -88,7 +88,7 @@ namespace ModKit {
                     return;
                 }
                 var e = Event.current;
-                UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
+                UI.userHasHitReturn = e.keyCode == KeyCode.Return;
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();
 
 

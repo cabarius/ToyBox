@@ -71,7 +71,7 @@ namespace ToyBox.BagOfPatches {
         public static class StatsDistribution_GetAddCost_Patch {
             public static bool Prefix(StatsDistribution __instance, StatType attribute) {
                 var attributeValue = __instance.StatValues[attribute];
-                return (attributeValue > 7 && attributeValue < 17);
+                return attributeValue > 7 && attributeValue < 17;
             }
             public static void Postfix(StatsDistribution __instance, ref int __result, StatType attribute) {
                 var attributeValue = __instance.StatValues[attribute];
@@ -87,7 +87,7 @@ namespace ToyBox.BagOfPatches {
         public static class StatsDistribution_GetRemoveCost_Patch {
             public static bool Prefix(StatsDistribution __instance, StatType attribute) {
                 var attributeValue = __instance.StatValues[attribute];
-                return (attributeValue > 7 && attributeValue < 17);
+                return attributeValue > 7 && attributeValue < 17;
             }
             public static void Postfix(StatsDistribution __instance, ref int __result, StatType attribute) {
                 var attributeValue = __instance.StatValues[attribute];

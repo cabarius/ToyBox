@@ -218,7 +218,7 @@ namespace ToyBox {
                         Div(0, 25, 1280);
                     }
                 },
-                () => Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width((450))),
+                () => Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width(450)),
                 () => {
                     using (VerticalScope()) {
 
@@ -235,7 +235,7 @@ namespace ToyBox {
                                 Label("This allows you to play with the originally released Unfair difficulty. ".green() + "Note:".orange().bold() + "This Unfair difficulty was bugged and applied the intended difficulty modifers twice. ToyBox allows you to keep playing at this Brutal difficulty level and beyond.  Use the slider below to select your desired Brutality Level".green(), Width(1200));
                                 Space(15);
                                 using (HorizontalScope()) {
-                                    if (Slider("Brutality Level", ref settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", Width((450)))) {
+                                    if (Slider("Brutality Level", ref settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", Width(450))) {
                                         EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
                                             h.HandleDifficultyChanged();
                                             Main.SetNeedsResetGameUI();
@@ -253,7 +253,7 @@ namespace ToyBox {
                                             label = $"Brutal{suffix}";
                                             break;
                                         default:
-                                            var rarity = (RarityType)(brutaltiy);
+                                            var rarity = (RarityType)brutaltiy;
                                             label = $"{rarity}{suffix}".Rarity(rarity);
                                             break;
                                     }

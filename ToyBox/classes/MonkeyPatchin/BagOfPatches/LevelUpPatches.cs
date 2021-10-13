@@ -171,7 +171,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SpendSkillPoint), "Check", new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         private static class SpendSkillPoint_Check_Patch {
             public static bool Prefix(SpendSkillPoint __instance) => !(settings.toggleIgnoreSkillCap || settings.toggleIgnoreSkillPointsRemaining);
-            private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) => __result = (StatTypeHelper.Skills).Contains<StatType>(__instance.Skill)
+            private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) => __result = StatTypeHelper.Skills.Contains<StatType>(__instance.Skill)
                     && (settings.toggleIgnoreSkillCap || unit.Stats.GetStat(__instance.Skill).BaseValue < state.NextCharacterLevel)
                     && (settings.toggleIgnoreSkillPointsRemaining || state.SkillPointsRemaining > 0);
         }
@@ -455,7 +455,7 @@ namespace ToyBox.BagOfPatches {
                     var selectionState = featureSelectorStateVM.SelectionState;
                     var selectionVM = __instance.FeatureSelectorStateVM;
                     var state = Game.Instance.LevelUpController.State;
-                    IFeatureSelection selection = (selection = (selectionVM.Feature as IFeatureSelection));
+                    IFeatureSelection selection = selection = selectionVM.Feature as IFeatureSelection;
                     var availableItems = selection?.Items
                         .Where((IFeatureSelectionItem item) => selection.CanSelect(state.Unit, state, selectionState, item));
                     //Main.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");

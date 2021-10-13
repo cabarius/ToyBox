@@ -10,7 +10,7 @@ namespace ToyBox.Multiclass {
             if (appliedClasses.Count() <= 0) return;
             var newClassLvls = appliedClasses.Select(cl => unit.Progression.GetClassLevel(cl)).ToArray();
             var classCount = newClassLvls.Length;
-            var hitDies = appliedClasses.Select(cl => (int)(cl.HitDie)).ToArray();
+            var hitDies = appliedClasses.Select(cl => (int)cl.HitDie).ToArray();
 
             var mainClassIndex = appliedClasses.ToList().FindIndex(ch => ch == state.SelectedClass);
             //Logger.ModLoggerDebug($"mainClassIndex = {mainClassIndex}");

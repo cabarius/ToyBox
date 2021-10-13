@@ -120,7 +120,7 @@ namespace ToyBox {
             }
             try {
                 var e = Event.current;
-                UI.userHasHitReturn = (e.keyCode == KeyCode.Return);
+                UI.userHasHitReturn = e.keyCode == KeyCode.Return;
                 UI.focusedControlName = GUI.GetNameOfFocusedControl();
                 if (caughtException != null) {
                     UI.Label("ERROR".red().bold() + $": caught exception {caughtException}");

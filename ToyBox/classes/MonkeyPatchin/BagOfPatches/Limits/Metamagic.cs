@@ -40,7 +40,7 @@ namespace ToyBox.BagOfPatches {
                     else {
                         __instance.KnownMetamagics.Add(metamagicFeature);
                         var metamagic = component.Metamagic;
-                        if (___m_SpellLevel < 0 || ___m_SpellLevel >= 10 || (___m_SpellLevel + component.Metamagic.DefaultCost() > 10 || __instance.SpellMetamagics.Contains(metamagicFeature)) || (__instance.Spell.AvailableMetamagic & metamagic) != metamagic)
+                        if (___m_SpellLevel < 0 || ___m_SpellLevel >= 10 || ___m_SpellLevel + component.Metamagic.DefaultCost() > 10 || __instance.SpellMetamagics.Contains(metamagicFeature) || (__instance.Spell.AvailableMetamagic & metamagic) != metamagic)
                             return;
                         __instance.SpellMetamagics.Add(metamagicFeature);
                     }

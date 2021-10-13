@@ -27,7 +27,7 @@ namespace ToyBox {
     }
 
     public static class UnitEntityDataUtils {
-        public static float GetMaxSpeed(List<UnitEntityData> data) => (data.Select((u => u.ModifiedSpeedMps)).Max());
+        public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.ModifiedSpeedMps).Max();
 
         public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType) {
             if (unitEntityData == null) return false;

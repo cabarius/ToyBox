@@ -36,18 +36,18 @@ namespace ToyBox.Multiclass {
                     if (appliedClassCount == 0)
                         break;
                     for (var i = 0; i < appliedClassCount; i++) increase += Math.Max(0, newBonuses[i] - oldBonuses[i]);
-                    unit.Stats.GetStat(stat).BaseValue += (increase / appliedClassCount - mainClassInc);
+                    unit.Stats.GetStat(stat).BaseValue += increase / appliedClassCount - mainClassInc;
                     break;
                 case ProgressionPolicy.Largest:
                     int maxOldValue = 0, maxNewValue = 0;
                     for (var i = 0; i < appliedClassCount; i++) maxOldValue = Math.Max(maxOldValue, oldBonuses[i]);
                     for (var i = 0; i < appliedClassCount; i++) maxNewValue = Math.Max(maxNewValue, newBonuses[i]);
                     increase = maxNewValue - maxOldValue;
-                    unit.Stats.GetStat(stat).BaseValue += (increase - mainClassInc);
+                    unit.Stats.GetStat(stat).BaseValue += increase - mainClassInc;
                     break;
                 case ProgressionPolicy.Sum:
                     for (var i = 0; i < appliedClassCount; i++) increase += Math.Max(0, newBonuses[i] - oldBonuses[i]);
-                    unit.Stats.GetStat(stat).BaseValue += (increase - mainClassInc);
+                    unit.Stats.GetStat(stat).BaseValue += increase - mainClassInc;
                     break;
                 default:
                     break; ;

@@ -66,7 +66,7 @@ namespace ToyBox {
                                         if (node.Expanded == ToggleState.None) {
                                             node.Expanded = ToggleState.Off;
                                         }
-                                        node.Expanded = (expandAll ? ToggleState.On : collapseAll ? ToggleState.Off : node.Expanded);
+                                        node.Expanded = expandAll ? ToggleState.On : collapseAll ? ToggleState.Off : node.Expanded;
                                     }
                                     else {
                                         node.Expanded = ToggleState.None;

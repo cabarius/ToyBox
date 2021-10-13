@@ -118,7 +118,7 @@ namespace ToyBox {
                                 var actionName = action.name;
                                 float extraSpace = 0;
                                 if (action.isRepeatable) {
-                                    actionName += (action.isRepeatable ? $" {repeatCount}" : "");
+                                    actionName += action.isRepeatable ? $" {repeatCount}" : "";
                                     extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
                                 }
                                 UI.ActionButton(actionName, () => action.action(blueprint, unit, repeatCount, currentCount), UI.Width(160 + extraSpace));

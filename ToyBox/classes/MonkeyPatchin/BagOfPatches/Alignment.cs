@@ -38,11 +38,11 @@ namespace ToyBox {
         private static class UnitAlignment_Shift_Patch {
             private static bool Prefix(UnitAlignment __instance, AlignmentShiftDirection direction, ref int value, IAlignmentShiftProvider provider) {
                 try {
-                    if ((settings.togglePreventAlignmentChanges)) {
+                    if (settings.togglePreventAlignmentChanges) {
                         value = 0;
                     }
 
-                    if ((settings.toggleAlignmentFix)) {
+                    if (settings.toggleAlignmentFix) {
                         if (value == 0) {
                             return false;
                         }
@@ -77,7 +77,7 @@ namespace ToyBox {
         [HarmonyPatch(typeof(ForbidSpellbookOnAlignmentDeviation), "CheckAlignment")]
         private static class ForbidSpellbookOnAlignmentDeviation_CheckAlignment_Patch {
             private static bool Prefix(ForbidSpellbookOnAlignmentDeviation __instance) {
-                if ((settings.toggleSpellbookAbilityAlignmentChecks)) {
+                if (settings.toggleSpellbookAbilityAlignmentChecks) {
                     __instance.Alignment = __instance.Owner.Alignment.ValueRaw.ToMask();
                 }
                 return true;
@@ -86,7 +86,7 @@ namespace ToyBox {
         [HarmonyPatch(typeof(AbilityCasterAlignment), nameof(AbilityCasterAlignment.IsCasterRestrictionPassed))]
         private static class AbilityCasterAlignment_CheckAlignment_Patch {
             private static void Postfix(ref bool __result) {
-                if ((settings.toggleSpellbookAbilityAlignmentChecks)) {
+                if (settings.toggleSpellbookAbilityAlignmentChecks) {
                     __result = true;
                 }
             }
