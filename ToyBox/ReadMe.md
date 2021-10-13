@@ -37,12 +37,13 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 **Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
+### Ver 1.4.3 (Coming Later)
+* **Armies Editor** allow editing of leader skills
+* **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.2 (Coming Soon)
 * **Bag of Tricks** moved teleport keys to go with teleport party to me and gave it its own section with explainer text
 * **Party Editor** renamed 'Facts' to the more correct name 'Features'
-* **Armies Editor** allow editing of leader skills
-* **Etude Editor** 
-  * Show other Etude info and links 
+* **Search 'n Pick** made categories for 'Features' much more useful. Choose Search 'n Pick > Features and see all the interesting categories to explore ^_^
 ### Ver 1.4.1
 * **Etude Editor** fixed crasher
 ### Ver 1.4.1

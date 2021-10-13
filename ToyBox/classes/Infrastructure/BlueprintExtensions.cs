@@ -58,7 +58,7 @@ namespace ToyBox {
             }
             return modifers;
         }
-        private static List<string> DefaultCollationNames(this SimpleBlueprint bp, params string[] extras) {
+        private static List<string> DefaultCollationNames(this SimpleBlueprint bp, string[] extras) {
             cachedCollationNames.TryGetValue(bp, out var names);
             if (names != null) return names;
             names = extras?.ToList() ?? new List<string> { };
@@ -119,7 +119,6 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
-
 
         private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
         public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {

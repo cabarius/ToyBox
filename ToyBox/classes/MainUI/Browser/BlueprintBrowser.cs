@@ -49,7 +49,7 @@ namespace ToyBox {
         private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationNames()),
-            new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames( bp.Groups.Select(g => g.ToString()).ToArray())),
             new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string> {bp.ParameterType.ToString() }),
             new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames("Standard")),
                                                                           //bp => bp.IsArcaneCaster ? "Arcane"
@@ -240,7 +240,7 @@ namespace ToyBox {
                 if (collatedBPs != null) {
                     using (UI.VerticalScope(GUI.skin.box)) {
                         var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-                        if (UI.VPicker<string>("Categories", ref selectedKey, collationKeys, null, s => s, ref collationSearchText, UI.Width(200))) {
+                        if (UI.VPicker<string>("Categories", ref selectedKey, collationKeys, null, s => s, ref collationSearchText, UI.Width(300))) {
                             collationChanged = true; BlueprintListUI.needsLayout = true;
                         }
                         if (selectedKey != null)

@@ -33,6 +33,8 @@ namespace ToyBox.Multiclass {
 
             switch (policy) {
                 case ProgressionPolicy.Average:
+                    if (appliedClassCount == 0)
+                        break;
                     for (var i = 0; i < appliedClassCount; i++) increase += Math.Max(0, newBonuses[i] - oldBonuses[i]);
                     unit.Stats.GetStat(stat).BaseValue += (increase / appliedClassCount - mainClassInc);
                     break;

@@ -115,6 +115,7 @@ namespace ToyBox {
                 () => {
                     UI.EnumGrid<ProgressionPolicy>("Skill Point Growth", ref settings.multiclassSkillPointPolicy, 0, UI.AutoWidth());
                 },
+#if false
                 () => UI.Toggle("Use Recalculate Caster Levels", ref settings.toggleRecalculateCasterLevelOnLevelingUp),
                 () => UI.Toggle("Restrict Caster Level To Current", ref settings.toggleRestrictCasterLevelToCharacterLevel),
                 //() => { UI.Toggle("Restrict CL to Current (temp) ", ref settings.toggleRestrictCasterLevelToCharacterLevelTemporary),
@@ -122,6 +123,7 @@ namespace ToyBox {
                 () => UI.Toggle("Fix Favored Class HP", ref settings.toggleFixFavoredClassHP),
                 () => UI.Toggle("Always Receive Favored Class HP", ref settings.toggleAlwaysReceiveFavoredClassHP),
                 () => UI.Toggle("Always Receive Favored Class HP Except Prestige", ref settings.toggleAlwaysReceiveFavoredClassHPExceptPrestige),
+#endif
                 () => { }
                 );
 

@@ -47,36 +47,11 @@ namespace ToyBox {
         public static int selectedSpellbookLevel = 0;
         private static bool editSpellbooks = false;
         private static UnitEntityData spellbookEditCharacter = null;
-        private static float nearbyRange = 25;
         private static readonly Dictionary<string, int> statEditorStorage = new();
         public static Dictionary<string, Spellbook> SelectedSpellbook = new();
-        private static NamedFunc<List<UnitEntityData>>[] partyFilterChoices = null;
-        private static readonly Player partyFilterPlayer = null;
-        public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
-            if (partyFilterPlayer != Game.Instance.Player) partyFilterChoices = null;
-            if (Game.Instance.Player != null && partyFilterChoices == null) {
-                partyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
-                    new NamedFunc<List<UnitEntityData>>("Party", () => Game.Instance.Player.Party),
-                    new NamedFunc<List<UnitEntityData>>("Party & Pets", () => Game.Instance.Player.m_PartyAndPets),
-                    new NamedFunc<List<UnitEntityData>>("All", () => Game.Instance.Player.AllCharacters),
-                    new NamedFunc<List<UnitEntityData>>("Active", () => Game.Instance.Player.ActiveCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Remote", () => Game.Instance.Player.m_RemoteCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Custom", PartyUtils.GetCustomCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets),
-                    new NamedFunc<List<UnitEntityData>>("Nearby", () => {
-                        var player = GameHelper.GetPlayerCharacter();
-                        if (player == null) return new List<UnitEntityData> ();
-                        return GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearbyRange , false, false).ToList();
-                    }),
-                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
-               };
-            }
-            return partyFilterChoices;
-        }
+
         public static List<UnitEntityData> GetCharacterList() {
-            var partyFilterChoices = GetPartyFilterChoices();
+            var partyFilterChoices = CharacterPicker.GetPartyFilterChoices();
             if (partyFilterChoices == null) { return null; }
             return partyFilterChoices[Main.settings.selectedPartyFilter].func();
         }
@@ -91,7 +66,7 @@ namespace ToyBox {
             selectedCharacterIndex = 0;
             selectedSpellbook = 0;
             selectedSpellbookLevel = 0;
-            partyFilterChoices = null;
+            CharacterPicker.partyFilterChoices = null;
             Main.settings.selectedPartyFilter = 0;
         }
 
@@ -132,7 +107,7 @@ namespace ToyBox {
         }
         public static void OnGUI() {
             var player = Game.Instance.Player;
-            var filterChoices = GetPartyFilterChoices();
+            var filterChoices = CharacterPicker.GetPartyFilterChoices();
             if (filterChoices == null) { return; }
 
             charToAdd = null;
@@ -146,7 +121,7 @@ namespace ToyBox {
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
             if (characterListFunc.name == "Nearby") {
-                UI.Slider("Nearby Distance", ref nearbyRange, 1f, 200, 25, 0, " meters", UI.Width(250));
+                UI.Slider("Nearby Distance", ref CharacterPicker.nearbyRange, 1f, 200, 25, 0, " meters", UI.Width(250));
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
             UI.Space(20);
