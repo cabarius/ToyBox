@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
+// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using ModKit.Utility;
 using System.Collections.Generic;
 using UnityModManagerNet;
@@ -89,6 +89,8 @@ namespace ToyBox {
         public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleEquipmentRestrictions = false;
         public bool toggleIgnoreMaxDexterity = false;
+        public bool toggleIgnoreArmorChecksPenalty = false;
+        public bool toggleIgnoreSpeedReduction = false;
         public bool toggleIgnoreSpellFailure = false;
         public bool togglePartyNegativeLevelImmunity = false;
         public bool togglePartyAbilityDamageImmunity = false;
