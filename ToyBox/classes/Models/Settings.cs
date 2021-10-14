@@ -20,6 +20,7 @@ namespace ToyBox {
     public class PerSaveSettings : EntityPart {
         public const string ID = "ToyBox.PerSaveSettings";
         public delegate void PerSaveChanged(PerSaveSettings perSave);
+        [JsonIgnore]
         public static PerSaveChanged observers;
 
         // schema for storing multiclass settings
@@ -47,8 +48,14 @@ namespace ToyBox {
             if (player == null || Game.Instance.SaveManager.CurrentState == SaveManager.State.Loading) return;
             Mod.Debug($"reloading per save settings from Player.SettingsList[{PerSaveKey}]");
             if (player.SettingsList.TryGetValue(PerSaveKey, out var obj) && obj is string json) {
-                cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
-                Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
+                try {
+                    cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
+                    Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
+                }
+                catch (Exception e) {
+                    Mod.Error($"failed to read from Player.SettingsList[{PerSaveKey}]");
+                    Mod.Error(e);
+                }
             }
             if (cachedPerSave == null) {
                 Mod.Warn("per save settings not found, creating new...");
@@ -66,7 +73,8 @@ namespace ToyBox {
             player.SettingsList[PerSaveKey] = json;
             Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
             Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
-            PerSaveSettings.observers(cachedPerSave);
+            if (cachedPerSave)
+                PerSaveSettings.observers?.Invoke(cachedPerSave);
         }
         public PerSaveSettings perSave{
             get {

@@ -24,6 +24,8 @@ using UnityEngine.UI;
 using Kingmaker.UI;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Class;
 using Kingmaker.PubSubSystem;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.CharacterInfo.Sections.Progression.Main;
+using Kingmaker.UI.MVVM._PCView.CharGen;
 
 namespace ToyBox.Multiclass {
     public static partial class MultipleClasses {
@@ -261,7 +263,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#if true
+#if DEBUG
         public static class MulticlassCheckBoxHelper {
             public static void UpdateCheckbox(CharGenClassSelectorItemPCView instance) {
                 var multicheckbox = instance.transform.Find("MulticlassCheckbox-ToyBox");
@@ -272,24 +274,55 @@ namespace ToyBox.Multiclass {
                 var options = MulticlassOptions.Get(ch);
                 toggle.SetIsOnWithoutNotify(options.Contains(cl) && (!viewModel.IsArchetype || options.ArchetypeOptions(cl).Contains(viewModel.Archetype)));
                 toggle.onValueChanged.RemoveAllListeners();
-                toggle.onValueChanged.AddListener(v => MulticlassCheckBoxChanged(v, viewModel));
+                toggle.onValueChanged.AddListener(v => MulticlassCheckBoxChanged(v, instance));
+                Mod.Warn($"hi1 {instance.ViewModel.Class.name}");
             }
-            public static void MulticlassCheckBoxChanged(bool value, CharGenClassSelectorItemVM viewModel) {
+            public static void MulticlassCheckBoxChanged(bool value, CharGenClassSelectorItemPCView instance) {
+                Mod.Warn($"hi2 {instance.ViewModel.Class.name}");
+                var viewModel = instance.ViewModel;
                 var ch = viewModel.LevelUpController.Unit;
                 var cl = viewModel.Class;
                 var options = MulticlassOptions.Get(ch);
-                if (viewModel.IsArchetype) {
-                    var archetypeOptions = options.ArchetypeOptions(cl);
-                    if (value)
-                        archetypeOptions.Add(viewModel.Archetype);
-                    else
-                        archetypeOptions.Remove(viewModel.Archetype);
-                }
+                var cd = ch.Progression.GetClassData(cl);
+                var chArchetype = cd.Archetypes.FirstOrDefault<BlueprintArchetype>();
+                var archetypeOptions = options.ArchetypeOptions(cl);
                 if (value)
                     options.Add(cl);
                 else
                     options.Remove(cl);
+                if (options.Contains(cl)) {
+                    if (viewModel.IsArchetype) {
+                        if (value)
+                            archetypeOptions.AddExclusive(viewModel.Archetype);
+                        else
+                            archetypeOptions.Remove(viewModel.Archetype);
+                    }
+                    else if (chArchetype != null) {
+                        // this is the case where the user clicks on the class and the character already has an archetype in this class
+                        if (value)
+                            archetypeOptions.AddExclusive(chArchetype);
+                        else
+                            archetypeOptions.Remove(chArchetype);
+                    }
+                    options.SetArchetypeOptions(cl, archetypeOptions);
+                }
                 MulticlassOptions.Set(ch, options);
+                Mod.Debug($"ch: {ch.CharacterName.ToString().orange()} class: {cl.name} isArch: {viewModel.IsArchetype} arch: {viewModel.Archetype} chArchetype:{chArchetype} - options: {options}");
+                var multicheckbox = instance.transform.Find("MulticlassCheckbox-ToyBox");
+                // this is one way to try to force an update to the other view
+                var charGemClassPhaseDetailedView = Game.Instance.UI.Canvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/PhaseClassDetaildPCView");
+                var phaseClassDetailView = charGemClassPhaseDetailedView.GetComponent<Kingmaker.UI.MVVM._PCView.CharGen.Phases.Class.CharGenClassPhaseDetailedPCView>();
+                var charGenClassPhaseVM = phaseClassDetailView.ViewModel;
+                charGenClassPhaseVM.UpdateClassInformation();
+                // this is the other
+                var progressionView = Game.Instance.UI.Canvas.transform.Find("ChargenPCView/ContentWrapper/ProgressionView");
+                var charGenProgressionView = progressionView.GetComponent<CharGenProgressionPCView>();
+                var unitProgressionVM = charGenProgressionView.ViewModel;
+                Mod.Debug($"unitProgressionView {charGenProgressionView}");
+                unitProgressionVM.SetJustGotClass(Game.Instance.LevelUpController.State.SelectedClass);
+                //unitProgressionVM.RefreshData();
+                //charGenProgressionView.RefreshView();
+                //viewModel.LevelUpController.UpdatePreview();
             }
 
         }
