@@ -5,6 +5,7 @@ using UnityModManagerNet;
 using UnityEngine;
 using ModKit;
 using System.Collections;
+using System.Linq;
 using Newtonsoft.Json;
 using Kingmaker.EntitySystem;
 using Kingmaker;
@@ -12,10 +13,14 @@ using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.UnitLogic.Parts;
 using JetBrains.Annotations;
 using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.PubSubSystem;
+using System;
 
 namespace ToyBox {
     public class PerSaveSettings : EntityPart {
         public const string ID = "ToyBox.PerSaveSettings";
+        public delegate void PerSaveChanged(PerSaveSettings perSave);
+        public static PerSaveChanged observers;
 
         // schema for storing multiclass settings
         //      Dictionary<CharacterName, 
@@ -61,6 +66,7 @@ namespace ToyBox {
             player.SettingsList[PerSaveKey] = json;
             Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
             Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
+            PerSaveSettings.observers(cachedPerSave);
         }
         public PerSaveSettings perSave{
             get {

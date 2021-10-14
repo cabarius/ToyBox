@@ -20,6 +20,10 @@ using ModKit;
 using Kingmaker.UI.MVVM._PCView.CharGen.Phases.Class;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Kingmaker.UI;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Class;
+using Kingmaker.PubSubSystem;
 
 namespace ToyBox.Multiclass {
     public static partial class MultipleClasses {
@@ -258,24 +262,82 @@ namespace ToyBox.Multiclass {
         }
 
 #if true
+        public static class MulticlassCheckBoxHelper {
+            public static void UpdateCheckbox(CharGenClassSelectorItemPCView instance) {
+                var multicheckbox = instance.transform.Find("MulticlassCheckbox-ToyBox");
+                var toggle = multicheckbox.GetComponent<ToggleWorkaround>();
+                var viewModel = instance.ViewModel;
+                var ch = viewModel.LevelUpController.Unit;
+                var cl = viewModel.Class;
+                var options = MulticlassOptions.Get(ch);
+                toggle.SetIsOnWithoutNotify(options.Contains(cl) && (!viewModel.IsArchetype || options.ArchetypeOptions(cl).Contains(viewModel.Archetype)));
+                toggle.onValueChanged.RemoveAllListeners();
+                toggle.onValueChanged.AddListener(v => MulticlassCheckBoxChanged(v, viewModel));
+            }
+            public static void MulticlassCheckBoxChanged(bool value, CharGenClassSelectorItemVM viewModel) {
+                var ch = viewModel.LevelUpController.Unit;
+                var cl = viewModel.Class;
+                var options = MulticlassOptions.Get(ch);
+                if (viewModel.IsArchetype) {
+                    var archetypeOptions = options.ArchetypeOptions(cl);
+                    if (value)
+                        archetypeOptions.Add(viewModel.Archetype);
+                    else
+                        archetypeOptions.Remove(viewModel.Archetype);
+                }
+                if (value)
+                    options.Add(cl);
+                else
+                    options.Remove(cl);
+                MulticlassOptions.Set(ch, options);
+            }
+
+        }
         [HarmonyPatch(typeof(CharGenClassSelectorItemPCView), nameof(CharGenClassSelectorItemPCView.BindViewImplementation))]
-        private static class CharGenClassSelectorItemPCView_CharGenClassSelectorItemPCView_Patch {
+        private static class CharGenClassSelectorItemPCView_BindViewImplementation_Patch {
             private static void Postfix(CharGenClassSelectorItemPCView __instance) {
                 Mod.Warn("CharGenClassSelectorItemPCView_CharGenClassSelectorItemPCView_Patch");
                 var multicheckbox = __instance.transform.Find("MulticlassCheckbox-ToyBox");
+                if (multicheckbox != null) {
+                    if (!settings.toggleMulticlass) {
+                        GameObject.Destroy(multicheckbox.gameObject);
+                    }
+                }
+                if (!settings.toggleMulticlass) return;
                 if (multicheckbox == null) {
                     var checkbox = Game.Instance.UI.Canvas.transform.Find("ServiceWindowsPCView/SpellbookView/SpellbookScreen/MainContainer/KnownSpells/Toggle");
-                    var sibling = __instance.transform.Find("LevelPlace");
+                    var sibling = __instance.transform.Find("CollapseButton");
                     var textContainer = __instance.transform.Find("TextContainer");
+                    var textLayout = textContainer.GetComponent<LayoutElement>();
+                    textLayout.preferredWidth = 1;
                     var siblingIndex = sibling.transform.GetSiblingIndex();
                     multicheckbox = GameObject.Instantiate(checkbox, __instance.transform);
-                    Mod.Debug($"made new multiCheckbox: {multicheckbox}".yellow());
-                    multicheckbox.transform.SetSiblingIndex(siblingIndex);
+                    multicheckbox.transform.SetSiblingIndex(1);
                     multicheckbox.name = "MulticlassCheckbox-ToyBox";
-                    multicheckbox.GetComponentInChildren<TextMeshProUGUI>().text = "multi";
+                    multicheckbox.GetComponentInChildren<TextMeshProUGUI>().text = "";
+                    multicheckbox.gameObject.SetActive(true);
+                    MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
+                    PerSaveSettings.observers += (perSave) => MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
                 }
-                else Mod.Debug($"found multiCheckbox: {multicheckbox}".green());
-                multicheckbox.gameObject.SetActive(true);
+                else {
+                    multicheckbox.gameObject.SetActive(true);
+                    MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
+                }
+            }
+        }
+        //[HarmonyPatch(typeof(CharGenClassSelectorItemPCView), nameof(CharGenClassSelectorItemPCView.RefreshView))]
+        //private static class CharGenClassSelectorItemPCView_RefreshView_Patch {
+        //    private static void Postfix(CharGenClassSelectorItemPCView __instance) {
+        //        if (!settings.toggleMulticlass) return;
+        //        MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
+        //    }
+        //}
+        [HarmonyPatch(typeof(CharGenClassPhaseDetailedPCView), nameof(CharGenClassPhaseDetailedPCView.BindViewImplementation))]
+        private static class CharGenClassPhaseDetailedPCView_BindViewImplementation_Patch {
+            private static void Postfix(CharGenClassPhaseDetailedPCView __instance) {
+                var chooseClass = __instance.transform.Find("ClassSelecotrPlace/Selector/HeaderH2/Label");
+                chooseClass.GetComponentInChildren<TextMeshProUGUI>().text = settings.toggleMulticlass ? "Choose Class <size=67%>(Checkbox for multiclass)</size>" : "Choose Class";
+
             }
         }
 #endif

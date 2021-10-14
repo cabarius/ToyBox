@@ -41,6 +41,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.2 (Coming Soon)
+* **Level Up & Multiclass** 
+  * You can now configure multiclass options directly in the level up screen!
+  * Fixed issue where char gen class choices would get applied to companions during some level ups. Please give feedback if you see issues respecing your companions
+  * removed unimplemented flags in the multi-class config to avoid confusion. Please file feature requests if there are any that you really wanted.
 * **Bag of Tricks** 
   * moved teleport keys to go with teleport party to me and gave it its own section with explainer text
   * Added common cheat to reset interaction point skill checks in an area
@@ -48,9 +52,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***Aephiex***) Fixed issue where 'Disable Armor Max Dexterity' permanently changes armor max dexterity into 99 even after disabling this option
   * (***Aephiex***) Added new option 'Disable Armor Speed Reduction' which disables the -10 speed while wearing medium and heavy armor
   * (***Aephiex***) Added new option 'Disable Armor & Shield Checks Penalty' which disables the checks penalty applied while wearing armor and holding shield
-* **Level Up & Multiclass** 
-  * Fixed issue where char gen class choices would get applied to companions during some level ups. Please give feedback if you see issues respecing your companions
-  * removed unimplemented flags in the multi-class config to avoid confusion. Please file feature requests if there are any that you really wanted.
 * **Party Editor** renamed 'Facts' to the more correct name 'Features'
 * **Search 'n Pick** made categories for 'Features' much more useful. Choose Search 'n Pick > Features and see all the interesting categories to explore ^_^
 ### Ver 1.4.1

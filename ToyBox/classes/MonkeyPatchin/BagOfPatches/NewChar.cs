@@ -30,7 +30,8 @@ namespace ToyBox.BagOfPatches {
                         var isCustom = unit.Blueprint.ToString() == "CustomCompanion";
                         //Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
                         //Logger.Log($"not pregen - isCust: {isCustom}");
-                        var pointCount = Math.Max(0, isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+                        var pointCount = Math.Max(0, __instance.m_Unit.IsCustomCompanion() ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+
                         //Logger.Log($"points: {pointCount}");
 
                         __instance.StatsDistribution.Start(pointCount);
