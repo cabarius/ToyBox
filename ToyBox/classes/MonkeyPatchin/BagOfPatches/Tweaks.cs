@@ -9,6 +9,7 @@ using Kingmaker.Cheats;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Enums;
 using Kingmaker.Globalmap;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;

@@ -257,7 +257,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#if false
+#if true
         [HarmonyPatch(typeof(CharGenClassSelectorItemPCView), nameof(CharGenClassSelectorItemPCView.BindViewImplementation))]
         private static class CharGenClassSelectorItemPCView_CharGenClassSelectorItemPCView_Patch {
             private static void Postfix(CharGenClassSelectorItemPCView __instance) {
@@ -266,6 +266,7 @@ namespace ToyBox.Multiclass {
                 if (multicheckbox == null) {
                     var checkbox = Game.Instance.UI.Canvas.transform.Find("ServiceWindowsPCView/SpellbookView/SpellbookScreen/MainContainer/KnownSpells/Toggle");
                     var sibling = __instance.transform.Find("LevelPlace");
+                    var textContainer = __instance.transform.Find("TextContainer");
                     var siblingIndex = sibling.transform.GetSiblingIndex();
                     multicheckbox = GameObject.Instantiate(checkbox, __instance.transform);
                     Mod.Debug($"made new multiCheckbox: {multicheckbox}".yellow());
