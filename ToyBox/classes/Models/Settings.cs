@@ -19,9 +19,9 @@ using System;
 namespace ToyBox {
     public class PerSaveSettings : EntityPart {
         public const string ID = "ToyBox.PerSaveSettings";
-        public delegate void PerSaveChanged(PerSaveSettings perSave);
+        public delegate void Changed(PerSaveSettings perSave);
         [JsonIgnore]
-        public static PerSaveChanged observers;
+        public static Changed observers;
 
         // schema for storing multiclass settings
         //      Dictionary<CharacterName, 
@@ -73,6 +73,17 @@ namespace ToyBox {
             player.SettingsList[PerSaveKey] = json;
             Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
             Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
+            if (PerSaveSettings.observers is MulticastDelegate mcdel) {
+                var doomed = new List<PerSaveSettings.Changed>();
+                foreach (var inv in mcdel.GetInvocationList()) {
+                    if (inv.Target == null && inv is PerSaveSettings.Changed changed)
+                        doomed.Add(changed);
+                }
+                foreach (var del in doomed) {
+                    Mod.Debug("removing observer: {del} from PerSaveSettings");
+                    PerSaveSettings.observers -= del;
+                }
+            }
             if (cachedPerSave)
                 PerSaveSettings.observers?.Invoke(cachedPerSave);
         }
