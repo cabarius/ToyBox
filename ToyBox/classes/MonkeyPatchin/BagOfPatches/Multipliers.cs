@@ -23,6 +23,7 @@ using Kingmaker.Settings.Difficulty;
 using ModKit;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
+using System.Collections.Generic;
 
 namespace ToyBox.BagOfPatches {
     internal static class Multipliers {
@@ -34,7 +35,7 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * settings.encumberanceMultiplier);
         }
 
-        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] { typeof(int) })]
+        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] {})]
         private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch_1 {
             private static void Postfix(ref EncumbranceHelper.CarryingCapacity __result) {
                 __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplierPartyOnly);
@@ -43,7 +44,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] { typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] { typeof(IEnumerable<UnitReference>) })]
         private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch_2 {
             private static void Postfix(ref EncumbranceHelper.CarryingCapacity __result) {
                 __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplierPartyOnly);
