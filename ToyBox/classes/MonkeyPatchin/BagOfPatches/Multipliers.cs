@@ -34,8 +34,17 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * settings.encumberanceMultiplier);
         }
 
-        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity")]
-        private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch {
+        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] { typeof(int) })]
+        private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch_1 {
+            private static void Postfix(ref EncumbranceHelper.CarryingCapacity __result) {
+                __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplierPartyOnly);
+                __result.Medium = Mathf.RoundToInt(__result.Medium * settings.encumberanceMultiplierPartyOnly);
+                __result.Heavy = Mathf.RoundToInt(__result.Heavy * settings.encumberanceMultiplierPartyOnly);
+            }
+        }
+
+        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] { typeof(UnitDescriptor) })]
+        private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch_2 {
             private static void Postfix(ref EncumbranceHelper.CarryingCapacity __result) {
                 __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplierPartyOnly);
                 __result.Medium = Mathf.RoundToInt(__result.Medium * settings.encumberanceMultiplierPartyOnly);
