@@ -54,7 +54,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***Aephiex***) Added new option 'Disable Armor & Shield Checks Penalty' which disables the checks penalty applied while wearing armor and holding shield
   * (***Aephiex***) Added new multiplier slider 'Increase Carry Capacity (Party Only)' which multiplies party carry capacity without changing the carry capacity of individual characters; the original multiplier still affects both
 * **Party Editor** renamed 'Facts' to the more correct name 'Features'
-* **Search 'n Pick** made categories for 'Features' much more useful. Choose Search 'n Pick > Features and see all the interesting categories to explore ^_^
+* **Search 'n Pick**
+  *  made categories for 'Features' much more useful. Choose Search 'n Pick > Features and see all the interesting categories to explore ^_^
+  *  you can now hover over the type field for a blueprint to get a button that lets you show other items in the same category
 ### Ver 1.4.1
 * **Etude Editor** fixed crasher
 ### Ver 1.4.1
