@@ -218,6 +218,18 @@ namespace ToyBox {
             UpdatePaginatedResults();
             firstSearch = false;
         }
+        public static void UpdateCollation() {
+            var key = collationKeys.ElementAt(selectedCollationIndex);
+            var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
+            foreach (var group in collatedBPs) {
+                if (group.Key == selectedKey) {
+                    matchCount = group.Count();
+                    selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
+                    UpdatePageCount();
+                }
+            }
+            BlueprintListUI.needsLayout = true;
+        }
         public static IEnumerable OnGUI() {
             if (blueprints == null) {
                 blueprints = BlueprintLoader.Shared.GetBlueprints();
@@ -330,20 +342,32 @@ namespace ToyBox {
                         }
                         if (selectedCollationIndex > 0) {
                             if (collationChanged) {
-                                var key = collationKeys.ElementAt(selectedCollationIndex);
-                                var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-                                foreach (var group in collatedBPs) {
-                                    if (group.Key == selectedKey) {
-                                        matchCount = group.Count();
-                                        selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
-                                        UpdatePageCount();
-                                    }
-                                }
-                                BlueprintListUI.needsLayout = true;
+                                UpdateCollation();
                             }
                             bps = selectedCollatedBPs;
                         }
-                        BlueprintListUI.OnGUI(selected, bps, 0, remainingWidth, null, selectedTypeFilter);
+                        BlueprintListUI.OnGUI(selected, bps, 0, remainingWidth, null, selectedTypeFilter, (keys) => {
+                            if (keys.Length > 0) {
+                                bool changed = false;
+                                //var bpTypeName = keys[0];
+                                //var newTypeFilterIndex = blueprintTypeFilters.FindIndex(f => f.type.Name == bpTypeName);
+                                //if (newTypeFilterIndex >= 0) {
+                                //    settings.selectedBPTypeFilter = newTypeFilterIndex;
+                                //    changed = true;
+                                //}
+                                if (keys.Length > 1) {
+                                    var collationKey = keys[1];
+                                    var newCollationIndex = collationKeys.FindIndex(ck => ck == collationKey);
+                                    if (newCollationIndex >= 0) {
+                                        selectedCollationIndex = newCollationIndex;
+                                        UpdateCollation();
+                                    }
+                                }
+                                if (changed) {
+                                    UpdateSearchResults();
+                                }
+                            }
+                        });
                     }
                     UI.Space(25);
                 }

@@ -15,6 +15,7 @@ using Kingmaker.Blueprints.Items;
 
 namespace ToyBox {
     public class BlueprintListUI {
+        public delegate void NavigateTo(params string[] argv);
         public static Settings settings => Main.settings;
 
         public static int repeatCount = 1;
@@ -28,7 +29,8 @@ namespace ToyBox {
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
             Func<string, string> titleFormater = null,
-            NamedTypeFilter typeFilter = null
+            NamedTypeFilter typeFilter = null,
+            NavigateTo navigateTo = null
         ) {
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             if (remainingWidth == 0) remainingWidth = UI.ummWidth - indent;
@@ -133,6 +135,7 @@ namespace ToyBox {
                     }
                     UI.Space(10);
                     var typeString = blueprint.GetType().Name;
+                    var navigateStrings = new List<string> { typeString };
                     if (typeFilter?.collator != null) {
                         var names = typeFilter.collator(blueprint);
                         if (names.Count > 0) {
@@ -141,8 +144,10 @@ namespace ToyBox {
                                 var rarity = itemBP.Rarity();
                                 typeString = $"{typeString} - {rarity}".Rarity(rarity);
                             }
-                            if (!typeString.Contains(collatorString))
+                            if (!typeString.Contains(collatorString)) {
                                 typeString += $" : {collatorString}".yellow();
+                                navigateStrings.Add(collatorString);
+                            }
                         }
                     }
                     var attributes = "";
@@ -172,11 +177,11 @@ namespace ToyBox {
                     using (UI.VerticalScope(UI.Width(remWidth))) {
                         if (settings.showAssetIDs) {
                             using (UI.HorizontalScope(UI.Width(remWidth))) {
-                                UI.Label(typeString);
+                                UI.ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), UI.rarityButtonStyle);
                                 GUILayout.TextField(blueprint.AssetGuid.ToString(), UI.ExpandWidth(false));
                             }
                         }
-                        else UI.Label(typeString); // + $" {remWidth}".bold());
+                        else UI.ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), UI.rarityButtonStyle);
 
                         if (description.Length > 0) UI.Label(description.green(), UI.Width(remWidth));
                     }
