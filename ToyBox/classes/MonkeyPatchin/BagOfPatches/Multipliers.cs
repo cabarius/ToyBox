@@ -37,9 +37,9 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity")]
         private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch {
             private static void Postfix(ref EncumbranceHelper.CarryingCapacity __result) {
-                __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplier);
-                __result.Medium = Mathf.RoundToInt(__result.Medium * settings.encumberanceMultiplier);
-                __result.Heavy = Mathf.RoundToInt(__result.Heavy * settings.encumberanceMultiplier);
+                __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplierPartyOnly);
+                __result.Medium = Mathf.RoundToInt(__result.Medium * settings.encumberanceMultiplierPartyOnly);
+                __result.Heavy = Mathf.RoundToInt(__result.Heavy * settings.encumberanceMultiplierPartyOnly);
             }
         }
 
