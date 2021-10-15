@@ -34,6 +34,15 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * settings.encumberanceMultiplier);
         }
 
+        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity")]
+        private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch {
+            private static void Postfix(ref EncumbranceHelper.CarryingCapacity __result) {
+                __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplier);
+                __result.Medium = Mathf.RoundToInt(__result.Medium * settings.encumberanceMultiplier);
+                __result.Heavy = Mathf.RoundToInt(__result.Heavy * settings.encumberanceMultiplier);
+            }
+        }
+
         [HarmonyPatch(typeof(UnitPartWeariness), "GetFatigueHoursModifier")]
         private static class EncumbranceHelper_GetFatigueHoursModifier_Patch {
             private static void Postfix(ref float __result) => __result *= (float)Math.Round(settings.fatigueHoursModifierMultiplier, 1);
