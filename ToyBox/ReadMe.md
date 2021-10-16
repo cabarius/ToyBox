@@ -40,7 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.3 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
-### Ver 1.4.2 (Coming Soon)
+### Ver 1.4.2
 * **Level Up & Multiclass** 
   * You can now configure multiclass options directly in the level up screen!
   * You are now prevented from making choices that break level up like selecting all of your existing classes as multiclass. Instead choose your desired new class as a multiclass and level up one of your existing
