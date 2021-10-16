@@ -40,6 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.3 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
+* **Quest Editor** you can now teleport to stages of quest progression when available
 ### Ver 1.4.2
 * **Level Up & Multiclass** 
   * You can now configure multiclass options directly in the level up screen!
@@ -60,6 +61,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   *  you can now hover over the type field for a blueprint to get a button that lets you show other items in the same category
 * **Enchantment**
   * Sandal has discovered the mythic path of Trickster and can reveal hidden secrets in your items. Look for some fun new buttons at the bottom of the target info on the enchantment tab.
+* **Quest Editor** * shows some area and location info in anticipating of adding teleport to quest locations soon
 ### Ver 1.4.1
 * **Etude Editor** fixed crasher
 ### Ver 1.4.1
