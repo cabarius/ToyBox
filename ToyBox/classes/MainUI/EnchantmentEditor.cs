@@ -1,5 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Weapons;
@@ -185,13 +186,16 @@ namespace ToyBox.classes.MainUI {
                             }
                         }
                         using (UI.HorizontalScope()) {
-                            UI.ActionButton("I feel like a lucky trickster!", () => {
-                                7bbd9f681440a294382b527a554e419d
-                                var tricksterToy = new TricksterArcanaAdditionalEnchantments();
-                                tricksterToy.OnItemIdentified(item, Game.Instance.Player.MainCharacter);
+                            UI.ActionButton("Sandal".cyan() + ", yer a Trickster!", () => {
+                                AddTricksterEnchantmentsTier1(item);
                             }, UI.AutoWidth());
-                            UI.Space(25);
-                            UI.Label("Sandal".cyan() + " discovered the mythic path of Trickster and can perform a special form of identification".green());
+                            UI.ActionButton("Gimmie More!".Rarity(RarityType.Epic), () => {
+                                AddTricksterEnchantmentsTier2or3(item, false);
+                            }, UI.rarityButtonStyle, UI.AutoWidth());
+                            UI.ActionButton("En-chaannt-ment".Rarity(RarityType.Legendary), () => {
+                                AddTricksterEnchantmentsTier2or3(item, true);
+                            }, UI.rarityButtonStyle, UI.AutoWidth());
+                            UI.Label("Sandal".cyan() + " has discovered the mythic path of Trickster and can reveal hidden secrets in your items".green());
                         }
                         UI.Div();
                     }
@@ -200,7 +204,7 @@ namespace ToyBox.classes.MainUI {
                     using (UI.HorizontalScope()) {
                         UI.ActionTextField(
                             ref settings.searchTextEnchantments,
-                            "searhText",
+                            "searchText",
                             (text) => { UpdateSearchResults(); },
                             () => { UpdateSearchResults(); },
                             UI.MinWidth(100), UI.MaxWidth(450));
@@ -272,7 +276,6 @@ namespace ToyBox.classes.MainUI {
                 UI.Label("No Enchantments".orange());
             }
         }
-
         public static void EnchantmentsListGUI() {
             UI.Div(5);
             for (var i = 0; i < filteredEnchantments.Count; i++) {
@@ -333,7 +336,6 @@ namespace ToyBox.classes.MainUI {
                 UI.Div();
             }
         }
-
         public static void UpdateItems() {
             var searchText = itemSearchText.ToLower();
             inventory = (from item in Game.Instance.Player.Inventory
@@ -350,7 +352,6 @@ namespace ToyBox.classes.MainUI {
             }
             selectedItem = selectedItemIndex < inventory.Count ? inventory.ElementAt(selectedItemIndex) : null;
         }
-
         public static void UpdateSearchResults() {
             filteredEnchantments.Clear();
             editedItem = null;
@@ -377,7 +378,6 @@ namespace ToyBox.classes.MainUI {
             matchCount = filteredEnchantments.Count();
             filteredEnchantments = filteredEnchantments.OrderByDescending(bp => bp.Rarity()).Take(settings.searchLimit).ToList();
         }
-
         public static void AddClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
@@ -398,7 +398,6 @@ namespace ToyBox.classes.MainUI {
                 editedItem = selected;
             }
         }
-
         public static void RemoveClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
@@ -445,6 +444,64 @@ namespace ToyBox.classes.MainUI {
             item.RemoveEnchantment(enchantment);
         }
 
+        public static void AddTricksterEnchantmentsTier1(ItemEntity item) {
+            var tricksterKnowledgeArcanaTier1 = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>("c7bb946de7454df4380c489a8350ba38");
+            var tricksterTier1Toy = tricksterKnowledgeArcanaTier1.GetComponent<TricksterArcanaBetterEnhancements>();
+            var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
+
+            List<ItemEnchantment> itemEnchantmentList = new List<ItemEnchantment>();
+            foreach (ItemEnchantment enchantment in item.Enchantments)
+                itemEnchantmentList.Add(enchantment);
+            if (!item.Enchantments.Any<ItemEnchantment>((Func<ItemEnchantment, bool>)(p => ((IList<BlueprintItemEnchantmentReference>)tricksterTier1Toy.EnhancementEnchantments).Any<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(param => param.Get() == p.Blueprint)))))
+                return;
+            foreach (ItemEnchantment itemEnchantment in itemEnchantmentList) {
+                ItemEnchantment enchantment = itemEnchantment;
+                if (!tricksterTier1Toy.BestEnchantments.Any<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(p => p.Get() == enchantment.Blueprint)) && ((IList<BlueprintItemEnchantmentReference>)tricksterTier1Toy.EnhancementEnchantments).Any<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(p => p.Get() == enchantment.Blueprint))) {
+                    int index = ((IEnumerable<BlueprintItemEnchantmentReference>)tricksterTier1Toy.EnhancementEnchantments).FindIndex<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(p => p.Get() == enchantment.Blueprint));
+                    if (tricksterTier1Toy.EnhancementEnchantments.Length > index + 1) {
+                        item.RemoveEnchantment(enchantment);
+                        item.AddEnchantment(tricksterTier1Toy.EnhancementEnchantments[index + 1].Get(), fake_context);
+                    }
+                }
+            }
+        }
+        public static void AddTricksterEnchantmentsTier2or3(ItemEntity item, bool isTier3) {
+            var tricksterKnowledgeArcanaBP = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>(isTier3 ? "5e26c673173e423881e318d2f0ae84f0" : "7bbd9f681440a294382b527a554e419d");
+            var tricksterToy = tricksterKnowledgeArcanaBP.GetComponent<TricksterArcanaAdditionalEnchantments>();
+            var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
+
+            List<BlueprintItemEnchantment> source = new List<BlueprintItemEnchantment>();
+            foreach (BlueprintItemEnchantmentReference commonEnchantment in tricksterToy.CommonEnchantments)
+                source.Add((BlueprintItemEnchantment)(BlueprintReference<BlueprintItemEnchantment>)commonEnchantment);
+            if (item is ItemEntityWeapon || item is ItemEntityShield) {
+                foreach (BlueprintWeaponEnchantmentReference weaponEnchantment in tricksterToy.WeaponEnchantments)
+                    source.Add((BlueprintItemEnchantment)(BlueprintWeaponEnchantment)(BlueprintReference<BlueprintWeaponEnchantment>)weaponEnchantment);
+            }
+            if (item is ItemEntityArmor || item is ItemEntityShield) {
+                foreach (BlueprintArmorEnchantmentReference armorEnchantment in tricksterToy.ArmorEnchantments)
+                    source.Add((BlueprintItemEnchantment)(BlueprintArmorEnchantment)(BlueprintReference<BlueprintArmorEnchantment>)armorEnchantment);
+            }
+            foreach (ItemEnchantment enchantment in item.Enchantments)
+                source.Remove(enchantment.Blueprint);
+            if (source.Empty<BlueprintItemEnchantment>())
+                return;
+            BlueprintItemEnchantment blueprint = source.ToList<BlueprintItemEnchantment>().Random<BlueprintItemEnchantment>();
+            ItemEntityShield itemEntityShield = item as ItemEntityShield;
+            switch (blueprint) {
+                case BlueprintWeaponEnchantment _ when itemEntityShield != null:
+                    ItemEntityWeapon weaponComponent = itemEntityShield.WeaponComponent;
+                    if (weaponComponent == null)
+                        break;
+                    weaponComponent.AddEnchantment(blueprint, fake_context);
+                    break;
+                case BlueprintArmorEnchantment _ when itemEntityShield != null:
+                    itemEntityShield.ArmorComponent.AddEnchantment(blueprint, fake_context);
+                    break;
+                default:
+                    item.AddEnchantment(blueprint, fake_context);
+                    break;
+            }
+        }
         /// <summary>probably useless</summary>
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {

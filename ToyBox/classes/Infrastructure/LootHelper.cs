@@ -37,7 +37,7 @@ namespace ToyBox {
         }
 
         public static List<ItemEntity> GetInteraction(this LootWrapper present) {
-            if (present.InteractionLoot != null) return present.InteractionLoot.Loot.Items; ;
+            if (present.InteractionLoot != null) return present.InteractionLoot.Loot.Items;
             if (present.Unit != null) return present.Unit.Inventory.Items;
             return null;
         }

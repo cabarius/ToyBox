@@ -58,6 +58,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Search 'n Pick**
   *  made categories for 'Features' much more useful. Choose Search 'n Pick > Features and see all the interesting categories to explore ^_^
   *  you can now hover over the type field for a blueprint to get a button that lets you show other items in the same category
+* **Enchantment**
+  * Sandal has discovered the mythic path of Trickster and can reveal hidden secrets in your items. Look for some fun new buttons at the bottom of the target info on the enchantment tab.
 ### Ver 1.4.1
 * **Etude Editor** fixed crasher
 ### Ver 1.4.1
