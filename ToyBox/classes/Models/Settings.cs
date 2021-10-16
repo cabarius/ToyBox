@@ -219,6 +219,7 @@ namespace ToyBox {
         // Multipliers
         public int featsMultiplier = 1;
         public int encumberanceMultiplier = 1;
+        public int encumberanceMultiplierPartyOnly = 1;
         public float experienceMultiplier = 1;
         public float moneyMultiplier = 1;
         public float vendorSellPriceMultiplier = 1;
