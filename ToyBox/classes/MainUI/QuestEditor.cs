@@ -82,6 +82,14 @@ namespace ToyBox {
                                                 questObjective.Start();
                                             }, UI.AutoWidth());
                                         }
+                                        UI.Space(25);
+                                        var areas = questObjective.Blueprint.Areas;
+                                        if (areas.Count > 0)
+                                            UI.Label($"Areas: {string.Join(", ", areas.Select(a => a.name.yellow()))}");
+                                        var locations = questObjective.Blueprint.Locations;
+                                        if (locations.Count > 0)
+                                            UI.Label($"locations: {string.Join(", ", locations.Select(a => a.GetBlueprint()?.name.yellow() ?? "???".yellow()))}");
+
                                     });
                                     if (questObjective.State == QuestObjectiveState.Started) {
                                         foreach (var childObjective in quest.Objectives) {
@@ -103,6 +111,12 @@ namespace ToyBox {
 
                                                     }
                                                 });
+                                                var areas = questObjective.Blueprint.Areas;
+                                                if (areas.Count > 0)
+                                                    UI.Label($"Areas: {string.Join(", ", areas.Select(a => a.name.yellow()))}");
+                                                var locations = questObjective.Blueprint.Locations;
+                                                if (locations.Count > 0)
+                                                    UI.Label($"locations: {string.Join(", ", locations.Select(a => a.GetBlueprint()?.name.yellow() ?? "???".yellow()))}");
                                             }
                                         }
                                     }
