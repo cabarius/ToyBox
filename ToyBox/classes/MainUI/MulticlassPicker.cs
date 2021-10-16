@@ -45,7 +45,9 @@ namespace ToyBox {
                     Mod.Trace("MulticlassOptions.Set");
                 }
             }
+            UI.Space(10);
             UI.Div(indent);
+            UI.Space(-3);
             if (showDesc) {
                 using (UI.HorizontalScope()) {
                     UI.Space(indent); UI.Label("Mythic".cyan());
@@ -62,7 +64,7 @@ namespace ToyBox {
         public static bool PickerRow(UnitEntityData ch, BlueprintCharacterClass cl, MulticlassOptions options, float indent = 100) {
             var changed = false;
             var showDesc = settings.toggleMulticlassShowClassDescriptions;
-            if (showDesc) UI.Div(indent);
+            if (showDesc) UI.Div(indent, 15);
             var cd = ch?.Progression.GetClassData(cl);
             var chArchetype = cd?.Archetypes.FirstOrDefault<BlueprintArchetype>();
             var archetypeOptions = options.ArchetypeOptions(cl);
@@ -75,8 +77,8 @@ namespace ToyBox {
             }
             var charHasClass = cd != null && chArchetype == null;
             // Class Toggle
+            var canSelectClass = MulticlassOptions.CanSelectClassAsMulticlass(ch, cl);
             using (UI.HorizontalScope()) {
-                var showedGestalt = false;
                 UI.Space(indent);
                 var optionsHasClass = options.Contains(cl);
                 UI.ActionToggle(
@@ -94,32 +96,33 @@ namespace ToyBox {
                         var action = v ? "Add".green() : "Del".yellow();
                         Mod.Trace($"PickerRow - {action} class: {cl.HashKey()} - {options} -> {options.Contains(cl)}");
                         changed = true;
-                    }, 350);
-                if (optionsHasClass && chArchetype != null && archetypeOptions.Empty()) {
-                    UI.Label($"due to existing archetype, {chArchetype.Name.yellow()},  this multiclass option will only be applied during respec.".orange());
-                }
-                if (showGestaltToggle && chArchetype == null) {
-                    UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
-                        (v) => {
-                            ch.SetClassIsGestalt(cd.CharacterClass, v);
-                            ch.Progression.UpdateLevelsForGestalt();
-                            changed = true;
-                        }, 125);
-                    UI.Space(25);
-                    if (!showDesc)
-                        UI.Label("this flag lets you not count this class in computing character level".green());
-                    showedGestalt = true;
-                }
-                else UI.Space(157);
-                if (showDesc) {
-                    using (UI.VerticalScope()) {
-                        if (showedGestalt) {
+                    },
+                    () => !canSelectClass,
+                    350);
+                UI.Space(247);
+                using (UI.VerticalScope()) {
+                    if (!canSelectClass)
+                        UI.Label("to select this class you must unselect at least one of your other existing classes".orange());
+                    if (optionsHasClass && chArchetype != null && archetypeOptions.Empty()) {
+                        UI.Label($"due to existing archetype, {chArchetype.Name.yellow()},  this multiclass option will only be applied during respec.".orange());
+                    }
+                    if (showGestaltToggle && chArchetype == null) {
+                        using (UI.HorizontalScope()) {
+                            UI.Space(-150);
+                            UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
+                                (v) => {
+                                    ch.SetClassIsGestalt(cd.CharacterClass, v);
+                                    ch.Progression.UpdateLevelsForGestalt();
+                                    changed = true;
+                                }, 125);
+                            UI.Space(25);
                             UI.Label("this flag lets you not count this class in computing character level".green());
-                            UI.DivLast();
-                            UI.Space(5);
-                            UI.Div();
                         }
-                        UI.Label(cl.Description.StripHTML().green());
+                    }
+                    if (showDesc) {
+                        using (UI.HorizontalScope()) {
+                            UI.Label(cl.Description.StripHTML().green());
+                        }
                     }
                 }
             }
@@ -128,7 +131,7 @@ namespace ToyBox {
                 var showedGestalt = false;
                 UI.Space(indent);
                 var archetypes = cl.Archetypes;
-                if (options.Contains(cl) && archetypes.Any() || chArchetype != null) {
+                if (options.Contains(cl) && archetypes.Any() || chArchetype != null || charHasClass) {
                     UI.Space(50);
                     using (UI.VerticalScope()) {
                         foreach (var archetype in cl.Archetypes) {
@@ -136,43 +139,52 @@ namespace ToyBox {
                             using (UI.HorizontalScope()) {
                                 var hasArch = archetypeOptions.Contains(archetype);
                                 UI.ActionToggle(
-                                archetype == chArchetype ? archetype.Name.orange() + $" ({cd.Level})".orange() : archetype.Name,
-                                () => hasArch,
-                                (v) => {
-                                    if (v) archetypeOptions.AddExclusive(archetype);
-                                    else archetypeOptions.Remove(archetype);
-                                    options.SetArchetypeOptions(cl, archetypeOptions);
-                                    var action = v ? "Add".green() : "Del".yellow();
-                                    Mod.Trace($"PickerRow -  {action}  - arch: {archetype.HashKey()} - {archetypeOptions}");
-                                    changed = true;
-                                }, 300);
-                                if (hasArch && archetype != chArchetype && chArchetype != null) {
-                                    UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
-                                }
-                                else if (showGestaltToggle && archetype == chArchetype) {
-                                    UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
-                                        (v) => {
-                                            ch.SetClassIsGestalt(cd.CharacterClass, v);
-                                            ch.Progression.UpdateLevelsForGestalt();
-                                            changed = true;
-                                        }, 125);
-                                    UI.Space(25);
-                                    if (!showDesc)
-                                        UI.Label("this flag lets you not count this class in computing character level".green());
-                                    showedGestalt = true;
-                                }
-                                else UI.Space(157);
-                                if (showDesc) {
-                                    using (UI.VerticalScope()) {
-                                        if (showedGestalt) {
+                                    archetype == chArchetype ? archetype.Name.orange() + $" ({cd.Level})".orange() : archetype.Name,
+                                    () => hasArch,
+                                    (v) => {
+                                        if (v) archetypeOptions.AddExclusive(archetype);
+                                        else archetypeOptions.Remove(archetype);
+                                        options.SetArchetypeOptions(cl, archetypeOptions);
+                                        var action = v ? "Add".green() : "Del".yellow();
+                                        Mod.Trace($"PickerRow -  {action}  - arch: {archetype.HashKey()} - {archetypeOptions}");
+                                        changed = true;
+                                    },
+                                    () => !canSelectClass,
+                                    300);
+                                UI.Space(250);
+                                using (UI.VerticalScope()) {
+
+                                    if (hasArch && archetype != chArchetype && (chArchetype != null || charHasClass)) {
+                                        if (chArchetype != null)
+                                            UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass archetype will only be applied during respec.".orange());
+                                        else
+                                            UI.Label($"due to existing class, {cd.CharacterClass.Name.yellow()}, this multiclass archetype will only be applied during respec.".orange());
+                                    }
+                                    else if (showGestaltToggle && archetype == chArchetype) {
+                                        using (UI.HorizontalScope()) {
+                                            UI.Space(-155);
+                                            UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
+                                                (v) => {
+                                                    ch.SetClassIsGestalt(cd.CharacterClass, v);
+                                                    ch.Progression.UpdateLevelsForGestalt();
+                                                    changed = true;
+                                                }, 125);
+                                            UI.Space(25);
                                             UI.Label("this flag lets you not count this class in computing character level".green());
-                                            UI.DivLast();
+                                            showedGestalt = true;
                                         }
-                                        UI.Label(archetype.Description.StripHTML().green());
+                                    }
+                                    if (showDesc) {
+                                        using (UI.VerticalScope()) {
+                                            if (showedGestalt) {
+                                                UI.Label("this flag lets you not count this class in computing character level".green());
+                                                UI.DivLast();
+                                            }
+                                            UI.Label(archetype.Description.StripHTML().green());
+                                        }
                                     }
                                 }
                             }
-                            //}
                         }
                     }
                 }
@@ -223,7 +235,7 @@ namespace ToyBox {
                                     UI.Space(25);
                                     UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
                                     UI.Space(25);
-                                    UI.ActionButton("Migrate", () => { 
+                                    UI.ActionButton("Migrate", () => {
                                         settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings();
                                         MultipleClasses.SyncAllGestaltState();
                                     });

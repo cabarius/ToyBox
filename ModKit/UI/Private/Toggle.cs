@@ -129,10 +129,10 @@ namespace ModKit.Private {
         public static bool DisclosureToggle(string label, bool value, GUIStyle stateStyle, GUIStyle labelStyle, bool isEmpty = false, params GUILayoutOption[] options) => Toggle(LabelContent(label), value, DisclosureOn, DisclosureOff, stateStyle, labelStyle, isEmpty, options);
         public static bool DisclosureToggle(string label, bool value, bool isEmpty = false, params GUILayoutOption[] options) => DisclosureToggle(label, value, GUI.skin.box, GUI.skin.label, isEmpty, options);
         // CheckBox 
-        public static bool CheckBox(GUIContent label, bool value, params GUILayoutOption[] options) => Toggle(label, value, CheckOn, CheckOff, GUI.skin.textArea, GUI.skin.label, false, options);
+        public static bool CheckBox(GUIContent label, bool value, bool isEmpty, params GUILayoutOption[] options) => Toggle(label, value, CheckOn, CheckOff, GUI.skin.textArea, GUI.skin.label, isEmpty, options);
 
-        public static bool CheckBox(string label, bool value, GUIStyle style, params GUILayoutOption[] options) => Toggle(LabelContent(label), value, CheckOn, CheckOff, GUI.skin.box, style, false, options);
+        public static bool CheckBox(string label, bool value, bool isEmpty, GUIStyle style, params GUILayoutOption[] options) => Toggle(LabelContent(label), value, CheckOn, CheckOff, GUI.skin.box, style, isEmpty, options);
 
-        public static bool CheckBox(string label, bool value, params GUILayoutOption[] options) => CheckBox(label, value, GUI.skin.label, options);
+        public static bool CheckBox(string label, bool value, bool isEmpty, params GUILayoutOption[] options) => CheckBox(label, value, isEmpty, GUI.skin.label, options);
     }
 }

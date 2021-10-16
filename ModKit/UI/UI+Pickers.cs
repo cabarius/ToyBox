@@ -251,7 +251,11 @@ namespace ModKit {
                     titles = titles.Prepend<string>(unselectedTitle);
                     selectedItemIndex += 1;
                 }
-                selectedItemIndex = Math.Max(0, selectedItemIndex);
+                var adjustedIndex = Math.Max(0, selectedItemIndex);
+                if (adjustedIndex != selectedItemIndex) {
+                    selectedItemIndex = adjustedIndex;
+                    changed = true;
+                }
                 UI.ActionSelectionGrid(
                     ref selectedItemIndex,
                     titles.ToArray(),

@@ -3,6 +3,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
 using Kingmaker.UI.Common;
@@ -182,6 +183,15 @@ namespace ToyBox.classes.MainUI {
                             else {
                                 TargetItemGUI(item);
                             }
+                        }
+                        using (UI.HorizontalScope()) {
+                            UI.ActionButton("I feel like a lucky trickster!", () => {
+                                7bbd9f681440a294382b527a554e419d
+                                var tricksterToy = new TricksterArcanaAdditionalEnchantments();
+                                tricksterToy.OnItemIdentified(item, Game.Instance.Player.MainCharacter);
+                            }, UI.AutoWidth());
+                            UI.Space(25);
+                            UI.Label("Sandal".cyan() + " discovered the mythic path of Trickster and can perform a special form of identification".green());
                         }
                         UI.Div();
                     }

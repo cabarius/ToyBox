@@ -153,7 +153,7 @@ namespace ToyBox {
                     var attributes = "";
                     if (settings.showAttributes) {
                         var attr = string.Join(" ", blueprint.Attributes());
-                        if (!typeString.Contains(attr)) 
+                        if (!typeString.Contains(attr))
                             attributes = attr;
                     }
 
@@ -173,16 +173,16 @@ namespace ToyBox {
                             else description = elementsStr + "\n" + description;
                         }
                     }
-
                     using (UI.VerticalScope(UI.Width(remWidth))) {
-                        if (settings.showAssetIDs) {
-                            using (UI.HorizontalScope(UI.Width(remWidth))) {
+                        using (UI.HorizontalScope(UI.Width(remWidth))) {
+                            UI.Space(-17);
+                            if (settings.showAssetIDs) {
                                 UI.ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), UI.rarityButtonStyle);
                                 GUILayout.TextField(blueprint.AssetGuid.ToString(), UI.ExpandWidth(false));
                             }
+                            else UI.ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), UI.rarityButtonStyle);
+                            UI.Space(17);
                         }
-                        else UI.ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), UI.rarityButtonStyle);
-
                         if (description.Length > 0) UI.Label(description.green(), UI.Width(remWidth));
                     }
                 }

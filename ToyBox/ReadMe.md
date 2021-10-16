@@ -43,6 +43,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.2 (Coming Soon)
 * **Level Up & Multiclass** 
   * You can now configure multiclass options directly in the level up screen!
+  * You are now prevented from making choices that break level up like selecting all of your existing classes as multiclass. Instead choose your desired new class as a multiclass and level up one of your existing
   * Fixed issue where char gen class choices would get applied to companions during some level ups. Please give feedback if you see issues respecing your companions
   * removed unimplemented flags in the multi-class config to avoid confusion. Please file feature requests if there are any that you really wanted.
 * **Bag of Tricks** 

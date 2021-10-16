@@ -217,6 +217,7 @@ namespace ToyBox {
             unpagedBPs = filteredBPs;
             UpdatePaginatedResults();
             firstSearch = false;
+            UpdateCollation();
         }
         public static void UpdateCollation() {
             var key = collationKeys.ElementAt(selectedCollationIndex);
@@ -266,7 +267,7 @@ namespace ToyBox {
                             UI.Width(200));
 #endif
                     }
-                    remainingWidth -= 350;
+                    remainingWidth -= 450;
                 }
 
                 // Section Column  - Main Area

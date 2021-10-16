@@ -39,7 +39,7 @@ namespace ModKit {
             options = options.AddItem(width == 0 ? AutoWidth() : Width(width)).ToArray();
             if (!disclosureStyle) {
                 title = value ? title.bold() : title.color(RGBA.medgrey).bold();
-                if (Private.UI.CheckBox(title, value, toggleStyle, options)) { value = !value; changed = true; }
+                if (Private.UI.CheckBox(title, value, isEmpty, toggleStyle, options)) { value = !value; changed = true; }
             }
             else {
                 if (Private.UI.DisclosureToggle(title, value, isEmpty, options)) { value = !value; changed = true; }
@@ -99,7 +99,7 @@ namespace ModKit {
         public static bool Toggle(string title, ref bool value, params GUILayoutOption[] options) {
             options = options.AddDefaults();
             var changed = false;
-            if (Private.UI.CheckBox(title, value, toggleStyle, options)) { value = !value; changed = true; }
+            if (Private.UI.CheckBox(title, value, false, toggleStyle, options)) { value = !value; changed = true; }
             return changed;
         }
         public static bool ActionToggle(
@@ -111,6 +111,22 @@ namespace ModKit {
             var value = get();
             if (TogglePrivate(title, ref value, false, false, width, options)) {
                 set(value);
+            }
+            return value;
+        }
+
+        public static bool ActionToggle(
+                string title,
+                Func<bool> get,
+                Action<bool> set,
+                Func<bool> isEmpty,
+                float width = 0,
+                params GUILayoutOption[] options) {
+            var value = get();
+            var empty = isEmpty();
+            if (TogglePrivate(title, ref value, empty, false, width, options)) {
+                if (!empty)
+                    set(value);
             }
             return value;
         }

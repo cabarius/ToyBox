@@ -263,7 +263,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#if DEBUG
+#if true
         public static class MulticlassCheckBoxHelper {
             public static void UpdateCheckbox(CharGenClassSelectorItemPCView instance) {
                 var multicheckbox = instance.transform.Find("MulticlassCheckbox-ToyBox");
@@ -274,8 +274,13 @@ namespace ToyBox.Multiclass {
                 if (viewModel == null) return;
                 var ch = viewModel.LevelUpController.Unit;
                 var cl = viewModel.Class;
+                var image = multicheckbox.Find("Background").GetComponent<Image>();
+                var canSelect = MulticlassOptions.CanSelectClassAsMulticlass(ch, cl);
+                image.CrossFadeAlpha(canSelect ? 1.0f : 0f, 0, true);
                 var options = MulticlassOptions.Get(ch);
-                toggle.SetIsOnWithoutNotify(options.Contains(cl) && (!viewModel.IsArchetype || options.ArchetypeOptions(cl).Contains(viewModel.Archetype)));
+                var shouldSelect = options.Contains(cl) && (!viewModel.IsArchetype || options.ArchetypeOptions(cl).Contains(viewModel.Archetype));
+                
+                toggle.SetIsOnWithoutNotify(shouldSelect);
                 toggle.onValueChanged.RemoveAllListeners();
                 toggle.onValueChanged.AddListener(v => MulticlassCheckBoxChanged(v, instance));
             }
@@ -284,6 +289,7 @@ namespace ToyBox.Multiclass {
                 var viewModel = instance.ViewModel;
                 var ch = viewModel.LevelUpController.Unit;
                 var cl = viewModel.Class;
+                if (!MulticlassOptions.CanSelectClassAsMulticlass(ch, cl)) return;
                 var options = MulticlassOptions.Get(ch);
                 var cd = ch.Progression.GetClassData(cl);
                 var chArchetype = cd?.Archetypes.FirstOrDefault<BlueprintArchetype>();

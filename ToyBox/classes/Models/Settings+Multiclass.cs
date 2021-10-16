@@ -39,6 +39,28 @@ namespace ToyBox {
             }
             return options;
         }
+        public static bool CanSelectClassAsMulticlass(UnitDescriptor ch, BlueprintCharacterClass cl) {
+            var options = Get(ch);
+            bool checkMythic = cl.IsMythic;
+            bool foundIt = false;
+            int classCount = 0;
+            int selectedCount = 0;
+            foreach (var cd in ch.Progression.Classes) {
+                var charClass = cd.CharacterClass;
+                if (cd.CharacterClass.IsMythic == checkMythic) {
+                    classCount += 1;
+                    var contains = options.Contains(charClass);
+                    if (contains) {
+                        selectedCount += 1;
+                    }
+                    if (charClass == cl && !contains)
+                        foundIt = true;
+                }
+            }
+            bool result = !foundIt || (classCount - selectedCount > 1);
+            Mod.Debug($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
+            return result;
+        }
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
             //modLogger.Log($"stack: {System.Environment.StackTrace}");
             if (ch == null) Main.settings.multiclassSettings[CharGenKey] = options;

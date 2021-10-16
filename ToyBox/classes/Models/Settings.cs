@@ -307,6 +307,7 @@ namespace ToyBox {
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
+        public bool toggleMulticlassInGameUI = false;
         public bool toggleMulticlassShowClassDescriptions = false;
         public bool toggleAlwaysShowMigration = false;
         public int selectedClassToConfigMulticlass = 0;
