@@ -373,12 +373,15 @@ namespace ToyBox.Multiclass {
         //        MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
         //    }
         //}
+        private static String class_selection_text_initial = null;
         [HarmonyPatch(typeof(CharGenClassPhaseDetailedPCView), nameof(CharGenClassPhaseDetailedPCView.BindViewImplementation))]
         private static class CharGenClassPhaseDetailedPCView_BindViewImplementation_Patch {
             private static void Postfix(CharGenClassPhaseDetailedPCView __instance) {
                 var chooseClass = __instance.transform.Find("ClassSelecotrPlace/Selector/HeaderH2/Label");
-                chooseClass.GetComponentInChildren<TextMeshProUGUI>().text = settings.toggleMulticlass ? "Choose Class <size=67%>(Checkbox for multiclass)</size>" : "Choose Class";
-
+                if (class_selection_text_initial == null) {
+                    class_selection_text_initial = chooseClass.GetComponentInChildren<TextMeshProUGUI>().text;
+                }
+                chooseClass.GetComponentInChildren<TextMeshProUGUI>().text = settings.toggleMulticlass ? "Choose Class <size=67%>(Checkbox for multiclass)</size>" : class_selection_text_initial;
             }
         }
 #endif
