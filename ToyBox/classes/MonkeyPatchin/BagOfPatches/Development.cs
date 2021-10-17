@@ -90,7 +90,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
             private static List<BlueprintItemEquipmentUsable> scrolls;
 
-            private static void Prefix(ref CharGenContextVM __instance, UnitEntityData character, Action successAction) {
+            private static void Prefix(ref CharGenContextVM __instance, ref UnitEntityData character, ref Action successAction) {
                 if (settings.toggleRespecRefundScrolls) {
                     scrolls = new List<BlueprintItemEquipmentUsable>();
 
@@ -104,16 +104,19 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                             }
                         }
                     }
+
+                    successAction = PatchedSuccessAction(successAction);
                 }
             }
 
-            private static void Postfix(ref CharGenContextVM __instance, UnitEntityData character, Action successAction) {
-                if (settings.toggleRespecRefundScrolls) {
+            private static Action PatchedSuccessAction(Action successAction) {
+                return () => {
                     foreach (var scroll in scrolls) {
                         Game.Instance.Player.Inventory.Add(new ItemEntityUsable(scroll));
                     }
                     scrolls = null;
-                }
+                    successAction.Invoke();
+                };
             }
         }
     }
