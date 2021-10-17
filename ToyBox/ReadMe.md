@@ -41,6 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 * **Quest Editor** you can now teleport to stages of quest progression when available
+### Ver 1.4.2.1
+* **Level Up & Multiclass** fixed crasher in the main menu when viewing level up options
 ### Ver 1.4.2
 * **Level Up & Multiclass** 
   * You can now configure multiclass options directly in the level up screen!

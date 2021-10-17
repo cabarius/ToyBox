@@ -40,6 +40,8 @@ namespace ToyBox {
             return options;
         }
         public static bool CanSelectClassAsMulticlass(UnitDescriptor ch, BlueprintCharacterClass cl) {
+            if (ch == null) return true;
+            if (cl == null) return false;
             var options = Get(ch);
             bool checkMythic = cl.IsMythic;
             bool foundIt = false;
