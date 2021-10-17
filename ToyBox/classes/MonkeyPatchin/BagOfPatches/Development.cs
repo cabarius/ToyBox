@@ -87,12 +87,10 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(CharGenContextVM), "HandleRespecInitiate")]
         private static class CharGenContextVM_HandleRespecInitiate_Patch {
-
-            private static List<BlueprintItemEquipmentUsable> scrolls;
-
+            
             private static void Prefix(ref CharGenContextVM __instance, ref UnitEntityData character, ref Action successAction) {
                 if (settings.toggleRespecRefundScrolls) {
-                    scrolls = new List<BlueprintItemEquipmentUsable>();
+                    List<BlueprintItemEquipmentUsable> scrolls = new List<BlueprintItemEquipmentUsable>();
 
                     var loadedscrolls = Game.Instance.BlueprintRoot.CraftRoot.m_ScrollsItems.Select(a => ResourcesLibrary.TryGetBlueprint<BlueprintItemEquipmentUsable>(a.Guid));
                     foreach (var spellbook in character.Spellbooks) {
@@ -105,16 +103,15 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                         }
                     }
 
-                    successAction = PatchedSuccessAction(successAction);
+                    successAction = PatchedSuccessAction(successAction, scrolls);
                 }
             }
 
-            private static Action PatchedSuccessAction(Action successAction) {
+            private static Action PatchedSuccessAction(Action successAction, List<BlueprintItemEquipmentUsable> scrolls) {
                 return () => {
                     foreach (var scroll in scrolls) {
                         Game.Instance.Player.Inventory.Add(new ItemEntityUsable(scroll));
                     }
-                    scrolls = null;
                     successAction.Invoke();
                 };
             }
