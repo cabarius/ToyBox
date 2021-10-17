@@ -112,6 +112,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                     foreach (var scroll in scrolls) {
                         Game.Instance.Player.Inventory.Add(new ItemEntityUsable(scroll));
                     }
+                    scrolls = null;
                 }
             }
         }
