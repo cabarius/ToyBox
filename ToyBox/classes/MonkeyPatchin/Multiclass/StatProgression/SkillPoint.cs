@@ -20,7 +20,7 @@ namespace ToyBox.Multiclass {
                 if (group.Key == false) baseTotal += group.ToList().Sum(cd => cd.CalcTotalSkillPointsNonMythic());
                 else {
                     var gestaltClasses = group.ToList();
-                    gestaltCount = classes.Count;
+                    gestaltCount = gestaltClasses.Count;
                     if (gestaltCount > 0) {
                         switch (Main.settings.multiclassSkillPointPolicy) {
                             case ProgressionPolicy.Largest:
