@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 using UnityModManagerNet;
 using static UnityModManagerNet.UnityModManager;
 using Logger = UnityModManagerNet.UnityModManager.Logger;
+using Kingmaker.UI.MVVM._VM.CharGen;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker;
+using Kingmaker.Blueprints;
+using Kingmaker.Items;
 
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     internal class Development {
@@ -53,6 +59,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 }
             }
         }
+        
         // This patch if for you @ArcaneTrixter and @Vek17
         [HarmonyPatch(typeof(Logger), "Write")]
         private static class Logger_Logger_Patch {
@@ -75,6 +82,37 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                     Logger.history.AddRange(result);
                 }
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(CharGenContextVM), "HandleRespecInitiate")]
+        private static class CharGenContextVM_HandleRespecInitiate_Patch {
+
+            private static List<BlueprintItemEquipmentUsable> scrolls;
+
+            private static void Prefix(ref CharGenContextVM __instance, UnitEntityData character, Action successAction) {
+                if (settings.toggleRespecRefundScrolls) {
+                    scrolls = new List<BlueprintItemEquipmentUsable>();
+
+                    var loadedscrolls = Game.Instance.BlueprintRoot.CraftRoot.m_ScrollsItems.Select(a => ResourcesLibrary.TryGetBlueprint<BlueprintItemEquipmentUsable>(a.Guid));
+                    foreach (var spellbook in character.Spellbooks) {
+                        foreach (var scrollspell in spellbook.GetAllKnownSpells()) {
+                            if (scrollspell.CopiedFromScroll) {
+                                if (loadedscrolls.TryFind(a => a.Ability.NameForAcronym == scrollspell.Blueprint.NameForAcronym, out BlueprintItemEquipmentUsable item)) {
+                                    scrolls.Add(item);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private static void Postfix(ref CharGenContextVM __instance, UnitEntityData character, Action successAction) {
+                if (settings.toggleRespecRefundScrolls) {
+                    foreach (var scroll in scrolls) {
+                        Game.Instance.Player.Inventory.Add(new ItemEntityUsable(scroll));
+                    }
+                }
             }
         }
     }
