@@ -60,7 +60,7 @@ namespace ToyBox {
                 }
             }
             bool result = !foundIt || (classCount - selectedCount > 1);
-            Mod.Debug($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
+            //Mod.Debug($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
             return result;
         }
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
