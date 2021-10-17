@@ -23,7 +23,7 @@ namespace ToyBox.BagOfPatches {
                 var viewModel = __instance.ViewModel;
                 var icon = __instance.transform.Find("BackgroundIcon");
                 var mechanicSlot = viewModel.MechanicActionBarSlot;
-                var name = mechanicSlot.GetTitle().StripHTML();
+                var name = mechanicSlot.GetTitle();
                 switch (mechanicSlot) {
                     case MechanicActionBarSlotAbility abilitySlot: name = abilitySlot.GetTitle(); break;
                     case MechanicActionBarSlotActivableAbility activatableSlot: name = activatableSlot.GetTitle(); break;
@@ -32,20 +32,23 @@ namespace ToyBox.BagOfPatches {
                     case MechanicActionBarSlotSpell spellSlot: name = spellSlot.GetTitle(); break;
                     case MechanicActionBarSlotSpontaneusConvertedSpell convSpellSlot: name = convSpellSlot.GetTitle(); break;
                 }
-                var title = string.Join("", name.Split(' ').Select(s => s[0]).Where(c => Char.IsLetter(c)));
-                Mod.Debug($"mechanicSlot: {mechanicSlot} : {mechanicSlot.GetType()} - {name} => {title}");
+                name = name.StripHTML();
+                var title = string.Join("", name.Split(' ').Select(s => s[0]).Where(c => Char.IsLetter(c)).Take(4));
+                //Mod.Debug($"mechanicSlot: {mechanicSlot} : {mechanicSlot.GetType()} - {name} => {title}");
                 var acronym = __instance.transform.Find("BackgroundIcon/ActionBarAcronym-ToyBox");
                 if (acronym == null) {
                     var count = __instance.transform.Find("BackgroundIcon/Count");
                     acronym = GameObject.Instantiate(count, icon.transform);
-                    acronym.transform.SetSiblingIndex(1);
+                    acronym.transform.SetSiblingIndex(4);
                     acronym.name = "ActionBarAcronym-ToyBox";
                 }
                 var rectTransform = acronym.transform as RectTransform;
                 //rectTransform.anchoredPosition = new Vector2(0.5f, 0f);
                 rectTransform.anchorMin = new Vector2(.95f, .15f);
                 rectTransform.anchorMax = new Vector2(1.0f, .35f);
-                acronym.GetComponentInChildren<TextMeshProUGUI>().text = $"<size=95%>{title}</size>";
+                var len = title.Length;
+                var percent = len <= 3 ? 100 : len < 4 ? 100 : len < 5 ? 83 : 75;
+                acronym.GetComponentInChildren<TextMeshProUGUI>().text = $"<size={percent}%>{title}</size>";
                 acronym.gameObject.SetActive(true);
             }
         }
