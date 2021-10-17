@@ -37,9 +37,13 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 **Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.3 (Coming Later)
+### Ver 1.4.4 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
+### Ver 1.4.3 (Coming Soon)
+* **Etude Editor** 
+  * Etude Elements are now more obvious that you can explore them
+  * The editor can now expand width as wide as needed which should improve layout. This means you will need to use the horizontal scroll bars for deep exploration
 * **Quest Editor** you can now teleport to stages of quest progression when available
 ### Ver 1.4.2.1
 * **Level Up & Multiclass** fixed crasher in the main menu when viewing level up options
