@@ -45,6 +45,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Etude Elements are now more obvious that you can explore them
   * The editor can now expand width as wide as needed which should improve layout. This means you will need to use the horizontal scroll bars for deep exploration
 * **Quest Editor** you can now teleport to stages of quest progression when available
+### Ver 1.4.2.2
+* **Level Up & Multiclass** fixed crasher in save due to interaction with in game level up UI
 ### Ver 1.4.2.1
 * **Level Up & Multiclass** fixed crasher in the main menu when viewing level up options
 ### Ver 1.4.2

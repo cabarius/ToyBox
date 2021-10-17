@@ -71,21 +71,26 @@ namespace ToyBox {
                 ReloadPerSaveSettings();
             var json = JsonConvert.SerializeObject(cachedPerSave);
             player.SettingsList[PerSaveKey] = json;
-            Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
-            Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
-            if (PerSaveSettings.observers is MulticastDelegate mcdel) {
-                var doomed = new List<PerSaveSettings.Changed>();
-                foreach (var inv in mcdel.GetInvocationList()) {
-                    if (inv.Target == null && inv is PerSaveSettings.Changed changed)
-                        doomed.Add(changed);
+            try {
+                Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
+                Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
+                if (PerSaveSettings.observers is MulticastDelegate mcdel) {
+                    var doomed = new List<PerSaveSettings.Changed>();
+                    foreach (var inv in mcdel.GetInvocationList()) {
+                        if (inv.Target == null && inv is PerSaveSettings.Changed changed)
+                            doomed.Add(changed);
+                    }
+                    foreach (var del in doomed) {
+                        Mod.Debug("removing observer: {del} from PerSaveSettings");
+                        PerSaveSettings.observers -= del;
+                    }
                 }
-                foreach (var del in doomed) {
-                    Mod.Debug("removing observer: {del} from PerSaveSettings");
-                    PerSaveSettings.observers -= del;
-                }
+                if (cachedPerSave)
+                    PerSaveSettings.observers?.Invoke(cachedPerSave);
             }
-            if (cachedPerSave)
-                PerSaveSettings.observers?.Invoke(cachedPerSave);
+            catch (Exception e) {
+                Mod.Error(e);
+            }
         }
         public PerSaveSettings perSave{
             get {
