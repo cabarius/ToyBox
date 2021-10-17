@@ -41,6 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.3 (Coming Soon)
+* **Bag of Tricks** 
+  * (***Aephiex***) Added new Quality of Life toggle 'Respec Refund Scrolls'
 * **Etude Editor** 
   * Etude Elements are now more obvious that you can explore them
   * The editor can now expand width as wide as needed which should improve layout. This means you will need to use the horizontal scroll bars for deep exploration
