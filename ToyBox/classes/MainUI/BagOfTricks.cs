@@ -189,6 +189,7 @@ namespace ToyBox {
                 () => Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave),
                 () => Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot),
                 () => Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer),
+                () => Toggle("Respec Refund Scrolls", ref settings.toggleRespecRefundScrolls),
                 () => ActionButton("Fix Incorrect Main Character", () => {
                     var probablyPlayer = Game.Instance.Player?.Party?
                         .Where(x => !x.IsCustomCompanion())
