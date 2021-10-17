@@ -43,10 +43,9 @@ namespace ToyBox.BagOfPatches {
                     acronym.name = "ActionBarAcronym-ToyBox";
                 }
                 var rectTransform = acronym.transform as RectTransform;
-                //rectTransform.anchoredPosition = new Vector2(0.5f, 0f);
-                rectTransform.anchorMin = new Vector2(.95f, .15f);
-                rectTransform.anchorMax = new Vector2(1.0f, .35f);
                 var len = title.Length;
+                rectTransform.anchorMin = new Vector2(.95f - 0.09f*(4 - len) , 0.15f);
+                rectTransform.anchorMax = new Vector2(1.0f - 0.09f*(4 - len), 0.35f);
                 var percent = len <= 3 ? 100 : len < 4 ? 100 : len < 5 ? 83 : 75;
                 acronym.GetComponentInChildren<TextMeshProUGUI>().text = $"<size={percent}%>{title}</size>";
                 acronym.gameObject.SetActive(true);
@@ -55,6 +54,8 @@ namespace ToyBox.BagOfPatches {
     }
 }
 #if false 
+                rectTransform.anchorMin = new Vector2(.95f, .15f);
+                rectTransform.anchorMax = new Vector2(1.0f, .35f);
                 var prototypeText = __instance.gameObject.transform.parent.transform.Find("Background/Header/HeaderText");
                 var text = GameObject.Instantiate(prototypeText, __instance.transform);
                 var mesh = text.GetComponent<TextMeshProUGUI>();
