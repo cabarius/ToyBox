@@ -51,6 +51,7 @@ using Kingmaker.Items.Slots;
 using ModKit;
 using Kingmaker.EntitySystem.Persistence;
 using ToyBox.Multiclass;
+using Kingmaker.UI.MVVM._PCView.ActionBar;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {

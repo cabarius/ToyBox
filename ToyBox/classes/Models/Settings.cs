@@ -103,13 +103,15 @@ namespace ToyBox {
         // Main
         public int selectedTab = 0;
 
+        // Qualty of Life
+        public bool highlightObjectsToggle = false;
+        public bool toggleHighlightCopyableScrolls = false;
+        public bool toggleShowAcronymsInActionBarSlots = true;
         // Cheap Tricks
         public int increment = 10000;
         public int kineticistBurnReduction = 0;
 
         // Tweaks
-        public bool highlightObjectsToggle = false;
-        public bool toggleHighlightCopyableScrolls = false;
         public bool toggleSpontaneousCopyScrolls = false;
         public bool toggleInstantEvent = false;
         public bool toggleInfiniteAbilities = false;

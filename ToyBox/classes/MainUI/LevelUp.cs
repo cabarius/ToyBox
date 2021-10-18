@@ -28,6 +28,7 @@ namespace ToyBox {
                 () => UI.ActionButton("Unlock Aeon", Actions.UnlockAeon, UI.Width(300)),
                 () => UI.ActionButton("Unlock Azata", Actions.UnlockAzata, UI.Width(300)),
                 () => UI.ActionButton("Unlock Trickster", Actions.UnlockTrickster, UI.Width(300)),
+                () => UI.ActionButton("Unlock Lich", Actions.UnlockLich, UI.Width(300)),
                 () => { UI.ActionButton("Unlock Swarm", Actions.UnlockSwarm, UI.Width(300)); UI.Space(25); UI.Label("Only available at Mythic level 8 or higher".green()); },
                 () => { UI.ActionButton("Unlock Gold Dragon", Actions.UnlockGoldDragon, UI.Width(300)); UI.Space(25); UI.Label("Only available at Mythic level 8 or higher".green()); },
                 () => {
