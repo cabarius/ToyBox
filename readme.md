@@ -40,7 +40,7 @@ Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteou
     1. Usually it is 0.0.1 higher than the current release but please check on Nexus.  If not please add a new Version entry at the top for the next release using proper markdown. 
     1. Don't worry too much about getting this right as Narria Cabarius will clean this up on merge so when in doubt add a new version.
     1. format your release note like like this:
-    >```* (Jane/JoeCoolCollaborator) added a Coolness Multiplier in Bag of Tricks that makes your main character more cool```
+    >```* (Jane/JoeCoolCollaborator) added a Coolness Multiplier in Bag of Tricks that makes your main character that much more awesome!```
 
 **PS**: 
 
