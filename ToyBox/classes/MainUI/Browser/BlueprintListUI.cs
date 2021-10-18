@@ -102,10 +102,12 @@ namespace ToyBox {
                         }
                         else {
                             var unlockIndex = titles.IndexOf("Unlock");
-                            var unlockAction = actions.ElementAt(unlockIndex);
-                            UI.Space(240);
-                            UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, unit, repeatCount); }, UI.Width(120));
-                            UI.Space(100);
+                            if (unlockIndex >= 0) {
+                                var unlockAction = actions.ElementAt(unlockIndex);
+                                UI.Space(240);
+                                UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, unit, repeatCount); }, UI.Width(120));
+                                UI.Space(100);
+                            }
                         }
                         remWidth -= 300;
                     }

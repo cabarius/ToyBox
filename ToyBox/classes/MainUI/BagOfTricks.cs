@@ -171,7 +171,11 @@ namespace ToyBox {
                 },
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
-                () => Toggle("Show Acronyms in Spell/Ability/Item toolbar items", ref settings.toggleShowAcronymsInActionBarSlots),
+                () => {
+                    if (Toggle("Show Acronyms in Spell/Ability/Item toolbar items", ref settings.toggleShowAcronymsInActionBarSlots)) {
+                        Main.SetNeedsResetGameUI();
+                    }
+                },
                 () => {
                     Toggle("Icky Stuff Begone!!!", ref settings.toggleReplaceModelMenu, UI.AutoWidth());
                     if (settings.toggleReplaceModelMenu) {

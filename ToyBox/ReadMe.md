@@ -44,7 +44,12 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Bag of Tricks** 
   * (***Aephiex***) Added new Quality of Life toggle 'Respec Refund Scrolls'
 * **Spell Ability Item Pickers** option to show acronyms in the spell slots in order to be able to identify and choose them faster
-* **Level Up** You can now unlock Lich Mythic path (was accidently removed)
+* **Level Up & Multiclass** 
+  * You can now unlock Lich Mythic path (was accidently removed)
+  * Made in game multiclass UI a bit more stable
+  * Level up multiclass UI now works in new game screen
+* **Search 'n Pick**
+  * Fixed crasher when viewing Unlockable Flags
 * **Etude Editor** 
   * Etude Elements are now more obvious that you can explore them
   * The editor can now expand width as wide as needed which should improve layout. This means you will need to use the horizontal scroll bars for deep exploration

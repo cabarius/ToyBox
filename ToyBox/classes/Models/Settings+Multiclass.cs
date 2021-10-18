@@ -28,7 +28,7 @@ namespace ToyBox {
         public static MulticlassOptions Get(UnitDescriptor ch) {
             //Main.Log($"stack: {System.Environment.StackTrace}");
             MulticlassOptions options;
-            if (ch == null) {
+            if (ch == null || ch.CharacterName == "Knight Commander") {
                 options = Main.settings.multiclassSettings.GetValueOrDefault(CharGenKey, new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - chargen - options: {options}");
             }
@@ -40,6 +40,7 @@ namespace ToyBox {
             return options;
         }
         public static bool CanSelectClassAsMulticlass(UnitDescriptor ch, BlueprintCharacterClass cl) {
+            if (!Main.IsInGame) return true;
             if (ch == null) return true;
             if (cl == null) return false;
             var options = Get(ch);
@@ -60,12 +61,13 @@ namespace ToyBox {
                 }
             }
             bool result = !foundIt || (classCount - selectedCount > 1);
-            //Mod.Debug($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
+            Mod.Trace($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
             return result;
         }
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
             //modLogger.Log($"stack: {System.Environment.StackTrace}");
-            if (ch == null) Main.settings.multiclassSettings[CharGenKey] = options;
+            if (ch == null || ch.CharacterName == "Knight Commander") 
+                Main.settings.multiclassSettings[CharGenKey] = options;
             else {
                 if (ch.HashKey() == null) return;
                 Mod.Debug($"options: {options}");

@@ -50,8 +50,8 @@ namespace ToyBox.Multiclass {
                     if (options == null || options.Count == 0)
                         return;
 
-                    Mod.Trace($"selected options: {options}".orange());
-                    //                    selectedMulticlassSet.ForEach(cl => Main.Log($"    {cl}"));
+                    Mod.Trace($"    selected options: {options}".orange());
+                                 //selectedMulticlassSet.ForEach(cl => Main.Log($"    {cl}"));
 
                     // applying classes
                     StateReplacer stateReplacer = new(state);
@@ -272,7 +272,7 @@ namespace ToyBox.Multiclass {
                 if (toggle == null) return;
                 var viewModel = instance.ViewModel;
                 if (viewModel == null) return;
-                var ch = viewModel.LevelUpController.Unit;
+                var ch = Main.IsInGame ? viewModel.LevelUpController.Unit : null;
                 var cl = viewModel.Class;
                 var image = multicheckbox.Find("Background").GetComponent<Image>();
                 var canSelect = MulticlassOptions.CanSelectClassAsMulticlass(ch, cl);
@@ -287,7 +287,7 @@ namespace ToyBox.Multiclass {
             public static void MulticlassCheckBoxChanged(bool value, CharGenClassSelectorItemPCView instance) {
                 if (instance == null) return;
                 var viewModel = instance.ViewModel;
-                var ch = viewModel.LevelUpController.Unit;
+                var ch = Main.IsInGame ? viewModel.LevelUpController.Unit : null;
                 var cl = viewModel.Class;
                 if (!MulticlassOptions.CanSelectClassAsMulticlass(ch, cl)) return;
                 var options = MulticlassOptions.Get(ch);
@@ -317,8 +317,8 @@ namespace ToyBox.Multiclass {
                 MulticlassOptions.Set(ch, options);
                 Mod.Debug($"ch: {ch.CharacterName.ToString().orange()} class: {cl.name} isArch: {viewModel.IsArchetype} arch: {viewModel.Archetype} chArchetype:{chArchetype} - options: {options}");
 
-
-                var charGemClassPhaseDetailedView = Game.Instance.UI.Canvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/PhaseClassDetaildPCView");
+                var transform = Game.Instance.UI.Canvas?.transform ?? Game.Instance.UI.MainMenu.transform;
+                var charGemClassPhaseDetailedView = transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/PhaseClassDetaildPCView");
                 var phaseClassDetailView = charGemClassPhaseDetailedView.GetComponent<Kingmaker.UI.MVVM._PCView.CharGen.Phases.Class.CharGenClassPhaseDetailedPCView>();
                 var charGenClassPhaseVM = phaseClassDetailView.ViewModel;
                 var selectedClassVM = charGenClassPhaseVM.SelectedClassVM.Value;
@@ -346,7 +346,8 @@ namespace ToyBox.Multiclass {
                 }
                 if (!settings.toggleMulticlass) return;
                 if (multicheckbox == null) {
-                    var checkbox = Game.Instance.UI.Canvas.transform.Find("ServiceWindowsPCView/SpellbookView/SpellbookScreen/MainContainer/KnownSpells/Toggle");
+                    var checkbox = Game.Instance.UI.FadeCanvas.transform.Find("TutorialView/BigWindow/Window/Content/Footer/Toggle");
+                    //var checkbox = Game.Instance.UI.Canvas.transform.Find("ServiceWindowsPCView/SpellbookView/SpellbookScreen/MainContainer/KnownSpells/Toggle");
                     var sibling = __instance.transform.Find("CollapseButton");
                     var textContainer = __instance.transform.Find("TextContainer");
                     var textLayout = textContainer.GetComponent<LayoutElement>();

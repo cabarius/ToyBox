@@ -20,6 +20,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ActionBarBaseSlotPCView), nameof(ActionBarBaseSlotPCView.BindViewImplementation))]
         public static class ActionBarBaseSlotPCView_BindViewImplementation_Patch {
             public static void Postfix(ActionBarBaseSlotPCView __instance) {
+                if (!settings.toggleShowAcronymsInActionBarSlots) return;
                 var viewModel = __instance.ViewModel;
                 var icon = __instance.transform.Find("BackgroundIcon");
                 var mechanicSlot = viewModel.MechanicActionBarSlot;
@@ -33,6 +34,7 @@ namespace ToyBox.BagOfPatches {
                     case MechanicActionBarSlotSpontaneusConvertedSpell convSpellSlot: name = convSpellSlot.GetTitle(); break;
                 }
                 name = name.StripHTML();
+                if (name?.Length <= 0) return;
                 var title = string.Join("", name.Split(' ').Select(s => s[0]).Where(c => Char.IsLetter(c)).Take(4));
                 //Mod.Debug($"mechanicSlot: {mechanicSlot} : {mechanicSlot.GetType()} - {name} => {title}");
                 var acronym = __instance.transform.Find("BackgroundIcon/ActionBarAcronym-ToyBox");
@@ -44,8 +46,8 @@ namespace ToyBox.BagOfPatches {
                 }
                 var rectTransform = acronym.transform as RectTransform;
                 var len = title.Length;
-                rectTransform.anchorMin = new Vector2(.95f - 0.09f*(4 - len) , 0.15f);
-                rectTransform.anchorMax = new Vector2(1.0f - 0.09f*(4 - len), 0.35f);
+                rectTransform.anchorMin = new Vector2(.95f - 0.09f * Math.Max(0, 4 - len), 0.15f); // - 0.35f);
+                rectTransform.anchorMax = new Vector2(1.0f - 0.09f * Math.Max(0, 4 - len), 0.35f); // - 0.35f);
                 var percent = len <= 3 ? 100 : len < 4 ? 100 : len < 5 ? 83 : 75;
                 acronym.GetComponentInChildren<TextMeshProUGUI>().text = $"<size={percent}%>{title}</size>";
                 acronym.gameObject.SetActive(true);
