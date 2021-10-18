@@ -37,6 +37,7 @@ namespace ToyBox.Multiclass {
         private static class LevelUpController_UpdatePreview_Patch {
             private static void Prefix(LevelUpController __instance) {
                 if (IsAvailable()) {
+                    // This is the critical place that gets called once before we go through all the level computations for setting up the level up screen
                     Mod.Debug("LevelUpController_UpdatePreview_Patch");
                     Main.multiclassMod.AppliedMulticlassSet.Clear();
                     Main.multiclassMod.UpdatedProgressions.Clear();
