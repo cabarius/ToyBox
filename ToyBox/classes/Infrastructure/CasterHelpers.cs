@@ -65,7 +65,7 @@ namespace ToyBox.classes.Infrastructure {
             }
 #if DEBUG
             foreach (var spellbook in casterLevelDictionary) {
-                Mod.Trace($"{spellbook.Key.Name}: {spellbook.Value}");
+                Mod.Trace($"spellbook - {spellbook.Key.Name}: {spellbook.Value}");
             }
 #endif
             return casterLevelDictionary;

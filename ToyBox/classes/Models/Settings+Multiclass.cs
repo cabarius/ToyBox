@@ -61,7 +61,7 @@ namespace ToyBox {
                 }
             }
             bool result = !foundIt || (classCount - selectedCount > 1);
-            Mod.Trace($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
+            //Mod.Trace($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
             return result;
         }
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
@@ -80,7 +80,7 @@ namespace ToyBox {
         public ArchetypeOptions ArchetypeOptions(BlueprintCharacterClass cl) => this.GetValueOrDefault(cl.HashKey(), new ArchetypeOptions());
         public void SetArchetypeOptions(BlueprintCharacterClass cl, ArchetypeOptions archOptions) => this[cl.HashKey()] = archOptions;
         public bool Contains(BlueprintCharacterClass cl) => ContainsKey(cl.HashKey());
-        public void Add(BlueprintCharacterClass cl) => Add(cl.HashKey(), new ArchetypeOptions());
+        public ArchetypeOptions Add(BlueprintCharacterClass cl) => this[cl.HashKey()] = new ArchetypeOptions();
         public void Remove(BlueprintCharacterClass cl) => Remove(cl.HashKey());
         public override string ToString() {
             var result = base.ToString() + " {\n";

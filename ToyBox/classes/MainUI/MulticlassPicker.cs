@@ -86,7 +86,7 @@ namespace ToyBox {
                     () => optionsHasClass,
                     (v) => {
                         if (v) {
-                            options.Add(cl);
+                            archetypeOptions = options.Add(cl);
                             if (chArchetype != null) {
                                 archetypeOptions.Add(chArchetype);
                                 options.SetArchetypeOptions(cl, archetypeOptions);

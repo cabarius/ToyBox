@@ -26,12 +26,23 @@ using Kingmaker.UI.MVVM._VM.CharGen.Phases.Class;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.CharacterInfo.Sections.Progression.Main;
 using Kingmaker.UI.MVVM._PCView.CharGen;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Mythic;
+using Kingmaker.UI.MVVM._VM.Party;
 
 namespace ToyBox.Multiclass {
     public static partial class MultipleClasses {
 
         #region Class Level & Archetype
-
+        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.UpdatePreview))]
+        private static class LevelUpController_UpdatePreview_Patch {
+            private static void Prefix(LevelUpController __instance) {
+                if (IsAvailable()) {
+                    Mod.Debug("LevelUpController_UpdatePreview_Patch");
+                    Main.multiclassMod.AppliedMulticlassSet.Clear();
+                    Main.multiclassMod.UpdatedProgressions.Clear();
+                }
+            }
+        }
         [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         private static class SelectClass_Apply_Patch {
             [HarmonyPostfix]
@@ -40,8 +51,6 @@ namespace ToyBox.Multiclass {
                 if (!unit.IsPartyOrPet()) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
                 if (IsAvailable()) {
-                    Main.multiclassMod.AppliedMulticlassSet.Clear();
-                    Main.multiclassMod.UpdatedProgressions.Clear();
                     // get multi-class setting
                     bool useDefaultMulticlassOptions = state.IsCharGen();
                     var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
@@ -49,13 +58,18 @@ namespace ToyBox.Multiclass {
 
                     if (options == null || options.Count == 0)
                         return;
-
                     Mod.Trace($"    selected options: {options}".orange());
-                                 //selectedMulticlassSet.ForEach(cl => Main.Log($"    {cl}"));
+                    //selectedMulticlassSet.ForEach(cl => Main.Log($"    {cl}"));
 
                     // applying classes
+                    var selectedClass = state.SelectedClass;
                     StateReplacer stateReplacer = new(state);
                     foreach (var characterClass in Main.multiclassMod.AllClasses) {
+                        if (characterClass.IsMythic != selectedClass.IsMythic) continue;
+                        if (Main.multiclassMod.AppliedMulticlassSet.Contains(characterClass)) {
+                            Mod.Warn($"    duplicated application of multiclass detected: {characterClass.name.yellow()}");
+                            continue;
+                        }
                         if (options.Contains(characterClass)) {
                             Mod.Trace($"   checking {characterClass.HashKey()} {characterClass.GetDisplayName()} ");
                         }
@@ -104,9 +118,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Skills & Features
+#region Skills & Features
 
         [HarmonyPatch(typeof(LevelUpController))]
         [HarmonyPatch("ApplyLevelup")]
@@ -207,9 +221,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Spellbook
+#region Spellbook
 
         [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         private static class ApplySpellbook_Apply_Patch {
@@ -227,9 +241,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Commit
+#region Commit
 
         [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
         private static class LevelUpController_Commit_Patch {
@@ -251,7 +265,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
-        #endregion
+#endregion
 
         [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.SetupLevelsIfNecessary))]
         private static class UnitProgressionData_SetupLevelsIfNecessary_Patch {
@@ -266,7 +280,8 @@ namespace ToyBox.Multiclass {
 #if true
         public static class MulticlassCheckBoxHelper {
             public static void UpdateCheckbox(CharGenClassSelectorItemPCView instance) {
-                var multicheckbox = instance.transform.Find("MulticlassCheckbox-ToyBox");
+                if (instance == null) return;
+                var multicheckbox = instance.transform?.Find("MulticlassCheckbox-ToyBox");
                 if (multicheckbox == null) return;
                 var toggle = multicheckbox.GetComponent<ToggleWorkaround>();
                 if (toggle == null) return;
@@ -279,7 +294,7 @@ namespace ToyBox.Multiclass {
                 image.CrossFadeAlpha(canSelect ? 1.0f : 0f, 0, true);
                 var options = MulticlassOptions.Get(ch);
                 var shouldSelect = options.Contains(cl) && (!viewModel.IsArchetype || options.ArchetypeOptions(cl).Contains(viewModel.Archetype));
-                
+
                 toggle.SetIsOnWithoutNotify(shouldSelect);
                 toggle.onValueChanged.RemoveAllListeners();
                 toggle.onValueChanged.AddListener(v => MulticlassCheckBoxChanged(v, instance));
@@ -295,7 +310,7 @@ namespace ToyBox.Multiclass {
                 var chArchetype = cd?.Archetypes.FirstOrDefault<BlueprintArchetype>();
                 var archetypeOptions = options.ArchetypeOptions(cl);
                 if (value)
-                    options.Add(cl);
+                    archetypeOptions = options.Add(cl);
                 else
                     options.Remove(cl);
                 if (options.Contains(cl)) {
@@ -316,8 +331,8 @@ namespace ToyBox.Multiclass {
                 }
                 MulticlassOptions.Set(ch, options);
                 Mod.Debug($"ch: {ch.CharacterName.ToString().orange()} class: {cl.name} isArch: {viewModel.IsArchetype} arch: {viewModel.Archetype} chArchetype:{chArchetype} - options: {options}");
-
-                var transform = Game.Instance.UI.Canvas?.transform ?? Game.Instance.UI.MainMenu.transform;
+                var canvas = Game.Instance.UI.Canvas;
+                var transform = canvas != null ? canvas.transform : Game.Instance.UI.MainMenu.transform;
                 var charGemClassPhaseDetailedView = transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/PhaseClassDetaildPCView");
                 var phaseClassDetailView = charGemClassPhaseDetailedView.GetComponent<Kingmaker.UI.MVVM._PCView.CharGen.Phases.Class.CharGenClassPhaseDetailedPCView>();
                 var charGenClassPhaseVM = phaseClassDetailView.ViewModel;
@@ -328,7 +343,7 @@ namespace ToyBox.Multiclass {
                 }
                 else {
                     charGenClassPhaseVM.LevelUpController.RemoveArchetype(viewModel.Archetype);
-                    charGenClassPhaseVM.UpdateClassInformation(); 
+                    charGenClassPhaseVM.UpdateClassInformation();
                 }
                 charGenClassPhaseVM.OnSelectorClassChanged(selectedClassVM);
 
@@ -337,7 +352,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(CharGenClassSelectorItemPCView), nameof(CharGenClassSelectorItemPCView.BindViewImplementation))]
         private static class CharGenClassSelectorItemPCView_BindViewImplementation_Patch {
             private static void Postfix(CharGenClassSelectorItemPCView __instance) {
-                Mod.Warn("CharGenClassSelectorItemPCView_CharGenClassSelectorItemPCView_Patch");
+                //Mod.Warn("CharGenClassSelectorItemPCView_CharGenClassSelectorItemPCView_Patch");
                 var multicheckbox = __instance.transform.Find("MulticlassCheckbox-ToyBox");
                 if (multicheckbox != null) {
                     if (!settings.toggleMulticlass) {
@@ -386,7 +401,7 @@ namespace ToyBox.Multiclass {
             }
         }
 #endif
-            }
+    }
 }
 #if false
                 //charGenClassPhaseVM.LevelUpController.SelectClass(viewModel.Class);

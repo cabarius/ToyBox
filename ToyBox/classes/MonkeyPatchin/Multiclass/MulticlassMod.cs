@@ -153,13 +153,16 @@ namespace ToyBox.Multiclass {
 
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
+            var selectedClass = state.SelectedClass;
             StateReplacer stateReplacer = new(state);
             Mod.Trace($"ForEachAppliedMulticlass\n    hash key: {unit.HashKey()}");
             Mod.Trace($"    mythic: {state.IsMythicClassSelected}");
             Mod.Trace($"    options: {options}");
             foreach (var characterClass in Main.multiclassMod.AllClasses) {
-                if (characterClass != stateReplacer.SelectedClass && options.Contains(characterClass)) {
-                    Mod.Trace($"       {characterClass.GetDisplayName()} ");
+                if (characterClass != stateReplacer.SelectedClass && characterClass.IsMythic == selectedClass.IsMythic && options.Contains(characterClass)) {
+                    var classes = unit?.Progression.Classes;
+                    var match = classes.Find(c => c.CharacterClass == characterClass);
+                    Mod.Trace($"       {characterClass.GetDisplayName()} lvl: {match?.Level ?? -1}");
                     if (state.IsMythicClassSelected == characterClass.IsMythic) {
                         stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
                         action();

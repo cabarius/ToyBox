@@ -41,13 +41,15 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.3 (Coming Soon)
+* **Level Up & Multiclass** 
+  * Fixed bugs where multiclass classes were being applied more than once in various cases
+  * In Game Multiclass UI
+    * Now works during character creation
+    * Various stability improvements
+  * You can now unlock Lich Mythic path (was accidently removed)
 * **Bag of Tricks** 
   * (***Aephiex***) Added new Quality of Life toggle 'Respec Refund Scrolls'
 * **Spell Ability Item Pickers** option to show acronyms in the spell slots in order to be able to identify and choose them faster
-* **Level Up & Multiclass** 
-  * You can now unlock Lich Mythic path (was accidently removed)
-  * Made in game multiclass UI a bit more stable
-  * Level up multiclass UI now works in new game screen
 * **Search 'n Pick**
   * Fixed crasher when viewing Unlockable Flags
 * **Etude Editor** 
