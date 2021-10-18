@@ -164,6 +164,7 @@ namespace ToyBox {
         public bool toggleTeleportKeysEnabled = false;
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleShiftClickToFastTransfer = false;
+        public bool toggleRespecRefundScrolls = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
         public bool toggleBrutalUnfair = false;

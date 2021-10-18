@@ -41,6 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.3 (Coming Soon)
+* **Bag of Tricks** 
+  * (***Aephiex***) Added new Quality of Life toggle 'Respec Refund Scrolls'
 * **Spell Ability Item Pickers** option to show acronyms in the spell slots in order to be able to identify and choose them faster
 * **Level Up** You can now unlock Lich Mythic path (was accidently removed)
 * **Etude Editor** 
