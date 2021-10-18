@@ -136,7 +136,7 @@ namespace ToyBox.Multiclass {
                         var expectedCount = count ?? 0;
                         var actual = CasterHelpers.GetCachedSpellsKnown(unit, spellbook1, index);
 #if DEBUG
-                        Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {expectedCount-actual} spells of spell level:{index} based on expected={expectedCount} and actual={actual}");
+                        //Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {expectedCount-actual} spells of spell level:{index} based on expected={expectedCount} and actual={actual}");
 #endif
                         spellSelectionData.SetLevelSpells(index, Math.Max(0, expectedCount - actual));
                     }

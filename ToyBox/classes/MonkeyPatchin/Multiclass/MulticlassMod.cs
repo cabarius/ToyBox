@@ -159,7 +159,9 @@ namespace ToyBox.Multiclass {
             Mod.Trace($"    mythic: {state.IsMythicClassSelected}");
             Mod.Trace($"    options: {options}");
             foreach (var characterClass in Main.multiclassMod.AllClasses) {
-                if (characterClass != stateReplacer.SelectedClass && characterClass.IsMythic == selectedClass.IsMythic && options.Contains(characterClass)) {
+                if (characterClass != stateReplacer.SelectedClass 
+                    //&& characterClass.IsMythic == selectedClass.IsMythic 
+                    && options.Contains(characterClass)) {
                     var classes = unit?.Progression.Classes;
                     var match = classes.Find(c => c.CharacterClass == characterClass);
                     Mod.Trace($"       {characterClass.GetDisplayName()} lvl: {match?.Level ?? -1}");

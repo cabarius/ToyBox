@@ -18,7 +18,7 @@ namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
         public static void AddClassLevel_NotCharacterLevel(this UnitProgressionData instance, BlueprintCharacterClass characterClass) {
             //instance.SureClassData(characterClass).Level++;
-            Mod.Trace($"AddClassLevel_NotCharLevel: class = {characterClass}");
+            Mod.Debug($"AddClassLevel_NotCharLevel: class = {characterClass.name.cyan()} - lvl:{instance.GetClassLevel(characterClass)} - {string.Join(", ", instance.Features.Enumerable.Select(f => f.Name.orange()))}");
             ReflectionCache.GetMethod<UnitProgressionData, Func<UnitProgressionData, BlueprintCharacterClass, ClassData>>
                 ("SureClassData")(instance, characterClass).Level++;
             //instance.CharacterLevel++;

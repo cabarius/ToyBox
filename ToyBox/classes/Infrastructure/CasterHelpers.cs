@@ -154,7 +154,7 @@ namespace ToyBox.classes.Infrastructure {
         public static int GetCachedSpellsKnown(UnitDescriptor unit, Spellbook spellbook, int level) {
             var key = $"{unit.CharacterName}.{spellbook.Blueprint.Name}";
             if (!UnitSpellsKnown.TryGetValue(key, out var spellsKnownList)) {
-                Mod.Trace($"Can't find cached spells known data for character {unit.CharacterName} with key: {key}");
+                //Mod.Trace($"Can't find cached spells known data for character {unit.CharacterName} with key: {key}");
                 return level > 1 ? GetCachedSpellsKnown(unit, spellbook, level - 1) : 0;
             }
 

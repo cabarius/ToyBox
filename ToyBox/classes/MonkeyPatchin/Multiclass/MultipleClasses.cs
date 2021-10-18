@@ -52,6 +52,9 @@ namespace ToyBox.Multiclass {
                 if (!unit.IsPartyOrPet()) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
                 if (IsAvailable()) {
+                    Main.multiclassMod.AppliedMulticlassSet.Clear();
+                    Main.multiclassMod.UpdatedProgressions.Clear();
+
                     // get multi-class setting
                     bool useDefaultMulticlassOptions = state.IsCharGen();
                     var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
