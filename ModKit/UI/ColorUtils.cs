@@ -41,7 +41,7 @@ namespace ModKit {
         rare = 0x2060ffff,
         epic = 0xc260f1ff, // 0x79297bff, //0x9f608cff, // 0x885278ff, // 0xc260f1ff,      //0xc860fff,
         legendary = 0xe67821e0, // 0x9a4a2dff, // 0x984c31ff, //0xe67821ff, //* 0xe67821e0,  // 0xe67821ff, // 0xe68019ff // 0xEDCB1Aff,
-        mythic = 0x60ffffff, // 0x84e2d4ff, // 0x2cd8d4ff, // * 0x60ffffff,
+        mythic = 0x2cd8d4ff, //0x60ffffff, // 0x84e2d4ff, // 0x2cd8d4ff, // * 0x60ffffff,
         godly = pink,           //red
         notable = 0xb1821fff, //0xffe000ff, // 0xC08020ff //0xffd840ff, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
     }

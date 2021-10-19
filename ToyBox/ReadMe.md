@@ -51,6 +51,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***Aephiex***) Added new Quality of Life toggle 'Respec Refund Scrolls'
 * **Spell Ability Item Pickers** option to show acronyms in the spell slots in order to be able to identify and choose them faster
 * **Search 'n Pick**
+  * Items now display flavor text if it is available and it can be searched whenever you search descriptions
   * Fixed crasher when viewing Unlockable Flags
 * **Etude Editor** 
   * Etude Elements are now more obvious that you can explore them

@@ -65,6 +65,8 @@ namespace ToyBox {
             foreach (var blueprint in simpleBlueprints) {
                 var currentCount = count++;
                 var description = blueprint.GetDescription();
+                if (blueprint is BlueprintItem itemBlueprint && itemBlueprint.FlavorText?.Length > 0)
+                    description = $"{itemBlueprint.FlavorText.StripHTML().color(RGBA.notable)}\n{description}";
                 float titleWidth = 0;
                 var remWidth = remainingWidth - indent;
                 using (UI.HorizontalScope()) {
