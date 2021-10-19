@@ -106,7 +106,7 @@ namespace ToyBox {
         // Qualty of Life
         public bool highlightObjectsToggle = false;
         public bool toggleHighlightCopyableScrolls = false;
-        public bool toggleShowAcronymsInActionBarSlots = true;
+        public bool toggleShowAcronymsInActionBarSlots = false;
         // Cheap Tricks
         public int increment = 10000;
         public int kineticistBurnReduction = 0;
