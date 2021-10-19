@@ -36,7 +36,7 @@ using System.Linq;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
-using Steamworks;
+// using Steamworks;
 using Kingmaker.Achievements.Platforms;
 using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
@@ -473,7 +473,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         // To eliminate some log spam
-        [HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", new Type[] { typeof(UserStatsStored_t) })]
+        /*[HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", new Type[] { typeof(UserStatsStored_t) })]
         public static class SteamAchievementsManager_OnUserStatsStored_Patch {
             public static bool Prefix(ref SteamAchievementsManager __instance, UserStatsStored_t pCallback) {
                 if ((long)(ulong)__instance.m_GameId != (long)pCallback.m_nGameID)
@@ -491,7 +491,7 @@ namespace ToyBox.BagOfPatches {
                     Debug.Log((object)("StoreStats - failed, " + (object)pCallback.m_eResult));
                 return false;
             }
-        }
+        */
 
         // Turnbased Combat Start Delay
         [HarmonyPatch(typeof(TurnBasedModeUIController), nameof(TurnBasedModeUIController.ShowCombatStartWindow))]
