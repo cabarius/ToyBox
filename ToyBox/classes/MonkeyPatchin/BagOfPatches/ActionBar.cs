@@ -20,7 +20,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ActionBarBaseSlotPCView), nameof(ActionBarBaseSlotPCView.BindViewImplementation))]
         public static class ActionBarBaseSlotPCView_BindViewImplementation_Patch {
             public static void Postfix(ActionBarBaseSlotPCView __instance) {
-                if (!settings.toggleShowAcronymsInActionBarSlots) return;
+                if (!settings.toggleShowAcronymsInSpellAndActionSlots) return;
                 var viewModel = __instance.ViewModel;
                 var icon = __instance.transform.Find("BackgroundIcon");
                 var mechanicSlot = viewModel.MechanicActionBarSlot;

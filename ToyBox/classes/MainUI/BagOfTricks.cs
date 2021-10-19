@@ -172,7 +172,7 @@ namespace ToyBox {
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
                 () => {
-                    if (Toggle("Show Acronyms in Spell/Ability/Item toolbar items", ref settings.toggleShowAcronymsInActionBarSlots)) {
+                    if (Toggle("Show Acronyms in Spell/Ability/Item toolbar items", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
                         Main.SetNeedsResetGameUI();
                     }
                 },

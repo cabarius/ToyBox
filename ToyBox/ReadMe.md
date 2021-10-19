@@ -42,7 +42,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Etude Editor** Show other Etude info and links 
 * **Quest Editor** you can now teleport to stages of quest progression when available
 ### Ver 1.4.4
-* **Bag of Tricks**
+* **Ported to Beta** (Game Version 1.1.0d)
+* **Bag of Tricks** Made spell acronyms default to off as intended (sorry about that)
 ### Ver 1.4.3
 * **Level Up & Multiclass**
   * ***Fixed Major Bugs in Multiclass***
