@@ -92,7 +92,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
         private static class LevelUpController_Commit_Posthook {
             private static void Postfix(LevelUpController __instance) {
-                Mod.Warn("Clearing Cache because LevelUpController.Commit called");
+                Mod.Debug("Clearing Cache because LevelUpController.Commit called");
                 CasterHelpers.ClearCachedSpellsLearned(__instance.Unit);
                 CasterHelpers.CacheSpellsLearned(__instance.Unit);
             }

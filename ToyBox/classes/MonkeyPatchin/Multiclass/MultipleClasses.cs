@@ -155,7 +155,7 @@ namespace ToyBox.Multiclass {
             private static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
-                    Mod.Log($"ApplyClassMechanics_Apply_Patch - unit: {unit} {unit.CharacterName} class:{state.SelectedClass}");
+                    Mod.Debug($"ApplyClassMechanics_Apply_Patch - unit: {unit} {unit.CharacterName} class:{state.SelectedClass}");
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
                             unit.SetClassIsGestalt(state.SelectedClass, true);
@@ -165,7 +165,7 @@ namespace ToyBox.Multiclass {
                         });
                     }
                     var allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
-                    Mod.Log($"ApplyClassMechanics_Apply_Patch - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
+                    Mod.Debug($"ApplyClassMechanics_Apply_Patch - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
                     allAppliedClasses.Add(state.SelectedClass);
                     SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
                     HPDice.ApplyHPDice(unit, state, allAppliedClasses.ToArray());
