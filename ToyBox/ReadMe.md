@@ -40,7 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.4 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
-### Ver 1.4.3 (Coming Soon)
+### Ver 1.4.3
 * **Level Up & Multiclass**
   * ***Fixed Major Bugs in Multiclass***
   * Fixed bug where class powers, curses, etc were not being applied in some cases
