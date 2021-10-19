@@ -43,7 +43,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Editor** you can now teleport to stages of quest progression when available
 ### Ver 1.4.4
 * **Bag of Tricks**
-  * Autoload of saves on launch can be disabled by holding down shift
 ### Ver 1.4.3
 * **Level Up & Multiclass**
   * ***Fixed Major Bugs in Multiclass***
@@ -54,6 +53,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Various stability improvements
   * You can now unlock Lich Mythic path (was accidently removed)
 * **Bag of Tricks** 
+  * Autoload of saves on launch can be disabled by holding down shift
   * **Spell/Ability Pickers** option to show acronyms in the spell slots in order to be able to identify and choose them faster
   * (***Aephiex***) Added new Quality of Life toggle 'Respec Refund Scrolls'
 * **Party Editor** Fixed bug where Recruitment was not using the new code path
