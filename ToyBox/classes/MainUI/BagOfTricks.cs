@@ -191,7 +191,7 @@ namespace ToyBox {
                 },
                 () => Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
-                () => Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave),
+                () => { Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25);  UI.Label("Hold down shift during launch to bypass".green()); },
                 () => Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot),
                 () => Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer),
                 () => Toggle("Respec Refund Scrolls", ref settings.toggleRespecRefundScrolls),

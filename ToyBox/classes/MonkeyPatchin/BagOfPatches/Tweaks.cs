@@ -48,6 +48,7 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.RuleSystem.Rules.Abilities;
 using UnityEngine;
 using Kingmaker.EntitySystem.Stats;
+using ModKit;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -293,8 +294,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityArmor __instance) {
                 if (settings.toggleIgnoreSpeedReduction) {
                     if (__instance.m_Modifiers != null) {
-                        __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m)
-                        {
+                        __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m) {
                             ModifiableValue appliedTo = m.AppliedTo;
                             ModifierDescriptor desc = m.ModDescriptor;
                             if (appliedTo == __instance.Wielder.Stats.Speed && (desc == ModifierDescriptor.Shield || desc == ModifierDescriptor.Armor)) {
@@ -380,6 +380,11 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(MainMenuBoard), "Update")]
         private static class MainMenuButtons_Update_Patch {
             private static void Postfix() {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    Main.freshlyLaunched = false;
+                    Mod.Warn("Auto Load Save on Launch disabled");
+                    return;
+                }
                 if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
                     var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
