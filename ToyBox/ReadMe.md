@@ -40,11 +40,12 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.4 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
+* **Quest Editor** you can now teleport to stages of quest progression when available
 ### Ver 1.4.3
 * **Level Up & Multiclass**
   * ***Fixed Major Bugs in Multiclass***
   * Fixed bug where class powers, curses, etc were not being applied in some cases
-  * Fixed bugs where multiclass classe were being applied more than once on companions
+  * Fixed bugs where multiclass classes were being applied more than once on companions
   * In Game Multiclass UI
     * Now works during character creation
     * Various stability improvements
@@ -59,7 +60,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Etude Editor** 
   * Etude Elements are now more obvious that you can explore them
   * The editor can now expand width as wide as needed which should improve layout. This means you will need to use the horizontal scroll bars for deep exploration
-* **Quest Editor** you can now teleport to stages of quest progression when available
 ### Ver 1.4.2.2
 * **Level Up & Multiclass** fixed crasher in save due to interaction with in game level up UI
 ### Ver 1.4.2.1
