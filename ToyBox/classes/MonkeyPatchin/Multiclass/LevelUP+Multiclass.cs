@@ -59,6 +59,7 @@ namespace ToyBox.Multiclass {
                 // int maxLevel = 20 // unit.Progression.CharacterLevel;
                 // if (nextLevel > maxLevel)
                 //     nextLevel = maxLevel;
+                Mod.Debug($"LevelUpHelper_UpdateProgression_Patch - {unit.CharacterName.orange()} - class: {state.SelectedClass} level: {level} nextLvl: {nextLevel}");
                 if (level >= nextLevel || progression.ExclusiveProgression != null && state.SelectedClass != progression.ExclusiveProgression)
                     return false;
                 if (!progression.GiveFeaturesForPreviousLevels)
@@ -66,7 +67,9 @@ namespace ToyBox.Multiclass {
                 for (var lvl = level + 1; lvl <= nextLevel; ++lvl) {
                     //                    if (!AllowProceed(progression)) break;
                     var levelEntry = progressionData.GetLevelEntry(lvl);
-                    LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, lvl);
+                    Mod.Debug($"    LevelUpHelper_UpdateProgression_Patch - {string.Join(", ", levelEntry.Features.Select(f => f.name.yellow()))}");
+
+    LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, lvl);
                 }
                 return false;
             }
@@ -165,16 +168,28 @@ namespace ToyBox.Multiclass {
         private static class ApplyClassMechanics_ApplyProgressions_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
-                var blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
-                foreach (var blueprintProgression in unit.Progression.Features.Enumerable.Select<Feature, BlueprintFeature>((Func<Feature, BlueprintFeature>)(f => f.Blueprint)).OfType<BlueprintProgression>().ToList<BlueprintProgression>()) {
+                Mod.Debug($"ApplyClassMechanics_ApplyProgressions_Patch - {unit.CharacterName.orange()} - class: {state.SelectedClass} nextLevel: {state.NextClassLevel}");
+                BlueprintCharacterClass blueprintCharacterClass = null;
+                if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)
+                    && ch.TryGetClass(state.SelectedClass, out var cl)
+                    && state.NextClassLevel >= cl.Level
+                    )
+                    blueprintCharacterClass = state.SelectedClass;
+                //var blueprintCharacterClass = state.NextClassLevel <= 1 ? state.SelectedClass : (BlueprintCharacterClass)null;
+                var features = unit.Progression.Features.Enumerable;
+                var progressions = features.Select(f => f.Blueprint).OfType<BlueprintProgression>().ToList();  // this ToList is important because it prevents mutation exceptions
+                foreach (var blueprintProgression in progressions) {
                     var p = blueprintProgression;
+                    Mod.Debug($"    prog: {p.name.yellow()}");
                     if (blueprintCharacterClass != null
                         // && p.Classes.Contains<BlueprintCharacterClass>(blueprintCharacterClass)) 
                         && p.IsChildProgressionOf(unit, blueprintCharacterClass) // Mod Line replacing above
-                        )
-                        unit.Progression.Features.Enumerable.FirstItem<Feature>(
-                            f => f.Blueprint == p)?.SetSource((FeatureSource)blueprintCharacterClass, 1
-                            );
+                        ) {
+                        var feature = unit.Progression.Features.Enumerable.FirstItem(f => f.Blueprint == p);
+                        feature?.SetSource(blueprintCharacterClass, state.NextClassLevel);
+                        Mod.Debug($"    feature: {feature.Name.cyan()} - levlel: {state.NextClassLevel}");
+                        //feature?.SetSource(blueprintCharacterClass, 1);
+                    }
                     LevelUpHelper.UpdateProgression(state, unit, p);
                 }
                 return true;

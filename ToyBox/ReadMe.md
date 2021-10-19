@@ -41,8 +41,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.3 (Coming Soon)
-* **Level Up & Multiclass** 
-  * Fixed bugs where multiclass classes were being applied more than once in various cases
+* **Level Up & Multiclass** Fixed Major Bugs
+  * Fixed bug where class powers, curses, etc were not being applied in some cases
+  * Fixed bugs where multiclass classe were being applied more than once on companions
   * In Game Multiclass UI
     * Now works during character creation
     * Various stability improvements

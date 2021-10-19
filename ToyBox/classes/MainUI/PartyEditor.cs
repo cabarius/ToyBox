@@ -602,7 +602,7 @@ namespace ToyBox {
             }
             UI.Space(25);
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
-            if (charToRecruit != null) { UnitEntityDataUtils.AddCompanion(charToRecruit); }
+            if (charToRecruit != null) { UnitEntityDataUtils.RecruitCompanion(charToRecruit); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
         }
     }

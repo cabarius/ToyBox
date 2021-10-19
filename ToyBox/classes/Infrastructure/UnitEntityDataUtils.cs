@@ -125,6 +125,32 @@ namespace ToyBox {
             }
         }
 #else
+note this code from Owlcat 
+  private static void RecruitCompanion(string parameters)
+    {
+      string paramString = Utilities.GetParamString(parameters, 1, (string) null);
+      bool? paramBool = Utilities.GetParamBool(parameters, 2, (string) null);
+      BlueprintUnit blueprint = Utilities.GetBlueprint<BlueprintUnit>(paramString);
+      if (blueprint == null)
+        PFLog.SmartConsole.Log("Cant get companion with name '" + paramString + "'", (object[]) Array.Empty<object>());
+      else if (!paramBool.HasValue || paramBool.Value)
+      {
+        UnitEntityData unitVacuum = Game.Instance.CreateUnitVacuum(blueprint);
+        Game.Instance.State.PlayerState.CrossSceneState.AddEntityData((EntityDataBase) unitVacuum);
+        unitVacuum.IsInGame = false;
+        unitVacuum.Ensure<UnitPartCompanion>().SetState(CompanionState.ExCompanion);
+      }
+      else
+      {
+        Vector3 position = Game.Instance.Player.MainCharacter.Value.Position;
+        SceneEntitiesState crossSceneState = Game.Instance.State.PlayerState.CrossSceneState;
+        UnitEntityData unit = Game.Instance.EntityCreator.SpawnUnit(blueprint, position, Quaternion.identity, crossSceneState);
+        Game.Instance.Player.AddCompanion(unit);
+        EventBus.RaiseEvent<IPartyHandler>((Action<IPartyHandler>) (h => h.HandleAddCompanion(unit)));
+      }
+    }
+
+
         public static void AddCompanion(UnitEntityData unit) {
             Player player = Game.Instance.Player;
             player.AddCompanion(unit);
