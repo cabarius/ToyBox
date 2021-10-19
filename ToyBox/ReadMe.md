@@ -41,10 +41,12 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 * **Quest Editor** you can now teleport to stages of quest progression when available
-### Ver 1.4.4
+### Ver 1.4.4 (for beta 1.1)
 * **Ported to Beta** (Game Version 1.1.0d)
 * **Bag of Tricks** Made spell acronyms default to off as intended (sorry about that)
-### Ver 1.4.3
+### Ver 1.4.3.1 (use this for current non beta until 1.1.x releases)
+  * Autoload of saves on launch can be disabled by holding down shift
+### Ver 1.4.3 
 * **Level Up & Multiclass**
   * ***Fixed Major Bugs in Multiclass***
   * Fixed bug where class powers, curses, etc were not being applied in some cases
@@ -54,7 +56,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Various stability improvements
   * You can now unlock Lich Mythic path (was accidently removed)
 * **Bag of Tricks** 
-  * Autoload of saves on launch can be disabled by holding down shift
   * **Spell/Ability Pickers** option to show acronyms in the spell slots in order to be able to identify and choose them faster
   * (***Aephiex***) Added new Quality of Life toggle 'Respec Refund Scrolls'
 * **Party Editor** Fixed bug where Recruitment was not using the new code path
