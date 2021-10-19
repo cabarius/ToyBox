@@ -15,6 +15,7 @@ using Kingmaker.Utility;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.ElementsSystem;
 using ModKit;
+using Kingmaker.Blueprints.Classes;
 
 namespace ToyBox {
     public enum UnitSelectType {
@@ -161,5 +162,15 @@ namespace ToyBox {
                 .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null ||
                     Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
         }
+
+        public static bool TryGetPartyMemberForLevelUpVersion(this UnitDescriptor levelUpUnit, out UnitEntityData ch) {
+            ch = Game.Instance?.Player?.AllCharacters.Find(c => c.CharacterName == levelUpUnit.CharacterName);
+            return ch != null;
+        }
+        
+        public static bool TryGetClass(this UnitEntityData unit, BlueprintCharacterClass cl, out ClassData cd) {
+            cd = unit.Progression.Classes.Find(c => c.CharacterClass == cl);
+            return cd != null;
+        } 
     }
 }

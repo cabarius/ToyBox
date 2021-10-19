@@ -52,13 +52,19 @@ namespace ToyBox.Multiclass {
                 if (!unit.IsPartyOrPet()) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
                 if (IsAvailable()) {
-                    Main.multiclassMod.AppliedMulticlassSet.Clear();
-                    Main.multiclassMod.UpdatedProgressions.Clear();
-
+                    //Main.multiclassMod.AppliedMulticlassSet.Clear();
+                    //Main.multiclassMod.UpdatedProgressions.Clear();
+                    // Some companions have predefined levels so in some cases we get called iteratively for each level so we will make sure we only apply multiclass on the last level
+                    if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)
+                        && ch.TryGetClass(state.SelectedClass, out var cl)
+                        && state.NextClassLevel <= cl.Level) {
+                        Mod.Debug($"SelectClass.Apply.Postfix, unit: {unit.CharacterName.orange()} - skip - lvl:{state.NextClassLevel} vs {cl.Level} ".green());
+                        return;
+                    }
                     // get multi-class setting
                     bool useDefaultMulticlassOptions = state.IsCharGen();
                     var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
-                    Mod.Trace($"SelectClass.Apply.Postfix, unit: {unit.CharacterName} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isPHChar: {unit.CharacterName == "Player Character"}".cyan().bold());
+                    Mod.Trace($"SelectClass.Apply.Postfix, unit: {unit.CharacterName.orange()} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isPHChar: {unit.CharacterName == "Player Character"} level: {state.NextClassLevel.ToString().yellow()}".cyan().bold());
 
                     if (options == null || options.Count == 0)
                         return;
@@ -147,7 +153,7 @@ namespace ToyBox.Multiclass {
             private static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
-                    //Main.Log($"ApplyClassMechanics.Apply.Postfix - unit: {unit} {unit.CharacterName}");
+                    Mod.Log($"ApplyClassMechanics.Apply.Postfix - unit: {unit} {unit.CharacterName}");
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
                             unit.SetClassIsGestalt(state.SelectedClass, true);
@@ -157,7 +163,7 @@ namespace ToyBox.Multiclass {
                         });
                     }
                     var allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
-                    //Main.Log($"ApplyClassMechanics.Apply.Postfix - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
+                    Mod.Log($"ApplyClassMechanics.Apply.Postfix - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
                     allAppliedClasses.Add(state.SelectedClass);
                     SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
                     HPDice.ApplyHPDice(unit, state, allAppliedClasses.ToArray());

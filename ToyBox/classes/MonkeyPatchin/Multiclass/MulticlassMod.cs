@@ -150,7 +150,7 @@ namespace ToyBox.Multiclass {
             set => settings.toggleMulticlass = value;
         }
         #region Utilities
-
+        
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
             var selectedClass = state.SelectedClass;
