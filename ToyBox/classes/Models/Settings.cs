@@ -212,6 +212,7 @@ namespace ToyBox {
         public bool toggleIgnoreCasterTypeSpellLevel = false;
         public bool toggleIgnoreForbiddenArchetype = false;
         public bool toggleIgnorePrerequisiteStatValue = false;
+        public bool toggleIgnorePrerequisiteClassLevel = false;
         public bool toggleIgnoreAlignmentWhenChoosingClass = false;
         public bool toggleIgnoreFeaturePrerequisitesWhenChoosingClass = false;  // TODO - implement
         public bool toggleIgnoreForbiddenFeatures = false;
