@@ -72,6 +72,7 @@ namespace ToyBox {
                 () => UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref settings.toggleIgnoreCasterTypeSpellLevel),
                 () => UI.Toggle("Ignore Forbidden Archetypes", ref settings.toggleIgnoreForbiddenArchetype),
                 () => UI.Toggle("Ignore Required Stat Values", ref settings.toggleIgnorePrerequisiteStatValue),
+                () => UI.Toggle("Ignore Required Class Levels", ref settings.toggleIgnorePrerequisiteClassLevel),
                 () => UI.Toggle("Ignore Alignment When Choosing A Class", ref settings.toggleIgnoreAlignmentWhenChoosingClass),
                 () => UI.Toggle("Ignore Prerequisite Features (like Race) when choosing Class", ref settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass),
 #if false // This is incredibly optimistic and requires resolving a bunch of conflicts with the existing gestalt and scroll copy logic

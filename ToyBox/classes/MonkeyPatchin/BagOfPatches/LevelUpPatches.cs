@@ -352,6 +352,20 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(PrerequisiteClassLevel), "CheckInternal")]
+        public static class PrerequisiteClassLevel_Check_Patch {
+            public static void Postfix(
+                    [CanBeNull] FeatureSelectionState selectionState,
+                    [NotNull] UnitDescriptor unit,
+                    [CanBeNull] LevelUpState state,
+                    ref bool __result) {
+                if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
+                if (settings.toggleIgnorePrerequisiteClassLevel) {
+                    __result = true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(PrerequisiteFeature))]
         public static class PrerequisiteFeature_CheckInternal_Patch {
             [HarmonyPostfix]
