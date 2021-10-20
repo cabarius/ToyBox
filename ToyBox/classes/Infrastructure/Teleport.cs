@@ -16,6 +16,12 @@ using Kingmaker.Utility;
 using Kingmaker.EntitySystem.Persistence;
 using ModKit;
 using UnityModManagerNet;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
+using Kingmaker.Visual.LocalMap;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
+using Kingmaker.Blueprints.Area;
+using Kingmaker.Designers;
+using System.Linq;
 
 namespace ToyBox {
     public static class Teleport {
@@ -24,10 +30,24 @@ namespace ToyBox {
 
         public static void TeleportUnit(UnitEntityData unit, Vector3 position) {
             var view = unit.View;
+            var localMap = Game.Instance?.UI.Canvas?.transform?.Find("ServiceWindowsPCView/LocalMapPCView");
+            if (localMap?.gameObject.activeSelf ?? false) {
+                var localMapView = localMap.GetComponent<LocalMapPCView>();
+                var viewModel = localMapView.ViewModel;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(localMapView.m_Image.rectTransform, (Vector2)Input.mousePosition, Game.Instance.UI.UICamera, out var localPoint);
+                var localPos = localPoint + Vector2.Scale(localMapView.m_Image.rectTransform.sizeDelta, localMapView.m_Image.rectTransform.pivot);
+                Vector3 vector3 = LocalMapRenderer.Instance.ViewportToWorldPoint((Vector3)new Vector2(localPos.x / (float)viewModel.DrawResult.Value.ColorRT.width, localPos.y / (float)viewModel.DrawResult.Value.ColorRT.height));
+                if (!LocalMapModel.IsInCurrentArea(vector3))
+                    vector3 = AreaService.Instance.CurrentAreaPart.Bounds.LocalMapBounds.ClosestPoint(vector3);
+                Mod.Debug($"PointerPosition - adjusting result {position} to {vector3}");
+                Game.Instance.UI.GetCameraRig().ScrollTo(vector3);
+                position = vector3;
+            }
 
             if (view != null) view.StopMoving();
 
             unit.Stop();
+
             unit.Position = position;
 
             foreach (var fam in unit.Familiars) {
@@ -102,7 +122,7 @@ namespace ToyBox {
                 }
                 foreach (var edge in pointState.Edges) {
                     edge.UpdateExplored(1f, 1);
-                    globalMapView.GetEdgeView(edge.Blueprint).UpdateRenderers();
+                    globalMapView.GetEdgeView(edge.Blueprint)?.UpdateRenderers();
 
                 }
                 globalMapController.StartTravels();
@@ -112,27 +132,29 @@ namespace ToyBox {
                 globalMapView.UpdatePawnPosition();
                 globalMapController.Stop();
                 EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped((IGlobalMapTraveler)globalMapView.State.Player)));
-                globalMapView.PlayerPawn.m_Compass.TryClear();
-                globalMapView.PlayerPawn.m_Compass.TrySet();
-#if false
-                globalMapView.TeleportParty(globalMapPoint);
-                globalMapUI.HandleGlobalMapPlayerTravelStopped(globalMapState.Player);
-                     GlobalMapPointState pointState = Game.Instance.Player.GlobalMap.GetPointState(globalMapPoint);
-                pointState.EdgesOpened = true;
-                pointState.Reveal();
-                GlobalMapPointView pointView = globalMapView.GetPointView(globalMapPoint);
-                pointView?.OpenOutgoingEdges((GlobalMapPointView)null);
-                globalMapView.RevealLocation(pointView);
-                if ((bool)(UnityEngine.Object)globalMapView) {
-                    if ((bool)(UnityEngine.Object)pointView)
-                        globalMapView.RevealLocation(pointView);
-                }
-                globalMapView.UpdatePawnPosition();
-                pointState.LastVisited = Game.Instance.TimeController.GameTime;
-#endif
+                globalMapView.PlayerPawn?.m_Compass?.TryClear();
+                globalMapView.PlayerPawn?.m_Compass?.TrySet();
                 return true;
             }
             return false;
+        }
+
+        public static void To(this BlueprintAreaEnterPoint enterPoint) => GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+        public static void To(this BlueprintGlobalMap globalMap) => GameHelper.EnterToArea(globalMap.GlobalMapEnterPoint, AutoSaveMode.None);
+        public static void To(this BlueprintArea area) {
+            var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
+            var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
+            if (blueprint is BlueprintAreaEnterPoint enterPoint) {
+                GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+            }
+        }
+        public static void To(this BlueprintGlobalMapPoint globalMapPoint) {
+            Game.Instance.LoadArea(globalMapPoint.GlobalMap.GlobalMapEnterPoint, AutoSaveMode.None, () => {
+                Teleport.TeleportToGlobalMapPoint(globalMapPoint);
+            });
+            //if (!Teleport.TeleportToGlobalMapPoint(globalMapPoint)) {
+            //    Teleport.TeleportToGlobalMap(() => Teleport.TeleportToGlobalMapPoint(globalMapPoint));
+            //}
         }
 
         internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {

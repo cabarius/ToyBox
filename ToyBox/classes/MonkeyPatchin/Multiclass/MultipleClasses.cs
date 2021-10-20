@@ -415,42 +415,4 @@ namespace ToyBox.Multiclass {
 #endif
     }
 }
-#if false
-                //charGenClassPhaseVM.LevelUpController.SelectClass(viewModel.Class);
-                //charGenClassPhaseVM.UpdateClassInformation();
-                //charGenClassPhaseVM.SelectedClassVM.Value = viewModel;
-                //Game.Instance.ScheduleAction(() => {
-                //    charGenClassPhaseVM.SelectedClassVM.Value = selectedClassVM;
-                //});
-                var charGenPCViewTransform = Game.Instance.UI.Canvas.transform.Find("ChargenPCView");
-                var charGenPCView = charGenPCViewTransform.GetComponent<CharGenPCView>();
-                var charGenViewModel = charGenPCView.ViewModel;
-                charGenViewModel.PreviewUnit.SetValueAndForceNotify(Game.Instance.LevelUpController.Preview);
 
-
-                var levelupController = Game.Instance.LevelUpController;
-                var selectedClass = levelUpController.State.SelectedClass;
-                levelUpController.SelectClass(selectedClass);
-
-
-                var charGenPCViewTransform = Game.Instance.UI.Canvas.transform.Find("ChargenPCView");
-                var charGenPCView = charGenPCViewTransform.GetComponent<CharGenPCView>();
-                var charGenViewModel = charGenPCView.ViewModel;
-                //charGenViewModel.PreviewUnit.SetValueAndForceNotify(Game.Instance.LevelUpController.Preview);
-                charGenViewModel.UpdateAllPhases();
-                var multicheckbox = instance.transform.Find("MulticlassCheckbox-ToyBox");
-                // this is one way to try to force an update to the other view
-                var charGemClassPhaseDetailedView = Game.Instance.UI.Canvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/PhaseClassDetaildPCView");
-                var phaseClassDetailView = charGemClassPhaseDetailedView.GetComponent<Kingmaker.UI.MVVM._PCView.CharGen.Phases.Class.CharGenClassPhaseDetailedPCView>();
-                var charGenClassPhaseVM = phaseClassDetailView.ViewModel;
-                charGenClassPhaseVM.UpdateClassInformation();
-                // this is the other
-                var progressionView = Game.Instance.UI.Canvas.transform.Find("ChargenPCView/ContentWrapper/ProgressionView");
-                var charGenProgressionView = progressionView.GetComponent<CharGenProgressionPCView>();
-                var unitProgressionVM = charGenProgressionView.ViewModel;
-                Mod.Debug($"unitProgressionView {charGenProgressionView}");
-                unitProgressionVM.SetJustGotClass(Game.Instance.LevelUpController.State.SelectedClass);
-                unitProgressionVM.RefreshData();
-                charGenProgressionView.RefreshView();
-                viewModel.LevelUpController.UpdatePreview();
-#endif

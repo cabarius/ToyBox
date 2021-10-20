@@ -310,23 +310,10 @@ namespace ToyBox {
             });
 
             // Teleport
-            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (bp, ch, n, index) => GameHelper.EnterToArea(bp, AutoSaveMode.None));
-            BlueprintAction.Register<BlueprintGlobalMap>("Teleport", (bp, ch, n, index) => GameHelper.EnterToArea(bp.GlobalMapEnterPoint, AutoSaveMode.None));
-
-            BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n, index) => {
-                var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
-                var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
-
-                if (blueprint is BlueprintAreaEnterPoint enterPoint) {
-                    GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
-                }
-            });
-
-            BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, index) => {
-                if (!Teleport.TeleportToGlobalMapPoint(globalMapPoint)) {
-                    Teleport.TeleportToGlobalMap(() => Teleport.TeleportToGlobalMapPoint(globalMapPoint));
-                }
-            });
+            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (enterPoint, ch, n, index) => Teleport.To(enterPoint));
+            BlueprintAction.Register<BlueprintGlobalMap>("Teleport", (map, ch, n, index) => Teleport.To(map));
+            BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n, index) => Teleport.To(area));
+            BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, index) => Teleport.To(globalMapPoint));
 
             //Army
             BlueprintAction.Register<BlueprintArmyPreset>("Add", (bp, ch, n, l) => {

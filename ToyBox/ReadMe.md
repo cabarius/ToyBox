@@ -37,11 +37,17 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 **Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.5 (Coming Later)
+### Ver 1.4.6 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
-* **Quest Editor** you can now teleport to stages of quest progression when available
-### Ver 1.4.4 (for beta 1.1)
+### Ver 1.4.5 (for beta)
+* **Bag of Tricks**
+  * Teleport keys now work on the local map
+* **Quest Editor** 
+  * you can now teleport to stages of quest progression when available
+* **Teleportation**
+  * Teleporting to global map points now work across the global map and kenabres map
+### Ver 1.4.4 (for beta)
 * **Ported to Beta** (Game Version 1.1.0d)
 * **Bag of Tricks** Made spell acronyms default to off as intended (sorry about that)
 ### Ver 1.4.3.1 (use this for current non beta until 1.1.x releases)
