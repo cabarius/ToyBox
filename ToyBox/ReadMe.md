@@ -43,6 +43,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.5 (for beta)
 * **Bag of Tricks**
   * Teleport keys now work on the local map
+* **Level Up & Multiclass**
+  * ***(Aephiex)*** Added new toggle 'Ignore Required Class Levels'
 * **Quest Editor** 
   * you can now teleport to stages of quest progression when available
 * **Teleportation**
