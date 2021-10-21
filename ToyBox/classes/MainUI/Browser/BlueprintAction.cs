@@ -116,6 +116,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintUnit>("Spawn",
                                                     (bp, ch, n, index) => Actions.SpawnUnit(bp, n), isRepeatable: true);
 
+            // Features
             BlueprintAction.Register<BlueprintFeature>("Add",
                                                        (bp, ch, n, index) => ch.Progression.Features.AddFeature(bp),
                                                        (bp, ch, index) => !ch.Progression.Features.HasFact(bp));
@@ -123,6 +124,73 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintFeature>("Remove",
                                                        (bp, ch, n, index) => ch.Progression.Features.RemoveFact(bp),
                                                        (bp, ch, index) => ch.Progression.Features.HasFact(bp));
+            BlueprintAction.Register<BlueprintFeature>("<",
+                                           (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
+                                           (bp, ch, index) => {
+                                               var feature = ch.Progression.Features.GetFact(bp);
+                                               return feature?.GetRank() > 1;
+                                           });
+
+            BlueprintAction.Register<BlueprintFeature>(">",
+                                                       (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.AddRank(),
+                                                       (bp, ch, index) => {
+                                                           var feature = ch.Progression.Features.GetFact(bp);
+                                                           return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
+                                                       });
+            // Paramaterized Feature
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
+                 (bp, ch, n, index) => {
+                     var value = bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param;
+                     ch?.Descriptor?.AddFact<UnitFact>(bp, null, value);
+                 },
+                (bp, ch, index) => {
+                    var value = bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param;
+                    var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
+                    return existing == null;
+                });
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove",
+                (bp, ch, n, index) => {
+                    var value = bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param;
+                    var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
+                    ch?.Progression?.Features?.RemoveFact(fact);
+                },
+                (bp, ch, index) => {
+                    var value = bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param;
+                    var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
+                    return existing != null;
+                });
+            // Feature Selection
+            BlueprintAction.Register<BlueprintFeatureSelection>("Add",
+                 (bp, ch, n, index) => {
+                     var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                     var source = new FeatureSource();
+                     ch?.Descriptor?.Progression.Features.AddFeature(bp).SetSource(source, 1);
+                     ch?.Progression?.AddSelection(bp, source, 1, value);
+
+                 },
+                (bp, ch, index) => {
+                    var progression = ch?.Descriptor?.Progression;
+                    if (progression == null) return false;
+                    if (!progression.Features.HasFact(bp)) return true;
+                    var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                    if (progression.Selections.TryGetValue(bp, out var selection)) {
+                        if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == value))) return false;
+                    }
+                    return true;
+                });
+            BlueprintAction.Register<BlueprintFeatureSelection>("Remove",
+                (bp, ch, n, index) => {
+                    var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                    var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
+                    ch?.Progression?.Features?.RemoveFact(fact);
+                },
+                (bp, ch, index) => {
+                    var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                    var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
+                    return existing != null;
+                });
+
+            // Facts
             BlueprintAction.Register<BlueprintUnitFact>("Add",
                                                        (bp, ch, n, index) => ch.AddFact(bp),
                                                        (bp, ch, index) => !ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
@@ -131,26 +199,6 @@ namespace ToyBox {
                                                        (bp, ch, n, index) => ch.RemoveFact(bp),
                                                        (bp, ch, index) => ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
-                (bp, ch, n, index) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param),
-                (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param) == null);
-
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove", (bp, ch, n, index) => ch?.Progression?.Features?.RemoveFact(ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param)),
-                                                       (bp, ch, index) => ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param) != null);
-
-            BlueprintAction.Register<BlueprintFeature>("<",
-                                                       (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
-                                                       (bp, ch, index) => {
-                                                           var feature = ch.Progression.Features.GetFact(bp);
-                                                           return feature?.GetRank() > 1;
-                                                       });
-
-            BlueprintAction.Register<BlueprintFeature>(">",
-                                                       (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.AddRank(),
-                                                       (bp, ch, index) => {
-                                                           var feature = ch.Progression.Features.GetFact(bp);
-                                                           return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
-                                                       });
             //BlueprintAction.Register<BlueprintArchetype>(
             //    "Add",
             //    (bp, ch, n, index) => ch.Progression.AddArchetype(ch.Progression.Classes.First().CharacterClass, bp),

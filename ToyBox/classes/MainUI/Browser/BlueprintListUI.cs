@@ -24,6 +24,7 @@ namespace ToyBox {
         public static bool needsLayout = true;
         public static int[] ParamSelected = new int[1000];
         public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
+        public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
         public static void OnGUI(UnitEntityData unit,
             IEnumerable<SimpleBlueprint> blueprints,
@@ -210,6 +211,36 @@ namespace ToyBox {
                                     ref ParamSelected[currentCount],
                                     nameStrings,
                                     6,
+                                    (selected) => { },
+                                    GUI.skin.toggle,
+                                    UI.Width(remWidth)
+                                );
+                                //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
+                            }
+                            UI.Space(15);
+                        }
+                    }
+                }
+                if (blueprint is BlueprintFeatureSelection selectionBP) {
+                    using (UI.HorizontalScope()) {
+                        UI.Space(titleWidth);
+                        using (UI.VerticalScope()) {
+                            using (UI.HorizontalScope(GUI.skin.button)) {
+                                var content = new GUIContent($"{selectionBP.Name.yellow()}");
+                                var labelWidth = GUI.skin.label.CalcSize(content).x;
+                                UI.Space(indent);
+                                //UI.Space(indent + titleWidth - labelWidth - 25);
+                                UI.Label(content, UI.Width(labelWidth));
+                                UI.Space(25);
+                                var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
+                                if (nameStrings == null) {
+                                    nameStrings = selectionBP.AllFeatures.Select(x => selectionBP.Name.Length > 0 ? x.Name.Replace(selectionBP.Name, "") : x.Name).OrderBy(x => x).ToArray();
+                                    selectionBPValuesNames[selectionBP] = nameStrings;
+                                }
+                                UI.ActionSelectionGrid(
+                                    ref ParamSelected[currentCount],
+                                    nameStrings,
+                                    4,
                                     (selected) => { },
                                     GUI.skin.toggle,
                                     UI.Width(remWidth)

@@ -44,7 +44,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Bag of Tricks**
   * Teleport keys now work on the local map
 * **Level Up & Multiclass**
+  * If multiclass or ignore class and feat restrictions is set you can see a full range of class choices for pets
   * ***(Aephiex)*** Added new toggle 'Ignore Required Class Levels'
+* **Search 'n Pick**
+  * You can now add feature selections such as Deity, 
 * **Quest Editor** 
   * you can now teleport to stages of quest progression when available
 * **Teleportation**

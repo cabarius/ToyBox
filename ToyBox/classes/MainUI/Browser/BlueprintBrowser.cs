@@ -51,6 +51,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames( bp.Groups.Select(g => g.ToString()).ToArray())),
             new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string> {bp.ParameterType.ToString() }),
+            new NamedTypeFilter<BlueprintFeatureSelection>("Feature Selection", null, bp => bp.CollationNames(bp.Group.ToString(), bp.Group2.ToString())),
             new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames("Standard")),
                                                                           //bp => bp.IsArcaneCaster ? "Arcane"
                                                                           //    : bp.IsDivineCaster ? "Divine"

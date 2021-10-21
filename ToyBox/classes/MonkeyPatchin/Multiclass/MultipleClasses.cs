@@ -28,6 +28,10 @@ using Kingmaker.UI.MVVM._PCView.ServiceWindows.CharacterInfo.Sections.Progressio
 using Kingmaker.UI.MVVM._PCView.CharGen;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Mythic;
 using Kingmaker.UI.MVVM._VM.Party;
+using Kingmaker.Blueprints.Root;
+using Kingmaker.Blueprints;
+using Kingmaker.DLC;
+using Kingmaker.UI.MVVM._VM.Other.NestedSelectionGroup;
 
 namespace ToyBox.Multiclass {
     public static partial class MultipleClasses {
@@ -58,7 +62,7 @@ namespace ToyBox.Multiclass {
                     if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)
                         && ch.TryGetClass(state.SelectedClass, out var cl)
                         && unit != ch.Descriptor
-                        && state.NextClassLevel <= cl.Level 
+                        && state.NextClassLevel <= cl.Level
                         ) {
                         Mod.Debug($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} isCH: {unit == ch.Descriptor}) - skip - lvl:{state.NextClassLevel} vs {cl.Level} ".green());
                         return;
@@ -130,9 +134,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#endregion
+        #endregion
 
-#region Skills & Features
+        #region Skills & Features
 
         [HarmonyPatch(typeof(LevelUpController))]
         [HarmonyPatch("ApplyLevelup")]
@@ -233,9 +237,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#endregion
+        #endregion
 
-#region Spellbook
+        #region Spellbook
 
         [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         private static class ApplySpellbook_Apply_Patch {
@@ -253,9 +257,9 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#endregion
+        #endregion
 
-#region Commit
+        #region Commit
 
         [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
         private static class LevelUpController_Commit_Patch {
@@ -277,7 +281,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
-#endregion
+        #endregion
 
         [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.SetupLevelsIfNecessary))]
         private static class UnitProgressionData_SetupLevelsIfNecessary_Patch {
@@ -288,8 +292,38 @@ namespace ToyBox.Multiclass {
                 return false;
             }
         }
-
-#if true
+        [HarmonyPatch(typeof(CharGenClassPhaseVM), nameof(CharGenClassPhaseVM.CreateClassListSelector))]
+        private static class CharGenClassPhaseVM_CreateClassListSelector_Patch {
+            private static bool Prefix(CharGenClassPhaseVM __instance) {
+                if (settings.toggleMulticlass || settings.toggleIgnoreClassAndFeatRestrictions) {
+                    var progression = Game.Instance.BlueprintRoot.Progression;
+                    __instance.m_ClassesVMs = (__instance.LevelUpController.State.Mode == LevelUpState.CharBuildMode.Mythic
+                        ? __instance.GetMythicClasses()
+                        : (__instance.LevelUpController.Unit.IsPet
+                            ? progression.PetClasses.Concat(progression.CharacterClasses.OrderBy(cl => cl.Name))
+                            : progression.CharacterClasses)
+                        )
+                        .Where(cls => {
+                            if (cls.IsDlcRestricted())
+                                return false;
+                            return CharGenClassPhaseVM.MeetsPrerequisites(__instance.LevelUpController, cls) || !cls.HideIfRestricted;
+                        })
+                        .Select(cls => new CharGenClassSelectorItemVM(
+                                                cls,
+                                                null,
+                                                __instance.LevelUpController,
+                                                __instance,
+                                                __instance.SelectedArchetypeVM,
+                                                __instance.ReactiveTooltipTemplate,
+                                                CharGenClassPhaseVM.IsClassAvailable(__instance.LevelUpController, cls),
+                                                true, false))
+                        .ToList<CharGenClassSelectorItemVM>();
+                    __instance.ClassSelector = new NestedSelectionGroupRadioVM<CharGenClassSelectorItemVM>((INestedListSource)__instance);
+                    return false;
+                }
+                return true;
+            }
+        }
         public static class MulticlassCheckBoxHelper {
             public static void UpdateCheckbox(CharGenClassSelectorItemPCView instance) {
                 if (instance == null) return;
@@ -412,7 +446,6 @@ namespace ToyBox.Multiclass {
                 chooseClass.GetComponentInChildren<TextMeshProUGUI>().text = settings.toggleMulticlass ? "Choose Class <size=67%>(Checkbox for multiclass)</size>" : class_selection_text_initial;
             }
         }
-#endif
     }
 }
 
