@@ -47,11 +47,11 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Teleport keys now work on the local map
 * **Level Up & Multiclass**
   * If multiclass or ignore class and feat restrictions is set you can see a full range of class choices for pets
-    * **Warning** *this is experimental so save early and often**
+    * **Warning** *this is experimental so save early and often*
   * ***(Aephiex)*** Added new toggle 'Ignore Required Class Levels'
 * **Search 'n Pick**
   * You can now add feature selections such as Deity.  
-    * **Warning** *this is experimental so save early and often**
+    * **Warning** *this is experimental so save early and often*
 * **Etude Editor**
   * You now have actions inside the Etude Elements which may be useful for quite a few things
   * Shows the state of conditional elements 
