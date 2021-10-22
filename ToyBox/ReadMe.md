@@ -40,7 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.6 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
-### Ver 1.4.5
+### Ver 1.4.5 (Universal -- works on mainline and beta)
 * **General**
   * 1.4.5 is now cross compatible between beta and mainline
 * **Bag of Tricks**
@@ -53,7 +53,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * You can now add feature selections such as Deity.  
     * **Warning** *this is experimental so save early and often**
 * **Etude Editor**
-  * You now have actions inside the Etude Elements which may be useful for quie a few things
+  * You now have actions inside the Etude Elements which may be useful for quite a few things
   * Shows the state of conditional elements 
 * **Quest Editor** 
   * you can now teleport to stages of quest progression when available
