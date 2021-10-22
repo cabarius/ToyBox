@@ -37,6 +37,7 @@ namespace ToyBox {
         public string Comment;
         public ToggleState ShowChildren;
         public ToggleState ShowElements;
+        public ToggleState ShowActions;
         public bool hasSearchResults;
         public List<BlueprintGuid> ConflictingGroups = new();
         public int Priority;

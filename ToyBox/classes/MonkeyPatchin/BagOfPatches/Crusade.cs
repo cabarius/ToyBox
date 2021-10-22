@@ -36,7 +36,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(TacticalCombatHelper), "GetSpellPower")]
         public static class TacticalCombatHelper_GetSpellPower_Patch {
-            public static void Postfix(ref int __result, UnitEntityData unit) {
+            public static void Postfix(ref int __result, [HarmonyArgument(0)] UnitEntityData unit) {
                 var leaderPowerMultiplier = unit.Get<UnitPartLeaderTacticalCombat>()?.LeaderData.Faction != ArmyFaction.Crusaders
                     ? Settings.enemyLeaderPowerMultiplier
                     : Settings.playerLeaderPowerMultiplier;

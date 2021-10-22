@@ -13,6 +13,9 @@ using ModKit;
 using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.ElementsSystem;
+using ModKit.Utility;
+using System.Reflection;
 
 namespace ToyBox {
     public static class EtudesEditor {
@@ -188,7 +191,13 @@ namespace ToyBox {
                 var etudeInfo = loadedEtudes[etudeID];
                 var name = etude.Name;
                 if (etude.hasSearchResults || searchText.Length == 0 || name.ToLower().Contains(searchText.ToLower())) {
-                    using (UI.HorizontalScope()) {
+                    var components = etude.Blueprint.Components;
+                    //var gameActions = etude.Blueprint.ComponentsArray.SelectMany(c => {
+                    //    var actionsField = c.GetType().GetField("Actions");
+                    //    var actionList = (ActionList)actionsField?.GetValue(c);
+                    //    return actionList?.Actions ?? new GameAction[] { };
+                    //}).ToList();
+                    using (UI.HorizontalScope(UI.ExpandWidth(true))) {
                         using (UI.HorizontalScope(UI.Width(310))) {
                             var actions = etude.Blueprint.GetActions().Where(action => action.canPerform(etude.Blueprint, null));
                             foreach (var action in actions) {
@@ -201,7 +210,7 @@ namespace ToyBox {
                         style.fontStyle = FontStyle.Normal;
                         if (selected == etudeID) name = name.orange().bold();
 
-                        using (UI.HorizontalScope(UI.Width(625))) {
+                        using (UI.HorizontalScope(UI.Width(825))) {
                             if (etudeInfo.ChildrenId.Count == 0) etudeInfo.ShowChildren = ToggleState.None;
                             UI.ToggleButton(ref etudeInfo.ShowChildren, name.orange().bold(), (state) => OpenCloseAllChildren(etudeInfo, state));
                             UI.Space(25);
@@ -210,7 +219,11 @@ namespace ToyBox {
                                 UI.ToggleButton(ref etude.ShowElements, $"{eltCount} elements", UI.Width(75));
                             else
                                 UI.Space(78);
-                            UI.Space(25);
+                            UI.Space(126);
+                            //if (gameActions.Count > 0)
+                            //    UI.ToggleButton(ref etude.ShowActions, $"{gameActions.Count} actions", UI.Width(75));
+                            //else
+                            //    UI.Space(78);
                         }
                         //UI.ActionButton(UI.DisclosureGlyphOff + ">", () => OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout), GUI.skin.box, UI.AutoWidth());
                         //if (GUILayout.Button("Select", GUI.skin.box, UI.Width(100))) {
@@ -249,16 +262,31 @@ namespace ToyBox {
 #endif
                     }
                     if (etude.ShowElements.IsOn()) {
-                        using (UI.HorizontalScope()) {
+                        using (UI.HorizontalScope(UI.ExpandWidth(true))) {
                             UI.Space(310);
                             UI.Indent(indent + 2);
                             using (UI.VerticalScope()) {
                                 foreach (var element in etude.Blueprint.m_AllElements) {
-                                    using (UI.HorizontalScope()) {
+                                    using (UI.HorizontalScope(UI.Width(2000))) {
                                         // UI.Label(element.NameSafe().orange()); -- this is useless at the moment
-                                        UI.Label(element.ToString().yellow() ?? "?", UI.Width(450));
+                                        using (UI.HorizontalScope(450)) {
+                                            if (element is GameAction gameAction) {
+                                                try {
+                                                    UI.ActionButton(gameAction.GetCaption().yellow(), gameAction.RunAction);
+                                                }
+                                                catch (Exception e) {
+                                                    Mod.Warn($"{gameAction.GetCaption()} failed to run {e.ToString().yellow()}");
+                                                }
+                                            }
+                                            else
+                                                UI.Label(element.GetCaption().yellow() ?? "?");
+                                            UI.Space(0);
+                                        }
                                         UI.Space(25);
-                                        UI.Label(element.GetType().Name.cyan(), UI.Width(250));
+                                        if (element is Condition condition)
+                                            UI.Label($"{element.GetType().Name.cyan()} : {condition.CheckCondition().ToString().orange()}", UI.Width(250));
+                                        else
+                                            UI.Label(element.GetType().Name.cyan(), UI.Width(250));
                                         UI.Space(25);
                                         UI.Label(element.GetDescription().green());
 
@@ -277,9 +305,20 @@ namespace ToyBox {
                             }
                         }
                     }
+                    //if (etude.ShowActions.IsOn()) {
+                    //    foreach (var action in gameActions) {
+                    //        using (UI.HorizontalScope()) {
+                    //            UI.Space(310);
+                    //            UI.Indent(indent + 2);
+                    //            UI.ActionButton(action.GetCaption(), action.RunAction);
+                    //            UI.Space(25);
+                    //            UI.Label(action.GetDescription().green());
+                    //        }
+                    //    }
+                    //}
+                    lineNumber += 1;
                 }
             }
-            lineNumber += 1;
         }
         private static void ShowBlueprintsTree() {
             using (UI.VerticalScope()) {
