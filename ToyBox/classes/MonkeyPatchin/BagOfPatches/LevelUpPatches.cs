@@ -358,10 +358,13 @@ namespace ToyBox.BagOfPatches {
                     [CanBeNull] FeatureSelectionState selectionState,
                     [NotNull] UnitDescriptor unit,
                     [CanBeNull] LevelUpState state,
+                    PrerequisiteClassLevel __instance,
                     ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
-                if (settings.toggleIgnorePrerequisiteClassLevel) {
-                    __result = true;
+                if (!__result && settings.toggleIgnorePrerequisiteClassLevel) {
+                    var characterClass = (BlueprintCharacterClass)(__instance.m_CharacterClass).GetBlueprint();
+                    if (!characterClass.HideIfRestricted && !characterClass.IsMythic)
+                        __result = true;
                 }
             }
         }
