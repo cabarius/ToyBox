@@ -61,7 +61,6 @@ namespace ToyBox {
         }
 
         public static IEnumerable<BlueprintAction> ActionsForBlueprint(SimpleBlueprint bp) => ActionsForType(bp.GetType());
-
         public static void Register<T>(string name, BlueprintAction<T>.Perform perform, BlueprintAction<T>.CanPerform canPerform = null, bool isRepeatable = false) where T : SimpleBlueprint {
             var action = new BlueprintAction<T>(name, perform, canPerform, isRepeatable);
             var type = action.BlueprintType;
@@ -103,7 +102,22 @@ namespace ToyBox {
 
     public static class BlueprintActions {
         public static IEnumerable<BlueprintAction> GetActions(this SimpleBlueprint bp) => BlueprintAction.ActionsForBlueprint(bp);
-
+        private static Dictionary<BlueprintParametrizedFeature, IFeatureSelectionItem[]> parametrizedSelectionItems = new();
+        public static IFeatureSelectionItem ParametrizedSelectionItems(this BlueprintParametrizedFeature feature, int index) {
+            if (parametrizedSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null ;
+            value = feature.Items.OrderBy(x => x.Name).ToArray();
+            if (value == null) return null;
+            parametrizedSelectionItems[feature] = value;
+            return index < value.Length ? value[index] : null;
+        }
+        private static Dictionary<BlueprintFeatureSelection, BlueprintFeature[]> featureSelectionItems = new();
+        public static BlueprintFeature FeatureSelectionItems(this BlueprintFeatureSelection feature, int index) {
+            if (featureSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null;
+            value = feature.AllFeatures.OrderBy(x => x.Name).ToArray();
+            if (value == null) return null;
+            featureSelectionItems[feature] = value;
+            return index < value.Length ? value[index] : null;
+        }
         public static void InitializeActions() {
             var flags = Game.Instance.Player.UnlockableFlags;
             BlueprintAction.Register<BlueprintItem>("Add",
@@ -140,29 +154,30 @@ namespace ToyBox {
             // Paramaterized Feature
             BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
                  (bp, ch, n, index) => {
-                     var value = bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param;
+                     var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
                      ch?.Descriptor?.AddFact<UnitFact>(bp, null, value);
                  },
                 (bp, ch, index) => {
-                    var value = bp.Items.OrderBy(x => x.Name).ElementAt(BlueprintListUI.ParamSelected[index]).Param;
+                    var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing == null;
                 });
             BlueprintAction.Register<BlueprintParametrizedFeature>("Remove",
                 (bp, ch, n, index) => {
-                    var value = bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param;
+                    var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
                     var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     ch?.Progression?.Features?.RemoveFact(fact);
                 },
                 (bp, ch, index) => {
-                    var value = bp.Items.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]].Param;
+                    if (bp.Items.Count() == 0) return false;
+                    var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing != null;
                 });
             // Feature Selection
             BlueprintAction.Register<BlueprintFeatureSelection>("Add",
                  (bp, ch, n, index) => {
-                     var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                     var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
                      var source = new FeatureSource();
                      ch?.Descriptor?.Progression.Features.AddFeature(bp).SetSource(source, 1);
                      ch?.Progression?.AddSelection(bp, source, 1, value);
@@ -172,7 +187,7 @@ namespace ToyBox {
                     var progression = ch?.Descriptor?.Progression;
                     if (progression == null) return false;
                     if (!progression.Features.HasFact(bp)) return true;
-                    var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                    var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
                     if (progression.Selections.TryGetValue(bp, out var selection)) {
                         if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == value))) return false;
                     }
@@ -181,7 +196,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintFeatureSelection>("Remove",
                 (bp, ch, n, index) => {
                     var progression = ch?.Descriptor?.Progression;
-                    var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                    var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
                     //Feature fact = progression.Features.GetFact(bp);
                     var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     var selections = ch?.Descriptor?.Progression.Selections;
@@ -207,7 +222,7 @@ namespace ToyBox {
                     var progression = ch?.Descriptor?.Progression;
                     if (progression == null) return false;
                     if (!progression.Features.HasFact(bp)) return false;
-                    var value = bp.AllFeatures.OrderBy(x => x.Name).ToArray()[BlueprintListUI.ParamSelected[index]];
+                    var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
                     if (progression.Selections.TryGetValue(bp, out var selection)) {
                         if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == value))) return true;
                     }

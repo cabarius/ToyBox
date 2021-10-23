@@ -26,5 +26,23 @@
     "Alt": false,
     "Cmd": false,
     "Shift": false
+  },
+  "InventoryUseModifier": {
+    "$id": "5",
+    "ID": "InventoryUseModifier",
+    "Key": "LeftAlt",
+    "Ctrl": false,
+    "Alt": false,
+    "Cmd": false,
+    "Shift": false
+  },
+  "ClickToTransferModifier": {
+    "$id": "6",
+    "ID": "ClickToTransferModifier",
+    "Key": "LeftShift",
+    "Ctrl": false,
+    "Alt": false,
+    "Cmd": false,
+    "Shift": false
   }
 }

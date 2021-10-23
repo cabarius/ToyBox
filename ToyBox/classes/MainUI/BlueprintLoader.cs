@@ -53,20 +53,17 @@ namespace ToyBox {
 #if true    // TODO - Truinto for evaluation; my result improved from 2689 to 17 milliseconds
             var loaded = 0;
             var total = 1;
-            var allGUIDs = new List<BlueprintGuid> { };
-            foreach (var key in toc.Keys) {
-                allGUIDs.Add(key);
-            }
-            total = allGUIDs.Count;
+            var allGUIDs = toc.AsEnumerable().OrderBy(e => e.Value.Offset);
+            total = allGUIDs.Count();
             Mod.Log($"Loading {total} Blueprints");
             UpdateProgress(loaded, total);
-            foreach (var guid in allGUIDs) {
+            foreach (var entry in allGUIDs) {
                 SimpleBlueprint bp;
                 try {
-                    bp = bpCache.Load(guid);
+                    bp = bpCache.Load(entry.Key);
                 }
                 catch {
-                    Mod.Warn($"cannot load GUID: {guid}");
+                    Mod.Warn($"cannot load GUID: {entry.Key}");
                     continue;
                 }
                 _blueprintsInProcess.Add(bp);

@@ -192,14 +192,22 @@ namespace ToyBox {
                 () => Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => { Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25);  UI.Label("Hold down shift during launch to bypass".green()); },
-                () => { Toggle("Allow Modifier + Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot);
+                () => {
+                    var modifier = KeyBindings.GetBinding("InventoryUseModifier");
+                    var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
+                    Toggle("Allow "+ $"{modifierText} + Click".cyan() +" To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot);
                     if (settings.toggleShiftClickToUseInventorySlot) {
-                        ModifierPicker("InventoryUseModifier", "Modifier", 0, 200);
+                        UI.Space(25);
+                        ModifierPicker("InventoryUseModifier", "", 0);
                     }
                 },
-                () => { Toggle("Allow Modifier + Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer);
+                () => {
+                    var modifier = KeyBindings.GetBinding("ClickToTransferModifier");
+                    var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
+                    Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer);
                     if(settings.toggleShiftClickToFastTransfer) {
-                        ModifierPicker("ClickToTransferModifier", "Modifier", 0, 200);
+                        UI.Space(25);
+                        ModifierPicker("ClickToTransferModifier", "", 0);
                     }
                 },
                 () => Toggle("Respec Refund Scrolls", ref settings.toggleRespecRefundScrolls),

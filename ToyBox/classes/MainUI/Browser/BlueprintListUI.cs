@@ -204,7 +204,7 @@ namespace ToyBox {
                                 UI.Space(25);
                                 var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
                                 if (nameStrings == null) {
-                                    nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray();
+                                    nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
                                     paramBPValueNames[paramBP] = nameStrings;
                                 }
                                 UI.ActionSelectionGrid(
@@ -235,7 +235,7 @@ namespace ToyBox {
                                 var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
                                 if (nameStrings == null) {
                                     var values = selectionBP.AllFeatures;
-                                    nameStrings = values.Select(x => selectionBP.Name.Length > 0 ? x.Name.Replace(selectionBP.Name, "") : x.Name).OrderBy(x => x).ToArray();
+                                    nameStrings = values.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
                                     selectionBPValuesNames[selectionBP] = nameStrings;
                                     if (unit.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
                                         var selection = selectionData.SelectionsByLevel.First().Value.First();
