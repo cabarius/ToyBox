@@ -192,8 +192,16 @@ namespace ToyBox {
                 () => Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => { Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25);  UI.Label("Hold down shift during launch to bypass".green()); },
-                () => { UI.Label("Click Modifier to use items in inventory:".cyan(), UI.Width(500)); EnumGrid(ref settings.clickModiferToUseInInventory); },
-                () => { UI.Label("Click Modifier to transfer entire stack:".cyan(), UI.Width(500)); EnumGrid(ref settings.clickModiferToFastTransfer); },
+                () => { Toggle("Allow Modifier + Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot);
+                    if (settings.toggleShiftClickToUseInventorySlot) {
+                        ModifierPicker("InventoryUseModifier", "Modifier", 0, 200);
+                    }
+                },
+                () => { Toggle("Allow Modifier + Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer);
+                    if(settings.toggleShiftClickToFastTransfer) {
+                        ModifierPicker("ClickToTransferModifier", "Modifier", 0, 200);
+                    }
+                },
                 () => Toggle("Respec Refund Scrolls", ref settings.toggleRespecRefundScrolls),
                 () => ActionButton("Fix Incorrect Main Character", () => {
                     var probablyPlayer = Game.Instance.Player?.Party?

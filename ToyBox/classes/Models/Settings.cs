@@ -106,8 +106,6 @@ namespace ToyBox {
         // Qualty of Life
         public bool highlightObjectsToggle = false;
         public bool toggleHighlightCopyableScrolls = false;
-        public UI.ClickModifier clickModiferToUseInInventory = UI.ClickModifier.Disabled;
-        public UI.ClickModifier clickModiferToFastTransfer = UI.ClickModifier.Disabled;
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;

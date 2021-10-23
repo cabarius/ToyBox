@@ -129,6 +129,17 @@ namespace ModKit {
                     return active;
                 }
             }
+            public bool IsModifierActive
+            {
+                get
+                {
+                    if (Event.current == null)
+                    {
+                        return false;
+                    }
+                    return Input.GetKey(Key);
+                }
+            }
             public string bindCode => ToString();
             public override string ToString() { // Why can't Unity display these ⌥⌃⇧⌘ ???  ⌗⌃⌥⇧⇑⌂©ăåâÂ
                 var result = "";
