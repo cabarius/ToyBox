@@ -106,6 +106,10 @@ namespace ToyBox {
         // Qualty of Life
         public bool highlightObjectsToggle = false;
         public bool toggleHighlightCopyableScrolls = false;
+        public UI.ClickModifier clickModiferToUseInInventory = UI.ClickModifier.Disabled;
+        public UI.ClickModifier clickModiferToFastTransfer = UI.ClickModifier.Disabled;
+        public bool toggleShiftClickToUseInventorySlot = false;
+        public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
         // Cheap Tricks
         public int increment = 10000;
@@ -162,8 +166,6 @@ namespace ToyBox {
         public bool toggleEquipmentNoWeight = false;
         public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
-        public bool toggleShiftClickToUseInventorySlot = false;
-        public bool toggleShiftClickToFastTransfer = false;
         public bool toggleRespecRefundScrolls = false;
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;

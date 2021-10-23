@@ -4,6 +4,22 @@ using Newtonsoft.Json;
 
 namespace ModKit {
     public static partial class UI {
+        public enum ClickModifier {
+            Disabled,
+            Shift,
+            Ctrl,
+            Alt,
+            Command
+        }
+        public static bool IsActive(this ClickModifier modifier) => modifier switch {
+            ClickModifier.Disabled => false,
+            ClickModifier.Shift => Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift),
+            ClickModifier.Ctrl => Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl),
+            ClickModifier.Alt => Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt),
+            ClickModifier.Command => Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand),
+            _ => false
+        };
+
         private static readonly HashSet<KeyCode> allowedMouseButtons = new() { KeyCode.Mouse3, KeyCode.Mouse4, KeyCode.Mouse5, KeyCode.Mouse6 };
         public static bool IsModifier(this KeyCode code) {
             return code == KeyCode.LeftControl || code == KeyCode.RightControl
@@ -11,7 +27,6 @@ namespace ModKit {
                        || code == KeyCode.LeftShift || code == KeyCode.RightShift
                        || code == KeyCode.LeftCommand || code == KeyCode.RightCommand;
         }
-
         public static bool IsControl(this KeyCode code) => code == KeyCode.LeftControl || code == KeyCode.RightControl;
 
         public static bool IsAlt(this KeyCode code) => code == KeyCode.LeftAlt || code == KeyCode.RightAlt;

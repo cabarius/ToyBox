@@ -156,7 +156,7 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 var type = unitEntityData.Blueprint.Type;
-                
+
                 // spider checks
                 if (spidersBegone) {
                     var isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
@@ -196,8 +196,7 @@ namespace ToyBox.BagOfPatches {
                 }
 
                 // retriever checks
-                if(retrieversBegone) 
-                { 
+                if (retrieversBegone) {
                     var isARetriever = IsRetrieverType(type?.AssetGuidThreadSafe);
                     var isAAreshkagelRetriever = IsRetrieverAreshkagelType(type?.AssetGuidThreadSafe);
                     var isOtherRetrieverUnit = IsRetrieverBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
@@ -513,8 +512,7 @@ namespace ToyBox.BagOfPatches {
         })]
         public static class CommonVM_HandleOpen_Patch {
             public static bool Prefix(CounterWindowType type, ItemEntity item, Action<int> command) {
-                if (!settings.toggleShiftClickToFastTransfer) return true;
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                if (settings.clickModiferToFastTransfer.IsActive()) {
                     command.Invoke(item.Count);
                     return false;
                 }
@@ -524,8 +522,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
         public static class ItemSlotPCView_OnClick_Patch {
             public static bool Prefix(ItemSlotPCView __instance) {
-                if (!settings.toggleShiftClickToFastTransfer) return true;
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                if (settings.clickModiferToFastTransfer.IsActive()) {
                     __instance.OnDoubleClick();
                     return false;
                 }
@@ -535,15 +532,12 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(InventorySlotPCView), nameof(InventorySlotPCView.OnClick))]
         public static class InventorySlotPCView_OnClick_Patch {
             public static bool Prefix(InventorySlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer) {
-                    if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
-                        __instance.OnDoubleClick();
-                        return false;
-                    }
+                if (settings.clickModiferToFastTransfer.IsActive()) {
+                    __instance.OnDoubleClick();
+                    return false;
                 }
                 if (__instance.UsableSource != UsableSourceType.Inventory) return true;
-                if (!settings.toggleShiftClickToUseInventorySlot) return true;
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                if (settings.clickModiferToUseInInventory.IsActive()) {
                     var item = __instance.Item;
                     Mod.Debug($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
                     try {
@@ -560,8 +554,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(VendorSlotPCView), nameof(VendorSlotPCView.OnClick))]
         public static class VendorSlotPCView_OnClick_Patch {
             public static bool Prefix(VendorSlotPCView __instance) {
-                if (!settings.toggleShiftClickToFastTransfer) return true;
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                if (settings.clickModiferToFastTransfer.IsActive()) {
                     __instance.OnDoubleClick();
                     return false;
                 }
