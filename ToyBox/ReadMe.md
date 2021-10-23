@@ -42,7 +42,13 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.6 (Universal -- works on mainline and beta)
 * **Bag of Tricks**
-  * click modifiers for use and transfer are now configurable
+     * ***(Flat)*** click modifiers for use and transfer are now configurable
+*  **Etude Editor**
+    * ***(Flat)*** Editor will not crash if localization files are not found
+*  **Settings**
+    * ***(Flat)*** Fixed a typo for developer console
+*  **Post-Build (Developer QOL)**
+    * ***(Flat)*** Post-Build script now copies over all packaged files to WrathPath
 ### Ver 1.4.5 (Universal -- works on mainline and beta)
 * **General**
   * 1.4.5 is now cross compatible between beta and mainline
