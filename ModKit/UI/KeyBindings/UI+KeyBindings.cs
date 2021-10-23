@@ -7,7 +7,7 @@ namespace ModKit {
     public static partial class UI {
         private static string selectedIdentifier = null;
         private static KeyBind oldValue = null;
-        public static KeyBind EditKeyBind(string identifier, bool showHint = true, params GUILayoutOption[] options) {
+        public static KeyBind EditKeyBind(string identifier, bool showHint = true, bool allowModifierOnly = false, params GUILayoutOption[] options) {
             if (Event.current.type == EventType.Layout)
                 KeyBindings.OnGUI();
             var keyBind = KeyBindings.GetBinding(identifier);
@@ -65,6 +65,18 @@ namespace ModKit {
                     return keyBind;
                 }
 
+                // Allow raw modifier keys as keybinds
+                if (Event.current.isKey && keyCode.IsModifier() && allowModifierOnly)
+                {
+                    keyBind = new KeyBind(identifier, keyCode, false, false, false, false);
+                    Mod.Trace($"    currentEvent isKey - bind: {keyBind}");
+                    KeyBindings.SetBinding(identifier, keyBind);
+                    selectedIdentifier = null;
+                    oldValue = null;
+                    Input.ResetInputAxes();
+                    return keyBind;
+                }
+
                 foreach (var mouseButton in allowedMouseButtons) {
                     if (Input.GetKey(mouseButton)) {
                         keyBind = new KeyBind(identifier, mouseButton, isCtrlDown, isAltDown, isCmdDown, isShiftDown);
@@ -87,12 +99,22 @@ namespace ModKit {
             }
         }
 
+        public static void ModifierPicker(string identifier, string title, float indent = 0, float titleWidth = 0)
+        {
+            using (HorizontalScope())
+            {
+                Label(title.bold(), titleWidth == 0 ? ExpandWidth(false) : Width(titleWidth));
+                Space(25);
+                EditKeyBind(identifier, true, true);
+            }
+        }
+
         // One stop shopping for making an instant button that you want to let a player bind to a key in game
         public static void BindableActionButton(string title, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             var action = KeyBindings.GetAction(title);
             if (GL.Button(title, options)) { action(); }
-            EditKeyBind(title, true, Width(200));
+            EditKeyBind(title, true, false, Width(200));
         }
 
         // Action button designed to live in a collection with a BindableActionButton
