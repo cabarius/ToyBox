@@ -66,8 +66,7 @@ namespace ModKit {
                 }
 
                 // Allow raw modifier keys as keybinds
-                if (Event.current.isKey && keyCode.IsModifier() && allowModifierOnly)
-                {
+                if (Event.current.isKey && keyCode.IsModifier() && allowModifierOnly) {
                     keyBind = new KeyBind(identifier, keyCode, false, false, false, false);
                     Mod.Trace($"    currentEvent isKey - bind: {keyBind}");
                     KeyBindings.SetBinding(identifier, keyBind);
@@ -99,10 +98,8 @@ namespace ModKit {
             }
         }
 
-        public static void ModifierPicker(string identifier, string title, float indent = 0, float titleWidth = 0)
-        {
-            using (HorizontalScope())
-            {
+        public static void ModifierPicker(string identifier, string title, float indent = 0, float titleWidth = 0) {
+            using (HorizontalScope()) {
                 Label(title.bold(), titleWidth == 0 ? ExpandWidth(false) : Width(titleWidth));
                 Space(25);
                 EditKeyBind(identifier, true, true);

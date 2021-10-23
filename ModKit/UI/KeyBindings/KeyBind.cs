@@ -129,12 +129,9 @@ namespace ModKit {
                     return active;
                 }
             }
-            public bool IsModifierActive
-            {
-                get
-                {
-                    if (Event.current == null)
-                    {
+            public bool IsModifierActive {
+                get {
+                    if (Event.current == null) {
                         return false;
                     }
                     return Input.GetKey(Key);
