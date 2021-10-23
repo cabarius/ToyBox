@@ -180,7 +180,7 @@ namespace ToyBox {
                      var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
                      var source = new FeatureSource();
                      ch?.Descriptor?.Progression.Features.AddFeature(bp).SetSource(source, 1);
-                     ch?.Progression?.AddSelection(bp, source, 1, value);
+                     ch?.Progression?.AddSelection(bp, source, 0, value);
 
                  },
                 (bp, ch, index) => {
@@ -193,7 +193,7 @@ namespace ToyBox {
                     }
                     return true;
                 });
-            BlueprintAction.Register<BlueprintFeatureSelection>("Remove",
+            BlueprintAction.Register<BlueprintFeatureSelection>("Rem. All",
                 (bp, ch, n, index) => {
                     var progression = ch?.Descriptor?.Progression;
                     var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);

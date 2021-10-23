@@ -225,6 +225,13 @@ namespace ToyBox {
                     using (UI.HorizontalScope()) {
                         UI.Space(titleWidth);
                         using (UI.VerticalScope()) {
+                            var needsSelection = false;
+                            var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
+                            if (nameStrings == null) {
+                                needsSelection = true;
+                                nameStrings = selectionBP.AllFeatures.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
+                                selectionBPValuesNames[selectionBP] = nameStrings;
+                            }
                             using (UI.HorizontalScope(GUI.skin.button)) {
                                 var content = new GUIContent($"{selectionBP.Name.yellow()}");
                                 var labelWidth = GUI.skin.label.CalcSize(content).x;
@@ -232,18 +239,7 @@ namespace ToyBox {
                                 //UI.Space(indent + titleWidth - labelWidth - 25);
                                 UI.Label(content, UI.Width(labelWidth));
                                 UI.Space(25);
-                                var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
-                                if (nameStrings == null) {
-                                    var values = selectionBP.AllFeatures;
-                                    nameStrings = values.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
-                                    selectionBPValuesNames[selectionBP] = nameStrings;
-                                    if (unit.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
-                                        var selection = selectionData.SelectionsByLevel.First().Value.First();
-                                        if (selection != null) {
-                                            ParamSelected[currentCount] = values.IndexOf(selection);
-                                        }
-                                    }
-                                }
+
                                 UI.ActionSelectionGrid(
                                     ref ParamSelected[currentCount],
                                     nameStrings,
@@ -253,6 +249,25 @@ namespace ToyBox {
                                     UI.Width(remWidth)
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
+                            }
+                            if (unit.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
+                                foreach (var entry in selectionData.SelectionsByLevel) {
+                                    foreach (var selection in entry.Value) {
+                                        if (needsSelection) {
+                                            ParamSelected[currentCount] = selectionBP.AllFeatures.IndexOf(selection);
+                                            needsSelection = false;
+                                        }
+                                        using (UI.HorizontalScope()) {
+                                            UI.ActionButton("Remove", () => {
+
+                                            }, UI.Width(160));
+                                            UI.Space(25);
+                                            UI.Label($"{entry.Key} ".yellow() + selection.Name.orange(), UI.Width(250));
+                                            UI.Space(25);
+                                            UI.Label(selection.Description.StripHTML().green());
+                                        }
+                                    }
+                                }
                             }
                             UI.Space(15);
                         }
