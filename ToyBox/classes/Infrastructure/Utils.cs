@@ -75,22 +75,32 @@ namespace ToyBox {
             }
         }
         public static Dictionary<string, string> ReadTranslations() {
-            var path = ModKit.Mod.modEntryPath;
-            path = Path.Combine(path, "Localization", "etude-comments.txt");
-            var text = File.ReadAllText(path);
-            text = Regex.Replace(text, @"(^\p{Zs}*\r\n){2,}", "\r\n", RegexOptions.Multiline);
-            var chunks = text.Split('`');
-            Dictionary<string, string> result = new();
-            for (var ii = 0; ii + 1 < chunks.Length; ii += 4) {
-                //Mod.Debug($"{ii} => {chunks[ii]}");
+            try {
+                var path = ModKit.Mod.modEntryPath;
+                path = Path.Combine(path, "Localization", "etude-comments.txt");
+                var text = File.ReadAllText(path);
+                text = Regex.Replace(text, @"(^\p{Zs}*\r\n){2,}", "\r\n", RegexOptions.Multiline);
+                var chunks = text.Split('`');
+                Dictionary<string, string> result = new();
+                for (var ii = 0; ii + 1 < chunks.Length; ii += 4) {
+                    //Mod.Debug($"{ii} => {chunks[ii]}");
 
-                var key = chunks[ii + 1].Trim();
-                var value = chunks[ii + 3].Trim();
-                if (key.Length == 0 || value.Length == 0) continue;
-                result[key] = value;
-                //Mod.Debug($"'{key}' => '{value}'");
+                    var key = chunks[ii + 1].Trim();
+                    var value = chunks[ii + 3].Trim();
+                    if (key.Length == 0 || value.Length == 0) continue;
+                    result[key] = value;
+                    //Mod.Debug($"'{key}' => '{value}'");
+                }
+                return result;
             }
-            return result;
+            catch (DirectoryNotFoundException) {
+                Mod.Error("Unable to load localization directory.");
+                return new();
+            }
+            catch (FileNotFoundException) {
+                Mod.Error("Unable to load localization file.");
+                return new();
+            }
         }
         public static string ToKM(this float v, string units = "") {
             if (v < 1000) {
