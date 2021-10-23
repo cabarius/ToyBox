@@ -16,7 +16,7 @@ namespace ToyBox {
                 () => {
                     UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode);
                     UI.Space(25);
-                    UI.Label("This turns on the developer console which lets you access cheat commands, shows a FPS window (hife with F11), etc".green());
+                    UI.Label("This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc".green());
                 },
                 () => UI.Label(""),
                 () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
