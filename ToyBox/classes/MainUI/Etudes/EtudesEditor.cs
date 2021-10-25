@@ -292,13 +292,16 @@ namespace ToyBox {
 
                                     }
                                     if (element is StartEtude started) {
-                                        DrawEtude(started.Etude.Guid, loadedEtudes[started.Etude.Guid], indent + 2);
+                                        if (started.Etude.Guid != etudeID)
+                                            DrawEtude(started.Etude.Guid, loadedEtudes[started.Etude.Guid], indent + 2);
                                     }
                                     if (element is EtudeStatus status) {
-                                        DrawEtude(status.m_Etude.Guid, loadedEtudes[status.m_Etude.Guid], indent + 2);
+                                        if (status.m_Etude.Guid != etudeID)
+                                            DrawEtude(status.m_Etude.Guid, loadedEtudes[status.m_Etude.Guid], indent + 2);
                                     }
                                     if (element is CompleteEtude completed) {
-                                        DrawEtude(completed.Etude.Guid, loadedEtudes[completed.Etude.Guid], indent + 2);
+                                        if (completed.Etude.Guid != etudeID)
+                                            DrawEtude(completed.Etude.Guid, loadedEtudes[completed.Etude.Guid], indent + 2);
                                     }
                                     UI.Div();
                                 }
