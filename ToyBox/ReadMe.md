@@ -55,9 +55,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
    * Fixed nasty crash when you opened elements on some of Camellia's romance items like the one with the necklace
    * Made things even wider so stuff formats well
    * ***(Flat)*** Editor will not crash if localization files are not found
-*  **Settings**
+* **Settings**
   * ***(Flat)*** Fixed a typo for developer console
-*  **Post-Build (Developer QoL)**
+* **Post-Build (Developer QoL)**
   * ***(Flat)*** Post-Build script now copies over all packaged files to WrathPath
 ### Ver 1.4.5 (Universal -- works on mainline and beta)
 * **General**
