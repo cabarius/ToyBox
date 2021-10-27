@@ -177,7 +177,10 @@ namespace ToyBox {
             }
             toValues.Clear();
         }
+
+        private static HashSet<BlueprintGuid> enclosingEtudes = new();
         private static void DrawEtude(BlueprintGuid etudeID, EtudeInfo etude, int indent) {
+            if  (enclosingEtudes.Contains(etudeID)) return;
             var viewPort = UI.ummRect;
             var topLines = firstRect.y / 30;
             var linesVisible = 1 + viewPort.height / 30;
@@ -188,9 +191,9 @@ namespace ToyBox {
             Mod.Log($"line: {lineNumber} - topLines: {topLines} scrollOffset: {scrollOffset} - {Event.current.type} - isVisible: {isVisible}");
 #endif
             if (true || isVisible) {
-                var etudeInfo = loadedEtudes[etudeID];
                 var name = etude.Name;
                 if (etude.hasSearchResults || searchText.Length == 0 || name.ToLower().Contains(searchText.ToLower())) {
+                    enclosingEtudes.Add(etudeID);
                     var components = etude.Blueprint.Components;
                     //var gameActions = etude.Blueprint.ComponentsArray.SelectMany(c => {
                     //    var actionsField = c.GetType().GetField("Actions");
@@ -211,8 +214,8 @@ namespace ToyBox {
                         if (selected == etudeID) name = name.orange().bold();
 
                         using (UI.HorizontalScope(UI.Width(825))) {
-                            if (etudeInfo.ChildrenId.Count == 0) etudeInfo.ShowChildren = ToggleState.None;
-                            UI.ToggleButton(ref etudeInfo.ShowChildren, name.orange().bold(), (state) => OpenCloseAllChildren(etudeInfo, state));
+                            if (etude.ChildrenId.Count == 0) etude.ShowChildren = ToggleState.None;
+                            UI.ToggleButton(ref etude.ShowChildren, name.orange().bold(), (state) => OpenCloseAllChildren(etude, state));
                             UI.Space(25);
                             var eltCount = etude.Blueprint.m_AllElements.Count;
                             if (eltCount > 0)
@@ -262,9 +265,10 @@ namespace ToyBox {
 #endif
                     }
                     if (etude.ShowElements.IsOn()) {
+                        indent += 2;
                         using (UI.HorizontalScope(UI.ExpandWidth(true))) {
                             UI.Space(310);
-                            UI.Indent(indent + 2);
+                            UI.Indent(indent);
                             using (UI.VerticalScope()) {
                                 foreach (var element in etude.Blueprint.m_AllElements) {
                                     using (UI.HorizontalScope(UI.Width(10000))) {
@@ -292,22 +296,18 @@ namespace ToyBox {
 
                                     }
                                     if (element is StartEtude started) {
-                                        if (started.Etude.Guid != etudeID)
-                                            DrawEtudeTree(started.Etude.Guid, indent + 2, true);
+                                        DrawEtudeTree(started.Etude.Guid, 2, true);
                                     }
                                     if (element is EtudeStatus status) {
-                                        if (status.m_Etude.Guid != etudeID)
-                                            DrawEtudeTree(status.m_Etude.Guid, indent + 2, true);
+                                        DrawEtudeTree(status.m_Etude.Guid, 2, true);
                                     }
                                     if (element is CompleteEtude completed) {
-                                        if (completed.Etude.Guid != etudeID)
-                                            DrawEtudeTree(completed.Etude.Guid, indent + 2, true);
+                                        DrawEtudeTree(completed.Etude.Guid, 2, true);
                                     }
                                     if (element is AnotherEtudeOfGroupIsPlaying otherGroup) {
                                         var conflicts = EtudesTreeModel.Instance.GetConflictingEtudes(otherGroup.Owner.AssetGuid);
                                         foreach (var conflict in conflicts) {
-                                            if (etudeID != conflict)
-                                                DrawEtudeTree(conflict, indent + 2, true);
+                                            DrawEtudeTree(conflict, 2, true);
                                         }
                                     }
                                     UI.Div();
@@ -319,7 +319,7 @@ namespace ToyBox {
                     //    foreach (var action in gameActions) {
                     //        using (UI.HorizontalScope()) {
                     //            UI.Space(310);
-                    //            UI.Indent(indent + 2);
+                    //            UI.Indent(indent);
                     //            UI.ActionButton(action.GetCaption(), action.RunAction);
                     //            UI.Space(25);
                     //            UI.Label(action.GetDescription().green());
@@ -328,6 +328,7 @@ namespace ToyBox {
                     //}
                     lineNumber += 1;
                 }
+                enclosingEtudes.Remove(etudeID);
             }
         }
         private static void ShowBlueprintsTree() {
