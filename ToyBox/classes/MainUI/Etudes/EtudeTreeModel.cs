@@ -16,6 +16,7 @@ namespace ToyBox {
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));
         public Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = new();
         public Dictionary<BlueprintGuid, ConflictingGroupIdReferences> conflictingGroups = new();
+
         public Dictionary<string, string> commentTranslations;
         private EtudesTreeModel() {
             commentTranslations = Utils.ReadTranslations();
@@ -204,6 +205,21 @@ namespace ToyBox {
             }
 
             return etudeInfo;
+        }
+        public List<BlueprintGuid> GetConflictingEtudes(BlueprintGuid etudeID) {
+            List<BlueprintGuid> result = new List<BlueprintGuid>();
+
+            foreach (var conflictingGroup in loadedEtudes[etudeID].ConflictingGroups) {
+                foreach (var etude in EtudesTreeModel.Instance.conflictingGroups[conflictingGroup].Etudes) {
+                    if (result.Contains(etude))
+                        continue;
+                    result.Add(etude);
+                }
+            }
+
+            result = result.OrderBy(e => -loadedEtudes[e].Priority - ((loadedEtudes[e].State == EtudeInfo.EtudeState.Active) ? 100500 : 0)).ToList();
+
+            return result;
         }
     }
 }

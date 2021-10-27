@@ -48,7 +48,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Search 'n Pick**
   * Improved Performance of parameterized feature and feature selection filters
 *  **Etude Editor**
+   *  Now shows conflicting Etudes for AnotherEtudeOfGroupIsPlaying
    *  Fixed nasty crash when you opened elements on some of Camellia's romance items like the one with the necklace
+   *  Made things even wider so stuff formats well
   * ***(Flat)*** Editor will not crash if localization files are not found
 *  **Settings**
   * ***(Flat)*** Fixed a typo for developer console

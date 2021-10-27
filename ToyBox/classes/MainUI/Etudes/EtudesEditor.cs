@@ -267,7 +267,7 @@ namespace ToyBox {
                             UI.Indent(indent + 2);
                             using (UI.VerticalScope()) {
                                 foreach (var element in etude.Blueprint.m_AllElements) {
-                                    using (UI.HorizontalScope(UI.Width(2000))) {
+                                    using (UI.HorizontalScope(UI.Width(10000))) {
                                         // UI.Label(element.NameSafe().orange()); -- this is useless at the moment
                                         using (UI.HorizontalScope(450)) {
                                             if (element is GameAction gameAction) {
@@ -302,6 +302,13 @@ namespace ToyBox {
                                     if (element is CompleteEtude completed) {
                                         if (completed.Etude.Guid != etudeID)
                                             DrawEtude(completed.Etude.Guid, loadedEtudes[completed.Etude.Guid], indent + 2);
+                                    }
+                                    if (element is AnotherEtudeOfGroupIsPlaying otherGroup) {
+                                        var conflicts = EtudesTreeModel.Instance.GetConflictingEtudes(otherGroup.Owner.AssetGuid);
+                                        foreach (var conflict in conflicts) {
+                                            if (etudeID != conflict)
+                                                DrawEtude(conflict, loadedEtudes[conflict], indent + 2);
+                                        }
                                     }
                                     UI.Div();
                                 }
