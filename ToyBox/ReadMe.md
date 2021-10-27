@@ -40,7 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.7 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
-### Ver 1.4.6 (Comming Soon) Universal -- works on mainline and beta)
+### Ver 1.4.6 (mainline 1.1.0i)
 * **Bag of Tricks**
   * Allow any gender and multiple romances
     * Big thanks to ***Paladingineer*** and ***Ronin*** for their contributions to making this possible

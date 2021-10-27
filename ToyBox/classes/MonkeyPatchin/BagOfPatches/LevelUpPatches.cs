@@ -61,7 +61,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
+#if false
         [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.AddClassLevel))]
         public static class UnitProgressionData_AddClassLevel_Patch {
             private static readonly MethodInfo UnitProgressionData_GetExperienceTable =
@@ -86,7 +86,6 @@ namespace ToyBox.BagOfPatches {
 
                 return codes;
             }
-
             private static int FindInsertionPoint(List<CodeInstruction> codes) {
                 for (var i = 0; i < codes.Count; i++) {
                     if (codes[i].opcode == OpCodes.Ldfld && codes[i].LoadsField(BlueprintStatProgression_GetBonuses)) {
@@ -98,6 +97,7 @@ namespace ToyBox.BagOfPatches {
                 return -1;
             }
         }
+#endif
 
         [HarmonyPatch(typeof(CharSheetCommonLevel), "Initialize")]
         private static class CharSheetCommonLevel_FixExperienceBar_Patch {
