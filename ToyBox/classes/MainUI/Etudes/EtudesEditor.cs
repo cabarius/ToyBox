@@ -293,21 +293,21 @@ namespace ToyBox {
                                     }
                                     if (element is StartEtude started) {
                                         if (started.Etude.Guid != etudeID)
-                                            DrawEtude(started.Etude.Guid, loadedEtudes[started.Etude.Guid], indent + 2);
+                                            DrawEtudeTree(started.Etude.Guid, indent + 2, true);
                                     }
                                     if (element is EtudeStatus status) {
                                         if (status.m_Etude.Guid != etudeID)
-                                            DrawEtude(status.m_Etude.Guid, loadedEtudes[status.m_Etude.Guid], indent + 2);
+                                            DrawEtudeTree(status.m_Etude.Guid, indent + 2, true);
                                     }
                                     if (element is CompleteEtude completed) {
                                         if (completed.Etude.Guid != etudeID)
-                                            DrawEtude(completed.Etude.Guid, loadedEtudes[completed.Etude.Guid], indent + 2);
+                                            DrawEtudeTree(completed.Etude.Guid, indent + 2, true);
                                     }
                                     if (element is AnotherEtudeOfGroupIsPlaying otherGroup) {
                                         var conflicts = EtudesTreeModel.Instance.GetConflictingEtudes(otherGroup.Owner.AssetGuid);
                                         foreach (var conflict in conflicts) {
                                             if (etudeID != conflict)
-                                                DrawEtude(conflict, loadedEtudes[conflict], indent + 2);
+                                                DrawEtudeTree(conflict, indent + 2, true);
                                         }
                                     }
                                     UI.Div();
@@ -338,17 +338,21 @@ namespace ToyBox {
                 }
             }
         }
-        private static void ShowParentTree(EtudeInfo etude, int indent) {
+
+        private static void DrawEtudeTree(BlueprintGuid etudeID, int indent, bool ignoreFilter = false) {
+            var etude = loadedEtudes[etudeID];
+            DrawEtude(etudeID, etude, indent);
+
+            if (etude.ChildrenId.Count > 0 && (etude.ShowChildren.IsOn() || etude.hasSearchResults)) {
+                ShowParentTree(etude, indent + 1, ignoreFilter);
+            }
+
+        }
+        private static void ShowParentTree(EtudeInfo etude, int indent, bool ignoreFilter = false) {
             foreach (var childID in etude.ChildrenId) {
-                if (!filteredEtudes.ContainsKey(childID))
+                if (!ignoreFilter && !filteredEtudes.ContainsKey(childID))
                     continue;
-                var childEtude = loadedEtudes[childID];
-                DrawEtude(childID, childEtude, indent);
-
-                if (childEtude.ChildrenId.Count > 0 && (childEtude.ShowChildren.IsOn() || childEtude.hasSearchResults)) {
-                    ShowParentTree(childEtude, indent + 1);
-
-                }
+                DrawEtudeTree(childID, indent, ignoreFilter);
             }
         }
         private static void UpdateSearchResults() {
