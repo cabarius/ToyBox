@@ -180,7 +180,7 @@ namespace ToyBox {
 
         private static HashSet<BlueprintGuid> enclosingEtudes = new();
         private static void DrawEtude(BlueprintGuid etudeID, EtudeInfo etude, int indent) {
-            if  (enclosingEtudes.Contains(etudeID)) return;
+            if (enclosingEtudes.Contains(etudeID)) return;
             var viewPort = UI.ummRect;
             var topLines = firstRect.y / 30;
             var linesVisible = 1 + viewPort.height / 30;
@@ -200,6 +200,8 @@ namespace ToyBox {
                     //    var actionList = (ActionList)actionsField?.GetValue(c);
                     //    return actionList?.Actions ?? new GameAction[] { };
                     //}).ToList();
+                    var conflicts = EtudesTreeModel.Instance.GetConflictingEtudes(etudeID);
+                    var conflictCount = conflicts.Count - 1;
                     using (UI.HorizontalScope(UI.ExpandWidth(true))) {
                         using (UI.HorizontalScope(UI.Width(310))) {
                             var actions = etude.Blueprint.GetActions().Where(action => action.canPerform(etude.Blueprint, null));
@@ -219,10 +221,16 @@ namespace ToyBox {
                             UI.Space(25);
                             var eltCount = etude.Blueprint.m_AllElements.Count;
                             if (eltCount > 0)
-                                UI.ToggleButton(ref etude.ShowElements, $"{eltCount} elements", UI.Width(75));
+                                UI.ToggleButton(ref etude.ShowElements, $"{eltCount} elements", UI.Width(175));
                             else
-                                UI.Space(78);
-                            UI.Space(126);
+                                UI.Space(178);
+                            //UI.Space(126);
+                            if (conflictCount > 0)
+                                UI.ToggleButton(ref etude.ShowConflicts, $"{conflictCount} conflicts", UI.Width(175));
+                            else
+                                UI.Space(178);
+
+                            //UI.Space(126);
                             //if (gameActions.Count > 0)
                             //    UI.ToggleButton(ref etude.ShowActions, $"{gameActions.Count} actions", UI.Width(75));
                             //else
@@ -264,8 +272,8 @@ namespace ToyBox {
                         }
 #endif
                     }
+                    indent += 2;
                     if (etude.ShowElements.IsOn()) {
-                        indent += 2;
                         using (UI.HorizontalScope(UI.ExpandWidth(true))) {
                             UI.Space(310);
                             UI.Indent(indent);
@@ -304,13 +312,25 @@ namespace ToyBox {
                                     if (element is CompleteEtude completed) {
                                         DrawEtudeTree(completed.Etude.Guid, 2, true);
                                     }
-                                    if (element is AnotherEtudeOfGroupIsPlaying otherGroup) {
-                                        var conflicts = EtudesTreeModel.Instance.GetConflictingEtudes(otherGroup.Owner.AssetGuid);
-                                        foreach (var conflict in conflicts) {
-                                            DrawEtudeTree(conflict, 2, true);
-                                        }
-                                    }
+                                    //if (element is AnotherEtudeOfGroupIsPlaying otherGroup) {
+                                    //    var guids = EtudesTreeModel.Instance.GetConflictingEtudes(otherGroup.Owner.AssetGuid);
+                                    //    foreach (var conflict in guids) {
+                                    //        DrawEtudeTree(conflict, 2, true);
+                                    //    }
+                                    //}
                                     UI.Div();
+                                }
+                            }
+                        }
+                    }
+
+                    if (etude.ShowConflicts.IsOn()) {
+                        using (UI.HorizontalScope(UI.Width(10000))) {
+                            UI.Space(310);
+                            UI.Indent(indent);
+                            using (UI.VerticalScope()) {
+                                foreach (var conflict in conflicts) {
+                                    DrawEtudeTree(conflict, 2, true);
                                 }
                             }
                         }
