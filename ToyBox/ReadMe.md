@@ -37,13 +37,14 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 **Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.7 (Coming Later)
+### Ver 1.4.8 (Coming Later)
 * **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
-### Ver 1.4.6 (mainline 1.1.0i)
-* **Bag of Tricks**
+### Ver 1.4.7 (Coming Soon)
   * Allow any gender and multiple romances
     * Big thanks to ***Paladingineer*** and ***Ronin*** for their contributions to making this possible
+### Ver 1.4.6 (mainline 1.1.0i)
+* **Bag of Tricks**
   * UI improvements for use and transfer
   * ***(Flat)*** click modifiers for use and transfer are now configurable
 * **Search 'n Pick**
