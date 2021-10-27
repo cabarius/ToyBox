@@ -299,6 +299,10 @@ namespace ToyBox {
                                             UI.Label($"{element.GetType().Name.cyan()} : {condition.CheckCondition().ToString().orange()}", UI.Width(250));
                                         else
                                             UI.Label(element.GetType().Name.cyan(), UI.Width(250));
+                                        if (element is AnotherEtudeOfGroupIsPlaying otherGroup)
+                                            UI.Label($"{conflictCount}", UI.Width(50));
+                                        else
+                                            UI.Width(53);
                                         UI.Space(25);
                                         UI.Label(element.GetDescription().green());
 
@@ -312,12 +316,6 @@ namespace ToyBox {
                                     if (element is CompleteEtude completed) {
                                         DrawEtudeTree(completed.Etude.Guid, 2, true);
                                     }
-                                    //if (element is AnotherEtudeOfGroupIsPlaying otherGroup) {
-                                    //    var guids = EtudesTreeModel.Instance.GetConflictingEtudes(otherGroup.Owner.AssetGuid);
-                                    //    foreach (var conflict in guids) {
-                                    //        DrawEtudeTree(conflict, 2, true);
-                                    //    }
-                                    //}
                                     UI.Div();
                                 }
                             }

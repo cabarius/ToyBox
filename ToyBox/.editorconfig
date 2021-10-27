@@ -21,7 +21,7 @@ csharp_indent_switch_labels = true
 #place catch statements on a new line
 csharp_new_line_before_catch = true
 #place else statements on a new line
-csharp_new_line_before_else =true
+csharp_new_line_before_else = true
 #require members of object initializers to be on the same line
 csharp_new_line_before_members_in_object_initializers = false
 #require braces to be on a new line for types and methods (also known as "Allman" style)
@@ -89,9 +89,9 @@ dotnet_style_object_initializer = true:suggestion
 #prefer var over explicit type in all cases, unless overridden by another code style rule
 csharp_style_var_elsewhere = true:suggestion
 #prefer explicit type over var to declare variables with built-in system types such as int
-csharp_style_var_for_built_in_types =true:suggestion
+csharp_style_var_for_built_in_types = true:suggestion
 #prefer explicit type over var when the type is already mentioned on the right-hand side of a declaration
-csharp_style_var_when_type_is_apparent =true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
 
 #Style - language keyword and framework type options
 
@@ -121,17 +121,27 @@ dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 #prefer properties to be prefaced with this. in C# or Me. in Visual Basic
 dotnet_style_qualification_for_property = true:suggestion
-csharp_space_after_semicolon_in_for_statement=true
+csharp_space_after_semicolon_in_for_statement = true
 
 # Default severity for analyzer diagnostics with category 'Style'
 
 # IDE0051: Remove unused private members
-dotnet_diagnostic.IDE0051.severity = none
+dotnet_diagnostic.ide0051.severity = none
 
 # IDE1006: Naming Styles
-dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.ide1006.severity = none
 
 # IDE0060: Remove unused parameter
-dotnet_diagnostic.IDE0060.severity = none
+dotnet_diagnostic.ide0060.severity = none
 
-dotnet_diagnostic.IDE0079.severity = none
+dotnet_diagnostic.ide0079.severity = none
+
+# ReSharper properties
+resharper_csharp_max_line_length = 99999
+resharper_csharp_wrap_before_binary_opsign = true
+resharper_csharp_wrap_chained_method_calls = chop_if_long
+resharper_csharp_wrap_lines = false
+resharper_csharp_wrap_parameters_style = chop_if_long
+resharper_nested_ternary_style = expanded
+resharper_place_linq_into_on_new_line = false
+resharper_wrap_chained_binary_expressions = chop_if_long
