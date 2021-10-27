@@ -147,6 +147,7 @@ namespace ToyBox {
         public bool toggleBlockUnrecruit = false;
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
+        public bool toggleAllowAnyGenderRomance = false;
         public bool toggleMultipleRomance = false;
         public bool toggleReplaceModelMenu = false;
         public bool toggleSpiderBegone = false;
