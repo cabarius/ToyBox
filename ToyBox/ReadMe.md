@@ -56,7 +56,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
    * ***(Flat)*** Editor will not crash if localization files are not found
 *  **Settings**
   * ***(Flat)*** Fixed a typo for developer console
-*  **Post-Build (Developer QOL)**
+*  **Post-Build (Developer QoL)**
   * ***(Flat)*** Post-Build script now copies over all packaged files to WrathPath
 ### Ver 1.4.5 (Universal -- works on mainline and beta)
 * **General**
