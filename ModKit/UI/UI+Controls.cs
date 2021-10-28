@@ -234,10 +234,22 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+        public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue) {
             var changed = false;
             using (UI.HorizontalScope(UI.Width(400))) {
                 UI.Label(title.cyan(), UI.Width(300));
+                UI.Space(15);
+                var value = get();
+                changed = UI.ValueAdjuster(ref value, increment, min, max);
+                if (changed)
+                    set(value);
+            }
+            return changed;
+        }
+        public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+            var changed = false;
+            using (UI.HorizontalScope()) {
+                UI.Label(title.cyan(), options);
                 UI.Space(15);
                 var value = get();
                 changed = UI.ValueAdjuster(ref value, increment, min, max);
