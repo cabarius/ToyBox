@@ -180,6 +180,7 @@ namespace ToyBox.classes.MainUI {
                                             }
                                         if (skillToAdd != null) leader.AddSkill(skillToAdd, true);
                                         if (skillToRemove != null) leader.RemoveSkill(skillToRemove);
+#if DEBUG
                                         using (UI.HorizontalScope()) {
                                             UI.Space(100);
                                             UI.Label("Rituals".yellow(), UI.Width(85));
@@ -213,7 +214,7 @@ namespace ToyBox.classes.MainUI {
                                                 }
                                             }
                                         }
-
+#endif
                                         if (!showSquads)
                                             UI.Div(0, 10);
                                     }
