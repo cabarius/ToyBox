@@ -258,9 +258,15 @@ namespace ToyBox {
             ch.Descriptor.Progression.CharacterLevel = level;
         }
 
-        public static void CreateArmy(BlueprintArmyPreset bp) {
+        public static void CreateArmy(BlueprintArmyPreset bp, bool friendlyorhostile) {
             var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
-            Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
+            if(friendlyorhostile) {
+                Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
+            }
+            else {
+                Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Demons, bp, playerPosition);
+            }
+            
         }
 
         public static void AddSkillToLeader(BlueprintLeaderSkill bp) {

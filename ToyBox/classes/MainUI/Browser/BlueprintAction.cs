@@ -403,8 +403,11 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, index) => Teleport.To(globalMapPoint));
 
             //Army
-            BlueprintAction.Register<BlueprintArmyPreset>("Add", (bp, ch, n, l) => {
-                Actions.CreateArmy(bp);
+            BlueprintAction.Register<BlueprintArmyPreset>("Create Friendly", (bp, ch, n, l) => {
+                Actions.CreateArmy(bp,true);
+            });
+            BlueprintAction.Register<BlueprintArmyPreset>("Create Hostile", (bp, ch, n, l) => {
+                Actions.CreateArmy(bp,false);
             });
 
             //ArmyGeneral
