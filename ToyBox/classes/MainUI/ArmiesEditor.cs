@@ -126,8 +126,10 @@ namespace ToyBox.classes.MainUI {
                                         showAllLeaderSkills = toggleStates.GetValueOrDefault(leader.Skills, false);
 
                                         using (UI.HorizontalScope()) {
-                                            UI.Label(leader.LocalizedName.yellow(), UI.Width(475));
-                                            UI.Space(213);
+                                            UI.Label(leader.LocalizedName.yellow() + "\n       Skills".cyan(), UI.Width(475));
+                                            UI.Space(25);
+                                            UI.Label("Action".yellow(), UI.Width(150));
+                                            UI.Space(53);
                                             if (UI.DisclosureToggle("Show All".orange().bold(), ref showAllLeaderSkills, 125)) {
                                                 toggleStates[leader.Skills] = showAllLeaderSkills;
                                             }
@@ -144,7 +146,7 @@ namespace ToyBox.classes.MainUI {
                                                     UI.Space(100);
                                                     var skillName = (string)skill.LocalizedName;
                                                     if (leaderHasSkill) skillName = skillName.cyan();
-                                                    UI.Label(skillName, UI.Width(350));
+                                                    UI.Label(skillName, UI.Width(375));
                                                     UI.Space(25);
                                                     if (leaderHasSkill)
                                                         UI.ActionButton("Remove", () => { skillToRemove = skill; }, UI.Width(150));
@@ -155,7 +157,6 @@ namespace ToyBox.classes.MainUI {
                                                     UI.Label(description.StripHTML().green());
                                                 }
                                             }
-
                                         if (skillToAdd != null) leader.AddSkill(skillToAdd, true);
                                         if (skillToRemove != null) leader.RemoveSkill(skillToRemove);
                                         if (!showSquads)

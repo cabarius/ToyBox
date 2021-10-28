@@ -172,7 +172,7 @@ namespace ToyBox {
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
 #if DEBUG
-                () => Toggle("Allow " + "Same".color(RGBA.purple) + " " + "Sex for all " + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple), ref settings.toggleAllowAnyGenderRomance),
+                () => Toggle("Allow " + "any gender".color(RGBA.purple) + " " + "for any " + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple), ref settings.toggleAllowAnyGenderRomance),
                 () => Toggle("Allow " + "multiple".color(RGBA.purple) + " romances at the same time", ref settings.toggleMultipleRomance),
 #endif
                 () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25); UI.Label("Hold down shift during launch to bypass".green()); },
