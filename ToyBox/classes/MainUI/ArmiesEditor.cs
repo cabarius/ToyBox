@@ -1,5 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.Armies;
+using Kingmaker.Armies.Blueprints;
 using Kingmaker.Armies.State;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
@@ -35,8 +36,18 @@ namespace ToyBox.classes.MainUI {
 
         private static readonly Dictionary<string, GlobalMapArmyState> armySelection = new();
         private static Dictionary<object, bool> toggleStates = new();
+        public static IEnumerable<BlueprintLeaderSkill> allLeaderSkills;
+
+        public static IEnumerable<BlueprintLeaderSkill> GetAllLeaderSkills() {
+            if (allLeaderSkills != null) return allLeaderSkills;
+            else {
+                allLeaderSkills = BlueprintLoader.Shared.GetBlueprints<BlueprintLeaderSkill>();
+                return allLeaderSkills;
+            }
+        }
 
         public static void OnGUI() {
+            if (allLeaderSkills == null) GetAllLeaderSkills();
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
                 UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());
@@ -73,6 +84,7 @@ namespace ToyBox.classes.MainUI {
                             foreach (var armyEntry in armies) {
                                 var showLeader = false;
                                 var showSquads = false;
+                                var showAllLeaderSkills = false;
                                 var army = armyEntry.Item1;
                                 var leader = army.Data.Leader;
                                 var distance = armyEntry.Item2;
@@ -111,18 +123,41 @@ namespace ToyBox.classes.MainUI {
                                 if (showLeader) {
                                     UI.Div(0, 10);
                                     using (UI.VerticalScope()) {
-                                        UI.Label(leader.LocalizedName.yellow(), UI.Width(475));
-                                    }
-                                    using (UI.VerticalScope()) {
-                                        var skills = leader.Skills;
-                                        foreach (var skill in skills) {
-                                            using (UI.HorizontalScope()) {
-                                                UI.Space(100);
-                                                UI.Label(skill.GetDisplayName().cyan(), UI.Width(350));
-                                                UI.Space(25);
+                                        showAllLeaderSkills = toggleStates.GetValueOrDefault(leader.Skills, false);
 
+                                        using (UI.HorizontalScope()) {
+                                            UI.Label(leader.LocalizedName.yellow(), UI.Width(475));
+                                            UI.Space(213);
+                                            if (UI.DisclosureToggle("Show All".orange().bold(), ref showAllLeaderSkills, 125)) {
+                                                toggleStates[leader.Skills] = showAllLeaderSkills;
                                             }
                                         }
+                                    }
+                                    using (UI.VerticalScope()) {
+                                        var skills = showAllLeaderSkills ? GetAllLeaderSkills() : leader.Skills;
+                                        BlueprintLeaderSkill skillToAdd = null;
+                                        BlueprintLeaderSkill skillToRemove = null;
+                                        if (skills != null)
+                                            foreach (var skill in skills) {
+                                                var leaderHasSkill = leader.Skills.Contains(skill);
+                                                using (UI.HorizontalScope()) {
+                                                    UI.Space(100);
+                                                    var skillName = (string)skill.LocalizedName;
+                                                    if (leaderHasSkill) skillName = skillName.cyan();
+                                                    UI.Label(skillName, UI.Width(350));
+                                                    UI.Space(25);
+                                                    if (leaderHasSkill)
+                                                        UI.ActionButton("Remove", () => { skillToRemove = skill; }, UI.Width(150));
+                                                    else
+                                                        UI.ActionButton("Add", () => { skillToAdd = skill; }, UI.Width(150));
+                                                    UI.Space(100);
+                                                    var description = (string)skill.LocalizedDescription;
+                                                    UI.Label(description.StripHTML().green());
+                                                }
+                                            }
+
+                                        if (skillToAdd != null) leader.AddSkill(skillToAdd, true);
+                                        if (skillToRemove != null) leader.RemoveSkill(skillToRemove);
                                         if (!showSquads)
                                             UI.Div(0, 10);
                                     }
