@@ -1,5 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.Armies;
+using Kingmaker.Armies.Blueprints;
 using Kingmaker.Armies.State;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
@@ -7,7 +8,9 @@ using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Blueprints;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using ModKit;
+using ModKit.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -35,8 +38,25 @@ namespace ToyBox.classes.MainUI {
 
         private static readonly Dictionary<string, GlobalMapArmyState> armySelection = new();
         private static Dictionary<object, bool> toggleStates = new();
+        public static IEnumerable<BlueprintLeaderSkill> allLeaderSkills;
+        public static IEnumerable<BlueprintLeaderSkill> GetAllLeaderSkills() {
+            if (allLeaderSkills != null) return allLeaderSkills;
+            else {
+                allLeaderSkills = BlueprintLoader.Shared.GetBlueprints<BlueprintLeaderSkill>();
+                return allLeaderSkills;
+            }
+        }
+        public static IEnumerable<BlueprintAbility> allLeaderAbilities;
+        public static IEnumerable<BlueprintAbility> GetAllLeaderAbilities() {
+            if (allLeaderAbilities != null) return allLeaderAbilities;
+            else {
+                allLeaderAbilities = BlueprintLoader.Shared.GetBlueprints<BlueprintAbility>();
+                return allLeaderAbilities;
+            }
+        }
 
         public static void OnGUI() {
+            if (allLeaderSkills == null) GetAllLeaderSkills();
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
                 UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());
@@ -73,6 +93,8 @@ namespace ToyBox.classes.MainUI {
                             foreach (var armyEntry in armies) {
                                 var showLeader = false;
                                 var showSquads = false;
+                                var showAllLeaderSkills = false;
+                                var showAllRituals = false;
                                 var army = armyEntry.Item1;
                                 var leader = army.Data.Leader;
                                 var distance = armyEntry.Item2;
@@ -110,19 +132,89 @@ namespace ToyBox.classes.MainUI {
                                 }
                                 if (showLeader) {
                                     UI.Div(0, 10);
+                                    showAllLeaderSkills = toggleStates.GetValueOrDefault(leader.Skills, false);
+                                    showAllRituals = toggleStates.GetValueOrDefault(leader.m_RitualSlots, false);
                                     using (UI.VerticalScope()) {
-                                        UI.Label(leader.LocalizedName.yellow(), UI.Width(475));
-                                    }
-                                    using (UI.VerticalScope()) {
-                                        var skills = leader.Skills;
-                                        foreach (var skill in skills) {
-                                            using (UI.HorizontalScope()) {
-                                                UI.Space(100);
-                                                UI.Label(skill.GetDisplayName().cyan(), UI.Width(350));
-                                                UI.Space(25);
-
+                                        using (UI.HorizontalScope()) {
+                                            UI.Space(100);
+                                            using (UI.VerticalScope()) {
+                                                UI.Label("Stats".yellow());
+                                                var stats = leader.Stats;
+                                                UI.ValueAdjuster("Attack Bonus".cyan(), () => stats.AttackBonus.BaseValue, (v) => stats.AttackBonus.BaseValue = v, 1, stats.AttackBonus.MinValue, stats.AttackBonus.MaxValue, UI.Width(375));
+                                                UI.ValueAdjuster("Defense Bonus".cyan(), () => stats.DefenseBonus.BaseValue, (v) => stats.DefenseBonus.BaseValue = v, 1, stats.DefenseBonus.MinValue, stats.DefenseBonus.MaxValue, UI.Width(375));
+                                                UI.ValueAdjuster("Infirmary Size".cyan(), () => stats.InfirmarySize.BaseValue, (v) => stats.InfirmarySize.BaseValue = v, 25, stats.InfirmarySize.MinValue, stats.InfirmarySize.MaxValue, UI.Width(375));
+                                                UI.ValueAdjuster("Max Mana".cyan(), () => stats.MaxMana.BaseValue, (v) => stats.MaxMana.BaseValue = v, 5, stats.MaxMana.MinValue, stats.MaxMana.MaxValue, UI.Width(375));
+                                                UI.ValueAdjuster("Mana Regen".cyan(), () => stats.ManaRegeneration.BaseValue, (v) => stats.ManaRegeneration.BaseValue = v, 1, stats.ManaRegeneration.MinValue, stats.ManaRegeneration.MaxValue, UI.Width(375));
+                                                UI.ValueAdjuster("Spell Strength".cyan(), () => stats.SpellStrength.BaseValue, (v) => stats.SpellStrength.BaseValue = v, 1, stats.SpellStrength.MinValue, stats.SpellStrength.MaxValue, UI.Width(375));
                                             }
                                         }
+                                        using (UI.HorizontalScope()) {
+                                            UI.Space(100);
+                                            UI.Label("Skills".yellow(), UI.Width(85));
+                                            if (UI.DisclosureToggle("Show All".orange().bold(), ref showAllLeaderSkills, 125)) {
+                                                toggleStates[leader.Skills] = showAllLeaderSkills;
+                                            }
+                                            //UI.Space(285);
+                                            //UI.Label("Action".yellow(), UI.Width(150));
+                                        }
+                                        var skills = showAllLeaderSkills ? GetAllLeaderSkills() : leader.Skills;
+                                        BlueprintLeaderSkill skillToAdd = null;
+                                        BlueprintLeaderSkill skillToRemove = null;
+                                        if (skills != null)
+                                            foreach (var skill in skills) {
+                                                var leaderHasSkill = leader.Skills.Contains(skill);
+                                                using (UI.HorizontalScope()) {
+                                                    UI.Space(100);
+                                                    var skillName = (string)skill.LocalizedName;
+                                                    if (leaderHasSkill) skillName = skillName.cyan();
+                                                    UI.Label(skillName, UI.Width(375));
+                                                    UI.Space(25);
+                                                    if (leaderHasSkill)
+                                                        UI.ActionButton("Remove", () => { skillToRemove = skill; }, UI.Width(150));
+                                                    else
+                                                        UI.ActionButton("Add", () => { skillToAdd = skill; }, UI.Width(150));
+                                                    UI.Space(100);
+                                                    var description = (string)skill.LocalizedDescription;
+                                                    UI.Label(description.StripHTML().green());
+                                                }
+                                            }
+                                        if (skillToAdd != null) leader.AddSkill(skillToAdd, true);
+                                        if (skillToRemove != null) leader.RemoveSkill(skillToRemove);
+#if DEBUG
+                                        using (UI.HorizontalScope()) {
+                                            UI.Space(100);
+                                            UI.Label("Rituals".yellow(), UI.Width(85));
+                                            if (UI.DisclosureToggle("Show All".orange().bold(), ref showAllRituals, 125)) {
+                                                toggleStates[leader.m_RitualSlots] = showAllRituals;
+                                            }
+                                            //UI.Space(285);
+                                            //UI.Label("Action".yellow(), UI.Width(150));
+                                        }
+
+                                        var leaderAbilities = leader.m_RitualSlots.Select(s => (BlueprintAbility)s).Where(s => s != null);
+                                        var abilities = showAllRituals ? GetAllLeaderAbilities() : leaderAbilities;
+                                        if (abilities != null) {
+                                            var canAdd = leaderAbilities.Count() < 14;
+                                            foreach (var ability in abilities) {
+                                                var leaderHasAbility = leaderAbilities.Contains(ability);
+                                                using (UI.HorizontalScope()) {
+                                                    UI.Space(100);
+                                                    var name = (string)ability.name;
+                                                    if (leaderHasAbility) name = name.cyan();
+                                                    UI.Label(name, UI.Width(375));
+                                                    UI.Space(25);
+                                                    if (leaderHasAbility)
+                                                        UI.ActionButton("Remove", () => { }, UI.Width(150));
+                                                    else if (canAdd)
+                                                        UI.ActionButton("Add", () => { }, UI.Width(150));
+                                                    else UI.Space(153);
+                                                    UI.Space(100);
+                                                    var description = (string)ability.GetDescription();
+                                                    UI.Label(description.StripHTML().green());
+                                                }
+                                            }
+                                        }
+#endif
                                         if (!showSquads)
                                             UI.Div(0, 10);
                                     }

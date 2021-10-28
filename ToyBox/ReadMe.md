@@ -38,11 +38,15 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 **Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.8 (Coming Later)
-* **Armies Editor** allow editing of leader skills
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.7 (Coming Soon)
+* **Bag of Tricks**
   * Allow any gender and multiple romances
     * Big thanks to ***Paladingineer*** and ***Ronin*** for their contributions to making this possible
+* **Armies Editor**
+  * can edit leader stats
+  * can edit leader skills
+  * can edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.6 (mainline 1.1.0i)
 * **Updated to WoTR 1.1.0.i (beta is done and released)**
 * **Bag of Tricks**
