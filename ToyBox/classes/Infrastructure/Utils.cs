@@ -125,12 +125,12 @@ namespace ToyBox {
             var maxStr = max.ToKM(units);
             return $"{minStr} - {maxStr}";
         }
-        public static int IntSortKey(this string s) {
+        public static long LongSortKey(this string s) {
             s = s.StripHTML();
             var match = Regex.Match(s, @"\d+");
             if (match == null || match.Value.Length <= 0) return int.MinValue;
             var stringValue = match.Value;
-            var v = int.Parse(stringValue, NumberFormatInfo.InvariantInfo);
+            var v = long.Parse(stringValue, NumberFormatInfo.InvariantInfo);
             var index = match.Index + match.Length;
             if (index < s.Length) {
                 if (s[index] == 'k') v *= 1000;

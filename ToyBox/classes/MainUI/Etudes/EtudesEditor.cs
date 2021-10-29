@@ -297,6 +297,8 @@ namespace ToyBox {
                                         UI.Space(25);
                                         if (element is Condition condition)
                                             UI.Label($"{element.GetType().Name.cyan()} : {condition.CheckCondition().ToString().orange()}", UI.Width(250));
+                                        else if (element is Conditional conditional)
+                                            UI.Label($"{element.GetType().Name.cyan()} : {conditional.ConditionsChecker.Check().ToString().orange()} - {string.Join(", ", conditional.ConditionsChecker.Conditions.Select(c => c.GetCaption())).yellow()}", UI.Width(250));
                                         else
                                             UI.Label(element.GetType().Name.cyan(), UI.Width(250));
                                         if (element is AnotherEtudeOfGroupIsPlaying otherGroup)

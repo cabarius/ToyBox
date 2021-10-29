@@ -27,6 +27,8 @@ using ModKit;
 using ModKit.Utility;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.ElementsSystem;
 
 namespace ToyBox {
     public class BlueprintBrowser {
@@ -46,8 +48,17 @@ namespace ToyBox {
         public static int currentPage = 0;
         public static string collationSearchText = "";
         public static string parameter = "";
+        private static readonly char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
         private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
-            new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(
+#if DEBUG
+                bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] {}
+#endif
+                )),
+            //new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.Collat`ionNames(bp.m_AllElements?.Select(e => e.GetType().Name).ToArray() ?? new string[] {})),
+            //new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(bp.m_AllElements?.Select(e => e.ToString().TrimEnd(digits)).ToArray() ?? new string[] {})),
+            //new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(bp.m_AllElements?.Select(e => e.name.Split('$')[1].TrimEnd(digits)).ToArray() ?? new string[] {})),
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames( bp.Groups.Select(g => g.ToString()).ToArray())),
             new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string> {bp.ParameterType.ToString() }),
@@ -212,7 +223,7 @@ namespace ToyBox {
                               from key in selectedTypeFilter.collator(bp)
                               //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
                               group bp by key into g
-                              orderby g.Key.IntSortKey(), g.Key
+                              orderby g.Key.LongSortKey(), g.Key
                               select g;
                 _ = collatedBPs.Count();
                 var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
