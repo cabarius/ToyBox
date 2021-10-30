@@ -42,6 +42,7 @@ namespace ToyBox.BagOfPatches {
             { "7364becdf5cc4b94dba30a9fe7c3b790", false },  // Cue      Cue_0234
             { "e166872fc2989f548af1b3e2ba8f7156", false },  // Cue      Cue_0029
             // Camellia
+            { "55c0fe80d141ecf40b49c7ad12746afb", true },   // Cue      Cue_0016
             { "789ffa9876fd92f439d4b975b16be283", true },   // Cue      Cue_0066_GiefSex
             { "f263d6ed04831f240bf2a8dce2b5ce33", true },   // Answer   Answer_0052
             { "a96fc116bb7af94488b6da41161a47c7", true },   // Answer   Answer_0060 
@@ -49,16 +50,18 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
         public static class PcFemale_CheckCondition_Patch {
-            public static void Postfix(PcFemale __instance, bool __result) {
+            public static void Postfix(PcFemale __instance, ref bool __result) {
+                Mod.Debug($"checking {__instance.ToString()} owner:{__instance.Owner.name} value: {__result}");
                 if (settings.toggleAllowAnyGenderRomance 
-                    && PcFemaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) __result = value;
+                    && PcFemaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value;}
             }
         }
         [HarmonyPatch(typeof(PcMale), nameof(PcMale.CheckCondition))]
         public static class PcMale_CheckCondition_Patch {
-            public static void Postfix(PcMale __instance, bool __result) {
+            public static void Postfix(PcMale __instance, ref bool __result) {
+                Mod.Debug($"checking {__instance.ToString()} owner:{__instance.Owner.name} value: {__result}");
                 if (settings.toggleAllowAnyGenderRomance
-                    && PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) __result = value;
+                    && PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }
 
@@ -70,7 +73,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(EtudeStatus), nameof(EtudeStatus.CheckCondition))]
         public static class EtudeStatus_CheckCondition_Patch {
-            public static void Postfix(EtudeStatus __instance, bool __result) {
+            public static void Postfix(EtudeStatus __instance, ref bool __result) {
                 if (settings.toggleMultipleRomance
                     && EtudeStatusOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) __result = value;
             }

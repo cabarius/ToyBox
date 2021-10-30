@@ -41,7 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Etude Editor** Show other Etude info and links 
 ### Ver 1.4.7 (Coming Soon)
 * **Bag of Tricks**
-  * Allow any gender and multiple romances
+  * Allow any gender for any romance
+  * and multiple romances (partially working - need to manually turn off KTC_Jealousy Etude for first exprimental preview)
     * Big thanks to ***Paladingineer*** and ***Ronin*** for their contributions to making this possible
 * **Armies Editor**
   * can edit leader stats
