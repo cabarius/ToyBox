@@ -37,17 +37,25 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 **Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.8 (Coming Later)
-* **Etude Editor** Show other Etude info and links 
-### Ver 1.4.7 (Coming Soon)
+### Ver 1.4.8 (Coming Soon)
+* **Armies Editor**
+  * Add squads in Army Editor
+### Ver 1.4.7
 * **Bag of Tricks**
-  * Allow any gender for any romance
-  * and multiple romances (partially working - need to manually turn off KTC_Jealousy Etude for first exprimental preview)
+  * ♥♥ Love is Free ♥♥ - Allow any gender for any romance
+  * Jelousy Begone! - Allow multiple romances at the same time
     * Big thanks to ***Paladingineer*** and ***Ronin*** for their contributions to making this possible
+* **Party Editor**
+  * (***Truinto***) added clear buttons for opposition schools
+  * (***Truinto***) allow CompletelyNormal Metamagic to work while using free metamagic cheat
+* **Search 'n Pick**
+  * (***BarleyFlour***) Added the ability to spawn an army as either friendly or hostile
 * **Armies Editor**
   * can edit leader stats
   * can edit leader skills
   * can edit leader rituals (abilities) and can add any BlueprintAbility
+* **Etude Editor** 
+  * Ability to show GUID and comments
 ### Ver 1.4.6 (mainline 1.1.0i)
 * **Updated to WoTR 1.1.0.i (beta is done and released)**
 * **Bag of Tricks**

@@ -312,6 +312,8 @@ namespace ToyBox {
         public bool previewAlignmentRestrictedDialog = false;
         public bool previewRandomEncounters = false;
 
+        // Etudes
+        public bool showEtudeComments = true;
         // Quests
         public bool hideCompleted = true;
 
