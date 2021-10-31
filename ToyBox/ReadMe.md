@@ -40,6 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.8 (Coming Soon)
 * **Armies Editor**
   * Add squads in Army Editor
+  * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.7
 * **Bag of Tricks**
   * ♥♥ Love is Free ♥♥ - Allow any gender for any romance
@@ -53,7 +54,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor**
   * can edit leader stats
   * can edit leader skills
-  * can edit leader rituals (abilities) and can add any BlueprintAbility
 * **Etude Editor** 
   * Ability to show GUID and comments
 ### Ver 1.4.6 (mainline 1.1.0i)
