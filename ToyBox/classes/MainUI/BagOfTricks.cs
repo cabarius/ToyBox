@@ -182,8 +182,9 @@ namespace ToyBox {
                     UI.Label("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green());
                 },
                 () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25); UI.Label("Hold down shift during launch to bypass".green()); },
+                () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ", ref settings.toggleWidenActionBarGroups),
                 () => {
-                    if (Toggle("Show Acronyms in Spell/Ability/Item toolbar items", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
+                    if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
                         Main.SetNeedsResetGameUI();
                     }
                 },

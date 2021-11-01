@@ -279,11 +279,11 @@ namespace ToyBox {
                         }
                     }
                     if (showComments && Main.settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
-                        UI.Space(-25);
+                        UI.Space(-15);
                         using (UI.HorizontalScope(UI.Width(10000))) {
                             UI.Space(310);
                             UI.Indent(indent);
-                            UI.Space(925);
+                            UI.Space(933);
                             UI.Label(etude.Comment.green());
                         }
                     }

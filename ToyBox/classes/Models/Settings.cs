@@ -109,6 +109,8 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
+
+        public bool toggleWidenActionBarGroups = false;
         // Cheap Tricks
         public int increment = 10000;
         public int kineticistBurnReduction = 0;
