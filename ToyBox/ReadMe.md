@@ -43,7 +43,13 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.8
 * **Bag of Tricks**
+  * Love is Free
+    * Mythic path no longer blocks romance with the queen
   * Toggle to allow spells/abilities/items toolbar pop-ups grow wider
+  * Group Picker 
+    * Changing party in a map does not break characters anymore
+    * No longer brings up the mod when activating it via hot key
+    * Now works on the global map too
 ### Ver 1.4.7
 * **Bag of Tricks**
   * ♥♥ Love is Free ♥♥ - Allow any gender for any romance

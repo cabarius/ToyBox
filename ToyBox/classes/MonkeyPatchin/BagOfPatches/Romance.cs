@@ -68,10 +68,11 @@ namespace ToyBox.BagOfPatches {
         // Multiple Romances overrides
         // This modify the EtudeStatus condition for specific Owner blueprints 
         internal static readonly Dictionary<string, bool> EtudeStatusOverrides = new() {
-            { "f4acc1a428ffbee42965a6f13fe270ac", false },
+            { "f4acc1a428ffbee42965a6f13fe270ac", false },  // Cue_0058
+            { "7a160960668f2ef4180cb56edb8388e9", true },   // Cue_0044
         };
         internal static readonly Dictionary<string, bool> FlagInRangeOverrides = new() {
-            { "4799a25da39295b43a6eefcd2cb2b4a7", false },
+            { "4799a25da39295b43a6eefcd2cb2b4a7", false },  // Etude    KTC_Jealousy
         };
 
         [HarmonyPatch(typeof(EtudeStatus), nameof(EtudeStatus.CheckCondition))]
