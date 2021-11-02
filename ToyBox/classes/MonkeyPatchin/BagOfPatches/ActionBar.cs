@@ -25,7 +25,7 @@ namespace ToyBox.BagOfPatches {
                 if (!settings.toggleWidenActionBarGroups) return;
                 var isSpellGroup = __instance is ActionBarSpellGroupPCView;
                 var rectTransform = __instance.RectTransform;
-                var itemCount = __instance.m_SlotsList.Count(s => !s.ViewModel.IsEmpty.Value);
+                var itemCount = __instance.m_SlotsList.Count(s => !s.ViewModel?.IsEmpty.Value ?? false);
                 var columnCount = Math.Max(5, (int)(0.85 * Math.Sqrt(itemCount)));
                 var rowCount = (int)(Math.Ceiling((float)itemCount / columnCount));
                 if (isSpellGroup) rowCount += 1; // nudge for spell group ??? TODO - why?

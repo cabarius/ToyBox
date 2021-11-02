@@ -50,6 +50,11 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Changing party in a map does not break characters anymore
     * No longer brings up the mod when activating it via hot key
     * Now works on the global map too
+* **Search 'n Pick**
+  * Fixed issue where if you select items and then weapons that the subcategories would not appear
+  * Fixed some misc crashes caused by bad blueprints
+* **Crusade Editor**
+  * Fixed issue where Build Time slider wouldn't slide
 ### Ver 1.4.7
 * **Bag of Tricks**
   * ♥♥ Love is Free ♥♥ - Allow any gender for any romance

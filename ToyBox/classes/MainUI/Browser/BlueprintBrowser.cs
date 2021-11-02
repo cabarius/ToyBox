@@ -92,7 +92,7 @@ namespace ToyBox {
                 }),
             new NamedTypeFilter<BlueprintItemArmor>("Armor", null, (bp) => {
                 var type = bp.Type;
-                if (type != null) return bp.CollationNames(type.NameSafe(), $"{bp.Cost.ToBinString("⊙".yellow())}");
+                if (type != null) return bp.CollationNames(type.DefaultName, $"{bp.Cost.ToBinString("⊙".yellow())}");
                 return bp.CollationNames("?", $"{bp.Cost.ToBinString("⊙".yellow())}");
                 }),
             new NamedTypeFilter<BlueprintItemEquipmentUsable>("Usable", null, bp => bp.CollationNames(bp.SubtypeName, $"{bp.Cost.ToBinString("⊙".yellow())}")),

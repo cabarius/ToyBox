@@ -112,7 +112,7 @@ namespace ToyBox.classes.MainUI {
                         UI.Slider("Claim Cost Modifier", () => ks.ClaimCostModifier, v => ks.ClaimCostModifier = v, -1, 2, 0, 1);
                         UI.Slider("Claim Time Modifier", () => ks.ClaimTimeModifier, v => ks.ClaimTimeModifier = v, -1, 2, 0, 1);
                         UI.Slider("Rankup Time Modifer", () => ks.RankupTimeModifier, v => ks.RankupTimeModifier = v, -1, 2, 0, 1);
-                        UI.Slider("Build Time Modifier", () => ks.BuildingTimeModifier, v => ks.BuildingTimeModifier = v, -1, 2, 0, 1);
+                        UI.Slider("Build Time Modifier", ref Settings.kingdomBuildingTimeModifier, -1, 2, 0, 1);
                         UI.Div(0, 0, 800);
                         UI.DescriptiveLabel("Random Encounters", "The following modifiers all work on ".green() + "chance = chance (1 + modifier) ".yellow() + "so a value of ".green() + "-1".yellow() + " means the chance is 0, ".green() + "0".yellow() + " is chance cost and ".green() + "2".yellow() + " increases it 3x".green());
                         UI.Slider("% Chance (Unclaimed)", () => ks.REModifierUnclaimed, v => ks.REModifierUnclaimed = v, -1f, 2f, 0f, 1);
@@ -177,7 +177,7 @@ namespace ToyBox.classes.MainUI {
                     UI.Label("Multiplies crusade card resolution time by (1 + modifier). -1 will make things as fast as possible (minimum 1 day to avoid possible bugs)".green());
                 },
             () => {
-                    UI.Slider("Build Time Modifer", ref Settings.kingdomBuildingTimeModifier, -1, 2, 0, 2, "", UI.Width(400));
+                    UI.Slider("Build Time Modifier", ref Settings.kingdomBuildingTimeModifier, -1, 2, 0, 2, "", UI.Width(400));
                     var instance = KingdomState.Instance;
                     if (instance != null) {
                         instance.BuildingTimeModifier = Settings.kingdomBuildingTimeModifier;
