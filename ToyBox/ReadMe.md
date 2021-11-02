@@ -50,6 +50,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Changing party in a map does not break characters anymore
     * No longer brings up the mod when activating it via hot key
     * Now works on the global map too
+* **Enchantment**
+  * (***Pheonix99***) Fix for stack merging eating enchants -  EX: If you add mighty fists to an amulet of natural armor, then stick it in inventory where you have another natural armor amulet of the same type, they're merged into a stack and the mighty fists enchant vanishes 
 * **Search 'n Pick**
   * Fixed issue where if you select items and then weapons that the subcategories would not appear
   * Fixed some misc crashes caused by bad blueprints
