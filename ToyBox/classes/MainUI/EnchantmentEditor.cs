@@ -4,6 +4,7 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
@@ -15,6 +16,7 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace ToyBox.classes.MainUI {
@@ -444,6 +446,8 @@ namespace ToyBox.classes.MainUI {
             item.RemoveEnchantment(enchantment);
         }
 
+
+
         public static void AddTricksterEnchantmentsTier1(ItemEntity item) {
             var tricksterKnowledgeArcanaTier1 = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>("c7bb946de7454df4380c489a8350ba38");
             var tricksterTier1Toy = tricksterKnowledgeArcanaTier1.GetComponent<TricksterArcanaBetterEnhancements>();
@@ -502,7 +506,7 @@ namespace ToyBox.classes.MainUI {
                     break;
             }
         }
-        /// <summary>probably useless</summary>
+        /// <summary>definitely not useless</summary>
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {
             Dictionary<ItemEnchantment, bool> enchantments = new();
@@ -512,6 +516,52 @@ namespace ToyBox.classes.MainUI {
                 enchantments.Add(enchantment, !base_enchantments.Contains(enchantment.Blueprint));
             }
             return enchantments;
+        }
+
+        public static int CalcCost(ItemEntity item, BlueprintItemEnchantment enchantment) {
+            if(item.Blueprint is Kingmaker.Blueprints.Items.Weapons.BlueprintItemWeapon || item.Blueprint is BlueprintItemArmor || item.Blueprint is BlueprintItemShield) {
+
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Makes getting the effective bonus of an item more readable
+        /// </summary>
+        /// <returns>Total effective bonus of all permanent enchantments on the item; 0 if none</returns>
+        public static int GetEffectiveBonus(ItemEntity item) {
+            if (item == null) return 0;
+
+            return item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
+        }
+
+        /// <summary>
+        /// Gives the current enhancement bonus of the item
+        /// </summary>
+        /// <returns></returns>
+        public static int CurrentEnhancement(ItemEntity item) {
+            if (item == null) return 0;
+
+            Regex enhanceCheck = new Regex(@"Enhancement\d$");
+            int[] enhancements = new int[20];
+
+            foreach (var enchant in item.Blueprint.Enchantments) {
+                if (enhanceCheck.IsMatch(enchant.Name)) {
+                    try {
+                        enhancements.Append(int.Parse(enchant.name.Substring(11)));
+                    }
+                    catch { // catches any edge cases where the name is something like "Enhancement3hop" and just ignores those
+                        continue;
+                    }
+                }
+            }
+
+            if (!enhancements.Empty()) {
+                return enhancements.Max();
+            }
+
+            return 0;
         }
 
         /// <summary>maybe useful to render button texts/colors</summary>
