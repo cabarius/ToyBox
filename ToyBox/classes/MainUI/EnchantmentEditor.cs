@@ -518,13 +518,27 @@ namespace ToyBox.classes.MainUI {
             return enchantments;
         }
 
-        public static int CalcCost(ItemEntity item, BlueprintItemEnchantment enchantment) {
-            if(item.Blueprint is Kingmaker.Blueprints.Items.Weapons.BlueprintItemWeapon || item.Blueprint is BlueprintItemArmor || item.Blueprint is BlueprintItemShield) {
+        // currently nonfunctional until Nordic gets his patch working
 
-            }
+        //public static int CalcCost(ItemEntity item, BlueprintItemEnchantment enchantment) {
+        //    if (item.Blueprint is BlueprintItemWeapon || item.Blueprint is BlueprintItemArmor || item.Blueprint is BlueprintItemShield) {
+        //        int currentBonus = GetEffectiveBonus(item);
 
-            return -1;
-        }
+        //        if (currentBonus + enchantment.EnchantmentCost > 10) {
+        //            return -1;
+        //        }
+
+        //        long currentPrice = item.Blueprint.SellPrice;
+        //        long basePrice;
+        //        if (item.Blueprint is BlueprintItemArmor) {
+        //            basePrice = currentPrice - (1000 * currentBonus * currentBonus);   // get the price of the item without its bonuses
+        //        } else if (item.Blueprint is BlueprintItemWeapon) {
+
+        //        } 
+        //    }
+
+        //    return -1;
+        //}
 
         /// <summary>
         /// Makes getting the effective bonus of an item more readable
@@ -533,7 +547,7 @@ namespace ToyBox.classes.MainUI {
         public static int GetEffectiveBonus(ItemEntity item) {
             if (item == null) return 0;
 
-            return item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
+            return item.Enchantments.Sum((enchantment) => enchantment.Blueprint.EnchantmentCost);
         }
 
         /// <summary>
