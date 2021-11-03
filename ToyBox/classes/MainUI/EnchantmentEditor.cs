@@ -102,7 +102,7 @@ namespace ToyBox.classes.MainUI {
                     if (inventory.Count > 0) {
                         UI.ActionSelectionGrid(
                             ref selectedItemIndex,
-                            inventory.Select(bp => bp.Name).ToArray(),
+                            inventory.Select(item => item.NameAndOwner()).ToArray(),
                             1,
                             index => selectedItem = inventory[selectedItemIndex],
                             UI.rarityButtonStyle,
@@ -126,7 +126,7 @@ namespace ToyBox.classes.MainUI {
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
                             UI.Space(25);
                             using (UI.VerticalScope(UI.Width(400))) {
-                                UI.Label(item.Name.bold(), UI.Width(400));
+                                UI.Label(item.NameAndOwner().bold(), UI.Width(400));
                                 var bp = item.Blueprint;
                                 using (UI.HorizontalScope()) {
                                     var modifers = bp.Attributes();
@@ -347,7 +347,7 @@ namespace ToyBox.classes.MainUI {
                 selectedItemIndex = inventory.IndexOf(editedItem);
                 editedItem = null;
             }
-            if (selectedItemIndex >= inventory.Count) {
+            if (selectedItemIndex >= inventory.Count || selectedItemIndex < 0) {
                 selectedItemIndex = 0;
             }
             selectedItem = selectedItemIndex < inventory.Count ? inventory.ElementAt(selectedItemIndex) : null;

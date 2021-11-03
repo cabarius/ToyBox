@@ -18,6 +18,7 @@ using UnityEngine;
 
 namespace ToyBox {
     public static class LootHelper {
+        public static string NameAndOwner(this ItemEntity u) => u.Name + (u.Owner != null ? $" ({u.Owner.CharacterName})" : "");
 
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
             var rarity = item.Rarity();

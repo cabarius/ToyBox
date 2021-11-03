@@ -42,6 +42,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.9 (Coming Soon)
+* **Enchantment**
+  * Show character name equiping an item if is equiped
 ### ver 1.4.8.1
 * Fixed some edge cases for **Jealousy Begone!**
 ### Ver 1.4.8
