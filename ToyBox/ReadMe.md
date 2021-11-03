@@ -47,7 +47,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * **Love is Free**
     * Mythic path no longer blocks romance with the queen
   * Toggle to allow spells/abilities/items toolbar pop-ups grow wider
-  * Group Picker 
+  * **Group Picker**
     * Changing party in a map does not break characters anymore
     * No longer brings up the mod when activating it via hot key
     * Now works on the global map too

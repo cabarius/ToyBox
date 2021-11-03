@@ -2,6 +2,7 @@
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.ElementsSystem;
 using Kingmaker.UI.MVVM._PCView.ActionBar;
 using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
 using Kingmaker.UI.UnitSettings;
@@ -67,6 +68,14 @@ namespace ToyBox.BagOfPatches {
 
         // Multiple Romances overrides
         // This modify the EtudeStatus condition for specific Owner blueprints 
+        internal static readonly Dictionary<(string, string), bool> ConditionCheckOverrides = new() {
+            { ("39bd3b1e9fb6fef4c8e92674c02295df", "6a5a5f14-0531-421e-8225-f777fd22fa52"), true },  // Not Etude CamelliaRomance_Start status is:   Playing;   
+            { ("39bd3b1e9fb6fef4c8e92674c02295df", "0dadef83-142b-4126-9ef3-d2b3d6ac3c00"), true },  // Not Etude WenduagRomance_Active status is:   Playing;   
+            { ("39bd3b1e9fb6fef4c8e92674c02295df", "6af9fc46-b172-45f6-991b-95864d7535dd"), true },  // Not Etude LannRomance_Active status is:   Playing;      
+            { ("39bd3b1e9fb6fef4c8e92674c02295df", "08562d17-c875-477d-916f-484c86d6d56b"), true },  // Not Etude ArueshalaeRomance_Active status is:   Playing;   
+            { ("39bd3b1e9fb6fef4c8e92674c02295df", "eed10502-68fe-4f06-93f6-9a5a344194e1"), true },  // Not Etude DaeranRomance_Active status is:   Playing;      
+            { ("39bd3b1e9fb6fef4c8e92674c02295df", "79f99282-5d3a-4b2b-8d2e-61a0dc8f033f"), true },  // Not Etude SosielRomance_Active status is:   Playing; 
+        };
         internal static readonly Dictionary<string, bool> EtudeStatusOverrides = new() {
             { "f4acc1a428ffbee42965a6f13fe270ac", false },  // Cue_0058
             { "7a160960668f2ef4180cb56edb8388e9", true },   // Cue_0044
@@ -74,6 +83,15 @@ namespace ToyBox.BagOfPatches {
         internal static readonly Dictionary<string, bool> FlagInRangeOverrides = new() {
             { "4799a25da39295b43a6eefcd2cb2b4a7", false },  // Etude    KTC_Jealousy
         };
+
+        [HarmonyPatch(typeof(Condition), nameof(Condition.Check))]
+        public static class Condition_Check_Patch {
+            public static void Postfix(Condition __instance, ref bool __result) {
+                var key = (__instance.Owner.AssetGuid.ToString(), __instance.AssetGuid);
+                if (settings.toggleMultipleRomance
+                    && ConditionCheckOverrides.TryGetValue(key, out var value)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {value}"); __result = value; }
+            }
+        }
 
         [HarmonyPatch(typeof(EtudeStatus), nameof(EtudeStatus.CheckCondition))]
         public static class EtudeStatus_CheckCondition_Patch {
