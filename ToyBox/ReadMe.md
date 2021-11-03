@@ -57,6 +57,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Fixed some misc crashes caused by bad blueprints
 * **Crusade Editor**
   * Fixed issue where Build Time slider wouldn't slide
+* **Misc**
+  * Fixed some crashers in inventory UI
 ### Ver 1.4.7
 * **Bag of Tricks**
   * ♥♥ Love is Free ♥♥ - Allow any gender for any romance
