@@ -36,7 +36,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
-**Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
+***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.10 (Coming Later)
 * **Armies Editor**
   * Add squads in Army Editor
@@ -49,6 +49,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Show character name equiping an item if is equiped
 * **Loot**
   * Item rarity takes into account enchantment rarity
+* **Level Up**
+  * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
 ### ver 1.4.8.1
 * Fixed some edge cases for **Jealousy Begone!**
 ### Ver 1.4.8
