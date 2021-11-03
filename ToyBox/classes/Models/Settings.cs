@@ -227,6 +227,8 @@ namespace ToyBox {
         public bool toggleOptionalFeatSelection = false;
         public bool toggleUniversalSpellbookd = false;
         public bool toggleUncappedCasterLevel = false;
+        public bool toggleContinousLevelCap = false;
+        public bool toggleExponentialLevelCap = false;
 
         // Multipliers
         public int featsMultiplier = 1;
