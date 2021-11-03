@@ -100,13 +100,6 @@ namespace ToyBox {
         const string vorpal = "2f60bfcba52e48a479e4a69868e24ebc";
         const string cruel = "629c383ffb407224398bb71d1bd95d14";
         const string secondChance = "a63292054cf307d479bebbff768f5d0e";
-        const string  = "";
-        const string  = "";
-        const string  = "";
-        const string  = "";
-        const string  = "";
-        const string  = "";
-        const string  = "";
 
         #endregion
 
