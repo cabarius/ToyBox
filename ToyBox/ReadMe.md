@@ -44,7 +44,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.9 (Coming Soon)
 ### Ver 1.4.8
 * **Bag of Tricks**
-  * Love is Free
+  * **Love is Free**
     * Mythic path no longer blocks romance with the queen
   * Toggle to allow spells/abilities/items toolbar pop-ups grow wider
   * Group Picker 
