@@ -77,7 +77,7 @@ namespace ToyBox.BagOfPatches {
                 acronym.gameObject.SetActive(true);
                 if (acronym.gameObject.GetComponent<UICornerCut>() == null) {
                     var cornerCut = acronym.gameObject.AddComponent<UICornerCut>();
-                    cornerCut.gameObject.SetActive(true);
+                    cornerCut?.gameObject?.SetActive(true);
                 }
             }
         }
