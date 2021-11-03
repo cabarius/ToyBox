@@ -55,7 +55,7 @@ namespace ToyBox.BagOfPatches {
                 settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
                 //Mod.Trace($"UnitProgressionData_ExperienceTable - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
 
-                if (isFakeLegendaryHero)
+                if (__instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero)
                     __result = Game.Instance.BlueprintRoot.Progression.LegendXPTable;
                 else if (settings.toggleContinousLevelCap)
                     __result = XPcontinuous;
@@ -72,7 +72,7 @@ namespace ToyBox.BagOfPatches {
                 settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
                 //Mod.Trace ($"UnitProgressionData_MaxCharacterLevel - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
 
-                if (isFakeLegendaryHero)
+                if (__instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero)
                     __result = 40;
                 else if (settings.toggleContinousLevelCap)
                     __result = 40;
