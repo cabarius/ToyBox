@@ -220,23 +220,27 @@ namespace ToyBox {
             uncolatedMatchCount = matchCount;
             if (selectedTypeFilter.collator != null) {
                 collatedBPs = from bp in filtered
-                              from key in selectedTypeFilter.collator(bp)
-                              //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
-                              group bp by key into g
-                              orderby g.Key.LongSortKey(), g.Key
-                              select g;
+                    from key in selectedTypeFilter.collator(bp)
+                    //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
+                    group bp by key into g
+                    orderby g.Key.LongSortKey(), g.Key
+                    select g;
                 _ = collatedBPs.Count();
                 var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
                 collationKeys = new List<string> { "All" };
                 collationKeys.AddRange(keys);
             }
+            else {
+                collationKeys = null;
+            }
+
             unpagedBPs = filteredBPs;
             UpdatePaginatedResults();
             firstSearch = false;
             UpdateCollation();
         }
         public static void UpdateCollation() {
-            var key = collationKeys.ElementAt(selectedCollationIndex);
+            if (collationKeys == null || collatedBPs == null) return;
             var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
             foreach (var group in collatedBPs) {
                 if (group.Key == selectedKey) {
