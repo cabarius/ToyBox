@@ -35,6 +35,11 @@ namespace ToyBox.classes.MainUI {
         private static List<ItemEntity> inventory;
         private static List<BlueprintItemEnchantment> enchantments;
         private static List<BlueprintItemEnchantment> filteredEnchantments = new();
+        public static IEnumerable<IGrouping<string, BlueprintItemEnchantment>> collatedBPs = null;
+        private static List<BlueprintItemEnchantment> selectedCollatedEnchantments;
+        private static List<string> collationKeys = new();
+        private static string collationKey;
+        private static string collationSearchText;
         public static int matchCount = 0;
 
         public static void ResetGUI() { }
@@ -79,7 +84,12 @@ namespace ToyBox.classes.MainUI {
                         1,
                         index => { selectedItemIndex = index; UpdateItems(); },
                         UI.buttonStyle,
-                        UI.Width(150));
+                        UI.Width(175));
+                    UI.Space(25);
+                    if (UI.VPicker("Ench. Types".cyan(), ref collationKey, collationKeys, "All", (s) => s, ref collationSearchText, UI.Width(175))) {
+                        Mod.Debug($"collationKey: {collationKey}");
+                        UpdateCollation();
+                    }
                 }
                 var itemTypeName = ItemTypeNames[selectedItemType];
                 remainingWidth -= 250;
@@ -278,8 +288,10 @@ namespace ToyBox.classes.MainUI {
         }
         public static void EnchantmentsListGUI() {
             UI.Div(5);
-            for (var i = 0; i < filteredEnchantments.Count; i++) {
-                var enchant = filteredEnchantments[i];
+            var enchantement = selectedCollatedEnchantments ?? filteredEnchantments;
+
+            for (var i = 0; i < enchantement.Count; i++) {
+                var enchant = enchantement[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
                 using (UI.HorizontalScope()) {
                     UI.Space(5);
@@ -317,20 +329,25 @@ namespace ToyBox.classes.MainUI {
                         else
                             UI.Space(154);
                     }
-
                     UI.Space(10);
+                    UI.Label($"{enchant.Rating()}".yellow(), 75.width()); // ⊙
+                    UI.Space(10);
+                    var description = enchant.Description.StripHTML().green();
+                    if (enchant.Comment.Length > 0) description = enchant.Comment.orange() + " " + description;
+                    if (enchant.Prefix.Length > 0) description = enchant.Prefix.yellow() + " " + description;
+                    if (enchant.Suffix.Length > 0) description = enchant.Suffix.yellow() + " " + description;
                     if (settings.showAssetIDs) {
                         using (UI.VerticalScope()) {
                             using (UI.HorizontalScope()) {
                                 UI.Label(enchant.CollationNames().First().cyan(), UI.Width(300));
                                 GUILayout.TextField(enchant.AssetGuid.ToString(), UI.AutoWidth());
                             }
-                            if (enchant.Description.Length > 0) UI.Label(enchant.Description.StripHTML().green());
+                            UI.Label(description);
                         }
                     }
                     else {
                         UI.Label(enchant.CollationNames().First().cyan(), UI.Width(300));
-                        if (enchant.Description.Length > 0) UI.Label(enchant.Description.StripHTML().green());
+                        UI.Label(description);
                     }
                 }
                 UI.Div();
@@ -376,7 +393,34 @@ namespace ToyBox.classes.MainUI {
                 }
             }
             matchCount = filteredEnchantments.Count();
-            filteredEnchantments = filteredEnchantments.OrderByDescending(bp => bp.Rarity()).Take(settings.searchLimit).ToList();
+            var filtered = from bp in filteredEnchantments
+                orderby bp.Rating() descending, bp.name
+                select bp;
+               //.ThenByDescending(bp => bp.IdentifyDC)
+               collatedBPs = from bp in filtered
+                             from key in bp.CollationNames().Select(n => n.Replace("Enchantment", ""))
+                             group bp by key into g
+                             orderby g.Key.LongSortKey(), g.Key
+                             select g;
+            _ = collatedBPs.Count();
+            var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
+            collationKeys = new List<string> { };
+            collationKeys.AddRange(keys);
+            filteredEnchantments = filtered.Take(settings.searchLimit).ToList();
+            UpdateCollation();
+        }
+        public static void UpdateCollation() {
+            if (collationKey == null)
+                selectedCollatedEnchantments = null;
+            else
+                foreach (var group in collatedBPs) {
+                    Mod.Debug($"group: {group.Key}");
+                    if (group.Key == collationKey) {
+                        matchCount = group.Count();
+                        selectedCollatedEnchantments = group.ToList();
+                    }
+                }
+
         }
         public static void AddClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;

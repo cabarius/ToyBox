@@ -55,17 +55,24 @@ namespace ToyBox {
             var rating = 0;
             try {
                 var itemRating = 0;
+                var itemEnchRating = 0;
                 var bpRating = 0;
+                var bpEnchRating = 0;
                 if (item != null) {
                     itemRating = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
+                    itemEnchRating = item.Enchantments.Sum(e => (int)e.Blueprint.Rating());
                     //Main.Log($"item enchantValue: {enchantValue}");
                     var currentCharacter = UIUtility.GetCurrentCharacter();
                     var component = bp.GetComponent<CopyItem>();
                     if (component != null && component.CanCopy(item, currentCharacter)) {
                         itemRating = Math.Max(itemRating, 10);
                     }
+
+                    itemRating = Math.Max(itemRating, itemEnchRating);
                 }
                 bpRating = 10 * bp.CollectEnchantments().Sum((e) => e.EnchantmentCost);
+                bpEnchRating = bp.CollectEnchantments().Sum((e) => (int)e.Rating());
+                bpRating = Math.Max(bpRating, bpEnchRating);
                 //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
                 rating = Math.Max(itemRating, bpRating);
             }
@@ -112,9 +119,17 @@ namespace ToyBox {
             }
             return Rarity(bp.Rating(item));
         }
+
+        public static int Rating(this BlueprintItemEnchantment bp) {
+            int rating = 0;
+            if (bp is BlueprintWeaponEnchantment || bp is BlueprintArmorEnchantment)
+                rating = 10 * bp.EnchantmentCost;
+            else
+                rating = (bp.IdentifyDC * 5) / 2;
+            return rating;
+        }
         public static RarityType Rarity(this BlueprintItemEnchantment bp) {
-            var rating = bp.EnchantmentCost * 10;
-            return rating.Rarity();
+            return bp.Rating().Rarity();
         }
         public static Color color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
         public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
