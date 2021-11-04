@@ -78,6 +78,7 @@ namespace ToyBox {
         const string flaming = "30f90becaaac51f41bf56641966c4121";
         const string flamingBurst = "3f032a3cd54e57649a0cdad0434bf221";
         const string frost = "421e54078b7719d40915ce0672511d0b";
+        const string icyBurst = "564a6924b246d254c920a7c44bf2a58b";
         const string shock = "7bda5277d36ad114f9f9fd21d0dab658";
         const string shockingBurst = "914d7ee77fb09d846924ca08bccee0ff";
         const string thundering = "690e762f7704e1f4aa1ac69ef0ce6a96";
@@ -104,87 +105,519 @@ namespace ToyBox {
         #endregion
 
         #region Enchantment GUIDs by equivalent +bonus
-        public string[] P1ArmorEnchants =  {
+        public static string[] P1ArmorEnchants =  {
             poisonResistant,
             balanced,
             fortLight
         };
 
-        public string[] P2ArmorEnchants = {
+        public static string[] P2ArmorEnchants = {
             shadow,
             spellRes13
         };
 
-        public string[] P3ArmorEnchants = {
+        public static string[] P3ArmorEnchants = {
             fortMed,
             spellRes15,
             invulnerability
         };
 
-        public string[] P4ArmorEnchants = {
+        public static string[] P4ArmorEnchants = {
             shadowImp,
-            resAcid10,
-            resCold10,
-            resLightning10,
-            resFire10,
-            resSonic10,
             spellRes17
         };
 
-        public string[] P5ArmorEnchants = {
+        public static string[] P5ArmorEnchants = {
             spellRes19,
-            resAcid20,
-            resCold20,
-            resLightning20,
-            resFire20,
-            resAcid30,
-            resCold30,
-            resLightning30,
-            resFire30,
-            resSonic30,
             fortHeavy
         };
 
 
-
-        public string[] P1ShieldEnchants = {
+        public static string[] P1ShieldEnchants = {
             poisonResistant,
             arrowCatching,
             fortLight
         };
 
-        public string[] P2ShieldEnchants = {
+        public static string[] P2ShieldEnchants = {
             arrowDeflecting,
             spellRes13
         };
 
-        public string[] P3ShieldEnchants = {
+        public static string[] P3ShieldEnchants = {
             spellRes15,
             fortMed
         };
 
-        public string[] P4ShieldEnchants = {
+        public static string[] P4ShieldEnchants = {
             spellRes17,
-            resFire10,
-            resCold10,
-            resAcid10,
-            resSonic10,
-            resLightning10
         };
 
-        public string[] P5ShieldEnchants = {
+        public static string[] P5ShieldEnchants = {
             spellRes19,
             fortHeavy,
+        };
+
+
+        public static string[] P1MeleeWeapEnchants = {
+            corrosive,
+            cruel,
+            flaming,
+            frost,
+            furious,
+            ghosttouch,
+            heartseeker,
+            keen,
+            shock,
+            thundering,
+            vicious
+        };
+
+        public static string[] P2MeleeWeapEnchants = {
+            anarchic,
+            axiomatic,
+            corrosiveBurst,
+            disruption,
+            flamingBurst,
+            furyborn,
+            holy,
+            icyBurst,
+            igniting,
+            shockingBurst,
+            thunderingBurst,
+            unholy
+        };
+
+        public static string[] P3MeleeWeapEnchants = {
+            nullifying,
+            speed
+        };
+
+        public static string[] P4MeleeWeapEnchants = {
+            brilliantEnergy
+        };
+
+        public static string[] P5MeleeWeapEnchants = {
+            vorpal
+        };
+
+
+        public static string[] P1RangedWeapEnchants = {
+
+            corrosive,
+            flaming,
+            frost,
+            thundering,
+            shock
+        };
+
+        public static string[] P2RangedWeapEnchants = {
+            anarchic,
+            axiomatic,
+            holy,
+            unholy,
+            corrosiveBurst,
+            flamingBurst,
+            icyBurst,
+            thunderingBurst,
+            shockingBurst,
+            igniting
+        };
+
+        public static string[] P3RangedWeapEnchants = {
+            speed
+        };
+
+        public static string[] P4RangedWeapEnchants = {
+            brilliantEnergy,
+            secondChance
+        };
+
+
+        public static string[] bane = {
+            baneAberration,
+            baneAnimal,
+            baneChaoticOutsider,
+            baneConstruct,
+            baneDragon,
+            baneEvilOutsider,
+            baneFey,
+            baneGoodOutsider,
+            baneHumanoidGiant,
+            baneHumanoidReptilian,
+            baneLawfulOutsider,
+            baneMagicalBeast,
+            baneMonstrousHumanoid,
+            banePlant,
+            baneUndead,
+            baneVermin,
+        };
+
+        public static string[] resistEnergy = {
+            resAcid10,
+            resCold10,
+            resLightning10,
+            resFire10,
+            resSonic10,
+        };
+
+        public static string[] resistEnergyImp = {
             resFire20,
             resCold20,
             resAcid20,
             resLightning20,
+        };
+
+        public static string[] resistEnergyGreat = {
             resFire30,
             resCold30,
             resAcid30,
             resSonic30,
             resLightning30
         };
+
+        #endregion
+
+        #region random enchantment methods
+
+        public static BlueprintWeaponEnchantment GetRandomMeleeWeaponEnchantment(int bonus) {
+            Random rand = new Random();
+            int dieResult;
+            string enchantGUID = null;
+
+            switch (bonus) {
+                case 1:
+                    dieResult = rand.Next(101);
+                    if (1 <= dieResult && dieResult <= 9) {
+                        enchantGUID = bane[rand.Next(bane.Length + 1) - 1];
+                    }
+                    else if (10 <= dieResult && dieResult <= 18) {
+                        enchantGUID = corrosive;
+                    }
+                    else if (19 <= dieResult && dieResult <= 23) {
+                        enchantGUID = cruel;
+                    }
+                    else if (24 <= dieResult && dieResult <= 32) {
+                        enchantGUID = flaming;
+                    }
+                    else if (33 <= dieResult && dieResult <= 41) {
+                        enchantGUID = frost;
+                    }
+                    else if (42 <= dieResult && dieResult <= 45) {
+                        enchantGUID = furious;
+                    }
+                    else if (46 <= dieResult && dieResult <= 51) {
+                        enchantGUID = ghosttouch;
+                    }
+                    else if (52 <= dieResult && dieResult <= 56) {
+                        enchantGUID = heartseeker;
+                    }
+                    else if (57 <= dieResult && dieResult <= 77) {
+                        enchantGUID = keen;
+                    }
+                    else if (78 <= dieResult && dieResult <= 85) {
+                        enchantGUID = shock;
+                    }
+                    else if (86 <= dieResult && dieResult <= 94) {
+                        enchantGUID = thundering;
+                    }
+                    else {
+                        enchantGUID = vicious;
+                    }
+                    break;
+                case 2:
+                    dieResult = rand.Next(101) / 9; // integer division here gives us pretty accurate results
+                    switch (dieResult) {
+                        case 0:
+                            enchantGUID = anarchic;
+                            break;
+                        case 1:
+                            enchantGUID = axiomatic;
+                            break;
+                        case 2:
+                            enchantGUID = corrosiveBurst;
+                            break;
+                        case 3:
+                            enchantGUID = flamingBurst;
+                            break;
+                        case 4:
+                            enchantGUID = holy;
+                            break;
+                        case 5:
+                            enchantGUID = unholy;
+                            break;
+                        case 6:
+                            enchantGUID = icyBurst;
+                            break;
+                        case 7:
+                            enchantGUID = igniting;
+                            break;
+                        case 8:
+                            enchantGUID = disruption;
+                            break;
+                        case 9:
+                            enchantGUID = shockingBurst;
+                            break;
+                        case 10:
+                            enchantGUID = thunderingBurst;
+                            break;
+                        case 11:
+                            enchantGUID = furyborn;
+                            break;
+                    }
+                    break;
+                case 3:
+                    dieResult = rand.Next(4) - 1;
+                    if (dieResult == 0) {
+                        enchantGUID = nullifying;
+                    } else {
+                        enchantGUID = speed;
+                    }
+                    break;
+                case 4:
+                    enchantGUID = brilliantEnergy;
+                    break;
+                case 5:
+                    enchantGUID = vorpal;
+                    break;
+                default:
+                    return null;
+            }
+
+            SimpleBlueprint holder = ResourcesLibrary.TryGetBlueprint(new BlueprintGuid(System.Guid.Parse(enchantGUID)));
+            return holder as BlueprintWeaponEnchantment;
+        }
+
+        public static BlueprintWeaponEnchantment GetRandomRangedWeaponEnchantment(int bonus) {
+            Random rand = new Random();
+            int dieResult;
+            string enchantGUID = null;
+
+            switch (bonus) {
+                case 1:
+                    dieResult = rand.Next(101);
+                    if (1 <= dieResult && dieResult <= 9) {
+                        enchantGUID = bane[rand.Next(bane.Length + 1) - 1];
+                    }
+                    else if (10 <= dieResult && dieResult <= 18) {
+                        enchantGUID = corrosive;
+                    }
+                    else if (19 <= dieResult && dieResult <= 23) {
+                        enchantGUID = cruel;
+                    }
+                    else if (24 <= dieResult && dieResult <= 36) {
+                        enchantGUID = flaming;
+                    }
+                    else if (37 <= dieResult && dieResult <= 48) {
+                        enchantGUID = frost;
+                    }
+                    else if (49 <= dieResult && dieResult <= 54) {
+                        enchantGUID = ghosttouch;
+                    }
+                    else if (55 <= dieResult && dieResult <= 69) {
+                        enchantGUID = heartseeker;
+                    }
+                    else if (70 <= dieResult && dieResult <= 85) {
+                        enchantGUID = shock;
+                    }
+                    else {
+                        enchantGUID = thundering;
+                    }
+                    break;
+                case 2:
+                    dieResult = rand.Next(11);
+                    switch (dieResult) {
+                        case 1:
+                            enchantGUID = anarchic;
+                            break;
+                        case 2:
+                            enchantGUID = axiomatic;
+                            break;
+                        case 3:
+                            enchantGUID = corrosiveBurst;
+                            break;
+                        case 4:
+                            enchantGUID = flamingBurst;
+                            break;
+                        case 5:
+                            enchantGUID = icyBurst;
+                            break;
+                        case 6:
+                            enchantGUID = shockingBurst;
+                            break;
+                        case 7:
+                            enchantGUID = thunderingBurst;
+                            break;
+                        case 8:
+                            enchantGUID = holy;
+                            break;
+                        case 9:
+                            enchantGUID = unholy;
+                            break;
+                        case 10:
+                            enchantGUID = igniting;
+                            break;
+                    }
+                    break;
+                case 3:
+                    enchantGUID = speed;
+                    break;
+                case 4:
+                    dieResult = rand.Next(12);
+                    if (dieResult <= 2) {
+                        enchantGUID = brilliantEnergy;
+                    } else {
+                        enchantGUID = secondChance;
+                    }
+                    break;
+                default:
+                    return null;
+            }
+
+            SimpleBlueprint holder = ResourcesLibrary.TryGetBlueprint(new BlueprintGuid(System.Guid.Parse(enchantGUID)));
+            return holder as BlueprintWeaponEnchantment;
+        }
+
+        public static BlueprintArmorEnchantment GetRandomArmorEnchantment(int bonus) {
+            Random rand = new Random();
+            int dieResult;
+            string enchantGUID = null;
+
+            switch (bonus) {
+                case 1:
+                    dieResult = rand.Next(4);
+                    if(dieResult == 1) {
+                        enchantGUID = balanced;
+                    } else if (dieResult == 2) {
+                        enchantGUID = poisonResistant;
+                    } else {
+                        enchantGUID = fortLight;
+                    }
+                    break;
+                case 2:
+                    dieResult = rand.Next(2);
+                    if (dieResult == 1) {
+                        enchantGUID = spellRes13;
+                    } else {
+                        enchantGUID = shadow;
+                    }
+                    break;
+                case 3:
+                    dieResult = rand.Next(4);
+                    if (dieResult == 1) {
+                        enchantGUID = invulnerability;
+                    }
+                    else if (dieResult == 2) {
+                        enchantGUID = spellRes15;
+                    }
+                    else {
+                        enchantGUID = fortMed;
+                    }
+                    break;
+                case 4:
+                    dieResult = rand.Next(4);
+                    if (dieResult == 1) {
+                        enchantGUID = resistEnergy[rand.Next(resistEnergy.Length + 1) - 1];
+                    }
+                    else if (dieResult == 2) {
+                        enchantGUID = spellRes17;
+                    }
+                    else {
+                        enchantGUID = shadowImp;
+                    }
+                    break;
+                case 5:
+                    dieResult = rand.Next(5);
+                    if (dieResult == 1) {
+                        enchantGUID = resistEnergyImp[rand.Next(resistEnergy.Length + 1) - 1];
+                    }
+                    else if (dieResult == 2) {
+                        enchantGUID = resistEnergyGreat[rand.Next(resistEnergy.Length + 1) - 1];
+                    }
+                    else if (dieResult == 3) {
+                        enchantGUID = spellRes19;
+                    }
+                    else {
+                        enchantGUID = fortHeavy;
+                    }
+                    break;
+                default:
+                    return null;
+            }
+
+            SimpleBlueprint holder = ResourcesLibrary.TryGetBlueprint(new BlueprintGuid(System.Guid.Parse(enchantGUID)));
+            return holder as BlueprintArmorEnchantment;
+        }
+
+        public static BlueprintArmorEnchantment GetRandomShieldEnchantment(int bonus) {
+            Random rand = new Random();
+            int dieResult;
+            string enchantGUID = null;
+
+            switch (bonus) {
+                case 1:
+                    dieResult = rand.Next(5);
+                    if (dieResult == 1) {
+                        enchantGUID = balanced;
+                    }
+                    else if (dieResult == 2) {
+                        enchantGUID = poisonResistant;
+                    } else if (dieResult == 3) {
+                        enchantGUID = arrowCatching;
+                    }
+                    else {
+                        enchantGUID = fortLight;
+                    }
+                    break;
+                case 2:
+                    dieResult = rand.Next(2);
+                    if (dieResult == 1) {
+                        enchantGUID = spellRes13;
+                    }
+                    else {
+                        enchantGUID = arrowDeflecting;
+                    }
+                    break;
+                case 3:
+                    dieResult = rand.Next(3);
+                    if (dieResult == 1) {
+                        enchantGUID = spellRes15;
+                    }
+                    else {
+                        enchantGUID = fortMed;
+                    }
+                    break;
+                case 4:
+                    dieResult = rand.Next(3);
+                    if (dieResult == 1) {
+                        enchantGUID = resistEnergy[rand.Next(resistEnergy.Length + 1) - 1];
+                    }
+                    else {
+                        enchantGUID = spellRes17;
+                    }
+                    break;
+                case 5:
+                    dieResult = rand.Next(5);
+                    if (dieResult == 1) {
+                        enchantGUID = resistEnergyImp[rand.Next(resistEnergy.Length + 1) - 1];
+                    }
+                    else if (dieResult == 2) {
+                        enchantGUID = resistEnergyGreat[rand.Next(resistEnergy.Length + 1) - 1];
+                    }
+                    else if (dieResult == 3) {
+                        enchantGUID = spellRes19;
+                    }
+                    else {
+                        enchantGUID = fortHeavy;
+                    }
+                    break;
+                default:
+                    return null;
+            }
+
+            SimpleBlueprint holder = ResourcesLibrary.TryGetBlueprint(new BlueprintGuid(System.Guid.Parse(enchantGUID)));
+            return holder as BlueprintArmorEnchantment;
+        }
 
         #endregion
     }
