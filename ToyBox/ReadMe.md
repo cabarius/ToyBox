@@ -42,6 +42,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.9 (Coming Soon)
+* **Level Up**
+  * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
 * **Enchantment**
   * Added collation for enchament types
   * Show enchament rating
@@ -49,8 +51,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Show character name equiping an item if is equiped
 * **Loot**
   * Item rarity takes into account enchantment rarity
-* **Level Up**
-  * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
+* **Misc**
+  * Fixed a crasher that impacted some text fields
 ### ver 1.4.8.1
 * Fixed some edge cases for **Jealousy Begone!**
 ### Ver 1.4.8
