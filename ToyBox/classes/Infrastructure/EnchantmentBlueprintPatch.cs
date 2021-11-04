@@ -280,6 +280,17 @@ namespace ToyBox {
 
         #region random enchantment methods
 
+        /// <summary>
+        /// Generates a random melee weapon enchantment with a given equivalent bonus.
+        /// 
+        /// If Elemental Burst enchantments are chosen, they need the base
+        /// Elemental damage enchantment on the item, too (e.g. Flaming Burst requires
+        /// Flaming).
+        /// 
+        /// Certain bonus values only have one possiblility to be generated.
+        /// </summary>
+        /// <param name="bonus">+x bonus to generate a random enchantment for. Value from 1-5.</param>
+        /// <returns>A random melee weapon enchantment. Null if the method fails.</returns>
         public static BlueprintWeaponEnchantment GetRandomMeleeWeaponEnchantment(int bonus) {
             Random rand = new Random();
             int dieResult;
@@ -388,6 +399,17 @@ namespace ToyBox {
             return holder as BlueprintWeaponEnchantment;
         }
 
+        /// <summary>
+        /// Generates a random ranged weapon enchantment with a given equivalent bonus.
+        /// 
+        /// If Elemental Burst enchantments are chosen, they need the base
+        /// Elemental damage enchantment on the item, too (e.g. Flaming Burst requires
+        /// Flaming).
+        /// 
+        /// Certain bonus values only have one possiblility to be generated.
+        /// </summary>
+        /// <param name="bonus">+x bonus to generate a random enchantment for. Value 1-4.</param>
+        /// <returns>A random ranged weapon enchantment. Null if the method fails.</returns>
         public static BlueprintWeaponEnchantment GetRandomRangedWeaponEnchantment(int bonus) {
             Random rand = new Random();
             int dieResult;
@@ -478,6 +500,11 @@ namespace ToyBox {
             return holder as BlueprintWeaponEnchantment;
         }
 
+        /// <summary>
+        /// Generates a random main armour enchantment with a given equivalent bonus.
+        /// </summary>
+        /// <param name="bonus">+x bonus to generate a random enchantment for. Value from 1-5.</param>
+        /// <returns>A random main armor enchantment. Null if the method fails.</returns>
         public static BlueprintArmorEnchantment GetRandomArmorEnchantment(int bonus) {
             Random rand = new Random();
             int dieResult;
@@ -549,6 +576,11 @@ namespace ToyBox {
             return holder as BlueprintArmorEnchantment;
         }
 
+        /// <summary>
+        /// Generates a random shield armour enchantment with a given equivalent bonus.
+        /// </summary>
+        /// <param name="bonus">+x bonus to generate a random enchantment for. Value from 1-5.</param>
+        /// <returns>A random shield armor enchantment. Null if the method fails.</returns>
         public static BlueprintArmorEnchantment GetRandomShieldEnchantment(int bonus) {
             Random rand = new Random();
             int dieResult;
