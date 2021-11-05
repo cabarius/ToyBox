@@ -4,6 +4,7 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.Blueprints.Items.Shields;
 using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
@@ -15,6 +16,7 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace ToyBox.classes.MainUI {
@@ -85,8 +87,8 @@ namespace ToyBox.classes.MainUI {
                         index => { selectedItemIndex = index; UpdateItems(); },
                         UI.buttonStyle,
                         UI.Width(175));
-                    UI.Space(25);
-                    if (UI.VPicker("Ench. Types".cyan(), ref collationKey, collationKeys, "All", (s) => s, ref collationSearchText, UI.Width(175))) {
+                        UI.Space(25);
+                        if (UI.VPicker("Ench. Types".cyan(), ref collationKey, collationKeys, "All", (s) => s, ref collationSearchText, UI.Width(175))) {
                         Mod.Debug($"collationKey: {collationKey}");
                         UpdateCollation();
                     }
@@ -329,6 +331,7 @@ namespace ToyBox.classes.MainUI {
                         else
                             UI.Space(154);
                     }
+
                     UI.Space(10);
                     UI.Label($"{enchant.Rating()}".yellow(), 75.width()); // ⊙
                     UI.Space(10);
@@ -343,6 +346,7 @@ namespace ToyBox.classes.MainUI {
                                 GUILayout.TextField(enchant.AssetGuid.ToString(), UI.AutoWidth());
                             }
                             UI.Label(description);
+                            
                         }
                     }
                     else {
@@ -394,14 +398,14 @@ namespace ToyBox.classes.MainUI {
             }
             matchCount = filteredEnchantments.Count();
             var filtered = from bp in filteredEnchantments
-                orderby bp.Rating() descending, bp.name
-                select bp;
-               //.ThenByDescending(bp => bp.IdentifyDC)
-               collatedBPs = from bp in filtered
-                             from key in bp.CollationNames().Select(n => n.Replace("Enchantment", ""))
-                             group bp by key into g
-                             orderby g.Key.LongSortKey(), g.Key
-                             select g;
+                           orderby bp.Rating() descending, bp.name
+                           select bp;
+            //.ThenByDescending(bp => bp.IdentifyDC)
+            collatedBPs = from bp in filtered
+                          from key in bp.CollationNames().Select(n => n.Replace("Enchantment", ""))
+                          group bp by key into g
+                          orderby g.Key.LongSortKey(), g.Key
+                          select g;
             _ = collatedBPs.Count();
             var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
             collationKeys = new List<string> { };
@@ -420,7 +424,6 @@ namespace ToyBox.classes.MainUI {
                         selectedCollatedEnchantments = group.ToList();
                     }
                 }
-
         }
         public static void AddClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
@@ -488,6 +491,8 @@ namespace ToyBox.classes.MainUI {
             item.RemoveEnchantment(enchantment);
         }
 
+
+
         public static void AddTricksterEnchantmentsTier1(ItemEntity item) {
             var tricksterKnowledgeArcanaTier1 = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>("c7bb946de7454df4380c489a8350ba38");
             var tricksterTier1Toy = tricksterKnowledgeArcanaTier1.GetComponent<TricksterArcanaBetterEnhancements>();
@@ -546,7 +551,7 @@ namespace ToyBox.classes.MainUI {
                     break;
             }
         }
-        /// <summary>probably useless</summary>
+        /// <summary>definitely not useless</summary>
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {
             Dictionary<ItemEnchantment, bool> enchantments = new();
@@ -556,6 +561,66 @@ namespace ToyBox.classes.MainUI {
                 enchantments.Add(enchantment, !base_enchantments.Contains(enchantment.Blueprint));
             }
             return enchantments;
+        }
+
+        // currently nonfunctional until Nordic gets his patch working
+
+        //public static int CalcCost(ItemEntity item, BlueprintItemEnchantment enchantment) {
+        //    if (item.Blueprint is BlueprintItemWeapon || item.Blueprint is BlueprintItemArmor || item.Blueprint is BlueprintItemShield) {
+        //        int currentBonus = GetEffectiveBonus(item);
+
+        //        if (currentBonus + enchantment.EnchantmentCost > 10) {
+        //            return -1;
+        //        }
+
+        //        long currentPrice = item.Blueprint.SellPrice;
+        //        long basePrice;
+        //        if (item.Blueprint is BlueprintItemArmor) {
+        //            basePrice = currentPrice - (1000 * currentBonus * currentBonus);   // get the price of the item without its bonuses
+        //        } else if (item.Blueprint is BlueprintItemWeapon) {
+
+        //        } 
+        //    }
+
+        //    return -1;
+        //}
+
+        /// <summary>
+        /// Makes getting the effective bonus of an item more readable
+        /// </summary>
+        /// <returns>Total effective bonus of all permanent enchantments on the item; 0 if none</returns>
+        public static int GetEffectiveBonus(ItemEntity item) {
+            if (item == null) return 0;
+
+            return item.Enchantments.Sum((enchantment) => enchantment.Blueprint.EnchantmentCost);
+        }
+
+        /// <summary>
+        /// Gives the current enhancement bonus of the item
+        /// </summary>
+        /// <returns></returns>
+        public static int CurrentEnhancement(ItemEntity item) {
+            if (item == null) return 0;
+
+            Regex enhanceCheck = new Regex(@"Enhancement\d$");
+            int[] enhancements = new int[20];
+
+            foreach (var enchant in item.Blueprint.Enchantments) {
+                if (enhanceCheck.IsMatch(enchant.Name)) {
+                    try {
+                        enhancements.Append(int.Parse(enchant.name.Substring(11)));
+                    }
+                    catch { // catches any edge cases where the name is something like "Enhancement3hop" and just ignores those
+                        continue;
+                    }
+                }
+            }
+
+            if (!enhancements.Empty()) {
+                return enhancements.Max();
+            }
+
+            return 0;
         }
 
         /// <summary>maybe useful to render button texts/colors</summary>
