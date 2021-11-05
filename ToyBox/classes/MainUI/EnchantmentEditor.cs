@@ -397,7 +397,33 @@ namespace ToyBox.classes.MainUI {
                 }
             }
             matchCount = filteredEnchantments.Count();
-            filteredEnchantments = filteredEnchantments.OrderByDescending(bp => bp.Rarity()).Take(settings.searchLimit).ToList();
+            var filtered = from bp in filteredEnchantments
+                           orderby bp.Rating() descending, bp.name
+                           select bp;
+            //.ThenByDescending(bp => bp.IdentifyDC)
+            collatedBPs = from bp in filtered
+                          from key in bp.CollationNames().Select(n => n.Replace("Enchantment", ""))
+                          group bp by key into g
+                          orderby g.Key.LongSortKey(), g.Key
+                          select g;
+            _ = collatedBPs.Count();
+            var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
+            collationKeys = new List<string> { };
+            collationKeys.AddRange(keys);
+            filteredEnchantments = filtered.Take(settings.searchLimit).ToList();
+            UpdateCollation();
+        }
+        public static void UpdateCollation() {
+            if (collationKey == null)
+                selectedCollatedEnchantments = null;
+            else
+                foreach (var group in collatedBPs) {
+                    Mod.Debug($"group: {group.Key}");
+                    if (group.Key == collationKey) {
+                        matchCount = group.Count();
+                        selectedCollatedEnchantments = group.ToList();
+                    }
+                }
         }
         public static void AddClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
