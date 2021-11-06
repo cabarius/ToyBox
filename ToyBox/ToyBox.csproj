@@ -150,6 +150,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\CustomEnchantmentStackingFix.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
     <Compile Include="classes\Infrastructure\HumanFriendly.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
     <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Romance.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Alignment.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
@@ -212,6 +214,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ActionBar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Dialog.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
@@ -266,7 +269,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

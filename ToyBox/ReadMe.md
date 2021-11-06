@@ -36,17 +36,62 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
-**Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.8 (Coming Later)
-* **Etude Editor** Show other Etude info and links 
-### Ver 1.4.7 (Coming Soon)
+***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
+### Ver 1.4.10 (Coming Later)
+* **Armies Editor**
+  * Add squads in Army Editor
+  * Edit leader rituals (abilities) and can add any BlueprintAbility
+### Ver 1.4.9 (Coming Soon)
+* ** Bag of Tricks ** > **Quality of Life**
+  * Remote Companion Dialog - Allow remote companions to make comments on dialog you are having
+    * This is exeprimental and may not work in some cases 
+* **Level Up**
+  * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
+* **Enchantment**
+  * Added collation for enchament types
+  * Show enchament rating
+  * Improved sorting of enchaments
+  * Show character name equiping an item if is equiped
+* **Loot**
+  * Item rarity takes into account enchantment rarity
+* **Misc**
+  * Fixed crasher that led to interference with World Crawl and possibly other mods
+  * Fixed a crasher that impacted some text fields
+### ver 1.4.8.1
+* Fixed some edge cases for **Jealousy Begone!**
+### Ver 1.4.8
 * **Bag of Tricks**
-  * Allow any gender and multiple romances
+  * **Love is Free**
+    * Mythic path no longer blocks romance with the queen
+  * Toggle to allow spells/abilities/items toolbar pop-ups grow wider
+  * **Group Picker**
+    * Changing party in a map does not break characters anymore
+    * No longer brings up the mod when activating it via hot key
+    * Now works on the global map too
+* **Enchantment**
+  * (***Pheonix99***) Fix for stack merging eating enchants -  EX: If you add mighty fists to an amulet of natural armor, then stick it in inventory where you have another natural armor amulet of the same type, they're merged into a stack and the mighty fists enchant vanishes 
+* **Search 'n Pick**
+  * Fixed issue where if you select items and then weapons that the subcategories would not appear
+  * Fixed some misc crashes caused by bad blueprints
+* **Crusade Editor**
+  * Fixed issue where Build Time slider wouldn't slide
+* **Misc**
+  * Fixed some crashers in inventory UI
+### Ver 1.4.7
+* **Bag of Tricks**
+  * ♥♥ Love is Free ♥♥ - Allow any gender for any romance
+  * Jelousy Begone! - Allow multiple romances at the same time
     * Big thanks to ***Paladingineer*** and ***Ronin*** for their contributions to making this possible
+* **Party Editor**
+  * (***Truinto***) added clear buttons for opposition schools
+  * (***Truinto***) allow CompletelyNormal Metamagic to work while using free metamagic cheat
+* **Search 'n Pick**
+  * (***BarleyFlour***) Added the ability to spawn an army as either friendly or hostile
 * **Armies Editor**
   * can edit leader stats
   * can edit leader skills
-  * can edit leader rituals (abilities) and can add any BlueprintAbility
+* **Etude Editor** 
+  * Ability to show GUID and comments
 ### Ver 1.4.6 (mainline 1.1.0i)
 * **Updated to WoTR 1.1.0.i (beta is done and released)**
 * **Bag of Tricks**

@@ -348,11 +348,12 @@ namespace ToyBox.Multiclass {
             public static void MulticlassCheckBoxChanged(bool value, CharGenClassSelectorItemPCView instance) {
                 if (instance == null) return;
                 var viewModel = instance.ViewModel;
+                if (viewModel == null) return;
                 var ch = Main.IsInGame ? viewModel.LevelUpController.Unit : null;
                 var cl = viewModel.Class;
                 if (!MulticlassOptions.CanSelectClassAsMulticlass(ch, cl)) return;
                 var options = MulticlassOptions.Get(ch);
-                var cd = ch.Progression.GetClassData(cl);
+                var cd = ch?.Progression.GetClassData(cl);
                 var chArchetype = cd?.Archetypes.FirstOrDefault<BlueprintArchetype>();
                 var archetypeOptions = options.ArchetypeOptions(cl);
                 if (value)
@@ -376,7 +377,7 @@ namespace ToyBox.Multiclass {
                     options.SetArchetypeOptions(cl, archetypeOptions);
                 }
                 MulticlassOptions.Set(ch, options);
-                Mod.Debug($"ch: {ch.CharacterName.ToString().orange()} class: {cl.name} isArch: {viewModel.IsArchetype} arch: {viewModel.Archetype} chArchetype:{chArchetype} - options: {options}");
+                Mod.Debug($"ch: {ch?.CharacterName.ToString().orange() ?? "null"} class: {cl?.name ?? "null"} isArch: {viewModel.IsArchetype} arch: {viewModel.Archetype} chArchetype:{chArchetype} - options: {options}");
                 var canvas = Game.Instance.UI.Canvas;
                 var transform = canvas != null ? canvas.transform : Game.Instance.UI.MainMenu.transform;
                 var charGemClassPhaseDetailedView = transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/PhaseClassDetaildPCView");

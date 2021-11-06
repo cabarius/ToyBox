@@ -12,6 +12,8 @@ namespace ModKit {
         public static GUILayoutOption AutoWidth() => GL.ExpandWidth(false);
         public static GUILayoutOption AutoHeight() => GL.ExpandHeight(false);
         public static GUILayoutOption Width(float v) => GL.Width(v);
+        public static GUILayoutOption width(this int v) => GL.Width(v);
+
         public static GUILayoutOption[] Width(float min, float max) => new GUILayoutOption[] { GL.MinWidth(min), GL.MaxWidth(max) };
         public static GUILayoutOption[] Height(float min, float max) => new GUILayoutOption[] { GL.MinHeight(min), GL.MaxHeight(max) };
         public static GUILayoutOption Height(float v) => GL.Height(v);
@@ -21,6 +23,7 @@ namespace ModKit {
         public static GUILayoutOption MinHeight(float v) => GL.MinHeight(v);
 
         public static void Space(float size = 150f) => GL.Space(size);
+        public static void space(this int size) => GL.Space(size);
         public static void Indent(int indent, float size = 75f) => GL.Space(indent * size);
         public static void BeginHorizontal(GUIStyle style, params GUILayoutOption[] options) => GL.BeginHorizontal(style, options);
         public static void BeginHorizontal(params GUILayoutOption[] options) => GL.BeginHorizontal(options);

@@ -109,6 +109,9 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
+        public bool toggleRemoteCompanionDialog = false;
+
+        public bool toggleWidenActionBarGroups = false;
         // Cheap Tricks
         public int increment = 10000;
         public int kineticistBurnReduction = 0;
@@ -225,6 +228,8 @@ namespace ToyBox {
         public bool toggleOptionalFeatSelection = false;
         public bool toggleUniversalSpellbookd = false;
         public bool toggleUncappedCasterLevel = false;
+        public bool toggleContinousLevelCap = false;
+        public bool toggleExponentialLevelCap = false;
 
         // Multipliers
         public int featsMultiplier = 1;
@@ -312,6 +317,8 @@ namespace ToyBox {
         public bool previewAlignmentRestrictedDialog = false;
         public bool previewRandomEncounters = false;
 
+        // Etudes
+        public bool showEtudeComments = true;
         // Quests
         public bool hideCompleted = true;
 

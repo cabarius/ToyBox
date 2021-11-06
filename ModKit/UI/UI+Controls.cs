@@ -140,7 +140,7 @@ namespace ModKit {
                 options);
             int.TryParse(str, out value);
             value = Math.Min(max, Math.Max(value, min));
-            if (changed) { action(value); }
+            if (changed) { action?.Invoke(value); }
             if (hitEnter && enterAction != null) { enterAction(); }
         }
         public static void ActionIntTextField(
@@ -168,10 +168,10 @@ namespace ModKit {
         // Action Buttons
 
         public static void ActionButton(string title, Action action, params GUILayoutOption[] options) {
-            if (GL.Button(title, options.AddDefaults())) { action(); }
+            if (GL.Button(title, options.AddDefaults())) { action?.Invoke(); }
         }
         public static void ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
-            if (GL.Button(title, style, options.AddDefaults())) { action(); }
+            if (GL.Button(title, style, options.AddDefaults())) { action?.Invoke(); }
         }
 
         public static void DangerousActionButton(string title, string warning, ref bool areYouSureState ,Action action, params GUILayoutOption[] options) {

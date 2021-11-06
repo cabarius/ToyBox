@@ -40,25 +40,48 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(UnitProgressionData))]
         private static class UnitProgressionData_LegendaryHero_Patch {
-            [HarmonyPatch("ExperienceTable", MethodType.Getter)]
-            private static void Postfix(ref BlueprintStatProgression __result, UnitProgressionData __instance) {
+            // note: no need to set AssetGuid or anything, 'Bonuses' is the only field accessed
+            private static BlueprintStatProgression XPcontinuous = new() { Bonuses = new int[] {
+                0,0,2000,5000,9000,15000,23000,35000,51000,75000,105000,155000,220000,315000,445000,635000,890000,1300000,1800000,2550000,
+                3600000,4650000,5700000,6750000,7800000,8850000,9900000,10950000,12000000,13050000,14100000,15150000,16200000,17250000,
+                18300000,19350000,20400000,21450000,22500000,23550000,24600000 }};
+
+            private static BlueprintStatProgression XPexponential = new() { Bonuses = new int[] {
+                0,0,2000,5000,9000,15000,23000,35000,51000,75000,105000,155000,220000,315000,445000,635000,890000,1300000,1800000,2550000,
+                3600000,5700000,9900000,18300000,35100000 }};
+
+            [HarmonyPatch(nameof(UnitProgressionData.ExperienceTable), MethodType.Getter)]
+            private static bool Prefix(ref BlueprintStatProgression __result, UnitProgressionData __instance) {
                 settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
                 //Mod.Trace($"UnitProgressionData_ExperienceTable - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
-                var legendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
-                __result = !legendaryHero
-                        ? Game.Instance.BlueprintRoot.Progression.XPTable
-                        : Game.Instance.BlueprintRoot.Progression.LegendXPTable.Or(null)
-                          ?? Game.Instance.BlueprintRoot.Progression.XPTable;
+
+                if (__instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero)
+                    __result = Game.Instance.BlueprintRoot.Progression.LegendXPTable;
+                else if (settings.toggleContinousLevelCap)
+                    __result = XPcontinuous;
+                else if (settings.toggleExponentialLevelCap)
+                    __result = XPexponential;
+                else
+                    return true;
+
+                return false;
             }
 
-            [HarmonyPatch("MaxCharacterLevel", MethodType.Getter)]
-            private static void Postfix(ref int __result, UnitProgressionData __instance) {
+            [HarmonyPatch(nameof(UnitProgressionData.MaxCharacterLevel), MethodType.Getter)]
+            private static bool Prefix(ref int __result, UnitProgressionData __instance) {
                 settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
                 //Mod.Trace ($"UnitProgressionData_MaxCharacterLevel - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
-                var isLegendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
-                if (isLegendaryHero) {
+
+                if (__instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero)
                     __result = 40;
-                }
+                else if (settings.toggleContinousLevelCap)
+                    __result = 40;
+                else if (settings.toggleExponentialLevelCap)
+                    __result = 24;
+                else
+                    return true;
+
+                return false;
             }
         }
 #if false

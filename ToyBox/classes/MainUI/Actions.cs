@@ -10,6 +10,9 @@ using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.ContextData;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap.State;
@@ -18,14 +21,18 @@ using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.Selection;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
+using Kingmaker.View;
 using Kingmaker.View.MapObjects;
 using UnityModManagerNet;
 using ToyBox.BagOfPatches;
 using ModKit;
+using Owlcat.Runtime.Core.Utils;
+using ToyBox;
 
 namespace ToyBox {
     public static class Actions {
@@ -127,18 +134,29 @@ namespace ToyBox {
             }
         }
         public static void HandleChangeParty() {
-            var partyCharacters = Game.Instance.Player.Party.Select<UnitEntityData, UnitReference>((Func<UnitEntityData, UnitReference>)(u => (UnitReference)u)).ToList<UnitReference>(); ;
-            if ((partyCharacters != null ? (partyCharacters.Select<UnitReference, UnitEntityData>((Func<UnitReference, UnitEntityData>)(r => r.Value)).SequenceEqual<UnitEntityData>((IEnumerable<UnitEntityData>)Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
-                return;
-            GlobalMapView.Instance.ChangePartyOnMap();
+            if (Game.Instance.CurrentMode == GameModeType.GlobalMap) {
+                var partyCharacters = Game.Instance.Player.Party.Select(u => (UnitReference)u).ToList(); ;
+                if ((partyCharacters != null ? (partyCharacters.Select(r => r.Value).SequenceEqual(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
+                    return;
+                GlobalMapView.Instance.ChangePartyOnMap();
+            }
+            else {
+                foreach (var temp in Game.Instance.Player.RemoteCompanions.ToTempList())
+                    temp.IsInGame = false;
+                Game.Instance.Player.FixPartyAfterChange();
+                Game.Instance.UI.SelectionManager.UpdateSelectedUnits();
+                var tempList = Game.Instance.Player.Party.Select(character => character.View).ToTempList<UnitEntityView>();
+                if (!(Game.Instance.UI.SelectionManager is SelectionManager selectionManager))
+                    return;
+                selectionManager.MultiSelect((IEnumerable<UnitEntityView>)tempList);
+            }
         }
-
         public static void ChangeParty() {
             var currentMode = Game.Instance.CurrentMode;
 
-            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-                UnityModManager.UI.Instance.ToggleWindow();
-                EventBus.RaiseEvent<IGroupChangerHandler>((Action<IGroupChangerHandler>)(h => h.HandleCall(new Action(HandleChangeParty), (Action)null, true)));
+            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause || currentMode == GameModeType.GlobalMap) {
+                if (Main.IsModGUIShown) UnityModManager.UI.Instance.ToggleWindow();
+                EventBus.RaiseEvent<IGroupChangerHandler>(h => h.HandleCall(new Action(HandleChangeParty), (Action)null, true));
             }
         }
         public static void IdentifyAll() {
@@ -260,13 +278,13 @@ namespace ToyBox {
 
         public static void CreateArmy(BlueprintArmyPreset bp, bool friendlyorhostile) {
             var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
-            if(friendlyorhostile) {
+            if (friendlyorhostile) {
                 Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
             }
             else {
                 Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Demons, bp, playerPosition);
             }
-            
+          
         }
 
         public static void AddSkillToLeader(BlueprintLeaderSkill bp) {

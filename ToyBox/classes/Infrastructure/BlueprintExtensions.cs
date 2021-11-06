@@ -60,15 +60,18 @@ namespace ToyBox {
         }
         private static List<string> DefaultCollationNames(this SimpleBlueprint bp, string[] extras) {
             cachedCollationNames.TryGetValue(bp, out var names);
-            if (names != null) return names;
-            names = extras?.ToList() ?? new List<string> { };
-            var typeName = bp.GetType().Name.Replace("Blueprint", "");
-            //var stripIndex = typeName.LastIndexOf("Blueprint");
-            //if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
-            names.Add(typeName);
-            foreach (var attribute in bp.Attributes())
-                names.Add(attribute.orange());
-            cachedCollationNames.Add(bp, names);
+            if (names == null) {
+                names = new List<string> { };
+                var typeName = bp.GetType().Name.Replace("Blueprint", "");
+                //var stripIndex = typeName.LastIndexOf("Blueprint");
+                //if (stripIndex > 0) typeName = typeName.Substring(stripIndex + "Blueprint".Length);
+                names.Add(typeName);
+                foreach (var attribute in bp.Attributes())
+                    names.Add(attribute.orange());
+                cachedCollationNames.Add(bp, names);
+            }
+
+            if (extras != null) names = names.Concat(extras).ToList();
             return names;
         }
         public static List<string> CollationNames(this SimpleBlueprint bp, params string[] extras) => DefaultCollationNames(bp, extras);

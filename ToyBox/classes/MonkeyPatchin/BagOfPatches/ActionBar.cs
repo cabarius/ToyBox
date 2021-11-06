@@ -11,11 +11,35 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 
 namespace ToyBox.BagOfPatches {
     internal static class ActionBar {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
+
+
+        [HarmonyPatch(typeof(ActionBarGroupPCView), nameof(ActionBarGroupPCView.SetStatePosition))]
+        public static class ActionBarGroupPCViewSetStatePosition_Patch {
+            public static void Prefix(ActionBarGroupPCView __instance) {
+                if (!settings.toggleWidenActionBarGroups) return;
+                var isSpellGroup = __instance is ActionBarSpellGroupPCView;
+                var rectTransform = __instance.RectTransform;
+                var itemCount = __instance.m_SlotsList.Count(s => !s.ViewModel?.IsEmpty.Value ?? false);
+                var columnCount = Math.Max(5, (int)(0.85 * Math.Sqrt(itemCount)));
+                var rowCount = (int)(Math.Ceiling((float)itemCount / columnCount));
+                if (isSpellGroup) rowCount += 1; // nudge for spell group ??? TODO - why?
+                var width = columnCount * 53f;
+                var xoffset = (columnCount - 5) * 53f;
+                var height = rowCount * 53f + 40 + (isSpellGroup ? 5 : 0);
+                var oldOffset = rectTransform.offsetMax;
+                var oldSize = rectTransform.sizeDelta;
+                //Mod.Debug($"ActionBarGroupPCViewSetStatePosition_Patch - itemCount:{itemCount} width:{oldSize.x} - > {width}");
+                rectTransform.offsetMax = new Vector2(width, height);
+                rectTransform.sizeDelta = new Vector2(width, height);
+            }
+        }
+
 
         [HarmonyPatch(typeof(ActionBarBaseSlotPCView), nameof(ActionBarBaseSlotPCView.BindViewImplementation))]
         public static class ActionBarBaseSlotPCView_BindViewImplementation_Patch {
@@ -51,6 +75,10 @@ namespace ToyBox.BagOfPatches {
                 var percent = len <= 3 ? 100 : len < 4 ? 100 : len < 5 ? 83 : 75;
                 acronym.GetComponentInChildren<TextMeshProUGUI>().text = $"<size={percent}%>{title}</size>";
                 acronym.gameObject.SetActive(true);
+                if (acronym.gameObject.GetComponent<UICornerCut>() == null) {
+                    var cornerCut = acronym.gameObject.AddComponent<UICornerCut>();
+                    cornerCut?.gameObject?.SetActive(true);
+                }
             }
         }
     }

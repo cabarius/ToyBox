@@ -1,4 +1,4 @@
-// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
+﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using System;
 using System.Linq;
@@ -35,6 +35,7 @@ namespace ToyBox {
         private const string RerollPerception = "Reroll Perception";
         private const string RerollInteractionSkillChecks = "Reset Interactables";
         private const string ChangeParty = "Change Party";
+        private const string ChangWeather = "Change Weather";
 
         // other
         private const string TimeScaleMultToggle = "Main/Alt Timescale";
@@ -57,6 +58,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
             KeyBindings.RegisterAction(RerollInteractionSkillChecks, () => Actions.RerollInteractionSkillChecks());
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
+            KeyBindings.RegisterAction(ChangWeather, () =>CheatsCommon.ChangeWeather(""));
             // Other
             KeyBindings.RegisterAction(TimeScaleMultToggle, () => {
                 settings.useAlternateTimeScaleMultiplier = !settings.useAlternateTimeScaleMultiplier;
@@ -145,7 +147,7 @@ namespace ToyBox {
                         Actions.RunPerceptionTriggers();
                     });
                 },
-                () => NonBindableActionButton("Change Weather", () => CheatsCommon.ChangeWeather("")),
+                () => BindableActionButton(ChangWeather),
                 () => NonBindableActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
                 () => NonBindableActionButton("Identify All", () => Actions.IdentifyAll()),
                 () => { }
@@ -171,13 +173,25 @@ namespace ToyBox {
                 },
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
-#if DEBUG
-                () => Toggle("Allow " + "any gender".color(RGBA.purple) + " " + "for any " + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple), ref settings.toggleAllowAnyGenderRomance),
-                () => Toggle("Allow " + "multiple".color(RGBA.purple) + " romances at the same time", ref settings.toggleMultipleRomance),
-#endif
-                () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25); UI.Label("Hold down shift during launch to bypass".green()); },
                 () => {
-                    if (Toggle("Show Acronyms in Spell/Ability/Item toolbar items", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
+                    Toggle("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red(), ref settings.toggleAllowAnyGenderRomance, 300.width());
+                    25.space();
+                    UI.Label("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple));
+                },
+                () => {
+                    Toggle("Jealousy Begone!".bold(), ref settings.toggleMultipleRomance, 300.width());
+                    25.space();
+                    UI.Label("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green());
+                },
+                () => {
+                    Toggle("Remote Companion Dialog", ref settings.toggleRemoteCompanionDialog);
+                    25.space(); 
+                    Label("Allow remote companions to make comments on dialog you are having.".green());
+                },
+                () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25); UI.Label("Hold down shift during launch to bypass".green()); },
+                () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ", ref settings.toggleWidenActionBarGroups),
+                () => {
+                    if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
                         Main.SetNeedsResetGameUI();
                     }
                 },

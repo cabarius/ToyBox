@@ -17,6 +17,7 @@ using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
 using Kingmaker.PubSubSystem;
 using Kingmaker.Blueprints;
+using Kingmaker.UnitLogic.FactLogic;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -556,6 +557,20 @@ namespace ToyBox {
                                 }
                                 if (casterLevel < 40) {
                                     UI.ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), UI.AutoWidth());
+                                }
+                                // removes opposition schools; these are not cleared when removing facts; to add new opposition schools, simply add the corresponding fact again
+                                if (spellbook.OppositionSchools.Any()) {
+                                    UI.ActionButton("Clear Opposition Schools", () => {
+                                        spellbook.OppositionSchools.Clear();
+                                        spellbook.ExOppositionSchools.Clear();
+                                        ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionSchool>(), true);
+                                    }, UI.AutoWidth());
+                                }
+                                if (spellbook.OppositionDescriptors != 0) {
+                                    UI.ActionButton("Clear Opposition Descriptors", () => {
+                                        spellbook.OppositionDescriptors = 0;
+                                        ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
+                                    }, UI.AutoWidth());
                                 }
 
                                 UI.Space(20);

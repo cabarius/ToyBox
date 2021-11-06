@@ -9,6 +9,7 @@ using ModKit;
 using System;
 
 namespace ToyBox {
+
     public class BlueprintLoader : MonoBehaviour {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
 
@@ -35,6 +36,9 @@ namespace ToyBox {
             }
             progress = (float)loaded / (float)total;
         }
+
+        internal readonly HashSet<string> badBlueprints = new() { "ce0842546b73aa34b8fcf40a970ede68", "2e3280bf21ec832418f51bee5136ec7a", "b60252a8ae028ba498340199f48ead67", "fb379e61500421143b52c739823b4082" };
+
         private IEnumerator LoadBlueprints() {
             yield return null;
             var bpCache = ResourcesLibrary.BlueprintsCache;
@@ -58,6 +62,7 @@ namespace ToyBox {
             Mod.Log($"Loading {total} Blueprints");
             UpdateProgress(loaded, total);
             foreach (var entry in allGUIDs) {
+                if (badBlueprints.Contains(entry.Key.ToString())) continue;
                 SimpleBlueprint bp;
                 try {
                     bp = bpCache.Load(entry.Key);

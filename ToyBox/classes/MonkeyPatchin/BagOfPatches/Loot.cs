@@ -47,10 +47,10 @@ namespace ToyBox.BagOfPatches {
         private static class ItemSlotView_RefreshItem_Patch {
             public static void Postfix(InventoryEquipSlotView __instance) {
                 if (!__instance.SlotVM.HasItem || !__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.canvasRenderer.SetColor(Color.white);
+                    __instance.m_Icon.canvasRenderer?.SetColor(Color.white);
                 }
                 else if (__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.canvasRenderer.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
+                    __instance.m_Icon.canvasRenderer?.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
                 }
                 var item = __instance.Item;
                 if (settings.toggleColorLootByRarity && item != null) {
@@ -66,7 +66,7 @@ namespace ToyBox.BagOfPatches {
                     var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
                     if (rarity == RarityType.Notable) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");
-                        objFX.GetComponent<Image>().color = color;
+                        if (objFX.TryGetComponent<Image>(out var image)) image.color = color;
                     }
                     else {
                         if (rarity >= RarityType.Uncommon) // Make sure things uncommon or better get their color circles despite not being magic. Colored loot offers sligtly different UI assumptions
@@ -74,7 +74,7 @@ namespace ToyBox.BagOfPatches {
                         var obj = __instance.m_MagicLayer.gameObject;
                         obj.GetComponent<Image>().color = colorTranslucent;
                         var objFX = __instance.m_MagicLayer.Find("MagicLayerFX");
-                        objFX.GetComponent<Image>().color = color;
+                        if (objFX.TryGetComponent<Image>(out var image)) image.color = color;
                     }
                 }
             }

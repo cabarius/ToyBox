@@ -89,6 +89,8 @@ namespace ToyBox {
                 () => { UI.Toggle("Ignore Feat Prerequisites When Choosing A Class", ref settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass); },
                 () => { UI.Toggle("Ignore Feat Prerequisits (List) When Choosing A Class", ref settings.toggle); },
 #endif
+                () => UI.Toggle("Party Level Cap 40 (continuous growth after 20)", ref settings.toggleContinousLevelCap),
+                () => UI.Toggle("Party Level Cap 24 (exponential growth)", ref settings.toggleExponentialLevelCap),
 
                 () => { }
                 );

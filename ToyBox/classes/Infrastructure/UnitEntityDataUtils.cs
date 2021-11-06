@@ -16,6 +16,7 @@ using Kingmaker.UnitLogic.Parts;
 using Kingmaker.ElementsSystem;
 using ModKit;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Items;
 
 namespace ToyBox {
     public enum UnitSelectType {
