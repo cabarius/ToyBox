@@ -284,7 +284,7 @@ namespace ToyBox {
             else {
                 Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Demons, bp, playerPosition);
             }
-          
+
         }
 
         public static void AddSkillToLeader(BlueprintLeaderSkill bp) {
