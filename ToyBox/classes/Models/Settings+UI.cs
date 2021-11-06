@@ -14,6 +14,11 @@ namespace ToyBox {
         public static void OnGUI() {
             UI.HStack("Settings", 1,
                 () => {
+                    UI.ActionButton("Reset UI", () => Main.SetNeedsResetGameUI());
+                    25.space();
+                    UI.Label("Tells the game to reset the in game UI.".green() + " Warning".yellow() + " Using this in dialog or the book will dismiss that dialog which may break progress so use with care".orange());
+                },
+                () => {
                     UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode);
                     UI.Space(25);
                     UI.Label("This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc".green());

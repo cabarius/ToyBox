@@ -42,6 +42,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.9 (Coming Soon)
+* ** Bag of Tricks ** > **Quality of Life**
+  * Remote Companion Dialog - Allow remote companions to make comments on dialog you are having
+    * This is exeprimental and may not work in some cases 
 * **Level Up**
   * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
 * **Enchantment**
@@ -52,6 +55,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Loot**
   * Item rarity takes into account enchantment rarity
 * **Misc**
+  * Fixed crasher that led to interference with World Crawl and possibly other mods
   * Fixed a crasher that impacted some text fields
 ### ver 1.4.8.1
 * Fixed some edge cases for **Jealousy Begone!**

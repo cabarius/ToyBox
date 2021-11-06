@@ -109,6 +109,7 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
+        public bool toggleRemoteCompanionDialog = false;
 
         public bool toggleWidenActionBarGroups = false;
         // Cheap Tricks
