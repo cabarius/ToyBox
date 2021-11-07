@@ -57,6 +57,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Misc**
   * Fixed crasher that led to interference with World Crawl and possibly other mods
   * Fixed a crasher that impacted some text fields
+  * Reworked code around scroll coloring to improve stability
 ### ver 1.4.8.1
 * Fixed some edge cases for **Jealousy Begone!**
 ### Ver 1.4.8

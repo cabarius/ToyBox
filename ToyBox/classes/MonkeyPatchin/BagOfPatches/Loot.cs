@@ -47,10 +47,10 @@ namespace ToyBox.BagOfPatches {
         private static class ItemSlotView_RefreshItem_Patch {
             public static void Postfix(InventoryEquipSlotView __instance) {
                 if (!__instance.SlotVM.HasItem || !__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.canvasRenderer?.SetColor(Color.white);
+                    __instance.m_Icon.color = Color.white;
                 }
                 else if (__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.canvasRenderer?.SetColor(new Color(0.5f, 1.0f, 0.5f, 1.0f));
+                    __instance.m_Icon.color = new Color(0.5f, 1.0f, 0.5f, 1.0f);
                 }
                 var item = __instance.Item;
                 if (settings.toggleColorLootByRarity && item != null) {
