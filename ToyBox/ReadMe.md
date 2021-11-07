@@ -45,6 +45,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * ** Bag of Tricks ** > **Quality of Life**
   * Remote Companion Dialog - Allow remote companions to make comments on dialog you are having
     * This is exeprimental and may not work in some cases 
+  * **Love is Free**
+    * Lich path no longer blocks romance
 * **Level Up**
   * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
 * **Enchantment**
