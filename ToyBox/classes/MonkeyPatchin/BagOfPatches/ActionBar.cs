@@ -28,16 +28,13 @@ namespace ToyBox.BagOfPatches {
                 var itemCount = __instance.m_SlotsList.Count(s => !s.ViewModel?.IsEmpty.Value ?? false);
                 var columnCount = Math.Max(5, (int)(0.85 * Math.Sqrt(itemCount)));
                 var rowCount = (int)(Math.Ceiling((float)itemCount / columnCount));
-                var minHeight = 0;
                 if (isSpellGroup) {
-                    rowCount += 1; // nudge for spell group ??? TODO - why?
-                    minHeight = 30 * (__instance as ActionBarSpellGroupPCView).m_LevelButtons.Count;
+                    //rowCount += 1; // nudge for spell group ??? TODO - why?
+                    rowCount = Math.Max(rowCount, (int)Math.Ceiling((((__instance as ActionBarSpellGroupPCView).m_Levels.Count - 1) * 26)/ 53f)) + 1;
                 }
                 var width = columnCount * 53f;
                 var xoffset = (columnCount - 5) * 53f;
                 var height = rowCount * 53f + 40 + (isSpellGroup ? 5 : 0);
-                if (isSpellGroup && height < minHeight)
-                    height += (((int)(minHeight - height))/53)*53f;
                 var oldOffset = rectTransform.offsetMax;
                 var oldSize = rectTransform.sizeDelta;
                 //Mod.Debug($"ActionBarGroupPCViewSetStatePosition_Patch - itemCount:{itemCount} width:{oldSize.x} - > {width}");
