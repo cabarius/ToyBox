@@ -54,6 +54,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Show character name equiping an item if is equiped
 * **Loot**
   * Item rarity takes into account enchantment rarity
+* **Armies Editor**
+  * Added the ability to spawn an army as either friendly or hostile.
+  * Add buttons for destroying an army and for restoring movement points
 * **Misc**
   * Fixed crasher that led to interference with World Crawl and possibly other mods
   * Fixed a crasher that impacted some text fields
