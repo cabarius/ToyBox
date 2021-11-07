@@ -129,6 +129,21 @@ namespace ToyBox.classes.MainUI {
                                     if (GlobalMapView.Instance != null) {
                                         UI.ActionButton("Summon", () => SummonArmy(army), UI.Width(150));
                                     }
+                                    UI.Space(25);
+                                    if (army.Data.Faction == ArmyFaction.Crusaders) {
+                                        UI.ActionButton("Restore MP", () => {
+                                            var additionalMP = army.Data.GetArmyBonusSkills().Select(a => a.DailyMovementPoints);
+                                            army.RestoreMovementPoints(40+additionalMP.Sum());
+                                        }, UI.Width(150));
+                                    }
+                                    UI.Space(25);
+                                    UI.ActionButton("Destroy", () => {
+                                       // army.Data.RemoveAllSquads();
+                                        Game.Instance.Player.GlobalMap.LastActivated.DestroyArmy(army);
+                                        UpdateArmies();
+                                    }, UI.Width(150));
+
+
                                 }
                                 if (showLeader) {
                                     UI.Div(0, 10);
