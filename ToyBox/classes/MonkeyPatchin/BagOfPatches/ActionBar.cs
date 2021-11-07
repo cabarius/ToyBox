@@ -28,7 +28,10 @@ namespace ToyBox.BagOfPatches {
                 var itemCount = __instance.m_SlotsList.Count(s => !s.ViewModel?.IsEmpty.Value ?? false);
                 var columnCount = Math.Max(5, (int)(0.85 * Math.Sqrt(itemCount)));
                 var rowCount = (int)(Math.Ceiling((float)itemCount / columnCount));
-                if (isSpellGroup) rowCount += 1; // nudge for spell group ??? TODO - why?
+                if (isSpellGroup) {
+                    //rowCount += 1; // nudge for spell group ??? TODO - why?
+                    rowCount = Math.Max(rowCount, (int)Math.Ceiling((((__instance as ActionBarSpellGroupPCView).m_Levels.Count - 1) * 26)/ 53f)) + 1;
+                }
                 var width = columnCount * 53f;
                 var xoffset = (columnCount - 5) * 53f;
                 var height = rowCount * 53f + 40 + (isSpellGroup ? 5 : 0);
