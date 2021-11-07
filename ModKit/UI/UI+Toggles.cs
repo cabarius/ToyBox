@@ -46,17 +46,25 @@ namespace ModKit {
             }
             return changed;
         }
-        public static void ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
+        public static bool ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
-            if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options))
+            bool changed = false;
+            if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options)) {
                 toggle = toggle.Flip();
+                changed = true;
+            }
+            return changed;
         }
-        public static void ToggleButton(ref ToggleState toggle, string title, params GUILayoutOption[] options) {
+        public static bool ToggleButton(ref ToggleState toggle, string title, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
-            if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options))
+            bool changed = false;
+            if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options)) {
                 toggle = toggle.Flip();
+                changed = true;
+            }
+            return changed;
         }
         public static void ToggleButton(ref ToggleState toggle, string title, Action<ToggleState> applyToChildren, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
