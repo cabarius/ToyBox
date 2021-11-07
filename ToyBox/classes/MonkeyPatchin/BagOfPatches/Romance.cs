@@ -49,6 +49,23 @@ namespace ToyBox.BagOfPatches {
             { "a96fc116bb7af94488b6da41161a47c7", true },   // Answer   Answer_0060 
         };
 
+
+        // Lich Romance Overrides
+        // These modify the EtudeStatus condition for specific Owner blueprints 
+        internal static readonly Dictionary<(string, string), bool> ConditionCheckOverridesLoveIsFree = new()
+        {
+            { ("7f532b681d64f3741a7aa0aebba7c4db", "977f3380-2938-4cc8-a26a-448edc6f9259"), false },  // Etude CamelliaRomance_Start status is:  Not Playing;   
+            { ("7f532b681d64f3741a7aa0aebba7c4db", "52632774-cbb4-4eea-ada6-37ec2708e07d"), false },  // Etude WenduagRomance_Active status is:  Not Playing;   
+            { ("7f532b681d64f3741a7aa0aebba7c4db", "12928be5-97e8-4e7c-ac5c-02d704289e7f"), false },  // Etude LannRomance_Active status is:  Not Playing;      
+            { ("7f532b681d64f3741a7aa0aebba7c4db", "2bbad7a7-5918-4c14-b909-f1a7bbce9248"), false },  // Etude ArueshalaeRomance_Active status is:  Not Playing;   
+            { ("7f532b681d64f3741a7aa0aebba7c4db", "55fd2fa2-9644-462a-a02e-23987e05fd62"), false },  // Etude DaeranRomance_Active status is:  Not Playing;      
+            { ("7f532b681d64f3741a7aa0aebba7c4db", "b0f684c1-0cc9-4ec7-a4a3-fe47e3d9847c"), false },  // Etude SosielRomance_Active status is:  Not Playing; 
+        };
+        internal static readonly Dictionary<string, bool> EtudeStatusOverridesLoveIsFree = new()
+        {
+            { "2ebd861e55143014c8067c6832cdf21c", false },  // Cue_0048
+        };
+
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
         public static class PcFemale_CheckCondition_Patch {
             public static void Postfix(PcFemale __instance, ref bool __result) {
@@ -66,22 +83,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        // Lich Romance Overrides
-        // These modify the EtudeStatus condition for specific Owner blueprints 
-        internal static readonly Dictionary<(string, string), bool> ConditionCheckOverridesLich = new()
-        {
-            { ("7f532b681d64f3741a7aa0aebba7c4db", "977f3380-2938-4cc8-a26a-448edc6f9259"), false },  // Etude CamelliaRomance_Start status is:  Not Playing;   
-            { ("7f532b681d64f3741a7aa0aebba7c4db", "52632774-cbb4-4eea-ada6-37ec2708e07d"), false },  // Etude WenduagRomance_Active status is:  Not Playing;   
-            { ("7f532b681d64f3741a7aa0aebba7c4db", "12928be5-97e8-4e7c-ac5c-02d704289e7f"), false },  // Etude LannRomance_Active status is:  Not Playing;      
-            { ("7f532b681d64f3741a7aa0aebba7c4db", "2bbad7a7-5918-4c14-b909-f1a7bbce9248"), false },  // Etude ArueshalaeRomance_Active status is:  Not Playing;   
-            { ("7f532b681d64f3741a7aa0aebba7c4db", "55fd2fa2-9644-462a-a02e-23987e05fd62"), false },  // Etude DaeranRomance_Active status is:  Not Playing;      
-            { ("7f532b681d64f3741a7aa0aebba7c4db", "b0f684c1-0cc9-4ec7-a4a3-fe47e3d9847c"), false },  // Etude SosielRomance_Active status is:  Not Playing; 
-        };
-        internal static readonly Dictionary<string, bool> EtudeStatusOverridesLich = new()
-        {
-            { "2ebd861e55143014c8067c6832cdf21c", false },  // Cue_0048
-        };
-
         [HarmonyPatch(typeof(Condition), nameof(Condition.Check))]
         public static class Condition_Check_Patch_Lich
         {
@@ -89,7 +90,7 @@ namespace ToyBox.BagOfPatches {
             {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
                 var keyLich = (__instance.Owner.AssetGuid.ToString(), __instance.AssetGuid);
-                if (ConditionCheckOverridesLich.TryGetValue(keyLich, out var valueLich)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {valueLich}"); __result = valueLich; }
+                if (ConditionCheckOverridesLoveIsFree.TryGetValue(keyLich, out var valueLich)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {valueLich}"); __result = valueLich; }
             }
         }
 
@@ -99,7 +100,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(EtudeStatus __instance, ref bool __result)
             {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                if (EtudeStatusOverridesLich.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var valueLich)) { Mod.Debug($"overiding {__instance.Owner.name} to {valueLich}"); __result = valueLich; }
+                if (EtudeStatusOverridesLoveIsFree.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var valueLich)) { Mod.Debug($"overiding {__instance.Owner.name} to {valueLich}"); __result = valueLich; }
             }
         }
 
@@ -124,9 +125,18 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Condition), nameof(Condition.Check))]
         public static class Condition_Check_Patch {
             public static void Postfix(Condition __instance, ref bool __result) {
-                if (!settings.toggleMultipleRomance || __instance?.Owner is null) return;
+                if (__instance?.Owner is null) return;
+
                 var key = (__instance.Owner.AssetGuid.ToString(), __instance.AssetGuid);
-                if (ConditionCheckOverrides.TryGetValue(key, out var value)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {value}"); __result = value; }
+                if (settings.toggleAllowAnyGenderRomance) {
+                    if (ConditionCheckOverridesLoveIsFree.TryGetValue(key, out var valueLich)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {valueLich}"); __result = valueLich; }
+                }
+                if (settings.toggleMultipleRomance) {
+                    if (ConditionCheckOverrides.TryGetValue(key, out var value)) {
+                        Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {value}");
+                        __result = value;
+                    }
+                }
             }
         }
 
