@@ -102,6 +102,7 @@ namespace ToyBox {
 
         // Main
         public int selectedTab = 0;
+        public int increment = 10000;
 
         // Qualty of Life
         public bool highlightObjectsToggle = false;
@@ -112,11 +113,16 @@ namespace ToyBox {
         public bool toggleRemoteCompanionDialog = false;
 
         public bool toggleWidenActionBarGroups = false;
-        // Cheap Tricks
-        public int increment = 10000;
-        public int kineticistBurnReduction = 0;
+
+        // Camera
+        public bool toggleZoomOnAllMaps = false;
+        public bool toggleRotateOnAllMaps = false;
+        public float fovMultiplier = 1;
+        public float fovMultiplierCutScenes = 1;
+        public float fovMultiplierMax = 1.25f;
 
         // Tweaks
+        public int kineticistBurnReduction = 0;
         public bool toggleSpontaneousCopyScrolls = false;
         public bool toggleInstantEvent = false;
         public bool toggleInfiniteAbilities = false;
@@ -251,9 +257,6 @@ namespace ToyBox {
         public float kingdomBuildingTimeModifier = 0;
         public float enemyBaseHitPointsMultiplier = 1;
         public float buffDurationMultiplierValue = 1;
-        public float fovMultiplier = 1;
-        public float fovMultiplierCutScenes = 1;
-        public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
         public float alternateTimeScaleMultiplier = 3;
         public bool useAlternateTimeScaleMultiplier = false;

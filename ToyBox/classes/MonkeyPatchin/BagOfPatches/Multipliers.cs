@@ -24,6 +24,8 @@ using ModKit;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
 using System.Collections.Generic;
+using CameraMode = Kingmaker.View.CameraMode;
+using DG.Tweening;
 
 namespace ToyBox.BagOfPatches {
     internal static class Multipliers {
@@ -35,7 +37,7 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * settings.encumberanceMultiplier);
         }
 
-        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] {})]
+        [HarmonyPatch(typeof(EncumbranceHelper), "GetPartyCarryingCapacity", new Type[] { })]
         private static class EncumbranceHelper_GetPartyCarryingCapacity_Patch_1 {
             private static void Postfix(ref EncumbranceHelper.CarryingCapacity __result) {
                 __result.Light = Mathf.RoundToInt(__result.Light * settings.encumberanceMultiplierPartyOnly);
@@ -93,7 +95,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(Player), "GetCustomCompanionCost")]
         public static class Player_GetCustomCompanionCost_Patch {
-            public static bool Prefix(ref bool __state) => !__state;    // FIXME - why did Bag of Tricks do this?
+            public static bool Prefix(ref bool __state) => !__state; // FIXME - why did Bag of Tricks do this?
 
             public static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * settings.companionCostMultiplier);
         }
@@ -132,11 +134,10 @@ namespace ToyBox.BagOfPatches {
 #endif
 
 
-        private static readonly string[] badBuffs = new string[]
-             {
-                 "24cf3deb078d3df4d92ba24b176bda97", //Prone
-                 "e6f2fc5d73d88064583cb828801212f4" //Fatigued
-             };
+        private static readonly string[] badBuffs = new string[] {
+            "24cf3deb078d3df4d92ba24b176bda97", //Prone
+            "e6f2fc5d73d88064583cb828801212f4" //Fatigued
+        };
 
         private static bool isGoodBuff(BlueprintBuff blueprint) => !blueprint.Harmful && !badBuffs.Contains(blueprint.AssetGuidThreadSafe);
 
@@ -145,7 +146,7 @@ namespace ToyBox.BagOfPatches {
             typeof(UnitEntityData),
             typeof(TimeSpan?),
             typeof(AbilityParams)
-            })]
+        })]
         public static class BuffCollection_AddBuff_patch {
             public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
                 try {
@@ -168,7 +169,7 @@ namespace ToyBox.BagOfPatches {
             typeof(BlueprintBuff),
             typeof(MechanicsContext),
             typeof(TimeSpan?)
-            })]
+        })]
         public static class BuffCollection_AddBuff2_patch {
             public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref TimeSpan? duration) {
                 float adjusted = 0;
@@ -193,7 +194,7 @@ namespace ToyBox.BagOfPatches {
             typeof(BlueprintItemEnchantment),
             typeof(MechanicsContext),
             typeof(Rounds?)
-            })]
+        })]
         public static class ItemEntity_AddEnchantment_Patch {
             public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref Rounds? duration) {
                 try {
@@ -235,6 +236,7 @@ namespace ToyBox.BagOfPatches {
         private static class VendorLogic_GetItemSellPrice_Patch {
             private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorSellPriceMultiplier);
         }
+
         [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(BlueprintItem) })]
         private static class VendorLogic_GetItemSellPrice_Patch2 {
             private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorSellPriceMultiplier);
@@ -244,16 +246,29 @@ namespace ToyBox.BagOfPatches {
         private static class VendorLogic_GetItemBuyPrice_Patch {
             private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorBuyPriceMultiplier);
         }
+
         [HarmonyPatch(typeof(VendorLogic), "GetItemBuyPrice", new Type[] { typeof(BlueprintItem) })]
         private static class VendorLogic_GetItemBuyPrice_Patc2h {
             private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorBuyPriceMultiplier);
         }
 
-        [HarmonyPatch(typeof(CameraZoom), "TickZoom")]
+
+        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickScroll))]
+        private static class CameraRig_TickScroll_Patch {
+            public static void Postfix(CameraRig __instance) {
+                if (settings.toggleRotateOnAllMaps)
+                    __instance.TickRotate();
+                if (settings.toggleZoomOnAllMaps)
+                    __instance.CameraZoom.TickZoom();
+            }
+        }
+
+        [HarmonyPatch(typeof(CameraZoom), nameof(CameraZoom.TickZoom))]
         private static class CameraZoom_TickZoom {
             private static bool firstCall = true;
             private static readonly float BaseFovMin = 17.5f;
             private static readonly float BaseFovMax = 30;
+
             public static bool Prefix(CameraZoom __instance) {
                 if (settings.fovMultiplier == 1) return true;
                 if (firstCall) {
@@ -262,12 +277,15 @@ namespace ToyBox.BagOfPatches {
                         Mod.Warn($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMin = __instance.FovMin;
                     }
+
                     if (__instance.FovMax != BaseFovMax) {
                         Mod.Warn($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMax = __instance.FovMax;
                     }
+
                     firstCall = false;
                 }
+
                 __instance.FovMax = BaseFovMax * settings.fovMultiplier;
                 __instance.FovMin = BaseFovMin / settings.fovMultiplier;
                 if (__instance.m_ZoomRoutine != null)
@@ -283,7 +301,37 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(CameraRig), "SetMode")]
+        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickRotate))]
+        private static class CameraRig_TickRotate_Patch {
+            public static bool Prefix(CameraRig __instance) {
+                Mod.Debug("TickRotsate");
+                if (__instance.m_RotateRoutine != null && (double)Time.time > (double)__instance.m_RotateRoutineEndsOn) {
+                    __instance.StopCoroutine(__instance.m_RotateRoutine);
+                    __instance.m_RotateRoutine = (Coroutine)null;
+                }
+
+                if (__instance.m_ScrollRoutine != null || __instance.m_RotateRoutine != null)// || __instance.m_HandRotationLock)
+                    return false;
+                __instance.RotateByMiddleButton();
+                float num = 0.0f;
+                if (__instance.m_RotationByMouse)
+                    num = __instance.CameraDragToRotate();
+                else if (__instance.m_RotationByKeyboard)
+                    num = __instance.m_RotateOffset;
+                if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard) {
+                    Vector3 eulerAngles = __instance.transform.rotation.eulerAngles;
+                    eulerAngles.y += num * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                    __instance.transform.DOKill();
+                    __instance.transform.DOLocalRotate(eulerAngles, __instance.m_RotationTime).SetUpdate<Tweener>(true);
+                }
+
+                __instance.m_RotationByKeyboard = false;
+                __instance.m_RotateOffset = 0.0f;
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.SetMode))]
         private static class CameraRig_SetMode_Apply {
             public static void Postfix(CameraRig __instance, CameraMode mode) {
                 if (settings.fovMultiplierCutScenes == 1 && settings.fovMultiplier == 1) return;

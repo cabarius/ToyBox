@@ -131,7 +131,7 @@ namespace ToyBox.classes.MainUI {
                                     }
                                     UI.Space(25);
                                     if (army.Data.Faction == ArmyFaction.Crusaders) {
-                                        UI.ActionButton("Restore MP", () => {
+                                        UI.ActionButton("Full MP", () => {
                                             var additionalMP = army.Data.GetArmyBonusSkills().Select(a => a.DailyMovementPoints);
                                             army.RestoreMovementPoints(40+additionalMP.Sum());
                                         }, UI.Width(150));

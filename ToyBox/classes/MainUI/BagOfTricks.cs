@@ -315,6 +315,14 @@ namespace ToyBox {
             () => { }
             );
             Div(0, 25);
+            HStack("Camera", 1,
+                () => Toggle("Enable Zoom on all maps", ref settings.toggleZoomOnAllMaps),
+                () => Toggle("Enable Rotate on all maps", ref settings.toggleRotateOnAllMaps),
+                () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                () => { }
+            );
+            Div(0, 25);
             HStack("Alignment", 1,
                 () => { Toggle("Fix Alignment Shifts", ref settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
                 () => { Toggle("Prevent Alignment Changes", ref settings.togglePreventAlignmentChanges); Space(25); Label("See Party Editor for more fine grained alignment locking per character".green()); },
@@ -429,8 +437,6 @@ namespace ToyBox {
                 },
                 () => LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
-                () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => { }
                 );
             Actions.ApplyTimeScale();
