@@ -66,44 +66,6 @@ namespace ToyBox.BagOfPatches {
             { "2ebd861e55143014c8067c6832cdf21c", false },  // Cue_0048
         };
 
-        [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
-        public static class PcFemale_CheckCondition_Patch {
-            public static void Postfix(PcFemale __instance, ref bool __result) {
-                if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
-                if (PcFemaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
-            }
-        }
-        [HarmonyPatch(typeof(PcMale), nameof(PcMale.CheckCondition))]
-        public static class PcMale_CheckCondition_Patch {
-            public static void Postfix(PcMale __instance, ref bool __result) {
-                if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
-                if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
-            }
-        }
-
-        [HarmonyPatch(typeof(Condition), nameof(Condition.Check))]
-        public static class Condition_Check_Patch_Lich
-        {
-            public static void Postfix(Condition __instance, ref bool __result)
-            {
-                if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                var keyLich = (__instance.Owner.AssetGuid.ToString(), __instance.AssetGuid);
-                if (ConditionCheckOverridesLoveIsFree.TryGetValue(keyLich, out var valueLich)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {valueLich}"); __result = valueLich; }
-            }
-        }
-
-        [HarmonyPatch(typeof(EtudeStatus), nameof(EtudeStatus.CheckCondition))]
-        public static class EtudeStatus_CheckCondition_Patch_Lich
-        {
-            public static void Postfix(EtudeStatus __instance, ref bool __result)
-            {
-                if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                if (EtudeStatusOverridesLoveIsFree.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var valueLich)) { Mod.Debug($"overiding {__instance.Owner.name} to {valueLich}"); __result = valueLich; }
-            }
-        }
-
         // Multiple Romances overrides
         // This modify the EtudeStatus condition for specific Owner blueprints 
         internal static readonly Dictionary<(string, string), bool> ConditionCheckOverrides = new() {
@@ -122,6 +84,23 @@ namespace ToyBox.BagOfPatches {
             { "4799a25da39295b43a6eefcd2cb2b4a7", false },  // Etude    KTC_Jealousy
         };
 
+        [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
+        public static class PcFemale_CheckCondition_Patch {
+            public static void Postfix(PcFemale __instance, ref bool __result) {
+                if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
+                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                if (PcFemaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+            }
+        }
+        [HarmonyPatch(typeof(PcMale), nameof(PcMale.CheckCondition))]
+        public static class PcMale_CheckCondition_Patch {
+            public static void Postfix(PcMale __instance, ref bool __result) {
+                if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
+                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+            }
+        }
+
         [HarmonyPatch(typeof(Condition), nameof(Condition.Check))]
         public static class Condition_Check_Patch {
             public static void Postfix(Condition __instance, ref bool __result) {
@@ -129,7 +108,7 @@ namespace ToyBox.BagOfPatches {
 
                 var key = (__instance.Owner.AssetGuid.ToString(), __instance.AssetGuid);
                 if (settings.toggleAllowAnyGenderRomance) {
-                    if (ConditionCheckOverridesLoveIsFree.TryGetValue(key, out var valueLich)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {valueLich}"); __result = valueLich; }
+                    if (ConditionCheckOverridesLoveIsFree.TryGetValue(key, out var valueLoveIsFree)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {valueLoveIsFree}"); __result = valueLoveIsFree; }
                 }
                 if (settings.toggleMultipleRomance) {
                     if (ConditionCheckOverrides.TryGetValue(key, out var value)) {
@@ -143,8 +122,15 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(EtudeStatus), nameof(EtudeStatus.CheckCondition))]
         public static class EtudeStatus_CheckCondition_Patch {
             public static void Postfix(EtudeStatus __instance, ref bool __result) {
-                if (!settings.toggleMultipleRomance || __instance?.Owner is null) return;
-                if (EtudeStatusOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                if (__instance?.Owner is null) return;
+
+                var key = (__instance.Owner.AssetGuid.ToString());
+                if (settings.toggleAllowAnyGenderRomance) {
+                    if (EtudeStatusOverridesLoveIsFree.TryGetValue(key, out var valueLoveIsFree)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueLoveIsFree}"); __result = valueLoveIsFree; }
+                }
+                if (settings.toggleMultipleRomance) {
+                    if (EtudeStatusOverrides.TryGetValue(key, out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                }
             }
         }
         [HarmonyPatch(typeof(FlagInRange), nameof(FlagInRange.CheckCondition))]
