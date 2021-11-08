@@ -40,6 +40,7 @@ namespace ToyBox {
         // other
         private const string TimeScaleMultToggle = "Main/Alt Timescale";
         private const string PreviewDialogResults = "Preview Results";
+        private const string ResetAdditionalCameraAngles = "Fix Camera";
 
         public static void OnLoad() {
             // Combat
@@ -67,6 +68,9 @@ namespace ToyBox {
             KeyBindings.RegisterAction(PreviewDialogResults, () => {
                 settings.previewDialogResults = !settings.previewDialogResults;
                 var dialogController = Game.Instance.DialogController;
+            });
+            KeyBindings.RegisterAction(ResetAdditionalCameraAngles, () => {
+                Main.resetExtraCameraAngles = true;
             });
         }
         public static void ResetGUI() { }
@@ -316,9 +320,20 @@ namespace ToyBox {
             );
             Div(0, 25);
             HStack("Camera", 1,
-                () => Toggle("Enable Zoom on all maps", ref settings.toggleZoomOnAllMaps),
-                () => Toggle("Enable Rotate on all maps", ref settings.toggleRotateOnAllMaps),
-                () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
+            () => {
+                Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
+                103.space();
+                UI.Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green(), 1280.width());
+            },
+            //() => Toggle("Enable Scrolling on all maps", ref settings.toggleScrollOnAllMaps),
+                () => {
+                    if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
+                    100.space();
+                    UI.Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated). This can mess with your camera but it is fun so enjoy.  The following bindable key allows you to fix the camera:".green(), 1280.width());
+                },
+                () => BindableActionButton(ResetAdditionalCameraAngles),
+            () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => { }
             );

@@ -117,6 +117,8 @@ namespace ToyBox {
         // Camera
         public bool toggleZoomOnAllMaps = false;
         public bool toggleRotateOnAllMaps = false;
+        public bool toggleScrollOnAllMaps = false;
+        public bool toggleCameraPitch = false;
         public float fovMultiplier = 1;
         public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;

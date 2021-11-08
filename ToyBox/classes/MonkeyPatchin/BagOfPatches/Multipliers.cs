@@ -26,6 +26,8 @@ using Kingmaker.Utility;
 using System.Collections.Generic;
 using CameraMode = Kingmaker.View.CameraMode;
 using DG.Tweening;
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Root;
 
 namespace ToyBox.BagOfPatches {
     internal static class Multipliers {
@@ -252,16 +254,26 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref long __result) => __result = (long)(__result * settings.vendorBuyPriceMultiplier);
         }
 
-
-        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickScroll))]
-        private static class CameraRig_TickScroll_Patch {
-            public static void Postfix(CameraRig __instance) {
-                if (settings.toggleRotateOnAllMaps)
+        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.Update))]
+        static class CameraRig_Update_Patch {
+            static void Postfix(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
+                if (settings.toggleRotateOnAllMaps || Main.resetExtraCameraAngles)
                     __instance.TickRotate();
                 if (settings.toggleZoomOnAllMaps)
                     __instance.CameraZoom.TickZoom();
+                if (settings.toggleScrollOnAllMaps) {
+                    __instance.TickScroll();
+                    //__instance.TickCameraDrag();
+                    //__instance.CameraDragToMove();
+                }
             }
         }
+
+        //[HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickScroll))]
+        //private static class CameraRig_TickScroll_Patch {
+        //    public static void Postfix(CameraRig __instance) {
+        //    }
+        //}
 
         [HarmonyPatch(typeof(CameraZoom), nameof(CameraZoom.TickZoom))]
         private static class CameraZoom_TickZoom {
@@ -301,10 +313,27 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        private static Vector2 CameraDragToRotate2D(this CameraRig __instance) {
+            if (!__instance.m_BaseMousePoint.HasValue)
+                return new Vector2(0.0f, 0.0f);
+            var basePoint = __instance.m_BaseMousePoint.Value;
+            var dx = basePoint.x - __instance.GetLocalPointerPosition().x;
+            var dy = basePoint.y - __instance.GetLocalPointerPosition().y;
+            var dist = Math.Sqrt(dx * dx + dy * dy);
+            var rotateDistance = ((double)__instance.m_RotateDistance - (double)dist) * ((bool)(SimpleBlueprint)BlueprintRoot.Instance ? (double)SettingsRoot.Controls.CameraRotationSpeedEdge.GetValue() : 2.0);
+            __instance.m_RotateDistance = (float)rotateDistance;
+            basePoint.x -= 0.25f * dx;
+            basePoint.y -= 0.25f * dy;
+            __instance.m_BaseMousePoint = basePoint;
+            return new Vector2(dx, -dy);
+        }
+
         [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickRotate))]
         private static class CameraRig_TickRotate_Patch {
+
             public static bool Prefix(CameraRig __instance) {
-                Mod.Debug("TickRotsate");
+                if (!settings.toggleRotateOnAllMaps && !settings.toggleCameraPitch && !Main.resetExtraCameraAngles) return true;
+                bool usePitch = settings.toggleCameraPitch;
                 if (__instance.m_RotateRoutine != null && (double)Time.time > (double)__instance.m_RotateRoutineEndsOn) {
                     __instance.StopCoroutine(__instance.m_RotateRoutine);
                     __instance.m_RotateRoutine = (Coroutine)null;
@@ -313,14 +342,21 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_ScrollRoutine != null || __instance.m_RotateRoutine != null)// || __instance.m_HandRotationLock)
                     return false;
                 __instance.RotateByMiddleButton();
-                var num = 0.0f;
-                if (__instance.m_RotationByMouse)
-                    num = __instance.CameraDragToRotate();
+                var mouseMovement = new Vector2(0,0);
+                if (__instance.m_RotationByMouse) {
+                    mouseMovement = __instance.CameraDragToRotate2D();
+                }
                 else if (__instance.m_RotationByKeyboard)
-                    num = __instance.m_RotateOffset;
-                if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard) {
+                    mouseMovement.x = __instance.m_RotateOffset;
+                if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
-                    eulerAngles.y += num * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                    eulerAngles.y += mouseMovement.x * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                    if (usePitch && !Main.resetExtraCameraAngles)
+                        eulerAngles.x += mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                    else {
+                        eulerAngles.x = 0f;
+                        Main.resetExtraCameraAngles = false;
+                    }
                     __instance.transform.DOKill();
                     __instance.transform.DOLocalRotate(eulerAngles, __instance.m_RotationTime).SetUpdate<Tweener>(true);
                 }
