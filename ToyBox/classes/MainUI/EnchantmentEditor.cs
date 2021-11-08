@@ -336,9 +336,9 @@ namespace ToyBox.classes.MainUI {
                     UI.Label($"{enchant.Rating()}".yellow(), 75.width()); // ⊙
                     UI.Space(10);
                     var description = enchant.Description.StripHTML().green();
-                    if (enchant.Comment.Length > 0) description = enchant.Comment.orange() + " " + description;
-                    if (enchant.Prefix.Length > 0) description = enchant.Prefix.yellow() + " " + description;
-                    if (enchant.Suffix.Length > 0) description = enchant.Suffix.yellow() + " " + description;
+                    if (enchant.Comment?.Length > 0) description = enchant.Comment.orange() + " " + description;
+                    if (enchant.Prefix?.Length > 0) description = enchant.Prefix.yellow() + " " + description;
+                    if (enchant.Suffix?.Length > 0) description = enchant.Suffix.yellow() + " " + description;
                     if (settings.showAssetIDs) {
                         using (UI.VerticalScope()) {
                             using (UI.HorizontalScope()) {

@@ -58,6 +58,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Show enchament rating
   * Improved sorting of enchaments
   * Show character name equiping an item if is equiped
+  * Fixed crash on null comment/prefix/suffix in BlueprintItemEnchantment (pheonix99)
 * **Loot**
   * Item rarity takes into account enchantment rarity
 * **Armies Editor**
