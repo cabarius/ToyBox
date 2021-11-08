@@ -90,13 +90,13 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             
             private static void Prefix(ref CharGenContextVM __instance, ref UnitEntityData character, ref Action successAction) {
                 if (settings.toggleRespecRefundScrolls) {
-                    List<BlueprintItemEquipmentUsable> scrolls = new List<BlueprintItemEquipmentUsable>();
+                    var scrolls = new List<BlueprintItemEquipmentUsable>();
 
                     var loadedscrolls = Game.Instance.BlueprintRoot.CraftRoot.m_ScrollsItems.Select(a => ResourcesLibrary.TryGetBlueprint<BlueprintItemEquipmentUsable>(a.Guid));
                     foreach (var spellbook in character.Spellbooks) {
                         foreach (var scrollspell in spellbook.GetAllKnownSpells()) {
                             if (scrollspell.CopiedFromScroll) {
-                                if (loadedscrolls.TryFind(a => a.Ability.NameForAcronym == scrollspell.Blueprint.NameForAcronym, out BlueprintItemEquipmentUsable item)) {
+                                if (loadedscrolls.TryFind(a => a.Ability.NameForAcronym == scrollspell.Blueprint.NameForAcronym, out var item)) {
                                     scrolls.Add(item);
                                 }
                             }

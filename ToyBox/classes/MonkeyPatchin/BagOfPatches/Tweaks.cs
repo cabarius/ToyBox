@@ -295,8 +295,8 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleIgnoreSpeedReduction) {
                     if (__instance.m_Modifiers != null) {
                         __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m) {
-                            ModifiableValue appliedTo = m.AppliedTo;
-                            ModifierDescriptor desc = m.ModDescriptor;
+                            var appliedTo = m.AppliedTo;
+                            var desc = m.ModDescriptor;
                             if (appliedTo == __instance.Wielder.Stats.Speed && (desc == ModifierDescriptor.Shield || desc == ModifierDescriptor.Armor)) {
                                 m.Remove();
                             }

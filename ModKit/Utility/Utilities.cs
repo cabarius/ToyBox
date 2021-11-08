@@ -97,14 +97,14 @@ namespace ModKit {
             return string.Empty;
         }
         public static string[] TrimCommonPrefix(this string[] values) {
-            string prefix = string.Empty;
+            var prefix = string.Empty;
             int? resultLength = null;
 
             if (values != null) {
                 if (values.Length > 1) {
                     var min = values.Min(value => value.Length);
-                    for (int charIndex = 0; charIndex < min; charIndex++) {
-                        for (int valueIndex = 1; valueIndex < values.Length; valueIndex++) {
+                    for (var charIndex = 0; charIndex < min; charIndex++) {
+                        for (var valueIndex = 1; valueIndex < values.Length; valueIndex++) {
                             if (values[0][charIndex] != values[valueIndex][charIndex]) {
                                 resultLength = charIndex;
                                 break;

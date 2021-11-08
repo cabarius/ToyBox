@@ -498,15 +498,15 @@ namespace ToyBox.classes.MainUI {
             var tricksterTier1Toy = tricksterKnowledgeArcanaTier1.GetComponent<TricksterArcanaBetterEnhancements>();
             var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
 
-            List<ItemEnchantment> itemEnchantmentList = new List<ItemEnchantment>();
-            foreach (ItemEnchantment enchantment in item.Enchantments)
+            var itemEnchantmentList = new List<ItemEnchantment>();
+            foreach (var enchantment in item.Enchantments)
                 itemEnchantmentList.Add(enchantment);
             if (!item.Enchantments.Any<ItemEnchantment>((Func<ItemEnchantment, bool>)(p => ((IList<BlueprintItemEnchantmentReference>)tricksterTier1Toy.EnhancementEnchantments).Any<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(param => param.Get() == p.Blueprint)))))
                 return;
-            foreach (ItemEnchantment itemEnchantment in itemEnchantmentList) {
-                ItemEnchantment enchantment = itemEnchantment;
+            foreach (var itemEnchantment in itemEnchantmentList) {
+                var enchantment = itemEnchantment;
                 if (!tricksterTier1Toy.BestEnchantments.Any<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(p => p.Get() == enchantment.Blueprint)) && ((IList<BlueprintItemEnchantmentReference>)tricksterTier1Toy.EnhancementEnchantments).Any<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(p => p.Get() == enchantment.Blueprint))) {
-                    int index = ((IEnumerable<BlueprintItemEnchantmentReference>)tricksterTier1Toy.EnhancementEnchantments).FindIndex<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(p => p.Get() == enchantment.Blueprint));
+                    var index = ((IEnumerable<BlueprintItemEnchantmentReference>)tricksterTier1Toy.EnhancementEnchantments).FindIndex<BlueprintItemEnchantmentReference>((Func<BlueprintItemEnchantmentReference, bool>)(p => p.Get() == enchantment.Blueprint));
                     if (tricksterTier1Toy.EnhancementEnchantments.Length > index + 1) {
                         item.RemoveEnchantment(enchantment);
                         item.AddEnchantment(tricksterTier1Toy.EnhancementEnchantments[index + 1].Get(), fake_context);
@@ -519,26 +519,26 @@ namespace ToyBox.classes.MainUI {
             var tricksterToy = tricksterKnowledgeArcanaBP.GetComponent<TricksterArcanaAdditionalEnchantments>();
             var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
 
-            List<BlueprintItemEnchantment> source = new List<BlueprintItemEnchantment>();
-            foreach (BlueprintItemEnchantmentReference commonEnchantment in tricksterToy.CommonEnchantments)
+            var source = new List<BlueprintItemEnchantment>();
+            foreach (var commonEnchantment in tricksterToy.CommonEnchantments)
                 source.Add((BlueprintItemEnchantment)(BlueprintReference<BlueprintItemEnchantment>)commonEnchantment);
             if (item is ItemEntityWeapon || item is ItemEntityShield) {
-                foreach (BlueprintWeaponEnchantmentReference weaponEnchantment in tricksterToy.WeaponEnchantments)
+                foreach (var weaponEnchantment in tricksterToy.WeaponEnchantments)
                     source.Add((BlueprintItemEnchantment)(BlueprintWeaponEnchantment)(BlueprintReference<BlueprintWeaponEnchantment>)weaponEnchantment);
             }
             if (item is ItemEntityArmor || item is ItemEntityShield) {
-                foreach (BlueprintArmorEnchantmentReference armorEnchantment in tricksterToy.ArmorEnchantments)
+                foreach (var armorEnchantment in tricksterToy.ArmorEnchantments)
                     source.Add((BlueprintItemEnchantment)(BlueprintArmorEnchantment)(BlueprintReference<BlueprintArmorEnchantment>)armorEnchantment);
             }
-            foreach (ItemEnchantment enchantment in item.Enchantments)
+            foreach (var enchantment in item.Enchantments)
                 source.Remove(enchantment.Blueprint);
             if (source.Empty<BlueprintItemEnchantment>())
                 return;
-            BlueprintItemEnchantment blueprint = source.ToList<BlueprintItemEnchantment>().Random<BlueprintItemEnchantment>();
-            ItemEntityShield itemEntityShield = item as ItemEntityShield;
+            var blueprint = source.ToList<BlueprintItemEnchantment>().Random<BlueprintItemEnchantment>();
+            var itemEntityShield = item as ItemEntityShield;
             switch (blueprint) {
                 case BlueprintWeaponEnchantment _ when itemEntityShield != null:
-                    ItemEntityWeapon weaponComponent = itemEntityShield.WeaponComponent;
+                    var weaponComponent = itemEntityShield.WeaponComponent;
                     if (weaponComponent == null)
                         break;
                     weaponComponent.AddEnchantment(blueprint, fake_context);
@@ -602,8 +602,8 @@ namespace ToyBox.classes.MainUI {
         public static int CurrentEnhancement(ItemEntity item) {
             if (item == null) return 0;
 
-            Regex enhanceCheck = new Regex(@"Enhancement\d$");
-            int[] enhancements = new int[20];
+            var enhanceCheck = new Regex(@"Enhancement\d$");
+            var enhancements = new int[20];
 
             foreach (var enchant in item.Blueprint.Enchantments) {
                 if (enhanceCheck.IsMatch(enchant.Name)) {

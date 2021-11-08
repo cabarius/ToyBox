@@ -39,7 +39,7 @@ namespace ToyBox.BagOfPatches {
                 Mod.Debug($"Evalutors checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (!settings.toggleRemoteCompanionDialog) return true;
                 if (__instance.Owner is BlueprintCue cueBP) {
-                    UnitEntityData unitEntityData = Game.Instance.Player.AllCrossSceneUnits.FirstOrDefault<UnitEntityData>((Func<UnitEntityData, bool>)(unit => __instance.IsCompanion(unit.Blueprint)));
+                    var unitEntityData = Game.Instance.Player.AllCrossSceneUnits.FirstOrDefault<UnitEntityData>((Func<UnitEntityData, bool>)(unit => __instance.IsCompanion(unit.Blueprint)));
                     __result = unitEntityData;
                     return false;
                 }
@@ -64,7 +64,7 @@ namespace ToyBox.BagOfPatches {
                 var second = Game.Instance.EntityCreator.CreationQueue.Select(ce => ce.Entity).OfType<UnitEntityData>();
                 __instance.MakeEssentialCharactersConscious();
                 Mod.Log($"second: {second?.ToString()} matching: {second.Select(u => __instance.SelectMatchingUnit(u))}");
-                UnitEntityData unitEntityData =
+                var unitEntityData =
                     Game.Instance.State.Units.Concat(Game.Instance.Player.Party)
                         //.Where(u => u.IsInGame && !u.Suppressed)
                         .Concat(second)

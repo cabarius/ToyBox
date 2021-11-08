@@ -202,7 +202,7 @@ namespace ToyBox {
                     var selections = ch?.Descriptor?.Progression.Selections;
                     BlueprintFeatureSelection featureSelection = null;
                     FeatureSelectionData featureSelectionData = null;
-                    int level = -1;
+                    var level = -1;
                     foreach (var selection in selections) {
                         foreach (var keyValuePair in selection.Value.SelectionsByLevel) {
                             if (keyValuePair.Value.HasItem<BlueprintFeature>(bp)) {

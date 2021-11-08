@@ -207,7 +207,7 @@ namespace ToyBox {
             return etudeInfo;
         }
         public List<BlueprintGuid> GetConflictingEtudes(BlueprintGuid etudeID) {
-            List<BlueprintGuid> result = new List<BlueprintGuid>();
+            var result = new List<BlueprintGuid>();
 
             foreach (var conflictingGroup in loadedEtudes[etudeID].ConflictingGroups) {
                 foreach (var etude in EtudesTreeModel.Instance.conflictingGroups[conflictingGroup].Etudes) {

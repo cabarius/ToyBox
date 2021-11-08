@@ -68,7 +68,7 @@ namespace ToyBox.Multiclass {
                         return;
                     }
                     // get multi-class setting
-                    bool useDefaultMulticlassOptions = state.IsCharGen();
+                    var useDefaultMulticlassOptions = state.IsCharGen();
                     var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
                     Mod.Trace($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isPHChar: {unit.CharacterName == "Player Character"} level: {state.NextClassLevel.ToString().yellow()}".cyan().bold());
 

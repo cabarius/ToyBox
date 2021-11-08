@@ -313,13 +313,13 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_ScrollRoutine != null || __instance.m_RotateRoutine != null)// || __instance.m_HandRotationLock)
                     return false;
                 __instance.RotateByMiddleButton();
-                float num = 0.0f;
+                var num = 0.0f;
                 if (__instance.m_RotationByMouse)
                     num = __instance.CameraDragToRotate();
                 else if (__instance.m_RotationByKeyboard)
                     num = __instance.m_RotateOffset;
                 if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard) {
-                    Vector3 eulerAngles = __instance.transform.rotation.eulerAngles;
+                    var eulerAngles = __instance.transform.rotation.eulerAngles;
                     eulerAngles.y += num * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
                     __instance.transform.DOKill();
                     __instance.transform.DOLocalRotate(eulerAngles, __instance.m_RotationTime).SetUpdate<Tweener>(true);

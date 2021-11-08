@@ -44,10 +44,10 @@ namespace ToyBox {
             if (ch == null) return true;
             if (cl == null) return false;
             var options = Get(ch);
-            bool checkMythic = cl.IsMythic;
-            bool foundIt = false;
-            int classCount = 0;
-            int selectedCount = 0;
+            var checkMythic = cl.IsMythic;
+            var foundIt = false;
+            var classCount = 0;
+            var selectedCount = 0;
             foreach (var cd in ch.Progression.Classes) {
                 var charClass = cd.CharacterClass;
                 if (cd.CharacterClass.IsMythic == checkMythic) {
@@ -60,7 +60,7 @@ namespace ToyBox {
                         foundIt = true;
                 }
             }
-            bool result = !foundIt || (classCount - selectedCount > 1);
+            var result = !foundIt || (classCount - selectedCount > 1);
             //Mod.Trace($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
             return result;
         }
