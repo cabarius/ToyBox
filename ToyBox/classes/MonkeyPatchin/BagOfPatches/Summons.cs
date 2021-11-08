@@ -18,12 +18,31 @@ using TurnBased.Controllers;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using ModKit;
+using Kingmaker.View;
 
 namespace ToyBox.BagOfPatches {
     internal static class Summons {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
         private static bool SummonedByPlayerFaction = false;
+
+        [HarmonyPatch(typeof(Player), "MoveCharacters")]
+        private static class Player_MoveCharacters_Patch {
+            private static void Postfix() {
+                if (settings.toggleMakeSummmonsControllable) {
+                    foreach (var unit in Game.Instance.Player.Group) {
+                        if (unit.IsSummoned()) {
+                            var view = unit.View;
+                            if (view != null) {
+                                view.StopMoving();
+                            }
+                            unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                            unit.DesiredOrientation = Game.Instance.Player.MainCharacter.Value.Orientation;
+                        }
+                    }
+                }
+            }
+        }
 
         [HarmonyPatch(typeof(SummonPool), "Register")]
         private static class SummonPool_Register_Patch {
@@ -35,6 +54,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMakeSummmonsControllable && SummonedByPlayerFaction) {
                     // Main.Log($"SummonPool.Register: Unit [{unit.CharacterName}] [{unit.UniqueId}]");
                     UnitEntityDataUtils.Charm(unit);
+                    //unit.Ensure<UnitPartFollowUnit>().Init(Game.Instance.Player.MainCharacter.Value, true, false);
 #if false
                     if (unit.Blueprint.AssetGuid == "6fdf7a3f850a1eb48bfbf44d9d0f45dd" && StringUtils.ToToggleBool(settings.toggleDisableWarpaintedSkullAbilityForSummonedBarbarians)) // WarpaintedSkullSummonedBarbarians
                     {
