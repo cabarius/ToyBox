@@ -41,7 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor**
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
-### Ver 1.4.9 (Coming Soon)
+### Ver 1.4.10 (Coming Soon)
+### Ver 1.4.9
 * **Bag of Tricks**
   * **Quality of Life**
     * Remote Companion Dialog - Allow remote companions (even former party members) to make comments on dialog you are having
