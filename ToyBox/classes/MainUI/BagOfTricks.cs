@@ -188,12 +188,7 @@ namespace ToyBox {
                     UI.Label("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green());
                 },
                 () => {
-                    40.space();
-                    UI.Label("Expanded Dialog".bold());
-                },
-                () => {
-                    50.space();
-                    Toggle("Include Remote Companions", ref settings.toggleRemoteCompanionDialog);
+                    Toggle("Expand Dialog To Include Remote Companions".bold() , ref settings.toggleRemoteCompanionDialog);
                     100.space();
                     Label("Experimental".orange()+ " Allow remote companions to make comments on dialog you are having.".green());
                 },

@@ -18,6 +18,7 @@ using Kingmaker.Blueprints;
 using UnityEngine;
 using Kingmaker.Controllers;
 using Kingmaker.EntitySystem;
+using Random = System.Random;
 
 namespace ToyBox.BagOfPatches {
     internal static class Dialog {
@@ -75,7 +76,11 @@ namespace ToyBox.BagOfPatches {
                 Mod.Debug($"found {unit?.CharacterName ?? "no one".cyan()} position: {unit?.Position.ToString() ?? "n/a"}");
                 if (unit != null) {
                     if (unit.DistanceTo(dialogPosition) > 25) {
-                        unit.Position = dialogPosition;
+                        var mainChar = Game.Instance.Player.MainCharacter.Value;
+                        var mainPos = mainChar.Position;
+                        var offset = 4f * UnityEngine.Random.insideUnitSphere;
+                        var mainDirection = mainChar.OrientationDirection;
+                        unit.Position = mainPos - 5 * mainDirection + offset;
                     }
                     __result = unit;
                     return false;

@@ -7,7 +7,7 @@ namespace ModKit {
         private static Texture2D fillTexture = null;
         private static GUIStyle fillStyle = null;
         private static Color fillColor = new(1f, 1f, 1f, 0.65f);
-        private static int point(this int x) => UnityModManager.UI.Scale(x);
+        public static int point(this int x) => UnityModManager.UI.Scale(x);
 
         public static GUIStyle FillStyle(Color color) {
             if (fillTexture == null)
