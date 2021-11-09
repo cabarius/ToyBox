@@ -831,8 +831,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * Teleport Party To You
 * Run Perception Check
 * ToggleTabHighlightsMode is ported from Spacehamster's awesome Kingdom Resolution Mod for Kingmaker https://www.nexusmods.com/pathfinderkingmaker/mods/36 based on code originally by fireundubh
-
-﻿﻿﻿### Ver 1.0.0
+### Ver 1.0.0
 * Search and entire blueprint catalog for feats, features, items and more
 * Browse party members, level up, mythic level up, modify stats
 * Browse and  remove features by party member (back up before using)
