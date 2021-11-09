@@ -37,7 +37,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.10 (Coming Later)
+### Ver 1.4.11 (Coming Later)
 * **Armies Editor**
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
