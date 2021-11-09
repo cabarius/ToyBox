@@ -16,6 +16,8 @@ using Kingmaker.UnitLogic;
 using Kingmaker.Controllers.Dialog;
 using Kingmaker.Blueprints;
 using UnityEngine;
+using Kingmaker.Controllers;
+using Kingmaker.EntitySystem;
 
 namespace ToyBox.BagOfPatches {
     internal static class Dialog {
@@ -61,20 +63,23 @@ namespace ToyBox.BagOfPatches {
                 var second = Game.Instance.EntityCreator.CreationQueue.Select(ce => ce.Entity).OfType<UnitEntityData>();
                 __instance.MakeEssentialCharactersConscious();
                 Mod.Log($"second: {second?.ToString()} matching: {second.Select(u => __instance.SelectMatchingUnit(u))}");
-                var unitEntityData =
-                    Game.Instance.State.Units.Concat(Game.Instance.Player.Party)
+                var unit =
+                    Game.Instance.State.Units.Concat(Game.Instance.Player.AllCrossSceneUnits)
                         //.Where(u => u.IsInGame && !u.Suppressed)
+                        .Where(u => settings.toggleExCompanionDialog || !u.IsExCompanion())
                         .Concat(second)
                         .Select(new Func<UnitEntityData, UnitEntityData>(__instance.SelectMatchingUnit))
                         .NotNull()
                         .Distinct()
                         .Nearest(dialogPosition);
-                Mod.Log($"found {unitEntityData.CharacterName}");
-                if (unitEntityData != null) {
-                    __result = unitEntityData;
+                Mod.Log($"found {unit?.CharacterName ?? "no one".cyan()} position: {unit?.Position.ToString() ?? "n/a"}");
+                if (unit != null) {
+                    if (unit.DistanceTo(dialogPosition) > 25) {
+                        unit.Position = dialogPosition;
+                    }
+                    __result = unit;
                     return false;
                 }
-
                 DialogDebug.Add((BlueprintScriptableObject)cue, "speaker doesnt exist", Color.red);
                 __result = null;
                 return false;

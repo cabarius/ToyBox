@@ -111,6 +111,7 @@ namespace ToyBox {
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
         public bool toggleRemoteCompanionDialog = false;
+        public bool toggleExCompanionDialog = false;
 
         public bool toggleWidenActionBarGroups = false;
 

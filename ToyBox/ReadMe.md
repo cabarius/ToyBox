@@ -44,7 +44,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.9 (Coming Soon)
 * **Bag of Tricks**
   * **Quality of Life**
-    * Remote Companion Dialog - Allow remote companions to make comments on dialog you are having
+    * Remote Companion Dialog - Allow remote companions (even former party members) to make comments on dialog you are having
+      * Include Former Companions - Let's you also listen to remarks from your former companions.
+    * This is experimental so it may break dialogs. If you find an issue please come find me (Narria) on the WoTR discord (https://discord.gg/CRsCZNw8Rf) and give me a copy of the save.
   * **Camera** 
     * **Massive improvements**
     * Camera settings moved to new section
