@@ -351,8 +351,10 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
                     eulerAngles.y += mouseMovement.x * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
-                    if (usePitch && !Main.resetExtraCameraAngles)
+                    if (usePitch && !Main.resetExtraCameraAngles) {
                         eulerAngles.x += mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                        //Mod.Debug($"eulerX: {eulerAngles.x}");
+                    }
                     else {
                         eulerAngles.x = 0f;
                         Main.resetExtraCameraAngles = false;
