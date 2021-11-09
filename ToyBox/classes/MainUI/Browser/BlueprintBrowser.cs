@@ -369,7 +369,7 @@ namespace ToyBox {
                         }
                         BlueprintListUI.OnGUI(selected, bps, 0, remainingWidth, null, selectedTypeFilter, (keys) => {
                             if (keys.Length > 0) {
-                                bool changed = false;
+                                var changed = false;
                                 //var bpTypeName = keys[0];
                                 //var newTypeFilterIndex = blueprintTypeFilters.FindIndex(f => f.type.Name == bpTypeName);
                                 //if (newTypeFilterIndex >= 0) {

@@ -49,7 +49,7 @@ namespace ModKit {
         public static bool ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
-            bool changed = false;
+            var changed = false;
             if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options)) {
                 toggle = toggle.Flip();
                 changed = true;
@@ -59,7 +59,7 @@ namespace ModKit {
         public static bool ToggleButton(ref ToggleState toggle, string title, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
-            bool changed = false;
+            var changed = false;
             if (TogglePrivate(title, ref isOn, isEmpty, true, 0, options)) {
                 toggle = toggle.Flip();
                 changed = true;

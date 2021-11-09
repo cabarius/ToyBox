@@ -122,16 +122,14 @@ namespace ToyBox {
         }
 
         public static int Rating(this BlueprintItemEnchantment bp) {
-            int rating = 0;
+            int rating;
             if (bp is BlueprintWeaponEnchantment || bp is BlueprintArmorEnchantment)
                 rating = 10 * bp.EnchantmentCost;
             else
                 rating = (bp.IdentifyDC * 5) / 2;
             return rating;
         }
-        public static RarityType Rarity(this BlueprintItemEnchantment bp) {
-            return bp.Rating().Rarity();
-        }
+        public static RarityType Rarity(this BlueprintItemEnchantment bp) => bp.Rating().Rarity();
         public static Color color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
         public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
         public static string GetString(this RarityType rarity, float adjust = 0) => rarity.ToString().Rarity(rarity, adjust);

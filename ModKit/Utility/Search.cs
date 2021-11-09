@@ -74,7 +74,7 @@ namespace ModKit {
                 var result = new MatchResult(searchable, key, text, this);
                 var index = text.IndexOf(searchText);
                 if (index >= 0) {
-                    MatchResult.Span span = new MatchResult.Span(index, searchText.Length);
+                    var span = new MatchResult.Span(index, searchText.Length);
                     result.AddSpan(span);
                     result.TargetRatio = result.TotalMatched / (float)text.Length;
                 }
@@ -83,8 +83,8 @@ namespace ModKit {
             private MatchResult FuzzyMatch(ISearchable searchable, string key, string text) {
                 var result = new MatchResult(searchable, key, text, this);
 
-                int searchTextIndex = 0;
-                int targetIndex = -1;
+                var searchTextIndex = 0;
+                var targetIndex = -1;
 
                 var searchText = result.Context.SearchText;
                 var target = result.Text;
@@ -116,7 +116,7 @@ namespace ModKit {
                         break;
 
                     //continue matching while both are in sync
-                    MatchResult.Span span = new MatchResult.Span(targetIndex);
+                    var span = new MatchResult.Span(targetIndex);
                     while (targetIndex < target.Length && searchTextIndex < searchText.Length && searchText[searchTextIndex] == target[targetIndex]) {
                         //if this span is rooted at the start of the word give a bonus because start is most importatn
                         if (span.From == 0 && searchTextIndex > 0)
@@ -154,7 +154,7 @@ namespace ModKit {
                     foreach (var provider in searchable.Providers) {
                         var key = provider.Key;
                         var text = provider.Value();
-                        bool foundRestricted = false;
+                        var foundRestricted = false;
                         foreach (var entry in RestrictedSearchTexts) {
                             if (key.StartsWith(entry.Key)) {
                                 searchable.Matches[key] = Match(entry.Value, searchable, key, text);

@@ -34,6 +34,7 @@ namespace ToyBox {
         private static bool needsResetGameUI = false;
         private static bool resetRequested = false;
         private static DateTime resetRequestTime = DateTime.Now;
+        public static bool resetExtraCameraAngles = false;
         public static void SetNeedsResetGameUI() {
             resetRequested = true;
             resetRequestTime = DateTime.Now;
@@ -182,6 +183,9 @@ namespace ToyBox {
                 BagOfTricks.OnLoad();
                 NeedsActionInit = false;
             }
+            //if (resetExtraCameraAngles) {
+            //    Game.Instance.UI.GetCameraRig().TickRotate(); // Kludge - TODO: do something better...
+            //}
             if (resetRequested) {
                 var timeSinceRequest = DateTime.Now.Subtract(resetRequestTime).TotalMilliseconds;
                 //Main.Log($"timeSinceRequest - {timeSinceRequest}");

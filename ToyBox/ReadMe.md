@@ -44,13 +44,14 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.9 (Coming Soon)
 * **Bag of Tricks**
   * **Quality of Life**
-  * Remote Companion Dialog - Allow remote companions to make comments on dialog you are having
-    * This is exeprimental and may not work in some cases 
+    * Remote Companion Dialog - Allow remote companions to make comments on dialog you are having
+  * **Camera** 
+    * **Massive improvements**
+    * Camera settings moved to new section
+    * Toggles to allow zooming and rotation on any map or cutscene (May need to use Mouse3 Drag to rotate in some situations)
+    * Toggle to allow changing the camera tilt to get an almost 3rd person view.  (experimental preview)
   * **Love is Free**
     * Lich path no longer blocks romance
-  * **Camera**
-    * Camera settings moved to new section
-    * Toggles to allow zooming and rotation on global map
 * **Level Up**
   * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
 * **Enchantment**
@@ -58,6 +59,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Show enchament rating
   * Improved sorting of enchaments
   * Show character name equiping an item if is equiped
+  * Fixed crash on null comment/prefix/suffix in BlueprintItemEnchantment (pheonix99)
 * **Loot**
   * Item rarity takes into account enchantment rarity
 * **Armies Editor**

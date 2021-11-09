@@ -36,7 +36,7 @@ namespace ToyBox {
                 var viewModel = localMapView.ViewModel;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(localMapView.m_Image.rectTransform, (Vector2)Input.mousePosition, Game.Instance.UI.UICamera, out var localPoint);
                 var localPos = localPoint + Vector2.Scale(localMapView.m_Image.rectTransform.sizeDelta, localMapView.m_Image.rectTransform.pivot);
-                Vector3 vector3 = LocalMapRenderer.Instance.ViewportToWorldPoint((Vector3)new Vector2(localPos.x / (float)viewModel.DrawResult.Value.ColorRT.width, localPos.y / (float)viewModel.DrawResult.Value.ColorRT.height));
+                var vector3 = LocalMapRenderer.Instance.ViewportToWorldPoint((Vector3)new Vector2(localPos.x / (float)viewModel.DrawResult.Value.ColorRT.width, localPos.y / (float)viewModel.DrawResult.Value.ColorRT.height));
                 if (!LocalMapModel.IsInCurrentArea(vector3))
                     vector3 = AreaService.Instance.CurrentAreaPart.Bounds.LocalMapBounds.ClosestPoint(vector3);
                 Mod.Debug($"PointerPosition - adjusting result {position} to {vector3}");
