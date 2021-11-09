@@ -16,6 +16,9 @@ using Kingmaker.UnitLogic;
 using Kingmaker.Controllers.Dialog;
 using Kingmaker.Blueprints;
 using UnityEngine;
+using Kingmaker.Controllers;
+using Kingmaker.EntitySystem;
+using Random = System.Random;
 
 namespace ToyBox.BagOfPatches {
     internal static class Dialog {
@@ -35,7 +38,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Evalutors.CompanionInParty), nameof(Evalutors.CompanionInParty.GetValueInternal))]
         public static class Evalualtors_CompanionInParty_GetValueInternal_Patch {
             public static bool Prefix(Kingmaker.Designers.EventConditionActionSystem.Evaluators.CompanionInParty __instance, ref UnitEntityData __result) {
-                Mod.Debug($"Evalutors checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                Mod.Debug($"Evalutors checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (!settings.toggleRemoteCompanionDialog) return true;
                 if (__instance.Owner is BlueprintCue cueBP) {
                     var unitEntityData = Game.Instance.Player.AllCrossSceneUnits.FirstOrDefault<UnitEntityData>((Func<UnitEntityData, bool>)(unit => __instance.IsCompanion(unit.Blueprint)));
@@ -55,26 +58,33 @@ namespace ToyBox.BagOfPatches {
                     __result = null;
                     return false;
                 }
-                Mod.Log($"getting unit for speaker {__instance.Blueprint.name}");
+                Mod.Trace($"getting unit for speaker {__instance.Blueprint.name}");
                 var dialogPosition = Game.Instance.DialogController.DialogPosition;
-                Mod.Log($"dialogPos: {dialogPosition.ToString()}");
+                Mod.Trace($"dialogPos: {dialogPosition}");
                 var second = Game.Instance.EntityCreator.CreationQueue.Select(ce => ce.Entity).OfType<UnitEntityData>();
                 __instance.MakeEssentialCharactersConscious();
-                Mod.Log($"second: {second?.ToString()} matching: {second.Select(u => __instance.SelectMatchingUnit(u))}");
-                var unitEntityData =
-                    Game.Instance.State.Units.Concat(Game.Instance.Player.Party)
+                Mod.Trace($"second: {second?.ToString()} matching: {second.Select(u => __instance.SelectMatchingUnit(u))}");
+                var unit =
+                    Game.Instance.State.Units.Concat(Game.Instance.Player.AllCrossSceneUnits)
                         //.Where(u => u.IsInGame && !u.Suppressed)
+                        .Where(u => settings.toggleExCompanionDialog || !u.IsExCompanion())
                         .Concat(second)
                         .Select(new Func<UnitEntityData, UnitEntityData>(__instance.SelectMatchingUnit))
                         .NotNull()
                         .Distinct()
                         .Nearest(dialogPosition);
-                Mod.Log($"found {unitEntityData.CharacterName}");
-                if (unitEntityData != null) {
-                    __result = unitEntityData;
+                Mod.Debug($"found {unit?.CharacterName ?? "no one".cyan()} position: {unit?.Position.ToString() ?? "n/a"}");
+                if (unit != null) {
+                    if (unit.DistanceTo(dialogPosition) > 25) {
+                        var mainChar = Game.Instance.Player.MainCharacter.Value;
+                        var mainPos = mainChar.Position;
+                        var offset = 4f * UnityEngine.Random.insideUnitSphere;
+                        var mainDirection = mainChar.OrientationDirection;
+                        unit.Position = mainPos - 5 * mainDirection + offset;
+                    }
+                    __result = unit;
                     return false;
                 }
-
                 DialogDebug.Add((BlueprintScriptableObject)cue, "speaker doesnt exist", Color.red);
                 __result = null;
                 return false;

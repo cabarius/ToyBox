@@ -37,27 +37,32 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.10 (Coming Later)
+### Ver 1.4.11 (Coming Later)
 * **Armies Editor**
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
-### Ver 1.4.9 (Coming Soon)
+### Ver 1.4.10 (Coming Soon)
+  * **Quality of Life**
+    * Cleaned up menus for dialog
+### Ver 1.4.9
 * **Bag of Tricks**
   * **Quality of Life**
-    * Remote Companion Dialog - Allow remote companions to make comments on dialog you are having
+    * Remote Companion Dialog - Allow remote companions (even former party members) to make comments on dialog you are having
+      * Include Former Companions - Let's you also listen to remarks from your former companions.
+    * This is experimental so it may break dialogs. If you find an issue please come find me (Narria) on the WoTR discord (https://discord.gg/CRsCZNw8Rf) and give me a copy of the save.
   * **Camera** 
     * **Massive improvements**
     * Camera settings moved to new section
     * Toggles to allow zooming and rotation on any map or cutscene (May need to use Mouse3 Drag to rotate in some situations)
     * Toggle to allow changing the camera tilt to get an almost 3rd person view.  (experimental preview)
   * **Love is Free**
-    * Lich path no longer blocks romance
+    * (***Ronin***)Lich path no longer blocks romance
 * **Level Up**
   * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
 * **Enchantment**
-  * Added collation for enchament types
-  * Show enchament rating
-  * Improved sorting of enchaments
+  * Added collation for enchantment types
+  * Show enchantment rating
+  * Improved sorting of enchantments
   * Show character name equiping an item if is equiped
   * Fixed crash on null comment/prefix/suffix in BlueprintItemEnchantment (pheonix99)
 * **Loot**

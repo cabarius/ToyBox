@@ -18,6 +18,7 @@ using ToyBox.classes.Infrastructure;
 using Kingmaker.PubSubSystem;
 using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
+using Kingmaker.UnitLogic.Parts;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -39,6 +40,7 @@ namespace ToyBox {
         private static UnitEntityData charToAdd = null;
         private static UnitEntityData charToRecruit = null;
         private static UnitEntityData charToRemove = null;
+        private static UnitEntityData charToUnrecruit = null;
         private static bool editMultiClass = false;
         private static UnitEntityData multiclassEditCharacter = null;
         private static int respecableCount = 0;
@@ -90,6 +92,11 @@ namespace ToyBox {
                 UI.ActionButton("Recruit".cyan(), () => { charToRecruit = ch; }, UI.Width(150));
                 UI.Space(25);
             }
+            if(player.AllCharacters.Contains(ch) && !ch.IsStoryCompanion()) {
+                UI.ActionButton("Unrecruit".cyan(), () => { charToUnrecruit = ch; charToRemove = ch; }, UI.Width(150));
+                UI.Space(25);
+               
+            }
             else {
                 UI.Space(178);
             }
@@ -114,6 +121,7 @@ namespace ToyBox {
             charToAdd = null;
             charToRecruit = null;
             charToRemove = null;
+            charToUnrecruit = null;
             var characterListFunc = UI.TypePicker<List<UnitEntityData>>(
                 null,
                 ref Main.settings.selectedPartyFilter,
@@ -619,6 +627,7 @@ namespace ToyBox {
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
             if (charToRecruit != null) { UnitEntityDataUtils.RecruitCompanion(charToRecruit); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
+            if (charToUnrecruit != null) { charToUnrecruit.Ensure<UnitPartCompanion>().SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>(); }
         }
     }
 }
