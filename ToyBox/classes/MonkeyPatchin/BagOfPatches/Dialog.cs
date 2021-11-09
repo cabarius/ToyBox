@@ -32,7 +32,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
         [HarmonyPatch(typeof(Evalutors.CompanionInParty), nameof(Evalutors.CompanionInParty.GetValueInternal))]
         public static class Evalualtors_CompanionInParty_GetValueInternal_Patch {
             public static bool Prefix(Kingmaker.Designers.EventConditionActionSystem.Evaluators.CompanionInParty __instance, ref UnitEntityData __result) {
@@ -50,14 +49,12 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(DialogSpeaker), nameof(DialogSpeaker.GetEntity))]
         public static class DialogSpeaker_GetEntity_Patch {
-
             public static bool Prefix(DialogSpeaker __instance, BlueprintCueBase cue, ref UnitEntityData __result) {
                 if (!settings.toggleRemoteCompanionDialog) return true;
                 if (__instance.Blueprint == null) {
                     __result = null;
                     return false;
                 }
-
                 Mod.Log($"getting unit for speaker {__instance.Blueprint.name}");
                 var dialogPosition = Game.Instance.DialogController.DialogPosition;
                 Mod.Log($"dialogPos: {dialogPosition.ToString()}");
