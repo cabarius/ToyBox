@@ -49,11 +49,11 @@ namespace ToyBox.BagOfPatches {
             { "a96fc116bb7af94488b6da41161a47c7", true },   // Answer   Answer_0060 
         };
 
-
-        // Lich Romance Overrides
+        // Path Romance Overrides
         // These modify the EtudeStatus condition for specific Owner blueprints 
         internal static readonly Dictionary<(string, string), bool> ConditionCheckOverridesLoveIsFree = new()
         {
+            // Lich Path
             { ("7f532b681d64f3741a7aa0aebba7c4db", "977f3380-2938-4cc8-a26a-448edc6f9259"), false },  // Etude CamelliaRomance_Start status is:  Not Playing;   
             { ("7f532b681d64f3741a7aa0aebba7c4db", "52632774-cbb4-4eea-ada6-37ec2708e07d"), false },  // Etude WenduagRomance_Active status is:  Not Playing;   
             { ("7f532b681d64f3741a7aa0aebba7c4db", "12928be5-97e8-4e7c-ac5c-02d704289e7f"), false },  // Etude LannRomance_Active status is:  Not Playing;      
@@ -63,7 +63,13 @@ namespace ToyBox.BagOfPatches {
         };
         internal static readonly Dictionary<string, bool> EtudeStatusOverridesLoveIsFree = new()
         {
+            // Lich Path
             { "2ebd861e55143014c8067c6832cdf21c", false },  // Cue_0048
+            // Vellexia
+            { "81b15ede1bb2a3e4e926d5ca4be3e193", true },   // Cue_0066
+            { "3aa48f68198afe14cb6de752ce80cc8f", true },   // Cue_0078
+            // Queen
+            { "7a160960668f2ef4180cb56edb8388e9", true },   // Cue_0044
         };
 
         // Multiple Romances overrides
@@ -78,7 +84,6 @@ namespace ToyBox.BagOfPatches {
         };
         internal static readonly Dictionary<string, bool> EtudeStatusOverrides = new() {
             { "f4acc1a428ffbee42965a6f13fe270ac", false },  // Cue_0058
-            { "7a160960668f2ef4180cb56edb8388e9", true },   // Cue_0044
         };
         internal static readonly Dictionary<string, bool> FlagInRangeOverrides = new() {
             { "4799a25da39295b43a6eefcd2cb2b4a7", false },  // Etude    KTC_Jealousy

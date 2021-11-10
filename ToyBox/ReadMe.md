@@ -44,6 +44,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.10 (Coming Soon)
   * **Quality of Life**
     * Cleaned up menus for dialog
+  * **Love is Free**
+    * (***Ronin***) Vellexia romance opened to all paths
 ### Ver 1.4.9
 * **Bag of Tricks**
   * **Quality of Life**
@@ -56,7 +58,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Toggles to allow zooming and rotation on any map or cutscene (May need to use Mouse3 Drag to rotate in some situations)
     * Toggle to allow changing the camera tilt to get an almost 3rd person view.  (experimental preview)
   * **Love is Free**
-    * (***Ronin***)Lich path no longer blocks romance
+    * (***Ronin***) Lich path no longer blocks romance
 * **Level Up**
   * (***Truinto***) Unlock Party Level Cap (continuous or exponential)
 * **Enchantment**
