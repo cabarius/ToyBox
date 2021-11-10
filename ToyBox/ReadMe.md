@@ -46,7 +46,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Bag of Tricks**
   * **Remote Companion Dialog**
     * Fixed issue with Ex Companion dialog that would break some scenes involving Lann and Wenduag like at the end of the Prologue Labyrinth
-    * Cleaned up layout of menus 
+    * Cleaned up layout of checkboxes for remote dialog
   * **Love is Free**
    	* (***Ronin***) Vellexia romance opened to all paths
 ### Ver 1.4.9
