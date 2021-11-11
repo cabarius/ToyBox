@@ -64,17 +64,20 @@ namespace ToyBox.BagOfPatches {
                     var color = rarity.color();
                     //Main.Log($"ItemSlotView_RefreshItem_Patch - {item.Name} - {color}");
                     var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
-                    if (rarity == RarityType.Notable) {
+                    if (rarity == RarityType.Notable && __instance.m_NotableLayer != null) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");
-                        if (objFX.TryGetComponent<Image>(out var image)) image.color = color;
+                        if (objFX != null && objFX.TryGetComponent<Image>(out var image)) image.color = color;
                     }
-                    else {
+                    else if (rarity != RarityType.Notable) {
                         if (rarity >= RarityType.Uncommon) // Make sure things uncommon or better get their color circles despite not being magic. Colored loot offers sligtly different UI assumptions
                             __instance.SlotVM.IsMagic.SetValueAndForceNotify(true);
-                        var obj = __instance.m_MagicLayer.gameObject;
-                        obj.GetComponent<Image>().color = colorTranslucent;
-                        var objFX = __instance.m_MagicLayer.Find("MagicLayerFX");
-                        if (objFX.TryGetComponent<Image>(out var image)) image.color = color;
+
+                        if (__instance.m_MagicLayer != null) {
+                            var obj = __instance.m_MagicLayer.gameObject;
+                            obj.GetComponent<Image>().color = colorTranslucent;
+                            var objFX = __instance.m_MagicLayer.Find("MagicLayerFX");
+                            if (objFX != null && objFX.TryGetComponent<Image>(out var image)) image.color = color;
+                        }
                     }
                 }
             }
