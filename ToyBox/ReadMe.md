@@ -42,10 +42,15 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.10 (Coming Soon)
-  * **Quality of Life**
-    * Cleaned up menus for dialog
+  * (***Flat***) Add Rest Selected Unit
+  * (***Flat***) Add toggle to disable Attack of Opportunities
+### Ver 1.4.9.1
+* **Bag of Tricks**
+  * **Remote Companion Dialog**
+    * Fixed issue with Ex Companion dialog that would break some scenes involving Lann and Wenduag like at the end of the Prologue Labyrinth
+    * Cleaned up layout of checkboxes for remote dialog
   * **Love is Free**
-    * (***Ronin***) Vellexia romance opened to all paths
+   	* (***Ronin***) Vellexia romance opened to all paths
 ### Ver 1.4.9
 * **Bag of Tricks**
   * **Quality of Life**
