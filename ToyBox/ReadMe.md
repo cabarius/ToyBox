@@ -42,6 +42,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.10 (Coming Soon)
+  * (***Flat***) Add Rest Selected Unit
+  * (***Flat***) Add toggle to disable Attack of Opportunities
 ### Ver 1.4.9.1
 * **Bag of Tricks**
   * **Remote Companion Dialog**

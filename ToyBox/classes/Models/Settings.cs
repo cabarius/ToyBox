@@ -183,6 +183,7 @@ namespace ToyBox {
         public bool toggleBrutalUnfair = false;
         public bool highlightHiddenObjects = false;
         public bool highlightHiddenObjectsInFog = false;
+        public bool toggleAttacksofOpportunity = false;
 
         // Loot 
         public bool toggleColorLootByRarity = false;

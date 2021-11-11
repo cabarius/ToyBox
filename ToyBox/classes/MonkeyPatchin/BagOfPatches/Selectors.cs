@@ -17,6 +17,9 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitCombatState), "AttackOfOpportunity")]
         private static class UnitCombatState_AttackOfOpportunity_Patch {
             private static bool Prefix(UnitEntityData target) {
+                if (settings.toggleAttacksofOpportunity && target.IsPlayerFaction) {
+                    return false;
+                }
                 if (UnitEntityDataUtils.CheckUnitEntityData(target, settings.noAttacksOfOpportunitySelection)) {
                     return false;
                 }
