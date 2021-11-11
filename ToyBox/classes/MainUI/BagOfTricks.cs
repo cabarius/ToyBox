@@ -20,6 +20,7 @@ namespace ToyBox {
 
         // cheats combat
         private const string RestAll = "Rest All";
+        private const string RestSelected = "Rest Selected";
         private const string Empowered = "Empowered";
         private const string FullBuffPlease = "Common Buffs";
         private const string GoddesBuffs = "Buff Like A Godess";
@@ -45,6 +46,7 @@ namespace ToyBox {
         public static void OnLoad() {
             // Combat
             KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
+            KeyBindings.RegisterAction(RestSelected, () => Cheats.RestSelected());
             KeyBindings.RegisterAction(Empowered, () => CheatsCombat.Empowered(""));
             KeyBindings.RegisterAction(FullBuffPlease, () => CheatsCombat.FullBuffPlease(""));
             KeyBindings.RegisterAction(GoddesBuffs, () => CheatsCombat.Iddqd(""));
@@ -109,6 +111,7 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Combat", 2,
                 () => BindableActionButton(RestAll),
+                () => BindableActionButton(RestSelected),
                 () => BindableActionButton(FullBuffPlease),
                 () => BindableActionButton(Empowered),
                 () => BindableActionButton(GoddesBuffs),
@@ -366,7 +369,7 @@ namespace ToyBox {
                 () => Toggle("No Material Components", ref settings.toggleMaterialComponent),
                 () => Toggle("Disable Party Negative Levels", ref settings.togglePartyNegativeLevelImmunity),
                 () => Toggle("Disable Party Ability Damage", ref settings.togglePartyAbilityDamageImmunity),
-
+                () => Toggle("Disable Attacks of Opportunity", ref settings.toggleAttacksofOpportunity),
                 () => Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn),
                 () => Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems),
 
