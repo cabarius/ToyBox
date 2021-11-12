@@ -19,12 +19,51 @@ using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using ModKit;
 using Kingmaker.View;
+using Kingmaker.UI.Common;
+using System.Collections.Generic;
+using System.Linq;
+using Kingmaker.UI.MVVM._VM.ActionBar;
+using Kingmaker.UI.UnitSettings;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.EntitySystem.Persistence;
+using static Kingmaker.Visual.Animation.Kingmaker.Actions.UnitAnimationActionHandEquip;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 
 namespace ToyBox.BagOfPatches {
     internal static class Summons {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
         private static bool SummonedByPlayerFaction = false;
+
+        // prefill actionbar slots for controlled summon with spell-like abilities and charge ability
+        [HarmonyPatch(typeof(ActionBarVM), "SetMechanicSlots")]
+        private static class ActionBarVM_SetMechanicSlots_Patch {
+            private static bool Prefix(ActionBarVM __instance, UnitEntityData unit) {
+                if (settings.toggleMakeSummmonsControllable && !LoadingProcess.Instance.IsLoadingInProcess && unit != null && unit.IsSummoned()) {
+                    if (unit.UISettings.GetSlot(0, unit) is MechanicActionBarSlotEmpty) {
+                        var index = 1;
+                        foreach (Ability ability in unit.Abilities) {
+                            if (ability.Blueprint.AssetGuidThreadSafe == "c78506dd0e14f7c45a599990e4e65038") { //Setting charge ability to first slot
+                                unit.UISettings.SetSlot(unit, ability, 0);
+                            }
+                            else if (index < __instance.Slots.Count && ability.Blueprint.Type != AbilityType.CombatManeuver && ability.Blueprint.Type != AbilityType.Physical) {
+                                unit.UISettings.SetSlot(unit, ability, index++);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(UIUtility), "GetGroup")]
+        private static class UIUtility_GetGroup_Patch {
+            private static void Postfix(ref List<UnitEntityData> __result) {
+                if (settings.toggleMakeSummmonsControllable) {
+                    __result.AddRange(Game.Instance.Player.Group.Select(u => u).Where(u => u.IsSummoned()));
+                }
+            }
+        }
 
         [HarmonyPatch(typeof(Player), "MoveCharacters")]
         private static class Player_MoveCharacters_Patch {
