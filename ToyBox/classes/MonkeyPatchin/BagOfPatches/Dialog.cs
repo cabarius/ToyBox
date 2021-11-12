@@ -29,6 +29,7 @@ namespace ToyBox.BagOfPatches {
         public static class CompanionInParty_CheckCondition_Patch {
             public static void Postfix(CompanionInParty __instance, ref bool __result) {
                 if (__instance.Not) return; // We only want this patch to run for conditions requiring the character to be in the party so if it is for the inverse we bail.  Example of this comes up with Lann and Wenduag in the final scene of the Prologue Labyrinth
+                if (__instance.companion.AssetGuid == "0bb1c03b9f7bbcf42bb74478af2c6258") return; // Disable for Secret Companion (T)
                 if (settings.toggleRemoteCompanionDialog && __instance.Owner is BlueprintCue cueBP) {
                     Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
                     __result = true;
