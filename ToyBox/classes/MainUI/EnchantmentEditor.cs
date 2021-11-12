@@ -221,7 +221,7 @@ namespace ToyBox.classes.MainUI {
                             () => { UpdateSearchResults(); },
                             UI.MinWidth(100), UI.MaxWidth(450));
                         UI.Space(25);
-                        UI.Label("Limit", UI.AutoWidth());
+                        UI.Label("Search Limit", UI.AutoWidth());
                         UI.ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
@@ -244,9 +244,18 @@ namespace ToyBox.classes.MainUI {
                         UI.Space(25);
                         if (matchCount > 0 && settings.searchTextEnchantments.Length > 0) {
                             var matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                            if (matchCount > settings.searchLimit) { matchesText += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
+                            if (matchCount > settings.searchLimit) { matchesText += "Displaying: ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
                             UI.Label(matchesText, UI.ExpandWidth(false));
                         }
+                    }
+                    using (UI.HorizontalScope()) {
+                        UI.Space(5);
+                        UI.Label("Enchantment".blue(), UI.Width(400));
+                        UI.Space(314);
+                        UI.Label("Rating".blue(), UI.Width(75));
+                        UI.Space(310);
+                        UI.Label("Description".blue());
+
                     }
                     UI.Space(10);
                     UI.Div();
@@ -291,10 +300,11 @@ namespace ToyBox.classes.MainUI {
         public static void EnchantmentsListGUI() {
             UI.Div(5);
             var enchantement = selectedCollatedEnchantments ?? filteredEnchantments;
-
+            
             for (var i = 0; i < enchantement.Count; i++) {
                 var enchant = enchantement[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
+               
                 using (UI.HorizontalScope()) {
                     UI.Space(5);
                     UI.Label(title, UI.Width(400));
