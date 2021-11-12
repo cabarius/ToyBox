@@ -45,6 +45,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***Flat***) Add Rest Selected Unit
   * (***Flat***) Add toggle to disable Attack of Opportunities
   * (***DeadMoroz***) Fixed crasher that led to broken character switch when Loot Coloring is enabled and magical item was rewarded after tactical battle
+  * (***Pheonix99***) Added Headers to Add Enchant search table, clairified Search Limit
 ### Ver 1.4.9.1
 * **Bag of Tricks**
   * **Remote Companion Dialog**
