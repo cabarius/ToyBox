@@ -26,6 +26,8 @@ using Kingmaker.UI.MVVM._VM.ActionBar;
 using Kingmaker.UI.UnitSettings;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.EntitySystem.Persistence;
+using static Kingmaker.Visual.Animation.Kingmaker.Actions.UnitAnimationActionHandEquip;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 
 namespace ToyBox.BagOfPatches {
     internal static class Summons {
@@ -44,7 +46,7 @@ namespace ToyBox.BagOfPatches {
                             if (ability.Blueprint.AssetGuidThreadSafe == "c78506dd0e14f7c45a599990e4e65038") { //Setting charge ability to first slot
                                 unit.UISettings.SetSlot(unit, ability, 0);
                             }
-                            else if (index < __instance.Slots.Count && ability.Blueprint.IsSpell) {
+                            else if (index < __instance.Slots.Count && ability.Blueprint.Type != AbilityType.CombatManeuver && ability.Blueprint.Type != AbilityType.Physical) {
                                 unit.UISettings.SetSlot(unit, ability, index++);
                             }
                         }
