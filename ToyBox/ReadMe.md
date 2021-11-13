@@ -47,6 +47,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***DeadMoroz***) Fixed crasher that led to broken character switch when Loot Coloring is enabled and magical item was rewarded after tactical battle
   * (***DeadMoroz***) Enable action bar for controllable summons. Prefill action bar with spell abilities and charge.
   * (***Pheonix99***) Added Headers to Add Enchant search table, clairified Search Limit
+  * **Remote Companion Dialog**
+   	* (***Ronin***) Secret companions no longer appear early to spoil the surprise
 ### Ver 1.4.9.1
 * **Bag of Tricks**
   * **Remote Companion Dialog**
