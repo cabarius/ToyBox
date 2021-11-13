@@ -45,6 +45,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***Flat***) Add Rest Selected Unit
   * (***Flat***) Add toggle to disable Attack of Opportunities
   * (***DeadMoroz***) Fixed crasher that led to broken character switch when Loot Coloring is enabled and magical item was rewarded after tactical battle
+  * (***DeadMoroz***) Enable action bar for controllable summons. Prefill action bar with spell abilities and charge.
   * (***Pheonix99***) Added Headers to Add Enchant search table, clairified Search Limit
   * **Remote Companion Dialog**
    	* (***Ronin***) Secret companions no longer appear early to spoil the surprise
