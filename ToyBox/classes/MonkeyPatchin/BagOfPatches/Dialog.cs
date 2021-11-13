@@ -25,14 +25,26 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
+        // These exclude certain secret companions
+        internal static readonly HashSet<string> SecretCompanions = new() {
+            { "0bb1c03b9f7bbcf42bb74478af2c6258" }, // Trever
+            { "6b1f599497f5cfa42853d095bda6dafd" }, // Delamere for Lich
+            { "d58b81fd7ec14784fa05bc29fb6c7ae0" }, // Galfrey for Lich
+            { "e46927657a79db64ea30758db3f42bb9" }, // Galfrey
+            { "7ece3afabe2b6f343b17d1eaa409d273" }, // Ciar for Lich
+            { "e551850403d61eb48bb2de010d12c894" }, // Kestoglyr for Lich
+            { "0bcf3c125a28d164191e874e3c0c52de" }  // Staunton for Lich
+        };
+
         [HarmonyPatch(typeof(CompanionInParty), nameof(CompanionInParty.CheckCondition))]
         public static class CompanionInParty_CheckCondition_Patch {
             public static void Postfix(CompanionInParty __instance, ref bool __result) {
                 if (__instance.Not) return; // We only want this patch to run for conditions requiring the character to be in the party so if it is for the inverse we bail.  Example of this comes up with Lann and Wenduag in the final scene of the Prologue Labyrinth
-                if (__instance.companion.AssetGuid == "0bb1c03b9f7bbcf42bb74478af2c6258" || __instance.companion.AssetGuid == "6b1f599497f5cfa42853d095bda6dafd" || __instance.companion.AssetGuid == "d58b81fd7ec14784fa05bc29fb6c7ae0"
-                    || __instance.companion.AssetGuid == "e46927657a79db64ea30758db3f42bb9" || __instance.companion.AssetGuid == "7ece3afabe2b6f343b17d1eaa409d273" || __instance.companion.AssetGuid == "e551850403d61eb48bb2de010d12c894"
-                    || __instance.companion.AssetGuid == "0bcf3c125a28d164191e874e3c0c52de"
-                    ) return; // Disable for Secret Companions
+                if (SecretCompanions.Contains(__instance.companion.AssetGuid.ToString())) return;
+               // if (__instance.companion.AssetGuid == "0bb1c03b9f7bbcf42bb74478af2c6258" || __instance.companion.AssetGuid == "6b1f599497f5cfa42853d095bda6dafd" || __instance.companion.AssetGuid == "d58b81fd7ec14784fa05bc29fb6c7ae0"
+               //     || __instance.companion.AssetGuid == "e46927657a79db64ea30758db3f42bb9" || __instance.companion.AssetGuid == "7ece3afabe2b6f343b17d1eaa409d273" || __instance.companion.AssetGuid == "e551850403d61eb48bb2de010d12c894"
+               //     || __instance.companion.AssetGuid == "0bcf3c125a28d164191e874e3c0c52de"
+               //     ) return; // Disable for Secret Companions
                 if (settings.toggleRemoteCompanionDialog && __instance.Owner is BlueprintCue cueBP) {
                     Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
                     __result = true;
