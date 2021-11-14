@@ -282,7 +282,7 @@ namespace ToyBox.BagOfPatches {
             private static readonly float BaseFovMax = 30;
 
             public static bool Prefix(CameraZoom __instance) {
-                if (settings.fovMultiplier == 1) return true;
+                if (settings.fovMultiplier == 1 && !settings.toggleZoomOnAllMaps) return true;
                 if (firstCall) {
                     //Main.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
                     if (__instance.FovMin != BaseFovMin) {
@@ -297,9 +297,16 @@ namespace ToyBox.BagOfPatches {
 
                     firstCall = false;
                 }
+                var fovMultiplier = settings.fovMultiplier;
+                if (settings.toggleZoomOnAllMaps) {
+                    __instance.FovMax = 30 * settings.fovMultiplier;
+                    __instance.FovMin = 12 / settings.fovMultiplier;
 
-                __instance.FovMax = BaseFovMax * settings.fovMultiplier;
-                __instance.FovMin = BaseFovMin / settings.fovMultiplier;
+                }
+                else {
+                    __instance.FovMax = BaseFovMax * settings.fovMultiplier;
+                    __instance.FovMin = BaseFovMin / settings.fovMultiplier;
+                }
                 if (__instance.m_ZoomRoutine != null)
                     return true;
                 if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse)
@@ -342,7 +349,7 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_ScrollRoutine != null || __instance.m_RotateRoutine != null)// || __instance.m_HandRotationLock)
                     return false;
                 __instance.RotateByMiddleButton();
-                var mouseMovement = new Vector2(0,0);
+                var mouseMovement = new Vector2(0, 0);
                 if (__instance.m_RotationByMouse) {
                     mouseMovement = __instance.CameraDragToRotate2D();
                 }
