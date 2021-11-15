@@ -42,6 +42,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.10 (Coming Soon)
+* **Bag of Tricks**
+  * Fixed issue with remote dialog and ex companions when ex companions are not emabled that broke certain scenes like during "A Strike from the Sky"
+  * Improved camera zoom behavior when camera tilt/zoom all scenes is active
+  * Fixed some crashers in dialog preview and control summons
   * (***Flat***) Add Rest Selected Unit
   * (***Flat***) Add toggle to disable Attack of Opportunities
   * (***DeadMoroz***) Fixed crasher that led to broken character switch when Loot Coloring is enabled and magical item was rewarded after tactical battle

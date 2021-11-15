@@ -41,9 +41,14 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(CompanionInParty __instance, ref bool __result) {
                 if (__instance.Not) return; // We only want this patch to run for conditions requiring the character to be in the party so if it is for the inverse we bail.  Example of this comes up with Lann and Wenduag in the final scene of the Prologue Labyrinth
                 if (SecretCompanions.Contains(__instance.companion.AssetGuid.ToString())) return;           
-                if (settings.toggleRemoteCompanionDialog && __instance.Owner is BlueprintCue cueBP) {
-                    Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
-                    __result = true;
+                if (settings.toggleRemoteCompanionDialog) {
+                    if (__instance.Owner is BlueprintCue cueBP) {
+                        Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
+                        __result = true;
+                    }
+                    if (__instance.Owner is BlueprintCue etudeBP) {
+
+                    }
                 }
             }
         }
@@ -62,6 +67,10 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        internal static readonly Dictionary<string, bool> DialogSpeaker_GetEntityOverrides = new() {
+            { "872dbbcca83313944b923fe9076b522d", true }
+        };
+
         [HarmonyPatch(typeof(DialogSpeaker), nameof(DialogSpeaker.GetEntity))]
         public static class DialogSpeaker_GetEntity_Patch {
             public static bool Prefix(DialogSpeaker __instance, BlueprintCueBase cue, ref UnitEntityData __result) {
@@ -76,10 +85,13 @@ namespace ToyBox.BagOfPatches {
                 var second = Game.Instance.EntityCreator.CreationQueue.Select(ce => ce.Entity).OfType<UnitEntityData>();
                 __instance.MakeEssentialCharactersConscious();
                 Mod.Trace($"second: {second?.ToString()} matching: {second.Select(u => __instance.SelectMatchingUnit(u))}");
-                var unit =
-                    Game.Instance.State.Units.Concat(Game.Instance.Player.AllCrossSceneUnits)
+                var overrides = DialogSpeaker_GetEntityOverrides;
+                var GUID = cue?.AssetGuid.ToString();
+                bool hasOverride = GUID != null ? DialogSpeaker_GetEntityOverrides.ContainsKey(GUID) : false;
+                bool overrideValue = hasOverride && DialogSpeaker_GetEntityOverrides[GUID];
+                var unit = Game.Instance.State.Units.Concat(Game.Instance.Player.AllCrossSceneUnits)
                         //.Where(u => u.IsInGame && !u.Suppressed)
-                        .Where(u => settings.toggleExCompanionDialog || !u.IsExCompanion())
+                        .Where(u => hasOverride ? overrideValue : settings.toggleExCompanionDialog || !u.IsExCompanion())
                         .Concat(second)
                         .Select(new Func<UnitEntityData, UnitEntityData>(__instance.SelectMatchingUnit))
                         .NotNull()

@@ -62,8 +62,8 @@ namespace ToyBox {
                 return ResolveConditional(action as Conditional);
             }
             var result = new List<string>();
-            var caption = action.GetCaption();
-            caption = caption == "" || caption == null ? action.GetType().Name : caption;
+            var caption = action?.GetCaption();
+            caption = caption == "" || caption == null ? action?.GetType().Name ?? "" : caption;
             result.Add(caption);
             return result;
         }
