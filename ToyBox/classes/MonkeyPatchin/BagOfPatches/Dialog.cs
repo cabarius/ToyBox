@@ -68,7 +68,25 @@ namespace ToyBox.BagOfPatches {
         }
 
         internal static readonly Dictionary<string, bool> DialogSpeaker_GetEntityOverrides = new() {
-            { "872dbbcca83313944b923fe9076b522d", true }
+            { "804b8b87618f8c840a731383a5b448ed", true }, // GargoyleAttack_Start_Dialogue - Cue 0002
+            { "7c812f8f46bd3bb4ba8e6561888f6416", true }, // GargoyleAttack_Start_Dialogue - Cue 0008
+            { "2d027a65c2cdc95409d4e47da952bc07", true }, // GargoyleAttack_Start_Dialogue - Cue 0013
+            { "209a861fefed80b44b29a5a648f2ed95", true }, // GargoyleAttack_Start_Dialogue - Cue 0014
+
+            { "872dbbcca83313944b923fe9076b522d", true }, // GargoyleAttack_Camellia_Dialog - Cue 0001
+            { "3dc95933510ddc342acac646976ca331", true }, // GargoyleAttack_Camellia_Dialog - Cue 0006
+            { "8834a2a27b3662548910b9d2cdd84a68", true }, // GargoyleAttack_Camellia_Dialog - Cue 0007
+            { "1d6e85632481ea6469fe0ce058043092", true }, // GargoyleAttack_Camellia_Dialog - Cue 0008
+
+            { "0111658988726d449b900d4e21866fa4", true }, // GargoyleAttack_Seelah_Dialogue - Cue 0001
+            { "4041ed38a35a5ca4fb7b128a4e2bf2d8", true }, // GargoyleAttack_Seelah_Dialogue - Cue 0006
+            { "65c43eb9234fcec488106a3f10b98e46", true }, // GargoyleAttack_Seelah_Dialogue - Cue 0012
+
+            { "f018c76c10022274ab7852cb89664183", true }, // Anevia_Start_Dialogue - Cue 0081
+
+            { "20a9fb7961786ca4ab55c370eae1dd2b", true }, // Companion_Ember_Dialogue - Cue 0037
+            { "a10cb691784999a41ba9ff07d621f5e2", true }, // Companion_Ember_Dialogue - Cue 0039
+            { "04a2c833eb9b59141a330c562def4156", true }, // Companion_Ember_Dialogue - Cue 0042
         };
 
         [HarmonyPatch(typeof(DialogSpeaker), nameof(DialogSpeaker.GetEntity))]
@@ -119,7 +137,7 @@ namespace ToyBox.BagOfPatches {
         public static class BlueprintCue_CanShow_Patch {
 
             public static void Postfix(BlueprintCue __instance, ref bool __result) {
-                Mod.Debug($"BlueprintCue_CanShow_Patch - {__instance?.Speaker?.Blueprint?.Name.orange() ?? ""} result: {__result}");
+                Mod.Debug($"BlueprintCue_CanShow_Patch - {__instance?.Speaker?.Blueprint?.Name.orange() ?? ""} BP: {__instance} result: {__result}");
             }
         }
     }

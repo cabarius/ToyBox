@@ -53,6 +53,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***Pheonix99***) Added Headers to Add Enchant search table, clairified Search Limit
   * **Remote Companion Dialog**
    	* (***Ronin***) Secret companions no longer appear early to spoil the surprise
+       (***Ronin + Narria***) Companions no longer mute during A Strike From The Sky 
 ### Ver 1.4.9.1
 * **Bag of Tricks**
   * **Remote Companion Dialog**
