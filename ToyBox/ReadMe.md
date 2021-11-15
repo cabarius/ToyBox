@@ -43,7 +43,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.10 (Coming Soon)
 * **Bag of Tricks**
-  * Fixed issue with remote dialog and ex companions when ex companions are not emabled that broke certain scenes like during "A Strike from the Sky"
+  * **Remote Companion Dialog**
+    * added infrastructure for handling situations with ex companions where an Etude may expect them to not be on the team.  We have resolved the cases in *A Strike from the Sky*.  Please report other situations where you see odd behavior and we will resolve it ASAP.
+   	* (***Ronin***) Secret companions no longer appear early to spoil the surprise
+    * (***Ronin + Narria***) Companions no longer mute during *A Strike From The Sky 
   * Improved camera zoom behavior when camera tilt/zoom all scenes is active
   * Fixed some crashers in dialog preview and control summons
   * (***Flat***) Add Rest Selected Unit
@@ -51,9 +54,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***DeadMoroz***) Fixed crasher that led to broken character switch when Loot Coloring is enabled and magical item was rewarded after tactical battle
   * (***DeadMoroz***) Enable action bar for controllable summons. Prefill action bar with spell abilities and charge.
   * (***Pheonix99***) Added Headers to Add Enchant search table, clairified Search Limit
-  * **Remote Companion Dialog**
-   	* (***Ronin***) Secret companions no longer appear early to spoil the surprise
-       (***Ronin + Narria***) Companions no longer mute during A Strike From The Sky 
 ### Ver 1.4.9.1
 * **Bag of Tricks**
   * **Remote Companion Dialog**
