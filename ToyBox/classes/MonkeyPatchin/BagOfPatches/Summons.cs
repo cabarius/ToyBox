@@ -60,7 +60,10 @@ namespace ToyBox.BagOfPatches {
         private static class UIUtility_GetGroup_Patch {
             private static void Postfix(ref List<UnitEntityData> __result) {
                 if (settings.toggleMakeSummmonsControllable) {
-                    __result.AddRange(Game.Instance.Player.Group.Select(u => u).Where(u => u.IsSummoned()));
+                    try {
+                        __result.AddRange(Game.Instance.Player.Group.Select(u => u).Where(u => u.IsSummoned()));
+                    }
+                    catch {}
                 }
             }
         }

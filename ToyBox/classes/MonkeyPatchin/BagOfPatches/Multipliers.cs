@@ -278,10 +278,11 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(CameraZoom), nameof(CameraZoom.TickZoom))]
         private static class CameraZoom_TickZoom {
             private static bool firstCall = true;
-            private static readonly float BaseFovMin = 17.5f;
+            private static float BaseFovMin => settings.toggleZoomOnAllMaps ? 12 : 17.5f;
             private static readonly float BaseFovMax = 30;
 
             public static bool Prefix(CameraZoom __instance) {
+                if (settings.toggleZoomOnAllMaps || settings.toggleRotateOnAllMaps) return true;
                 if (settings.fovMultiplier == 1) return true;
                 if (firstCall) {
                     //Main.Log($"baseMin/Max: {__instance.FovMin} {__instance.FovMax}");
@@ -289,15 +290,13 @@ namespace ToyBox.BagOfPatches {
                         Mod.Warn($"Warning: game has changed FovMin to {__instance.FovMin} vs {BaseFovMin}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMin = __instance.FovMin;
                     }
-
                     if (__instance.FovMax != BaseFovMax) {
                         Mod.Warn($"Warning: game has changed FovMax to {__instance.FovMax} vs {BaseFovMax}. Toy Box should be updated to avoid stability issues when enabling and disabling the mod repeatedly".orange().bold());
                         //BaseFovMax = __instance.FovMax;
                     }
-
                     firstCall = false;
                 }
-
+                var fovMultiplier = settings.fovMultiplier;
                 __instance.FovMax = BaseFovMax * settings.fovMultiplier;
                 __instance.FovMin = BaseFovMin / settings.fovMultiplier;
                 if (__instance.m_ZoomRoutine != null)
@@ -342,7 +341,7 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_ScrollRoutine != null || __instance.m_RotateRoutine != null)// || __instance.m_HandRotationLock)
                     return false;
                 __instance.RotateByMiddleButton();
-                var mouseMovement = new Vector2(0,0);
+                var mouseMovement = new Vector2(0, 0);
                 if (__instance.m_RotationByMouse) {
                     mouseMovement = __instance.CameraDragToRotate2D();
                 }
