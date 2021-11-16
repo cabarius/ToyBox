@@ -151,6 +151,7 @@ namespace ToyBox {
 #endif
                 }
             }
+            List<Action> todo = new();
             foreach (var ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
@@ -515,16 +516,16 @@ namespace ToyBox {
                     }
                 }
                 //if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
-                //    FactsEditor.OnGUI(ch, ch.Facts.m_Facts);
+                //    todo = FactsEditor.OnGUI(ch, ch.Facts.m_Facts);
                 //}
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Features) {
-                    FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
+                    todo = FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
-                    FactsEditor.OnGUI(ch, ch.Descriptor.Buffs.Enumerable.ToList());
+                    todo = FactsEditor.OnGUI(ch, ch.Descriptor.Buffs.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
-                    FactsEditor.OnGUI(ch, ch.Descriptor.Abilities.Enumerable.ToList());
+                    todo = FactsEditor.OnGUI(ch, ch.Descriptor.Abilities.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     UI.Space(20);
@@ -540,7 +541,7 @@ namespace ToyBox {
                         if (editSpellbooks) {
                             spellbookEditCharacter = ch;
                             var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
-                            BlueprintListUI.OnGUI(ch, blueprints, 100);
+                            todo = BlueprintListUI.OnGUI(ch, blueprints, 100);
                         }
                         else {
                             var maxLevel = spellbook.Blueprint.MaxSpellLevel;
@@ -594,7 +595,7 @@ namespace ToyBox {
                                 }
                             }
                             SelectedSpellbook[ch.HashKey()] = spellbook;
-                            FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
+                            todo = FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
                         }
                     }
 #if false
@@ -602,7 +603,7 @@ namespace ToyBox {
                         spellbookEditCharacter = ch;
                         editSpellbooks = true;
                         var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
-                        BlueprintListUI.OnGUI(ch, blueprints, 100);
+                        todo = BlueprintListUI.OnGUI(ch, blueprints, 100);
                     }
 #endif
                 }
@@ -624,6 +625,8 @@ namespace ToyBox {
                 UI.Label("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange());
             }
             UI.Space(25);
+            foreach (var action in todo)
+                action();
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
             if (charToRecruit != null) { UnitEntityDataUtils.RecruitCompanion(charToRecruit); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }

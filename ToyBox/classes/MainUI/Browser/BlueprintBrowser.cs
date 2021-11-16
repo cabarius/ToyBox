@@ -388,7 +388,7 @@ namespace ToyBox {
                                     UpdateSearchResults();
                                 }
                             }
-                        });
+                        }).ForEach(action => action());
                     }
                     UI.Space(25);
                 }

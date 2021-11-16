@@ -205,8 +205,9 @@ namespace ToyBox.classes.MainUI {
                     }
                 },
                () => { }
-        );
-
+            );
+            UI.Space(25);
+            SettlementsEditor.OnGUI();
         }
     }
 }

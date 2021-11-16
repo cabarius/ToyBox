@@ -243,6 +243,11 @@ namespace ToyBox {
                     }
                 },
                 () => Toggle("Respec Refund Scrolls", ref settings.toggleRespecRefundScrolls),
+                () => {
+                    ActionButton("Clear Action Bar", () => Actions.ClearActionBar());
+                    50.space();
+                    UI.Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".green());
+                },
                 () => ActionButton("Fix Incorrect Main Character", () => {
                     var probablyPlayer = Game.Instance.Player?.Party?
                         .Where(x => !x.IsCustomCompanion())

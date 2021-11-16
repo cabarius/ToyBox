@@ -26,13 +26,14 @@ namespace ToyBox {
         public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
         public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
-        public static void OnGUI(UnitEntityData unit,
+        public static List<Action> OnGUI(UnitEntityData unit,
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
             Func<string, string> titleFormater = null,
             NamedTypeFilter typeFilter = null,
             NavigateTo navigateTo = null
         ) {
+            List<Action> todo = new();
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
             if (remainingWidth == 0) remainingWidth = UI.ummWidth - indent;
             var index = 0;
@@ -128,7 +129,7 @@ namespace ToyBox {
                                     actionName += action.isRepeatable ? $" {repeatCount}" : "";
                                     extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
                                 }
-                                UI.ActionButton(actionName, () => action.action(blueprint, unit, repeatCount, currentCount), UI.Width(160 + extraSpace));
+                                UI.ActionButton(actionName, () => todo.Add(() => action.action(blueprint, unit, repeatCount, currentCount)), UI.Width(160 + extraSpace));
                                 UI.Space(10);
                                 remWidth -= 174.0f + extraSpace;
 
@@ -276,6 +277,7 @@ namespace ToyBox {
                 UI.Div(indent);
                 index++;
             }
+            return todo;
         }
     }
 }

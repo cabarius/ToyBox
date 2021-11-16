@@ -172,6 +172,12 @@ namespace ToyBox {
                 }
             }
         }
+        public static void ClearActionBar() {
+            var selectedChar = Game.Instance?.SelectionCharacter?.CurrentSelectedCharacter;
+            var uiSettings = selectedChar?.UISettings;
+            uiSettings?.CleanupSlots();
+            uiSettings.Dirty = true;
+        }
         public static bool HasAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
                 if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {

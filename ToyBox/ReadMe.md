@@ -42,6 +42,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.11 (Coming Soon)
+* **Bag of Tricks**
+  * Tweak to clear the action bar of the selected char
+* **Crusade Editor**
+  * Added Settlement Editor
 ### Ver 1.4.10
 * **Bag of Tricks**
   * **Remote Companion Dialog**
