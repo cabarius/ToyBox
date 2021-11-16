@@ -20,9 +20,11 @@ namespace ToyBox.classes.MainUI {
                 Label("You must unlock the crusade before you can access these toys.".yellow().bold());
                 return;
             }
-            UI.HStack("Settlements", 1,
+            UI.HStack("Settlement", 1,
                 () => {
                     using (VerticalScope()) {
+                        if (kingdom.SettlementsManager.Settlements.Count == 0)
+                            UI.Label("None".orange().bold() + " - please progress further into the game".green());
                         foreach (var settlement in kingdom.SettlementsManager.Settlements) {
                             var showBuildings = false;
                             var buildings = settlement.Buildings;
