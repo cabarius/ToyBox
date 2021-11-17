@@ -51,7 +51,7 @@ namespace ToyBox.classes.MainUI {
                                             building.IsFinished = true;
                                         }, UI.AutoWidth());
                                         25.space();
-                                        UI.Label(building.IsFinished.ToString().StripHTML(), 200.width());
+                                        UI.Label(building.IsFinished.ToString(), 200.width());
                                         25.space();
                                         UI.Label(building.Blueprint.MechanicalDescription.ToString().StripHTML().orange() + "\n" + building.Blueprint.Description.ToString().StripHTML().green());
                                     }
