@@ -89,6 +89,16 @@ namespace ToyBox.BagOfPatches {
             { "4799a25da39295b43a6eefcd2cb2b4a7", false },  // Etude    KTC_Jealousy
         };
 
+        internal static readonly Dictionary<string, bool> EtudeStatusOverridesFriendshipIsMagic = new()  {
+            // Crusaders at large + Queen
+            { "60ad7865e557c50489244e3f3f7fc6bc", false },   // GalfreyOnTheEdge_Iz_ch5_Dialog - Cue_0015
+            { "70f2c9f4876257a4f8c47b5409752aef", true },   // GalfreyOnTheEdge_Iz_ch5_Dialog - Cue_0062
+            { "136b18c04f144794b9c5b5d39e0e296e", false },   // GalfreyAfter_Iz_ch5_Dialog - Cue_0017
+            { "d9d009964b3f0e945a0d509dc56db853", false },   // GalfreyAfter_Iz_ch5_Dialog - Cue_0063
+            { "070e849ca16487340ae9641fcfabab53", true },   // Coronation_Dialogue - Cue_0211
+            { "977012d051210674c91dc2c31a3fddbe", true },   // Coronation_Dialogue - Cue_0053
+        };
+
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
         public static class PcFemale_CheckCondition_Patch {
             public static void Postfix(PcFemale __instance, ref bool __result) {
@@ -136,8 +146,12 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMultipleRomance) {
                     if (EtudeStatusOverrides.TryGetValue(key, out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
                 }
+                if (settings.toggleFriendshipIsMagic) {
+                    if (EtudeStatusOverridesFriendshipIsMagic.TryGetValue(key, out var valueFriendshipIsMagic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueFriendshipIsMagic}"); __result = valueFriendshipIsMagic; }
+                }
             }
         }
+
         [HarmonyPatch(typeof(FlagInRange), nameof(FlagInRange.CheckCondition))]
         public static class FlagInRange_CheckCondition_Patch {
             public static void Postfix(FlagInRange __instance, ref bool __result) {
