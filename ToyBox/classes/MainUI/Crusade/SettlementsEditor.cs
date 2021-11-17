@@ -47,8 +47,11 @@ namespace ToyBox.classes.MainUI {
                                     using (HorizontalScope()) {
                                         100.space();
                                         UI.Label(building.Blueprint.name.cyan(), 350.width());
+                                        UI.ActionButton("Finish", () => {
+                                            building.IsFinished = true;
+                                        }, UI.AutoWidth());
                                         25.space();
-                                        UI.Label(building.GetRank().ToString());
+                                        UI.Label(building.IsFinished.ToString(), 200.width());
                                         25.space();
                                         UI.Label(building.Blueprint.MechanicalDescription.ToString().StripHTML().orange() + "\n" + building.Blueprint.Description.ToString().StripHTML().green());
                                     }

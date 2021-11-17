@@ -54,6 +54,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Added Mythic set level to let you delevel your mythic level like you can for normal character level
 * **Crusade Editor**
   * Added Settlement Editor
+  *(***KnightOfSeiros***) Added immediately build buildings
 ### Ver 1.4.10
 * **Bag of Tricks**
   * **Remote Companion Dialog**
