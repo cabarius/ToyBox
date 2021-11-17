@@ -43,7 +43,15 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Edit leader rituals (abilities) and can add any BlueprintAbility
 ### Ver 1.4.11 (Coming Soon)
 * **Bag of Tricks**
+  * **Friendship is Magic** 
+    * allow friendships to survive after commiting the most vile actions
+  * Toggle to let a rider mount pets without size restriction
+  * Toggle to let a rider mount anything (experimental)
   * Tweak to clear the action bar of the selected char
+* **Level Up**
+  * Toggle to let pets take mythic classes
+* **Party Editor**
+  * Added Mythic set level to let you delevel your mythic level like you can for normal character level
 * **Crusade Editor**
   * Added Settlement Editor
 ### Ver 1.4.10

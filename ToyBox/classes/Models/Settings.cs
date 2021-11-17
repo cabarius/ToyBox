@@ -161,6 +161,7 @@ namespace ToyBox {
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleAllowAnyGenderRomance = false;
         public bool toggleMultipleRomance = false;
+        public bool toggleFriendshipIsMagic = false;
         public bool toggleReplaceModelMenu = false;
         public bool toggleSpiderBegone = false;
         public bool toggleVescavorsBegone = false;
@@ -184,6 +185,8 @@ namespace ToyBox {
         public bool highlightHiddenObjects = false;
         public bool highlightHiddenObjectsInFog = false;
         public bool toggleAttacksofOpportunity = false;
+        public bool toggleMakePetsRidable = false;
+        public bool toggleRideAnything = false;
 
         // Loot 
         public bool toggleColorLootByRarity = false;
@@ -196,7 +199,7 @@ namespace ToyBox {
         public RarityType lootChecklistFilterRarity = RarityType.None;
 
 
-        //Crusade
+        // Crusade
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleLargeArmies = false;
         public bool toggleCrusadeFlagsStayGreen = false;
@@ -207,6 +210,10 @@ namespace ToyBox {
         public float playerLeaderPowerMultiplier = 1;
         public float enemyLeaderPowerMultiplier = 1;
         public float kingdomTaskResolutionLengthMultiplier = 0;
+
+        // Settlement
+        public bool toggleIgnoreBuildingClassRestrictions = false;
+        public bool toggleIgnoreBuildingAdjanceyRestrictions = false;
 
         // selectors
         public UnitSelectType noAttacksOfOpportunitySelection = UnitSelectType.Off;
@@ -222,6 +229,7 @@ namespace ToyBox {
         public bool toggleFullHitdiceEachLevel = false;
         public bool toggleIgnoreClassAndFeatRestrictions = false;
         public bool toggleAllowCompanionsToBecomeMythic = false;
+        public bool toggleAllowMythicPets = false;
         public bool toggleIgnorePrerequisites = false;
         public bool toggleIgnoreCasterTypeSpellLevel = false;
         public bool toggleIgnoreForbiddenArchetype = false;

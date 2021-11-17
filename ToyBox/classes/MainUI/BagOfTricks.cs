@@ -191,6 +191,11 @@ namespace ToyBox {
                     UI.Label("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green());
                 },
                 () => {
+                    Toggle("Friendship is Magic".bold(), ref settings.toggleFriendshipIsMagic, 300.width());
+                    25.space();
+                    UI.Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
+                },
+                () => {
                     Toggle("Expand Dialog To Include Remote Companions".bold() , ref settings.toggleRemoteCompanionDialog);
                     100.space();
                     Label("Experimental".orange()+ " Allow remote companions to make comments on dialog you are having.".green());
@@ -407,7 +412,8 @@ namespace ToyBox {
                 () => ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
-                () => Toggle("Remove Level 20 Caster Level Cap", ref settings.toggleUncappedCasterLevel),
+                () => Toggle("Ignore Pet Sizes For Mounting", ref settings.toggleMakePetsRidable),
+                () => Toggle("Mount Anything", ref settings.toggleRideAnything),
                 () => { }
                 );
             Div(153, 25);

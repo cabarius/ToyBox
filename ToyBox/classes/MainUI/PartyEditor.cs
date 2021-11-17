@@ -360,6 +360,18 @@ namespace ToyBox {
                             UI.Space(175);
                             UI.Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
                         }
+                        using (UI.HorizontalScope()) {
+                            UI.Space(100);
+                            UI.Label("Experience".cyan(), UI.Width(250));
+                            UI.Space(82);
+                            UI.Label($"{prog.MythicExperience}", UI.Width(150f));
+                            UI.Space(36);
+                            UI.ActionButton("Set", () => {
+                                prog.MythicExperience = prog.MythicLevel;
+                            }, UI.Width(125));
+                            UI.Space(23);
+                            UI.Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
+                        }
                         var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
                         var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                         foreach (var cd in classData) {
