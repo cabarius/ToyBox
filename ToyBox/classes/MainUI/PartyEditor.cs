@@ -555,12 +555,15 @@ namespace ToyBox {
                             UI.SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), UI.AutoWidth());
                             if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                             UI.DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
-                            UI.Space(20);
+                            Space(-50);
                             var mergableClasses = ch.MergableClasses();
-                            if (spellbook.IsStandaloneMythic || mergableClasses.Count() == 0)
-                                Label($"Merge Mythic: ".cyan() + "n/a".orange() + " When you get standalone mythic spellbooks you can merge them here.".green(), AutoWidth());
+                            if (spellbook.IsStandaloneMythic || mergableClasses.Count() == 0) {
+                                Label($"Merge Mythic".cyan(), AutoWidth());
+                                25.space();
+                                UI.Label("When you get standalone mythic spellbooks you can merge them here.".green());
+                            }
                             else {
-                                Label($"Merge Mythic: ".cyan(), 175.width());
+                                Label($"Merge Mythic:".cyan(), 175.width());
                                 25.space();
                                 foreach (var cl in mergableClasses) {
                                     ActionButton(cl.CharacterClass.LocalizedName.ToString(), () => spellbook.MergeMythicSpellbook(cl));
@@ -617,14 +620,6 @@ namespace ToyBox {
                                         ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
                                     }, UI.AutoWidth());
                                 }
-#if false
-                                var mythicToMerge = ch.GetMythicToMerge();
-                                UI.Label($"myToMerge: {mythicToMerge.CharacterClass.name}");
-                                if (ch.Spellbooks
-                                    .Where(sb => sb.IsStandaloneMythic && !spellbook.IsStandaloneMythic && sb.Blueprint.CharacterClass != null)
-                                    .Any(sb => sb.Blueprint.CharacterClass == mythicToMerge?.CharacterClass)) {
-                                    }
-#endif
                             }
                             SelectedSpellbook[ch.HashKey()] = spellbook;
                             todo = FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
