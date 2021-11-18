@@ -61,7 +61,9 @@ namespace ToyBox {
 
                             void draw(FeaturesTree.FeatureNode node) {
                                 using (UI.HorizontalScope()) {
-                                    var titleText = node.Name.Bold() + (" [" + node.Blueprint.name + "]  ").color(node.IsMissing ? RGBA.maroon : RGBA.aqua);
+                                    var levelText = node.Level == 0 ? "" : $" {node.Level} - ";
+                                    var blueprintName =  $"[{node.Blueprint.name}]".color(node.IsMissing ? RGBA.maroon : RGBA.aqua);
+                                    var titleText = $"{levelText}{node.Name.Bold()} {blueprintName}";
                                     if (node.ChildNodes.Count > 0) {
                                         if (node.Expanded == ToggleState.None) {
                                             node.Expanded = ToggleState.Off;
@@ -75,7 +77,7 @@ namespace ToyBox {
                                     UI.ToggleButton(ref node.Expanded, titleText, _buttonStyle);
                                     if (node.Expanded.IsOn()) {
                                         using (UI.VerticalScope(UI.ExpandWidth(false))) {
-                                            foreach (var child in node.ChildNodes)
+                                            foreach (var child in node.ChildNodes.OrderBy(n => n.Level))
                                                 draw(child);
                                         }
                                     }
@@ -112,22 +114,22 @@ namespace ToyBox {
                     var source = feature.m_Source;
                     //Main.Log($"source: {source}");
                     if (feature.Blueprint is BlueprintParametrizedFeature)
-                        parametrizedNodes.Add(new FeatureNode(name, feature.Blueprint, source));
+                        parametrizedNodes.Add(new FeatureNode(name, feature.SourceLevel, feature.Blueprint, source));
                     else
-                        normalNodes.Add(feature.Blueprint, new FeatureNode(name, feature.Blueprint, source));
+                        normalNodes.Add(feature.Blueprint, new FeatureNode(name, feature.SourceLevel, feature.Blueprint, source));
                 }
 
                 // get nodes (classes)
                 foreach (var characterClass in progression.Classes.Select(item => item.CharacterClass)) {
-                    normalNodes.Add(characterClass, new FeatureNode(characterClass.Name, characterClass, null));
+                    normalNodes.Add(characterClass, new FeatureNode(characterClass.Name, 0, characterClass, null));
                 }
 
                 // set source selection
                 var selectionNodes = normalNodes.Values
                     .Where(item => item.Blueprint is BlueprintFeatureSelection).ToList();
-                for (var i = 0; i <= 20; i++) {
+                for (var level = 0; level <= 100; level++) {
                     foreach (var selection in selectionNodes) {
-                        foreach (var feature in progression.GetSelections(selection.Blueprint as BlueprintFeatureSelection, i)) {
+                        foreach (var feature in progression.GetSelections(selection.Blueprint as BlueprintFeatureSelection, level)) {
                             FeatureNode node = default;
                             if (feature is BlueprintParametrizedFeature) {
                                 node = parametrizedNodes
@@ -136,11 +138,12 @@ namespace ToyBox {
 
                             if (node != null || normalNodes.TryGetValue(feature, out node)) {
                                 node.Source = selection.Blueprint;
+                                node.Level = level;
                             }
                             else {
                                 // missing child
                                 normalNodes.Add(feature,
-                                    new FeatureNode(string.Empty, feature, selection.Blueprint) { IsMissing = true });
+                                    new FeatureNode(string.Empty, level, feature, selection.Blueprint) { IsMissing = true });
                             }
                         }
                     }
@@ -156,7 +159,7 @@ namespace ToyBox {
                     }
                     else {
                         // missing parent
-                        parent = new FeatureNode(string.Empty, node.Source, null) { IsMissing = true };
+                        parent = new FeatureNode(string.Empty, 0, node.Source, null) { IsMissing = true };
                         parent.ChildNodes.Add(node);
                         normalNodes.Add(parent.Blueprint, parent);
                         RootNodes.Add(parent);
@@ -169,13 +172,15 @@ namespace ToyBox {
                 internal BlueprintScriptableObject Source;
 
                 public readonly string Name;
+                public int Level;
                 public readonly BlueprintScriptableObject Blueprint;
                 public readonly List<FeatureNode> ChildNodes = new();
 
                 public ToggleState Expanded;
 
-                internal FeatureNode(string name, BlueprintScriptableObject blueprint, BlueprintScriptableObject source) {
+                internal FeatureNode(string name, int level, BlueprintScriptableObject blueprint, BlueprintScriptableObject source) {
                     Name = name;
+                    Level = level;
                     Blueprint = blueprint;
                     Source = source;
                 }

@@ -13,6 +13,7 @@ using Kingmaker.UnitLogic;
 using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
+using static ModKit.UI;
 using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
 using Kingmaker.PubSubSystem;
@@ -92,10 +93,10 @@ namespace ToyBox {
                 UI.ActionButton("Recruit".cyan(), () => { charToRecruit = ch; }, UI.Width(150));
                 UI.Space(25);
             }
-            if(player.AllCharacters.Contains(ch) && !ch.IsStoryCompanion()) {
+            if (player.AllCharacters.Contains(ch) && !ch.IsStoryCompanion()) {
                 UI.ActionButton("Unrecruit".cyan(), () => { charToUnrecruit = ch; charToRemove = ch; }, UI.Width(150));
                 UI.Space(25);
-               
+
             }
             else {
                 UI.Space(178);
@@ -374,6 +375,8 @@ namespace ToyBox {
                         }
                         var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
                         var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
+                        var mythicCount = classData.Count(x => x.CharacterClass.IsMythic);
+                        var mythicGestaltCount = classData.Count(cd => cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                         foreach (var cd in classData) {
                             var showedGestalt = false;
                             UI.Div(100, 20);
@@ -398,7 +401,10 @@ namespace ToyBox {
                                 var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                                 UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
                                 UI.Space(23);
-                                if (!cd.CharacterClass.IsMythic && classCount - gestaltCount > 1 || ch.IsClassGestalt(cd.CharacterClass) || cd.CharacterClass.IsMythic) {
+                                if (ch.IsClassGestalt(cd.CharacterClass)
+                                    || !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1
+                                    || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1
+                                    ) {
                                     UI.ActionToggle(
                                         "gestalt".grey(),
                                         () => ch.IsClassGestalt(cd.CharacterClass),
@@ -544,12 +550,30 @@ namespace ToyBox {
                     var names = spellbooks.Select((sb) => sb.Blueprint.GetDisplayName()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
+                        var spellbook = spellbooks.ElementAt(selectedSpellbook);
                         using (UI.HorizontalScope()) {
                             UI.SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), UI.AutoWidth());
                             if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                             UI.DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
+                            UI.Space(20);
+                            var mergableClasses = ch.MergableClasses();
+                            if (spellbook.IsStandaloneMythic || mergableClasses.Count() == 0)
+                                Label($"Merge Mythic: ".cyan() + "n/a".orange() + " When you get standalone mythic spellbooks you can merge them here.".green(), AutoWidth());
+                            else {
+                                Label($"Merge Mythic: ".cyan(), 175.width());
+                                25.space();
+                                foreach (var cl in mergableClasses) {
+                                    ActionButton(cl.CharacterClass.LocalizedName.ToString(), () => spellbook.MergeMythicSpellbook(cl));
+                                    15.space();
+                                }
+                                25.space();
+                                using (VerticalScope()) {
+                                    UI.Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up.".green());
+                                    Label("Warning: This is irreversible. Please save before continuing!".Orange());
+                                }
+                            }
                         }
-                        var spellbook = spellbooks.ElementAt(selectedSpellbook);
+                        spellbook = spellbooks.ElementAt(selectedSpellbook);
                         if (editSpellbooks) {
                             spellbookEditCharacter = ch;
                             var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
@@ -593,18 +617,14 @@ namespace ToyBox {
                                         ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
                                     }, UI.AutoWidth());
                                 }
-
-                                UI.Space(20);
-                                if (ch.Spellbooks.Where(x => x.IsStandaloneMythic && !spellbook.IsStandaloneMythic && x.Blueprint.CharacterClass != null).Any(y => y.Blueprint.CharacterClass == ch.Progression.GetMythicToMerge()?.CharacterClass)) {
-                                    using (UI.VerticalScope()) {
-                                        using (UI.HorizontalScope()) {
-                                            UI.ActionButton("Merge Mythic Levels and Selected Spellbook", () => CasterHelpers.ForceSpellbookMerge(spellbook), UI.AutoWidth());
-                                            UI.Label("Warning: This is irreversible. Please save before continuing!".Orange());
-                                        }
-
-                                        UI.Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up.", UI.Width(850));
+#if false
+                                var mythicToMerge = ch.GetMythicToMerge();
+                                UI.Label($"myToMerge: {mythicToMerge.CharacterClass.name}");
+                                if (ch.Spellbooks
+                                    .Where(sb => sb.IsStandaloneMythic && !spellbook.IsStandaloneMythic && sb.Blueprint.CharacterClass != null)
+                                    .Any(sb => sb.Blueprint.CharacterClass == mythicToMerge?.CharacterClass)) {
                                     }
-                                }
+#endif
                             }
                             SelectedSpellbook[ch.HashKey()] = spellbook;
                             todo = FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);

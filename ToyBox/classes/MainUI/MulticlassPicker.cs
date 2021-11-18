@@ -73,7 +73,12 @@ namespace ToyBox {
                 var classes = ch?.Progression.Classes;
                 var classCount = classes?.Count(x => !x.CharacterClass.IsMythic);
                 var gestaltCount = classes?.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
-                showGestaltToggle = !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1 || ch.IsClassGestalt(cd.CharacterClass) || cd.CharacterClass.IsMythic;
+                var mythicCount = classes.Count(x => x.CharacterClass.IsMythic);
+                var mythicGestaltCount = classes.Count(cd => cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
+
+                showGestaltToggle = ch.IsClassGestalt(cd.CharacterClass)
+                                    || !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1
+                                    || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1;
             }
             var charHasClass = cd != null && chArchetype == null;
             // Class Toggle
