@@ -197,7 +197,7 @@ namespace ToyBox.Multiclass {
         }
         [HarmonyPatch(typeof(UnitHelper))]
         [HarmonyPatch("CopyInternal")]
-        private static class UnitProgressionData_CopyFrom_Patch {
+        private static class UnitProgressionData_CopyFrom_Patch { 
             private static void Postfix(UnitEntityData unit, UnitEntityData __result) {
                 if (!settings.toggleMulticlass) return;
                 // When upgrading, this method will be used to copy a UnitEntityData, which involves copying UnitProgressionData
@@ -209,6 +209,7 @@ namespace ToyBox.Multiclass {
                 Mod.Trace($"UnitProgressionData_CopyFrom_Patch - {unit.CharacterName.orange()} - {UnitProgressionData_CharacterLevel}");
 
                 UnitProgressionData_CharacterLevel.SetValue(__result.Descriptor.Progression, unit.Descriptor.Progression.CharacterLevel);
+                __result.Descriptor.Progression.MythicLevel = unit.Descriptor.Progression.MythicLevel;
             }
         }
     }
