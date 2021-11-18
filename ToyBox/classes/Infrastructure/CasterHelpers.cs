@@ -109,8 +109,8 @@ namespace ToyBox.classes.Infrastructure {
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
             }
         }
-        public static void AddIfUnknown(this Spellbook spellbook, int level, BlueprintAbility ability) { 
-            if (!spellbook.IsKnown(ability))spellbook.AddKnown(level, ability); 
+        public static void AddIfUnknown(this Spellbook spellbook, int level, BlueprintAbility ability) {
+            if (!spellbook.IsKnown(ability)) spellbook.AddKnown(level, ability);
         }
 
         public static void AddAllSpellsOfSelectedLevel(Spellbook spellbook, int level) {
@@ -143,7 +143,7 @@ namespace ToyBox.classes.Infrastructure {
                 AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
             }
         }
-        
+
         public static void HandleAddAllSpellsOnPartyEditor(UnitDescriptor unit) {
             if (!PartyEditor.SelectedSpellbook.TryGetValue(unit.HashKey(), out var selectedSpellbook)) {
                 return;
@@ -207,31 +207,26 @@ namespace ToyBox.classes.Infrastructure {
             return known.Count;
         }
 
-        public static ClassData GetMythicToMerge(this UnitProgressionData unit) {
-            var list = unit.Classes.Where(cls => cls.CharacterClass.IsMythic).ToList();
-            if (!list.Any()) {
-                return null;
-            }
-
-            return list.Count == 1 ? list.First() : list.FirstOrDefault(mythic => mythic.CharacterClass != BlueprintRoot.Instance.Progression.MythicStartingClass && mythic.CharacterClass != BlueprintRoot.Instance.Progression.MythicCompanionClass);
+        public static IEnumerable<ClassData> MergableClasses(this UnitEntityData unit) {
+            var spellbookCandidates = unit.Spellbooks.Where(sb => sb.IsStandaloneMythic
+                                                                   && sb.Blueprint.CharacterClass != null
+                                                                   ).Select(sb => sb.Blueprint).ToHashSet();
+            return unit.Progression.Classes.Where(cl => cl.Spellbook != null && spellbookCandidates.Contains(cl.Spellbook));
         }
-
-        public static void ForceSpellbookMerge(Spellbook spellbook) {
-            var unit = spellbook.Owner;
-            var classData = unit.Progression.GetMythicToMerge();
-            var oldMythicSpellbookBp = classData?.Spellbook;
-            if (classData == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
+        public static void MergeMythicSpellbook(this Spellbook targetSpellbook, ClassData fromClass) {
+            var unit = targetSpellbook.Owner;
+            var oldMythicSpellbookBp = fromClass?.Spellbook;
+            if (fromClass == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
                 Mod.Warn("Can't merge because you don't have a mythic class / mythic spellbook!");
                 return;
             }
 
-            classData.Spellbook = spellbook.Blueprint;
-            spellbook.m_Type = SpellbookType.Mythic;
-            spellbook.AddSpecialList(oldMythicSpellbookBp.MythicSpellList);
+            fromClass.Spellbook = targetSpellbook.Blueprint;
+            targetSpellbook.m_Type = SpellbookType.Mythic;
+            targetSpellbook.AddSpecialList(oldMythicSpellbookBp.MythicSpellList);
             for (var i = 0; i < unit.Progression.MythicLevel; i++) {
-                spellbook.AddMythicLevel();
+                targetSpellbook.AddMythicLevel();
             }
-
             unit.DeleteSpellbook(oldMythicSpellbookBp);
         }
 

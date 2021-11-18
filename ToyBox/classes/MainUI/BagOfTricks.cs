@@ -23,7 +23,7 @@ namespace ToyBox {
         private const string RestSelected = "Rest Selected";
         private const string Empowered = "Empowered";
         private const string FullBuffPlease = "Common Buffs";
-        private const string GoddesBuffs = "Buff Like A Godess";
+        private const string GoddesBuffs = "Buff Like A Goddess";
         private const string RemoveBuffs = "Remove Buffs";
         private const string RemoveDeathsDoor = "Remove Deaths Door";
         private const string KillAllEnemies = "Kill All Enemies";
@@ -413,7 +413,7 @@ namespace ToyBox {
                 () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
                 () => Toggle("Ignore Pet Sizes For Mounting", ref settings.toggleMakePetsRidable),
-                () => Toggle("Mount Anything", ref settings.toggleRideAnything),
+                () => Toggle("Ride Any Unit As Your Mount", ref settings.toggleRideAnything),
                 () => { }
                 );
             Div(153, 25);

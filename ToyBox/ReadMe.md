@@ -50,8 +50,12 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Tweak to clear the action bar of the selected char
 * **Level Up**
   * Toggle to let pets take mythic classes
+  * Fixed mythic level up to show the correct mythic level on the top left of the level up screen.  Not the progression UI still puts stuff in the wrong place but at least the calculations should be better
 * **Party Editor**
-  * Added Mythic set level to let you delevel your mythic level like you can for normal character level
+  * Improved UI for mythic spellbook merging
+  * Added Mythic display of Mythic Experience and a button to set mythic experience so you can delevel your mythic level like you can for normal character level
+  * You can no longer select all mythic classes as gestalt
+  * Feature Tree view now shows levels for features acquired during level up
 * **Crusade Editor**
   * Added Settlement Editor
   *(***KnightOfSeiros***) Added immediately build buildings
