@@ -25,8 +25,14 @@ namespace ToyBox.classes.MainUI {
                     using (VerticalScope()) {
                         if (kingdom.SettlementsManager.Settlements.Count == 0)
                             UI.Label("None".orange().bold() + " - please progress further into the game".green());
-                        UI.Toggle("Ignore player class restrictions", ref Settings.toggleIgnoreBuildingClassRestrictions);
-                        UI.Toggle("Ignore building adjacency restrictions", ref Settings.toggleIgnoreBuildingAdjanceyRestrictions);
+                        UI.Toggle("Ignore building restrions", ref Settings.toggleSettlementRestrictions);
+                        if (Settings.toggleSettlementRestrictions) {
+                            Space(25);
+                            using (VerticalScope(UI.Width(250))) {
+                                UI.Toggle("Ignore player class restrictions", ref Settings.toggleIgnoreBuildingClassRestrictions);
+                                UI.Toggle("Ignore building adjacency restrictions", ref Settings.toggleIgnoreBuildingAdjanceyRestrictions);
+                            }
+                        }
                         foreach (var settlement in kingdom.SettlementsManager.Settlements) {
                             var showBuildings = false;
                             var buildings = settlement.Buildings;
