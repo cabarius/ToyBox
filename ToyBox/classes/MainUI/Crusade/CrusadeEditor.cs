@@ -216,15 +216,19 @@ namespace ToyBox.classes.MainUI {
                             using (UI.HorizontalScope()) {
                                 UI.Label(activeTasks.Name.cyan(), 350.width());
                                 25.space();
-                                if (activeTasks.IsStarted)  //Something wrong here
-                                    UI.Label($"Ends in {activeTasks.EndsOn} days", 250.width());
+                                if (activeTasks.IsStarted)
+                                    UI.Label($"Ends in {activeTasks.EndsOn - ks.CurrentDay} days", 200.width());
                                 else
-                                    UI.Label("Not started", 250.width());
+                                    UI.Label("Not started", 200.width());
                                 25.space();
-                                //Not working somehow, gonna work on it later
-                                //UI.ActionButton("Finish", () => {
-                                //Settings.toggleActiveTaskIsFinished = true;
-                                //}, UI.AutoWidth());
+                                if (activeTasks.IsStarted) {
+                                    UI.ActionButton("Finish", () => {
+                                        Settings.toggleActiveTaskIsFinished = true;
+                                    }, 120.width());
+                                }
+                                else
+                                    120.space();
+                                25.space();
                                 UI.Label(activeTasks.Description.StripHTML().orange());
                             }
                         }
