@@ -206,6 +206,31 @@ namespace ToyBox.classes.MainUI {
                 },
                () => { }
             );
+            UI.Div(0, 25);
+            UI.HStack("Decrees", 1,
+                () => {
+                    using (UI.VerticalScope()) {
+                        if (ks.ActiveTasks.Count() == 0)
+                            UI.Label("No active decrees".orange().bold());
+                        foreach (var activeTasks in ks.ActiveTasks) {
+                            using (UI.HorizontalScope()) {
+                                UI.Label(activeTasks.Name.cyan(), 350.width());
+                                25.space();
+                                if (activeTasks.IsStarted)  //Something wrong here
+                                    UI.Label($"Ends in {activeTasks.EndsOn} days", 250.width());
+                                else
+                                    UI.Label("Not started", 250.width());
+                                25.space();
+                                //Not working somehow, gonna work on it later
+                                //UI.ActionButton("Finish", () => {
+                                //Settings.toggleActiveTaskIsFinished = true;
+                                //}, UI.AutoWidth());
+                                UI.Label(activeTasks.Description.StripHTML().orange());
+                            }
+                        }
+                    }
+                }
+             );
             25.space();
             UI.Div();
             SettlementsEditor.OnGUI();
