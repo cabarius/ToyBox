@@ -103,6 +103,8 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         private static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
+                if (!settings.toggleMulticlass) return true;
+
                 if (state.SelectedClass == null) {
                     return false;
                 }
