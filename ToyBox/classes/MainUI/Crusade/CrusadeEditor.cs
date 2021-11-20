@@ -5,6 +5,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.Blueprints;
 using ModKit;
 using System.Collections.Generic;
@@ -212,29 +213,60 @@ namespace ToyBox.classes.MainUI {
                     using (UI.VerticalScope()) {
                         if (ks.ActiveTasks.Count() == 0)
                             UI.Label("No active decrees".orange().bold());
-                        foreach (var activeTasks in ks.ActiveTasks) {
+                        
+                        foreach (var activeTask in ks.ActiveTasks) {
                             using (UI.HorizontalScope()) {
-                                UI.Label(activeTasks.Name.cyan(), 350.width());
+                                UI.Label(activeTask.Name.cyan(), 350.width());
                                 25.space();
-                                if (activeTasks.IsStarted)
-                                    UI.Label($"Ends in {activeTasks.EndsOn - ks.CurrentDay} days", 200.width());
+                                if (activeTask.IsInProgress)
+                                    UI.Label($"Ends in {activeTask.EndsOn - ks.CurrentDay} days", 200.width());
                                 else
                                     UI.Label("Not started", 200.width());
                                 25.space();
-                                if (activeTasks.IsStarted) {
+                                
+                                if (activeTask.IsInProgress) {
                                     UI.ActionButton("Finish", () => {
-                                        Settings.toggleActiveTaskIsFinished = true;
+                                        //How the heck to do this
+                                        //Settings.selectedTask = ;
                                     }, 120.width());
                                 }
                                 else
                                     120.space();
+                                //ks.ActiveTasks.RemoveAll((KingdomTask t) => t.IsFinished || !t.IsValid);
+
                                 25.space();
-                                UI.Label(activeTasks.Description.StripHTML().orange());
+                                UI.Label(activeTask.Description.StripHTML().orange());
                             }
                         }
                     }
                 }
              );
+            
+            UI.Div(0, 25);
+            UI.HStack("Events", 1,
+                () => {
+                    using (UI.VerticalScope()) {
+                        if (ks.ActiveEvents.Count == 0)
+                            UI.Label("No active events".orange().bold());
+                        foreach (var activeEvent in ks.ActiveEvents) {
+                            /* If it's an event not a decree
+                             * Events are associated with Tasks by EventTask
+                             * EventTask is a child of Task
+                             * Task(decree) must also have a corresponding event
+                             * Event(AKA the "Event" in the game) does not have an associated task(EventTask)
+                             */
+                            if (activeEvent.AssociatedTask == null) {
+                                using (UI.HorizontalScope()) {
+                                    UI.Label(activeEvent.FullName.cyan(), 350.width());
+                                    25.space();
+                                    UI.Label(activeEvent.EventBlueprint.InitialDescription.StripHTML().orange());
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+            
             25.space();
             UI.Div();
             SettlementsEditor.OnGUI();

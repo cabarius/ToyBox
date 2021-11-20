@@ -11,6 +11,7 @@ using Kingmaker.EntitySystem;
 using Kingmaker;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Kingdom.Tasks;
 using JetBrains.Annotations;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.PubSubSystem;
@@ -203,7 +204,7 @@ namespace ToyBox {
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleLargeArmies = false;
         public bool toggleCrusadeFlagsStayGreen = false;
-        public bool toggleActiveTaskIsFinished = false;
+        //public bool toggleActiveTaskIsFinished = false;
         public float postBattleSummonMultiplier = 1;
         public float recruitmentCost = 1;
         public float recruitmentMultiplier = 1;
