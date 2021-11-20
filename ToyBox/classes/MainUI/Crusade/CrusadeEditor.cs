@@ -214,6 +214,7 @@ namespace ToyBox.classes.MainUI {
                         if (ks.ActiveEvents.Count == 0)
                             UI.Label("No active events".orange().bold());
                         foreach (var activeEvent in ks.ActiveEvents) {
+
                             /* If it's an event not a decree
                              * Events are associated with Tasks by EventTask
                              * EventTask is a child of Task
@@ -262,6 +263,7 @@ namespace ToyBox.classes.MainUI {
                                 }
                             }
                         }
+                        ks.TimelineManager.UpdateEvents();
                     }
                 }
             );
