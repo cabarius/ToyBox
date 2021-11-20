@@ -25,9 +25,9 @@ namespace ToyBox.classes.MainUI {
                     using (VerticalScope()) {
                         if (kingdom.SettlementsManager.Settlements.Count == 0)
                             UI.Label("None".orange().bold() + " - please progress further into the game".green());
-                        UI.Toggle("Ignore building restrions", ref Settings.toggleSettlementRestrictions, UI.AutoWidth());
+                        UI.Toggle("Ignore building restrions", ref Settings.toggleIgnoreSettlementRestrictions, UI.AutoWidth());
                         /*
-                        if (Settings.toggleSettlementRestrictions) {
+                        if (Settings.toggleIgnoreSettlementRestrictions) {
                             UI.Toggle("Ignore player class restrictions", ref Settings.toggleIgnoreBuildingClassRestrictions);
                             UI.Toggle("Ignore building adjacency restrictions", ref Settings.toggleIgnoreBuildingAdjanceyRestrictions);
                         }
