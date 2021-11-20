@@ -11,7 +11,6 @@ using Kingmaker.EntitySystem;
 using Kingmaker;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.UnitLogic.Parts;
-using Kingmaker.Kingdom.Tasks;
 using JetBrains.Annotations;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.PubSubSystem;

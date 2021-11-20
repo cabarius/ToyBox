@@ -140,6 +140,5 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 __result = __result < 1 ? 1 : __result;
             }
         }
-        
     }
 }
