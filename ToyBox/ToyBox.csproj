@@ -217,6 +217,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Selectors.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Settlement.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Spellbooks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Summons.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ActionBar.cs" />
