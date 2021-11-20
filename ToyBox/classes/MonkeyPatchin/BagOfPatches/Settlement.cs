@@ -9,7 +9,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(BlueprintSettlementBuilding), "CheckRestrictions", new Type[] { typeof(SettlementState) })]
         public static class BlueprintSettlementBuilding_CheckRestrictions_Patch1 {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleSettlementRestrictions) {
+                if (settings.toggleIgnoreSettlementRestrictions) {
                     __result = true;
                 }
             }
@@ -18,7 +18,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(BlueprintSettlementBuilding), "CheckRestrictions", new Type[] { typeof(SettlementState), typeof(SettlementGridTopology.Slot) })]
         public static class BlueprintSettlementBuilding_CheckRestrictions_Patch2 {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleSettlementRestrictions) {
+                if (settings.toggleIgnoreSettlementRestrictions) {
                     __result = true;
                 }
             }
@@ -27,7 +27,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SettlementState), "CanBuildUprgade", new Type[] { typeof(BlueprintSettlementBuilding) })]
         public static class SettlementState_CanBuildUprgade_Patch {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleSettlementRestrictions) {
+                if (settings.toggleIgnoreSettlementRestrictions) {
                     __result = true;
                 }
             }
@@ -36,7 +36,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SettlementState), "CanBuildByLevel", new Type[] { typeof(BlueprintSettlementBuilding) })]
         public static class SettlementState_CanBuildByLevel_Patch {
             private static void Postfix(ref bool __result) {
-                if (settings.toggleSettlementRestrictions) {
+                if (settings.toggleIgnoreSettlementRestrictions) {
                     __result = true;
                 }
             }
@@ -45,9 +45,8 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SettlementState), "CanBuild", new Type[] { typeof(BlueprintSettlementBuilding) })]
         public static class SettlementState_CanBuild_Patch {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleSettlementRestrictions) {
+                if (settings.toggleIgnoreSettlementRestrictions) 
                     __result = true;
-                }
             }
         }
     }

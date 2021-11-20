@@ -144,7 +144,7 @@ namespace ToyBox {
         public bool toggleDialogRestrictionsMythic = false;
         public bool toggleDialogRestrictionsEverything = false;
         public bool toggleNoFriendlyFireForAOE = false;
-        public bool toggleSettlementRestrictions = false;
+        public bool toggleIgnoreSettlementRestrictions = false;
         public bool toggleMoveSpeedAsOne = false;
         public bool toggleNoFogOfWar = false;
         public bool toggleRestoreSpellsAbilitiesAfterCombat = false;
