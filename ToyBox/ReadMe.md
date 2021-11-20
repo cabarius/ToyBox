@@ -55,7 +55,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Fixed mythic level up to show the correct mythic level on the top left of the level up screen.  **Note**: the progression UI still puts stuff in the wrong place but at least the calculations should be better
   * Toggle for ignoring racial feature prerequisites works once again
 * **Party Editor**
-  * Improved UI for mythic spellbook merging. You can also merge more than one mythic spellbook into the same normal spellbook.  Note: only the first merge increasess the mythic level (caster level) of the spellbook but you do get the extra spells.
+  * Improved UI for mythic spellbook merging. You can also merge more than one mythic spellbook into the same normal spellbook. **Note**: only the first merge increasess the mythic level (caster level) of the spellbook but you do get the extra spells.
   * Added Mythic display of Mythic Experience and a button to set mythic experience so you can delevel your mythic level like you can for normal character level
   * You can no longer select all mythic classes as gestalt
   * Feature Tree view now shows levels for features acquired during level up
