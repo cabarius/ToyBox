@@ -204,7 +204,6 @@ namespace ToyBox {
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleLargeArmies = false;
         public bool toggleCrusadeFlagsStayGreen = false;
-        //public bool toggleActiveTaskIsFinished = false;
         public float postBattleSummonMultiplier = 1;
         public float recruitmentCost = 1;
         public float recruitmentMultiplier = 1;

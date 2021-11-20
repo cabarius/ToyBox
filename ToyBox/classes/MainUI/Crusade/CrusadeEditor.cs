@@ -208,41 +208,6 @@ namespace ToyBox.classes.MainUI {
                () => { }
             );
             UI.Div(0, 25);
-            UI.HStack("Decrees", 1,
-                () => {
-                    using (UI.VerticalScope()) {
-                        if (ks.ActiveTasks.Count() == 0)
-                            UI.Label("No active decrees".orange().bold());
-                        
-                        foreach (var activeTask in ks.ActiveTasks) {
-                            using (UI.HorizontalScope()) {
-                                UI.Label(activeTask.Name.cyan(), 350.width());
-                                25.space();
-                                if (activeTask.IsInProgress)
-                                    UI.Label($"Ends in {activeTask.EndsOn - ks.CurrentDay} days", 200.width());
-                                else
-                                    UI.Label("Not started", 200.width());
-                                25.space();
-                                
-                                if (activeTask.IsInProgress) {
-                                    UI.ActionButton("Finish", () => {
-                                        //How the heck to do this
-                                        //Settings.selectedTask = ;
-                                    }, 120.width());
-                                }
-                                else
-                                    120.space();
-                                //ks.ActiveTasks.RemoveAll((KingdomTask t) => t.IsFinished || !t.IsValid);
-
-                                25.space();
-                                UI.Label(activeTask.Description.StripHTML().orange());
-                            }
-                        }
-                    }
-                }
-             );
-            
-            UI.Div(0, 25);
             UI.HStack("Events", 1,
                 () => {
                     using (UI.VerticalScope()) {
@@ -266,7 +231,40 @@ namespace ToyBox.classes.MainUI {
                     }
                 }
             );
-            
+            UI.Div(0, 25);
+            UI.HStack("Decrees", 1,
+                () => {
+                    using (UI.VerticalScope()) {
+                        if (ks.ActiveTasks.Count() == 0)
+                            UI.Label("No active decrees".orange().bold());
+                        foreach (var activeTask in ks.ActiveEvents) {
+                            if (activeTask.AssociatedTask != null) {
+                                var task = activeTask.AssociatedTask;
+                                using (UI.HorizontalScope()) {
+                                    UI.Label(task.Name.cyan(), 350.width());
+                                    25.space();
+                                    if (task.IsInProgress)
+                                        UI.Label($"Ends in {task.EndsOn - ks.CurrentDay} days", 200.width());
+                                    else
+                                        UI.Label("Not started", 200.width());
+                                    25.space();
+
+                                    if (task.IsInProgress) {
+                                        UI.ActionButton("Finish", () => {
+                                            task.m_BonusDays = task.Duration;
+                                        }, 120.width());
+                                    }
+                                    else
+                                        120.space();
+
+                                    25.space();
+                                    UI.Label(task.Description.StripHTML().orange());
+                                }
+                            }
+                        }
+                    }
+                }
+            );
             25.space();
             UI.Div();
             SettlementsEditor.OnGUI();

@@ -60,6 +60,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Added Settlement Editor
   *(***KnightOfSeiros***) Added immediately build buildings
   *(***KnightOfSeiros***) Toggle to ignore all building restrictions
+  *(***KnightOfSeiros***) Added immediately finish decrees(decrees will show up in the completed deck after skipping a day)
 
 ### Ver 1.4.10
 * **Bag of Tricks**
