@@ -229,7 +229,6 @@ namespace ToyBox.classes.Infrastructure {
             }
             unit.DeleteSpellbook(oldMythicSpellbookBp);
         }
-
         private static Dictionary<int, List<BlueprintAbility>> AllSpellsCache = new();
         public static List<BlueprintAbility> GetAllSpells(int level) {
             if (AllSpellsCache.TryGetValue(level, out var spells))
