@@ -216,6 +216,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Selectors.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Settlement.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Summons.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ActionBar.cs" />
@@ -276,7 +277,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
