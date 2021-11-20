@@ -9,6 +9,7 @@ using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Class;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
@@ -392,7 +393,26 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteFeature))]
+        [HarmonyPatch(typeof(BlueprintRace), nameof(BlueprintRace.GetRestrictedByArchetype))]
+        private static class BlueprintRace_GetRestrictedByArchetype_Patch {
+            public static bool Prefix(BlueprintRace __instance, UnitDescriptor unit, ref BlueprintArchetype __result) {
+                if (!settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass) return true;
+                __result = null;
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(CharGenClassSelectorItemVM), nameof(CharGenClassSelectorItemVM.SpecialRequiredRace), MethodType.Getter)]
+        private static class CharGenClassSelectorItemVM_SpecialRequiredRace_Patch {
+            public static bool Prefix(CharGenClassSelectorItemVM __instance, ref BlueprintRace __result) {
+                if (!settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass) return true;
+                __result = null;
+                return false;
+            }
+        }
+
+
+    [HarmonyPatch(typeof(PrerequisiteFeature))]
         public static class PrerequisiteFeature_CheckInternal_Patch {
             [HarmonyPostfix]
             [HarmonyPatch("CheckInternal")]

@@ -104,7 +104,7 @@ namespace ToyBox {
         public int selectedTab = 0;
         public int increment = 10000;
 
-        // Qualty of Life
+        // Quality of Life
         public bool highlightObjectsToggle = false;
         public bool toggleHighlightCopyableScrolls = false;
         public bool toggleShiftClickToUseInventorySlot = false;
@@ -112,7 +112,6 @@ namespace ToyBox {
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
         public bool toggleRemoteCompanionDialog = false;
         public bool toggleExCompanionDialog = false;
-
         public bool toggleWidenActionBarGroups = false;
 
         // Camera
@@ -144,7 +143,7 @@ namespace ToyBox {
         public bool toggleDialogRestrictionsMythic = false;
         public bool toggleDialogRestrictionsEverything = false;
         public bool toggleNoFriendlyFireForAOE = false;
-        public bool toggleSettlementRestrictions = false;
+        public bool toggleIgnoreSettlementRestrictions = false;
         public bool toggleMoveSpeedAsOne = false;
         public bool toggleNoFogOfWar = false;
         public bool toggleRestoreSpellsAbilitiesAfterCombat = false;

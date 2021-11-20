@@ -224,7 +224,7 @@ namespace ToyBox.classes.Infrastructure {
             fromClass.Spellbook = targetSpellbook.Blueprint;
             targetSpellbook.m_Type = SpellbookType.Mythic;
             targetSpellbook.AddSpecialList(oldMythicSpellbookBp.MythicSpellList);
-            for (var i = 0; i < unit.Progression.MythicLevel; i++) {
+            for (var i = targetSpellbook.MythicLevel; i < unit.Progression.MythicLevel; i++) {
                 targetSpellbook.AddMythicLevel();
             }
             unit.DeleteSpellbook(oldMythicSpellbookBp);

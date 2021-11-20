@@ -571,7 +571,7 @@ namespace ToyBox {
                                 }
                                 25.space();
                                 using (VerticalScope()) {
-                                    UI.Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up.".green());
+                                    UI.Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up. Merging a second mythic spellbook will transfer the spells but not increase your caster level further.  If you want more CL then increase it below.".green());
                                     Label("Warning: This is irreversible. Please save before continuing!".Orange());
                                 }
                             }
