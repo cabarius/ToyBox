@@ -246,19 +246,24 @@ namespace ToyBox.classes.MainUI {
                                     25.space();
                                     if (task.IsInProgress)
                                         UI.Label($"Ends in {task.EndsOn - ks.CurrentDay} days", 200.width());
-                                    else
-                                        UI.Label("Not started", 200.width());
+                                    else {
+                                        UI.ActionButton("Start", () => {
+                                            task.Start();
+                                        }, 200.width());
+                                    }
                                     25.space();
 
                                     if (task.IsInProgress) {
                                         UI.ActionButton("Finish", () => {
                                             task.m_BonusDays = task.Duration;
                                         }, 120.width());
+                                        UI.ActionButton("Cancel", () => {
+                                            task.Cancel();
+                                        }, 120.width());
                                     }
                                     else
-                                        120.space();
-
-                                    25.space();
+                                        240.space();
+                                    30.space();
                                     UI.Label(task.Description.StripHTML().orange());
                                 }
                             }
