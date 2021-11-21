@@ -46,7 +46,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * **Friendship is Magic** 
     * (***Ronin***) Allow friendships to survive after commiting the most vile actions
   * **Remote Companion Dialog**
-   	* (***Ronin***) Companions no longer mute during Act 5 companion quests or Underground Army
+   	* (***Ronin***) Companions no longer mute during Act 5 companion quests, Bad Blood, or Underground Army
   * Toggle to let a rider mount pets without size restriction
   * Toggle to let a rider mount anything (experimental)
   * Tweak to clear the action bar of the selected char
