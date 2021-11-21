@@ -91,7 +91,7 @@ namespace ToyBox {
                     (text) => { },
                     () => { },
                     UI.Width(300));
-                    //UI.Space(390); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
+                    UI.Space(25); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
                     UI.Space(25); UI.Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint, UI.AutoWidth());
                     UI.Space(25); UI.Toggle("Description", ref settings.toggleLootChecklistFilterDescription, UI.AutoWidth());
                 },
@@ -107,17 +107,13 @@ namespace ToyBox {
                                 else return (int)loot.Max(l => l.Rarity());
                             });
                             var rarity = settings.lootChecklistFilterRarity;
-                            var count = presents.Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
+                            var count = presents.Where(p => p.Unit == null || (settings.toggleLootChecklistFilterFriendlies && !p.Unit.IsPlayersEnemy || p.Unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && p.Unit.IsPlayersEnemy)).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
                             UI.Label($"{group.Key.cyan()}: {count}");
                             UI.Div(indent);
                             foreach (var present in presents) {
                                 var pahtLewts = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity());
                                 var unit = present.Unit;
-                                if (pahtLewts.Count() > 0
-                                    //&& (unit == null
-                                    //    || settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy
-                                    //    )
-                                    ) {
+                                if (pahtLewts.Count() > 0 && (unit == null || (settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy))) { 
                                     isEmpty = false;
                                     UI.Div();
                                     using (UI.HorizontalScope()) {
