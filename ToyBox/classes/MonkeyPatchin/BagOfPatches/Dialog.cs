@@ -159,6 +159,9 @@ namespace ToyBox.BagOfPatches {
             { "f2a7a52ba0f1e7346aa47c9ff53c22bc", true }, // Avowal_RegillQ3_dialog - Cue 0032
             { "037c6ab7548083f49bc43b1195cf05ac", true }, // Avowal_RegillQ3_dialog - Cue 0033
 
+            // Bad Blood
+            { "c3ca34383f9ee3a4e9908ce68a2e828b", true }, // MongrelsDefeated_dialogue - Cue 0001
+
         };
 
         [HarmonyPatch(typeof(DialogSpeaker), nameof(DialogSpeaker.GetEntity))]

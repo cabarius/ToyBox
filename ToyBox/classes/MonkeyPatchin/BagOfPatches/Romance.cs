@@ -97,6 +97,8 @@ namespace ToyBox.BagOfPatches {
             { "d9d009964b3f0e945a0d509dc56db853", false },   // GalfreyAfter_Iz_ch5_Dialog - Cue_0063
             { "070e849ca16487340ae9641fcfabab53", true },   // Coronation_Dialogue - Cue_0211
             { "977012d051210674c91dc2c31a3fddbe", true },   // Coronation_Dialogue - Cue_0053
+
+            { "365405cc55044874893d26759532ea07", false },   // DrezenSiege_Council_Dialogue - Cue_0107
         };
 
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
