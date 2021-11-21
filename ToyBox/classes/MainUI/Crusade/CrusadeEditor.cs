@@ -207,6 +207,7 @@ namespace ToyBox.classes.MainUI {
                 },
                () => { }
             );
+            /*
             UI.Div(0, 25);
             UI.HStack("Events", 1,
                 () => {
@@ -220,7 +221,7 @@ namespace ToyBox.classes.MainUI {
                              * EventTask is a child of Task
                              * Task(decree) must also have a corresponding event
                              * Event(AKA the "Event" in the game) does not have an associated task(EventTask)
-                             */
+                             
                             if (activeEvent.AssociatedTask == null) {
                                 using (UI.HorizontalScope()) {
                                     UI.Label(activeEvent.FullName.cyan(), 350.width());
@@ -232,10 +233,12 @@ namespace ToyBox.classes.MainUI {
                     }
                 }
             );
+            */
             UI.Div(0, 25);
             UI.HStack("Decrees", 1,
                 () => {
                     using (UI.VerticalScope()) {
+                        UI.Toggle("Ignore start restrictions" + " Note:".orange().bold() + " This may stop you gaining crusade stat experience".green(), ref Settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
                         if (ks.ActiveTasks.Count() == 0)
                             UI.Label("No active decrees".orange().bold());
                         foreach (var activeTask in ks.ActiveEvents) {
@@ -246,19 +249,28 @@ namespace ToyBox.classes.MainUI {
                                     25.space();
                                     if (task.IsInProgress)
                                         UI.Label($"Ends in {task.EndsOn - ks.CurrentDay} days", 200.width());
-                                    else
-                                        UI.Label("Not started", 200.width());
+                                    else {
+                                        UI.ActionButton("Start", () => {
+                                            task.Start();
+                                        }, 200.width());
+                                    }
                                     25.space();
 
                                     if (task.IsInProgress) {
                                         UI.ActionButton("Finish", () => {
                                             task.m_BonusDays = task.Duration;
                                         }, 120.width());
+                                        if (task.CanCancelStarted) {
+                                            UI.ActionButton("Cancel", () => {
+                                                task.Cancel();
+                                            }, 120.width());
+                                        }
+                                        else
+                                            120.space();
                                     }
                                     else
-                                        120.space();
-
-                                    25.space();
+                                        240.space();
+                                    30.space();
                                     UI.Label(task.Description.StripHTML().orange());
                                 }
                             }
@@ -267,6 +279,7 @@ namespace ToyBox.classes.MainUI {
                     }
                 }
             );
+
             25.space();
             UI.Div();
             SettlementsEditor.OnGUI();
