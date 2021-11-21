@@ -207,6 +207,7 @@ namespace ToyBox.classes.MainUI {
                 },
                () => { }
             );
+            /*
             UI.Div(0, 25);
             UI.HStack("Events", 1,
                 () => {
@@ -220,7 +221,7 @@ namespace ToyBox.classes.MainUI {
                              * EventTask is a child of Task
                              * Task(decree) must also have a corresponding event
                              * Event(AKA the "Event" in the game) does not have an associated task(EventTask)
-                             */
+                             
                             if (activeEvent.AssociatedTask == null) {
                                 using (UI.HorizontalScope()) {
                                     UI.Label(activeEvent.FullName.cyan(), 350.width());
@@ -232,6 +233,7 @@ namespace ToyBox.classes.MainUI {
                     }
                 }
             );
+            */
             UI.Div(0, 25);
             UI.HStack("Decrees", 1,
                 () => {
