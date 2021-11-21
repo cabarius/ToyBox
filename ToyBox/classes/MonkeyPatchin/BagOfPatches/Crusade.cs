@@ -140,5 +140,21 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 __result = __result < 1 ? 1 : __result;
             }
         }
+        
+        [HarmonyPatch(typeof(KingdomTaskEvent), "CanBeStarted")]
+        public static class KingdomTaskEvent_CanBeStarted_Patch {
+            public static void Postfix(ref bool __result) {
+                if (Settings.toggleIgnoreStartTaskRestrictions)
+                    __result = true;
+            }
+        }
+
+       [HarmonyPatch(typeof(BlueprintKingdomEventBase), "GetAvailableLeader")]
+       public static class BlueprintKingdomEventBase_GetAvailableLeader_Patch {
+            public static void Postfix(BlueprintKingdomEventBase __instance, ref LeaderState __result) {
+                if (Settings.toggleIgnoreStartTaskRestrictions) 
+                    __result = new LeaderState(__instance.GetDefaultResolutionType());
+            }
+        }
     }
 }

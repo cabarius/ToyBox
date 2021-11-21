@@ -236,6 +236,7 @@ namespace ToyBox.classes.MainUI {
             UI.HStack("Decrees", 1,
                 () => {
                     using (UI.VerticalScope()) {
+                        UI.Toggle("Ignore start restrictions" + " Note:".orange().bold() + " This may stop you gaining crusade stat experience".green(), ref Settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
                         if (ks.ActiveTasks.Count() == 0)
                             UI.Label("No active decrees".orange().bold());
                         foreach (var activeTask in ks.ActiveEvents) {
@@ -257,9 +258,13 @@ namespace ToyBox.classes.MainUI {
                                         UI.ActionButton("Finish", () => {
                                             task.m_BonusDays = task.Duration;
                                         }, 120.width());
-                                        UI.ActionButton("Cancel", () => {
-                                            task.Cancel();
-                                        }, 120.width());
+                                        if (task.CanCancelStarted) {
+                                            UI.ActionButton("Cancel", () => {
+                                                task.Cancel();
+                                            }, 120.width());
+                                        }
+                                        else
+                                            120.space();
                                     }
                                     else
                                         240.space();
@@ -272,6 +277,7 @@ namespace ToyBox.classes.MainUI {
                     }
                 }
             );
+
             25.space();
             UI.Div();
             SettlementsEditor.OnGUI();

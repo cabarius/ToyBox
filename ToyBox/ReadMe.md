@@ -63,6 +63,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   *(***KnightOfSeiros***) Added immediately build buildings
   *(***KnightOfSeiros***) Toggle to ignore all building restrictions
   *(***KnightOfSeiros***) Added immediately finish decrees
+  *(***KnightOfSeiros***) Toggle to ignore start decree restrictions
 
 ### Ver 1.4.10
 * **Bag of Tricks**
