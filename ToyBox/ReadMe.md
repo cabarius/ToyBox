@@ -41,6 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor**
   * Add squads in Army Editor
 ### Ver 1.4.12 (Coming Soon)
+* **Loot**
+  * Added a friendly unit filter toggle to the loot checklist
 ### Ver 1.4.11
 * **Bag of Tricks**
   * **Friendship is Magic** 
