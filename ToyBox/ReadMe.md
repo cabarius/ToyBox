@@ -37,11 +37,11 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.12 (Coming Later)
+### Ver 1.4.13 (Coming Later)
 * **Armies Editor**
   * Add squads in Army Editor
-  * Edit leader rituals (abilities) and can add any BlueprintAbility
-### Ver 1.4.11 (Coming Soon)
+### Ver 1.4.12 (Coming Soon)
+### Ver 1.4.11
 * **Bag of Tricks**
   * **Friendship is Magic** 
     * (***Ronin***) Allow friendships to survive after commiting the most vile actions
@@ -50,6 +50,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Toggle to let a rider mount pets without size restriction
   * Toggle to let a rider mount anything (experimental)
   * Tweak to clear the action bar of the selected char
+  * **Camera**
+    * Fixed bug where FOV multilier stopped working when using enhanced camera settings
+    * Made camera zoom smoother on the mouse wheel, especially at higher FOV settings
 * **Level Up**
   * Toggle to let pets take mythic classes
   * Fixed mythic level up to show the correct mythic level on the top left of the level up screen.  **Note**: the progression UI still puts stuff in the wrong place but at least the calculations should be better
