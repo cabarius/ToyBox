@@ -50,6 +50,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Toggle to let a rider mount pets without size restriction
   * Toggle to let a rider mount anything (experimental)
   * Tweak to clear the action bar of the selected char
+  * **Camera**
+    * Fixed bug where FOV multilier stopped working when using enhanced camera settings
+    * Made camera zoom smoother on the mouse wheel, especially at higher FOV settings
 * **Level Up**
   * Toggle to let pets take mythic classes
   * Fixed mythic level up to show the correct mythic level on the top left of the level up screen.  **Note**: the progression UI still puts stuff in the wrong place but at least the calculations should be better
