@@ -43,7 +43,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.12 (Coming Soon)
 * **Bag of Tricks**
   * **Friendship is Magic** 
-    * (***Ronin***) Expended to allow friendships to survive after philosophical disagreements
+    * (***Ronin***) Now for goodie-two-shoes as well!
 * **Loot**
   * Added a friendly unit filter toggle to the loot checklist
 ### Ver 1.4.11
