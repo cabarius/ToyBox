@@ -99,7 +99,7 @@ namespace ToyBox.BagOfPatches {
             basePoint.x -= 0.25f * dx;
             basePoint.y -= 0.25f * dy;
             __instance.m_BaseMousePoint = basePoint;
-            return new Vector2(dx, -dy);
+            return new Vector2(dx, dy);
         }
 
         [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickRotate))]
