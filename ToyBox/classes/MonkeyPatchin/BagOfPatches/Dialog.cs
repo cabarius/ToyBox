@@ -36,12 +36,23 @@ namespace ToyBox.BagOfPatches {
             { "0bcf3c125a28d164191e874e3c0c52de" }  // Staunton for Lich
         };
 
+        // These exclude certain problematic cues
+        internal static readonly HashSet<string> ProblemCues = new() {
+            // Underground Army
+            { "0b3974b21835707458e535fcb330a2a6" }, // SullLannIsNeutralized_dialogue - Cue 0014
+
+            // The Last Resort
+            { "372e6b1be6427f04788827503d8e3330" }, // SullWeak_dialogue - Cue 0041
+            { "a9802b4720687bc498e0722b89b45ec9" }, // SullWeak_dialogue - Cue 0009
+
+        };
+
         [HarmonyPatch(typeof(CompanionInParty), nameof(CompanionInParty.CheckCondition))]
         public static class CompanionInParty_CheckCondition_Patch {
             public static void Postfix(CompanionInParty __instance, ref bool __result) {
-                if (__instance.Owner.AssetGuid.ToString() == "0b3974b21835707458e535fcb330a2a6") return; // Underground Army Fix: SullLannIsNeutralized_dialogue - Cue 0014
                 if (__instance.Not) return; // We only want this patch to run for conditions requiring the character to be in the party so if it is for the inverse we bail.  Example of this comes up with Lann and Wenduag in the final scene of the Prologue Labyrinth
-                if (SecretCompanions.Contains(__instance.companion.AssetGuid.ToString())) return;           
+                if (SecretCompanions.Contains(__instance.companion.AssetGuid.ToString())) return;
+                if (ProblemCues.Contains(__instance.Owner.AssetGuid.ToString())) return;
                 if (settings.toggleRemoteCompanionDialog) {
                     if (__instance.Owner is BlueprintCue cueBP) {
                         Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
@@ -161,6 +172,9 @@ namespace ToyBox.BagOfPatches {
 
             // Bad Blood
             { "c3ca34383f9ee3a4e9908ce68a2e828b", true }, // MongrelsDefeated_dialogue - Cue 0001
+
+            // Bad Blood
+        //    { "c3ca34383f9ee3a4e9908ce68a2e828b", true }, // SullWeak_dialogue - Cue 0041
 
         };
 
