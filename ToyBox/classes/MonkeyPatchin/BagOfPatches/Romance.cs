@@ -99,6 +99,11 @@ namespace ToyBox.BagOfPatches {
             { "977012d051210674c91dc2c31a3fddbe", true },   // Coronation_Dialogue - Cue_0053
 
             { "365405cc55044874893d26759532ea07", false },   // DrezenSiege_Council_Dialogue - Cue_0107
+
+        };
+        internal static readonly Dictionary<string, bool> FlagInRangeOverridesFriendshipIsMagic = new() {
+            // Cam
+            { "8c8b7f25df243dd4799da10e5683ff64", true },   // AfterHorgus_Dialogue - Cue_0024
         };
 
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
@@ -112,6 +117,15 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(PcMale), nameof(PcMale.CheckCondition))]
         public static class PcMale_CheckCondition_Patch {
             public static void Postfix(PcMale __instance, ref bool __result) {
+                if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
+                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemsEnough), nameof(ItemsEnough.CheckCondition))]
+        public static class ItemsEnough_CheckCondition_Patch {
+            public static void Postfix(ItemsEnough __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
                 Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
@@ -157,8 +171,13 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(FlagInRange), nameof(FlagInRange.CheckCondition))]
         public static class FlagInRange_CheckCondition_Patch {
             public static void Postfix(FlagInRange __instance, ref bool __result) {
-                if (!settings.toggleMultipleRomance || __instance?.Owner is null) return;
-                if (FlagInRangeOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                if (__instance?.Owner is null) return;
+                if (settings.toggleMultipleRomance) {
+                    if (FlagInRangeOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                }
+                if (settings.toggleFriendshipIsMagic) {
+                    if (FlagInRangeOverridesFriendshipIsMagic.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var valueFriendshipIsMagic)) { Mod.Debug($"overiding {__instance.Owner.name} to {valueFriendshipIsMagic}"); __result = valueFriendshipIsMagic; }
+                }
             }
         }
     }
