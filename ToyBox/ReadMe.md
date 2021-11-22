@@ -47,7 +47,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * **Alignment Unrestrcted** 
     * (***Ronin***) Included support for dialogs from NPC, not just dialog from the MC
     * (***Ronin***) Fixes for Lann/Wendu's questline
-
 * **Loot**
   * Added a friendly unit filter toggle to the loot checklist
 ### Ver 1.4.11
