@@ -41,6 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor**
   * Add squads in Army Editor
 ### Ver 1.4.12 (Coming Soon)
+* **Loot**
+  * Added a friendly unit filter toggle to the loot checklist
 ### Ver 1.4.11
 * **Bag of Tricks**
   * **Friendship is Magic** 
@@ -68,7 +70,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * (***KnightOfSeiros***) Toggle to ignore all building restrictions
   * (***KnightOfSeiros***) Added immediately finish decrees
   * (***KnightOfSeiros***) Toggle to ignore start decree restrictions
-
 ### Ver 1.4.10
 * **Bag of Tricks**
   * **Remote Companion Dialog**
