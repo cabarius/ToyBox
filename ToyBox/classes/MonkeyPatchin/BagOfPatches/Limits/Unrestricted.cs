@@ -5,9 +5,13 @@ using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Items;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using ModKit;
+using Kingmaker.ElementsSystem;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.UnitLogic;
 using System;
+using System.Collections.Generic;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
@@ -64,6 +68,20 @@ namespace ToyBox.BagOfPatches {
                     var blueprint = __instance.Blueprint as BlueprintItemEquipment;
                     __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
                 }
+            }
+        }
+
+        internal static readonly Dictionary<string, bool> PlayerAlignmentIsOverrides = new() {
+            { "fdc9eb3b03cf8ef4ca6132a04970fb41", false },  // DracoshaIntro_MythicAzata_dialog - Cue_0031
+        };
+
+        [HarmonyPatch(typeof(PlayerAlignmentIs), nameof(PlayerAlignmentIs.CheckCondition))]
+        public static class PlayerAlignmentIs_CheckCondition_Patch {
+            public static void Postfix(PlayerAlignmentIs __instance, ref bool __result) {
+                if (!settings.toggleDialogRestrictions || __instance?.Owner is null) return;
+                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                if (PlayerAlignmentIsOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                else __result = true;
             }
         }
 
