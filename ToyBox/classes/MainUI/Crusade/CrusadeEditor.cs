@@ -238,7 +238,9 @@ namespace ToyBox.classes.MainUI {
             UI.HStack("Decrees", 1,
                 () => {
                     using (UI.VerticalScope()) {
-                        UI.Toggle("Ignore start restrictions" + " Note:".orange().bold() + " This may stop you gaining crusade stat experience".green(), ref Settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
+                        UI.Toggle("Ignore start restrictions", ref Settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
+                        //TODO: toggle to ignore specific restrictions
+                        UI.Toggle("No decree resource costs", ref Settings.toggleTaskNoResourcesCost);
                         if (ks.ActiveTasks.Count() == 0)
                             UI.Label("No active decrees".orange().bold());
                         foreach (var activeTask in ks.ActiveEvents) {
