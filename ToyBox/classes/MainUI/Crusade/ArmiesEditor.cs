@@ -62,6 +62,31 @@ namespace ToyBox.classes.MainUI {
                 UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());
                 return;
             }
+            UI.HStack("Tweaks", 1,
+                () => UI.Toggle("Infinite Mercenary Rerolls", ref Settings.toggleInfiniteArmyRerolls),
+                () => {
+                    UI.Toggle("Experimental - Enable Large Player Armies", ref Settings.toggleLargeArmies);
+                    if (Settings.toggleLargeArmies) {
+                        BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
+                        BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
+                    }
+                    else {
+                        BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 4;
+                        BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
+                    }
+                },
+                () => UI.Slider("Recruitment Cost", ref Settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("Number of Recruits", ref Settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
+                    UI.AutoWidth()),
+                () => UI.LogSlider("Army Experience Multiplier", ref Settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
+                    UI.AutoWidth()),
+                () => UI.LogSlider("After Army Battle Raise Multiplier", ref Settings.postBattleSummonMultiplier, 0f, 100,
+                    1, 1, "", UI.AutoWidth()),
+                () => UI.Slider("Player Leader Ability Strength", ref Settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", UI.AutoWidth()),
+                () => UI.Slider("Enemy Leader Ability Strength", ref Settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
+            );
+            UI.Div(0, 25);
+
             if (armies == null)
                 UpdateArmies();
             if (playerArmies != null)
