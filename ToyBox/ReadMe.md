@@ -49,6 +49,11 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * (***Ronin***) Fixes for Lann/Wendu's questline
 * **Loot**
   * Added a friendly unit filter toggle to the loot checklist
+* **Crusade Editor**
+  * Cleaned up UI layout and description coloring to match the rest of the mod
+  * (***KnightOfSeiros***) Toggle to choose no decree costs
+* **Army Editor**
+  * Moved army cheats to armies editor
 ### Ver 1.4.11
 * **Bag of Tricks**
   * **Friendship is Magic** 
