@@ -156,5 +156,13 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                     __result = new LeaderState(__instance.GetDefaultResolutionType());
             }
         }
+
+        [HarmonyPatch(typeof(KingdomTaskEvent), "OneTimeCost", MethodType.Getter)]
+        public static class KingdomTaskEvent_OneTimeCost_Patch {
+            public static void Postfix(ref KingdomResourcesAmount __result) {
+                if (Settings.toggleTaskNoResourcesCost)
+                    __result = new KingdomResourcesAmount();
+            }
+        }
     }
 }
