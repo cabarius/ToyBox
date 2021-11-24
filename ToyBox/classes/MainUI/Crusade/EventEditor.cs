@@ -21,12 +21,13 @@ namespace ToyBox.classes.MainUI {
             }
             UI.Div(0, 25);
             UI.HStack("Events", 1,
+                () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent),
+                () => UI.Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
                 () => {
                     using (UI.VerticalScope()) {
                         if (ks.ActiveEvents.Count == 0)
                             UI.Label("No active events".orange().bold());
                         foreach (var activeEvent in ks.ActiveEvents) {
-
                             /* If it's an event not a decree
                              * Events are associated with Tasks by EventTask
                              * EventTask is a child of Task
@@ -34,10 +35,11 @@ namespace ToyBox.classes.MainUI {
                              * Event(AKA the "Event" in the game) does not have an associated task(EventTask)
                             */
                             if (activeEvent.AssociatedTask == null) {
+                                Div(0, 25);
                                 using (UI.HorizontalScope()) {
                                     UI.Label(activeEvent.FullName.cyan(), 350.width());
                                     25.space();
-                                    UI.Label(activeEvent.EventBlueprint.InitialDescription.StripHTML().orange());
+                                    UI.Label(activeEvent.EventBlueprint.InitialDescription.StripHTML().green());
                                 }
                             }
                         }
@@ -56,6 +58,7 @@ namespace ToyBox.classes.MainUI {
                              UI.Label("No active decrees".orange().bold());
                          foreach (var activeTask in ks.ActiveEvents) {
                              if (activeTask.AssociatedTask != null) {
+                                 Div(0,25);
                                  var task = activeTask.AssociatedTask;
                                  using (UI.HorizontalScope()) {
                                      UI.Label(task.Name.cyan(), 350.width());
