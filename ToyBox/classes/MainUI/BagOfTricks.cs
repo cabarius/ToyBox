@@ -61,7 +61,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
             KeyBindings.RegisterAction(RerollInteractionSkillChecks, () => Actions.RerollInteractionSkillChecks());
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
-            KeyBindings.RegisterAction(ChangWeather, () =>CheatsCommon.ChangeWeather(""));
+            KeyBindings.RegisterAction(ChangWeather, () => CheatsCommon.ChangeWeather(""));
             // Other
             KeyBindings.RegisterAction(TimeScaleMultToggle, () => {
                 settings.useAlternateTimeScaleMultiplier = !settings.useAlternateTimeScaleMultiplier;
@@ -172,14 +172,7 @@ namespace ToyBox {
                 BindableActionButton(PreviewDialogResults);
             });
             Div(0, 25);
-            HStack("Quality of Life", 1,
-                () => {
-                    Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);
-                    UI.Space(25);
-                    Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
-                },
-                () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
-                () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
+            HStack("Dialog", 1,
                 () => {
                     Toggle("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red(), ref settings.toggleAllowAnyGenderRomance, 300.width());
                     25.space();
@@ -196,9 +189,9 @@ namespace ToyBox {
                     UI.Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
                 },
                 () => {
-                    Toggle("Expand Dialog To Include Remote Companions".bold() , ref settings.toggleRemoteCompanionDialog);
+                    Toggle("Expand Dialog To Include Remote Companions".bold(), ref settings.toggleRemoteCompanionDialog);
                     100.space();
-                    Label("Experimental".orange()+ " Allow remote companions to make comments on dialog you are having.".green());
+                    Label("Experimental".orange() + " Allow remote companions to make comments on dialog you are having.".green());
                 },
                 () => {
                     if (settings.toggleRemoteCompanionDialog) {
@@ -207,6 +200,27 @@ namespace ToyBox {
                         25.space();
                     }
                 },
+                () => {
+                    Toggle("Randomize NPC Responses To Dialog Choices Where Multiple Responses Apply", ref settings.toggleRandomizeClueSelections);
+                    50.space();
+                    UI.Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green());
+                },
+                () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
+                () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
+#if DEBUG
+                () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything),
+#endif
+                () => { }
+            );
+            Div(0, 25);
+            HStack("Quality of Life", 1,
+                () => {
+                    Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);
+                    UI.Space(25);
+                    Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
+                },
+                () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
+                () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
                 () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25); UI.Label("Hold down shift during launch to bypass".green()); },
                 () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ", ref settings.toggleWidenActionBarGroups),
                 () => {
@@ -393,11 +407,6 @@ namespace ToyBox {
                 () => Toggle("Disable Armor & Shield Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure),
                 () => Toggle("Disable Armor & Shield Checks Penalty", ref settings.toggleIgnoreArmorChecksPenalty),
 
-                () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
-                () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
-#if DEBUG
-                () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything),
-#endif
                 () => Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE),
                 () => Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree),
 

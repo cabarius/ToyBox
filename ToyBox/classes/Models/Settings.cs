@@ -110,8 +110,6 @@ namespace ToyBox {
         public bool toggleShiftClickToUseInventorySlot = false;
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
-        public bool toggleRemoteCompanionDialog = false;
-        public bool toggleExCompanionDialog = false;
         public bool toggleWidenActionBarGroups = false;
 
         // Camera
@@ -326,12 +324,15 @@ namespace ToyBox {
 
         public string searchTextEnchantments = "";
 
-        // Previews (Dialogs, Events ,etc)
+        // Dialog & Previews (Dialogs, Events ,etc)
 
         public bool previewEventResults = false;
         public bool previewDialogResults = false;
         public bool previewAlignmentRestrictedDialog = false;
         public bool previewRandomEncounters = false;
+        public bool toggleRemoteCompanionDialog = false;
+        public bool toggleExCompanionDialog = false;
+        public bool toggleRandomizeClueSelections = false;
 
         // Etudes
         public bool showEtudeComments = true;
