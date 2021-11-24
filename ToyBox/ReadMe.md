@@ -42,6 +42,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
 ### Ver 1.4.12 (Coming Soon)
 * **Bag of Tricks**
+  * Moved dialog options into their own section in Bag of Tricks
+  * Mythic Dialog Restrictions are beginning to apply to crusade events.
   * **Friendship is Magic** 
     * (***Ronin***) Now for goodie-two-shoes as well!
     * (***Ronin***) Added support for Ciar
@@ -51,6 +53,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Loot**
   * Added a friendly unit filter toggle to the loot checklist
 * **Crusade Editor**
+  * Now shows conditions and preview for crusade event solutions
+  * Option to ignore crusade event solution restrictions
   * Cleaned up UI layout and description coloring to match the rest of the mod
   * (***KnightOfSeiros***) Toggle to choose no decree costs
 * **Army Editor**

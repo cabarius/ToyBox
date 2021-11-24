@@ -170,6 +170,7 @@
     <Compile Include="classes\MainUI\Browser\Editor.cs" />
     <Compile Include="classes\MainUI\Crusade\ArmiesEditor.cs" />
     <Compile Include="classes\MainUI\Crusade\CrusadeEditor.cs" />
+    <Compile Include="classes\MainUI\Crusade\EventEditor.cs" />
     <Compile Include="classes\MainUI\Crusade\SettlementsEditor.cs" />
     <Compile Include="classes\MainUI\EnchantmentEditor.cs" />
     <Compile Include="classes\MainUI\Etudes\EtudeChildrenDrawer.cs" />
@@ -279,7 +280,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
