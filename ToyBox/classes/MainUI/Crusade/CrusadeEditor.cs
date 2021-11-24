@@ -248,7 +248,8 @@ namespace ToyBox.classes.MainUI {
                                     else
                                         249.space();
                                     25.space();
-                                    UI.Label(task.Description.StripHTML().green());
+                                    var taskBlueprint = task.Event.EventBlueprint as BlueprintKingdomProject;
+                                    UI.Label(task.Description.StripHTML().orange() + "\n" + taskBlueprint.MechanicalDescription.ToString().StripHTML().green());
                                 }
                             }
                         }
