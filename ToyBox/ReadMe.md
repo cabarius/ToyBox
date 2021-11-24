@@ -44,6 +44,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Bag of Tricks**
   * **Friendship is Magic** 
     * (***Ronin***) Now for goodie-two-shoes as well!
+    * (***Ronin***) Added support for Ciar
   * **Alignment Unrestrcted** 
     * (***Ronin***) Included support for dialogs from NPC, not just dialog from the MC
     * (***Ronin***) Fixes for Lann/Wendu's questline
