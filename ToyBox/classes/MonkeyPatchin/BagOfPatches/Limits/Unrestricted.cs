@@ -87,7 +87,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(BlueprintAnswerBase), nameof(BlueprintAnswerBase.IsAlignmentRequirementSatisfied), MethodType.Getter)]
         public static class BlueprintAnswerBase_IsAlignmentRequirementSatisfied_Patch {
-            public static void Postfix(ref bool __result) {
+            public static void Postfix(BlueprintAnswerBase __instance, ref bool __result) {
                 if (settings.toggleDialogRestrictions) {
                     __result = true;
                 }

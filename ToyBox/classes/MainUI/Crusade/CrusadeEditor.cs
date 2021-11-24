@@ -15,7 +15,7 @@ using UnityEngine;
 namespace ToyBox.classes.MainUI {
     public static class CrusadeEditor {
         public static void ResetGUI() { }
-        public static Settings Settings => Main.settings;
+        public static Settings settings => Main.settings;
 
         public static void OnGUI() {
             var ks = KingdomState.Instance;
@@ -26,7 +26,7 @@ namespace ToyBox.classes.MainUI {
             var moraleState = ks.MoraleState;
             UI.HStack("Morale", 1,
                 () => {
-                    UI.Toggle("Flags always green", ref Settings.toggleCrusadeFlagsStayGreen);
+                    UI.Toggle("Flags always green", ref settings.toggleCrusadeFlagsStayGreen);
                     KingdomCheats.AddMorale();
                 },
                 () => {
@@ -50,7 +50,7 @@ namespace ToyBox.classes.MainUI {
             UI.HStack("Kingdom", 1,
                 () => {
                     UI.Label("increment".cyan(), UI.Width(325));
-                    var increment = UI.IntTextField(ref Settings.increment, null, UI.Width(150));
+                    var increment = UI.IntTextField(ref settings.increment, null, UI.Width(150));
                     UI.Space(25);
                     UI.Label("Experimental".orange().bold());
                 },
@@ -75,20 +75,20 @@ namespace ToyBox.classes.MainUI {
                                 UI.Label(exp, UI.Width(150));
                                 UI.Label(required, UI.Width(150));
                                 UI.Space(10);
-                                UI.ActionButton($"Gain {Settings.increment}", () => {
-                                    kingdomStat.Value += Settings.increment;
+                                UI.ActionButton($"Gain {settings.increment}", () => {
+                                    kingdomStat.Value += settings.increment;
                                 }, UI.AutoWidth());
-                                UI.ActionButton($"Lose {Settings.increment}", () => {
-                                    kingdomStat.Value -= Settings.increment;
+                                UI.ActionButton($"Lose {settings.increment}", () => {
+                                    kingdomStat.Value -= settings.increment;
                                 }, UI.AutoWidth());
                             }
                         }
                         UI.Div(0, 0, 800);
-                        UI.DescriptiveLabel("Cost Modifiers", "The following modifiers all work on ".green() + "cost = cost (1 + modifier) ".yellow() + "so a value of ".green() + "-1".yellow() + " means the cost is free, ".green() + "0".yellow() +" is normal cost and ".green() + "2".yellow() + " increases it 3x".green());
+                        UI.DescriptiveLabel("Cost Modifiers", "The following modifiers all work on ".green() + "cost = cost (1 + modifier) ".yellow() + "so a value of ".green() + "-1".yellow() + " means the cost is free, ".green() + "0".yellow() + " is normal cost and ".green() + "2".yellow() + " increases it 3x".green());
                         UI.Slider("Claim Cost Modifier", () => ks.ClaimCostModifier, v => ks.ClaimCostModifier = v, -1, 2, 0, 1);
                         UI.Slider("Claim Time Modifier", () => ks.ClaimTimeModifier, v => ks.ClaimTimeModifier = v, -1, 2, 0, 1);
                         UI.Slider("Rankup Time Modifer", () => ks.RankupTimeModifier, v => ks.RankupTimeModifier = v, -1, 2, 0, 1);
-                        UI.Slider("Build Time Modifier", ref Settings.kingdomBuildingTimeModifier, -1, 2, 0, 1);
+                        UI.Slider("Build Time Modifier", ref settings.kingdomBuildingTimeModifier, -1, 2, 0, 1);
                         UI.Div(0, 0, 800);
                         UI.DescriptiveLabel("Random Encounters", "The following modifiers all work on ".green() + "chance = chance (1 + modifier) ".yellow() + "so a value of ".green() + "-1".yellow() + " means the chance is 0, ".green() + "0".yellow() + " is chance cost and ".green() + "2".yellow() + " increases it 3x".green());
                         UI.Slider("% Chance (Unclaimed)", () => ks.REModifierUnclaimed, v => ks.REModifierUnclaimed = v, -1f, 2f, 0f, 1);
@@ -112,31 +112,31 @@ namespace ToyBox.classes.MainUI {
                 () => {
                     UI.Label("Finances".cyan(), UI.Width(325));
                     UI.Label(ks.Resources.Finances.ToString().orange().bold(), UI.Width(100));
-                    UI.ActionButton($"Gain {Settings.increment}", () => {
-                        ks.Resources += KingdomResourcesAmount.FromFinances(Settings.increment);
+                    UI.ActionButton($"Gain {settings.increment}", () => {
+                        ks.Resources += KingdomResourcesAmount.FromFinances(settings.increment);
                     }, UI.AutoWidth());
-                    UI.ActionButton($"Lose {Settings.increment}", () => {
-                        ks.Resources -= KingdomResourcesAmount.FromFinances(Settings.increment);
+                    UI.ActionButton($"Lose {settings.increment}", () => {
+                        ks.Resources -= KingdomResourcesAmount.FromFinances(settings.increment);
                     }, UI.AutoWidth());
                 },
                 () => {
                     UI.Label("Materials".cyan(), UI.Width(325));
                     UI.Label(ks.Resources.Materials.ToString().orange().bold(), UI.Width(100));
-                    UI.ActionButton($"Gain {Settings.increment}", () => {
-                        ks.Resources += KingdomResourcesAmount.FromMaterials(Settings.increment);
+                    UI.ActionButton($"Gain {settings.increment}", () => {
+                        ks.Resources += KingdomResourcesAmount.FromMaterials(settings.increment);
                     }, UI.AutoWidth());
-                    UI.ActionButton($"Lose {Settings.increment}", () => {
-                        ks.Resources -= KingdomResourcesAmount.FromMaterials(Settings.increment);
+                    UI.ActionButton($"Lose {settings.increment}", () => {
+                        ks.Resources -= KingdomResourcesAmount.FromMaterials(settings.increment);
                     }, UI.AutoWidth());
                 },
                 () => {
                     UI.Label("Favors".cyan(), UI.Width(325));
                     UI.Label(ks.Resources.Favors.ToString().orange().bold(), UI.Width(100));
-                    UI.ActionButton($"Gain {Settings.increment}", () => {
-                        ks.Resources += KingdomResourcesAmount.FromFavors(Settings.increment);
+                    UI.ActionButton($"Gain {settings.increment}", () => {
+                        ks.Resources += KingdomResourcesAmount.FromFavors(settings.increment);
                     }, UI.AutoWidth());
-                    UI.ActionButton($"Lose {Settings.increment}", () => {
-                        ks.Resources -= KingdomResourcesAmount.FromFavors(Settings.increment);
+                    UI.ActionButton($"Lose {settings.increment}", () => {
+                        ks.Resources -= KingdomResourcesAmount.FromFavors(settings.increment);
                     }, UI.AutoWidth());
                 },
                 () => {
@@ -145,18 +145,19 @@ namespace ToyBox.classes.MainUI {
                         UI.Div(0, 0, 800);
                     }
                 },
-                () => UI.Toggle("Instant Events", ref Settings.toggleInstantEvent),
+                () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent),
+                () => UI.Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
                 () => {
 
-                    UI.Slider("Crusade card resolution time multiplier", ref Settings.kingdomTaskResolutionLengthMultiplier, -1, 2, 0, 2, "", UI.Width(400));
+                    UI.Slider("Crusade card resolution time multiplier", ref settings.kingdomTaskResolutionLengthMultiplier, -1, 2, 0, 2, "", UI.Width(400));
                     UI.Space(25);
                     UI.Label("Multiplies crusade card resolution time by (1 + modifier). -1 will make things as fast as possible (minimum 1 day to avoid possible bugs)".green());
                 },
             () => {
-                    UI.Slider("Build Time Modifier", ref Settings.kingdomBuildingTimeModifier, -1, 2, 0, 2, "", UI.Width(400));
+                    UI.Slider("Build Time Modifier", ref settings.kingdomBuildingTimeModifier, -1, 2, 0, 2, "", UI.Width(400));
                     var instance = KingdomState.Instance;
                     if (instance != null) {
-                        instance.BuildingTimeModifier = Settings.kingdomBuildingTimeModifier;
+                        instance.BuildingTimeModifier = settings.kingdomBuildingTimeModifier;
                     }
                     UI.Space(25);
                     UI.Label("Multiplies build time by (1 + modifier). -1 will make new buildings instant.".green());
@@ -213,9 +214,9 @@ namespace ToyBox.classes.MainUI {
             UI.HStack("Decrees", 1,
                 () => {
                     using (UI.VerticalScope()) {
-                        UI.Toggle("Ignore start restrictions", ref Settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
+                        UI.Toggle("Ignore start restrictions", ref settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
                         //TODO: toggle to ignore specific restrictions
-                        UI.Toggle("No decree resource costs", ref Settings.toggleTaskNoResourcesCost);
+                        UI.Toggle("No decree resource costs", ref settings.toggleTaskNoResourcesCost);
                         if (ks.ActiveTasks.Count() == 0)
                             UI.Label("No active decrees".orange().bold());
                         foreach (var activeTask in ks.ActiveEvents) {

@@ -19,7 +19,7 @@ using UnityModManagerNet;
 
 namespace ToyBox.classes.MainUI {
     public static class ArmiesEditor {
-        public static Settings Settings => Main.settings;
+        public static Settings settings => Main.settings;
 
         public static IEnumerable<(GlobalMapArmyState, float)> armies;
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;
@@ -64,10 +64,10 @@ namespace ToyBox.classes.MainUI {
                 return;
             }
             UI.HStack("Tweaks", 1,
-                () => UI.Toggle("Infinite Mercenary Rerolls", ref Settings.toggleInfiniteArmyRerolls),
+                () => UI.Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
                 () => {
-                    UI.Toggle("Experimental - Enable Large Player Armies", ref Settings.toggleLargeArmies);
-                    if (Settings.toggleLargeArmies) {
+                    UI.Toggle("Experimental - Enable Large Player Armies", ref settings.toggleLargeArmies);
+                    if (settings.toggleLargeArmies) {
                         BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
                     }
@@ -76,15 +76,15 @@ namespace ToyBox.classes.MainUI {
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
                     }
                 },
-                () => UI.Slider("Recruitment Cost", ref Settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
-                () => UI.LogSlider("Number of Recruits", ref Settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
+                () => UI.Slider("Recruitment Cost", ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
+                () => UI.LogSlider("Number of Recruits", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
                     UI.AutoWidth()),
-                () => UI.LogSlider("Army Experience Multiplier", ref Settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
+                () => UI.LogSlider("Army Experience Multiplier", ref settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
                     UI.AutoWidth()),
-                () => UI.LogSlider("After Army Battle Raise Multiplier", ref Settings.postBattleSummonMultiplier, 0f, 100,
+                () => UI.LogSlider("After Army Battle Raise Multiplier", ref settings.postBattleSummonMultiplier, 0f, 100,
                     1, 1, "", UI.AutoWidth()),
-                () => UI.Slider("Player Leader Ability Strength", ref Settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", UI.AutoWidth()),
-                () => UI.Slider("Enemy Leader Ability Strength", ref Settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
+                () => UI.Slider("Player Leader Ability Strength", ref settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", UI.AutoWidth()),
+                () => UI.Slider("Enemy Leader Ability Strength", ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
             );
             UI.Div(0, 25);
 

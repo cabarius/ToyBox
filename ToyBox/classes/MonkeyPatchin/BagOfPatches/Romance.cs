@@ -100,12 +100,20 @@ namespace ToyBox.BagOfPatches {
 
             { "365405cc55044874893d26759532ea07", false },   // DrezenSiege_Council_Dialogue - Cue_0107
 
+            // Ciar
+            { "5e51a15b014a1bb4181f5feaa4f71e32", false },   // KTC_Ciar_FirstVisit - Cue_0014
+
         };
         internal static readonly Dictionary<string, bool> FlagInRangeOverridesFriendshipIsMagic = new() {
             // Cam
             { "8c8b7f25df243dd4799da10e5683ff64", true },   // AfterHorgus_Dialogue - Cue_0024
         };
+        internal static readonly Dictionary<string, bool> EtudeStatusOverridesAnyMythic = new() {
+            // Cam
+            { "d9fd5839ef1a44fe81473fc2bac2078b", true },   // CrusadeEvent05
+        };
 
+        
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
         public static class PcFemale_CheckCondition_Patch {
             public static void Postfix(PcFemale __instance, ref bool __result) {
@@ -164,6 +172,9 @@ namespace ToyBox.BagOfPatches {
                 }
                 if (settings.toggleFriendshipIsMagic) {
                     if (EtudeStatusOverridesFriendshipIsMagic.TryGetValue(key, out var valueFriendshipIsMagic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueFriendshipIsMagic}"); __result = valueFriendshipIsMagic; }
+                }
+                if (settings.toggleDialogRestrictionsMythic) {
+                    if (EtudeStatusOverridesAnyMythic.TryGetValue(key, out var valueDialogRestrictionsMythic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueDialogRestrictionsMythic}"); __result = valueDialogRestrictionsMythic; }
                 }
             }
         }

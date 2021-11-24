@@ -201,12 +201,13 @@ namespace ToyBox {
                     }
                 },
                 () => {
-                    Toggle("Randomize NPC Responses To Dialog Choices Where Multiple Responses Apply", ref settings.toggleRandomizeClueSelections);
+                    Toggle("Randomize NPC Responses To Dialog Choices", ref settings.toggleRandomizeClueSelections);
                     50.space();
-                    UI.Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green());
+                    UI.Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() +"\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
                 },
                 () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
                 () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
+                () => UI.Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
 #if DEBUG
                 () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything),
 #endif

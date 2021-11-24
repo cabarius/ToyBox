@@ -209,6 +209,7 @@ namespace ToyBox {
         public float playerLeaderPowerMultiplier = 1;
         public float enemyLeaderPowerMultiplier = 1;
         public float kingdomTaskResolutionLengthMultiplier = 0;
+        public bool toggleIgnoreEventSolutionRestrictions = false;
 
         // Settlement
         public bool toggleIgnoreBuildingClassRestrictions = false;
