@@ -108,7 +108,12 @@ namespace ToyBox.BagOfPatches {
             // Cam
             { "8c8b7f25df243dd4799da10e5683ff64", true },   // AfterHorgus_Dialogue - Cue_0024
         };
+        internal static readonly Dictionary<string, bool> EtudeStatusOverridesAnyMythic = new() {
+            // Cam
+            { "d9fd5839ef1a44fe81473fc2bac2078b", true },   // CrusadeEvent05
+        };
 
+        
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
         public static class PcFemale_CheckCondition_Patch {
             public static void Postfix(PcFemale __instance, ref bool __result) {
@@ -167,6 +172,9 @@ namespace ToyBox.BagOfPatches {
                 }
                 if (settings.toggleFriendshipIsMagic) {
                     if (EtudeStatusOverridesFriendshipIsMagic.TryGetValue(key, out var valueFriendshipIsMagic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueFriendshipIsMagic}"); __result = valueFriendshipIsMagic; }
+                }
+                if (settings.toggleDialogRestrictionsMythic) {
+                    if (EtudeStatusOverridesAnyMythic.TryGetValue(key, out var valueDialogRestrictionsMythic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueDialogRestrictionsMythic}"); __result = valueDialogRestrictionsMythic; }
                 }
             }
         }

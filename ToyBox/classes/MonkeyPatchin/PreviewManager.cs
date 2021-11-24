@@ -11,6 +11,7 @@ using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
+using Kingmaker.Localization;
 using Kingmaker.RandomEncounters;
 using Kingmaker.Settings;
 using Kingmaker.UI.Common;
@@ -18,6 +19,7 @@ using Kingmaker.UI.Dialog;
 using Kingmaker.UI.GlobalMap;
 using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.MVVM._PCView.Dialog.Dialog;
+using Kingmaker.UI.MVVM._VM.Tooltip.Utils;
 using Kingmaker.UI.Tooltip;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.Utility;
@@ -27,11 +29,15 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace ToyBox {
     internal class PreviewManager {
+        public static Settings settings = Main.settings;
+        public static Player player = Game.Instance.Player;
         private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
+
         public static KingdomStats.Changes CalculateEventResult(KingdomEvent kingdomEvent, EventResult.MarginType margin, AlignmentMaskType alignment, LeaderType leaderType) {
             var checkMargin = EventResult.MarginToInt(margin);
             var result = new KingdomStats.Changes();
@@ -98,7 +104,7 @@ namespace ToyBox {
                 0,
                 answer.OnSelect.Actions,
                 answer.AlignmentShift
-                ));
+            ));
             while (toCheck.Count > 0) {
                 var item = toCheck.Dequeue();
                 var cueBase = item.Item1;
@@ -110,7 +116,7 @@ namespace ToyBox {
                         currentDepth,
                         cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray(),
                         cue.AlignmentShift
-                        ));
+                    ));
                     if (cue.Answers.Count > 0) {
                         var subAnswer = cue.Answers[0].Get();
                         if (visited.Contains(subAnswer)) {
@@ -129,7 +135,7 @@ namespace ToyBox {
                         currentDepth,
                         page.OnShow.Actions,
                         null
-                        ));
+                    ));
                     if (page.Answers.Count > 0) {
                         var subAnswer = page.Answers[0].Get();
                         if (visited.Contains(subAnswer)) {
@@ -140,7 +146,9 @@ namespace ToyBox {
                         if (page.Answers[0].Get() is BlueprintAnswersList) break;
                     }
                     if (page.Cues.Count > 0) {
-                        foreach (var c in page.Cues) if (c.Get().CanShow()) toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
+                        foreach (var c in page.Cues)
+                            if (c.Get().CanShow())
+                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
                     }
                 }
                 else if (cueBase is BlueprintCheck check) {
@@ -148,7 +156,9 @@ namespace ToyBox {
                     toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
                 }
                 else if (cueBase is BlueprintCueSequence sequence) {
-                    foreach (var c in sequence.Cues) if (c.Get().CanShow()) toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
+                    foreach (var c in sequence.Cues)
+                        if (c.Get().CanShow())
+                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
                     if (sequence.Exit != null) {
                         var exit = sequence.Exit;
                         if (exit.Answers.Count > 0) {
@@ -170,16 +180,17 @@ namespace ToyBox {
             }
             return cueResults;
         }
+
         public static string GetFixedAnswerString(BlueprintAnswer answer, string bind, int index) {
             var flag = Game.Instance.DialogController.Dialog.Type == DialogType.Book;
             string checkFormat = (!flag) ? UIDialog.Instance.AnswerStringWithCheckFormat : UIDialog.Instance.AnswerStringWithCheckBeFormat;
             var text = string.Empty;
             if (DialogSettings.ShowSkillcheckDC) {
-                text = answer.SkillChecksDC.Aggregate(string.Empty, (string current, SkillCheckDC skillCheck) => current + string.Format(checkFormat, UIUtility.PackKeys(new object[]
-                {
-                    TooltipType.SkillcheckDC,
-                    skillCheck.StatType
-                }), LocalizedTexts.Instance.Stats.GetText(skillCheck.StatType), skillCheck.ValueDC));
+                text = answer.SkillChecksDC.Aggregate(string.Empty, (string current, SkillCheckDC skillCheck) => current
+                                                                                                                 + string.Format(checkFormat, UIUtility.PackKeys(new object[] {
+                                                                                                                     TooltipType.SkillcheckDC,
+                                                                                                                     skillCheck.StatType
+                                                                                                                 }), LocalizedTexts.Instance.Stats.GetText(skillCheck.StatType), skillCheck.ValueDC));
             }
             if (DialogSettings.ShowAlignmentRequirements && answer.AlignmentRequirement != AlignmentComponent.None) {
                 text = string.Format(UIDialog.Instance.AlignmentRequirementFormat, UIUtility.GetAlignmentRequirementText(answer.AlignmentRequirement)) + text;
@@ -195,6 +206,7 @@ namespace ToyBox {
                 (!stringByBinding.Empty()) ? stringByBinding : index.ToString(),
                 text + ((!text.Empty()) ? " " : string.Empty) + answer.DisplayText);
         }
+
         [HarmonyPatch(typeof(UIConsts), "GetAnswerString")]
         private static class UIConsts_GetAnswerString_Patch {
             private static void Postfix(ref string __result, BlueprintAnswer answer, string bind, int index) {
@@ -216,8 +228,7 @@ namespace ToyBox {
                         var alignment = data.Item4;
                         var line = new List<string>();
                         if (actions.Length > 0) {
-                            line.AddRange(actions.
-                                SelectMany(action => PreviewUtilities.FormatActionAsList(action)
+                            line.AddRange(actions.SelectMany(action => PreviewUtilities.FormatActionAsList(action)
                                 .Select(actionText => actionText == "" ? "EmptyAction" : actionText)));
                         }
                         if (alignment != null && alignment.Value > 0) {
@@ -235,6 +246,7 @@ namespace ToyBox {
                 }
             }
         }
+
         [HarmonyPatch(typeof(DialogCurrentPart), "Fill")]
         private static class DialogCurrentPart_Fill_Patch {
             private static void Postfix(DialogCurrentPart __instance) {
@@ -260,6 +272,7 @@ namespace ToyBox {
                 }
             }
         }
+
         [HarmonyPatch(typeof(KingdomUIEventWindow), "SetHeader")]
         private static class KingdomUIEventWindow_SetHeader_Patch {
             private static void Postfix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
@@ -335,6 +348,7 @@ namespace ToyBox {
                 }
             }
         }
+
         [HarmonyPatch(typeof(GlobalMapRandomEncounterController), "OnRandomEncounterStarted")]
         private static class GlobalMapRandomEncounterController_OnRandomEncounterStarted_Patch {
             private static AccessTools.FieldRef<GlobalMapRandomEncounterController, TextMeshProUGUI> m_DescriptionRef;
@@ -358,5 +372,48 @@ namespace ToyBox {
                 }
             }
         }
+
+        [HarmonyPatch(typeof(KingdomUIEventWindowFooterSolution), nameof(KingdomUIEventWindowFooterSolution.Initialize))]
+        private static class KingdomUIEventWindowFooter_Initialize_Patch {
+            private static bool Prefix(KingdomUIEventWindowFooterSolution __instance,
+                                        EventSolution eventSolution,
+                                        UnityAction<bool> onToggle,
+                                        ToggleGroup toggleGroup,
+                                        bool isOn = false) {
+                if (!settings.previewDialogResults) return true;
+                __instance.gameObject.SetActive(true);
+                __instance.EventSolution = eventSolution;
+                __instance.Toggle.group = toggleGroup;
+                __instance.Toggle.onValueChanged.RemoveAllListeners();
+                __instance.Toggle.onValueChanged.AddListener(onToggle);
+                string extraText = "";
+                var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
+                var color = isAvail ? "#005800><b>" : "#800000>";
+                if (eventSolution.m_AvailConditions.HasConditions)
+                    extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption()))}]</b></color>";
+                if (eventSolution.m_SuccessEffects.Actions.Length > 0)
+                    extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption()))}]";
+                if (isAvail) {
+                    if (extraText.Length > 0)
+                        __instance.m_TextLabel.text = $"{eventSolution.SolutionText}<size=75%>{extraText}</size>";
+                    else
+                        __instance.m_TextLabel.text = (string)eventSolution.SolutionText;
+                }
+                else if (eventSolution.UnavailingBehaviour == UnavailingBehaviour.ShowPlaceholder) {
+                    if (extraText.Length > 0)
+                        __instance.m_TextLabel.text = $"{eventSolution.UnavailingPlaceholder}<size=75%>{extraText}</size>";
+                    else
+                        __instance.m_TextLabel.text = (string)eventSolution.UnavailingPlaceholder;
+                }
+                else
+                    __instance.gameObject.SetActive(false);
+                __instance.Toggle.interactable = isAvail;
+                __instance.Toggle.isOn = isOn;
+                __instance.m_Disposable?.Dispose();
+                __instance.m_Disposable = __instance.m_TextLabel.SetLinkTooltip();
+                return false;
+            }
+        }
+        
     }
 }
