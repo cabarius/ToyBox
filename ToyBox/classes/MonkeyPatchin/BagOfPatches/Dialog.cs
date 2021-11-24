@@ -229,5 +229,37 @@ namespace ToyBox.BagOfPatches {
                 Mod.Debug($"BlueprintCue_CanShow_Patch - {__instance?.Speaker?.Blueprint?.Name.orange() ?? ""} BP: {__instance} result: {__result}");
             }
         }
+
+
+#if false
+        [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
+        public static class CueSelection_Select_Patch {
+            public static bool Prefix(CueSelection __instance, ref BlueprintCueBase __result) {
+            }
+        }
+#else
+        [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
+        public static class CueSelection_Select_Patch {
+            public static bool Prefix(CueSelection __instance, ref BlueprintCueBase __result) {
+                if (!settings.toggleRandomizeClueSelections) return true;
+                List<BlueprintCueBase> blueprintCueBaseList = null;
+                foreach (BlueprintCueBase blueprintCueBase in __instance.Cues.Dereference()) {
+                    if (blueprintCueBase != null && blueprintCueBase.CanShow()) {
+                        if (blueprintCueBaseList == null)
+                            blueprintCueBaseList = new();
+                        blueprintCueBaseList.Add(blueprintCueBase);
+                    }
+                }
+                if (blueprintCueBaseList == null) {
+                    __result = null;
+                    return false;
+                }
+                int index = UnityEngine.Random.Range(0, blueprintCueBaseList.Count);
+                Mod.Debug($"CueSelection_Select_Patch - index: {index}");
+                __result = blueprintCueBaseList[index];
+                return false;
+            }
+        }
+#endif
     }
 }

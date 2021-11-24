@@ -10,6 +10,7 @@ using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using ModKit;
+using static ModKit.UI;
 using ModKit.Utility;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,6 +180,7 @@ namespace ToyBox.classes.MainUI {
                                             UI.Space(100);
                                             using (UI.VerticalScope()) {
                                                 UI.Label("Stats".yellow());
+                                                UI.ValueAdjuster("Level".cyan(), () => leader.Level, (l) => leader.m_Level = l, 1, 0, 20, 375.width());
                                                 var stats = leader.Stats;
                                                 UI.ValueAdjuster("Attack Bonus".cyan(), () => stats.AttackBonus.BaseValue, (v) => stats.AttackBonus.BaseValue = v, 1, stats.AttackBonus.MinValue, stats.AttackBonus.MaxValue, UI.Width(375));
                                                 UI.ValueAdjuster("Defense Bonus".cyan(), () => stats.DefenseBonus.BaseValue, (v) => stats.DefenseBonus.BaseValue = v, 1, stats.DefenseBonus.MinValue, stats.DefenseBonus.MaxValue, UI.Width(375));
