@@ -5,7 +5,6 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Kingdom;
-using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.Blueprints;
 using ModKit;
 using System.Collections.Generic;
@@ -183,81 +182,6 @@ namespace ToyBox.classes.MainUI {
                 },
                () => { }
             );
-            /*
-            UI.Div(0, 25);
-            UI.HStack("Events", 1,
-                () => {
-                    using (UI.VerticalScope()) {
-                        if (ks.ActiveEvents.Count == 0)
-                            UI.Label("No active events".orange().bold());
-                        foreach (var activeEvent in ks.ActiveEvents) {
-
-                            /* If it's an event not a decree
-                             * Events are associated with Tasks by EventTask
-                             * EventTask is a child of Task
-                             * Task(decree) must also have a corresponding event
-                             * Event(AKA the "Event" in the game) does not have an associated task(EventTask)
-                             
-                            if (activeEvent.AssociatedTask == null) {
-                                using (UI.HorizontalScope()) {
-                                    UI.Label(activeEvent.FullName.cyan(), 350.width());
-                                    25.space();
-                                    UI.Label(activeEvent.EventBlueprint.InitialDescription.StripHTML().orange());
-                                }
-                            }
-                        }
-                    }
-                }
-            );
-            */
-            UI.Div(0, 25);
-            UI.HStack("Decrees", 1,
-                () => {
-                    using (UI.VerticalScope()) {
-                        UI.Toggle("Ignore start restrictions", ref settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
-                        //TODO: toggle to ignore specific restrictions
-                        UI.Toggle("No decree resource costs", ref settings.toggleTaskNoResourcesCost);
-                        if (ks.ActiveTasks.Count() == 0)
-                            UI.Label("No active decrees".orange().bold());
-                        foreach (var activeTask in ks.ActiveEvents) {
-                            if (activeTask.AssociatedTask != null) {
-                                var task = activeTask.AssociatedTask;
-                                using (UI.HorizontalScope()) {
-                                    UI.Label(task.Name.cyan(), 350.width());
-                                    25.space();
-                                    if (task.IsInProgress)
-                                        UI.Label($"Ends in {task.EndsOn - ks.CurrentDay} days", 200.width());
-                                    else {
-                                        UI.ActionButton("Start", () => {
-                                            task.Start();
-                                        }, 200.width());
-                                    }
-                                    25.space();
-
-                                    if (task.IsInProgress) {
-                                        UI.ActionButton("Finish", () => {
-                                            task.m_BonusDays = task.Duration;
-                                        }, 120.width());
-                                        if (task.CanCancelStarted) {
-                                            UI.ActionButton("Cancel", () => {
-                                                task.Cancel();
-                                            }, 120.width());
-                                        }
-                                        else
-                                            123.space();
-                                    }
-                                    else
-                                        249.space();
-                                    25.space();
-                                    UI.Label(task.Description.StripHTML().green());
-                                }
-                            }
-                        }
-                        ks.TimelineManager.UpdateEvents();
-                    }
-                }
-            );
-
             25.space();
             UI.Div();
             SettlementsEditor.OnGUI();
