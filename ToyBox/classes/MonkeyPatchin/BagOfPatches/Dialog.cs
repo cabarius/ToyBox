@@ -45,6 +45,10 @@ namespace ToyBox.BagOfPatches {
             { "372e6b1be6427f04788827503d8e3330" }, // SullWeak_dialogue - Cue 0041
             { "a9802b4720687bc498e0722b89b45ec9" }, // SullWeak_dialogue - Cue 0009
 
+            // Feud of the Faithful
+            { "a2f183f2a53b6eb4ea4337b709eb2320" }, // HurlunRamien_Early_Dialogue - Cue 0098
+            { "5de6be5c80b5f25439151dec4a812714" }, // HurlunRamien_Early_Dialogue - Cue 0100
+
         };
 
         [HarmonyPatch(typeof(CompanionInParty), nameof(CompanionInParty.CheckCondition))]
