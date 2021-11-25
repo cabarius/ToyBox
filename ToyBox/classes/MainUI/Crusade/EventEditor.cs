@@ -21,6 +21,7 @@ namespace ToyBox.classes.MainUI {
             }
             UI.Div(0, 25);
             UI.HStack("Events", 1,
+                () => UI.Toggle("Preview Events", ref settings.previewEventResults),
                 () => UI.Toggle("Instant Events", ref settings.toggleInstantEvent),
                 () => UI.Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
                 () => {
@@ -51,9 +52,9 @@ namespace ToyBox.classes.MainUI {
              UI.HStack("Decrees", 1,
                  () => {
                      using (UI.VerticalScope()) {
-                         UI.Toggle("Ignore start restrictions", ref settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
+                         UI.Toggle("Ignore Start Restrictions", ref settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth());
                          //TODO: toggle to ignore specific restrictions
-                         UI.Toggle("No decree resource costs", ref settings.toggleTaskNoResourcesCost);
+                         UI.Toggle("No Decree Resource Costs", ref settings.toggleTaskNoResourcesCost);
                          if (ks.ActiveTasks.Count() == 0)
                              UI.Label("No active decrees".orange().bold());
                          foreach (var activeTask in ks.ActiveEvents) {
