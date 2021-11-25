@@ -103,13 +103,23 @@ namespace ToyBox.BagOfPatches {
             // Ciar
             { "5e51a15b014a1bb4181f5feaa4f71e32", false },   // KTC_Ciar_FirstVisit - Cue_0014
 
+            // Hand of the Inheritor
+            { "4a056226dce658f4da30d99d851537ec", false },   // Herald_IvoryLabyrinth_dialog - Cue_0011
+            { "0a5a3d097018c1041b1eedb6fb26c5c3", false },   // Herald_IvoryLabyrinth_dialog - Cue_0018
+            { "223ea6c047133024a96a18049ffe7679", true },   // Herraxa_dialogue - Cue_0268
+
         };
         internal static readonly Dictionary<string, bool> FlagInRangeOverridesFriendshipIsMagic = new() {
             // Cam
             { "8c8b7f25df243dd4799da10e5683ff64", true },   // AfterHorgus_Dialogue - Cue_0024
+
+            // Hand of the Inheritor
+            { "308d6b0d4d0c1944dadccf4a4942d085", true },   // Audience_Areelu_c4_dialog - Cue_0067
+            { "e3b2f7241dae25548a35c65729c6f50e", true },   // Audience_Areelu_c4_dialog - Cue_0086
+
         };
         internal static readonly Dictionary<string, bool> EtudeStatusOverridesAnyMythic = new() {
-            // Cam
+            // Crusade Events
             { "d9fd5839ef1a44fe81473fc2bac2078b", true },   // CrusadeEvent05
         };
 
@@ -131,12 +141,13 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        // This is in testing and everything but debug output should be *disabled* for users
         [HarmonyPatch(typeof(ItemsEnough), nameof(ItemsEnough.CheckCondition))]
         public static class ItemsEnough_CheckCondition_Patch {
             public static void Postfix(ItemsEnough __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
                 Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
-                if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+             //   if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }
 

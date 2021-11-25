@@ -46,10 +46,12 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Mythic Dialog Restrictions are beginning to apply to crusade events.
   * **Friendship is Magic** 
     * (***Ronin***) Now for goodie-two-shoes as well!
-    * (***Ronin***) Added support for Ciar
+    * (***Ronin***) Added support for Ciar and the Hand
   * **Alignment Unrestrcted** 
     * (***Ronin***) Included support for dialogs from NPC, not just dialog from the MC
     * (***Ronin***) Fixes for Lann/Wendu's questline
+* **Remote Companion Dialog**
+   	* (***Ronin***) Fixed errors with Wendu and Lann not properly counting as "former" companions
 * **Loot**
   * Added a friendly unit filter toggle to the loot checklist
 * **Crusade Editor**
