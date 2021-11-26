@@ -57,6 +57,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Option to ignore crusade event solution restrictions
   * Cleaned up UI layout and description coloring to match the rest of the mod
   * (***KnightOfSeiros***) Toggle to choose no decree costs
+  * (***KnightOfSeiros***) Now shows preview for decree and event results
 * **Army Editor**
   * Moved army cheats to armies editor
 ### Ver 1.4.11

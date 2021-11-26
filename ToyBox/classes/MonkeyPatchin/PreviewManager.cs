@@ -416,11 +416,7 @@ namespace ToyBox {
                 return false;
             }
         }
-        
-        /* 
-         * Some test here, luckily it works ^^ 
-         * Problem now is I can't find where is the solution results >:(
-         */
+
         [HarmonyPatch(typeof(KingdomUIEventWindow), nameof(KingdomUIEventWindow.SetDescription))]
         private static class KingdomUIEventWindow_SetDescription_Patch {
             private static bool Prefix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
@@ -442,12 +438,15 @@ namespace ToyBox {
                 __instance.m_ResultDescription.text = string.Empty;
             IL_D7:
                 BlueprintKingdomProject blueprintKingdomProject = blueprint as BlueprintKingdomProject;
-                string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null); 
-                if(settings.previewDialogResults && settings.previewDecreeResults) {
-                    mechanicalDescription = "";
-                    var eventSolution = __instance.m_Footer.CurrentEventSolution;
-                    if (eventSolution != null && eventSolution.m_SuccessEffects.Actions.Length > 0)
-                        mechanicalDescription += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption()))}]";
+                string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null);
+                if (settings.previewDialogResults && settings.previewDecreeResults) {
+                    var eventResults = blueprintKingdomProject.Solutions.GetResolutions(blueprintKingdomProject.DefaultResolutionType);
+                    if(eventResults != null) {
+                        foreach (var result in eventResults) {
+                            if (result.Actions != null && result.Actions.Actions.Length > 0)
+                                mechanicalDescription += $"<size=75%>\n[{string.Join(", ", result.Actions.Actions.Select(c => c.GetCaption()))}]</size>";
+                        }
+                    }
                 }
                 __instance.m_MechanicalDescription.text = mechanicalDescription;
                 __instance.m_MechanicalDescription.gameObject.SetActive(((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null) != null);
