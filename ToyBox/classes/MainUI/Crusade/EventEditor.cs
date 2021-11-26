@@ -50,8 +50,8 @@ namespace ToyBox.classes.MainUI {
             
              UI.Div(0, 25);
              UI.HStack("Decrees", 1,
-                 () => UI.Toggle("Preview Decrees", ref settings.previewDecreeResults),
-                 () => UI.Toggle("Ignore Start Restrictions", ref settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth()),
+                () => UI.Toggle("Preview Decrees", ref settings.previewDecreeResults),
+                () => UI.Toggle("Ignore Start Restrictions", ref settings.toggleIgnoreStartTaskRestrictions, UI.AutoWidth()),
                 //TODO: toggle to ignore specific restrictions
                 () => UI.Toggle("No Decree Resource Costs", ref settings.toggleTaskNoResourcesCost),
                 () => {
