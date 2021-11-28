@@ -432,16 +432,16 @@ namespace ToyBox {
                         EventSolution currentEventSolution2 = __instance.m_Footer.CurrentEventSolution;
                         resultDescription.text = ((currentEventSolution2 != null) ? currentEventSolution2.ResultText : null);
                         __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
-                        goto IL_D7;
+
                     }
+                    else
+                        __instance.m_ResultDescription.text = string.Empty;
                 }
-                __instance.m_ResultDescription.text = string.Empty;
-            IL_D7:
                 BlueprintKingdomProject blueprintKingdomProject = blueprint as BlueprintKingdomProject;
                 string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null);
                 if (settings.previewDialogResults && settings.previewDecreeResults) {
                     var eventResults = blueprintKingdomProject.Solutions.GetResolutions(blueprintKingdomProject.DefaultResolutionType);
-                    if(eventResults != null) {
+                    if (eventResults != null) {
                         foreach (var result in eventResults) {
                             if (result.Actions != null && result.Actions.Actions.Length > 0)
                                 mechanicalDescription += $"<size=75%>\n[{string.Join(", ", result.Actions.Actions.Select(c => c.GetCaption()))}]</size>";
