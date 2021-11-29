@@ -53,7 +53,10 @@ namespace ToyBox.BagOfPatches {
 
             [HarmonyPatch(nameof(UnitProgressionData.ExperienceTable), MethodType.Getter)]
             private static bool Prefix(ref BlueprintStatProgression __result, UnitProgressionData __instance) {
-                settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
+                var hashKey = __instance.Owner.HashKey();
+                var perSave = settings.perSave;
+                if (perSave is null) return true;
+                perSave.charIsLegendaryHero.TryGetValue(hashKey, out var isFakeLegendaryHero);
                 //Mod.Trace($"UnitProgressionData_ExperienceTable - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
 
                 if (__instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero)
@@ -70,7 +73,10 @@ namespace ToyBox.BagOfPatches {
 
             [HarmonyPatch(nameof(UnitProgressionData.MaxCharacterLevel), MethodType.Getter)]
             private static bool Prefix(ref int __result, UnitProgressionData __instance) {
-                settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
+                var hashKey = __instance.Owner.HashKey();
+                var perSave = settings.perSave;
+                if (perSave is null) return true;
+                perSave.charIsLegendaryHero.TryGetValue(hashKey, out var isFakeLegendaryHero);
                 //Mod.Trace ($"UnitProgressionData_MaxCharacterLevel - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
 
                 if (__instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero)

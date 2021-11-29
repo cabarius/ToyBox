@@ -44,6 +44,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Bag of Tricks**
   * Moved dialog options into their own section in Bag of Tricks
   * Mythic Dialog Restrictions are beginning to apply to crusade events.
+  * Multiple Choice Reactions - Allows you to choose among reactions to an answer in dialog that exist based on different conidtions that may be active on your character such as being a Lich and an Azata at the same time.
   * **Friendship is Magic** 
     * (***Ronin***) Now for goodie-two-shoes as well!
     * (***Ronin***) Added support for Ciar and the Hand

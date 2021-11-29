@@ -19,6 +19,9 @@ using UnityEngine;
 using Kingmaker.Controllers;
 using Kingmaker.EntitySystem;
 using Random = System.Random;
+using JetBrains.Annotations;
+using Kingmaker.Localization;
+using Kingmaker.ElementsSystem;
 
 namespace ToyBox.BagOfPatches {
     internal static class Dialog {
@@ -234,14 +237,41 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-
-#if false
-        [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
-        public static class CueSelection_Select_Patch {
-            public static bool Prefix(CueSelection __instance, ref BlueprintCueBase __result) {
+        [HarmonyPatch(typeof(DialogController), nameof(DialogController.AddAnswers))]
+        public static class DialogController_AddAnswers_Patch {
+            public static bool Prefix(DialogController __instance, [NotNull] ref IEnumerable<BlueprintAnswerBase> answers, [CanBeNull] BlueprintCueBase continueCue) {
+                List<BlueprintAnswerBase> expandedAnswers = new();
+                foreach (var answerBase in answers) {
+                    if (answerBase is BlueprintAnswer answer) {
+                        if (answer.NextCue is CueSelection cueSelection) {
+                            foreach (var cueBase in cueSelection.Cues.Dereference<BlueprintCueBase>()) {
+                                if (true || cueBase.CanShow()) {
+                                    var multiAnswer = answer.ShallowClone();
+                                    var cueSel = cueSelection.ShallowClone();
+                                    cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
+                                    cueSel.Strategy = Strategy.First;
+                                    multiAnswer.NextCue = cueSel;
+                                    //var locStr = new LocalizedString();
+                                    //var conditionText = $"{string.Join(", ", cueBase.Conditions.Conditions.Select(c => c.GetCaption()))}";
+                                    //if (conditionText.Length > 0)
+                                    //    conditionText = $"[{conditionText}]";
+                                    //locStr.Key = $"{answer.DisplayText} <size=75%>{conditionText}</size>";
+                                    //multiAnswer.Text = locStr;
+                                    expandedAnswers.Add(multiAnswer);
+                                }
+                            }
+                        }
+                        else
+                            expandedAnswers.Add(answer);
+                    }
+                    else
+                        expandedAnswers.Add(answerBase);
+                }
+                answers = expandedAnswers;
+                return true;
             }
         }
-#else
+#if false
         [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
         public static class CueSelection_Select_Patch {
             public static bool Prefix(CueSelection __instance, ref BlueprintCueBase __result) {
@@ -265,5 +295,5 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
+        }
     }
-}

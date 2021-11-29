@@ -4,6 +4,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.Controllers.Dialog;
+using Kingmaker.DialogSystem;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Enums;
@@ -12,6 +13,7 @@ using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
 using Kingmaker.Localization;
+using Kingmaker.PubSubSystem;
 using Kingmaker.RandomEncounters;
 using Kingmaker.Settings;
 using Kingmaker.UI.Common;
@@ -452,6 +454,35 @@ namespace ToyBox {
                 __instance.m_MechanicalDescription.gameObject.SetActive(((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null) != null);
                 __instance.m_Disposables.Add(__instance.m_MechanicalDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
 
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(DialogAnswerView), nameof(DialogAnswerView.SetAnswer))]
+        private static class DialogAnswerView_SetAnswer_Patch {
+            private static bool Prefix(DialogAnswerView __instance, BlueprintAnswer answer) {
+                if (!settings.previewDialogResults) return true;
+                DialogType type = Game.Instance.DialogController.Dialog.Type;
+                string str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
+                var text = UIConsts.GetAnswerString(answer, str, __instance.ViewModel.Index);
+                bool isAvail = answer.CanSelect();
+                if (answer.NextCue.Cues.Count == 1) {
+                    var cue = answer.NextCue.Cues.Dereference<BlueprintCueBase>().FirstOrDefault();
+                    isAvail = cue.CanShow();
+                    var color = isAvail ? "#005800><b>" : "#800000>";
+                    var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
+                    if (conditionText.Length > 0)
+                        text += $"<size=75%><color={color}>[{conditionText}]</color></size>";
+                }
+                __instance.AnswerText.text = text;
+                Color32 color32 = isAvail ? DialogAnswerView.Colors.NormalAnswer : DialogAnswerView.Colors.DisabledAnswer;
+                if (type == DialogType.Common && answer.IsAlreadySelected() && (Game.Instance.DialogController.NextCueWasShown(answer) || !Game.Instance.DialogController.NextCueHasNewAnswers(answer)))
+                    color32 = DialogAnswerView.Colors.SelectedAnswer;
+                __instance.AnswerText.color = (Color)color32;
+                __instance.AddDisposable(Game.Instance.Keyboard.Bind(str, new Action(__instance.Confirm)));
+                if (__instance.ViewModel.Index != 1 || type != DialogType.Interchapter && type != DialogType.Epilogue)
+                    return false;
+                __instance.AddDisposable(Game.Instance.Keyboard.Bind("NextOrEnd", new Action(__instance.Confirm)));
                 return false;
             }
         }
