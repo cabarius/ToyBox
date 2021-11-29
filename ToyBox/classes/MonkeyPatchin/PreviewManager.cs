@@ -380,6 +380,8 @@ namespace ToyBox {
                                         UnityAction<bool> onToggle,
                                         ToggleGroup toggleGroup,
                                         bool isOn = false) {
+                // Should it be previewEventResults here?
+                // Or previewDialogResults && previewEventResults
                 if (!settings.previewDialogResults) return true;
                 __instance.gameObject.SetActive(true);
                 __instance.EventSolution = eventSolution;
@@ -414,6 +416,44 @@ namespace ToyBox {
                 return false;
             }
         }
-        
+
+        [HarmonyPatch(typeof(KingdomUIEventWindow), nameof(KingdomUIEventWindow.SetDescription))]
+        private static class KingdomUIEventWindow_SetDescription_Patch {
+            private static bool Prefix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
+                BlueprintKingdomEventBase blueprint = kingdomEventView.Blueprint;
+                __instance.m_Description.text = blueprint.LocalizedDescription;
+                __instance.m_Disposables.Add(__instance.m_Description.SetLinkTooltip(null, null, default(TooltipConfig)));
+                bool flag = kingdomEventView.IsCrusadeEvent && kingdomEventView.IsFinished;
+                __instance.m_ResultDescription.gameObject.SetActive(flag);
+                if (flag) {
+                    EventSolution currentEventSolution = __instance.m_Footer.CurrentEventSolution;
+                    if (((currentEventSolution != null) ? currentEventSolution.ResultText : null) != null) {
+                        TMP_Text resultDescription = __instance.m_ResultDescription;
+                        EventSolution currentEventSolution2 = __instance.m_Footer.CurrentEventSolution;
+                        resultDescription.text = ((currentEventSolution2 != null) ? currentEventSolution2.ResultText : null);
+                        __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
+
+                    }
+                    else
+                        __instance.m_ResultDescription.text = string.Empty;
+                }
+                BlueprintKingdomProject blueprintKingdomProject = blueprint as BlueprintKingdomProject;
+                string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null);
+                if (settings.previewDialogResults && settings.previewDecreeResults) {
+                    var eventResults = blueprintKingdomProject.Solutions.GetResolutions(blueprintKingdomProject.DefaultResolutionType);
+                    if (eventResults != null) {
+                        foreach (var result in eventResults) {
+                            if (result.Actions != null && result.Actions.Actions.Length > 0)
+                                mechanicalDescription += $"<size=75%>\n[{string.Join(", ", result.Actions.Actions.Select(c => c.GetCaption()))}]</size>";
+                        }
+                    }
+                }
+                __instance.m_MechanicalDescription.text = mechanicalDescription;
+                __instance.m_MechanicalDescription.gameObject.SetActive(((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null) != null);
+                __instance.m_Disposables.Add(__instance.m_MechanicalDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
+
+                return false;
+            }
+        }
     }
 }

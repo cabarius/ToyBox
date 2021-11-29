@@ -326,7 +326,7 @@ namespace ToyBox {
         public string searchTextEnchantments = "";
 
         // Dialog & Previews (Dialogs, Events ,etc)
-
+        public bool previewDecreeResults = false;
         public bool previewEventResults = false;
         public bool previewDialogResults = false;
         public bool previewAlignmentRestrictedDialog = false;
