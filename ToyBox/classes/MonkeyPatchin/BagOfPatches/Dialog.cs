@@ -177,8 +177,8 @@ namespace ToyBox.BagOfPatches {
             // Bad Blood
             { "c3ca34383f9ee3a4e9908ce68a2e828b", true }, // MongrelsDefeated_dialogue - Cue 0001
 
-            // Bad Blood
-        //    { "c3ca34383f9ee3a4e9908ce68a2e828b", true }, // SullWeak_dialogue - Cue 0041
+            // More Than Nothing
+            { "cb4cc74067ccf074aad0974519a6013b", true }, // FoxMyself_dialogue - Cue 0001
 
         };
 
