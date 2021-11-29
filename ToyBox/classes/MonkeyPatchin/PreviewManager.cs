@@ -444,7 +444,7 @@ namespace ToyBox {
                     if (eventResults != null) {
                         foreach (var result in eventResults) {
                             if (result.Actions != null && result.Actions.Actions.Length > 0)
-                                mechanicalDescription += $"<size=75%>\n[{string.Join(", ", result.Actions.Actions.Select(c => c.GetCaption()))}]</size>";
+                                mechanicalDescription += $"\n<size=67%><b>Results Preview   </b>\n{string.Join("\n", result.Actions.Actions.Select(c => c.GetCaption()))}</size>";
                         }
                     }
                 }
