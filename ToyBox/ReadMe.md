@@ -52,6 +52,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * (***Ronin***) Fixes for Lann/Wendu's questline
 * **Remote Companion Dialog**
    	* (***Ronin***) Fixed errors with Wendu and Lann not properly counting as "former" companions
+    * (***Ronin***) Fixed errors with Nenio's final quest
 * **Loot**
   * Added a friendly unit filter toggle to the loot checklist
 * **Crusade Editor**
