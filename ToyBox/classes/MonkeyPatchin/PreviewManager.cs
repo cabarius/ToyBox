@@ -461,7 +461,7 @@ namespace ToyBox {
         [HarmonyPatch(typeof(DialogAnswerView), nameof(DialogAnswerView.SetAnswer))]
         private static class DialogAnswerView_SetAnswer_Patch {
             private static bool Prefix(DialogAnswerView __instance, BlueprintAnswer answer) {
-                if (!settings.previewDialogResults) return true;
+                if (!settings.previewDialogResults && !settings.toggleShowAnswersForEachConditionalResponse) return true;
                 DialogType type = Game.Instance.DialogController.Dialog.Type;
                 string str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
                 var text = UIConsts.GetAnswerString(answer, str, __instance.ViewModel.Index);
@@ -472,7 +472,7 @@ namespace ToyBox {
                     var color = isAvail ? "#005800><b>" : "#800000>";
                     var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
                     if (conditionText.Length > 0)
-                        text += $"<size=75%><color={color}>[{conditionText}]</color></size>";
+                        text += $"<size=75%><color={color}[{conditionText}]</color></size>";
                 }
                 __instance.AnswerText.text = text;
                 Color32 color32 = isAvail ? DialogAnswerView.Colors.NormalAnswer : DialogAnswerView.Colors.DisabledAnswer;
