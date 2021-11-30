@@ -44,7 +44,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Bag of Tricks**
   * Moved dialog options into their own section in Bag of Tricks
   * Mythic Dialog Restrictions are beginning to apply to crusade events.
-  * Expand Answers For Conditional Responses - Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on.
+  * **Expand Answers For Conditional Responses** - Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on.
   * **Friendship is Magic** 
     * (***Ronin***) Now for goodie-two-shoes as well!
     * (***Ronin***) Added support for Ciar and the Hand
