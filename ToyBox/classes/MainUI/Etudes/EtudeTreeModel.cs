@@ -210,7 +210,7 @@ namespace ToyBox {
             var result = new List<BlueprintGuid>();
 
             foreach (var conflictingGroup in loadedEtudes[etudeID].ConflictingGroups) {
-                foreach (var etude in EtudesTreeModel.Instance.conflictingGroups[conflictingGroup].Etudes) {
+                foreach (var etude in Instance.conflictingGroups[conflictingGroup].Etudes) {
                     if (result.Contains(etude))
                         continue;
                     result.Add(etude);

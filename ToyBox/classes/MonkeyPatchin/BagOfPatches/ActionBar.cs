@@ -67,7 +67,7 @@ namespace ToyBox.BagOfPatches {
                 var acronym = __instance.transform.Find("BackgroundIcon/ActionBarAcronym-ToyBox");
                 if (acronym == null) {
                     var count = __instance.transform.Find("BackgroundIcon/Count");
-                    acronym = GameObject.Instantiate(count, icon.transform);
+                    acronym = UnityEngine.Object.Instantiate(count, icon.transform);
                     acronym.transform.SetSiblingIndex(4);
                     acronym.name = "ActionBarAcronym-ToyBox";
                 }

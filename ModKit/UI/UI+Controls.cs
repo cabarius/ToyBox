@@ -8,10 +8,10 @@ using System.Linq;
 namespace ModKit {
     public static partial class UI {
         private static readonly HashSet<Type> widthTypes = new() {
-            UI.Width(0).GetType(),
-            UI.MinWidth(0).GetType(),
-            UI.MaxWidth(0).GetType(),
-            UI.AutoWidth().GetType()
+            Width(0).GetType(),
+            MinWidth(0).GetType(),
+            MaxWidth(0).GetType(),
+            AutoWidth().GetType()
         };
         public static GUILayoutOption[] AddDefaults(this GUILayoutOption[] options, params GUILayoutOption[] desired) {
             foreach (var option in options) {
@@ -39,11 +39,11 @@ namespace ModKit {
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
         public static void DescriptiveLabel(string title, string description, params GUILayoutOption[] options) {
-            options = options.AddDefaults(UI.Width(300));
-            using (UI.HorizontalScope()) {
-                UI.Label(title, options);
-                UI.Space(25);
-                UI.Label(description);
+            options = options.AddDefaults(Width(300));
+            using (HorizontalScope()) {
+                Label(title, options);
+                Space(25);
+                Label(description);
             }
         }
         public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
@@ -175,18 +175,18 @@ namespace ModKit {
         }
 
         public static void DangerousActionButton(string title, string warning, ref bool areYouSureState ,Action action, params GUILayoutOption[] options) {
-            using (UI.HorizontalScope()) {
+            using (HorizontalScope()) {
                 var areYouSure = areYouSureState;
                 ActionButton(title, () => { areYouSure = !areYouSure; });
                 if (areYouSureState) {
-                    UI.Space(25);
-                    UI.Label("Are you sure?".yellow());
-                    UI.Space(25);
+                    Space(25);
+                    Label("Are you sure?".yellow());
+                    Space(25);
                     ActionButton("YES".yellow().bold(), action);
-                    UI.Space(10);
+                    Space(10);
                     ActionButton("NO".green(), () => areYouSure = false);
-                    UI.Space(25);
-                    UI.Label(warning.orange());
+                    Space(25);
+                    Label(warning.orange());
                 }
                 areYouSureState = areYouSure;
             }
@@ -197,20 +197,20 @@ namespace ModKit {
         public static bool ValueAdjuster(ref int value, int increment = 1, int min = 0, int max = int.MaxValue) {
             var v = value;
             if (v > min)
-                ActionButton(" < ", () => { v = Math.Max(v - increment, min); }, UI.textBoxStyle, AutoWidth());
+                ActionButton(" < ", () => { v = Math.Max(v - increment, min); }, textBoxStyle, AutoWidth());
             else {
-                UI.Space(-21);
-                ActionButton("min ".cyan(), () => { }, UI.textBoxStyle, AutoWidth());
+                Space(-21);
+                ActionButton("min ".cyan(), () => { }, textBoxStyle, AutoWidth());
             }
             Space(-8);
             var temp = false;
-            UI.Button($"{v}".orange().bold(), ref temp, UI.textBoxStyle, AutoWidth());
+            Button($"{v}".orange().bold(), ref temp, textBoxStyle, AutoWidth());
             Space(-8);
             if (v < max)
-                ActionButton(" > ", () => { v = Math.Min(v + increment, max); }, UI.textBoxStyle, AutoWidth());
+                ActionButton(" > ", () => { v = Math.Min(v + increment, max); }, textBoxStyle, AutoWidth());
             else {
-                ActionButton(" max".cyan(), () => { }, UI.textBoxStyle, AutoWidth());
-                UI.Space(-27);
+                ActionButton(" max".cyan(), () => { }, textBoxStyle, AutoWidth());
+                Space(-27);
             }
             if (v != value) {
                 value = v;
@@ -228,19 +228,19 @@ namespace ModKit {
 
         public static bool ValueAdjuster(string title, ref int value, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             var changed = false;
-            using (UI.HorizontalScope(options)) {
-                UI.Label(title);
-                changed = UI.ValueAdjuster(ref value, increment, min, max);
+            using (HorizontalScope(options)) {
+                Label(title);
+                changed = ValueAdjuster(ref value, increment, min, max);
             }
             return changed;
         }
         public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue) {
             var changed = false;
-            using (UI.HorizontalScope(UI.Width(400))) {
-                UI.Label(title.cyan(), UI.Width(300));
-                UI.Space(15);
+            using (HorizontalScope(Width(400))) {
+                Label(title.cyan(), Width(300));
+                Space(15);
                 var value = get();
-                changed = UI.ValueAdjuster(ref value, increment, min, max);
+                changed = ValueAdjuster(ref value, increment, min, max);
                 if (changed)
                     set(value);
             }
@@ -248,11 +248,11 @@ namespace ModKit {
         }
         public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             var changed = false;
-            using (UI.HorizontalScope()) {
-                UI.Label(title.cyan(), options);
-                UI.Space(15);
+            using (HorizontalScope()) {
+                Label(title.cyan(), options);
+                Space(15);
                 var value = get();
-                changed = UI.ValueAdjuster(ref value, increment, min, max);
+                changed = ValueAdjuster(ref value, increment, min, max);
                 if (changed)
                     set(value);
             }
@@ -265,8 +265,8 @@ namespace ModKit {
             var changed = false;
             var value = get();
             var inc = increment;
-            using (UI.HorizontalScope(options)) {
-                Label(title.cyan(), UI.ExpandWidth(true));
+            using (HorizontalScope(options)) {
+                Label(title.cyan(), ExpandWidth(true));
                 Space(25);
                 var fieldWidth = GUI.skin.textField.CalcSize(new GUIContent(max.ToString())).x;
                 if (ValueAdjuster(ref value, inc, min, max)) {

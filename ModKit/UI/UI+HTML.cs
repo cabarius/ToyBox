@@ -25,8 +25,8 @@ namespace ModKit {
             }
             bool result;
             Rect rect;
-            using (UI.HorizontalScope()) {
-                UI.Space(4.point());
+            using (HorizontalScope()) {
+                Space(4.point());
                 result = GL.Button(title, linkStyle, options);
                 rect = GUILayoutUtility.GetLastRect();
             }

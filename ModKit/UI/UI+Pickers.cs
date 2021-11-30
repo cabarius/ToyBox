@@ -126,7 +126,7 @@ namespace ModKit {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                UI.Space(25);
+                Space(25);
                 changed = EnumGrid(ref value, xCols, null, options);
             }
             return changed;
@@ -135,7 +135,7 @@ namespace ModKit {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                UI.Space(25);
+                Space(25);
                 changed = EnumGrid(ref value, 0, null, options);
             }
             return changed;
@@ -145,7 +145,7 @@ namespace ModKit {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                UI.Space(25);
+                Space(25);
                 changed = EnumGrid(ref value, xCols, null, style, options);
             }
             return changed;
@@ -155,7 +155,7 @@ namespace ModKit {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                UI.Space(25);
+                Space(25);
                 changed = EnumGrid(ref value, xCols, titleFormater, options);
             }
             return changed;
@@ -164,7 +164,7 @@ namespace ModKit {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                UI.Space(25);
+                Space(25);
                 changed = EnumGrid(ref value, xCols, titleFormater, style, options);
             }
             return changed;
@@ -173,7 +173,7 @@ namespace ModKit {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
-                UI.Space(25);
+                Space(25);
                 var value = get();
                 changed = EnumGrid(ref value, 0, null, options);
                 if (changed)
@@ -232,12 +232,12 @@ namespace ModKit {
                 style = GUI.skin.button;
             var changed = false;
             if (searchText != null) {
-                UI.ActionTextField(
+                ActionTextField(
                     ref searchText,
                     "itemSearchText",
                     (text) => { changed = true; },
                     () => { },
-                    xCols == 1 ? options : new GUILayoutOption[] { UI.Width(300) });
+                    xCols == 1 ? options : new GUILayoutOption[] { Width(300) });
                 if (searchText?.Length > 0) {
                     var searchStr = searchText.ToLower();
                     items = items.Where(i => titler(i).ToLower().Contains(searchStr)).ToList();
@@ -257,7 +257,7 @@ namespace ModKit {
                     selectedItemIndex = adjustedIndex;
                     changed = true;
                 }
-                UI.ActionSelectionGrid(
+                ActionSelectionGrid(
                     ref selectedItemIndex,
                     titles.ToArray(),
                     xCols,
@@ -270,7 +270,7 @@ namespace ModKit {
                 //if (changed) Mod.Log($"sel index: {selectedItemIndex} sel: {selected}");
             }
             else {
-                UI.Label("No Items".grey(), options);
+                Label("No Items".grey(), options);
             }
             return changed;
         }
@@ -283,7 +283,7 @@ namespace ModKit {
                 int xCols,
                 params GUILayoutOption[] options
                 ) where T : class 
-            => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, xCols, UI.buttonStyle, options);
+            => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, xCols, buttonStyle, options);
         public static bool GridPicker<T>(
                 string title,
                 ref T selected, List<T> items,
@@ -292,7 +292,7 @@ namespace ModKit {
                 ref string searchText,
                 params GUILayoutOption[] options
                 ) where T : class 
-            => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 6, UI.buttonStyle, options);
+            => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 6, buttonStyle, options);
 
         // VPicker
         public static bool VPicker<T>(
@@ -309,10 +309,10 @@ namespace ModKit {
                 style = GUI.skin.button;
             var changed = false;
             if (title != null)
-                UI.Label(title, options);
+                Label(title, options);
             extras?.Invoke();
-            UI.Div();
-            changed = UI.GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 1, options);
+            Div();
+            changed = GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 1, options);
             return changed;
         }
         public static bool VPicker<T>(
@@ -324,7 +324,7 @@ namespace ModKit {
                 Action extras,
                 params GUILayoutOption[] options
                 ) where T : class 
-            => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, UI.buttonStyle, options);
+            => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, buttonStyle, options);
         public static bool VPicker<T>(
                 string title,
                 ref T selected, List<T> items,
@@ -333,6 +333,6 @@ namespace ModKit {
                 ref string searchText,
                 params GUILayoutOption[] options
                 ) where T : class
-            => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, () => { }, UI.buttonStyle, options);
+            => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, () => { }, buttonStyle, options);
     }
 }

@@ -72,21 +72,21 @@ namespace ModKit {
             var state = toggle;
             if (TogglePrivate("", ref isOn, isEmpty, true, 0, options))
                 state = state.Flip();
-            UI.Space(-10);
+            Space(-10);
             if (state == ToggleState.None)
-                UI.Space(35);
+                Space(35);
             else {
                 var deepTitle = state switch {
                     ToggleState.On => "≪",
                     ToggleState.Off => "≫",
                     _ => ""
                 };
-                UI.ActionButton(deepTitle, () => {
+                ActionButton(deepTitle, () => {
                     state = state.Flip();
                     applyToChildren(state);
-                }, toggleStyle, UI.Width(35));
+                }, toggleStyle, Width(35));
             }
-            UI.Label(title, toggleStyle);
+            Label(title, toggleStyle);
             toggle = state;
         }
 

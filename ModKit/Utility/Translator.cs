@@ -77,7 +77,7 @@ namespace ModKit {
             var toLanguage = "en";//English
             var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={fromLanguage}&tl={toLanguage}&dt=t&q={Uri.EscapeDataString(text)}";
             var webClient = new WebClient {
-                Encoding = System.Text.Encoding.UTF8
+                Encoding = Encoding.UTF8
             };
             try {
                 var result = webClient.DownloadString(url);

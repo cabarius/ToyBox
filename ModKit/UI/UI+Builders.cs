@@ -95,7 +95,7 @@ namespace ModKit {
                 selected = 0;
             var sel = selected;
             var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
-            UI.SelectionGrid(ref selected, titles.ToArray(), 8, UI.Width(UI.ummWidth - 60));
+            SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60));
             GL.BeginVertical("box");
             header?.Invoke();
             actions[selected].action();

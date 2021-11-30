@@ -108,10 +108,10 @@ namespace ToyBox {
 
         public List<SimpleBlueprint> GetBlueprints() {
             if (blueprints == null) {
-                if (BlueprintLoader.Shared.IsLoading) { return null; }
+                if (Shared.IsLoading) { return null; }
                 else {
                     Mod.Debug($"calling BlueprintLoader.Load");
-                    BlueprintLoader.Shared.Load((bps) => {
+                    Shared.Load((bps) => {
                         _blueprintsInProcess = bps.ToList();
                         blueprints = _blueprintsInProcess;
                         Mod.Debug($"success got {bps.Count()} bluerints");
