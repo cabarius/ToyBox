@@ -333,7 +333,9 @@ namespace ToyBox {
         public bool previewRandomEncounters = false;
         public bool toggleRemoteCompanionDialog = false;
         public bool toggleExCompanionDialog = false;
-        public bool toggleRandomizeClueSelections = false;
+        public bool toggleRandomizeCueSelections = false;
+        public bool toggleShowAnswersForEachConditionalResponse = false;
+        public bool toggleShowAllAnswersForEachConditionalResponse = false;
 
         // Etudes
         public bool showEtudeComments = true;

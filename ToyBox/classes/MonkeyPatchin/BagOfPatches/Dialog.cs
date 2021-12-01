@@ -19,6 +19,10 @@ using UnityEngine;
 using Kingmaker.Controllers;
 using Kingmaker.EntitySystem;
 using Random = System.Random;
+using JetBrains.Annotations;
+using Kingmaker.Localization;
+using Kingmaker.ElementsSystem;
+using Kingmaker.DialogSystem.State;
 
 namespace ToyBox.BagOfPatches {
     internal static class Dialog {
@@ -234,18 +238,79 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(DialogController), nameof(DialogController.AddAnswers))]
+        public static class DialogController_AddAnswers_Patch {
+            public static bool Prefix(DialogController __instance, [NotNull] ref IEnumerable<BlueprintAnswerBase> answers, [CanBeNull] BlueprintCueBase continueCue) {
+                if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
+                List<BlueprintAnswerBase> expandedAnswers = new();
+                foreach (var answerBase in answers) {
+                    if (answerBase is BlueprintAnswer answer) {
+                        if (answer.NextCue is CueSelection cueSelection) {
+                            Mod.Debug($"checking: {answer.name} - {cueSelection.Cues.Count} {answer.Text}");
 
+                            if (cueSelection.Cues.Count <= 1)
+                                expandedAnswers.Add(answer);
+                            else
+                                foreach (var cueBase in cueSelection.Cues.Dereference<BlueprintCueBase>()) {
+                                    if (answer.ShowOnce) {
+                                        var dialog = Game.Instance.Player.Dialog;
+                                        var dialogController = Game.Instance.DialogController;
+                                        if (dialogController.LocalSelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
+                                            continue;
+                                        if (dialog.SelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
+                                            continue;
+                                    }
+                                    if (settings.toggleShowAllAnswersForEachConditionalResponse || cueBase.CanShow()) {
+                                        var multiAnswer = answer.ShallowClone();
+                                        var cueSel = cueSelection.ShallowClone();
+                                        cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
+                                        cueSel.Strategy = Strategy.First;
+                                        multiAnswer.NextCue = cueSel;
+                                        expandedAnswers.Add(multiAnswer);
+                                    }
+                                }
+                        }
+                        else
+                            expandedAnswers.Add(answer);
+                    }
+                    else
+                        expandedAnswers.Add(answerBase);
+                }
+                answers = expandedAnswers;
+                return true;
+            }
+        }
+
+#if false
+        [HarmonyPatch(typeof(BlueprintAnswer), nameof(BlueprintAnswer.CanShow))]
+        public static class BlueprintAnswer_CanShow_Patch {
+            public static bool Prefix(BlueprintAnswer __instance, ref bool __result) {
+                if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
+                if (__instance.ShowOnce) {
+                    var dialog = Game.Instance.Player.Dialog;
+                    var dialogController = Game.Instance.DialogController;
+                    var matchingSelectedAnswers = dialog.SelectedAnswers.Where(a => a.AssetGuid == __instance.AssetGuid);
+                    Mod.Debug($"matchingAnswers = {string.Join(", ", matchingSelectedAnswers.Select(a => a.name))}");
+                    if (__instance.ShowOnceCurrentDialog) {
+                        if (dialogController.LocalSelectedAnswers.Where(a => a.AssetGuid == __instance.AssetGuid).Any()) {
+                            __result = true;
+                            return false;
+                        }
+                    }
+                    else if (matchingSelectedAnswers.Any()) {
+                        __result = true;
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+#endif
 #if false
         [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
         public static class CueSelection_Select_Patch {
             public static bool Prefix(CueSelection __instance, ref BlueprintCueBase __result) {
-            }
-        }
-#else
-        [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
-        public static class CueSelection_Select_Patch {
-            public static bool Prefix(CueSelection __instance, ref BlueprintCueBase __result) {
-                if (!settings.toggleRandomizeClueSelections) return true;
+                if (!settings.toggleRandomizeCueSelections) return true;
                 List<BlueprintCueBase> blueprintCueBaseList = null;
                 foreach (BlueprintCueBase blueprintCueBase in __instance.Cues.Dereference()) {
                     if (blueprintCueBase != null && blueprintCueBase.CanShow()) {
