@@ -171,6 +171,8 @@ namespace ToyBox {
                 Space(25);
                 Toggle("Decrees", ref settings.previewDecreeResults);
                 Space(25);
+                Toggle("Relic Info", ref settings.previewRelicResults);
+                Space(25);
                 BindableActionButton(PreviewDialogResults);
             });
             Div(0, 25);

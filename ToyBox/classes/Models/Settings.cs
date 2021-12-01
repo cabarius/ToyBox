@@ -332,6 +332,7 @@ namespace ToyBox {
         // Dialog & Previews (Dialogs, Events ,etc)
         public bool previewDecreeResults = false;
         public bool previewEventResults = false;
+        public bool previewRelicResults = false;
         public bool previewDialogResults = false;
         public bool previewAlignmentRestrictedDialog = false;
         public bool previewRandomEncounters = false;

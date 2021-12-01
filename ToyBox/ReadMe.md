@@ -1,15 +1,16 @@
 # ToyBox
 ### Now with 400+ Cheats, Tweaks and Quality of Life Improvements
-* **Bag of Tricks**: 113 (or 144 depending on how you count)
+* **Bag of Tricks**: 142 (or 173 depending on how you count)
 * **Level Up & Multiclass**: 57
 * **Party Editor**: 67
 * **Loot Checklist**: 4
 * **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
 * **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
-* **Crusade**: 36
-* **Armies**: 4
+* **Crusade**: 38
+* **Armies**: 22
+* **Events/Decrees**: 9
 * **Etudes**: 6225 x 3 (start, unstart, complete)
-* **Quest Resolution**: 1
+* **Quest Resolution**: 4
 
 **Please backup early and backup often.**
 
@@ -41,6 +42,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Armies Editor**
   * Add squads in Army Editor
 ### Ver 1.4.13 (Coming Soon)
+* **Bag of Tricks**
+  * Preview Relic Info (*thanks to rathtr*)
 ### Ver 1.4.12
 * **Bag of Tricks**
   * Cheat to let you enable Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)
