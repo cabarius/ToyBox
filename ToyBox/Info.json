@@ -2,7 +2,7 @@
     "Id": "ToyBox",
     "DisplayName": "ToyBox (a bag of tricks)",
     "Author": "Narria",
-    "Version": "1.4.12",
+    "Version": "1.4.13",
     "ManagerVersion": "0.23.0",
     "Requirements": [],
     "AssemblyName": "ToyBox.dll",

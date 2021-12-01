@@ -1,15 +1,16 @@
 # ToyBox
 ### Now with 400+ Cheats, Tweaks and Quality of Life Improvements
-* **Bag of Tricks**: 113 (or 144 depending on how you count)
+* **Bag of Tricks**: 142 (or 173 depending on how you count)
 * **Level Up & Multiclass**: 57
 * **Party Editor**: 67
 * **Loot Checklist**: 4
 * **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
 * **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
-* **Crusade**: 36
-* **Armies**: 4
+* **Crusade**: 38
+* **Armies**: 22
+* **Events/Decrees**: 9
 * **Etudes**: 6225 x 3 (start, unstart, complete)
-* **Quest Resolution**: 1
+* **Quest Resolution**: 4
 
 **Please backup early and backup often.**
 
@@ -37,14 +38,21 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.13 (Coming Later)
+### Ver 1.4.14 (Coming Later)
 * **Armies Editor**
   * Add squads in Army Editor
-### Ver 1.4.12 (Coming Soon)
+### Ver 1.4.13 (Coming Soon)
 * **Bag of Tricks**
+  * Preview Relic Info (*thanks to rathtr*)
+### Ver 1.4.12
+* **Bag of Tricks**
+  * Cheat to let you enable Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)
+  * Fixed backwards default X rotation when camera mods are enabled
+  * Options to Invert Mouse X and Y Axis in camera settings
   * Moved dialog options into their own section in Bag of Tricks
   * Mythic Dialog Restrictions are beginning to apply to crusade events.
   * **Expand Answers For Conditional Responses** - Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on.
+    * Option to see unavailable answers so you can see the conditions you are not meeting
   * **Friendship is Magic** 
     * (***Ronin***) Now for goodie-two-shoes as well!
     * (***Ronin***) Added support for Ciar and the Hand

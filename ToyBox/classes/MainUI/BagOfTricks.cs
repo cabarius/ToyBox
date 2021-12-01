@@ -135,8 +135,8 @@ namespace ToyBox {
                             KeyBindPicker("TeleportParty", "Whole Party", 0, 200);
                         }
                     }
-                    UI.Space(25);
-                    UI.Label("You can enable hot keys to teleport members of your party to your mouse cursor on Area or the Global Map".green());
+                    Space(25);
+                    Label("You can enable hot keys to teleport members of your party to your mouse cursor on Area or the Global Map".green());
                 });
             Div(0, 25);
             HStack("Common", 2,
@@ -145,8 +145,8 @@ namespace ToyBox {
                 () => BindableActionButton(RerollPerception),
                 () => {
                     BindableActionButton(RerollInteractionSkillChecks);
-                    UI.Space(-75);
-                    UI.Label("This resets all the skill check rolls for all interactable objects in the area".green());
+                    Space(-75);
+                    Label("This resets all the skill check rolls for all interactable objects in the area".green());
                 },
                 () => {
                     NonBindableActionButton("Set Perception to 40", () => {
@@ -171,6 +171,8 @@ namespace ToyBox {
                 Space(25);
                 Toggle("Decrees", ref settings.previewDecreeResults);
                 Space(25);
+                Toggle("Relic Info", ref settings.previewRelicResults);
+                Space(25);
                 BindableActionButton(PreviewDialogResults);
             });
             Div(0, 25);
@@ -178,17 +180,17 @@ namespace ToyBox {
                 () => {
                     Toggle("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red(), ref settings.toggleAllowAnyGenderRomance, 300.width());
                     25.space();
-                    UI.Label("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple));
+                    Label("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple));
                 },
                 () => {
                     Toggle("Jealousy Begone!".bold(), ref settings.toggleMultipleRomance, 300.width());
                     25.space();
-                    UI.Label("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green());
+                    Label("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green());
                 },
                 () => {
                     Toggle("Friendship is Magic".bold(), ref settings.toggleFriendshipIsMagic, 300.width());
                     25.space();
-                    UI.Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
+                    Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
                 },
                 () => {
                     Toggle("Expand Dialog To Include Remote Companions".bold(), ref settings.toggleRemoteCompanionDialog);
@@ -213,18 +215,18 @@ namespace ToyBox {
                         }
                     }
                     50.space();
-                    UI.Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".green());
+                    Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".green());
                 },
 #if DEBUG
                 () => {
                     Toggle("Randomize NPC Responses To Dialog Choices", ref settings.toggleRandomizeCueSelections);
                     50.space();
-                    UI.Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() +"\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
+                    Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
                 },
 #endif
                 () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
                 () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
-                () => UI.Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
+                () => Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
 #if DEBUG
                 () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything),
 #endif
@@ -234,12 +236,12 @@ namespace ToyBox {
             HStack("Quality of Life", 1,
                 () => {
                     Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);
-                    UI.Space(25);
+                    Space(25);
                     Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
-                () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); UI.Space(25); UI.Label("Hold down shift during launch to bypass".green()); },
+                () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); Space(25); Label("Hold down shift during launch to bypass".green()); },
                 () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ", ref settings.toggleWidenActionBarGroups),
                 () => {
                     if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
@@ -247,17 +249,17 @@ namespace ToyBox {
                     }
                 },
                 () => {
-                    Toggle("Icky Stuff Begone!!!", ref settings.toggleReplaceModelMenu, UI.AutoWidth());
+                    Toggle("Icky Stuff Begone!!!", ref settings.toggleReplaceModelMenu, AutoWidth());
                     if (settings.toggleReplaceModelMenu) {
                         Space(25);
-                        using (VerticalScope(UI.Width(250))) {
+                        using (VerticalScope(Width(250))) {
                             Toggle("Spiders Begone!", ref settings.toggleSpiderBegone);
                             Toggle("Vescavors Begone!", ref settings.toggleVescavorsBegone);
                             Toggle("Retrievers Begone!", ref settings.toggleRetrieversBegone);
                         }
                     }
-                    UI.Space(25);
-                    UI.Label("Some players find spiders and other swarms icky. This replaces them with something more pleasent".green());
+                    Space(25);
+                    Label("Some players find spiders and other swarms icky. This replaces them with something more pleasent".green());
                 },
                 () => Toggle("Make tutorials not appear if disabled in settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
@@ -266,7 +268,7 @@ namespace ToyBox {
                     var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
                     Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot);
                     if (settings.toggleShiftClickToUseInventorySlot) {
-                        UI.Space(25);
+                        Space(25);
                         ModifierPicker("InventoryUseModifier", "", 0);
                     }
                 },
@@ -275,7 +277,7 @@ namespace ToyBox {
                     var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
                     Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer);
                     if (settings.toggleShiftClickToFastTransfer) {
-                        UI.Space(25);
+                        Space(25);
                         ModifierPicker("ClickToTransferModifier", "", 0);
                     }
                 },
@@ -283,7 +285,7 @@ namespace ToyBox {
                 () => {
                     ActionButton("Clear Action Bar", () => Actions.ClearActionBar());
                     50.space();
-                    UI.Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".green());
+                    Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".green());
                 },
                 () => ActionButton("Fix Incorrect Main Character", () => {
                     var probablyPlayer = Game.Instance.Player?.Party?
@@ -373,19 +375,39 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Camera", 1,
                 () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
-            () => {
-                Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
-                103.space();
-                UI.Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green(), 1280.width());
-            },
-            //() => Toggle("Enable Scrolling on all maps", ref settings.toggleScrollOnAllMaps),
                 () => {
+                    Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
+                    103.space();
+                    Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
+                },
+                () => Label("Rotation".cyan()),
+                () => {
+                    50.space();
                     if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
                     100.space();
-                    UI.Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated). This can mess with your camera but it is fun so enjoy.  The following bindable key allows you to fix the camera:".green(), 1280.width());
+                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green());
                 },
-                () => BindableActionButton(ResetAdditionalCameraAngles),
-            () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                () => {
+                    50.space();
+                    Label("Mouse:".cyan(), 125.width());
+                    25.space();
+                    Toggle("Invert X Axis", ref settings.toggleInvertXAxis);
+                    if (settings.toggleCameraPitch) {
+                        25.space();
+                        Toggle("Invert Y Axis", ref settings.toggleInvertYAxis);
+                    }
+                },
+                () => {
+                    50.space();
+                    Label("Keyboard:".cyan(), 125.width());
+                    25.space();
+                    Toggle("Invert X Axis", ref settings.toggleInvertKeyboardXAxis);
+                },
+                () => {
+                    50.space();
+                    BindableActionButton(ResetAdditionalCameraAngles);
+                },
+                () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => { }
             );
@@ -397,6 +419,7 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Cheats", 1,
+                () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)", ref settings.toggleUnlimitedStatModifierStacking),
                 () => {
                     using (HorizontalScope()) {
                         ToggleCallback("Highlight Hidden Objects", ref settings.highlightHiddenObjects, Actions.UpdateHighlights);

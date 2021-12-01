@@ -76,7 +76,7 @@ namespace ToyBox {
         }
         public static Dictionary<string, string> ReadTranslations() {
             try {
-                var path = ModKit.Mod.modEntryPath;
+                var path = Mod.modEntryPath;
                 path = Path.Combine(path, "Localization", "etude-comments.txt");
                 var text = File.ReadAllText(path);
                 text = Regex.Replace(text, @"(^\p{Zs}*\r\n){2,}", "\r\n", RegexOptions.Multiline);

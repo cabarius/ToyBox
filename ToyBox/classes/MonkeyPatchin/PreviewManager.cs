@@ -1,14 +1,18 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.Controllers.Dialog;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.DialogSystem;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Enums;
 using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Actions;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
@@ -394,9 +398,9 @@ namespace ToyBox {
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = isAvail ? "#005800><b>" : "#800000>";
                 if (eventSolution.m_AvailConditions.HasConditions)
-                    extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption()))}]</b></color>";
+                    extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption())).MergeSpaces(true)}]</b></color>";
                 if (eventSolution.m_SuccessEffects.Actions.Length > 0)
-                    extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption()))}]";
+                    extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}]";
                 if (isAvail) {
                     if (extraText.Length > 0)
                         __instance.m_TextLabel.text = $"{eventSolution.SolutionText}<size=75%>{extraText}</size>";
@@ -425,13 +429,13 @@ namespace ToyBox {
                 BlueprintKingdomEventBase blueprint = kingdomEventView.Blueprint;
                 __instance.m_Description.text = blueprint.LocalizedDescription;
                 __instance.m_Disposables.Add(__instance.m_Description.SetLinkTooltip(null, null, default(TooltipConfig)));
-                bool flag = kingdomEventView.IsCrusadeEvent && kingdomEventView.IsFinished;
-                __instance.m_ResultDescription.gameObject.SetActive(flag);
-                if (flag) {
+                bool isActive = kingdomEventView.IsCrusadeEvent && kingdomEventView.IsFinished;
+                __instance.m_ResultDescription.gameObject.SetActive(isActive);
+                if (isActive) {
                     EventSolution currentEventSolution = __instance.m_Footer.CurrentEventSolution;
-                    if (((currentEventSolution != null) ? currentEventSolution.ResultText : null) != null) {
+                    if (currentEventSolution?.ResultText != null) {
                         TMP_Text resultDescription = __instance.m_ResultDescription;
-                        EventSolution currentEventSolution2 = __instance.m_Footer.CurrentEventSolution;
+                        var currentEventSolution2 = __instance.m_Footer.CurrentEventSolution;
                         resultDescription.text = ((currentEventSolution2 != null) ? currentEventSolution2.ResultText : null);
                         __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
 
@@ -441,18 +445,97 @@ namespace ToyBox {
                 }
                 BlueprintKingdomProject blueprintKingdomProject = blueprint as BlueprintKingdomProject;
                 string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null);
-                if (settings.previewDialogResults && settings.previewDecreeResults) {
+                if (settings.previewDecreeResults) {
                     var eventResults = blueprintKingdomProject.Solutions.GetResolutions(blueprintKingdomProject.DefaultResolutionType);
                     if (eventResults != null) {
                         foreach (var result in eventResults) {
                             if (result.Actions != null && result.Actions.Actions.Length > 0)
-                                mechanicalDescription += $"\n<size=67%><b>Results Preview   </b>\n{string.Join("\n", result.Actions.Actions.Select(c => c.GetCaption()))}</size>";
+                                mechanicalDescription += $"\n<size=67%><b>Results Preview   </b>\n{string.Join("\n", result.Actions.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}</size>";
                         }
                     }
                 }
+                // RelicInfo code borrowed (with permission from Rathtr) from https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/200
+                var projectType = kingdomEventView.ProjectBlueprint.ProjectType;
+                if (settings.previewRelicResults
+                    //&& projectType == KingdomProjectType.Relics
+                    && blueprint.ElementsArray.Find(elem => elem is KingdomActionStartEvent) is KingdomActionStartEvent e
+                    && e.Event is BlueprintCrusadeEvent crusadeEvent
+                    ) {
+                    // this relic event starts another event on completion
+                    var allRelicProjects =  // todo: cache this?
+                      from ev in Game.Instance.BlueprintRoot.Kingdom.KingdomProjectEvents
+                      where ev.Get().ProjectType == KingdomProjectType.Relics
+                      select ev.Get();
+
+                    BlueprintCrusadeEvent subEvent = null;
+                    foreach (var relicProject in allRelicProjects) {
+                        if (relicProject.TriggerCondition.HasConditions &&
+                            relicProject.TriggerCondition.Conditions.First() is FlagUnlocked unlockedFlag) {
+                            var conditionFlag = unlockedFlag.ConditionFlag;
+                            if (blueprint.ElementsArray
+                                    .Exists(
+                                    elem => elem is KingdomActionStartEvent actE
+                                            && actE.Event.ElementsArray
+                                                .Exists(
+                                                elem2 => elem2 is UnlockFlag unlockFlag
+                                                         && unlockFlag.flag == conditionFlag
+                                                         )
+                                            ) &&
+                                relicProject.ElementsArray.Find(elem => elem is KingdomActionStartEvent) is KingdomActionStartEvent subActionEvent
+                                && subActionEvent.Event is BlueprintCrusadeEvent subBp
+                                && subBp.EventSolutions.Length >= 1
+                                && (subEvent = subBp) != null) {
+                                break;
+                            }
+                        }
+                    }
+                    var solStrings = "\n\n";
+                    for (var i = 0; i < crusadeEvent.EventSolutions.Length; ++i) {
+                        var sol = crusadeEvent.EventSolutions[i];
+                        // check if this is an intermediate step, then we should not add unpicked choice solutions
+                        if (sol.IsAvail)
+                            solStrings += sol.SolutionText.ToString(); // add main solution string
+                        if (sol.m_SuccessEffects.Actions.Length > 0
+                            && sol.m_SuccessEffects.Actions.FindOrDefault(act => act is AddItemToPlayer) is AddItemToPlayer addIntermediateItemAct) {
+                            var intermediateItem = addIntermediateItemAct.ItemToGive;
+                            if (intermediateItem != null)
+                                solStrings += $" [{intermediateItem.Name.Rarity(intermediateItem.Rarity())}]".SizePercent(75);
+                        }
+                        if (subEvent != null) {
+                            var finalSols = from subEventSol in subEvent.EventSolutions
+                                            where subEventSol.m_AvailConditions.HasConditions && subEventSol.m_AvailConditions.Conditions[0] is FlagUnlocked flagUnlockCond && sol.m_SuccessEffects.Actions.ToList().Find(act => act is UnlockFlag) is UnlockFlag intermediateFlagUnlocked && intermediateFlagUnlocked.flag == flagUnlockCond.ConditionFlag
+                                            select subEventSol;
+                            if (finalSols.Count() > 1)
+                                solStrings += " leads to\n".SizePercent(75);
+                            foreach (var finalSol in finalSols) {
+                                solStrings += "    " + finalSol.SolutionText;
+                                if (finalSol.m_SuccessEffects.Actions.Length > 0
+                                    && finalSol.m_SuccessEffects.Actions.FindOrDefault(act => act is AddItemToPlayer) is AddItemToPlayer addFinalItemAct) {
+                                    var finalItem = addFinalItemAct.ItemToGive;
+                                    if (finalItem != null)
+                                        solStrings += $" [{finalItem.Name.Rarity(finalItem.Rarity())}]\n".SizePercent(75);
+                                }
+                                else 
+                                    solStrings += "\n";
+                            }
+                        }
+                        else
+                            solStrings += "\n";
+                    }
+                    __instance.m_Description.text += solStrings.SizePercent(87);
+                }
+                __instance.m_Disposables.Add(__instance.m_Description.SetLinkTooltip());
+                __instance.m_ResultDescription.gameObject.SetActive(isActive);
+                if (isActive && __instance.m_Footer.CurrentEventSolution?.ResultText != null) {
+                    __instance.m_ResultDescription.text = (string)__instance.m_Footer.CurrentEventSolution?.ResultText;
+                    __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip());
+                }
+                else
+                    __instance.m_ResultDescription.text = string.Empty;
+
                 __instance.m_MechanicalDescription.text = mechanicalDescription;
-                __instance.m_MechanicalDescription.gameObject.SetActive(((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null) != null);
-                __instance.m_Disposables.Add(__instance.m_MechanicalDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
+                __instance.m_MechanicalDescription.gameObject.SetActive((blueprintKingdomProject?.MechanicalDescription) != null);
+                __instance.m_Disposables.Add(__instance.m_MechanicalDescription.SetLinkTooltip(null, null, default));
 
                 return false;
             }
@@ -472,9 +555,10 @@ namespace ToyBox {
                     var color = isAvail ? "#005800><b>" : "#800000>";
                     var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
                     if (conditionText.Length > 0)
-                        text += $"<size=75%><color={color}[{conditionText}]</color></size>";
+                        text += $"<size=75%><color={color}[{conditionText.MergeSpaces(true)}]</color></size>";
                 }
                 __instance.AnswerText.text = text;
+                __instance.ViewModel.Enable.Value = isAvail;
                 Color32 color32 = isAvail ? DialogAnswerView.Colors.NormalAnswer : DialogAnswerView.Colors.DisabledAnswer;
                 if (type == DialogType.Common && answer.IsAlreadySelected() && (Game.Instance.DialogController.NextCueWasShown(answer) || !Game.Instance.DialogController.NextCueHasNewAnswers(answer)))
                     color32 = DialogAnswerView.Colors.SelectedAnswer;

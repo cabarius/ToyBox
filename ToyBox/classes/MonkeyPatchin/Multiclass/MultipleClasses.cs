@@ -403,7 +403,7 @@ namespace ToyBox.Multiclass {
                 var multicheckbox = __instance.transform.Find("MulticlassCheckbox-ToyBox");
                 if (multicheckbox != null) {
                     if (!settings.toggleMulticlass) {
-                        GameObject.Destroy(multicheckbox.gameObject);
+                        UnityEngine.Object.Destroy(multicheckbox.gameObject);
                     }
                 }
                 if (!settings.toggleMulticlass) return;
@@ -415,7 +415,7 @@ namespace ToyBox.Multiclass {
                     var textLayout = textContainer.GetComponent<LayoutElement>();
                     textLayout.preferredWidth = 1;
                     var siblingIndex = sibling.transform.GetSiblingIndex();
-                    multicheckbox = GameObject.Instantiate(checkbox, __instance.transform);
+                    multicheckbox = UnityEngine.Object.Instantiate(checkbox, __instance.transform);
                     multicheckbox.transform.SetSiblingIndex(1);
                     multicheckbox.name = "MulticlassCheckbox-ToyBox";
                     multicheckbox.GetComponentInChildren<TextMeshProUGUI>().text = "";

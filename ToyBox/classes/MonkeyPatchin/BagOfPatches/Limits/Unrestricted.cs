@@ -13,6 +13,8 @@ using Kingmaker.UnitLogic;
 using System;
 using System.Collections.Generic;
 using UnityModManager = UnityModManagerNet.UnityModManager;
+using Kingmaker.EntitySystem.Stats;
+using static Kingmaker.EntitySystem.Stats.ModifiableValue;
 
 namespace ToyBox.BagOfPatches {
     internal static class Unrestricted {
@@ -120,5 +122,16 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+        
+        [HarmonyPatch(typeof(Modifier), nameof(Modifier.Stacks), MethodType.Getter)]
+        public static class ModifiableValue_UpdateValue_Patch {
+            public static bool Prefix(Modifier __instance) {
+                if (settings.toggleUnlimitedStatModifierStacking) {
+                    __instance.StackMode = StackMode.ForceStack;
+                }
+                return true;
+            }
+        }
+
     }
 }

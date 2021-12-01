@@ -150,7 +150,7 @@ namespace ToyBox {
         }
         public static void To(this BlueprintGlobalMapPoint globalMapPoint) {
             Game.Instance.LoadArea(globalMapPoint.GlobalMap.GlobalMapEnterPoint, AutoSaveMode.None, () => {
-                Teleport.TeleportToGlobalMapPoint(globalMapPoint);
+                TeleportToGlobalMapPoint(globalMapPoint);
             });
             //if (!Teleport.TeleportToGlobalMapPoint(globalMapPoint)) {
             //    Teleport.TeleportToGlobalMap(() => Teleport.TeleportToGlobalMapPoint(globalMapPoint));

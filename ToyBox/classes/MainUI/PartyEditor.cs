@@ -79,39 +79,39 @@ namespace ToyBox {
 
         public static void ActionsGUI(UnitEntityData ch) {
             var player = Game.Instance.Player;
-            UI.Space(25);
+            Space(25);
             if (!player.PartyAndPets.Contains(ch) && player.AllCharacters.Contains(ch)) {
-                UI.ActionButton("Add", () => { charToAdd = ch; }, UI.Width(150));
-                UI.Space(25);
+                ActionButton("Add", () => { charToAdd = ch; }, Width(150));
+                Space(25);
             }
             else if (player.ActiveCompanions.Contains(ch)) {
-                UI.ActionButton("Remove", () => { charToRemove = ch; }, UI.Width(150));
-                UI.Space(25);
+                ActionButton("Remove", () => { charToRemove = ch; }, Width(150));
+                Space(25);
             }
             else if (!player.AllCharacters.Contains(ch)) {
                 recruitableCount++;
-                UI.ActionButton("Recruit".cyan(), () => { charToRecruit = ch; }, UI.Width(150));
-                UI.Space(25);
+                ActionButton("Recruit".cyan(), () => { charToRecruit = ch; }, Width(150));
+                Space(25);
             }
             if (player.AllCharacters.Contains(ch) && !ch.IsStoryCompanion()) {
-                UI.ActionButton("Unrecruit".cyan(), () => { charToUnrecruit = ch; charToRemove = ch; }, UI.Width(150));
-                UI.Space(25);
+                ActionButton("Unrecruit".cyan(), () => { charToUnrecruit = ch; charToRemove = ch; }, Width(150));
+                Space(25);
 
             }
             else {
-                UI.Space(178);
+                Space(178);
             }
             if (RespecHelper.GetRespecableUnits().Contains(ch)) {
                 respecableCount++;
-                UI.ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, UI.Width(150));
+                ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, Width(150));
             }
             else {
-                UI.Space(153);
+                Space(153);
             }
 #if DEBUG
-            UI.Space(25);
-            UI.ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
-                UI.AutoWidth());
+            Space(25);
+            ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
+                AutoWidth());
 #endif
         }
         public static void OnGUI() {
@@ -123,7 +123,7 @@ namespace ToyBox {
             charToRecruit = null;
             charToRemove = null;
             charToUnrecruit = null;
-            var characterListFunc = UI.TypePicker<List<UnitEntityData>>(
+            var characterListFunc = TypePicker(
                 null,
                 ref Main.settings.selectedPartyFilter,
                 filterChoices
@@ -131,19 +131,19 @@ namespace ToyBox {
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
             if (characterListFunc.name == "Nearby") {
-                UI.Slider("Nearby Distance", ref CharacterPicker.nearbyRange, 1f, 200, 25, 0, " meters", UI.Width(250));
+                Slider("Nearby Distance", ref CharacterPicker.nearbyRange, 1f, 200, 25, 0, " meters", Width(250));
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
-            UI.Space(20);
+            Space(20);
             var chIndex = 0;
             recruitableCount = 0;
             respecableCount = 0;
             var selectedCharacter = GetSelectedCharacter();
-            var isWide = UI.IsWide;
+            var isWide = IsWide;
             if (Main.IsInGame) {
-                using (UI.HorizontalScope()) {
-                    UI.Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), UI.AutoWidth());
-                    UI.Space(25);
+                using (HorizontalScope()) {
+                    Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), AutoWidth());
+                    Space(25);
 #if false   // disabled until we fix performance
                     var encounterCR = CheatsCombat.GetEncounterCr();
                     if (encounterCR > 0) {
@@ -163,108 +163,108 @@ namespace ToyBox {
                 var spellbooks = ch.Spellbooks;
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 var isOnTeam = player.AllCharacters.Contains(ch);
-                using (UI.HorizontalScope()) {
+                using (HorizontalScope()) {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)) {
                         if (isWide) {
-                            if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600))) {
+                            if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(600))) {
                                 ch.Descriptor.CustomName = name;
                                 Main.SetNeedsResetGameUI();
                             }
                         }
                         else
-                            if (UI.EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), UI.Width(230))) {
+                            if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
                             ch.Descriptor.CustomName = name;
                             Main.SetNeedsResetGameUI();
                         }
                     }
                     else {
                         if (isWide)
-                            UI.Label(ch.CharacterName.orange().bold(), UI.MinWidth(100), UI.MaxWidth(600));
+                            Label(ch.CharacterName.orange().bold(), MinWidth(100), MaxWidth(600));
                         else
-                            UI.Label(ch.CharacterName.orange().bold(), UI.Width(230));
+                            Label(ch.CharacterName.orange().bold(), Width(230));
                     }
-                    UI.Space(5);
+                    Space(5);
                     var distance = mainChar.DistanceTo(ch); ;
-                    UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
-                    UI.Space(5);
+                    Label(distance < 1 ? "" : distance.ToString("0") + "m", Width(75));
+                    Space(5);
                     int nextLevel;
                     for (nextLevel = level; progression.Experience >= xpTable.GetBonus(nextLevel + 1) && xpTable.HasBonusForLevel(nextLevel + 1); nextLevel++) { }
                     if (nextLevel <= level || !isOnTeam)
-                        UI.Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", UI.Width(90));
+                        Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", Width(90));
                     else
-                        UI.Label((level < 10 ? "  " : "") + $"{level} > " + $"{nextLevel}".cyan(), UI.Width(90));
+                        Label((level < 10 ? "  " : "") + $"{level} > " + $"{nextLevel}".cyan(), Width(90));
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
                         if (xpTable.HasBonusForLevel(nextLevel + 1)) {
-                            UI.ActionButton("+1", () => {
+                            ActionButton("+1", () => {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(nextLevel + 1), true);
-                            }, UI.Width(63));
+                            }, Width(63));
                         }
-                        else { UI.Label("max", UI.Width(63)); }
+                        else { Label("max", Width(63)); }
                     }
-                    else { UI.Space(66); }
-                    UI.Space(10);
+                    else { Space(66); }
+                    Space(10);
                     var nextML = progression.MythicExperience;
                     if (nextML <= mythicLevel || !isOnTeam)
-                        UI.Label((mythicLevel < 10 ? "  my" : "  my").green() + $" {mythicLevel}", UI.Width(90));
+                        Label((mythicLevel < 10 ? "  my" : "  my").green() + $" {mythicLevel}", Width(90));
                     else
-                        UI.Label((level < 10 ? "  " : "") + $"{mythicLevel} > " + $"{nextML}".cyan(), UI.Width(90));
+                        Label((level < 10 ? "  " : "") + $"{mythicLevel} > " + $"{nextML}".cyan(), Width(90));
                     if (player.AllCharacters.Contains(ch)) {
                         if (progression.MythicExperience < 10) {
-                            UI.ActionButton("+1", () => {
+                            ActionButton("+1", () => {
                                 progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
-                            }, UI.Width(63));
+                            }, Width(63));
                         }
-                        else { UI.Label("max", UI.Width(63)); }
+                        else { Label("max", Width(63)); }
                     }
-                    else { UI.Space(66); }
-                    UI.Space(30);
+                    else { Space(66); }
+                    Space(30);
                     if (!isWide) ActionsGUI(ch);
-                    UI.Wrap(!UI.IsWide, 283, 0);
+                    Wrap(!IsWide, 283, 0);
                     var showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
-                    if (UI.DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
+                    if (DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
                             selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Trace($"selected {ch.CharacterName}");
                         }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
-                    if (UI.DisclosureToggle("Stats", ref showStats, 125)) {
+                    if (DisclosureToggle("Stats", ref showStats, 125)) {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    UI.Wrap(UI.IsNarrow, 279);
+                    Wrap(IsNarrow, 279);
                     //var showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
                     //if (UI.DisclosureToggle("Facts", ref showFacts, 125)) {
                     //    if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
                     //    else { selectedToggle = ToggleChoice.None; }
                     //}
                     var showFeatures = ch == selectedCharacter && selectedToggle == ToggleChoice.Features;
-                    if (UI.DisclosureToggle("Features", ref showFeatures, 150)) {
+                    if (DisclosureToggle("Features", ref showFeatures, 150)) {
                         if (showFeatures) { selectedCharacter = ch; selectedToggle = ToggleChoice.Features; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
-                    if (UI.DisclosureToggle("Buffs", ref showBuffs, 125)) {
+                    if (DisclosureToggle("Buffs", ref showBuffs, 125)) {
                         if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    UI.Wrap(UI.IsNarrow, 304);
+                    Wrap(IsNarrow, 304);
                     var showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
-                    if (UI.DisclosureToggle("Abilities", ref showAbilities, 125)) {
+                    if (DisclosureToggle("Abilities", ref showAbilities, 125)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    UI.Space(10);
+                    Space(10);
                     if (spellbooks.Count() > 0) {
                         var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
-                        if (UI.DisclosureToggle($"{spellCount} Spells", ref showSpells)) {
+                        if (DisclosureToggle($"{spellCount} Spells", ref showSpells)) {
                             if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                             else { selectedToggle = ToggleChoice.None; }
                         }
                     }
-                    else { UI.Space(180); }
+                    else { Space(180); }
                     if (isWide) ActionsGUI(ch);
                 }
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
@@ -280,22 +280,22 @@ namespace ToyBox {
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
 #if true
-                    UI.Div(100, 20);
-                    using (UI.HorizontalScope()) {
-                        UI.Space(100);
-                        UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass);
+                    Div(100, 20);
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass);
                         if (settings.toggleMulticlass) {
-                            UI.Space(40);
-                            if (UI.DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
+                            Space(40);
+                            if (DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
                                 multiclassEditCharacter = selectedCharacter;
                             }
-                            UI.Space(53);
-                            UI.Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
+                            Space(53);
+                            Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
                         }
                     }
-                    using (UI.HorizontalScope()) {
-                        UI.Space(100);
-                        UI.ActionToggle("Allow Levels Past 20",
+                    using (HorizontalScope()) {
+                        Space(100);
+                        ActionToggle("Allow Levels Past 20",
                             () => {
                                 var hasValue = settings.perSave.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
                                 return hasValue && isLegendaryHero;
@@ -311,67 +311,67 @@ namespace ToyBox {
                                 }
                             },
                             0f,
-                            UI.AutoWidth());
-                        UI.Space(380);
-                        UI.Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".green());
+                            AutoWidth());
+                        Space(380);
+                        Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".green());
                     }
 #endif
-                    UI.Div(100, 20);
+                    Div(100, 20);
                     if (editMultiClass) {
                         MulticlassPicker.OnGUI(ch);
                     }
                     else {
                         var prog = ch.Descriptor.Progression;
-                        using (UI.HorizontalScope()) {
-                            UI.Space(100);
-                            UI.Label("Character Level".cyan(), UI.Width(250));
-                            UI.ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), UI.AutoWidth());
-                            UI.Space(25);
-                            UI.Label("level".green() + $": {prog.CharacterLevel}", UI.Width(100f));
-                            UI.ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), UI.AutoWidth());
-                            UI.Space(25);
-                            UI.ActionButton("Reset", () => ch.resetClassLevel(), UI.Width(125));
-                            UI.Space(23);
-                            using (UI.VerticalScope()) {
-                                UI.Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green() + "If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange());
-                                UI.LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
+                        using (HorizontalScope()) {
+                            Space(100);
+                            Label("Character Level".cyan(), Width(250));
+                            ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), AutoWidth());
+                            Space(25);
+                            Label("level".green() + $": {prog.CharacterLevel}", Width(100f));
+                            ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), AutoWidth());
+                            Space(25);
+                            ActionButton("Reset", () => ch.resetClassLevel(), Width(125));
+                            Space(23);
+                            using (VerticalScope()) {
+                                Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green() + "If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange());
+                                LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
                             }
                         }
-                        using (UI.HorizontalScope()) {
-                            UI.Space(100);
-                            UI.Label("Experience".cyan(), UI.Width(250));
-                            UI.Space(82);
-                            UI.Label($"{prog.Experience}", UI.Width(150f));
-                            UI.Space(36);
-                            UI.ActionButton("Set", () => {
+                        using (HorizontalScope()) {
+                            Space(100);
+                            Label("Experience".cyan(), Width(250));
+                            Space(82);
+                            Label($"{prog.Experience}", Width(150f));
+                            Space(36);
+                            ActionButton("Set", () => {
                                 var newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
                                 prog.Experience = newXP;
-                            }, UI.Width(125));
-                            UI.Space(23);
-                            UI.Label("This sets your experience to match the current value of character level.".green());
+                            }, Width(125));
+                            Space(23);
+                            Label("This sets your experience to match the current value of character level.".green());
                         }
-                        UI.Div(100, 25);
-                        using (UI.HorizontalScope()) {
-                            UI.Space(100);
-                            UI.Label("Mythic Level".cyan(), UI.Width(250));
-                            UI.ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), UI.AutoWidth());
-                            UI.Space(25);
-                            UI.Label("my lvl".green() + $": {prog.MythicLevel}", UI.Width(100f));
-                            UI.ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), UI.AutoWidth());
-                            UI.Space(175);
-                            UI.Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
+                        Div(100, 25);
+                        using (HorizontalScope()) {
+                            Space(100);
+                            Label("Mythic Level".cyan(), Width(250));
+                            ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), AutoWidth());
+                            Space(25);
+                            Label("my lvl".green() + $": {prog.MythicLevel}", Width(100f));
+                            ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), AutoWidth());
+                            Space(175);
+                            Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
                         }
-                        using (UI.HorizontalScope()) {
-                            UI.Space(100);
-                            UI.Label("Experience".cyan(), UI.Width(250));
-                            UI.Space(82);
-                            UI.Label($"{prog.MythicExperience}", UI.Width(150f));
-                            UI.Space(36);
-                            UI.ActionButton("Set", () => {
+                        using (HorizontalScope()) {
+                            Space(100);
+                            Label("Experience".cyan(), Width(250));
+                            Space(82);
+                            Label($"{prog.MythicExperience}", Width(150f));
+                            Space(36);
+                            ActionButton("Set", () => {
                                 prog.MythicExperience = prog.MythicLevel;
-                            }, UI.Width(125));
-                            UI.Space(23);
-                            UI.Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
+                            }, Width(125));
+                            Space(23);
+                            Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
                         }
                         var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
                         var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
@@ -379,33 +379,33 @@ namespace ToyBox {
                         var mythicGestaltCount = classData.Count(cd => cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                         foreach (var cd in classData) {
                             var showedGestalt = false;
-                            UI.Div(100, 20);
-                            using (UI.HorizontalScope()) {
-                                UI.Space(100);
-                                using (UI.VerticalScope(UI.Width(250))) {
+                            Div(100, 20);
+                            using (HorizontalScope()) {
+                                Space(100);
+                                using (VerticalScope(Width(250))) {
                                     var className = cd.CharacterClass.Name;
                                     var archetype = cd.Archetypes.FirstOrDefault<BlueprintArchetype>();
                                     if (archetype != null) {
                                         var archName = archetype.Name;
-                                        UI.Label(archName.orange(), UI.Width(250));
+                                        Label(archName.orange(), Width(250));
                                         if (!archName.Contains(className))
-                                            UI.Label(className.yellow(), UI.Width(250));
+                                            Label(className.yellow(), Width(250));
                                     }
                                     else {
-                                        UI.Label(className.orange(), UI.Width(250));
+                                        Label(className.orange(), Width(250));
                                     }
                                 }
-                                UI.ActionButton("<", () => cd.Level = Math.Max(0, cd.Level - 1), UI.AutoWidth());
-                                UI.Space(25);
-                                UI.Label("level".green() + $": {cd.Level}", UI.Width(100f));
+                                ActionButton("<", () => cd.Level = Math.Max(0, cd.Level - 1), AutoWidth());
+                                Space(25);
+                                Label("level".green() + $": {cd.Level}", Width(100f));
                                 var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
-                                UI.ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), UI.AutoWidth());
-                                UI.Space(23);
+                                ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), AutoWidth());
+                                Space(23);
                                 if (ch.IsClassGestalt(cd.CharacterClass)
                                     || !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1
                                     || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1
                                     ) {
-                                    UI.ActionToggle(
+                                    ActionToggle(
                                         "gestalt".grey(),
                                         () => ch.IsClassGestalt(cd.CharacterClass),
                                         (v) => {
@@ -416,88 +416,88 @@ namespace ToyBox {
                                         );
                                     showedGestalt = true;
                                 }
-                                else UI.Space(125);
-                                UI.Space(27);
-                                using (UI.VerticalScope()) {
+                                else Space(125);
+                                Space(27);
+                                using (VerticalScope()) {
                                     if (showedGestalt) {
                                         if (showedGestalt) {
-                                            UI.Label("this flag lets you not count this class in computing character level".green());
-                                            UI.DivLast();
+                                            Label("this flag lets you not count this class in computing character level".green());
+                                            DivLast();
                                         }
                                     }
-                                    UI.Label(cd.CharacterClass.Description.StripHTML().green(), UI.AutoWidth());
+                                    Label(cd.CharacterClass.Description.StripHTML().green(), AutoWidth());
                                 }
                             }
                         }
                     }
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
-                    UI.Div(100, 20, 755);
+                    Div(100, 20, 755);
                     var alignment = ch.Descriptor.Alignment.ValueRaw;
-                    using (UI.HorizontalScope()) {
-                        UI.Space(100);
-                        UI.Label("Alignment", UI.Width(425));
-                        UI.Label($"{alignment.Name()}".color(alignment.Color()).bold(), UI.Width(1250f));
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Label("Alignment", Width(425));
+                        Label($"{alignment.Name()}".color(alignment.Color()).bold(), Width(1250f));
                     }
-                    using (UI.HorizontalScope()) {
-                        UI.Space(528);
-                        UI.AlignmentGrid(alignment, (a) => ch.Descriptor.Alignment.Set(a));
+                    using (HorizontalScope()) {
+                        Space(528);
+                        AlignmentGrid(alignment, (a) => ch.Descriptor.Alignment.Set(a));
                     }
-                    UI.Div(100, 20, 755);
+                    Div(100, 20, 755);
                     var alignmentMask = ch.Descriptor.Alignment.m_LockedAlignmentMask;
-                    using (UI.HorizontalScope()) {
-                        UI.Space(100);
-                        UI.Label("Alignment Lock", UI.Width(425));
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Label("Alignment Lock", Width(425));
                         //UI.Label($"{alignmentMask.ToString()}".color(alignmentMask.Color()).bold(), UI.Width(325));
-                        UI.Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
+                        Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
                     }
 
-                    using (UI.HorizontalScope()) {
-                        UI.Space(528);
-                        var maskIndex = Array.IndexOf(UI.AlignmentMasks, alignmentMask);
-                        var titles = UI.AlignmentMasks.Select(
+                    using (HorizontalScope()) {
+                        Space(528);
+                        var maskIndex = Array.IndexOf(AlignmentMasks, alignmentMask);
+                        var titles = AlignmentMasks.Select(
                             a => a.ToString().color(a.Color()).bold()).ToArray();
-                        if (UI.SelectionGrid(ref maskIndex, titles, 3, UI.Width(800))) {
-                            ch.Descriptor.Alignment.LockAlignment(UI.AlignmentMasks[maskIndex], new Alignment?());
+                        if (SelectionGrid(ref maskIndex, titles, 3, Width(800))) {
+                            ch.Descriptor.Alignment.LockAlignment(AlignmentMasks[maskIndex], new Alignment?());
                         }
                     }
-                    UI.Div(100, 20, 755);
-                    using (UI.HorizontalScope()) {
-                        UI.Space(100);
-                        UI.Label("Size", UI.Width(425));
+                    Div(100, 20, 755);
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Label("Size", Width(425));
                         var size = ch.Descriptor.State.Size;
-                        UI.Label($"{size}".orange().bold(), UI.Width(175));
+                        Label($"{size}".orange().bold(), Width(175));
                     }
-                    using (UI.HorizontalScope()) {
-                        UI.Space(528);
-                        UI.EnumGrid(
+                    using (HorizontalScope()) {
+                        Space(528);
+                        EnumGrid(
                             () => ch.Descriptor.State.Size,
                             (s) => ch.Descriptor.State.Size = s,
-                            3, UI.Width(600));
+                            3, Width(600));
                     }
-                    using (UI.HorizontalScope()) {
-                        UI.Space(528);
-                        UI.ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, UI.Width(197));
+                    using (HorizontalScope()) {
+                        Space(528);
+                        ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, Width(197));
                     }
-                    UI.Div(100, 20, 755);
-                    using (UI.HorizontalScope()) {
-                        UI.Space(100);
-                        UI.Label("Gender", UI.Width(400));
-                        UI.Space(25);
+                    Div(100, 20, 755);
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Label("Gender", Width(400));
+                        Space(25);
                         var gender = ch.Descriptor.CustomGender ?? ch.Descriptor.Gender;
                         var isFemale = gender == Gender.Female;
-                        using (UI.HorizontalScope(UI.Width(200))) {
-                            if (UI.Toggle(isFemale ? "Female" : "Male", ref isFemale,
+                        using (HorizontalScope(Width(200))) {
+                            if (Toggle(isFemale ? "Female" : "Male", ref isFemale,
                                 "♀".color(RGBA.magenta).bold(),
                                 "♂".color(RGBA.aqua).bold(),
-                                0, UI.largeStyle, GUI.skin.box, UI.Width(300), UI.Height(20))) {
+                                0, largeStyle, GUI.skin.box, Width(300), Height(20))) {
                                 ch.Descriptor.CustomGender = isFemale ? Gender.Female : Gender.Male;
                             }
                         }
-                        UI.Label("Changing your gender may cause visual glitches".green());
+                        Label("Changing your gender may cause visual glitches".green());
                     }
-                    UI.Space(10);
-                    UI.Div(100, 20, 755);
+                    Space(10);
+                    Div(100, 20, 755);
                     foreach (var obj in HumanFriendly.StatTypes) {
                         var statType = (StatType)obj;
                         var modifiableValue = ch.Stats.GetStat(statType);
@@ -509,26 +509,26 @@ namespace ToyBox {
                         var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
                         var statName = statType.ToString();
                         if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
-                            UI.Div(100, 20, 755);
+                            Div(100, 20, 755);
                         }
-                        using (UI.HorizontalScope()) {
-                            UI.Space(100);
-                            UI.Label(statName, UI.Width(400f));
-                            UI.Space(25);
-                            UI.ActionButton(" < ", () => {
+                        using (HorizontalScope()) {
+                            Space(100);
+                            Label(statName, Width(400f));
+                            Space(25);
+                            ActionButton(" < ", () => {
                                 modifiableValue.BaseValue -= 1;
                                 storedValue = modifiableValue.BaseValue;
-                            }, GUI.skin.box, UI.AutoWidth());
-                            UI.Space(20);
-                            UI.Label($"{modifiableValue.BaseValue}".orange().bold(), UI.Width(50f));
-                            UI.ActionButton(" > ", () => {
+                            }, GUI.skin.box, AutoWidth());
+                            Space(20);
+                            Label($"{modifiableValue.BaseValue}".orange().bold(), Width(50f));
+                            ActionButton(" > ", () => {
                                 modifiableValue.BaseValue += 1;
                                 storedValue = modifiableValue.BaseValue;
-                            }, GUI.skin.box, UI.AutoWidth());
-                            UI.Space(25);
-                            UI.ActionIntTextField(ref storedValue, (v) => {
+                            }, GUI.skin.box, AutoWidth());
+                            Space(25);
+                            ActionIntTextField(ref storedValue, (v) => {
                                 modifiableValue.BaseValue = v;
-                            }, UI.Width(75));
+                            }, Width(75));
                             statEditorStorage[key] = storedValue;
                         }
                     }
@@ -546,21 +546,21 @@ namespace ToyBox {
                     todo = FactsEditor.OnGUI(ch, ch.Descriptor.Abilities.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
-                    UI.Space(20);
+                    Space(20);
                     var names = spellbooks.Select((sb) => sb.Blueprint.GetDisplayName()).ToArray();
                     var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
                     if (spellbooks.Any()) {
                         var spellbook = spellbooks.ElementAt(selectedSpellbook);
-                        using (UI.HorizontalScope()) {
-                            UI.SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), UI.AutoWidth());
+                        using (HorizontalScope()) {
+                            SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
                             if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
-                            UI.DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
+                            DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
                             Space(-50);
                             var mergableClasses = ch.MergableClasses();
                             if (spellbook.IsStandaloneMythic || mergableClasses.Count() == 0) {
                                 Label($"Merge Mythic".cyan(), AutoWidth());
                                 25.space();
-                                UI.Label("When you get standalone mythic spellbooks you can merge them here.".green());
+                                Label("When you get standalone mythic spellbooks you can merge them here.".green());
                             }
                             else {
                                 Label($"Merge Mythic:".cyan(), 175.width());
@@ -571,7 +571,7 @@ namespace ToyBox {
                                 }
                                 25.space();
                                 using (VerticalScope()) {
-                                    UI.Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up. Merging a second mythic spellbook will transfer the spells but not increase your caster level further.  If you want more CL then increase it below.".green());
+                                    Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up. Merging a second mythic spellbook will transfer the spells but not increase your caster level further.  If you want more CL then increase it below.".green());
                                     Label("Warning: This is irreversible. Please save before continuing!".Orange());
                                 }
                             }
@@ -585,8 +585,8 @@ namespace ToyBox {
                         else {
                             var maxLevel = spellbook.Blueprint.MaxSpellLevel;
                             var casterLevel = spellbook.CasterLevel;
-                            using (UI.HorizontalScope()) {
-                                UI.EnumerablePicker<int>(
+                            using (HorizontalScope()) {
+                                EnumerablePicker(
                                     "Spells known",
                                     ref selectedSpellbookLevel,
                                     Enumerable.Range(0, spellbook.Blueprint.MaxSpellLevel + 1),
@@ -597,28 +597,28 @@ namespace ToyBox {
                                         var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                         return levelText + countText;
                                     },
-                                    UI.AutoWidth()
+                                    AutoWidth()
                                 );
-                                UI.Space(20);
+                                Space(20);
                                 if (casterLevel > 0) {
-                                    UI.ActionButton("-1 CL", () => CasterHelpers.LowerCasterLevel(spellbook), UI.AutoWidth());
+                                    ActionButton("-1 CL", () => CasterHelpers.LowerCasterLevel(spellbook), AutoWidth());
                                 }
                                 if (casterLevel < 40) {
-                                    UI.ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), UI.AutoWidth());
+                                    ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), AutoWidth());
                                 }
                                 // removes opposition schools; these are not cleared when removing facts; to add new opposition schools, simply add the corresponding fact again
                                 if (spellbook.OppositionSchools.Any()) {
-                                    UI.ActionButton("Clear Opposition Schools", () => {
+                                    ActionButton("Clear Opposition Schools", () => {
                                         spellbook.OppositionSchools.Clear();
                                         spellbook.ExOppositionSchools.Clear();
                                         ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionSchool>(), true);
-                                    }, UI.AutoWidth());
+                                    }, AutoWidth());
                                 }
                                 if (spellbook.OppositionDescriptors != 0) {
-                                    UI.ActionButton("Clear Opposition Descriptors", () => {
+                                    ActionButton("Clear Opposition Descriptors", () => {
                                         spellbook.OppositionDescriptors = 0;
                                         ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
-                                    }, UI.AutoWidth());
+                                    }, AutoWidth());
                                 }
                             }
                             SelectedSpellbook[ch.HashKey()] = spellbook;
@@ -639,19 +639,19 @@ namespace ToyBox {
                 }
                 chIndex += 1;
             }
-            UI.Space(25);
+            Space(25);
             if (recruitableCount > 0) {
-                UI.Label($"{recruitableCount} character(s) can be ".orange().bold() + " Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green());
+                Label($"{recruitableCount} character(s) can be ".orange().bold() + " Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green());
             }
             if (respecableCount > 0) {
-                UI.Label($"{respecableCount} character(s)  can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green());
-                UI.Label("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange());
+                Label($"{respecableCount} character(s)  can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green());
+                Label("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange());
             }
             if (recruitableCount > 0 || respecableCount > 0) {
-                UI.Label("WARNING".yellow().bold() + " these features are ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange());
-                UI.Label("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange());
+                Label("WARNING".yellow().bold() + " these features are ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange());
+                Label("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange());
             }
-            UI.Space(25);
+            Space(25);
             foreach (var action in todo)
                 action();
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }

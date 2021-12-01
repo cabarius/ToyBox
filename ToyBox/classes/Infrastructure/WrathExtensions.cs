@@ -66,14 +66,14 @@ namespace ModKit {
             return RGBA.grey;
         }
         public static void AlignmentGrid(string title, Alignment alignment, Action<Alignment> action, params GUILayoutOption[] options) {
-            using (UI.HorizontalScope()) {
+            using (HorizontalScope()) {
                 if (title?.Length > 0) {
-                    UI.Label(title.cyan(), options);
+                    Label(title.cyan(), options);
                 }
                 var alignmentIndex = Array.IndexOf(Alignments, alignment);
                 var titles = Alignments.Select(
                     a => a.Acronym().color(a.Color()).bold()).ToArray();
-                if (UI.SelectionGrid(ref alignmentIndex, titles, 3, UI.Width(250f))) {
+                if (SelectionGrid(ref alignmentIndex, titles, 3, Width(250f))) {
                     action(Alignments[alignmentIndex]);
                 }
             }

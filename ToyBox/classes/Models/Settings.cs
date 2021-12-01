@@ -117,6 +117,9 @@ namespace ToyBox {
         public bool toggleRotateOnAllMaps = false;
         public bool toggleScrollOnAllMaps = false;
         public bool toggleCameraPitch = false;
+        public bool toggleInvertXAxis = false;
+        public bool toggleInvertKeyboardXAxis = false;
+        public bool toggleInvertYAxis = false;
         public float fovMultiplier = 1;
         public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;
@@ -184,6 +187,7 @@ namespace ToyBox {
         public bool toggleAttacksofOpportunity = false;
         public bool toggleMakePetsRidable = false;
         public bool toggleRideAnything = false;
+        public bool toggleUnlimitedStatModifierStacking = false;
 
         // Loot 
         public bool toggleColorLootByRarity = false;
@@ -328,6 +332,7 @@ namespace ToyBox {
         // Dialog & Previews (Dialogs, Events ,etc)
         public bool previewDecreeResults = false;
         public bool previewEventResults = false;
+        public bool previewRelicResults = false;
         public bool previewDialogResults = false;
         public bool previewAlignmentRestrictedDialog = false;
         public bool previewRandomEncounters = false;

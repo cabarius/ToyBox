@@ -24,6 +24,7 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<(GlobalMapArmyState, float)> armies;
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;
         public static IEnumerable<(GlobalMapArmyState, float)> demonArmies;
+        public static string skillsSearchText = "";
         public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {
             armies = ArmiesByDistanceFromPlayer()?.ToList();
@@ -57,16 +58,16 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static void OnGUI() {
-            if (allLeaderSkills == null) GetAllLeaderSkills();
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
-                UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());
+                Label("You must unlock the crusade before you can access these toys.".yellow().bold());
                 return;
             }
-            UI.HStack("Tweaks", 1,
-                () => UI.Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
+            if (allLeaderSkills == null) GetAllLeaderSkills();
+            HStack("Tweaks", 1,
+                () => Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
                 () => {
-                    UI.Toggle("Experimental - Enable Large Player Armies", ref settings.toggleLargeArmies);
+                    Toggle("Experimental - Enable Large Player Armies", ref settings.toggleLargeArmies);
                     if (settings.toggleLargeArmies) {
                         BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
@@ -76,24 +77,24 @@ namespace ToyBox.classes.MainUI {
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
                     }
                 },
-                () => UI.Slider("Recruitment Cost", ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", UI.AutoWidth()),
-                () => UI.LogSlider("Number of Recruits", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
-                    UI.AutoWidth()),
-                () => UI.LogSlider("Army Experience Multiplier", ref settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
-                    UI.AutoWidth()),
-                () => UI.LogSlider("After Army Battle Raise Multiplier", ref settings.postBattleSummonMultiplier, 0f, 100,
-                    1, 1, "", UI.AutoWidth()),
-                () => UI.Slider("Player Leader Ability Strength", ref settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", UI.AutoWidth()),
-                () => UI.Slider("Enemy Leader Ability Strength", ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", UI.AutoWidth())
+                () => Slider("Recruitment Cost", ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", AutoWidth()),
+                () => LogSlider("Number of Recruits", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
+                    AutoWidth()),
+                () => LogSlider("Army Experience Multiplier", ref settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
+                    AutoWidth()),
+                () => LogSlider("After Army Battle Raise Multiplier", ref settings.postBattleSummonMultiplier, 0f, 100,
+                    1, 1, "", AutoWidth()),
+                () => Slider("Player Leader Ability Strength", ref settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", AutoWidth()),
+                () => Slider("Enemy Leader Ability Strength", ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", AutoWidth())
             );
-            UI.Div(0, 25);
+            Div(0, 25);
 
             if (armies == null)
                 UpdateArmies();
             if (playerArmies != null)
                 ArmiesGUI("Player Armies", playerArmies);
             if (playerArmies != null && demonArmies != null) {
-                UI.Div(0, 25, 0);
+                Div(0, 25, 0);
             }
             if (demonArmies != null)
                 ArmiesGUI("Demon Armies", demonArmies);
@@ -101,20 +102,20 @@ namespace ToyBox.classes.MainUI {
         public static void ArmiesGUI(string title, IEnumerable<(GlobalMapArmyState, float)> armies) {
             if (armies.Count() == 0) return;
             var selectedArmy = armySelection.GetValueOrDefault(title, null);
-            using (UI.VerticalScope()) {
-                UI.HStack(title, 1,
+            using (VerticalScope()) {
+                HStack(title, 1,
                     () => {
-                        UI.Label("Name", UI.MinWidth(100), UI.MaxWidth(250));
-                        UI.Label("Type", UI.MinWidth(100), UI.MaxWidth(250));
-                        UI.Label("Leader", UI.Width(350));
-                        UI.Label("Squad Count", UI.Width(150));
-                        UI.Space(55);
-                        UI.Label("Location", UI.Width(400));
-                        UI.Space(25);
-                        UI.Label("Dist");
+                        Label("Name", MinWidth(100), MaxWidth(250));
+                        Label("Type", MinWidth(100), MaxWidth(250));
+                        Label("Leader", Width(350));
+                        Label("Squad Count", Width(150));
+                        Space(55);
+                        Label("Location", Width(400));
+                        Space(25);
+                        Label("Dist");
                     },
                     () => {
-                        using (UI.VerticalScope()) {
+                        using (VerticalScope()) {
                             var last = armies.Last().Item1;
                             foreach (var armyEntry in armies) {
                                 var showLeader = false;
@@ -124,109 +125,119 @@ namespace ToyBox.classes.MainUI {
                                 var army = armyEntry.Item1;
                                 var leader = army.Data.Leader;
                                 var distance = armyEntry.Item2;
-                                using (UI.HorizontalScope()) {
-                                    UI.Label(army.Data.ArmyName.ToString().orange().bold(), UI.MinWidth(100), UI.MaxWidth(250));
-                                    UI.Label(army.ArmyType.ToString().cyan(), UI.MinWidth(100), UI.MaxWidth(250));
+                                using (HorizontalScope()) {
+                                    Label(army.Data.ArmyName.ToString().orange().bold(), MinWidth(100), MaxWidth(250));
+                                    Label(army.ArmyType.ToString().cyan(), MinWidth(100), MaxWidth(250));
                                     if (leader != null) {
                                         showLeader = toggleStates.GetValueOrDefault(leader, false);
-                                        if (UI.DisclosureToggle(leader.LocalizedName, ref showLeader, 350)) {
+                                        if (DisclosureToggle(leader.LocalizedName, ref showLeader, 350)) {
                                             selectedArmy = army == selectedArmy ? null : army;
                                             toggleStates[leader] = showLeader;
                                         }
                                     }
-                                    else UI.Space(353);
+                                    else Space(353);
                                     var squads = army.Data.Squads;
-                                    UI.Label(squads.Count.ToString().cyan(), UI.Width(35));
+                                    Label(squads.Count.ToString().cyan(), Width(35));
                                     showSquads = toggleStates.GetValueOrDefault(squads, false);
-                                    if (UI.DisclosureToggle("Squads", ref showSquads, 125)) {
+                                    if (DisclosureToggle("Squads", ref showSquads, 125)) {
                                         selectedArmy = army == selectedArmy ? null : army;
                                         toggleStates[squads] = showSquads;
 
                                     }
-                                    UI.Space(50);
+                                    Space(50);
                                     var displayName = army.Location?.GetDisplayName() ?? "traveling on a path";
-                                    UI.Label(displayName.yellow(), UI.Width(400));
-                                    UI.Space(25);
+                                    Label(displayName.yellow(), Width(400));
+                                    Space(25);
                                     var distStr = distance >= 0 ? $"{distance:0.#}" : "-";
-                                    UI.Label(distStr, UI.Width(50));
-                                    UI.Space(50);
-                                    UI.ActionButton("Teleport", () => TeleportToArmy(army), UI.Width(150));
-                                    UI.Space(25);
+                                    Label(distStr, Width(50));
+                                    Space(50);
+                                    ActionButton("Teleport", () => TeleportToArmy(army), Width(150));
+                                    Space(25);
                                     if (GlobalMapView.Instance != null) {
-                                        UI.ActionButton("Summon", () => SummonArmy(army), UI.Width(150));
+                                        ActionButton("Summon", () => SummonArmy(army), Width(150));
                                     }
-                                    UI.Space(25);
+                                    Space(25);
                                     if (army.Data.Faction == ArmyFaction.Crusaders) {
-                                        UI.ActionButton("Full MP", () => {
+                                        ActionButton("Full MP", () => {
                                             var additionalMP = army.Data.GetArmyBonusSkills().Select(a => a.DailyMovementPoints);
-                                            army.RestoreMovementPoints(40+additionalMP.Sum());
-                                        }, UI.Width(150));
+                                            army.RestoreMovementPoints(40 + additionalMP.Sum());
+                                        }, Width(150));
                                     }
-                                    UI.Space(25);
-                                    UI.ActionButton("Destroy", () => {
-                                       // army.Data.RemoveAllSquads();
+                                    Space(25);
+                                    ActionButton("Destroy", () => {
+                                        // army.Data.RemoveAllSquads();
                                         Game.Instance.Player.GlobalMap.LastActivated.DestroyArmy(army);
                                         UpdateArmies();
-                                    }, UI.Width(150));
+                                    }, Width(150));
 
 
                                 }
                                 if (showLeader) {
-                                    UI.Div(0, 10);
+                                    Div(0, 10);
                                     showAllLeaderSkills = toggleStates.GetValueOrDefault(leader.Skills, false);
                                     showAllRituals = toggleStates.GetValueOrDefault(leader.m_RitualSlots, false);
-                                    using (UI.VerticalScope()) {
-                                        using (UI.HorizontalScope()) {
-                                            UI.Space(100);
-                                            using (UI.VerticalScope()) {
-                                                UI.Label("Stats".yellow());
-                                                UI.ValueAdjuster("Level".cyan(), () => leader.Level, (l) => leader.m_Level = l, 1, 0, 20, 375.width());
+                                    using (VerticalScope()) {
+                                        using (HorizontalScope()) {
+                                            Space(100);
+                                            using (VerticalScope()) {
+                                                Label("Stats".yellow());
+                                                ValueAdjuster("Level".cyan(), () => leader.Level, (l) => leader.m_Level = l, 1, 0, 20, 375.width());
                                                 var stats = leader.Stats;
-                                                UI.ValueAdjuster("Attack Bonus".cyan(), () => stats.AttackBonus.BaseValue, (v) => stats.AttackBonus.BaseValue = v, 1, stats.AttackBonus.MinValue, stats.AttackBonus.MaxValue, UI.Width(375));
-                                                UI.ValueAdjuster("Defense Bonus".cyan(), () => stats.DefenseBonus.BaseValue, (v) => stats.DefenseBonus.BaseValue = v, 1, stats.DefenseBonus.MinValue, stats.DefenseBonus.MaxValue, UI.Width(375));
-                                                UI.ValueAdjuster("Infirmary Size".cyan(), () => stats.InfirmarySize.BaseValue, (v) => stats.InfirmarySize.BaseValue = v, 25, stats.InfirmarySize.MinValue, stats.InfirmarySize.MaxValue, UI.Width(375));
-                                                UI.ValueAdjuster("Max Mana".cyan(), () => stats.MaxMana.BaseValue, (v) => stats.MaxMana.BaseValue = v, 5, stats.MaxMana.MinValue, stats.MaxMana.MaxValue, UI.Width(375));
-                                                UI.ValueAdjuster("Mana Regen".cyan(), () => stats.ManaRegeneration.BaseValue, (v) => stats.ManaRegeneration.BaseValue = v, 1, stats.ManaRegeneration.MinValue, stats.ManaRegeneration.MaxValue, UI.Width(375));
-                                                UI.ValueAdjuster("Spell Strength".cyan(), () => stats.SpellStrength.BaseValue, (v) => stats.SpellStrength.BaseValue = v, 1, stats.SpellStrength.MinValue, stats.SpellStrength.MaxValue, UI.Width(375));
+                                                ValueAdjuster("Attack Bonus".cyan(), () => stats.AttackBonus.BaseValue, (v) => stats.AttackBonus.BaseValue = v, 1, stats.AttackBonus.MinValue, stats.AttackBonus.MaxValue, Width(375));
+                                                ValueAdjuster("Defense Bonus".cyan(), () => stats.DefenseBonus.BaseValue, (v) => stats.DefenseBonus.BaseValue = v, 1, stats.DefenseBonus.MinValue, stats.DefenseBonus.MaxValue, Width(375));
+                                                ValueAdjuster("Infirmary Size".cyan(), () => stats.InfirmarySize.BaseValue, (v) => stats.InfirmarySize.BaseValue = v, 25, stats.InfirmarySize.MinValue, stats.InfirmarySize.MaxValue, Width(375));
+                                                ValueAdjuster("Max Mana".cyan(), () => stats.MaxMana.BaseValue, (v) => stats.MaxMana.BaseValue = v, 5, stats.MaxMana.MinValue, stats.MaxMana.MaxValue, Width(375));
+                                                ValueAdjuster("Mana Regen".cyan(), () => stats.ManaRegeneration.BaseValue, (v) => stats.ManaRegeneration.BaseValue = v, 1, stats.ManaRegeneration.MinValue, stats.ManaRegeneration.MaxValue, Width(375));
+                                                ValueAdjuster("Spell Strength".cyan(), () => stats.SpellStrength.BaseValue, (v) => stats.SpellStrength.BaseValue = v, 1, stats.SpellStrength.MinValue, stats.SpellStrength.MaxValue, Width(375));
                                             }
                                         }
-                                        using (UI.HorizontalScope()) {
-                                            UI.Space(100);
-                                            UI.Label("Skills".yellow(), UI.Width(85));
-                                            if (UI.DisclosureToggle("Show All".orange().bold(), ref showAllLeaderSkills, 125)) {
+                                        using (HorizontalScope()) {
+                                            Space(100);
+                                            Label("Skills".yellow(), Width(85));
+                                            if (DisclosureToggle("Show All".orange().bold(), ref showAllLeaderSkills, 125)) {
                                                 toggleStates[leader.Skills] = showAllLeaderSkills;
                                             }
                                             //UI.Space(285);
                                             //UI.Label("Action".yellow(), UI.Width(150));
                                         }
+                                        using (HorizontalScope()) {
+                                            Space(100);
+                                            ActionTextField(ref skillsSearchText, "Search", (s) => { }, () => { }, 235.width());
+                                        }
                                         var skills = showAllLeaderSkills ? GetAllLeaderSkills() : leader.Skills;
+                                        if (skillsSearchText.Length > 0) {
+                                            var searchText = skillsSearchText.ToLower();
+                                            skills = skills.Where(
+                                                skill => skill.LocalizedName.ToString().ToLower().Contains(searchText)
+                                                         || skill.LocalizedDescription.ToString().ToLower().Contains(searchText));
+                                        }
                                         BlueprintLeaderSkill skillToAdd = null;
                                         BlueprintLeaderSkill skillToRemove = null;
                                         if (skills != null)
                                             foreach (var skill in skills) {
                                                 var leaderHasSkill = leader.Skills.Contains(skill);
-                                                using (UI.HorizontalScope()) {
-                                                    UI.Space(100);
+                                                using (HorizontalScope()) {
+                                                    Space(100);
                                                     var skillName = (string)skill.LocalizedName;
                                                     if (leaderHasSkill) skillName = skillName.cyan();
-                                                    UI.Label(skillName, UI.Width(375));
-                                                    UI.Space(25);
+                                                    Label(skillName, Width(375));
+                                                    Space(25);
                                                     if (leaderHasSkill)
-                                                        UI.ActionButton("Remove", () => { skillToRemove = skill; }, UI.Width(150));
+                                                        ActionButton("Remove", () => { skillToRemove = skill; }, Width(150));
                                                     else
-                                                        UI.ActionButton("Add", () => { skillToAdd = skill; }, UI.Width(150));
-                                                    UI.Space(100);
+                                                        ActionButton("Add", () => { skillToAdd = skill; }, Width(150));
+                                                    Space(100);
                                                     var description = (string)skill.LocalizedDescription;
-                                                    UI.Label(description.StripHTML().green());
+                                                    Label(description.StripHTML().green());
                                                 }
                                             }
                                         if (skillToAdd != null) leader.AddSkill(skillToAdd, true);
                                         if (skillToRemove != null) leader.RemoveSkill(skillToRemove);
-#if DEBUG
-                                        using (UI.HorizontalScope()) {
-                                            UI.Space(100);
-                                            UI.Label("Rituals".yellow(), UI.Width(85));
-                                            if (UI.DisclosureToggle("Show All".orange().bold(), ref showAllRituals, 125)) {
+#if false
+                                        using (HorizontalScope()) {
+                                            Space(100);
+                                            Label("Rituals".yellow(), Width(85));
+                                            if (DisclosureToggle("Show All".orange().bold(), ref showAllRituals, 125)) {
                                                 toggleStates[leader.m_RitualSlots] = showAllRituals;
                                             }
                                             //UI.Space(285);
@@ -239,54 +250,54 @@ namespace ToyBox.classes.MainUI {
                                             var canAdd = leaderAbilities.Count() < 14;
                                             foreach (var ability in abilities) {
                                                 var leaderHasAbility = leaderAbilities.Contains(ability);
-                                                using (UI.HorizontalScope()) {
-                                                    UI.Space(100);
+                                                using (HorizontalScope()) {
+                                                    Space(100);
                                                     var name = (string)ability.name;
                                                     if (leaderHasAbility) name = name.cyan();
-                                                    UI.Label(name, UI.Width(375));
-                                                    UI.Space(25);
+                                                    Label(name, Width(375));
+                                                    Space(25);
                                                     if (leaderHasAbility)
-                                                        UI.ActionButton("Remove", () => { }, UI.Width(150));
+                                                        ActionButton("Remove", () => { }, Width(150));
                                                     else if (canAdd)
-                                                        UI.ActionButton("Add", () => { }, UI.Width(150));
-                                                    else UI.Space(153);
-                                                    UI.Space(100);
+                                                        ActionButton("Add", () => { }, Width(150));
+                                                    else Space(153);
+                                                    Space(100);
                                                     var description = (string)ability.GetDescription();
-                                                    UI.Label(description.StripHTML().green());
+                                                    Label(description.StripHTML().green());
                                                 }
                                             }
                                         }
 #endif
                                         if (!showSquads)
-                                            UI.Div(0, 10);
+                                            Div(0, 10);
                                     }
                                 }
                                 if (showSquads) {
-                                    UI.Div(0, 10);
-                                    using (UI.VerticalScope()) {
-                                        using (UI.HorizontalScope()) {
-                                            UI.Label("Squad Name".yellow(), UI.Width(475));
-                                            UI.Space(25);
-                                            UI.Label("Unit Count".yellow(), UI.Width(250));
+                                    Div(0, 10);
+                                    using (VerticalScope()) {
+                                        using (HorizontalScope()) {
+                                            Label("Squad Name".yellow(), Width(475));
+                                            Space(25);
+                                            Label("Unit Count".yellow(), Width(250));
                                         }
                                     }
-                                    using (UI.VerticalScope()) {
+                                    using (VerticalScope()) {
                                         var squads = army.Data.m_Squads;
                                         SquadState squadToRemove = null;
                                         foreach (var squad in squads) {
-                                            using (UI.HorizontalScope()) {
-                                                UI.Label(squad.Unit.NameSafe(), UI.Width(475));
-                                                UI.Space(25);
+                                            using (HorizontalScope()) {
+                                                Label(squad.Unit.NameSafe(), Width(475));
+                                                Space(25);
                                                 var count = squad.Count;
-                                                UI.ActionIntTextField(ref count,
+                                                ActionIntTextField(ref count,
                                                     (value) => {
                                                         squad.SetCount(value);
-                                                    }, UI.Width(225)
+                                                    }, Width(225)
                                                 );
-                                                UI.Space(25);
-                                                UI.ActionButton("Remove", () => {
+                                                Space(25);
+                                                ActionButton("Remove", () => {
                                                     squadToRemove = squad;
-                                                }, UI.Width(150));
+                                                }, Width(150));
                                             }
                                         }
 
@@ -295,7 +306,7 @@ namespace ToyBox.classes.MainUI {
                                         }
                                     }
                                     if (army != last)
-                                        UI.Div();
+                                        Div();
                                 }
                             }
                         }
