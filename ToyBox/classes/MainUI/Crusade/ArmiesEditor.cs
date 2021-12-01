@@ -58,12 +58,12 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static void OnGUI() {
-            if (allLeaderSkills == null) GetAllLeaderSkills();
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
                 Label("You must unlock the crusade before you can access these toys.".yellow().bold());
                 return;
             }
+            if (allLeaderSkills == null) GetAllLeaderSkills();
             HStack("Tweaks", 1,
                 () => Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
                 () => {
@@ -103,7 +103,7 @@ namespace ToyBox.classes.MainUI {
             if (armies.Count() == 0) return;
             var selectedArmy = armySelection.GetValueOrDefault(title, null);
             using (VerticalScope()) {
-                UI.HStack(title, 1,
+                HStack(title, 1,
                     () => {
                         Label("Name", MinWidth(100), MaxWidth(250));
                         Label("Type", MinWidth(100), MaxWidth(250));
@@ -160,12 +160,12 @@ namespace ToyBox.classes.MainUI {
                                     if (army.Data.Faction == ArmyFaction.Crusaders) {
                                         ActionButton("Full MP", () => {
                                             var additionalMP = army.Data.GetArmyBonusSkills().Select(a => a.DailyMovementPoints);
-                                            army.RestoreMovementPoints(40+additionalMP.Sum());
+                                            army.RestoreMovementPoints(40 + additionalMP.Sum());
                                         }, Width(150));
                                     }
                                     Space(25);
                                     ActionButton("Destroy", () => {
-                                       // army.Data.RemoveAllSquads();
+                                        // army.Data.RemoveAllSquads();
                                         Game.Instance.Player.GlobalMap.LastActivated.DestroyArmy(army);
                                         UpdateArmies();
                                     }, Width(150));
@@ -200,7 +200,17 @@ namespace ToyBox.classes.MainUI {
                                             //UI.Space(285);
                                             //UI.Label("Action".yellow(), UI.Width(150));
                                         }
+                                        using (HorizontalScope()) {
+                                            Space(100);
+                                            ActionTextField(ref skillsSearchText, "Search", (s) => { }, () => { }, 235.width());
+                                        }
                                         var skills = showAllLeaderSkills ? GetAllLeaderSkills() : leader.Skills;
+                                        if (skillsSearchText.Length > 0) {
+                                            var searchText = skillsSearchText.ToLower();
+                                            skills = skills.Where(
+                                                skill => skill.LocalizedName.ToString().ToLower().Contains(searchText)
+                                                         || skill.LocalizedDescription.ToString().ToLower().Contains(searchText));
+                                        }
                                         BlueprintLeaderSkill skillToAdd = null;
                                         BlueprintLeaderSkill skillToRemove = null;
                                         if (skills != null)
@@ -223,7 +233,7 @@ namespace ToyBox.classes.MainUI {
                                             }
                                         if (skillToAdd != null) leader.AddSkill(skillToAdd, true);
                                         if (skillToRemove != null) leader.RemoveSkill(skillToRemove);
-#if DEBUG
+#if false
                                         using (HorizontalScope()) {
                                             Space(100);
                                             Label("Rituals".yellow(), Width(85));

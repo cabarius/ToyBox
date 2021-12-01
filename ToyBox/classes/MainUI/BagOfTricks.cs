@@ -397,6 +397,7 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Cheats", 1,
+                () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)", ref settings.toggleUnlimitedStatModifierStacking),
                 () => {
                     using (HorizontalScope()) {
                         ToggleCallback("Highlight Hidden Objects", ref settings.highlightHiddenObjects, Actions.UpdateHighlights);
