@@ -380,9 +380,18 @@ namespace ToyBox {
             },
             //() => Toggle("Enable Scrolling on all maps", ref settings.toggleScrollOnAllMaps),
                 () => {
-                    if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
+                    using (VerticalScope()) {
+                        if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
+                        using (HorizontalScope()) {
+                            Toggle("Invert X Axis", ref settings.toggleInvertXAxis);
+                            if (settings.toggleCameraPitch) {
+                                25.space();
+                                Toggle("Invert Y Axis", ref settings.toggleInvertYAxis);
+                            }
+                        }
+                    }
                     100.space();
-                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated). This can mess with your camera but it is fun so enjoy.  The following bindable key allows you to fix the camera:".green(), 1280.width());
+                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated). This can mess with your camera but it is fun so enjoy.  The following bindable key allows you to fix the camera:".green());
                 },
                 () => BindableActionButton(ResetAdditionalCameraAngles),
             () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),

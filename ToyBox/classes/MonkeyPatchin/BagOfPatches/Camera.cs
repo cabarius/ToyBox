@@ -106,7 +106,7 @@ namespace ToyBox.BagOfPatches {
         private static class CameraRig_TickRotate_Patch {
 
             public static bool Prefix(CameraRig __instance) {
-                if (!settings.toggleRotateOnAllMaps && !settings.toggleCameraPitch && !Main.resetExtraCameraAngles) return true;
+                if (!settings.toggleRotateOnAllMaps && !settings.toggleCameraPitch && !Main.resetExtraCameraAngles && !settings.toggleInvertXAxis) return true;
                 bool usePitch = settings.toggleCameraPitch;
                 if (__instance.m_RotateRoutine != null && (double)Time.time > (double)__instance.m_RotateRoutineEndsOn) {
                     __instance.StopCoroutine(__instance.m_RotateRoutine);
@@ -124,9 +124,9 @@ namespace ToyBox.BagOfPatches {
                     mouseMovement.x = __instance.m_RotateOffset;
                 if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
-                    eulerAngles.y += mouseMovement.x * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                    eulerAngles.y += (settings.toggleInvertXAxis ? 1 : -1) * mouseMovement.x * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
                     if (usePitch && !Main.resetExtraCameraAngles) {
-                        eulerAngles.x += mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                        eulerAngles.x += (settings.toggleInvertYAxis ? 1 : -1) * mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
                         //Mod.Debug($"eulerX: {eulerAngles.x}");
                     }
                     else {

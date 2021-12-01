@@ -43,6 +43,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.12 (Coming Soon)
 * **Bag of Tricks**
   * Cheat to let you enable Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)
+  * Fixed backwards default X rotation when camera mods are enabled
+  * Options to Invert Mouse X and Y Axis in camera settings
   * Moved dialog options into their own section in Bag of Tricks
   * Mythic Dialog Restrictions are beginning to apply to crusade events.
   * **Expand Answers For Conditional Responses** - Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on.
