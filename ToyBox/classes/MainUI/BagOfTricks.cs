@@ -219,7 +219,7 @@ namespace ToyBox {
                 () => {
                     Toggle("Randomize NPC Responses To Dialog Choices", ref settings.toggleRandomizeCueSelections);
                     50.space();
-                    Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() +"\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
+                    Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
                 },
 #endif
                 () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
@@ -373,28 +373,39 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Camera", 1,
                 () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
-            () => {
-                Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
-                103.space();
-                Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green(), 1280.width());
-            },
-            //() => Toggle("Enable Scrolling on all maps", ref settings.toggleScrollOnAllMaps),
                 () => {
-                    using (VerticalScope()) {
-                        if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
-                        using (HorizontalScope()) {
-                            Toggle("Invert X Axis", ref settings.toggleInvertXAxis);
-                            if (settings.toggleCameraPitch) {
-                                25.space();
-                                Toggle("Invert Y Axis", ref settings.toggleInvertYAxis);
-                            }
-                        }
-                    }
-                    100.space();
-                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated). This can mess with your camera but it is fun so enjoy.  The following bindable key allows you to fix the camera:".green());
+                    Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
+                    103.space();
+                    Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
                 },
-                () => BindableActionButton(ResetAdditionalCameraAngles),
-            () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                () => Label("Rotation".cyan()),
+                () => {
+                    50.space();
+                    if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
+                    100.space();
+                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green());
+                },
+                () => {
+                    50.space();
+                    Label("Mouse:".cyan(), 125.width());
+                    25.space();
+                    Toggle("Invert X Axis", ref settings.toggleInvertXAxis);
+                    if (settings.toggleCameraPitch) {
+                        25.space();
+                        Toggle("Invert Y Axis", ref settings.toggleInvertYAxis);
+                    }
+                },
+                () => {
+                    50.space();
+                    Label("Keyboard:".cyan(), 125.width());
+                    25.space();
+                    Toggle("Invert X Axis", ref settings.toggleInvertKeyboardXAxis);
+                },
+                () => {
+                    50.space();
+                    BindableActionButton(ResetAdditionalCameraAngles);
+                },
+                () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => { }
             );

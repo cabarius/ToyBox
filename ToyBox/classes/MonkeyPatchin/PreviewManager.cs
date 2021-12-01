@@ -394,9 +394,9 @@ namespace ToyBox {
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = isAvail ? "#005800><b>" : "#800000>";
                 if (eventSolution.m_AvailConditions.HasConditions)
-                    extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption()))}]</b></color>";
+                    extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption())).MergeSpaces(true)}]</b></color>";
                 if (eventSolution.m_SuccessEffects.Actions.Length > 0)
-                    extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption()))}]";
+                    extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}]";
                 if (isAvail) {
                     if (extraText.Length > 0)
                         __instance.m_TextLabel.text = $"{eventSolution.SolutionText}<size=75%>{extraText}</size>";
@@ -446,7 +446,7 @@ namespace ToyBox {
                     if (eventResults != null) {
                         foreach (var result in eventResults) {
                             if (result.Actions != null && result.Actions.Actions.Length > 0)
-                                mechanicalDescription += $"\n<size=67%><b>Results Preview   </b>\n{string.Join("\n", result.Actions.Actions.Select(c => c.GetCaption()))}</size>";
+                                mechanicalDescription += $"\n<size=67%><b>Results Preview   </b>\n{string.Join("\n", result.Actions.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}</size>";
                         }
                     }
                 }
@@ -472,7 +472,7 @@ namespace ToyBox {
                     var color = isAvail ? "#005800><b>" : "#800000>";
                     var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
                     if (conditionText.Length > 0)
-                        text += $"<size=75%><color={color}[{conditionText}]</color></size>";
+                        text += $"<size=75%><color={color}[{conditionText.MergeSpaces(true)}]</color></size>";
                 }
                 __instance.AnswerText.text = text;
                 __instance.ViewModel.Enable.Value = isAvail;
