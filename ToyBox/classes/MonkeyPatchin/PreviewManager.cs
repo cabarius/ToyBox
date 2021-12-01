@@ -475,6 +475,7 @@ namespace ToyBox {
                         text += $"<size=75%><color={color}[{conditionText}]</color></size>";
                 }
                 __instance.AnswerText.text = text;
+                __instance.ViewModel.Enable.Value = isAvail;
                 Color32 color32 = isAvail ? DialogAnswerView.Colors.NormalAnswer : DialogAnswerView.Colors.DisabledAnswer;
                 if (type == DialogType.Common && answer.IsAlreadySelected() && (Game.Instance.DialogController.NextCueWasShown(answer) || !Game.Instance.DialogController.NextCueHasNewAnswers(answer)))
                     color32 = DialogAnswerView.Colors.SelectedAnswer;
