@@ -33,13 +33,15 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace ToyBox {
-    internal class PreviewManager {
+    internal static class PreviewManager {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
         private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
@@ -422,19 +424,39 @@ namespace ToyBox {
                 return false;
             }
         }
-
+        public static string PreviewText(this EventSolution solution) {
+            string result = "";
+            result += solution.SolutionText.ToString(); // add main solution string
+            if (solution.m_SuccessEffects.Actions.Length > 0
+                && solution.m_SuccessEffects.Actions.FindOrDefault(act => act is AddItemToPlayer) is AddItemToPlayer addIntermediateItemAct) {
+                var item = addIntermediateItemAct.ItemToGive;
+                if (item != null) {
+                    var pattern = @"<link=([^>]*)>";
+                    var matches = Regex.Matches(result, pattern);                    
+                    if (matches.Cast<Match>().FirstOrDefault()?
+                        .Groups.Cast<Group>().FirstOrDefault()?
+                        .Captures.Cast<Capture>().FirstOrDefault()?
+                        .Value is string link) {
+                        result += $" {link}[{item.Name.Rarity(item.Rarity())}]</link>".SizePercent(75);
+                    }
+                    else
+                        result += $" [{item.Name.Rarity(item.Rarity())}]".SizePercent(75);
+                }
+            }
+            return result;
+        }
         [HarmonyPatch(typeof(KingdomUIEventWindow), nameof(KingdomUIEventWindow.SetDescription))]
         private static class KingdomUIEventWindow_SetDescription_Patch {
             private static bool Prefix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
-                BlueprintKingdomEventBase blueprint = kingdomEventView.Blueprint;
+                var blueprint = kingdomEventView.Blueprint;
                 __instance.m_Description.text = blueprint.LocalizedDescription;
                 __instance.m_Disposables.Add(__instance.m_Description.SetLinkTooltip(null, null, default(TooltipConfig)));
                 bool isActive = kingdomEventView.IsCrusadeEvent && kingdomEventView.IsFinished;
                 __instance.m_ResultDescription.gameObject.SetActive(isActive);
                 if (isActive) {
-                    EventSolution currentEventSolution = __instance.m_Footer.CurrentEventSolution;
+                    var currentEventSolution = __instance.m_Footer.CurrentEventSolution;
                     if (currentEventSolution?.ResultText != null) {
-                        TMP_Text resultDescription = __instance.m_ResultDescription;
+                        var resultDescription = __instance.m_ResultDescription;
                         var currentEventSolution2 = __instance.m_Footer.CurrentEventSolution;
                         resultDescription.text = ((currentEventSolution2 != null) ? currentEventSolution2.ResultText : null);
                         __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
@@ -443,7 +465,7 @@ namespace ToyBox {
                     else
                         __instance.m_ResultDescription.text = string.Empty;
                 }
-                BlueprintKingdomProject blueprintKingdomProject = blueprint as BlueprintKingdomProject;
+                var blueprintKingdomProject = blueprint as BlueprintKingdomProject;
                 string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null);
                 if (settings.previewDecreeResults) {
                     var eventResults = blueprintKingdomProject.Solutions.GetResolutions(blueprintKingdomProject.DefaultResolutionType);
@@ -472,19 +494,17 @@ namespace ToyBox {
                         if (relicProject.TriggerCondition.HasConditions &&
                             relicProject.TriggerCondition.Conditions.First() is FlagUnlocked unlockedFlag) {
                             var conditionFlag = unlockedFlag.ConditionFlag;
-                            if (blueprint.ElementsArray
-                                    .Exists(
-                                    elem => elem is KingdomActionStartEvent actE
-                                            && actE.Event.ElementsArray
-                                                .Exists(
-                                                elem2 => elem2 is UnlockFlag unlockFlag
-                                                         && unlockFlag.flag == conditionFlag
-                                                         )
-                                            ) &&
-                                relicProject.ElementsArray.Find(elem => elem is KingdomActionStartEvent) is KingdomActionStartEvent subActionEvent
-                                && subActionEvent.Event is BlueprintCrusadeEvent subBp
-                                && subBp.EventSolutions.Length >= 1
-                                && (subEvent = subBp) != null) {
+                            if (blueprint.ElementsArray.Exists(elem 
+                                    => elem is KingdomActionStartEvent actE
+                                       && actE.Event.ElementsArray.Exists(elem2 
+                                           => elem2 is UnlockFlag unlockFlag
+                                           && unlockFlag.flag == conditionFlag
+                                           )
+                                       ) 
+                                     && relicProject.ElementsArray.Find(elem => elem is KingdomActionStartEvent) is KingdomActionStartEvent subActionEvent
+                                     && subActionEvent.Event is BlueprintCrusadeEvent subBp
+                                     && subBp.EventSolutions.Length >= 1
+                                     && (subEvent = subBp) != null) {
                                 break;
                             }
                         }
@@ -492,31 +512,16 @@ namespace ToyBox {
                     var solStrings = "\n\n";
                     for (var i = 0; i < crusadeEvent.EventSolutions.Length; ++i) {
                         var sol = crusadeEvent.EventSolutions[i];
-                        // check if this is an intermediate step, then we should not add unpicked choice solutions
                         if (sol.IsAvail)
-                            solStrings += sol.SolutionText.ToString(); // add main solution string
-                        if (sol.m_SuccessEffects.Actions.Length > 0
-                            && sol.m_SuccessEffects.Actions.FindOrDefault(act => act is AddItemToPlayer) is AddItemToPlayer addIntermediateItemAct) {
-                            var intermediateItem = addIntermediateItemAct.ItemToGive;
-                            if (intermediateItem != null)
-                                solStrings += $" [{intermediateItem.Name.Rarity(intermediateItem.Rarity())}]".SizePercent(75);
-                        }
+                            solStrings += sol.PreviewText();
                         if (subEvent != null) {
                             var finalSols = from subEventSol in subEvent.EventSolutions
                                             where subEventSol.m_AvailConditions.HasConditions && subEventSol.m_AvailConditions.Conditions[0] is FlagUnlocked flagUnlockCond && sol.m_SuccessEffects.Actions.ToList().Find(act => act is UnlockFlag) is UnlockFlag intermediateFlagUnlocked && intermediateFlagUnlocked.flag == flagUnlockCond.ConditionFlag
                                             select subEventSol;
                             if (finalSols.Count() > 1)
                                 solStrings += " leads to\n".SizePercent(75);
-                            foreach (var finalSol in finalSols) {
-                                solStrings += "    " + finalSol.SolutionText;
-                                if (finalSol.m_SuccessEffects.Actions.Length > 0
-                                    && finalSol.m_SuccessEffects.Actions.FindOrDefault(act => act is AddItemToPlayer) is AddItemToPlayer addFinalItemAct) {
-                                    var finalItem = addFinalItemAct.ItemToGive;
-                                    if (finalItem != null)
-                                        solStrings += $" [{finalItem.Name.Rarity(finalItem.Rarity())}]\n".SizePercent(75);
-                                }
-                                else 
-                                    solStrings += "\n";
+                            foreach (var endSolution in finalSols) {
+                                solStrings += $"    {endSolution.PreviewText()}\n";
                             }
                         }
                         else
