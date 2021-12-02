@@ -108,7 +108,7 @@ namespace ToyBox {
             else {
                 Space(153);
             }
-#if DEBUG
+#if false
             Space(25);
             ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
                 AutoWidth());

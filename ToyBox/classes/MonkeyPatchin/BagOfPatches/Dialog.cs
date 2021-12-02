@@ -284,6 +284,21 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(AnswerSelected), nameof(AnswerSelected.CheckCondition))]
+        public static class AnswerSelected_CheckCondition_Patch {
+            public static bool Prefix(AnswerSelected __instance, ref bool __result) {
+                if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
+                if (!__instance.CurrentDialog) {
+                    __result = Game.Instance.Player.Dialog.SelectedAnswers.Where(a => a.AssetGuid == __instance.Answer.AssetGuid).Any();
+                }
+                else {
+                    __result = Game.Instance.DialogController.LocalSelectedAnswers.Where(a => a.AssetGuid == __instance.Answer.AssetGuid).Any();
+
+                }
+                return false;
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(BlueprintAnswer), nameof(BlueprintAnswer.CanShow))]
         public static class BlueprintAnswer_CanShow_Patch {
@@ -333,5 +348,5 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-    }
+        }
 }
