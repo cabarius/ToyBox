@@ -43,7 +43,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
 ### Ver 1.4.13 (Coming Soon)
 * **Bag of Tricks**
-* **Remote Companion Dialog**
+  * **Expand Answers For Conditional Responses**
+    * Dialog dependent on previous dialog checks now works correctly with the feature enabled
+  * **Remote Companion Dialog**
    	* (***Ronin***) Convinced Daeran to stop repeating himself in the Grey Garrison
   * Preview Relic Info (*thanks to rathtr*)
 ### Ver 1.4.12
