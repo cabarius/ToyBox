@@ -47,7 +47,11 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Dialog dependent on previous dialog checks now works correctly with the feature enabled
   * **Remote Companion Dialog**
    	* (***Ronin***) Convinced Daeran to stop repeating himself in the Grey Garrison
+  * **Camera**
+    * Added Toy to let you adjust the clip plane with Alt+MouseWheel
   * Preview Relic Info (*thanks to rathtr*)
+* **Quest Editor**
+  * Added descriptions and improved UI in quest editor
 ### Ver 1.4.12
 * **Bag of Tricks**
   * Cheat to let you enable Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)

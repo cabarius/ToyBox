@@ -28,6 +28,8 @@ using CameraMode = Kingmaker.View.CameraMode;
 using DG.Tweening;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
+using Owlcat.Runtime.Visual.RenderPipeline;
+using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.OccludedObjectHighlighting;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
@@ -72,6 +74,22 @@ namespace ToyBox.BagOfPatches {
                         float ___m_ZoomLenght) {
                 if (settings.fovMultiplier == 1) return true;
                 if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse && (double)Input.GetAxis("Mouse ScrollWheel") != 0.0 && ((double)___m_Camera.fieldOfView > (double)FovMin || (double)Input.GetAxis("Mouse ScrollWheel") < 0.0)) {
+                    if (settings.toggleUseAltMouseWheelToAdjustClipPlane && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.LeftShift))) {
+                        var cameraRig = Game.Instance.UI.GetCameraRig();
+                        var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
+                        if (Input.GetKey(KeyCode.LeftAlt)) {
+                            highlightingFeature.DepthClip.NearCameraClipDistance += Input.GetAxis("Mouse ScrollWheel") * 5;
+                            Mod.Debug($"highlightingFeature.DepthClip.NearCameraClipDistance: {highlightingFeature.DepthClip.NearCameraClipDistance}");
+                        }
+                        if (Input.GetKey(KeyCode.LeftShift)) {
+                            highlightingFeature.DepthClip.ClipTreshold += Input.GetAxis("Mouse ScrollWheel")/5;
+                            Mod.Debug($"highlightingFeature.DepthClip.ClipTreshold: {highlightingFeature.DepthClip.ClipTreshold}");
+                            //highlightingFeature.DepthClip.AlphaScale += Input.GetAxis("Mouse ScrollWheel");
+                            //highlightingFeature.DepthClip.NoiseTiling += Input.GetAxis("Mouse ScrollWheel");
+
+                        }
+                        return false;
+                    }
                     ___m_PlayerScrollPosition += __instance.IsOutOfScreen ? 0.0f : Input.GetAxis("Mouse ScrollWheel");
                     if ((double)___m_PlayerScrollPosition <= 0.0)
                         ___m_PlayerScrollPosition = 0.01f;
@@ -135,6 +153,12 @@ namespace ToyBox.BagOfPatches {
                     }
                     else {
                         eulerAngles.x = 0f;
+                        if (Main.resetExtraCameraAngles || settings.toggleUseAltMouseWheelToAdjustClipPlane) {
+                            var cameraRig = Game.Instance.UI.GetCameraRig();
+                            var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
+                            highlightingFeature.DepthClip.NearCameraClipDistance = 10;
+                            highlightingFeature.DepthClip.ClipTreshold = 0;
+                        }
                         Main.resetExtraCameraAngles = false;
                     }
                     __instance.transform.DOKill();

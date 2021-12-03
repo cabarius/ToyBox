@@ -377,15 +377,18 @@ namespace ToyBox {
                 () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
                 () => {
                     Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
-                    103.space();
+                    153.space();
                     Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
+                },
+                () => {
+                    Toggle("Enable Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
                 },
                 () => Label("Rotation".cyan()),
                 () => {
                     50.space();
                     if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
                     100.space();
-                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green());
+                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange()+ " Holding alt while Mouse3 dragging lets you move the camera location.".green());
                 },
                 () => {
                     50.space();
