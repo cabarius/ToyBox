@@ -342,6 +342,7 @@ namespace ToyBox {
         public bool toggleRandomizeCueSelections = false;
         public bool toggleShowAnswersForEachConditionalResponse = false;
         public bool toggleShowAllAnswersForEachConditionalResponse = false;
+        public bool toggleShowDialogConditions = false;
 
         // Etudes
         public bool showEtudeComments = true;

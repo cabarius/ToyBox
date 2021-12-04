@@ -45,6 +45,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Bag of Tricks**
   * **Expand Answers For Conditional Responses**
     * Dialog dependent on previous dialog checks now works correctly with the feature enabled
+    * Fixed issue that generated bogus extra answers for non conditional response by ensuring that the feature only gets activated by a set of continuation cues that all have conditions
   * **Remote Companion Dialog**
    	* (***Ronin***) Convinced Daeran to stop repeating himself in the Grey Garrison
   * **Camera**
