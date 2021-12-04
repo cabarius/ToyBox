@@ -120,6 +120,7 @@ namespace ToyBox {
         public bool toggleInvertXAxis = false;
         public bool toggleInvertKeyboardXAxis = false;
         public bool toggleInvertYAxis = false;
+        public bool toggleUseAltMouseWheelToAdjustClipPlane = false;
         public float fovMultiplier = 1;
         public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;
