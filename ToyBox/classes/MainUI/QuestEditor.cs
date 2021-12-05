@@ -15,17 +15,25 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public static class QuestExensions {
+        private static readonly RGBA[] titleColors = new RGBA[] {
+            RGBA.brown,
+            RGBA.cyan,
+            RGBA.darkgrey,
+            RGBA.red
+        };
         private static readonly string[] questColors = new string[] {
             "gray",
-            "yellow",
-            "green",
+            "cyan",
+            "white",
             "red"
         };
         public static string stateColored(this string text, Quest quest) => text.color(questColors[(int)quest.State]);
         public static string stateColored(this string text, QuestObjective objective) => text.color(questColors[(int)objective.State]);
+        public static string titleColored(this Quest quest) => quest.Blueprint.Title.ToString().color(titleColors[(int)quest.State]);
+        public static string titleColored(this QuestObjective quest) => quest.Blueprint.Title.ToString().color(titleColors[(int)quest.State]);
 
-        public static string stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest);
-        public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective);
+        public static string stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest).bold();
+        public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
     }
     public class QuestEditor {
         private static bool[] selectedQuests = new bool[0];
@@ -62,7 +70,7 @@ namespace ToyBox {
                                     using (HorizontalScope()) {
                                         Space(50);
                                         Label($"{questObjective.Order}", Width(50));
-                                        Label(questObjective.Blueprint.Title.ToString().cyan(), Width(600));
+                                        Label(questObjective.titleColored(), Width(600));
                                         Space(25);
                                         Label(questObjective.stateString(), Width(150));
                                         Space(25);
@@ -103,7 +111,7 @@ namespace ToyBox {
                                                     Space(100);
                                                     Label($"{childObjective.Order}", Width(50));
                                                     Space(10);
-                                                    Label(childObjective.Blueprint.Title, Width(600));
+                                                    Label(childObjective.titleColored(), Width(600));
                                                     Space(25);
                                                     Label(childObjective.stateString(), Width(150));
                                                     Space(25);

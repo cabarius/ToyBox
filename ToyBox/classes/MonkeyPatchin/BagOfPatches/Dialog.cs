@@ -233,13 +233,13 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintCue), nameof(BlueprintCue.CanShow))]
-        public static class BlueprintCue_CanShow_Patch {
+        //[HarmonyPatch(typeof(BlueprintCue), nameof(BlueprintCue.CanShow))]
+        //public static class BlueprintCue_CanShow_Patch {
 
-            public static void Postfix(BlueprintCue __instance, ref bool __result) {
-                Mod.Debug($"BlueprintCue_CanShow_Patch - {__instance?.Speaker?.Blueprint?.Name.orange() ?? ""} BP: {__instance} result: {__result}");
-            }
-        }
+        //    public static void Postfix(BlueprintCue __instance, ref bool __result) {
+        //        Mod.Debug($"BlueprintCue_CanShow_Patch - {__instance?.Speaker?.Blueprint?.Name.orange() ?? ""} BP: {__instance} result: {__result}");
+        //    }
+        //}
 
         [HarmonyPatch(typeof(DialogController), nameof(DialogController.AddAnswers))]
         public static class DialogController_AddAnswers_Patch {
@@ -250,28 +250,34 @@ namespace ToyBox.BagOfPatches {
                     if (answerBase is BlueprintAnswer answer) {
                         if (answer.NextCue is CueSelection cueSelection) {
                             Mod.Debug($"checking: {answer.name} - {cueSelection.Cues.Count} {answer.Text}");
-
-                            if (cueSelection.Cues.Count <= 1)
+                            var cueCount = cueSelection.Cues.Count;
+                            if (cueCount <= 1)
                                 expandedAnswers.Add(answer);
-                            else
-                                foreach (var cueBase in cueSelection.Cues.Dereference<BlueprintCueBase>()) {
-                                    if (answer.ShowOnce) {
-                                        var dialog = Game.Instance.Player.Dialog;
-                                        var dialogController = Game.Instance.DialogController;
-                                        if (dialogController.LocalSelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
-                                            continue;
-                                        if (dialog.SelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
-                                            continue;
-                                    }
-                                    if (settings.toggleShowAllAnswersForEachConditionalResponse || cueBase.CanShow()) {
-                                        var multiAnswer = answer.ShallowClone();
-                                        var cueSel = cueSelection.ShallowClone();
-                                        cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
-                                        cueSel.Strategy = Strategy.First;
-                                        multiAnswer.NextCue = cueSel;
-                                        expandedAnswers.Add(multiAnswer);
+                            else {
+                                var cues = cueSelection.Cues.Dereference<BlueprintCueBase>();
+                                if (cues.All(c => c.Conditions.HasConditions)) {
+                                    foreach (var cueBase in cueSelection.Cues.Dereference<BlueprintCueBase>()) {
+                                        if (answer.ShowOnce) {
+                                            var dialog = Game.Instance.Player.Dialog;
+                                            var dialogController = Game.Instance.DialogController;
+                                            if (dialogController.LocalSelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
+                                                continue;
+                                            if (dialog.SelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
+                                                continue;
+                                        }
+                                        if (settings.toggleShowAllAnswersForEachConditionalResponse || cueBase.CanShow()) {
+                                            var multiAnswer = answer.ShallowClone();
+                                            var cueSel = cueSelection.ShallowClone();
+                                            cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
+                                            cueSel.Strategy = Strategy.First;
+                                            multiAnswer.NextCue = cueSel;
+                                            expandedAnswers.Add(multiAnswer);
+                                        }
                                     }
                                 }
+                                else
+                                    expandedAnswers.Add(answer);
+                            }
                         }
                         else
                             expandedAnswers.Add(answer);
