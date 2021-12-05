@@ -346,8 +346,10 @@ namespace ToyBox {
 
         // Etudes
         public bool showEtudeComments = true;
+
         // Quests
-        public bool hideCompleted = true;
+        public bool toggleQuestHideCompleted = true;
+        public bool toggleQuestsShowUnrevealedObjectives = false;
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
@@ -424,9 +426,10 @@ namespace ToyBox {
         public string uiCultureCode = "en";
 
         // Deprecated
-        public bool toggleNoLevelUpRestirctions = false;    // deprecated
+        private bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-        
+        private bool hideCompleted = true;
+
         // Save
         public override void Save(UnityModManager.ModEntry modEntry) => Save(this, modEntry);
 

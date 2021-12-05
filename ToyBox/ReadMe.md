@@ -53,6 +53,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Preview Relic Info (*thanks to rathtr*)
 * **Quest Editor**
   * Added descriptions and improved UI in quest editor
+  * Quest steps now number properly
+  * Steps with missing titles show blueprint name
+  * quest steps are now colored based on whether completed, current or not seen yet.  
+  * Failure steps are colored red
 ### Ver 1.4.12
 * **Bag of Tricks**
   * Cheat to let you enable Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)
