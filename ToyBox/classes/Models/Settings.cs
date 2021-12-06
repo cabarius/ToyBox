@@ -111,6 +111,7 @@ namespace ToyBox {
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
         public bool toggleWidenActionBarGroups = false;
+        public bool toggleGameOverFixLeeerrroooooyJenkins = false;
 
         // Camera
         public bool toggleZoomOnAllMaps = false;
@@ -199,7 +200,6 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterBlueprint = false;
         public bool toggleLootChecklistFilterDescription = false;
         public RarityType lootChecklistFilterRarity = RarityType.None;
-
 
         // Crusade
         public bool toggleInfiniteArmyRerolls = false;
@@ -327,6 +327,7 @@ namespace ToyBox {
         public bool showElements = false;
         public bool showDivisions = true;
         public bool showFromAllSpellbooks = false;
+        public bool showDisplayAndInternalNames = false;
 
         public string searchTextEnchantments = "";
 
@@ -346,8 +347,10 @@ namespace ToyBox {
 
         // Etudes
         public bool showEtudeComments = true;
+
         // Quests
-        public bool hideCompleted = true;
+        public bool toggleQuestHideCompleted = true;
+        public bool toggleQuestsShowUnrevealedObjectives = false;
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
@@ -424,9 +427,10 @@ namespace ToyBox {
         public string uiCultureCode = "en";
 
         // Deprecated
-        public bool toggleNoLevelUpRestirctions = false;    // deprecated
+        private bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-        
+        private bool hideCompleted = true;
+
         // Save
         public override void Save(UnityModManager.ModEntry modEntry) => Save(this, modEntry);
 

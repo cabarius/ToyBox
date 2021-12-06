@@ -13,6 +13,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using ModKit;
+using static ModKit.UI;
 using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
 using Kingmaker.EntitySystem;
@@ -43,7 +44,10 @@ namespace ToyBox {
                 }
                 else {
                     var name = blueprint.name.ToLower();
-                    if (terms.All(term => StringExtensions.Matches(name, term))) {
+                    var displayName = blueprint.GetDisplayName().ToLower();
+                    if (terms.All(term => name.Matches(term))
+                        || terms.All(term => displayName.Matches(term))
+                        ) {
                         filtered.Add(blueprint);
                     }
                 }
@@ -69,42 +73,44 @@ namespace ToyBox {
             if (callerKey != prevCallerKey) { searchChanged = true; showAll = false; }
             prevCallerKey = callerKey;
             var mutatorLookup = actions.Distinct().ToDictionary(a => a.name, a => a);
-            using (UI.HorizontalScope()) {
-                UI.Space(100);
-                UI.ActionTextField(ref searchText, "searhText", null, () => { searchChanged = true; }, UI.Width(320));
-                UI.Space(25);
-                UI.Label("Limit", UI.ExpandWidth(false));
-                UI.ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, UI.Width(175));
+            using (HorizontalScope()) {
+                100.space();
+                ActionTextField(ref searchText, "searhText", null, () => { searchChanged = true; }, Width(320));
+                25.space();
+                Label("Limit", ExpandWidth(false));
+                ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, Width(175));
                 if (searchLimit > 1000) { searchLimit = 1000; }
-                UI.Space(25);
-                searchChanged |= UI.DisclosureToggle("Show All".orange().bold(), ref showAll);
-                UI.Space(25);
-                refreshTree |= UI.DisclosureToggle("Show Tree".orange().bold(), ref showTree);
-                UI.Space(50);
-                UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
+                25.space();
+                searchChanged |= DisclosureToggle("Show All".orange().bold(), ref showAll);
+                25.space();
+                refreshTree |= DisclosureToggle("Show Tree".orange().bold(), ref showTree);
+                50.space();
+                Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
+                25.space();
+                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, AutoWidth());
             }
             if (showTree) {
                 treeEditor.OnGUI(unit, refreshTree);
                 return new List<Action>();
             }
-            using (UI.HorizontalScope()) {
-                UI.Space(100);
-                UI.ActionButton("Search", () => { searchChanged = true; }, UI.AutoWidth());
-                UI.Space(25);
+            using (HorizontalScope()) {
+                Space(100);
+                ActionButton("Search", () => { searchChanged = true; }, AutoWidth());
+                Space(25);
                 if (showAll && typeof(T) == typeof(AbilityData)) { // This dynamic type check is obviously tech debt and should be refactored, but we don't want to deal with Search All Spellbooks/Add All being on the facts editor as it is now
-                    if (UI.Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks, UI.AutoWidth())) { searchChanged = true; }
-                    UI.Space(25);
-                    UI.ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList()), UI.AutoWidth());
-                    UI.Space(25);
-                    UI.ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor), UI.AutoWidth());
+                    if (Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks, AutoWidth())) { searchChanged = true; }
+                    Space(25);
+                    ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList()), AutoWidth());
+                    Space(25);
+                    ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor), AutoWidth());
                 }
                 if (matchCount > 0 && searchText.Length > 0) {
                     var matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                     if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
-                    UI.Label(matchesText, UI.ExpandWidth(false));
+                    Label(matchesText, ExpandWidth(false));
                 }
             }
-            var remainingWidth = UI.ummWidth;
+            var remainingWidth = ummWidth;
             if (showAll) {
                 // TODO - do we need this logic or can we make blueprint filtering fast enough to do keys by key searching?
                 //if (filteredBPs == null || searchChanged) {
@@ -126,7 +132,7 @@ namespace ToyBox {
 
             var sorted = facts.OrderBy((f) => title(f));
             matchCount = 0;
-            UI.Div(100);
+            Div(100);
             foreach (var fact in sorted) {
                 var remWidth = remainingWidth;
                 if (fact == null) continue;
@@ -135,17 +141,23 @@ namespace ToyBox {
                 var nameLower = name.ToLower();
                 if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => nameLower.Contains(term)))) {
                     matchCount++;
-                    using (UI.HorizontalScope()) {
-                        UI.Space(100); remWidth -= 100;
-                        var titleWidth = (remainingWidth / (UI.IsWide ? 3.0f : 4.0f)) - 100;
-                        UI.Label($"{name}".cyan().bold(), UI.Width(titleWidth));
+                    using (HorizontalScope()) {
+                        Space(100); remWidth -= 100;
+                        var titleWidth = (remainingWidth / (IsWide ? 3.0f : 4.0f)) - 100;
+                        string text;
+                        if (settings.showDisplayAndInternalNames)
+                            text = $"{name.cyan().bold()} : {bp.NameSafe().color(RGBA.darkgrey)}";
+                        else {
+                            text = name.cyan().bold();
+                        }
+                        Label(text, Width(titleWidth));
                         remWidth -= titleWidth;
-                        UI.Space(10); remWidth -= 10;
+                        Space(10); remWidth -= 10;
                         if (value != null) {
                             var v = value(fact);
                             decrease.BlueprintActionButton(unit, bp, () => todo.Add(() => decrease.action(bp, unit, repeatCount)), 60);
-                            UI.Space(10f);
-                            UI.Label($"{v}".orange().bold(), UI.Width(30));
+                            Space(10f);
+                            Label($"{v}".orange().bold(), Width(30));
                             increase.BlueprintActionButton(unit, bp, () => todo.Add(() => increase.action(bp, unit, repeatCount)), 60);
                             remWidth -= 166;
                         }
@@ -153,7 +165,7 @@ namespace ToyBox {
                     UI.Space(30);
                     add.BlueprintActionButton(unit, bp, () => todo.Add(add.action(bp, unit, repeatCount)), 150);
 #endif
-                        UI.Space(10); remWidth -= 10;
+                        Space(10); remWidth -= 10;
                         remove.BlueprintActionButton(unit, bp, () => todo.Add(() => remove.action(bp, unit, repeatCount)), 175);
                         remWidth -= 178;
 #if false
@@ -161,16 +173,16 @@ namespace ToyBox {
                         action.MutatorButton(unit, bp, () => todo.Add(() => muator.action(bp, unit, repeatCount)), 150);
                     }
 #endif
-                        UI.Space(20); remWidth -= 20;
-                        using (UI.VerticalScope(UI.Width(remWidth - 100))) {
+                        Space(20); remWidth -= 20;
+                        using (VerticalScope(Width(remWidth - 100))) {
                             if (settings.showAssetIDs)
-                                GUILayout.TextField(blueprint(fact).AssetGuid.ToString(), UI.AutoWidth());
+                                GUILayout.TextField(blueprint(fact).AssetGuid.ToString(), AutoWidth());
                             if (description != null) {
-                                UI.Label(description(fact).StripHTML().green(), UI.Width(remWidth - 100));
+                                Label(description(fact).StripHTML().green(), Width(remWidth - 100));
                             }
                         }
                     }
-                    UI.Div(100);
+                    Div(100);
                 }
             }
             return todo;

@@ -49,6 +49,7 @@ using Kingmaker.RuleSystem.Rules.Abilities;
 using UnityEngine;
 using Kingmaker.EntitySystem.Stats;
 using ModKit;
+using Kingmaker.Controllers.Combat;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -391,6 +392,14 @@ namespace ToyBox.BagOfPatches {
                     mainMenuVM?.EnterGame(new Action(mainMenuVM.LoadLastSave));
                 }
                 Main.freshlyLaunched = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(Player), nameof(Player.GameOver))]
+        private static class Player_GameOverReason_Patch {
+            private static bool Prefix(Player __instance, Player.GameOverReasonType reason) {
+                if (!settings.toggleGameOverFixLeeerrroooooyJenkins || reason  != Player.GameOverReasonType.EssentialUnitIsDead) return true;
+                return false;
             }
         }
 

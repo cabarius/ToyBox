@@ -242,7 +242,8 @@ namespace ToyBox {
                 },
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
-                () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); Space(25); Label("Hold down shift during launch to bypass".green()); },
+                () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); 25.space(); Label("Hold down shift during launch to bypass".green()); },
+                () => { Toggle($"Game Over Fix For {"LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon)} omg he just ran in!", ref settings.toggleGameOverFixLeeerrroooooyJenkins); 25.space(); Label("Prevents dumb companions (that's you Greybor) from wiping the party by running running into the dragon room and dying...".green()); },
                 () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ", ref settings.toggleWidenActionBarGroups),
                 () => {
                     if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {

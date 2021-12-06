@@ -43,6 +43,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
 ### Ver 1.4.13 (Coming Soon)
 * **Bag of Tricks**
+  * **Quality of Life**
+    * **Game Over** - Added toggle to block Game Over when certain companions die in combat, so if ***Leerooooy (Greybor) Jenkins*** runs in and your leader runs in to save him and dies the game does not end unless the whole party wipes.
   * **Expand Answers For Conditional Responses**
     * Dialog dependent on previous dialog checks now works correctly with the feature enabled
     * Fixed issue that generated bogus extra answers for non conditional response by ensuring that the feature only gets activated by a set of continuation cues that all have conditions
@@ -51,8 +53,15 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * **Camera**
     * Added Toy to let you adjust the clip plane with Alt+MouseWheel
   * Preview Relic Info (*thanks to rathtr*)
+* **Search 'n Pick**
+  * Option to show display name (localized name) for things that have it
+  * Search now looks at both display name (localized name) and internal name. Previously it only looked at internal name
 * **Quest Editor**
   * Added descriptions and improved UI in quest editor
+  * Quest steps now number properly
+  * Steps with missing titles show blueprint name
+  * quest steps are now colored based on whether completed, current or not seen yet.  
+  * Failure steps are colored red
 ### Ver 1.4.12
 * **Bag of Tricks**
   * Cheat to let you enable Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)
