@@ -111,6 +111,7 @@ namespace ToyBox {
         public bool toggleShiftClickToFastTransfer = false;
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
         public bool toggleWidenActionBarGroups = false;
+        public bool toggleGameOverFixLeeerrroooooyJenkins = false;
 
         // Camera
         public bool toggleZoomOnAllMaps = false;

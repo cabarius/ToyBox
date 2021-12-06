@@ -356,7 +356,7 @@ namespace ToyBox.classes.MainUI {
             return dist;
         }
         public static IEnumerable<(GlobalMapArmyState, float)> ArmiesByDistanceFromPlayer() {
-            if (!Main.IsInGame) return null;
+            if (!Main.IsInGame || GlobalMapView.Instance is null) return null;
             var mainMapState = MainGlobalMapState();
             if (mainMapState == null) return null;
             var armies = mainMapState.Armies;

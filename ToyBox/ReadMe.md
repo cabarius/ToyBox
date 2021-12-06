@@ -43,6 +43,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
 ### Ver 1.4.13 (Coming Soon)
 * **Bag of Tricks**
+  * **Quality of Life**
+    * Added toggle to block Game Over when certain companions die in combat, so if Leerooooy (Greybor) Jenkins runs in and your leader runs in to save him and dies the game does not end unless the whole party wipes.
   * **Expand Answers For Conditional Responses**
     * Dialog dependent on previous dialog checks now works correctly with the feature enabled
     * Fixed issue that generated bogus extra answers for non conditional response by ensuring that the feature only gets activated by a set of continuation cues that all have conditions
