@@ -76,7 +76,7 @@ namespace ToyBox {
                             50.space();
                             Label(quest.Blueprint.Title.ToString().orange().bold(), Width(600));
                             50.space();
-                            DisclosureToggle(quest.stateString(), ref selectedQuests[index]);
+                            DisclosureToggle(quest.stateString(), ref selectedQuests[index]);                                                           
                             50.space();
                             Label(quest.Blueprint.Description.ToString().StripHTML().green());
                         }
