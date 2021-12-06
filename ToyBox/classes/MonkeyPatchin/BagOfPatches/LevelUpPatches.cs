@@ -421,7 +421,7 @@ namespace ToyBox.BagOfPatches {
     [HarmonyPatch(typeof(PrerequisiteFeature))]
         public static class PrerequisiteFeature_CheckInternal_Patch {
             [HarmonyPostfix]
-            [HarmonyPatch("CheckInternal")]
+            [HarmonyPatch(nameof(PrerequisiteFeature.CheckInternal))]
             public static void PostfixCheckInternal([NotNull] UnitDescriptor unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) {
                     return;
@@ -433,7 +433,7 @@ namespace ToyBox.BagOfPatches {
             }
 
             [HarmonyPostfix]
-            [HarmonyPatch("ConsiderFulfilled")]
+            [HarmonyPatch(nameof(PrerequisiteFeature.ConsiderFulfilled))]
             public static void PostfixConsiderFulfilled([NotNull] UnitDescriptor unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) {
                     return;

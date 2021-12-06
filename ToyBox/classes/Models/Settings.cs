@@ -200,7 +200,6 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterDescription = false;
         public RarityType lootChecklistFilterRarity = RarityType.None;
 
-
         // Crusade
         public bool toggleInfiniteArmyRerolls = false;
         public bool toggleLargeArmies = false;
@@ -327,6 +326,7 @@ namespace ToyBox {
         public bool showElements = false;
         public bool showDivisions = true;
         public bool showFromAllSpellbooks = false;
+        public bool showDisplayAndInternalNames = false;
 
         public string searchTextEnchantments = "";
 

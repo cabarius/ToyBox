@@ -16,6 +16,8 @@ using ModKit;
 using Kingmaker.Blueprints.Items.Weapons;
 using HarmonyLib;
 using Kingmaker.AreaLogic.Etudes;
+using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 
 namespace ToyBox {
 
@@ -31,7 +33,16 @@ namespace ToyBox {
             }
             cachedCollationNames.Add(bp, names);
         }
-        public static string GetDisplayName(this SimpleBlueprint bp) => bp.name;
+
+        public static string GetDisplayName(this SimpleBlueprint bp) => bp switch {
+            BlueprintAbilityResource abilityResource => abilityResource.Name,
+            BlueprintArchetype archetype => archetype.Name,
+            BlueprintCharacterClass charClass => charClass.Name,
+            BlueprintItem item => item.Name,
+            BlueprintItemEnchantment enchant => enchant.Name,
+            BlueprintUnitFact fact => fact.Name,
+            _ => bp.name
+        };
         public static string GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
             if (name == null || name.Length == 0) name = bp.name.Replace("Spellbook", "");

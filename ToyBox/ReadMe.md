@@ -51,6 +51,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * **Camera**
     * Added Toy to let you adjust the clip plane with Alt+MouseWheel
   * Preview Relic Info (*thanks to rathtr*)
+* **Search 'n Pick**
+  * Option to show display name (localized name) for things that have it
+  * Search now looks at both display name (localized name) and internal name. Previously it only looked at internal name
 * **Quest Editor**
   * Added descriptions and improved UI in quest editor
   * Quest steps now number properly

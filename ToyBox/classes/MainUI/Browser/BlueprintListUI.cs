@@ -10,6 +10,7 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem;
 using Kingmaker.Utility;
 using ModKit;
+using static ModKit.UI;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items;
 
@@ -35,7 +36,7 @@ namespace ToyBox {
         ) {
             List<Action> todo = new();
             if (titleFormater == null) titleFormater = (t) => t.orange().bold();
-            if (remainingWidth == 0) remainingWidth = UI.ummWidth - indent;
+            if (remainingWidth == 0) remainingWidth = ummWidth - indent;
             var index = 0;
             IEnumerable<SimpleBlueprint> simpleBlueprints = blueprints.ToList();
             if (needsLayout) {
@@ -48,21 +49,21 @@ namespace ToyBox {
                 needsLayout = false;
             }
             if (hasRepeatableAction) {
-                UI.BeginHorizontal();
-                UI.Label("", UI.MinWidth(350 - indent), UI.MaxWidth(600));
-                UI.ActionIntTextField(
+                BeginHorizontal();
+                Label("", MinWidth(350 - indent), MaxWidth(600));
+                ActionIntTextField(
                     ref repeatCount,
                     "repeatCount",
                     (limit) => { },
                     () => { },
-                    UI.Width(160));
-                UI.Space(40);
-                UI.Label("Parameter".cyan() + ": " + $"{repeatCount}".orange(), UI.ExpandWidth(false));
+                    Width(160));
+                Space(40);
+                Label("Parameter".cyan() + ": " + $"{repeatCount}".orange(), ExpandWidth(false));
                 repeatCount = Math.Max(1, repeatCount);
                 repeatCount = Math.Min(100, repeatCount);
-                UI.EndHorizontal();
+                EndHorizontal();
             }
-            UI.Div(indent);
+            Div(indent);
             var count = 0;
             foreach (var blueprint in simpleBlueprints) {
                 var currentCount = count++;
@@ -71,20 +72,33 @@ namespace ToyBox {
                     description = $"{itemBlueprint.FlavorText.StripHTML().color(RGBA.notable)}\n{description}";
                 float titleWidth = 0;
                 var remWidth = remainingWidth - indent;
-                using (UI.HorizontalScope()) {
-                    UI.Space(indent);
+                using (HorizontalScope()) {
+                    Space(indent);
                     var actions = blueprint.GetActions()
                         .Where(action => action.canPerform(blueprint, unit));
                     var titles = actions.Select(a => a.name);
-                    var title = blueprint.NameSafe();
-                    if (titles.Contains("Remove") || titles.Contains("Lock")) {
-                        title = title.cyan().bold();
+                    var name = blueprint.NameSafe();
+                    var displayName = blueprint.GetDisplayName();
+                    string title;
+                    if (settings.showDisplayAndInternalNames && displayName.Length > 0) {
+                        if (titles.Contains("Remove") || titles.Contains("Lock")) {
+                            title = displayName.cyan().bold();
+                        }
+                        else {
+                            title = titleFormater(displayName);
+                        }
+                        title += $"{title} : {name.color(RGBA.darkgrey)}";
                     }
                     else {
-                        title = titleFormater(title);
+                        if (titles.Contains("Remove") || titles.Contains("Lock")) {
+                            title = name.cyan().bold();
+                        }
+                        else {
+                            title = titleFormater(name);
+                        }
                     }
-                    titleWidth = (remainingWidth / (UI.IsWide ? 3 : 4)) - indent;
-                    UI.Label(title, UI.Width(titleWidth));
+                    titleWidth = (remainingWidth / (IsWide ? 3 : 4)) - indent;
+                    Label(title, Width(titleWidth));
                     remWidth -= titleWidth;
                     var actionCount = actions != null ? actions.Count() : 0;
                     var lockIndex = titles.IndexOf("Lock");
@@ -93,24 +107,24 @@ namespace ToyBox {
                         if (lockIndex >= 0) {
                             var flags = Game.Instance.Player.UnlockableFlags;
                             var lockAction = actions.ElementAt(lockIndex);
-                            UI.ActionButton("<", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) - 1); }, UI.Width(50));
-                            UI.Space(25);
-                            UI.Label($"{flags.GetFlagValue(flagBP)}".orange().bold(), UI.MinWidth(50));
-                            UI.ActionButton(">", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) + 1); }, UI.Width(50));
-                            UI.Space(50);
-                            UI.ActionButton(lockAction.name, () => { lockAction.action(blueprint, unit, repeatCount); }, UI.Width(120));
-                            UI.Space(100);
+                            ActionButton("<", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) - 1); }, Width(50));
+                            Space(25);
+                            Label($"{flags.GetFlagValue(flagBP)}".orange().bold(), MinWidth(50));
+                            ActionButton(">", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) + 1); }, Width(50));
+                            Space(50);
+                            ActionButton(lockAction.name, () => { lockAction.action(blueprint, unit, repeatCount); }, Width(120));
+                            Space(100);
 #if DEBUG
-                            UI.Label(flagBP.GetDescription().green());
+                            Label(flagBP.GetDescription().green());
 #endif
                         }
                         else {
                             var unlockIndex = titles.IndexOf("Unlock");
                             if (unlockIndex >= 0) {
                                 var unlockAction = actions.ElementAt(unlockIndex);
-                                UI.Space(240);
-                                UI.ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, unit, repeatCount); }, UI.Width(120));
-                                UI.Space(100);
+                                Space(240);
+                                ActionButton(unlockAction.name, () => { unlockAction.action(blueprint, unit, repeatCount); }, Width(120));
+                                Space(100);
                             }
                         }
                         remWidth -= 300;
@@ -121,7 +135,7 @@ namespace ToyBox {
                                 var action = actions.ElementAt(ii);
                                 // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
                                 if (action.name == "<" || action.name == ">") {
-                                    UI.Space(174); continue;
+                                    Space(174); continue;
                                 }
                                 var actionName = action.name;
                                 float extraSpace = 0;
@@ -129,17 +143,17 @@ namespace ToyBox {
                                     actionName += action.isRepeatable ? $" {repeatCount}" : "";
                                     extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
                                 }
-                                UI.ActionButton(actionName, () => todo.Add(() => action.action(blueprint, unit, repeatCount, currentCount)), UI.Width(160 + extraSpace));
-                                UI.Space(10);
+                                ActionButton(actionName, () => todo.Add(() => action.action(blueprint, unit, repeatCount, currentCount)), Width(160 + extraSpace));
+                                Space(10);
                                 remWidth -= 174.0f + extraSpace;
 
                             }
                             else {
-                                UI.Space(174);
+                                Space(174);
                             }
                         }
                     }
-                    UI.Space(10);
+                    Space(10);
                     var typeString = blueprint.GetType().Name;
                     var navigateStrings = new List<string> { typeString };
                     if (typeFilter?.collator != null) {
@@ -179,53 +193,53 @@ namespace ToyBox {
                             else description = elementsStr + "\n" + description;
                         }
                     }
-                    using (UI.VerticalScope(UI.Width(remWidth))) {
-                        using (UI.HorizontalScope(UI.Width(remWidth))) {
-                            UI.Space(-17);
+                    using (VerticalScope(Width(remWidth))) {
+                        using (HorizontalScope(Width(remWidth))) {
+                            Space(-17);
                             if (settings.showAssetIDs) {
-                                UI.ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), UI.rarityButtonStyle);
-                                GUILayout.TextField(blueprint.AssetGuid.ToString(), UI.ExpandWidth(false));
+                                ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
+                                GUILayout.TextField(blueprint.AssetGuid.ToString(), ExpandWidth(false));
                             }
-                            else UI.ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), UI.rarityButtonStyle);
-                            UI.Space(17);
+                            else ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
+                            Space(17);
                         }
-                        if (description.Length > 0) UI.Label(description.green(), UI.Width(remWidth));
+                        if (description.Length > 0) Label(description.green(), Width(remWidth));
                     }
                 }
                 if (blueprint is BlueprintParametrizedFeature paramBP) {
-                    using (UI.HorizontalScope()) {
-                        UI.Space(titleWidth);
-                        using (UI.VerticalScope()) {
-                            using (UI.HorizontalScope(GUI.skin.button)) {
+                    using (HorizontalScope()) {
+                        Space(titleWidth);
+                        using (VerticalScope()) {
+                            using (HorizontalScope(GUI.skin.button)) {
                                 var content = new GUIContent($"{paramBP.Name.yellow()}");
                                 var labelWidth = GUI.skin.label.CalcSize(content).x;
-                                UI.Space(indent);
+                                Space(indent);
                                 //UI.Space(indent + titleWidth - labelWidth - 25);
-                                UI.Label(content, UI.Width(labelWidth));
-                                UI.Space(25);
+                                Label(content, Width(labelWidth));
+                                Space(25);
                                 var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
                                 if (nameStrings == null) {
                                     nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
                                     paramBPValueNames[paramBP] = nameStrings;
                                 }
-                                UI.ActionSelectionGrid(
+                                ActionSelectionGrid(
                                     ref ParamSelected[currentCount],
                                     nameStrings,
                                     6,
                                     (selected) => { },
                                     GUI.skin.toggle,
-                                    UI.Width(remWidth)
+                                    Width(remWidth)
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                             }
-                            UI.Space(15);
+                            Space(15);
                         }
                     }
                 }
                 if (blueprint is BlueprintFeatureSelection selectionBP) {
-                    using (UI.HorizontalScope()) {
-                        UI.Space(titleWidth);
-                        using (UI.VerticalScope()) {
+                    using (HorizontalScope()) {
+                        Space(titleWidth);
+                        using (VerticalScope()) {
                             var needsSelection = false;
                             var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
                             if (nameStrings == null) {
@@ -233,21 +247,21 @@ namespace ToyBox {
                                 nameStrings = selectionBP.AllFeatures.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
                                 selectionBPValuesNames[selectionBP] = nameStrings;
                             }
-                            using (UI.HorizontalScope(GUI.skin.button)) {
+                            using (HorizontalScope(GUI.skin.button)) {
                                 var content = new GUIContent($"{selectionBP.Name.yellow()}");
                                 var labelWidth = GUI.skin.label.CalcSize(content).x;
-                                UI.Space(indent);
+                                Space(indent);
                                 //UI.Space(indent + titleWidth - labelWidth - 25);
-                                UI.Label(content, UI.Width(labelWidth));
-                                UI.Space(25);
+                                Label(content, Width(labelWidth));
+                                Space(25);
 
-                                UI.ActionSelectionGrid(
+                                ActionSelectionGrid(
                                     ref ParamSelected[currentCount],
                                     nameStrings,
                                     4,
                                     (selected) => { },
                                     GUI.skin.toggle,
-                                    UI.Width(remWidth)
+                                    Width(remWidth)
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                             }
@@ -258,23 +272,23 @@ namespace ToyBox {
                                             ParamSelected[currentCount] = selectionBP.AllFeatures.IndexOf(selection);
                                             needsSelection = false;
                                         }
-                                        using (UI.HorizontalScope()) {
-                                            UI.ActionButton("Remove", () => {
+                                        using (HorizontalScope()) {
+                                            ActionButton("Remove", () => {
 
-                                            }, UI.Width(160));
-                                            UI.Space(25);
-                                            UI.Label($"{entry.Key} ".yellow() + selection.Name.orange(), UI.Width(250));
-                                            UI.Space(25);
-                                            UI.Label(selection.Description.StripHTML().green());
+                                            }, Width(160));
+                                            Space(25);
+                                            Label($"{entry.Key} ".yellow() + selection.Name.orange(), Width(250));
+                                            Space(25);
+                                            Label(selection.Description.StripHTML().green());
                                         }
                                     }
                                 }
                             }
-                            UI.Space(15);
+                            Space(15);
                         }
                     }
                 }
-                UI.Div(indent);
+                Div(indent);
                 index++;
             }
             return todo;

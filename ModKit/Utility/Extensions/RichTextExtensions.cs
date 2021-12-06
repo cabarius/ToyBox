@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ModKit.Utility {
     public static class StringExtensions {
-        public static bool Matches(string source, string other) {
+        public static bool Matches(this string source, string other) {
             if (source == null || other == null)
                 return false;
 #if false

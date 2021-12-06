@@ -24,6 +24,7 @@ using Kingmaker.Utility;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
+using static ModKit.UI;
 using ModKit.Utility;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
@@ -31,7 +32,7 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 
 namespace ToyBox {
-    public class BlueprintBrowser {
+    public static class BlueprintBrowser {
         public static Settings settings => Main.settings;
 
         public static IEnumerable<SimpleBlueprint> unpagedBPs = null;
@@ -198,13 +199,15 @@ namespace ToyBox {
                     filtered.Add(blueprint);
                 }
                 else {
-                    var name = blueprint.GetDisplayName();
+                    var name = blueprint.name;
+                    var displayName = blueprint.GetDisplayName();
                     var description = blueprint.GetDescription() ?? "";
-                    if (terms.All(term => StringExtensions.Matches(name, term))
+                    if (terms.All(term => name.Matches(term))
+                        || terms.All(term => displayName.Matches(term))
                         || settings.searchesDescriptions && 
-                            (  terms.All(term => StringExtensions.Matches(description, term))
+                            (  terms.All(term => description.Matches(term))
                             || blueprint is BlueprintItem itemBP 
-                                && terms.All(term => StringExtensions.Matches(itemBP.FlavorText, term))
+                                && terms.All(term => itemBP.FlavorText.Matches(term))
                             )
                         ) {
                         filtered.Add(blueprint);
@@ -257,23 +260,23 @@ namespace ToyBox {
                 if (blueprints != null) UpdateSearchResults();
             }
             // Stackable browser
-            using (UI.HorizontalScope(UI.Width(350))) {
-                var remainingWidth = UI.ummWidth;
+            using (HorizontalScope(Width(350))) {
+                var remainingWidth = ummWidth;
                 // First column - Type Selection Grid
-                using (UI.VerticalScope(GUI.skin.box)) {
-                    UI.ActionSelectionGrid(ref settings.selectedBPTypeFilter,
+                using (VerticalScope(GUI.skin.box)) {
+                    ActionSelectionGrid(ref settings.selectedBPTypeFilter,
                         blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                         1,
                         (selected) => { UpdateSearchResults(); },
-                        UI.buttonStyle,
-                        UI.Width(200));
+                        buttonStyle,
+                        Width(200));
                 }
                 remainingWidth -= 350;
                 var collationChanged = false;
                 if (collatedBPs != null) {
-                    using (UI.VerticalScope(GUI.skin.box)) {
+                    using (VerticalScope(GUI.skin.box)) {
                         var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-                        if (UI.VPicker<string>("Categories", ref selectedKey, collationKeys, null, s => s, ref collationSearchText, UI.Width(300))) {
+                        if (VPicker("Categories", ref selectedKey, collationKeys, null, s => s, ref collationSearchText, Width(300))) {
                             collationChanged = true; BlueprintListUI.needsLayout = true;
                         }
                         if (selectedKey != null)
@@ -291,66 +294,66 @@ namespace ToyBox {
                 }
 
                 // Section Column  - Main Area
-                using (UI.VerticalScope(UI.MinWidth(remainingWidth))) {
+                using (VerticalScope(MinWidth(remainingWidth))) {
                     // Search Field and modifiers
-                    using (UI.HorizontalScope()) {
-                        UI.ActionTextField(
+                    using (HorizontalScope()) {
+                        ActionTextField(
                             ref settings.searchText,
                             "searhText",
                             (text) => { },
                             () => UpdateSearchResults(),
-                            UI.Width(400));
-                        UI.Space(50);
-                        UI.Label("Limit", UI.AutoWidth());
-                        UI.Space(15);
-                        UI.ActionIntTextField(
+                            Width(400));
+                        50.space();
+                        Label("Limit", AutoWidth());
+                        15.space();
+                        ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
                             (limit) => { },
                             () => UpdateSearchResults(),
-                            UI.Width(75));
+                            Width(75));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
-                        UI.Space(25);
-                        if (UI.Toggle("Search Descriptions", ref settings.searchesDescriptions, UI.AutoWidth())) UpdateSearchResults();
-                        UI.Space(25);
-                        if (UI.Toggle("Attributes", ref settings.showAttributes, UI.AutoWidth())) UpdateSearchResults();
-                        UI.Space(25);
-                        UI.Toggle("Show GUIDs", ref settings.showAssetIDs, UI.AutoWidth());
-                        UI.Space(25);
-                        UI.Toggle("Components", ref settings.showComponents, UI.AutoWidth());
-                        UI.Space(25);
-                        UI.Toggle("Elements", ref settings.showElements, UI.AutoWidth());
+                        25.space();
+                        if (Toggle("Search Descriptions", ref settings.searchesDescriptions, AutoWidth())) UpdateSearchResults();
+                        25.space();
+                        if (Toggle("Attributes", ref settings.showAttributes, AutoWidth())) UpdateSearchResults();
+                        25.space();
+                        Toggle("Show GUIDs", ref settings.showAssetIDs, AutoWidth());
+                        25.space();
+                        Toggle("Components", ref settings.showComponents, AutoWidth());
+                        25.space();
+                        Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, AutoWidth());
                     }
                     // Search Button and Results Summary
-                    using (UI.HorizontalScope()) {
-                        UI.ActionButton("Search", () => {
+                    using (HorizontalScope()) {
+                        ActionButton("Search", () => {
                             UpdateSearchResults();
-                        }, UI.AutoWidth());
-                        UI.Space(25);
+                        }, AutoWidth());
+                        Space(25);
                         if (firstSearch) {
-                            UI.Label("please note the first search may take a few seconds.".green(), UI.AutoWidth());
+                            Label("please note the first search may take a few seconds.".green(), AutoWidth());
                         }
                         else if (matchCount > 0) {
                             var title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
-                            UI.Label(title, UI.ExpandWidth(false));
+                            Label(title, ExpandWidth(false));
                         }
-                        UI.Space(130);
-                        UI.Label($"Page: ".green() + $"{Math.Min(currentPage + 1, pageCount + 1)}".orange() + " / " + $"{pageCount + 1}".cyan(), UI.AutoWidth());
-                        UI.ActionButton("-", () => {
+                        Space(130);
+                        Label($"Page: ".green() + $"{Math.Min(currentPage + 1, pageCount + 1)}".orange() + " / " + $"{pageCount + 1}".cyan(), AutoWidth());
+                        ActionButton("-", () => {
                             currentPage = Math.Max(currentPage -= 1, 0);
                             UpdatePaginatedResults();
-                        }, UI.AutoWidth());
-                        UI.ActionButton("+", () => {
+                        }, AutoWidth());
+                        ActionButton("+", () => {
                             currentPage = Math.Min(currentPage += 1, pageCount);
                             UpdatePaginatedResults();
-                        }, UI.AutoWidth());
-                        UI.Space(25);
+                        }, AutoWidth());
+                        Space(25);
                         var pageNum = currentPage + 1;
-                        if (UI.Slider(ref pageNum, 1, pageCount + 1, 1)) UpdatePaginatedResults();
+                        if (Slider(ref pageNum, 1, pageCount + 1, 1)) UpdatePaginatedResults();
                         currentPage = pageNum - 1;
                     }
-                    UI.Space(10);
+                    Space(10);
 
                     if (filteredBPs != null) {
                         CharacterPicker.OnGUI();
@@ -390,7 +393,7 @@ namespace ToyBox {
                             }
                         }).ForEach(action => action());
                     }
-                    UI.Space(25);
+                    Space(25);
                 }
             }
             return null;

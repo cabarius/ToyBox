@@ -397,10 +397,12 @@ namespace ToyBox.classes.MainUI {
                 }
                 else {
                     var name = enchant.name;
+                    var displayName = enchant.GetDisplayName();
                     var description = enchant.Description ?? "";
                     description = description.StripHTML();
-                    if (terms.All(term => StringExtensions.Matches(name, term))
-                        || settings.searchesDescriptions && terms.All(term => StringExtensions.Matches(description, term))
+                    if (terms.All(term => name.Matches( term))
+                        || terms.All(term => displayName.Matches(term))
+                        || settings.searchesDescriptions && terms.All(term => description.Matches(term))
                         ) {
                         filteredEnchantments.Add(enchant);
                     }
