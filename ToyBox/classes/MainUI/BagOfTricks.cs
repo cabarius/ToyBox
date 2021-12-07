@@ -385,7 +385,11 @@ namespace ToyBox {
                 () => {
                     Toggle("Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
                 },
-                () => Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation", ref settings.toggleCameraElevation),
+                () => {
+                    Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation", ref settings.toggleCameraElevation);
+                    25.space();
+                    Toggle("Free Camera", ref settings.toggleFreeCamera);
+                },
                 () => Label("Rotation".cyan()),
                 () => {
                     50.space();
