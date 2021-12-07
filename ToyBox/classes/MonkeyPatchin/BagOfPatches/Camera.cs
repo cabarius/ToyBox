@@ -35,6 +35,7 @@ namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
+        private static float CameraElevation = 0f;
 
         [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.Update))]
         static class CameraRig_Update_Patch {
@@ -50,12 +51,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        //[HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickScroll))]
-        //private static class CameraRig_TickScroll_Patch {
-        //    public static void Postfix(CameraRig __instance) {
-        //    }
-        //}
 
         [HarmonyPatch(typeof(CameraZoom), nameof(CameraZoom.TickZoom))]
         private static class CameraZoom_TickZoom_Patch {
@@ -82,7 +77,7 @@ namespace ToyBox.BagOfPatches {
                             Mod.Debug($"highlightingFeature.DepthClip.NearCameraClipDistance: {highlightingFeature.DepthClip.NearCameraClipDistance}");
                         }
                         if (Input.GetKey(KeyCode.LeftShift)) {
-                            highlightingFeature.DepthClip.ClipTreshold += Input.GetAxis("Mouse ScrollWheel")/5;
+                            highlightingFeature.DepthClip.ClipTreshold += Input.GetAxis("Mouse ScrollWheel") / 5;
                             Mod.Debug($"highlightingFeature.DepthClip.ClipTreshold: {highlightingFeature.DepthClip.ClipTreshold}");
                             //highlightingFeature.DepthClip.AlphaScale += Input.GetAxis("Mouse ScrollWheel");
                             //highlightingFeature.DepthClip.NoiseTiling += Input.GetAxis("Mouse ScrollWheel");
@@ -123,7 +118,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickRotate))]
         private static class CameraRig_TickRotate_Patch {
 
-            public static bool Prefix(CameraRig __instance) {
+            public static bool Prefix(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
                 if (!settings.toggleRotateOnAllMaps && !settings.toggleCameraPitch && !Main.resetExtraCameraAngles && !settings.toggleInvertXAxis && !settings.toggleInvertKeyboardXAxis) return true;
                 bool usePitch = settings.toggleCameraPitch;
                 if (__instance.m_RotateRoutine != null && (double)Time.time > (double)__instance.m_RotateRoutineEndsOn) {
@@ -135,7 +130,8 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 __instance.RotateByMiddleButton();
                 var mouseMovement = new Vector2(0, 0);
-                float xRotationSign = 1;
+                var xRotationSign = 1f;
+                var yRotationSign = settings.toggleInvertYAxis ? 1f : -1f;
                 if (__instance.m_RotationByMouse) {
                     if (!settings.toggleInvertXAxis) xRotationSign = -1;
                     mouseMovement = __instance.CameraDragToRotate2D();
@@ -147,19 +143,24 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
                     eulerAngles.y += xRotationSign * mouseMovement.x * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
-                    if (usePitch && !Main.resetExtraCameraAngles) {
-                        eulerAngles.x += (settings.toggleInvertYAxis ? 1 : -1) * mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
-                        //Mod.Debug($"eulerX: {eulerAngles.x}");
+                    if (Main.resetExtraCameraAngles) {
+                        eulerAngles.x = 0f;
+                        CameraElevation = 0f;
+                        var cameraRig = Game.Instance.UI.GetCameraRig();
+                        var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
+                        highlightingFeature.DepthClip.NearCameraClipDistance = 10;
+                        highlightingFeature.DepthClip.ClipTreshold = 0;
+                        Main.resetExtraCameraAngles = false;
                     }
                     else {
-                        eulerAngles.x = 0f;
-                        if (Main.resetExtraCameraAngles || settings.toggleUseAltMouseWheelToAdjustClipPlane) {
-                            var cameraRig = Game.Instance.UI.GetCameraRig();
-                            var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
-                            highlightingFeature.DepthClip.NearCameraClipDistance = 10;
-                            highlightingFeature.DepthClip.ClipTreshold = 0;
+                        if (Input.GetKey(KeyCode.LeftControl)) {
+                            ___m_TargetPosition.y += yRotationSign * mouseMovement.y/10f;
+                            CameraElevation = ___m_TargetPosition.y;
                         }
-                        Main.resetExtraCameraAngles = false;
+                        else if (usePitch) {
+                            eulerAngles.x += yRotationSign * mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                            //Mod.Debug($"eulerX: {eulerAngles.x}");
+                        }
                     }
                     __instance.transform.DOKill();
                     __instance.transform.DOLocalRotate(eulerAngles, __instance.m_RotationTime).SetUpdate<Tweener>(true);
@@ -168,6 +169,13 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_RotationByKeyboard = false;
                 __instance.m_RotateOffset = 0.0f;
                 return false;
+            }
+        }
+        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.PlaceOnGround))]
+        private static class CameraRig_PlaceOnGround_Patch {
+            private static void Postfix(ref Vector3 __result) {
+                if (!settings.toggleCameraElevation) return;
+                __result.y = CameraElevation;
             }
         }
 

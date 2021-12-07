@@ -52,6 +52,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
    	* (***Ronin***) Convinced Daeran to stop repeating himself in the Grey Garrison
   * **Camera**
     * Added Toy to let you adjust the clip plane with Alt+MouseWheel
+    * Added Toy to let you adjust camera height with Ctrl+Mouse3 Camera Drag (very experimental)
   * Preview Relic Info (*thanks to rathtr*)
 * **Search 'n Pick**
   * Option to show display name (localized name) for things that have it

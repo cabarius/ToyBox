@@ -383,8 +383,9 @@ namespace ToyBox {
                     Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
                 },
                 () => {
-                    Toggle("Enable Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
+                    Toggle("Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
                 },
+                () => Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation", ref settings.toggleCameraElevation),
                 () => Label("Rotation".cyan()),
                 () => {
                     50.space();

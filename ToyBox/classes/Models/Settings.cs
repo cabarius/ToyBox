@@ -118,6 +118,7 @@ namespace ToyBox {
         public bool toggleRotateOnAllMaps = false;
         public bool toggleScrollOnAllMaps = false;
         public bool toggleCameraPitch = false;
+        public bool toggleCameraElevation = false;
         public bool toggleInvertXAxis = false;
         public bool toggleInvertKeyboardXAxis = false;
         public bool toggleInvertYAxis = false;
