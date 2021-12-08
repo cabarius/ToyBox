@@ -5,12 +5,22 @@ using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using ToyBox.Multiclass;
+using static ModKit.UI;
 
 namespace ToyBox {
     public class PhatLoot {
         public static Settings settings => Main.settings;
         public static string searchText = "";
+
+        //
+        private const string MassLootBox = "Open Area Exit Loot Window";
+
         public static void ResetGUI() { }
+
+        public static void OnLoad() {
+            KeyBindings.RegisterAction(MassLootBox, () => LootHelper.OpenMassLoot());
+        }
+
         public static void OnGUI() {
 #if DEBUG
             UI.Div(0, 25);
@@ -29,6 +39,10 @@ namespace ToyBox {
 #endif
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
+                () => {
+                    UI.BindableActionButton(MassLootBox, UI.Width(200));
+                    UI.Space(5); UI.Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
+                },
                 () => {
                     UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
                     UI.Space(100); UI.Label("Some items might be invisible until looted".green());

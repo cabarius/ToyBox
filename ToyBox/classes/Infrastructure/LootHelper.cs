@@ -3,11 +3,14 @@ using Kingmaker.Blueprints.Loot;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Items;
+using Kingmaker.UI.MVVM._PCView.Loot;
+using Kingmaker.UI.MVVM._VM.Loot;
 using Kingmaker.UnitLogic;
 using Kingmaker.Utility;
 using Kingmaker.View.MapObjects;
 using Newtonsoft.Json;
 using Owlcat.Runtime.Core.Utils;
+using Owlcat.Runtime.UI.Controls.Button;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,6 +80,37 @@ namespace ToyBox {
             }));
             lootWrapperList.AddRange(collection);
             return (IEnumerable<LootWrapper>)lootWrapperList;
+        }
+
+        public static void OpenMassLoot() {
+            var lootWindow = new MassLootWindowHandler();
+        }
+
+        private static void DisposeLoot() {
+        }
+    }
+
+    internal class MassLootWindowHandler {
+
+        private LootPCView lootPCView;
+
+        public MassLootWindowHandler() {
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, MassLootHelper.GetMassLootFromCurrentArea(), null, new Action(Dispose));
+            lootPCView = Game.Instance.UI.Canvas.transform.Find("LootPCView").GetComponent<LootPCView>();
+            lootPCView.Initialize();
+            var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();
+            if(buttons.Length > 2) {
+                for(int i = 2; i < buttons.Length; i++) {
+                    GameObject.DestroyImmediate(buttons[i].gameObject);
+                }
+            }
+
+            lootPCView.Bind(lootVM);
+        }
+
+        private void Dispose() {
+            lootPCView.Unbind();
+            lootPCView.DestroyView();
         }
     }
 }
