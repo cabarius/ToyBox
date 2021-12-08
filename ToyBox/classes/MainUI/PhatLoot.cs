@@ -44,6 +44,10 @@ namespace ToyBox {
                     UI.Space(5); UI.Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
                 },
                 () => {
+                    UI.ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), UI.Width(200));
+                    UI.Space(210); UI.Label("Shows all chests/bags/etc on the map".green());
+                },
+                () => {
                     UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
                     UI.Space(100); UI.Label("Some items might be invisible until looted".green());
                 },
