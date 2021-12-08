@@ -60,7 +60,7 @@ namespace ToyBox {
                 lootWrapperList.Add(new LootWrapper() {
                     Unit = unitEntityData
                 });
-            var interactionLootParts = Game.Instance.State.Entities.All
+            var interactionLootParts = Game.Instance.State.MapObjects.All
                 .Where<EntityDataBase>(e => e.IsInGame)
                 .Select<EntityDataBase, InteractionLootPart>(i => i.Get<InteractionLootPart>())
                 .Where<InteractionLootPart>(i => i?.Loot != Game.Instance.Player.SharedStash)
