@@ -86,13 +86,14 @@ namespace ToyBox {
             var lootWindow = new MassLootWindowHandler();
         }
 
-        public static void ShowAllChestsOnMap() {
+        public static void ShowAllChestsOnMap(bool hidden = false) {
             var interactionLootParts = Game.Instance.State.MapObjects.All
                 .Where<EntityDataBase>(e => e.IsInGame)
                 .Select<EntityDataBase, InteractionLootPart>(i => i.Get<InteractionLootPart>())
                 .Where<InteractionLootPart>(i => i?.Loot != Game.Instance.Player.SharedStash)
                 .NotNull<InteractionLootPart>();
             foreach (var interactionLootPart in interactionLootParts) {
+                if (hidden) interactionLootPart.Owner.IsPerceptionCheckPassed = true;
                 interactionLootPart.Owner.SetIsRevealedSilent(true);
             }
         }
