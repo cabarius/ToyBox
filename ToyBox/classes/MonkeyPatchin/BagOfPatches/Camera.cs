@@ -142,7 +142,7 @@ namespace ToyBox.BagOfPatches {
                     var dPos = scaledScrollVector.x * __instance.Right + scaledScrollVector.y * __instance.Up;
                     if (__instance.m_RotationByMouse)
                         dPos += scaledScrollVector.y * (float)Math.Sin(pitchRadians) * yAxis;
-                    Mod.Debug($"dPos: {dPos} pitch: {pitch:##.000} sine: {Math.Sin(pitchRadians):#.000}");
+                    //Mod.Debug($"dPos: {dPos} pitch: {pitch:##.000} sine: {Math.Sin(pitchRadians):#.000}");
                     __instance.m_TargetPosition += dPos;
                     if (!settings.toggleFreeCamera) {
                         if (!__instance.NoClamp && !__instance.m_SkipClampOneFrame)
