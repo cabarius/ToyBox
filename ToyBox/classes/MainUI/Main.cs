@@ -182,6 +182,7 @@ namespace ToyBox {
             Mod.logLevel = settings.loggingLevel;
             if (NeedsActionInit) {
                 BagOfTricks.OnLoad();
+                PhatLoot.OnLoad();
                 NeedsActionInit = false;
             }
             //if (resetExtraCameraAngles) {

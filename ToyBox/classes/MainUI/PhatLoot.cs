@@ -5,12 +5,22 @@ using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using ToyBox.Multiclass;
+using static ModKit.UI;
 
 namespace ToyBox {
     public class PhatLoot {
         public static Settings settings => Main.settings;
         public static string searchText = "";
+
+        //
+        private const string MassLootBox = "Open Area Exit Loot Window";
+
         public static void ResetGUI() { }
+
+        public static void OnLoad() {
+            KeyBindings.RegisterAction(MassLootBox, () => LootHelper.OpenMassLoot());
+        }
+
         public static void OnGUI() {
 #if DEBUG
             UI.Div(0, 25);
@@ -29,6 +39,18 @@ namespace ToyBox {
 #endif
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
+                () => {
+                    UI.BindableActionButton(MassLootBox, UI.Width(200));
+                    UI.Space(5); UI.Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
+                },
+                () => {
+                    UI.ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), UI.Width(200));
+                    UI.Space(210); UI.Label("Shows all chests/bags/etc on the map excluding hidden".green());
+                },
+                () => {
+                    UI.ActionButton("Reveal Hidden Ground Loot", () => LootHelper.ShowAllChestsOnMap(true), UI.Width(200));
+                    UI.Space(210); UI.Label("Shows all chests/bags/etc on the map including hidden".green());
+                },
                 () => {
                     UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
                     UI.Space(100); UI.Label("Some items might be invisible until looted".green());
@@ -118,7 +140,10 @@ namespace ToyBox {
                                     UI.Div();
                                     using (UI.HorizontalScope()) {
                                         UI.Space(indent);
-                                        UI.Label(present.GetName().orange().bold(), UI.Width(300));
+                                        if(present.InteractionLoot?.Owner?.PerceptionCheckDC > 0)
+                                            UI.Label($"{present.GetName()} Perception DC: {present.InteractionLoot?.Owner?.PerceptionCheckDC}".orange().bold(), UI.Width(300));
+                                        else
+                                            UI.Label($"{present.GetName()}".orange().bold(), UI.Width(300));
                                         UI.Space(25);
                                         using (UI.VerticalScope()) {
                                             foreach (var lewt in pahtLewts) {
