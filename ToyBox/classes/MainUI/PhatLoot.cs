@@ -6,6 +6,8 @@ using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using ToyBox.Multiclass;
 using static ModKit.UI;
+using Kingmaker.View.MapObjects;
+using Kingmaker.View.MapObjects.InteractionRestrictions;
 
 namespace ToyBox {
     public class PhatLoot {
@@ -140,10 +142,18 @@ namespace ToyBox {
                                     UI.Div();
                                     using (UI.HorizontalScope()) {
                                         UI.Space(indent);
-                                        if(present.InteractionLoot?.Owner?.PerceptionCheckDC > 0)
-                                            UI.Label($"{present.GetName()} Perception DC: {present.InteractionLoot?.Owner?.PerceptionCheckDC}".orange().bold(), UI.Width(300));
-                                        else
-                                            UI.Label($"{present.GetName()}".orange().bold(), UI.Width(300));
+                                        UI.Label($"{present.GetName()}".orange().bold(), UI.Width(325));
+                                        if (present.InteractionLoot != null) {
+                                            if (present.InteractionLoot?.Owner?.PerceptionCheckDC > 0)
+                                                UI.Label($" Perception DC: {present.InteractionLoot?.Owner?.PerceptionCheckDC}".green().bold(), UI.Width(125));
+                                            else
+                                                UI.Label($" Perception DC: NA".orange().bold(), UI.Width(125));
+                                            int? trickDc = present.InteractionLoot?.Owner?.Get<DisableDeviceRestrictionPart>()?.DC;
+                                            if (trickDc > 0)
+                                                UI.Label($" Trickery DC: {trickDc}".green().bold(), UI.Width(125));
+                                            else
+                                                UI.Label($" Trickery DC: NA".orange().bold(), UI.Width(125));
+                                        }
                                         UI.Space(25);
                                         using (UI.VerticalScope()) {
                                             foreach (var lewt in pahtLewts) {

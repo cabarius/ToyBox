@@ -66,6 +66,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * (***Hambeard***) Added hotkey bindable button to allow for area exit loot window to be opened mid dungeon.
     * (***Hambeard***) Added button to show all ground loot on the map.
     * (***Hambeard***) Added perception dc's to loot check list to indicate chest is hidden
+    * (***Hambeard***) Added trickery dc's to loot check list to indicate chest is locked
     * (***Hambeard***) Added button to include hidden chest when revealing them to the map
 ### Ver 1.4.12
 * **Bag of Tricks**
