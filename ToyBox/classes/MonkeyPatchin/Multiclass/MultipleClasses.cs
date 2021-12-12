@@ -295,7 +295,7 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(CharGenClassPhaseVM), nameof(CharGenClassPhaseVM.CreateClassListSelector))]
         private static class CharGenClassPhaseVM_CreateClassListSelector_Patch {
             private static bool Prefix(CharGenClassPhaseVM __instance) {
-                if (settings.toggleMulticlass || settings.toggleIgnoreClassAndFeatRestrictions) {
+                if (settings.toggleMulticlass || settings.toggleIgnoreClassRestrictions) {
                     var progression = Game.Instance.BlueprintRoot.Progression;
                     __instance.m_ClassesVMs = (__instance.LevelUpController.State.Mode == LevelUpState.CharBuildMode.Mythic
                         ? __instance.GetMythicClasses()

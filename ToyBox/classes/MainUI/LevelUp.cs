@@ -49,11 +49,6 @@ namespace ToyBox {
                     Space(25);
                     Label("This allows you to select a given feature more than once at level up".green());
                 },
-                () => {
-                    Toggle("Allow Multiple Archetypes When Selecting A New Class", ref settings.toggleMultiArchetype);
-                    25.space();
-                    Label("This allows you to select combinations of archetypes when selecting a class for the first time that contain distinct spellbooks".green());
-                },
                 () => Toggle("Enable  'Next' when no feat selections are available", ref settings.toggleNextWhenNoAvailableFeatSelections),
                 () => Toggle("Make All Feature Selections Optional", ref settings.toggleOptionalFeatSelection),
                 () => {
@@ -69,9 +64,14 @@ namespace ToyBox {
                 () => Toggle("Always Able To Level Up", ref settings.toggleNoLevelUpRestrictions),
                 () => Toggle("Add Full Hit Die Value", ref settings.toggleFullHitdiceEachLevel),
                 (Action)(() => {
-                    Toggle((string)"Ignore Class And Feat Restrictions", ref settings.toggleIgnoreClassAndFeatRestrictions);
+                    Toggle((string)"Ignore Class Restrictions", ref settings.toggleIgnoreClassRestrictions);
                     Space(25);
                     Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
+                }),
+                (Action)(() => {
+                    Toggle((string)"Ignore Feat Restrictions", ref settings.toggleIgnoreFeatRestrictions);
+                    Space(25);
+                    Label("Experimental".cyan() + ": lets you select any feat ignoring prerequisites.".green());
                 }),
                 () => Toggle("Allow Companions to Take Mythic Classes", ref settings.toggleAllowCompanionsToBecomeMythic),
                 () => Toggle("Allow Pets to Take Mythic Classes", ref settings.toggleAllowMythicPets),
