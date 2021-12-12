@@ -346,6 +346,7 @@ namespace ToyBox {
         public bool toggleShowAnswersForEachConditionalResponse = false;
         public bool toggleShowAllAnswersForEachConditionalResponse = false;
         public bool toggleShowDialogConditions = false;
+        public bool toggleMakePreviousAnswersMoreClear = false;
 
         // Etudes
         public bool showEtudeComments = true;
@@ -356,6 +357,7 @@ namespace ToyBox {
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
+        public bool toggleMultiArchetype = false;
         public bool toggleMulticlassInGameUI = false;
         public bool toggleMulticlassShowClassDescriptions = false;
         public bool toggleAlwaysShowMigration = false;

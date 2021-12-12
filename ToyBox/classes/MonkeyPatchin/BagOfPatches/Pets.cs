@@ -41,7 +41,7 @@ namespace ToyBox.BagOfPatches {
                     __instance.MythicExperience += experience;
                     if (__instance.MythicExperience > 10)
                         PFLog.Default.Error(string.Format("Current mythic level of {0} is {1}, trying to raise to {2}! Can't do this", (object)__instance.Owner, (object)__instance.MythicLevel, (object)(__instance.MythicExperience + experience)));
-                    UnitEntityData pair = UnitPartDualCompanion.GetPair(__instance.Owner.Unit);
+                    var pair = UnitPartDualCompanion.GetPair(__instance.Owner.Unit);
                     if (pair != (UnitDescriptor)null)
                         pair.Descriptor.Progression.MythicExperience = __instance.MythicExperience;
                     EventBus.RaiseEvent<IUnitGainMythicExperienceHandler>((Action<IUnitGainMythicExperienceHandler>)(h => h.HandleUnitGainMythicExperience(__instance.Owner, experience)));
