@@ -59,7 +59,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Added Toy to let you adjust the clip plane with Alt+MouseWheel
   * Preview Relic Info (*thanks to rathtr*)
 * **Level Up & Multiclass**
-  * ToyBox now supports multiple archetypes when you select a new class following tabletop rules 
+  * **ToyBox now supports multiple archetypes when you select a new class following tabletop rules**
     * Thank you **Vek** for making this and sharing it with ToyBox users (please check out the excellent Table Top Tweaks mod as well. https://github.com/Vek17/WrathMods-TabletopTweaks)
 * **Search 'n Pick**
   * Option to show display name (localized name) for things that have it
