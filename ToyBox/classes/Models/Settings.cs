@@ -334,12 +334,12 @@ namespace ToyBox {
         public string searchTextEnchantments = "";
 
         // Dialog & Previews (Dialogs, Events ,etc)
-        public bool previewDecreeResults = false;
-        public bool previewEventResults = false;
-        public bool previewRelicResults = false;
         public bool previewDialogResults = false;
         public bool previewAlignmentRestrictedDialog = false;
         public bool previewRandomEncounters = false;
+        public bool previewDecreeResults = false;
+        public bool previewEventResults = false;
+        public bool previewRelicResults = false;
         public bool toggleRemoteCompanionDialog = false;
         public bool toggleExCompanionDialog = false;
         public bool toggleRandomizeCueSelections = false;
