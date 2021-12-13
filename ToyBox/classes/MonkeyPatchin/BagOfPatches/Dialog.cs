@@ -205,8 +205,8 @@ namespace ToyBox.BagOfPatches {
                 Mod.Trace($"second: {second?.ToString()} matching: {second.Select(u => __instance.SelectMatchingUnit(u))}");
                 var overrides = DialogSpeaker_GetEntityOverrides;
                 var GUID = cue?.AssetGuid.ToString();
-                bool hasOverride = GUID != null ? DialogSpeaker_GetEntityOverrides.ContainsKey(GUID) : false;
-                bool overrideValue = hasOverride && DialogSpeaker_GetEntityOverrides[GUID];
+                var hasOverride = GUID != null ? DialogSpeaker_GetEntityOverrides.ContainsKey(GUID) : false;
+                var overrideValue = hasOverride && DialogSpeaker_GetEntityOverrides[GUID];
                 var unit = Game.Instance.State.Units.Concat(Game.Instance.Player.AllCrossSceneUnits)
                         //.Where(u => u.IsInGame && !u.Suppressed)
                         .Where(u => hasOverride ? overrideValue : settings.toggleExCompanionDialog || !u.IsExCompanion())

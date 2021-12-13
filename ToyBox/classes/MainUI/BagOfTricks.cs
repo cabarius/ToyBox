@@ -192,6 +192,7 @@ namespace ToyBox {
                     25.space();
                     Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
                 },
+                () => Toggle("Make Previously Chosen Answers More Clear", ref settings.toggleMakePreviousAnswersMoreClear),
                 () => {
                     Toggle("Expand Dialog To Include Remote Companions".bold(), ref settings.toggleRemoteCompanionDialog);
                     100.space();
@@ -224,7 +225,6 @@ namespace ToyBox {
                     Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
                 },
 #endif
-                () => Toggle("Show Conditions for Cues and Answers", ref settings.toggleShowDialogConditions),
                 () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
                 () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
                 () => Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
@@ -383,7 +383,12 @@ namespace ToyBox {
                     Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
                 },
                 () => {
-                    Toggle("Enable Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
+                    Toggle("Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
+                },
+                () => {
+                    Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation", ref settings.toggleCameraElevation);
+                    25.space();
+                    Toggle("Free Camera", ref settings.toggleFreeCamera);
                 },
                 () => Label("Rotation".cyan()),
                 () => {

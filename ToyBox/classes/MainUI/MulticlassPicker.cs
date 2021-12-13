@@ -144,7 +144,7 @@ namespace ToyBox {
                             using (UI.HorizontalScope()) {
                                 var hasArch = archetypeOptions.Contains(archetype);
                                 UI.ActionToggle(
-                                    archetype == chArchetype ? archetype.Name.orange() + $" ({cd.Level})".orange() : archetype.Name,
+                                    archetype == chArchetype ? cd.ArchetypesName().orange() + $" ({cd.Level})".orange() : archetype.Name,
                                     () => hasArch,
                                     (v) => {
                                         if (v) archetypeOptions.AddExclusive(archetype);

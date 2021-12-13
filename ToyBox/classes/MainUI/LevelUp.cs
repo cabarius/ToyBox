@@ -49,6 +49,11 @@ namespace ToyBox {
                     Space(25);
                     Label("This allows you to select a given feature more than once at level up".green());
                 },
+                () => {
+                    Toggle("Allow Multiple Archetypes When Selecting A New Class", ref settings.toggleMultiArchetype);
+                    25.space();
+                    Label("This allows you to select combinations of archetypes when selecting a class for the first time that contain distinct spellbooks".green());
+                },
                 () => Toggle("Enable  'Next' when no feat selections are available", ref settings.toggleNextWhenNoAvailableFeatSelections),
                 () => Toggle("Make All Feature Selections Optional", ref settings.toggleOptionalFeatSelection),
                 () => {

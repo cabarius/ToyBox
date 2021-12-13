@@ -38,21 +38,30 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
-### Ver 1.4.14 (Coming Later)
+### Ver 1.4.15 (Coming Later)
 * **Armies Editor**
   * Add squads in Army Editor
-### Ver 1.4.13 (Coming Soon)
+### Ver 1.4.14 (Coming Soon)
+### Ver 1.4.13
 * **Bag of Tricks**
   * **Quality of Life**
     * **Game Over** - Added toggle to block Game Over when certain companions die in combat, so if ***Leerooooy (Greybor) Jenkins*** runs in and your leader runs in to save him and dies the game does not end unless the whole party wipes.
-  * **Expand Answers For Conditional Responses**
-    * Dialog dependent on previous dialog checks now works correctly with the feature enabled
-    * Fixed issue that generated bogus extra answers for non conditional response by ensuring that the feature only gets activated by a set of continuation cues that all have conditions
-  * **Remote Companion Dialog**
-   	* (***Ronin***) Convinced Daeran to stop repeating himself in the Grey Garrison
+  * **Dialog**
+    * Toy to make previously chosen dialog answers show up in smaller dimmer text
+    * **Expand Answers For Conditional Responses**
+      * Dialog dependent on previous dialog checks now works correctly with the feature enabled
+      * Fixed issue that generated bogus extra answers for non conditional response by ensuring that the feature only gets activated by a set of continuation cues that all have conditions
+    * **Remote Companion Dialog**
+     	* (***Ronin***) Convinced Daeran to stop repeating himself in the Grey Garrison
   * **Camera**
+    * Mouse3 Camera + forward/back keys now lets you fly freely when pitch is enabled
+    * Additional setting for completely free camera
+    * Added Toy to let you adjust camera height with Ctrl+Mouse3 Camera Drag (very experimental)
     * Added Toy to let you adjust the clip plane with Alt+MouseWheel
   * Preview Relic Info (*thanks to rathtr*)
+* **Level Up & Multiclass**
+  * **ToyBox now supports multiple archetypes when you select a new class following tabletop rules**
+    * Thank you **Vek** for making this and sharing it with ToyBox users (please check out the excellent Table Top Tweaks mod as well. https://github.com/Vek17/WrathMods-TabletopTweaks)
 * **Search 'n Pick**
   * Option to show display name (localized name) for things that have it
   * Search now looks at both display name (localized name) and internal name. Previously it only looked at internal name
@@ -62,7 +71,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Steps with missing titles show blueprint name
   * quest steps are now colored based on whether completed, current or not seen yet.  
   * Failure steps are colored red
-  **Loot**
+* **Loot**
     * (***Hambeard***) Added hotkey bindable button to allow for area exit loot window to be opened mid dungeon.
     * (***Hambeard***) Added button to show all ground loot on the map.
     * (***Hambeard***) Added perception dc's to loot check list to indicate chest is hidden

@@ -118,6 +118,8 @@ namespace ToyBox {
         public bool toggleRotateOnAllMaps = false;
         public bool toggleScrollOnAllMaps = false;
         public bool toggleCameraPitch = false;
+        public bool toggleCameraElevation = false;
+        public bool toggleFreeCamera = false;
         public bool toggleInvertXAxis = false;
         public bool toggleInvertKeyboardXAxis = false;
         public bool toggleInvertYAxis = false;
@@ -344,6 +346,7 @@ namespace ToyBox {
         public bool toggleShowAnswersForEachConditionalResponse = false;
         public bool toggleShowAllAnswersForEachConditionalResponse = false;
         public bool toggleShowDialogConditions = false;
+        public bool toggleMakePreviousAnswersMoreClear = false;
 
         // Etudes
         public bool showEtudeComments = true;
@@ -354,6 +357,7 @@ namespace ToyBox {
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
+        public bool toggleMultiArchetype = false;
         public bool toggleMulticlassInGameUI = false;
         public bool toggleMulticlassShowClassDescriptions = false;
         public bool toggleAlwaysShowMigration = false;

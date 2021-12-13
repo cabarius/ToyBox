@@ -42,7 +42,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMakeSummmonsControllable && !LoadingProcess.Instance.IsLoadingInProcess && unit != null && unit.IsSummoned()) {
                     if (unit.UISettings.GetSlot(0, unit) is MechanicActionBarSlotEmpty) {
                         var index = 1;
-                        foreach (Ability ability in unit.Abilities) {
+                        foreach (var ability in unit.Abilities) {
                             if (ability.Blueprint.AssetGuidThreadSafe == "c78506dd0e14f7c45a599990e4e65038") { //Setting charge ability to first slot
                                 unit.UISettings.SetSlot(unit, ability, 0);
                             }

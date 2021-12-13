@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace ToyBox {
     public static class Cheats {
         public static void RestSelected() {
-            foreach (UnitEntityData selectedUnit in Game.Instance.UI.SelectionManager.SelectedUnits) {
+            foreach (var selectedUnit in Game.Instance.UI.SelectionManager.SelectedUnits) {
                 if (selectedUnit.Descriptor.State.IsFinallyDead) {
                     selectedUnit.Descriptor.Resurrect();
                     selectedUnit.Position = Game.Instance.Player.MainCharacter.Value.Position;
@@ -25,7 +25,7 @@ namespace ToyBox {
                 RestController.RemoveNegativeEffects(selectedUnit.Descriptor);
                 RestController.ApplyRest(selectedUnit.Descriptor);
                 Rulebook.Trigger(new RuleHealDamage(selectedUnit, selectedUnit, default(DiceFormula), selectedUnit.Descriptor.Stats.HitPoints.ModifiedValue));
-                foreach (ModifiableValueAttributeStat attribute in selectedUnit.Stats.Attributes) {
+                foreach (var attribute in selectedUnit.Stats.Attributes) {
                     attribute.Damage = 0;
                     attribute.Drain = 0;
                 }

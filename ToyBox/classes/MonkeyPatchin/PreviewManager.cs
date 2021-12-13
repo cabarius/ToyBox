@@ -396,7 +396,7 @@ namespace ToyBox {
                 __instance.Toggle.group = toggleGroup;
                 __instance.Toggle.onValueChanged.RemoveAllListeners();
                 __instance.Toggle.onValueChanged.AddListener(onToggle);
-                string extraText = "";
+                var extraText = "";
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = isAvail ? "#005800><b>" : "#800000>";
                 if (eventSolution.m_AvailConditions.HasConditions)
@@ -425,7 +425,7 @@ namespace ToyBox {
             }
         }
         public static string PreviewText(this EventSolution solution) {
-            string result = "";
+            var result = "";
             result += solution.SolutionText.ToString(); // add main solution string
             if (solution.m_SuccessEffects.Actions.Length > 0
                 && solution.m_SuccessEffects.Actions.FindOrDefault(act => act is AddItemToPlayer) is AddItemToPlayer addIntermediateItemAct) {
@@ -451,7 +451,7 @@ namespace ToyBox {
                 var blueprint = kingdomEventView.Blueprint;
                 __instance.m_Description.text = blueprint.LocalizedDescription;
                 __instance.m_Disposables.Add(__instance.m_Description.SetLinkTooltip(null, null, default(TooltipConfig)));
-                bool isActive = kingdomEventView.IsCrusadeEvent && kingdomEventView.IsFinished;
+                var isActive = kingdomEventView.IsCrusadeEvent && kingdomEventView.IsFinished;
                 __instance.m_ResultDescription.gameObject.SetActive(isActive);
                 if (isActive) {
                     var currentEventSolution = __instance.m_Footer.CurrentEventSolution;
@@ -549,11 +549,11 @@ namespace ToyBox {
         [HarmonyPatch(typeof(DialogAnswerView), nameof(DialogAnswerView.SetAnswer))]
         private static class DialogAnswerView_SetAnswer_Patch {
             private static bool Prefix(DialogAnswerView __instance, BlueprintAnswer answer) {
-                if (!settings.previewDialogResults && !settings.toggleShowAnswersForEachConditionalResponse) return true;
-                DialogType type = Game.Instance.DialogController.Dialog.Type;
-                string str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
+                if (!settings.previewDialogResults && !settings.toggleShowAnswersForEachConditionalResponse && !settings.toggleMakePreviousAnswersMoreClear) return true;
+                var type = Game.Instance.DialogController.Dialog.Type;
+                var str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
                 var text = UIConsts.GetAnswerString(answer, str, __instance.ViewModel.Index);
-                bool isAvail = answer.CanSelect();
+                var isAvail = answer.CanSelect();
                 if (answer.NextCue.Cues.Count == 1) {
                     var cue = answer.NextCue.Cues.Dereference<BlueprintCueBase>().FirstOrDefault();
                     isAvail = cue.CanShow();
@@ -564,9 +564,15 @@ namespace ToyBox {
                 }
                 __instance.AnswerText.text = text;
                 __instance.ViewModel.Enable.Value = isAvail;
-                Color32 color32 = isAvail ? DialogAnswerView.Colors.NormalAnswer : DialogAnswerView.Colors.DisabledAnswer;
-                if (type == DialogType.Common && answer.IsAlreadySelected() && (Game.Instance.DialogController.NextCueWasShown(answer) || !Game.Instance.DialogController.NextCueHasNewAnswers(answer)))
+                var color32 = isAvail ? DialogAnswerView.Colors.NormalAnswer : DialogAnswerView.Colors.DisabledAnswer;
+                if (type == DialogType.Common && answer.IsAlreadySelected() && (Game.Instance.DialogController.NextCueWasShown(answer) || !Game.Instance.DialogController.NextCueHasNewAnswers(answer))) {
                     color32 = DialogAnswerView.Colors.SelectedAnswer;
+                    __instance.AnswerText.alpha = 0.45f;
+                    if (settings.toggleMakePreviousAnswersMoreClear)
+                        __instance.AnswerText.text = text.SizePercent(83);
+                }
+                else
+                    __instance.AnswerText.alpha = 1.0f;
                 __instance.AnswerText.color = (Color)color32;
                 __instance.AddDisposable(Game.Instance.Keyboard.Bind(str, new Action(__instance.Confirm)));
                 if (__instance.ViewModel.Index != 1 || type != DialogType.Interchapter && type != DialogType.Epilogue)
