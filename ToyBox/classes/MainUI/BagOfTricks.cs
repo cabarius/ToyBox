@@ -9,7 +9,9 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.UI.Dialog;
+using Kingmaker.Utility;
 using ModKit;
+using ToyBox;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
@@ -106,7 +108,17 @@ namespace ToyBox {
                         ActionButton($"Gain {increment}", () => {
                             Game.Instance.Player.GainPartyExperience(increment);
                         }, AutoWidth());
-                    });
+                    },
+                    () => {
+                        var corruption = Game.Instance.Player.Corruption;
+                        Label("Corruption".cyan(), Width(150));
+                        Label(corruption.CurrentValue.ToString().orange().bold(), Width(200));
+                        ActionButton($"Clear", () => corruption.Clear(), AutoWidth());
+                        25.space();
+                        Toggle("Disable Corruption", ref settings.toggleDisableCorruption);
+                    },
+                    () => { }
+                );
             }
             Div(0, 25);
             HStack("Combat", 2,
