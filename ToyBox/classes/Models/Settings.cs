@@ -235,7 +235,8 @@ namespace ToyBox {
         // level up
         public bool toggleNoLevelUpRestrictions = false;
         public bool toggleFullHitdiceEachLevel = false;
-        public bool toggleIgnoreClassAndFeatRestrictions = false;
+        public bool toggleIgnoreClassRestrictions = false;
+        public bool toggleIgnoreFeatRestrictions = false;
         public bool toggleAllowCompanionsToBecomeMythic = false;
         public bool toggleAllowMythicPets = false;
         public bool toggleIgnorePrerequisites = false;

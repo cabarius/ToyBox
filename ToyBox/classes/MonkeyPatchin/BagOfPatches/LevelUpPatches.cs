@@ -269,8 +269,17 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(IgnorePrerequisites), "Ignore", MethodType.Getter)]
         private static class IgnorePrerequisites_Ignore_Patch {
             private static void Postfix(ref bool __result) {
-                if (settings.toggleIgnoreClassAndFeatRestrictions) {
-                    __result = true;
+                var state = Game.Instance.LevelUpController.State;
+
+                if (!state.IsClassSelected) {
+                    if (settings.toggleIgnoreClassRestrictions) {
+                        __result = true;
+                    }
+                }
+                else {
+                    if (settings.toggleIgnoreFeatRestrictions) {
+                        __result = true;
+                    }
                 }
             }
         }
@@ -308,7 +317,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LevelUpController), "IsPossibleMythicSelection", MethodType.Getter)]
         private static class LevelUpControllerIsPossibleMythicSelection_Patch {
             private static void Postfix(ref bool __result, LevelUpController __instance) {
-                if (settings.toggleIgnoreClassAndFeatRestrictions || settings.toggleAllowCompanionsToBecomeMythic && !__instance.Unit.IsMainCharacter) {
+                if (settings.toggleIgnoreClassRestrictions || settings.toggleAllowCompanionsToBecomeMythic && !__instance.Unit.IsMainCharacter) {
                     __result = true;
                 }
             }

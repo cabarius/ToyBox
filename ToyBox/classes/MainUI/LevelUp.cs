@@ -69,9 +69,14 @@ namespace ToyBox {
                 () => Toggle("Always Able To Level Up", ref settings.toggleNoLevelUpRestrictions),
                 () => Toggle("Add Full Hit Die Value", ref settings.toggleFullHitdiceEachLevel),
                 (Action)(() => {
-                    Toggle((string)"Ignore Class And Feat Restrictions", ref settings.toggleIgnoreClassAndFeatRestrictions);
+                    Toggle((string)"Ignore Class Restrictions", ref settings.toggleIgnoreClassRestrictions);
                     Space(25);
                     Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
+                }),
+                (Action)(() => {
+                    Toggle((string)"Ignore Feat Restrictions", ref settings.toggleIgnoreFeatRestrictions);
+                    Space(25);
+                    Label("Experimental".cyan() + ": lets you select any feat ignoring prerequisites.".green());
                 }),
                 () => Toggle("Allow Companions to Take Mythic Classes", ref settings.toggleAllowCompanionsToBecomeMythic),
                 () => Toggle("Allow Pets to Take Mythic Classes", ref settings.toggleAllowMythicPets),
