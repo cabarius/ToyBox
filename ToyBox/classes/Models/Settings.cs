@@ -256,6 +256,7 @@ namespace ToyBox {
         public bool toggleUncappedCasterLevel = false;
         public bool toggleContinousLevelCap = false;
         public bool toggleExponentialLevelCap = false;
+        public bool toggleFeatureMultiplierCompanions = false;
 
         // Multipliers
         public int featsMultiplier = 1;
