@@ -179,6 +179,16 @@ namespace ToyBox {
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
 
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
+            if (Game.Instance?.Player != null) {
+                var corruption = Game.Instance.Player.Corruption;
+                var corruptionDisabled = (bool)corruption.Disabled;
+                if (corruptionDisabled != settings.toggleDisableCorruption) {
+                    if (settings.toggleDisableCorruption)
+                        corruption.Disabled.Retain();
+                    else
+                        corruption.Disabled.ReleaseAll();
+                }
+            }
             Mod.logLevel = settings.loggingLevel;
             if (NeedsActionInit) {
                 BagOfTricks.OnLoad();

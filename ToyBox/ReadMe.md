@@ -43,6 +43,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Add squads in Army Editor
 ### Ver 1.4.14 (Coming Soon)
 * **Bag of Tricks**
+  * Added ability to show, clear and disable corruption
   * **Dialog**
     * Fixed issue that caused you to be unable to finish dialog with Nenio in chapter 2 and 5
 ### Ver 1.4.13
