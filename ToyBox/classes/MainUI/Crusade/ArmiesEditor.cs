@@ -29,6 +29,8 @@ namespace ToyBox.classes.MainUI {
 
         public static string selectedUnitString = "";
         public static string selectedArmyString = "";
+        public static ArmyData armyData = null;
+        public static BlueprintUnit squadToAdd = null;
 
         public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {
@@ -332,7 +334,7 @@ namespace ToyBox.classes.MainUI {
             var recruitManager = kingdom.RecruitsManager;
             var growthPool = recruitManager.Growth;
             var count = 0;
-            BlueprintUnit selectedUnit = null;
+
 
             HStack("Add Squads", 1,
                 () => {
@@ -341,43 +343,61 @@ namespace ToyBox.classes.MainUI {
                 },
                 () => {
                     using (VerticalScope()) {
-                        Label("Selected unit ".cyan() + selectedUnitString, Width(450));
-                        foreach (var poolInfo in mercenariesPool) {
-                            var unit = poolInfo.Unit;
-                            using (HorizontalScope()) {
-                                Label(unit.NameSafe().orange().bold(), Width(520));
-                                ActionButton("Select", () => { selectedUnitString = unit.NameSafe(); selectedUnit = unit; }, Width(150));
-                            }
+                        Label("Selcted army ".cyan() + selectedArmyString, AutoWidth());
+                        using (HorizontalScope()) {
+                            Label("Name", MinWidth(100), MaxWidth(250));
+                            Label("Squad Count", Width(150));
                         }
-                        foreach (var poolInfo in growthPool) {
-                            var unit = poolInfo.Unit;
-                            using (HorizontalScope()) {
-                                Label(unit.NameSafe().orange().bold(), Width(520));
-                                ActionButton("Select", () => { selectedUnitString = unit.NameSafe(); selectedUnit = unit; }, Width(150));
-                            }
-                        }
-                    }
-                },
-                () => Div(0, 10),
-                () => {
-                    if (selectedUnit != null)
-                        Label("Selected", AutoWidth());
-                    else
-                        Label("NULL", AutoWidth());
-                    using (VerticalScope()) {
                         foreach (var armyEntry in playerArmies) {
                             var army = armyEntry.Item1;
                             using (HorizontalScope()) {
                                 Label(army.Data.ArmyName.ToString().orange().bold(), MinWidth(100), MaxWidth(250));
                                 var squads = army.Data.Squads;
                                 Label(squads.Count.ToString().cyan(), Width(35));
-                                Space(50);
-                                ActionButton("Add", () => { armyEntry.Item1.Data.Add(selectedUnit, count, false, null); }, Width(150));
+                                Space(225);
+                                ActionButton("Select", () => { armyData = army.Data; selectedArmyString = armyData.ArmyName.ToString(); }, Width(150));
                             }
-                            
+
                         }
                     }
-                    
+                },
+                () => Div(0, 10),
+                () => {
+                    using (VerticalScope()) {
+                        Label("Selected unit ".cyan() + selectedUnitString, Width(450));
+                        foreach (var poolInfo in mercenariesPool) {
+                            var unit = poolInfo.Unit;
+                            using (HorizontalScope()) {
+                                Label(unit.NameSafe().orange().bold(), Width(520));
+                                ActionButton("Select", 
+                                    () => { 
+                                        selectedUnitString = unit.NameSafe();
+                                        if (armyData != null)
+                                            squadToAdd = unit;
+                                    }, Width(150));
+                            }
+                        }
+                        foreach (var poolInfo in growthPool) {
+                            var unit = poolInfo.Unit;
+                            using (HorizontalScope()) {
+                                Label(unit.NameSafe().orange().bold(), Width(520));
+                                ActionButton("Select", 
+                                    () => { 
+                                        selectedUnitString = unit.NameSafe();
+                                        if (armyData != null)
+                                            squadToAdd = unit;
+                                    }, Width(150));
+                            }
+                        }
+                    }
+                },
+                () => Div(0, 10),
+                () => {
+                    ActionButton("Add", () => {
+                        if (squadToAdd != null) {
+                            armyData.Add(squadToAdd, count, false, null);
+                        }
+                    }, Width(150));
                 }
             );
         }
