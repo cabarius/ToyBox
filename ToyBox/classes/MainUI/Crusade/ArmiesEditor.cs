@@ -9,6 +9,7 @@ using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.Kingdom.Armies;
 using ModKit;
 using static ModKit.UI;
 using ModKit.Utility;
@@ -25,6 +26,10 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;
         public static IEnumerable<(GlobalMapArmyState, float)> demonArmies;
         public static string skillsSearchText = "";
+
+        public static string selectedUnitString = "";
+        public static string selectedArmyString = "";
+
         public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {
             armies = ArmiesByDistanceFromPlayer()?.ToList();
@@ -93,11 +98,13 @@ namespace ToyBox.classes.MainUI {
                 UpdateArmies();
             if (playerArmies != null)
                 ArmiesGUI("Player Armies", playerArmies);
-            if (playerArmies != null && demonArmies != null) {
+            if (playerArmies != null && demonArmies != null) 
                 Div(0, 25, 0);
-            }
             if (demonArmies != null)
                 ArmiesGUI("Demon Armies", demonArmies);
+
+            Div(0, 25);
+            AddSquadsGUI();
         }
         public static void ArmiesGUI(string title, IEnumerable<(GlobalMapArmyState, float)> armies) {
             if (armies.Count() == 0) return;
@@ -169,8 +176,6 @@ namespace ToyBox.classes.MainUI {
                                         Game.Instance.Player.GlobalMap.LastActivated.DestroyArmy(army);
                                         UpdateArmies();
                                     }, Width(150));
-
-
                                 }
                                 if (showLeader) {
                                     Div(0, 10);
@@ -300,7 +305,6 @@ namespace ToyBox.classes.MainUI {
                                                 }, Width(150));
                                             }
                                         }
-
                                         if (squadToRemove != null) {
                                             squadToRemove.Army.RemoveSquad(squadToRemove);
                                         }
@@ -319,6 +323,63 @@ namespace ToyBox.classes.MainUI {
                     armySelection.Remove(title);
                 }
             }
+        }
+
+        public static void AddSquadsGUI() {
+            var kingdom = KingdomState.Instance;
+            var mercenariesManager = kingdom.MercenariesManager;
+            var mercenariesPool = mercenariesManager.Pool;
+            var recruitManager = kingdom.RecruitsManager;
+            var growthPool = recruitManager.Growth;
+            var count = 0;
+            BlueprintUnit selectedUnit = null;
+
+            HStack("Add Squads", 1,
+                () => {
+                    Label("Unit Count".cyan(), AutoWidth());
+                    count = IntTextField(ref settings.unitCount, null, Width(150));
+                },
+                () => {
+                    using (VerticalScope()) {
+                        Label("Selected unit ".cyan() + selectedUnitString, Width(450));
+                        foreach (var poolInfo in mercenariesPool) {
+                            var unit = poolInfo.Unit;
+                            using (HorizontalScope()) {
+                                Label(unit.NameSafe().orange().bold(), Width(520));
+                                ActionButton("Select", () => { selectedUnitString = unit.NameSafe(); selectedUnit = unit; }, Width(150));
+                            }
+                        }
+                        foreach (var poolInfo in growthPool) {
+                            var unit = poolInfo.Unit;
+                            using (HorizontalScope()) {
+                                Label(unit.NameSafe().orange().bold(), Width(520));
+                                ActionButton("Select", () => { selectedUnitString = unit.NameSafe(); selectedUnit = unit; }, Width(150));
+                            }
+                        }
+                    }
+                },
+                () => Div(0, 10),
+                () => {
+                    if (selectedUnit != null)
+                        Label("Selected", AutoWidth());
+                    else
+                        Label("NULL", AutoWidth());
+                    using (VerticalScope()) {
+                        foreach (var armyEntry in playerArmies) {
+                            var army = armyEntry.Item1;
+                            using (HorizontalScope()) {
+                                Label(army.Data.ArmyName.ToString().orange().bold(), MinWidth(100), MaxWidth(250));
+                                var squads = army.Data.Squads;
+                                Label(squads.Count.ToString().cyan(), Width(35));
+                                Space(50);
+                                ActionButton("Add", () => { armyEntry.Item1.Data.Add(selectedUnit, count, false, null); }, Width(150));
+                            }
+                            
+                        }
+                    }
+                    
+                }
+            );
         }
 
         public static GlobalMapState MainGlobalMapState() {
