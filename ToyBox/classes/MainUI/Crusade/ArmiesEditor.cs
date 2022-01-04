@@ -346,7 +346,14 @@ namespace ToyBox.classes.MainUI {
                                                 }
                                             }
                                             if (squadToAdd != null) {
-                                                army.Data.Add(squadToAdd, count, false, null);
+                                                var merge = false;
+                                                foreach(var squad in army.Data.Squads) {
+                                                    if(squad.Unit.NameSafe() == squadToAdd.NameSafe()) {
+                                                        merge = true;
+                                                        break;
+                                                    }
+                                                }
+                                                army.Data.Add(squadToAdd, count, merge, null);
                                             }
                                         }
                                        
