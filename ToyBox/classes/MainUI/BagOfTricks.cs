@@ -271,6 +271,7 @@ namespace ToyBox {
                             Toggle("Vescavors Begone!", ref settings.toggleVescavorsBegone);
                             Toggle("Retrievers Begone!", ref settings.toggleRetrieversBegone);
                             Toggle("Deraknis Begone!", ref settings.toggleDeraknisBegone);
+                            Toggle("Deskari Begone!", ref settings.toggleDeskariBegone);
                         }
                     }
                     Space(25);

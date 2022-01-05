@@ -154,6 +154,7 @@ namespace ToyBox.BagOfPatches {
             public static bool vescavorsBegone = false;
             public static bool retrieversBegone = false;
             public static bool derakniBegone = false;
+            public static bool deskariBegone = false;
 
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 var type = unitEntityData.Blueprint.Type;
@@ -212,11 +213,20 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
 
-                //derakniBegone checks
+                // derakni checks
                 if (derakniBegone) {
                     var isADemonDerakni = IsDemonDerakniType(type?.AssetGuidThreadSafe);
                     if (isADemonDerakni) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintTriceratopsStandarGUID;
+                        return;
+                    }
+                }
+
+                // Deskari checks
+                if (deskariBegone) {
+                    var isADeskari = IsDeskariBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
+                    if (isADeskari) {
+                        unitEntityData.Descriptor.CustomPrefabGuid = blueprintMastodonStandarGUID;
                         return;
                     }
                 }
@@ -282,11 +292,21 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
 
-                //derakniBegone checks
+                // derakni checks
                 if (derakniBegone) {
                     var isADemonDerakni = IsDemonDerakniType(type?.AssetGuidThreadSafe);
                     if (isADemonDerakni) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintTriceratopsStandarGUID).Prefab;
+                        return;
+                    }
+                }
+
+
+                // Deskari checks
+                if (deskariBegone) {
+                    var isADeskari = IsDeskariBlueprintUnit(blueprintUnit.AssetGuidThreadSafe);
+                    if (isADeskari) {
+                        blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintMastodonStandarGUID).Prefab;
                         return;
                     }
                 }
@@ -311,8 +331,11 @@ namespace ToyBox.BagOfPatches {
             private static bool IsRetrieverBlueprintUnit(string blueprintUnitGuid) => RetrieverGuids.Contains(blueprintUnitGuid);
             private static bool IsRetrieverAreshkagelBlueprintUnit(string blueprintUnitGuid) => RetrieverAreshkagelGuids.Contains(blueprintUnitGuid);
 
-            //Derakni check methods
+            // Derakni check method
             private static bool IsDemonDerakniType(string typeGuid) => typeGuid == demonDerakniTypeGUID;
+
+            // Deskari check method
+            private static bool IsDeskariBlueprintUnit(string blueprintUnitGuid) => blueprintUnitGuid == blueprintDeskariGUID;
 
             private const string spiderTypeGUID = "243702bdc53e2574aaa34d1e3eafe6aa";
             private const string spiderSwarmTypeGUID = "0fd1473096fbdda4db770cca8366c5e1";
@@ -326,12 +349,15 @@ namespace ToyBox.BagOfPatches {
 
             private const string demonDerakniTypeGUID = "f57d863656bcfd4449a2fc743c3e895c";
 
+            private const string blueprintDeskariGUID = "5a75db49bf7aeaf4c9f0264cac3eed5c";
+
             private const string blueprintCR2RatSwarmGUID = "12a5944fa27307e4e8b6f56431d5cc8c";
             private const string blueprintWolfStandardGUID = "ea610d9e540af4243b1310a3e6833d9f";
             private const string blueprintDireWolfStandardGUID = "87b83e0e06432a44eb50fb03c71bc8f5";
             private const string blueprintBearStandardGUID = "cbaf7673c1c75a746b195af100bfab32";
             private const string blueprintOwlBearStandardGUID = "d6e0acbdbdb56114898922063ae2cba0";
-            private const string blueprintTriceratopsStandarGUID = "d604eef764fe4279bc2d90dc327f86cc";
+            private const string blueprintTriceratopsStandarGUID = "429171c659daac44689a34d3b7771140";
+            private const string blueprintMastodonStandarGUID = "028cc6f46e7998f46855a33ffde89567";
 
             private static readonly string[] spiderSwarmGuids = new string[]
             {
@@ -426,6 +452,7 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.vescavorsBegone = settings.toggleVescavorsBegone;
                 ModelReplacers.retrieversBegone = settings.toggleRetrieversBegone;
                 ModelReplacers.derakniBegone = settings.toggleDeraknisBegone;
+                ModelReplacers.deskariBegone = settings.toggleDeskariBegone;
 
                 ModelReplacers.CheckAndReplace(ref __instance);
             }
@@ -438,6 +465,7 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.vescavorsBegone = settings.toggleVescavorsBegone;
                 ModelReplacers.retrieversBegone = settings.toggleRetrieversBegone;
                 ModelReplacers.derakniBegone = settings.toggleDeraknisBegone;
+                ModelReplacers.deskariBegone = settings.toggleDeskariBegone;
 
                 ModelReplacers.CheckAndReplace(ref __instance);
             }
@@ -451,6 +479,7 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.vescavorsBegone = settings.toggleVescavorsBegone;
                 ModelReplacers.retrieversBegone = settings.toggleRetrieversBegone;
                 ModelReplacers.derakniBegone = settings.toggleDeraknisBegone;
+                ModelReplacers.deskariBegone = settings.toggleDeskariBegone;
 
                 ModelReplacers.CheckAndReplace(ref unit);
             }
@@ -464,6 +493,7 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.vescavorsBegone = settings.toggleVescavorsBegone;
                 ModelReplacers.retrieversBegone = settings.toggleRetrieversBegone;
                 ModelReplacers.derakniBegone = settings.toggleDeraknisBegone;
+                ModelReplacers.deskariBegone = settings.toggleDeskariBegone;
 
                 ModelReplacers.CheckAndReplace(ref unit);
             }
