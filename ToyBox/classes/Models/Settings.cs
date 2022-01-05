@@ -170,6 +170,7 @@ namespace ToyBox {
         public bool toggleSpiderBegone = false;
         public bool toggleVescavorsBegone = false;
         public bool toggleRetrieversBegone = false;
+        public bool toggleDeraknisBegone = false;
         public bool togglAutoEquipConsumables = false;
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
