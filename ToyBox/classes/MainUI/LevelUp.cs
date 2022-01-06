@@ -49,6 +49,7 @@ namespace ToyBox {
                     Space(25);
                     Label("This allows you to select a given feature more than once at level up".green());
                 },
+                () => Toggle("Apply Feature Selection Multiplier to party members", ref settings.toggleFeatureMultiplierCompanions),
                 () => {
                     Toggle("Allow Multiple Archetypes When Selecting A New Class", ref settings.toggleMultiArchetype);
                     25.space();
