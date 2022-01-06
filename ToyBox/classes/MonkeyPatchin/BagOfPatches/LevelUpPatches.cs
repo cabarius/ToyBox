@@ -269,8 +269,17 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(IgnorePrerequisites), "Ignore", MethodType.Getter)]
         private static class IgnorePrerequisites_Ignore_Patch {
             private static void Postfix(ref bool __result) {
-                if (settings.toggleIgnoreClassAndFeatRestrictions) {
-                    __result = true;
+                var state = Game.Instance.LevelUpController.State;
+
+                if (!state.IsClassSelected) {
+                    if (settings.toggleIgnoreClassRestrictions) {
+                        __result = true;
+                    }
+                }
+                else {
+                    if (settings.toggleIgnoreFeatRestrictions) {
+                        __result = true;
+                    }
                 }
             }
         }
@@ -308,7 +317,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LevelUpController), "IsPossibleMythicSelection", MethodType.Getter)]
         private static class LevelUpControllerIsPossibleMythicSelection_Patch {
             private static void Postfix(ref bool __result, LevelUpController __instance) {
-                if (settings.toggleIgnoreClassAndFeatRestrictions || settings.toggleAllowCompanionsToBecomeMythic && !__instance.Unit.IsMainCharacter) {
+                if (settings.toggleIgnoreClassRestrictions || settings.toggleAllowCompanionsToBecomeMythic && !__instance.Unit.IsMainCharacter) {
                     __result = true;
                 }
             }
@@ -593,7 +602,7 @@ namespace ToyBox.BagOfPatches {
                 [NotNull] IList<BlueprintFeatureBase> features,
                 FeatureSource source,
                 int level) {
-                if (settings.featsMultiplier < 2) return true;
+                if (settings.featsMultiplier < 2 || (!settings.toggleFeatureMultiplierCompanions && !unit.IsMainCharacter)) return true;
                 //Main.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
                 if (!unit.IsPartyOrPet()) return true;
                 Mod.Trace($"Log adding {settings.featsMultiplier}x features from {source.Blueprint.name.orange()} : {source.Blueprint.GetType().Name.yellow()} for {unit.CharacterName.green()} {string.Join(", ", state.Selections.Select(s => $"{s.Selection}")).cyan()}");
