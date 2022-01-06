@@ -100,8 +100,8 @@ namespace ToyBox.BagOfPatches {
 
             { "365405cc55044874893d26759532ea07", false },   // DrezenSiege_Council_Dialogue - Cue_0107
 
-            // Ciar
-            { "5e51a15b014a1bb4181f5feaa4f71e32", false },   // KTC_Ciar_FirstVisit - Cue_0014
+            // Ciar (commented out due to Lich issue)
+            // { "5e51a15b014a1bb4181f5feaa4f71e32", false },   // KTC_Ciar_FirstVisit - Cue_0014
 
             // Hand of the Inheritor
             { "4a056226dce658f4da30d99d851537ec", false },   // Herald_IvoryLabyrinth_dialog - Cue_0011
