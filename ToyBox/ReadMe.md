@@ -41,6 +41,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.15 (Coming Later)
 * **Armies Editor**
   * Add squads in Army Editor
+* **LevelUp**
+  * **Split Class and Feat Prequisite Ignore (Nihilistzsche)**
+    * Split the class and feat prerequisite ignore into two separate settings.
 ### Ver 1.4.14 (Coming Soon)
 * **Bag of Tricks**
   * Added ability to show, clear and disable corruption
