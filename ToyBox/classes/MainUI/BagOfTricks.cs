@@ -552,6 +552,7 @@ namespace ToyBox {
             HStack("Dice Rolls", 1,
                 () => EnumGrid("All Attacks Hit", ref settings.allAttacksHit, AutoWidth()),
                 () => EnumGrid("All Hits Critical", ref settings.allHitsCritical, AutoWidth()),
+                () => EnumGrid("All Criticals Auto-confirm", ref settings.allCriticalsConfirmed, AutoWidth()),
                 () => EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, AutoWidth()),
                 () => EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, AutoWidth()),
                 () => EnumGrid("Always Roll 20", ref settings.alwaysRoll20, AutoWidth()),

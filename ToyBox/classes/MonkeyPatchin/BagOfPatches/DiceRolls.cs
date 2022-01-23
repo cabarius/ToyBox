@@ -33,6 +33,14 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+        [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
+        private static class HitPlayer_OnTrigger3_Patch {
+            private static void Postfix(ref bool __result, RuleAttackRoll __instance) {
+                if (__instance.IsCriticalRoll && UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allCriticalsConfirmed)) {
+                    __result = true;
+                }
+            }
+        }
 
 #if false
         [HarmonyPatch(typeof(RuleCastSpell), "IsArcaneSpellFailed", MethodType.Getter)]

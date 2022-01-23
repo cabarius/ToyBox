@@ -289,6 +289,7 @@ namespace ToyBox {
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
         public UnitSelectType allHitsCritical = UnitSelectType.Off;
+        public UnitSelectType allCriticalsConfirmed = UnitSelectType.Off;
         public UnitSelectType rollWithAdvantage = UnitSelectType.Off;
         public UnitSelectType rollWithDisadvantage = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20 = UnitSelectType.Off;
