@@ -9,6 +9,7 @@ using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.Kingdom.Armies;
 using ModKit;
 using static ModKit.UI;
 using ModKit.Utility;
@@ -25,6 +26,8 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;
         public static IEnumerable<(GlobalMapArmyState, float)> demonArmies;
         public static string skillsSearchText = "";
+
+
         public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {
             armies = ArmiesByDistanceFromPlayer()?.ToList();
@@ -40,6 +43,7 @@ namespace ToyBox.classes.MainUI {
 
         private static readonly Dictionary<string, GlobalMapArmyState> armySelection = new();
         private static Dictionary<object, bool> toggleStates = new();
+        private static Dictionary<object, bool> toggleShowSquadStates = new();
         public static IEnumerable<BlueprintLeaderSkill> allLeaderSkills;
         public static IEnumerable<BlueprintLeaderSkill> GetAllLeaderSkills() {
             if (allLeaderSkills != null) return allLeaderSkills;
@@ -93,9 +97,8 @@ namespace ToyBox.classes.MainUI {
                 UpdateArmies();
             if (playerArmies != null)
                 ArmiesGUI("Player Armies", playerArmies);
-            if (playerArmies != null && demonArmies != null) {
+            if (playerArmies != null && demonArmies != null) 
                 Div(0, 25, 0);
-            }
             if (demonArmies != null)
                 ArmiesGUI("Demon Armies", demonArmies);
         }
@@ -125,6 +128,9 @@ namespace ToyBox.classes.MainUI {
                                 var army = armyEntry.Item1;
                                 var leader = army.Data.Leader;
                                 var distance = armyEntry.Item2;
+                                var showAddSquad = false;
+                                BlueprintUnit squadToAdd = null;
+
                                 using (HorizontalScope()) {
                                     Label(army.Data.ArmyName.ToString().orange().bold(), MinWidth(100), MaxWidth(250));
                                     Label(army.ArmyType.ToString().cyan(), MinWidth(100), MaxWidth(250));
@@ -169,8 +175,6 @@ namespace ToyBox.classes.MainUI {
                                         Game.Instance.Player.GlobalMap.LastActivated.DestroyArmy(army);
                                         UpdateArmies();
                                     }, Width(150));
-
-
                                 }
                                 if (showLeader) {
                                     Div(0, 10);
@@ -284,6 +288,7 @@ namespace ToyBox.classes.MainUI {
                                     using (VerticalScope()) {
                                         var squads = army.Data.m_Squads;
                                         SquadState squadToRemove = null;
+                                        showAddSquad = toggleShowSquadStates.GetValueOrDefault(squads, false);
                                         foreach (var squad in squads) {
                                             using (HorizontalScope()) {
                                                 Label(squad.Unit.NameSafe(), Width(475));
@@ -300,7 +305,58 @@ namespace ToyBox.classes.MainUI {
                                                 }, Width(150));
                                             }
                                         }
+                                        if (title == "Player Armies") {
+                                            if (DisclosureToggle("Add Squads", ref showAddSquad, 125)) {
+                                                toggleShowSquadStates[squads] = showAddSquad;
+                                            }
+                                        }
+                                        if(showAddSquad) {
+                                            Div(0, 10);
+                                            var count = 0;
+                                            var kingdom = KingdomState.Instance;
+                                            var mercenariesManager = kingdom.MercenariesManager;
+                                            var mercenariesPool = mercenariesManager.Pool;
+                                            var recruitManager = kingdom.RecruitsManager;
+                                            var growthPool = recruitManager.Growth;
+                                            using (VerticalScope()) {
+                                                using (HorizontalScope()) { 
+                                                Label("Unit Count".cyan(), AutoWidth());
+                                                count = IntTextField(ref settings.unitCount, null, Width(150));
+                                                }
 
+                                                foreach (var poolInfo in mercenariesPool) {
+                                                    var unit = poolInfo.Unit;
+                                                    using (HorizontalScope()) {
+                                                        Label(unit.NameSafe(), Width(520));
+                                                        ActionButton("Add",
+                                                            () => {
+                                                                squadToAdd = unit;
+                                                            }, Width(150));
+                                                    }
+                                                }
+                                                foreach (var poolInfo in growthPool) {
+                                                    var unit = poolInfo.Unit;
+                                                    using (HorizontalScope()) {
+                                                        Label(unit.NameSafe(), Width(520));
+                                                        ActionButton("Add",
+                                                            () => {
+                                                                squadToAdd = unit;
+                                                            }, Width(150));
+                                                    }
+                                                }
+                                            }
+                                            if (squadToAdd != null) {
+                                                var merge = false;
+                                                foreach(var squad in army.Data.Squads) {
+                                                    if(squad.Unit.NameSafe() == squadToAdd.NameSafe()) {
+                                                        merge = true;
+                                                        break;
+                                                    }
+                                                }
+                                                army.Data.Add(squadToAdd, count, merge, null);
+                                            }
+                                        }
+                                       
                                         if (squadToRemove != null) {
                                             squadToRemove.Army.RemoveSquad(squadToRemove);
                                         }
@@ -320,6 +376,8 @@ namespace ToyBox.classes.MainUI {
                 }
             }
         }
+
+       
 
         public static GlobalMapState MainGlobalMapState() {
             var player = Game.Instance?.Player ?? null;

@@ -170,6 +170,8 @@ namespace ToyBox {
         public bool toggleSpiderBegone = false;
         public bool toggleVescavorsBegone = false;
         public bool toggleRetrieversBegone = false;
+        public bool toggleDeraknisBegone = false;
+        public bool toggleDeskariBegone = false;
         public bool togglAutoEquipConsumables = false;
         public bool toggleInstantChangeParty = false;
         public bool toggleExtendHexes = false;
@@ -218,6 +220,7 @@ namespace ToyBox {
         public float enemyLeaderPowerMultiplier = 1;
         public float kingdomTaskResolutionLengthMultiplier = 0;
         public bool toggleIgnoreEventSolutionRestrictions = false;
+        public int unitCount = 100;
 
         // Settlement
         public bool toggleIgnoreBuildingClassRestrictions = false;
