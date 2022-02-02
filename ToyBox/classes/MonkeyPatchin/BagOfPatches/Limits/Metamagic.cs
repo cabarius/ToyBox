@@ -19,7 +19,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(MetamagicHelper), "DefaultCost")]
+        [HarmonyPatch(typeof(MetamagicHelper), nameof(MetamagicHelper.DefaultCost))]
         public static class MetamagicHelper_DefaultCost_Patch {
             public static void Postfix(ref int __result) {
                 if (settings.toggleMetamagicIsFree) {
@@ -29,7 +29,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleCollectMetamagic), "AddMetamagic")]
+        [HarmonyPatch(typeof(RuleCollectMetamagic), nameof(RuleCollectMetamagic.AddMetamagic))]
         public static class RuleCollectMetamagic_AddMetamagic_Patch {
             public static bool Prefix() => !settings.toggleMetamagicIsFree;
             public static void Postfix(ref RuleCollectMetamagic __instance, int ___m_SpellLevel, Feature metamagicFeature) {

@@ -17,7 +17,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(RuleAttackRoll), "IsCriticalConfirmed", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleAttackRoll), nameof(RuleAttackRoll.IsCriticalConfirmed), MethodType.Getter)]
         private static class HitPlayer_OnTriggerl_Patch {
             private static void Postfix(ref bool __result, RuleAttackRoll __instance) {
                 if (__instance.IsHit && UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allHitsCritical)) {
@@ -25,7 +25,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(RuleAttackRoll), "IsHit", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleAttackRoll), nameof(RuleAttackRoll.IsHit), MethodType.Getter)]
         private static class HitPlayer_OnTrigger2_Patch {
             private static void Postfix(ref bool __result, RuleAttackRoll __instance) {
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.allAttacksHit)) {
@@ -35,7 +35,7 @@ namespace ToyBox.BagOfPatches {
         }
 
 #if false
-        [HarmonyPatch(typeof(RuleCastSpell), "IsArcaneSpellFailed", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleCastSpell), nameof(RuleCastSpell.IsArcaneSpellFailed), MethodType.Getter)]
         public static class RuleCastSpell_IsArcaneSpellFailed_Patch {
             static void Postfix(RuleCastSpell __instance, ref bool __result) {
                 if ((__instance.Spell.Caster?.Unit?.IsPartyMemberOrPet() ?? false) && (StringUtils.ToToggleBool(settings.toggleArcaneSpellFailureRoll))) {
@@ -51,7 +51,7 @@ namespace ToyBox.BagOfPatches {
         }
 #endif
 
-        [HarmonyPatch(typeof(RuleRollDice), "Roll")]
+        [HarmonyPatch(typeof(RuleRollDice), nameof(RuleRollDice.Roll))]
         public static class RuleRollDice_Roll_Patch {
             private static void Postfix(RuleRollDice __instance) {
                 if (__instance.DiceFormula.Dice != DiceType.D20) return;
@@ -98,7 +98,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleInitiativeRoll), "Result", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleInitiativeRoll), nameof(RuleInitiativeRoll.Result), MethodType.Getter)]
         public static class RuleInitiativeRoll_OnTrigger_Patch {
             private static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {

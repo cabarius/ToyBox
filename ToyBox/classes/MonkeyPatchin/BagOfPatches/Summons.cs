@@ -36,7 +36,7 @@ namespace ToyBox.BagOfPatches {
         private static bool SummonedByPlayerFaction = false;
 
         // prefill actionbar slots for controlled summon with spell-like abilities and charge ability
-        [HarmonyPatch(typeof(ActionBarVM), "SetMechanicSlots")]
+        [HarmonyPatch(typeof(ActionBarVM), nameof(ActionBarVM.SetMechanicSlots))]
         private static class ActionBarVM_SetMechanicSlots_Patch {
             private static bool Prefix(ActionBarVM __instance, UnitEntityData unit) {
                 if (settings.toggleMakeSummmonsControllable && !LoadingProcess.Instance.IsLoadingInProcess && unit != null && unit.IsSummoned()) {
@@ -56,7 +56,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(UIUtility), "GetGroup")]
+        [HarmonyPatch(typeof(UIUtility), nameof(UIUtility.GetGroup))]
         private static class UIUtility_GetGroup_Patch {
             private static void Postfix(ref List<UnitEntityData> __result) {
                 if (settings.toggleMakeSummmonsControllable) {
@@ -68,7 +68,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(Player), "MoveCharacters")]
+        [HarmonyPatch(typeof(Player), nameof(Player.MoveCharacters))]
         private static class Player_MoveCharacters_Patch {
             private static void Postfix() {
                 if (settings.toggleMakeSummmonsControllable) {
@@ -86,7 +86,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(SummonPool), "Register")]
+        [HarmonyPatch(typeof(SummonPool), nameof(SummonPool.Register))]
         private static class SummonPool_Register_Patch {
             private static void Postfix(ref UnitEntityData unit) {
                 //if (settings.toggleSetSpeedOnSummon) {
@@ -154,7 +154,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ActionBarManager), "CheckTurnPanelView")]
+        [HarmonyPatch(typeof(ActionBarManager), nameof(ActionBarManager.CheckTurnPanelView))]
         internal static class ActionBarManager_CheckTurnPanelView_Patch {
             private static void Postfix(ActionBarManager __instance) {
                 if (settings.toggleMakeSummmonsControllable && CombatController.IsInTurnBasedCombat()) {
@@ -163,7 +163,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(UnitEntityData), "IsDirectlyControllable", MethodType.Getter)]
+        [HarmonyPatch(typeof(UnitEntityData), nameof(UnitEntityData.IsDirectlyControllable), MethodType.Getter)]
         public static class UnitEntityData_IsDirectlyControllable_Patch {
             public static void Postfix(UnitEntityData __instance, ref bool __result) {
                 if (settings.toggleMakeSummmonsControllable && __instance.Descriptor.IsPartyOrPet() && !__result && __instance.Get<UnitPartSummonedMonster>() != null && !__instance.Descriptor.State.IsFinallyDead && !__instance.Descriptor.State.IsPanicked && !__instance.IsDetached && !__instance.PreventDirectControl) {

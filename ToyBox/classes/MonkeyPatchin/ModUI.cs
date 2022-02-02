@@ -12,7 +12,7 @@ using ModKit;
 
 namespace ToyBox.BagOfPatches {
     internal static class ModUI {
-        [HarmonyPatch(typeof(UnityModManager.UI), "Update")]
+        [HarmonyPatch(typeof(UnityModManager.UI), nameof(UnityModManager.UI.Update))]
         internal static class UnityModManager_UI_Update_Patch {
             private static readonly Dictionary<int, float> scrollOffsets = new() { };
             private static void Postfix(UnityModManager.UI __instance, ref Rect ___mWindowRect, ref Vector2[] ___mScrollPosition, ref int ___tabId) {

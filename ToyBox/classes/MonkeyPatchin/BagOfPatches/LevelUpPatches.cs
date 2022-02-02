@@ -30,7 +30,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(LevelUpController), "CanLevelUp")]
+        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.CanLevelUp))]
         private static class LevelUpController_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleNoLevelUpRestrictions) {
@@ -129,7 +129,7 @@ namespace ToyBox.BagOfPatches {
         }
 #endif
 
-        [HarmonyPatch(typeof(CharSheetCommonLevel), "Initialize")]
+        [HarmonyPatch(typeof(CharSheetCommonLevel), nameof(CharSheetCommonLevel.Initialize))]
         private static class CharSheetCommonLevel_FixExperienceBar_Patch {
             public static void Postfix(UnitProgressionData data, ref CharSheetCommonLevel __instance) {
                 __instance.Level.text = "Level " + data.CharacterLevel;
@@ -141,7 +141,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(CharInfoExperienceVM), "RefreshData")]
+        [HarmonyPatch(typeof(CharInfoExperienceVM), nameof(CharInfoExperienceVM.RefreshData))]
         private static class CharInfoExperienceVM_FixExperienceBar_Patch {
             public static void Postfix(ref CharInfoExperienceVM __instance) {
                 var unit = __instance.Unit.Value;
@@ -151,7 +151,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         // ignoreAttributesPointsRemainng
-        [HarmonyPatch(typeof(StatsDistribution), "IsComplete")]
+        [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.IsComplete))]
         private static class StatsDistribution_IsComplete_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreAttributePointsRemaining) {
@@ -160,7 +160,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(SpendAttributePoint), "Check")]
+        [HarmonyPatch(typeof(SpendAttributePoint), nameof(SpendAttributePoint.Check))]
         private static class SpendAttributePoint_Check_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreAttributePointsRemaining) {
@@ -169,7 +169,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         // ignoreAttributeCap
-        [HarmonyPatch(typeof(StatsDistribution), "CanAdd", new Type[] { typeof(StatType) })]
+        [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.CanAdd), new Type[] { typeof(StatType) })]
         private static class StatsDistribution_CanAdd_Patch {
             /*
             public static bool Prefix() {
@@ -189,7 +189,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         // ignoreSkillPointsRemaining
-        [HarmonyPatch(typeof(CharGenSkillsPhaseVM), "SelectionStateIsCompleted")]
+        [HarmonyPatch(typeof(CharGenSkillsPhaseVM), nameof(CharGenSkillsPhaseVM.SelectionStateIsCompleted))]
         private static class CharGenSkillsPhaseVM_SelectionStateIsCompleted_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreSkillPointsRemaining) {
@@ -198,7 +198,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         // ignoreSkillPointsRemaing, ignoreSkillCap
-        [HarmonyPatch(typeof(SpendSkillPoint), "Check", new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SpendSkillPoint), nameof(SpendSkillPoint.Check), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         private static class SpendSkillPoint_Check_Patch {
             public static bool Prefix(SpendSkillPoint __instance) => !(settings.toggleIgnoreSkillCap || settings.toggleIgnoreSkillPointsRemaining);
             private static void Postfix(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) => __result = StatTypeHelper.Skills.Contains<StatType>(__instance.Skill)
@@ -206,7 +206,7 @@ namespace ToyBox.BagOfPatches {
                     && (settings.toggleIgnoreSkillPointsRemaining || state.SkillPointsRemaining > 0);
         }
         // ignoreSkillCap
-        [HarmonyPatch(typeof(CharGenSkillAllocatorVM), "UpdateSkillAllocator")]
+        [HarmonyPatch(typeof(CharGenSkillAllocatorVM), nameof(CharGenSkillAllocatorVM.UpdateSkillAllocator))]
         private static class CharGenSkillAllocatorVM_UpdateSkillAllocator_Patch {
             public static bool Prefix(CharGenSkillAllocatorVM __instance) {
                 if (settings.toggleIgnoreSkillCap) {
@@ -222,7 +222,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         // full HD
-        [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyHitPoints", new Type[] { typeof(LevelUpState), typeof(ClassData), typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.ApplyHitPoints), new Type[] { typeof(LevelUpState), typeof(ClassData), typeof(UnitDescriptor) })]
         private static class ApplyClassMechanics_ApplyHitPoints_Patch {
             private static void Postfix(LevelUpState state, ClassData classData, ref UnitDescriptor unit) {
                 if (settings.toggleFullHitdiceEachLevel && unit.IsPartyOrPet() && state.NextClassLevel > 1) {
@@ -241,7 +241,7 @@ namespace ToyBox.BagOfPatches {
 #endif
             }
         }
-        [HarmonyPatch(typeof(PrerequisiteFeature), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteFeature), nameof(PrerequisiteFeature.CheckInternal))]
         private static class PrerequisiteFeature_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreFeaturePrerequisites) {
@@ -249,7 +249,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(PrerequisiteFeaturesFromList), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteFeaturesFromList), nameof(PrerequisiteFeaturesFromList.CheckInternal))]
         private static class PrerequisiteFeaturesFromList_CanLevelUp_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleIgnoreFeatureListPrerequisites) {
@@ -258,7 +258,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(FeatureSelectionState), "IgnorePrerequisites", MethodType.Getter)]
+        [HarmonyPatch(typeof(FeatureSelectionState), nameof(FeatureSelectionState.IgnorePrerequisites), MethodType.Getter)]
         private static class FeatureSelectionState_IgnorePrerequisites_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleFeaturesIgnorePrerequisites) {
@@ -266,7 +266,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(IgnorePrerequisites), "Ignore", MethodType.Getter)]
+        [HarmonyPatch(typeof(IgnorePrerequisites), nameof(IgnorePrerequisites.Ignore), MethodType.Getter)]
         private static class IgnorePrerequisites_Ignore_Patch {
             private static void Postfix(ref bool __result) {
                 var state = Game.Instance.LevelUpController.State;
@@ -284,7 +284,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #if false
-        [HarmonyPatch(typeof(CharGenMythicPhaseVM), "IsClassVisible")]
+        [HarmonyPatch(typeof(CharGenMythicPhaseVM), nameof(CharGenMythicPhaseVM.IsClassVisible))]
         static class CharGenMythicPhaseVM_IsClassVisible_Patch {
             private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
                 Logger.Log("IsClassVisible");
@@ -294,7 +294,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(CharGenMythicPhaseVM), "IsClassAvailableToSelect")]
+        [HarmonyPatch(typeof(CharGenMythicPhaseVM), nameof(CharGenMythicPhaseVM.IsClassAvailableToSelect))]
         static class CharGenMythicPhaseVM_IsClassAvailableToSelect_Patch {
             private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
                 Logger.Log("CharGenMythicPhaseVM.IsClassAvailableToSelect");
@@ -303,7 +303,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(CharGenMythicPhaseVM), "IsPossibleMythicSelection", MethodType.Getter)]
+        [HarmonyPatch(typeof(CharGenMythicPhaseVM), nameof(CharGenMythicPhaseVM.IsPossibleMythicSelection), MethodType.Getter)]
         static class CharGenMythicPhaseVM_IsPossibleMythicSelection_Patch {
             private static void Postfix(ref bool __result) {
                 Logger.Log("CharGenMythicPhaseVM.IsPossibleMythicSelection");
@@ -314,7 +314,7 @@ namespace ToyBox.BagOfPatches {
         }
 #endif
 
-        [HarmonyPatch(typeof(LevelUpController), "IsPossibleMythicSelection", MethodType.Getter)]
+        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.IsPossibleMythicSelection), MethodType.Getter)]
         private static class LevelUpControllerIsPossibleMythicSelection_Patch {
             private static void Postfix(ref bool __result, LevelUpController __instance) {
                 if (settings.toggleIgnoreClassRestrictions || settings.toggleAllowCompanionsToBecomeMythic && !__instance.Unit.IsMainCharacter) {
@@ -350,7 +350,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteCasterTypeSpellLevel), nameof(PrerequisiteCasterTypeSpellLevel.CheckInternal))]
         public static class PrerequisiteCasterTypeSpellLevel_Check_Patch {
             public static void Postfix(
                     [CanBeNull] FeatureSelectionState selectionState,
@@ -363,7 +363,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(PrerequisiteNoArchetype), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteNoArchetype), nameof(PrerequisiteNoArchetype.CheckInternal))]
         public static class PrerequisiteNoArchetype_Check_Patch {
             public static void Postfix(
                     [CanBeNull] FeatureSelectionState selectionState,
@@ -377,7 +377,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteStatValue), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteStatValue), nameof(PrerequisiteStatValue.CheckInternal))]
         public static class PrerequisiteStatValue_Check_Patch {
             public static void Postfix(
                     [CanBeNull] FeatureSelectionState selectionState,
@@ -391,7 +391,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteClassLevel), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteClassLevel), nameof(PrerequisiteClassLevel.CheckInternal))]
         public static class PrerequisiteClassLevel_Check_Patch {
             public static void Postfix(
                     [CanBeNull] FeatureSelectionState selectionState,
@@ -454,7 +454,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteAlignment), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteAlignment), nameof(PrerequisiteAlignment.CheckInternal))]
         public static class PrerequisiteAlignment_Check_Patch {
             public static void Postfix(
                     [CanBeNull] FeatureSelectionState selectionState,
@@ -468,7 +468,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PrerequisiteNoFeature), "CheckInternal")]
+        [HarmonyPatch(typeof(PrerequisiteNoFeature), nameof(PrerequisiteNoFeature.CheckInternal))]
         public static class PrerequisiteNoFeature_Check_Patch {
             public static void Postfix(
                     [CanBeNull] FeatureSelectionState selectionState,
@@ -482,7 +482,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #if false
-        [HarmonyPatch(typeof(Spellbook), "AddCasterLevel")]
+        [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.AddCasterLevel))]
         public static class Spellbook_AddCasterLevel_Patch {
             public static bool Prefix() {
                 return false;
@@ -508,7 +508,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-        [HarmonyPatch(typeof(SpellSelectionData), "CanSelectAnything", new Type[] { typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(SpellSelectionData), nameof(SpellSelectionData.CanSelectAnything), new Type[] { typeof(UnitDescriptor) })]
         public static class SpellSelectionData_CanSelectAnything_Patch {
             public static void Postfix(UnitDescriptor unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
@@ -519,7 +519,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         // Let user advance if no options left for feat selection
-        [HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM), "CheckIsCompleted")]
+        [HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM), nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
         private static class CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch {
             private static void Postfix(CharGenFeatureSelectorPhaseVM __instance, ref bool __result) {
                 if (settings.toggleOptionalFeatSelection) {
@@ -594,7 +594,7 @@ namespace ToyBox.BagOfPatches {
          * Required adding in "skip feat selection" because it broke level ups.
          * Causes certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
         */
-        [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
+        [HarmonyPatch(typeof(LevelUpHelper), nameof(LevelUpHelper.AddFeaturesFromProgression))]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             public static bool Prefix(
                 [NotNull] LevelUpState state,
@@ -635,7 +635,7 @@ namespace ToyBox.BagOfPatches {
 
 #endif
 #if false
-        [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
+        [HarmonyPatch(typeof(LevelUpHelper), nameof(LevelUpHelper.AddFeaturesFromProgression))]
         public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
             //Defines which progressions are allowed to be multiplied to prevent unexpected behavior
             private static readonly BlueprintGuid[] AllowedProgressions = new BlueprintGuid[] {

@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace ToyBox.classes.MonkeyPatchin {
     public class HighlightObjectToggle {
-        [HarmonyPatch(typeof(InteractionHighlightController), "HighlightOn")]
+        [HarmonyPatch(typeof(InteractionHighlightController), nameof(InteractionHighlightController.HighlightOn))]
         private class InteractionHighlightController_Activate_Patch {
             //static TimeSpan m_LastTickTime;
             private static AccessTools.FieldRef<InteractionHighlightController, bool> m_IsHighlightingRef;
@@ -58,7 +58,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                 return true;
             }
         }
-        [HarmonyPatch(typeof(InteractionHighlightController), "HighlightOff")]
+        [HarmonyPatch(typeof(InteractionHighlightController), nameof(InteractionHighlightController.HighlightOff))]
         private class InteractionHighlightController_Deactivate_Patch {
             private static bool Prefix(InteractionHighlightController __instance) {
                 try {
@@ -75,7 +75,7 @@ namespace ToyBox.classes.MonkeyPatchin {
         }
     }
 
-    [HarmonyPatch(typeof(MapObjectView), "UpdateHighlight")]
+    [HarmonyPatch(typeof(MapObjectView), nameof(MapObjectView.UpdateHighlight))]
     internal class HighlightHiddenObjects {
         private static readonly string ObjName = "ToyBox.HiddenHighlighter";
         private static readonly string DecalName = "ToyBox.DecalHiddenHighlighter";

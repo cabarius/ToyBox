@@ -21,7 +21,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(EquipmentRestrictionAlignment), "CanBeEquippedBy")]
+        [HarmonyPatch(typeof(EquipmentRestrictionAlignment), nameof(EquipmentRestrictionAlignment.CanBeEquippedBy))]
         public static class EquipmentRestrictionAlignment_CanBeEquippedBy_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
@@ -29,7 +29,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(EquipmentRestrictionClass), "CanBeEquippedBy")]
+        [HarmonyPatch(typeof(EquipmentRestrictionClass), nameof(EquipmentRestrictionClass.CanBeEquippedBy))]
         public static class EquipmentRestrictionClassNew_CanBeEquippedBy_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
@@ -37,7 +37,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(EquipmentRestrictionStat), "CanBeEquippedBy")]
+        [HarmonyPatch(typeof(EquipmentRestrictionStat), nameof(EquipmentRestrictionStat.CanBeEquippedBy))]
         public static class EquipmentRestrictionStat_CanBeEquippedBy_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
@@ -45,7 +45,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(ItemEntityArmor), "CanBeEquippedInternal")]
+        [HarmonyPatch(typeof(ItemEntityArmor), nameof(ItemEntityArmor.CanBeEquippedInternal))]
         public static class ItemEntityArmor_CanBeEquippedInternal_Patch {
             public static void Postfix(ItemEntityArmor __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
@@ -54,7 +54,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(ItemEntityShield), "CanBeEquippedInternal")]
+        [HarmonyPatch(typeof(ItemEntityShield), nameof(ItemEntityShield.CanBeEquippedInternal))]
         public static class ItemEntityShield_CanBeEquippedInternal_Patch {
             public static void Postfix(ItemEntityShield __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
@@ -63,7 +63,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(ItemEntityWeapon), "CanBeEquippedInternal")]
+        [HarmonyPatch(typeof(ItemEntityWeapon), nameof(ItemEntityWeapon.CanBeEquippedInternal))]
         public static class ItemEntityWeapon_CanBeEquippedInternal_Patch {
             public static void Postfix(ItemEntityWeapon __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {

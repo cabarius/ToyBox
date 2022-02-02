@@ -20,7 +20,7 @@ namespace ToyBox {
         }
 
         // forbid moving through non selected entity type
-        [HarmonyPatch(typeof(UnitMovementAgent), "IsSoftObstacle", typeof(UnitMovementAgent))]
+        [HarmonyPatch(typeof(UnitMovementAgent), nameof(UnitMovementAgent.IsSoftObstacle), typeof(UnitMovementAgent))]
         private static class UnitMovementAgent_IsSoftObstacle_Patch {
             [HarmonyPrefix]
             private static bool Prefix(UnitMovementAgent __instance, ref bool __result) {

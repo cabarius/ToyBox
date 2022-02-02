@@ -25,7 +25,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(UnitEntityData), "ModifiedSpeedMps", MethodType.Getter)]
+        [HarmonyPatch(typeof(UnitEntityData), nameof(UnitEntityData.ModifiedSpeedMps), MethodType.Getter)]
         public static class UnitEntityData_CalculateSpeedModifier_Patch {
             private static void Postfix(UnitEntityData __instance, ref float __result) {
                 //Main.Log($"UnitEntityData_CalculateSpeedModifier_Patch: isInParty:{__instance.Descriptor.IsPartyOrPet()} result:{__result}".cyan());
@@ -39,7 +39,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ClickGroundHandler), "RunCommand")]
+        [HarmonyPatch(typeof(ClickGroundHandler), nameof(ClickGroundHandler.RunCommand))]
         public static class ClickGroundHandler_RunCommand_Patch {
             private static UnitMoveTo unitMoveTo = null;
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
@@ -80,7 +80,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", new Type[] { })]
+        [HarmonyPatch(typeof(GlobalMapMovementController), nameof(GlobalMapMovementController.GetRegionalModifier), new Type[] { })]
         public static class MovementSpeed_GetRegionalModifier_Patch1 {
             public static void Postfix(ref float __result) {
                 var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
@@ -88,7 +88,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapMovementController), "GetRegionalModifier", new Type[] { typeof(Vector3) })]
+        [HarmonyPatch(typeof(GlobalMapMovementController), nameof(GlobalMapMovementController.GetRegionalModifier), new Type[] { typeof(Vector3) })]
         public static class MovementSpeed_GetRegionalModifier_Patch2 {
             public static void Postfix(ref float __result) {
                 var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
@@ -102,7 +102,7 @@ namespace ToyBox.BagOfPatches {
             IGlobalMapTraveler traveler,
             float visualStepDistance)
         */
-        [HarmonyPatch(typeof(GlobalMapMovementUtility), "MoveAlongEdge", new Type[] {
+        [HarmonyPatch(typeof(GlobalMapMovementUtility), nameof(GlobalMapMovementUtility.MoveAlongEdge), new Type[] {
             typeof(GlobalMapState), typeof(GlobalMapView), typeof(IGlobalMapTraveler), typeof(float)
             })]
         public static class GlobalMapMovementUtility_MoveAlongEdge_Patch {
@@ -119,7 +119,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapArmyState), "SpendMovementPoints", new Type[] { typeof(float) })]
+        [HarmonyPatch(typeof(GlobalMapArmyState), nameof(GlobalMapArmyState.SpendMovementPoints), new Type[] { typeof(float) })]
         public static class GlobalMapArmyState_SpendMovementPoints_Patch {
             public static void Prefix(GlobalMapArmyState __instance, ref float points) {
                 if (__instance.Data.Faction == ArmyFaction.Crusaders) {

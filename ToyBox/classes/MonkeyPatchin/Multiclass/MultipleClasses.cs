@@ -138,8 +138,7 @@ namespace ToyBox.Multiclass {
 
         #region Skills & Features
 
-        [HarmonyPatch(typeof(LevelUpController))]
-        [HarmonyPatch("ApplyLevelup")]
+        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.ApplyLevelup))]
         private static class LevelUpController_ApplyLevelup_Patch {
             private static void Prefix(LevelUpController __instance, UnitEntityData unit) {
                 if (!settings.toggleMulticlass) return;

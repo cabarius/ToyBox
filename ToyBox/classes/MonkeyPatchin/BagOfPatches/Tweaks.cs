@@ -62,7 +62,7 @@ namespace ToyBox.BagOfPatches {
 
         //     private static bool CanCopySpell([NotNull] BlueprintAbility spell, [NotNull] Spellbook spellbook) => spellbook.Blueprint.CanCopyScrolls && !spellbook.IsKnown(spell) && spellbook.Blueprint.SpellList.Contains(spell);
 
-        [HarmonyPatch(typeof(CopyScroll), "CanCopySpell")]
+        [HarmonyPatch(typeof(CopyScroll), nameof(CopyScroll.CanCopySpell))]
         [HarmonyPatch(new Type[] { typeof(BlueprintAbility), typeof(Spellbook) })]
         public static class CopyScroll_CanCopySpell_Patch {
             private static bool Prefix() => false;
@@ -83,7 +83,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(KingdomUIEventWindow), "OnClose")]
+        [HarmonyPatch(typeof(KingdomUIEventWindow), nameof(KingdomUIEventWindow.OnClose))]
         public static class KingdomUIEventWindow_OnClose_Patch {
             public static bool Prefix(ref bool __state) {
                 __state = settings.toggleInstantEvent;
@@ -121,7 +121,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(KingdomTaskEvent), "SkipPlayerTime", MethodType.Getter)]
+        [HarmonyPatch(typeof(KingdomTaskEvent), nameof(KingdomTaskEvent.SkipPlayerTime), MethodType.Getter)]
         public static class KingdomTaskEvent_SkipPlayerTime_Patch {
             public static void Postfix(ref int __result) {
                 if (settings.toggleInstantEvent) {
@@ -130,7 +130,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(KingdomUIEventWindowFooter), "OnStart")]
+        [HarmonyPatch(typeof(KingdomUIEventWindowFooter), nameof(KingdomUIEventWindowFooter.OnStart))]
         public static class KingdomUIEventWindowFooter_OnStart_Patch {
             public static bool Prefix(ref bool __state) {
                 __state = settings.toggleInstantEvent;
@@ -165,7 +165,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(FogOfWarArea), "RevealOnStart", MethodType.Getter)]
+        [HarmonyPatch(typeof(FogOfWarArea), nameof(FogOfWarArea.RevealOnStart), MethodType.Getter)]
         public static class FogOfWarArea_Active_Patch {
             private static bool Prefix(ref bool __result) {
                 if (!settings.toggleNoFogOfWar) return true;
@@ -178,7 +178,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GameHistoryLog), "HandlePartyCombatStateChanged")]
+        [HarmonyPatch(typeof(GameHistoryLog), nameof(GameHistoryLog.HandlePartyCombatStateChanged))]
         private static class GameHistoryLog_HandlePartyCombatStateChanged_Patch {
             private static void Postfix(ref bool inCombat) {
                 if (!inCombat && settings.toggleRestoreSpellsAbilitiesAfterCombat) {
@@ -241,7 +241,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GroupController), "WithRemote", MethodType.Getter)]
+        [HarmonyPatch(typeof(GroupController), nameof(GroupController.WithRemote), MethodType.Getter)]
         private static class GroupController_WithRemote_Patch {
             private static void Postfix(GroupController __instance, ref bool __result) {
                 if (settings.toggleAccessRemoteCharacters) {
@@ -259,7 +259,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(AbilityData), "RequireMaterialComponent", MethodType.Getter)]
+        [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.RequireMaterialComponent), MethodType.Getter)]
         public static class AbilityData_RequireMaterialComponent_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleMaterialComponent) {
@@ -268,7 +268,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintArmorType), "HasDexterityBonusLimit", MethodType.Getter)]
+        [HarmonyPatch(typeof(BlueprintArmorType), nameof(BlueprintArmorType.HasDexterityBonusLimit), MethodType.Getter)]
         public static class BlueprintArmorType_HasDexterityBonusLimit_Patch {
             public static bool Prefix(ref bool __result) {
                 if (settings.toggleIgnoreMaxDexterity) {
@@ -279,7 +279,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintArmorType), "ArmorChecksPenalty", MethodType.Getter)]
+        [HarmonyPatch(typeof(BlueprintArmorType), nameof(BlueprintArmorType.ArmorChecksPenalty), MethodType.Getter)]
         public static class BlueprintArmorType_ArmorChecksPenalty_Patch {
             public static bool Prefix(ref int __result) {
                 if (settings.toggleIgnoreArmorChecksPenalty) {
@@ -290,7 +290,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ItemEntityArmor), "RecalculateStats")]
+        [HarmonyPatch(typeof(ItemEntityArmor), nameof(ItemEntityArmor.RecalculateStats))]
         public static class ItemEntityArmor_RecalculateStats_Patch {
             public static void Postfix(ItemEntityArmor __instance) {
                 if (settings.toggleIgnoreSpeedReduction) {
@@ -307,7 +307,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintArmorType), "ArcaneSpellFailureChance", MethodType.Getter)]
+        [HarmonyPatch(typeof(BlueprintArmorType), nameof(BlueprintArmorType.ArcaneSpellFailureChance), MethodType.Getter)]
         public static class BlueprintArmorType_ArcaneSpellFailureChance_Patch {
             public static bool Prefix(ref int __result) {
                 if (settings.toggleIgnoreSpellFailure) {
@@ -341,7 +341,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleDrainEnergy), "TargetIsImmune", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleDrainEnergy), nameof(RuleDrainEnergy.TargetIsImmune), MethodType.Getter)]
         private static class RuleDrainEnergy_Immune_Patch {
             public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
                 if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyNegativeLevelImmunity) {
@@ -350,7 +350,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleDealStatDamage), "Immune", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleDealStatDamage), nameof(RuleDealStatDamage.Immune), MethodType.Getter)]
         private static class RuleDealStatDamage_Immune_Patch {
             public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
                 if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyAbilityDamageImmunity) {
@@ -361,7 +361,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch]
         private static class AbilityAlignment_IsRestrictionPassed_Patch {
-            [HarmonyPatch(typeof(AbilityCasterAlignment), "IsCasterRestrictionPassed")]
+            [HarmonyPatch(typeof(AbilityCasterAlignment), nameof(AbilityCasterAlignment.IsCasterRestrictionPassed))]
             [HarmonyPostfix]
             public static void PostfixCasterRestriction(ref bool __result) {
                 if (settings.toggleIgnoreAbilityAlignmentRestriction) {
@@ -369,7 +369,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
 
-            [HarmonyPatch(typeof(AbilityTargetAlignment), "IsTargetRestrictionPassed")]
+            [HarmonyPatch(typeof(AbilityTargetAlignment), nameof(AbilityTargetAlignment.IsTargetRestrictionPassed))]
             [HarmonyPostfix]
             public static void PostfixTargetRestriction(ref bool __result) {
                 if (settings.toggleIgnoreAbilityAlignmentRestriction) {
@@ -378,8 +378,8 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(MainMenuBoard), "Update")]
-        private static class MainMenuButtons_Update_Patch {
+        [HarmonyPatch(typeof(MainMenuBoard), nameof(MainMenuBoard.Update))]
+        private static class MainMenuButtons_UpdatePatch {
             private static void Postfix() {
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
                     Main.freshlyLaunched = false;
@@ -403,7 +403,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(Tutorial), "IsBanned")]
+        [HarmonyPatch(typeof(Tutorial), nameof(Tutorial.IsBanned))]
         private static class Tutorial_IsBanned_Patch {
             private static bool Prefix(ref Tutorial __instance, ref bool __result) {
                 if (settings.toggleForceTutorialsToHonorSettings) {
@@ -502,7 +502,7 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix() => !settings.toggleBlockUnrecruit;
         }
 
-        [HarmonyPatch(typeof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked), "CheckCondition")]
+        [HarmonyPatch(typeof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked), nameof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked.CheckCondition))]
         public static class RomanceLocked_CheckCondition_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleMultipleRomance) {
@@ -544,7 +544,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RestrictionCanGatherPower), "IsAvailable")]
+        [HarmonyPatch(typeof(RestrictionCanGatherPower), nameof(RestrictionCanGatherPower.IsAvailable))]
         public static class RestrictionCanGatherPower_IsAvailable_Patch {
             public static bool Prefix(ref bool __result) {
                 if (!settings.toggleKineticistGatherPower) {
@@ -556,12 +556,12 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(KineticistAbilityBurnCost), "GetTotal")]
+        [HarmonyPatch(typeof(KineticistAbilityBurnCost), nameof(KineticistAbilityBurnCost.GetTotal))]
         public static class KineticistAbilityBurnCost_GetTotal_Patch {
             public static void Postfix(ref int __result) => __result = Math.Max(0, __result - settings.kineticistBurnReduction);
         }
 
-        [HarmonyPatch(typeof(UnitPartMagus), "IsSpellCombatThisRoundAllowed")]
+        [HarmonyPatch(typeof(UnitPartMagus), nameof(UnitPartMagus.IsSpellCombatThisRoundAllowed))]
         public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
             public static void Postfix(ref bool __result, UnitPartMagus __instance) {
                 if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
@@ -579,7 +579,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(IngameMenuManager), "OpenGroupManager")]
+        [HarmonyPatch(typeof(IngameMenuManager), nameof(IngameMenuManager.OpenGroupManager))]
         private static class IngameMenuManager_OpenGroupManager_Patch {
             private static bool Prefix(IngameMenuManager __instance) {
                 if (settings.toggleInstantPartyChange) {
@@ -602,7 +602,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(PartyPerceptionController), "Tick")]
+        [HarmonyPatch(typeof(PartyPerceptionController), nameof(PartyPerceptionController.Tick))]
         public static class PartyPerceptionController_Tick_Patch {
             public static MethodInfo HasMotionThisTick_Method = AccessTools.DeclaredMethod(typeof(UnitEntityData), "get_HasMotionThisTick");
             public static MethodInfo CanRollPerception_Method = AccessTools.DeclaredMethod(typeof(UnitEntityData_CanRollPerception_Extension), "CanRollPerception");

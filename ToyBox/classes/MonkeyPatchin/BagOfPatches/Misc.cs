@@ -107,7 +107,7 @@ namespace ToyBox.BagOfPatches {
         }
 
 
-        [HarmonyPatch(typeof(Kingmaker.UI.ServiceWindow.ItemSlot), "ScrollContent", MethodType.Getter)]
+        [HarmonyPatch(typeof(Kingmaker.UI.ServiceWindow.ItemSlot), nameof(Kingmaker.UI.ServiceWindow.ItemSlot.ScrollContent), MethodType.Getter)]
         public static class ItemSlot_ScrollContent_Patch {
             [HarmonyPostfix]
             private static void Postfix(Kingmaker.UI.ServiceWindow.ItemSlot __instance, ref string __result) {
@@ -122,7 +122,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         // Disables the lockout for reporting achievements
-        [HarmonyPatch(typeof(AchievementEntity), "IsDisabled", MethodType.Getter)]
+        [HarmonyPatch(typeof(AchievementEntity), nameof(AchievementEntity.IsDisabled), MethodType.Getter)]
         public static class AchievementEntity_IsDisabled_Patch {
             private static void Postfix(ref bool __result, AchievementEntity __instance) {
                 //modLogger.Log("AchievementEntity.IsDisabled");
@@ -445,7 +445,7 @@ namespace ToyBox.BagOfPatches {
             };
         }
 
-        [HarmonyPatch(typeof(UnitEntityData), "CreateView")]
+        [HarmonyPatch(typeof(UnitEntityData), nameof(UnitEntityData.CreateView))]
         public static class UnitEntityData_CreateView_Patch {
             public static void Prefix(ref UnitEntityData __instance) {
                 ModelReplacers.spidersBegone = settings.toggleSpiderBegone;
@@ -458,7 +458,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(BlueprintUnit), "PreloadResources")]
+        [HarmonyPatch(typeof(BlueprintUnit), nameof(BlueprintUnit.PreloadResources))]
         public static class BlueprintUnit_PreloadResources_Patch {
             public static void Prefix(ref BlueprintUnit __instance) {
                 ModelReplacers.spidersBegone = settings.toggleSpiderBegone;
@@ -471,7 +471,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
+        [HarmonyPatch(typeof(EntityCreationController), nameof(EntityCreationController.SpawnUnit))]
         [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(string) })]
         public static class EntityCreationControllert_SpawnUnit_Patch1 {
             public static void Prefix(ref BlueprintUnit unit) {
@@ -485,7 +485,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(EntityCreationController), "SpawnUnit")]
+        [HarmonyPatch(typeof(EntityCreationController), nameof(EntityCreationController.SpawnUnit))]
         [HarmonyPatch(new Type[] { typeof(BlueprintUnit), typeof(UnitEntityView), typeof(Vector3), typeof(Quaternion), typeof(SceneEntitiesState), typeof(string) })]
         public static class EntityCreationControllert_SpawnUnit_Patch2 {
             public static void Prefix(ref BlueprintUnit unit) {
@@ -498,7 +498,7 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.CheckAndReplace(ref unit);
             }
         }
-        [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), "RemoveItem", new Type[] { typeof(bool), typeof(bool) })]
+        [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), nameof(Kingmaker.Items.Slots.ItemSlot.RemoveItem), new Type[] { typeof(bool), typeof(bool) })]
         private static class ItemSlot_RemoveItem_Patch {
             private static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
                 if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
@@ -531,7 +531,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         // To eliminate some log spam
-        /*[HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", new Type[] { typeof(UserStatsStored_t) })]
+        /*[HarmonyPatch(typeof(SteamAchievementsManager), nameof(SteamAchievementsManager.OnUserStatsStored), new Type[] { typeof(UserStatsStored_t) })]
         public static class SteamAchievementsManager_OnUserStatsStored_Patch {
             public static bool Prefix(ref SteamAchievementsManager __instance, UserStatsStored_t pCallback) {
                 if ((long)(ulong)__instance.m_GameId != (long)pCallback.m_nGameID)

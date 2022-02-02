@@ -45,7 +45,7 @@ namespace ToyBox.Multiclass {
             return Mathf.Max(intelligenceSkillPoints + total, nextLevel);
         }
 
-        [HarmonyPatch(typeof(LevelUpHelper), "GetTotalSkillPoints")]
+        [HarmonyPatch(typeof(LevelUpHelper), nameof(LevelUpHelper.GetTotalSkillPoints))]
         public static class LevelUpHelper_GetTotalSkillPoints_Patch {
             public static bool Prefix(UnitDescriptor unit, int nextLevel, ref int __result) {
                 if (!MultipleClasses.IsAvailable()) return true;

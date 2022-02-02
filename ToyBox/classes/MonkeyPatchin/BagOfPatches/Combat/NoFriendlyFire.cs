@@ -27,7 +27,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(AbilityTargetsAround), "Select")]
+        [HarmonyPatch(typeof(AbilityTargetsAround), nameof(AbilityTargetsAround.Select))]
         public static class AbilityTargetsAround_Select_Patch {
             public static void Postfix(ref IEnumerable<TargetWrapper> __result, AbilityTargetsAround __instance, ConditionsChecker ___m_Condition, AbilityExecutionContext context, TargetWrapper anchor) {
                 if (settings.toggleNoFriendlyFireForAOE) {
@@ -74,7 +74,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleDealDamage), "ApplyDifficultyModifiers")]
+        [HarmonyPatch(typeof(RuleDealDamage), nameof(RuleDealDamage.ApplyDifficultyModifiers))]
         public static class RuleDealDamage_ApplyDifficultyModifiers_Patch {
             public static void Postfix(ref int __result, RuleDealDamage __instance, int damage) {
                 if (settings.toggleNoFriendlyFireForAOE) {
@@ -93,7 +93,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         //        public bool IsSuccessRoll(int d20, int successBonus = 0) => d20 + this.TotalBonus + successBonus >= this.DC;
-        [HarmonyPatch(typeof(RuleSkillCheck), "IsSuccessRoll")]
+        [HarmonyPatch(typeof(RuleSkillCheck), nameof(RuleSkillCheck.IsSuccessRoll))]
         [HarmonyPatch(new Type[] { typeof(int), typeof(int) })]
 
         public static class RuleSkillCheck_IsSuccessRoll_Patch {
@@ -110,7 +110,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RulePartySkillCheck), "Success", MethodType.Getter)]
+        [HarmonyPatch(typeof(RulePartySkillCheck), nameof(RulePartySkillCheck.Success), MethodType.Getter)]
         public static class RulePartySkillCheck_IsPassed_Patch {
             private static void Postfix(ref bool __result, RulePartySkillCheck __instance) {
                 if (settings.toggleNoFriendlyFireForAOE) {
@@ -144,7 +144,7 @@ namespace ToyBox.BagOfPatches {
 #endif
             }
         }
-        [HarmonyPatch(typeof(RuleSavingThrow), "IsPassed", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleSavingThrow), nameof(RuleSavingThrow.IsPassed), MethodType.Getter)]
         public static class RuleSavingThrow_IsPassed_Patch {
             internal static void Postfix(ref bool __result, RuleSavingThrow __instance) {
                 if (settings.toggleNoFriendlyFireForAOE) {

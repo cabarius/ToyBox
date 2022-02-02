@@ -21,7 +21,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     internal class Development {
         public static Settings settings = Main.settings;
 
-        [HarmonyPatch(typeof(BuildModeUtility), "IsDevelopment", MethodType.Getter)]
+        [HarmonyPatch(typeof(BuildModeUtility), nameof(BuildModeUtility.IsDevelopment), MethodType.Getter)]
         private static class BuildModeUtility_IsDevelopment_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleDevopmentMode) {
@@ -29,7 +29,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(SmartConsole), "WriteLine")]
+        [HarmonyPatch(typeof(SmartConsole), nameof(SmartConsole.WriteLine))]
         private static class SmartConsole_WriteLine_Patch {
             private static void Postfix(string message) {
                 if (settings.toggleDevopmentMode) {
@@ -40,7 +40,8 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(SmartConsole), "Initialise")]
+#if false
+        [HarmonyPatch(typeof(SmartConsole), nameof(SmartConsole.Initialise))]
         private static class SmartConsole_Initialise_Patch {
             private static void Postfix() {
                 if (settings.toggleDevopmentMode) {
@@ -49,8 +50,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-
-        [HarmonyPatch(typeof(Owlcat.Runtime.Core.Logging.Logger), "ForwardToUnity")]
+        [HarmonyPatch(typeof(Owlcat.Runtime.Core.Logging.Logger), nameof(Owlcat.Runtime.Core.Logging.Logger.ForwardToUnity))]
         private static class UberLoggerLogger_ForwardToUnity_Patch {
             private static void Prefix(ref object message) {
                 if (settings.toggleUberLoggerForwardPrefix) {
@@ -59,9 +59,9 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 }
             }
         }
-        
+#endif
         // This patch if for you @ArcaneTrixter and @Vek17
-        [HarmonyPatch(typeof(Logger), "Write")]
+        [HarmonyPatch(typeof(Logger), nameof(Logger.Write))]
         private static class Logger_Logger_Patch {
             private static bool Prefix(string str, bool onlyNative = false) {
                 if (str == null)
@@ -85,7 +85,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(CharGenContextVM), "HandleRespecInitiate")]
+        [HarmonyPatch(typeof(CharGenContextVM), nameof(CharGenContextVM.HandleRespecInitiate))]
         private static class CharGenContextVM_HandleRespecInitiate_Patch {
             
             private static void Prefix(ref CharGenContextVM __instance, ref UnitEntityData character, ref Action successAction) {

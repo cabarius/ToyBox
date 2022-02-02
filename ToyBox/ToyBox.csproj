@@ -208,7 +208,6 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Development.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUpPatches.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
@@ -225,7 +224,6 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Summons.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ActionBar.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Dialog.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Camera.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />

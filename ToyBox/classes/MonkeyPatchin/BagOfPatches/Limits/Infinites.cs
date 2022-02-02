@@ -25,7 +25,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(AbilityResourceLogic), "Spend")]
+        [HarmonyPatch(typeof(AbilityResourceLogic), nameof(AbilityResourceLogic.Spend))]
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
                 var unit = ability.Caster.Unit;
@@ -37,17 +37,17 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ActivatableAbilityResourceLogic), "SpendResource")]
+        [HarmonyPatch(typeof(ActivatableAbilityResourceLogic), nameof(ActivatableAbilityResourceLogic.SpendResource))]
         public static class ActivatableAbilityResourceLogic_SpendResource_Patch {
             public static bool Prefix() => !settings.toggleInfiniteAbilities;
         }
 
-        [HarmonyPatch(typeof(AbilityData), "SpellSlotCost", MethodType.Getter)]
+        [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.SpellSlotCost), MethodType.Getter)]
         public static class AbilityData_SpellSlotCost_Patch {
             public static bool Prefix() => !settings.toggleInfiniteSpellCasts;
         }
 
-        [HarmonyPatch(typeof(SpendSkillPoint), "Apply")]
+        [HarmonyPatch(typeof(SpendSkillPoint), nameof(SpendSkillPoint.Apply))]
         public static class SpendSkillPoint_Apply_Patch {
             public static bool Prefix(ref bool __state) {
                 __state = settings.toggleInfiniteSkillpoints;
@@ -61,7 +61,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ItemEntity), "SpendCharges", new Type[] { typeof(UnitDescriptor) })]
+        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.SpendCharges), new Type[] { typeof(UnitDescriptor) })]
         public static class ItemEntity_SpendCharges_Patch {
             public static bool Prefix(ref bool __state) {
                 __state = settings.toggleInfiniteItems;

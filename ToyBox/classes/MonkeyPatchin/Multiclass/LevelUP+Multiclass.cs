@@ -46,7 +46,7 @@ namespace ToyBox.Multiclass {
                                     [NotNull] UnitDescriptor unit,
                                     [NotNull] BlueprintProgression progression)
         */
-        [HarmonyPatch(typeof(LevelUpHelper), "UpdateProgression")]
+        [HarmonyPatch(typeof(LevelUpHelper), nameof(LevelUpHelper.UpdateProgression))]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor), typeof(BlueprintProgression) })]
         private static class LevelUpHelper_UpdateProgression_Patch {
             public static bool Prefix([NotNull] LevelUpState state, [NotNull] UnitDescriptor unit, [NotNull] BlueprintProgression progression) {
@@ -99,7 +99,7 @@ namespace ToyBox.Multiclass {
         }
 
         // Do not proceed the spell selection if the caster level was not changed
-        [HarmonyPatch(typeof(ApplySpellbook), "Apply")]
+        [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply))]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
         private static class ApplySpellbook_Apply_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
@@ -166,7 +166,7 @@ namespace ToyBox.Multiclass {
         }
 
         // Fixed a vanilla PFK bug that caused dragon bloodline to be displayed in Magus' feats tree
-        [HarmonyPatch(typeof(ApplyClassMechanics), "ApplyProgressions")]
+        [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.ApplyProgressions))]
         private static class ApplyClassMechanics_ApplyProgressions_Patch {
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
@@ -197,8 +197,7 @@ namespace ToyBox.Multiclass {
                 return true;
             }
         }
-        [HarmonyPatch(typeof(UnitHelper))]
-        [HarmonyPatch("CopyInternal")]
+        [HarmonyPatch(typeof(UnitHelper), nameof(UnitHelper.CopyInternal))]
         private static class UnitProgressionData_CopyFrom_Patch { 
             private static void Postfix(UnitEntityData unit, UnitEntityData __result) {
                 if (!settings.toggleMulticlass) return;
