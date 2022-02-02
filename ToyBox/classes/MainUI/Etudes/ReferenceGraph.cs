@@ -1,27 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Kingmaker.AreaLogic.Cutscenes;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
-using Kingmaker.Blueprints.JsonSystem.PropertyUtility;
-using Kingmaker.Blueprints.Quests;
-using Kingmaker.Blueprints.Validation;
-using Kingmaker.DialogSystem.Blueprints;
-using Kingmaker.ElementsSystem;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Utility;
-using UnityEditor;
-using UnityEngine;
 
-namespace ToyBox
-{
+namespace ToyBox {
     public class ReferenceGraph
     {
         public enum ValidationStateType

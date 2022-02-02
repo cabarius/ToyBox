@@ -78,6 +78,9 @@
       <HintPath>$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Owlcat.Runtime.Validation">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Validation.dll</HintPath>
+    </Reference>
     <Reference Include="Owlcat.Runtime.Visual">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
       <Private>False</Private>
@@ -281,7 +284,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
