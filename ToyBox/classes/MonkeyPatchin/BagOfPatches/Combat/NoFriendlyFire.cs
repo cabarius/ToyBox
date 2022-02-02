@@ -109,7 +109,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#if true
 
         [HarmonyPatch(typeof(RulePartyStatCheck), nameof(RulePartyStatCheck.Success), MethodType.Getter)]
         public static class RulePartyStatCheck_IsPassed_Patch {
@@ -145,9 +144,7 @@ namespace ToyBox.BagOfPatches {
 #endif
             }
         }
-#endif
-
-        [HarmonyPatch(typeof(RuleSavingThrow), nameof(RuleSavingThrow.IsPassed), MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleSavingThrow), "IsPassed", MethodType.Getter)]
         public static class RuleSavingThrow_IsPassed_Patch {
             internal static void Postfix(ref bool __result, RuleSavingThrow __instance) {
                 if (settings.toggleNoFriendlyFireForAOE) {
