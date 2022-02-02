@@ -39,7 +39,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.15 (Coming Soon)
-### Ver 1.4.14
+### Ver 1.4.14 (beta 1.2.0.h)
 * **Beta Compatibility** now works with Beta 1.2.0h
 * **Bag of Tricks**
   * Added ability to show, clear and disable corruption
@@ -51,7 +51,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Split the class and feat prerequisite ignore into two separate settings.
 * **Armies Editor**
   * (***KnightOfSeiros***) Add squads in Army Editor
-### Ver 1.4.13
+### Ver 1.4.13 (current for non beta)
 * **Bag of Tricks**
   * **Quality of Life**
     * **Game Over** - Added toggle to block Game Over when certain companions die in combat, so if ***Leerooooy (Greybor) Jenkins*** runs in and your leader runs in to save him and dies the game does not end unless the whole party wipes.
