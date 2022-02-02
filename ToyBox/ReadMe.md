@@ -40,8 +40,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.15 (Coming Later)
 ### Ver 1.4.14 (Coming Soon)
+* **Beta Compatibility** now works with Beta 1.2.0h
 * **Bag of Tricks**
-  * Fixed issue 
   * Added ability to show, clear and disable corruption
   * (***KnightOfSeiros***) Added a deraknis-begone option to replace all derakni models, so as deskari-begone
   * **Dialog**

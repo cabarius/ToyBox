@@ -18,7 +18,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     public static class Crusade {
         public static Settings Settings = Main.settings;
 
-        [HarmonyPatch(typeof(ArmyMercenariesManager), "Reroll")]
+        [HarmonyPatch(typeof(ArmyMercenariesManager), nameof(ArmyMercenariesManager.Reroll))]
         public static class ArmyMercenariesManager_Reroll_Patch {
             public static void Prefix(ref ArmyMercenariesManager __instance, ref int __state) {
                 if (Settings.toggleInfiniteArmyRerolls) {
@@ -34,7 +34,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(TacticalCombatHelper), "GetSpellPower")]
+        [HarmonyPatch(typeof(TacticalCombatHelper), nameof(TacticalCombatHelper.GetSpellPower))]
         public static class TacticalCombatHelper_GetSpellPower_Patch {
             public static void Postfix(ref int __result, [HarmonyArgument(0)] UnitEntityData unit) {
                 var leaderPowerMultiplier = unit.Get<UnitPartLeaderTacticalCombat>()?.LeaderData.Faction != ArmyFaction.Crusaders
@@ -45,7 +45,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ArmyData), "MaxSquadsCount", MethodType.Getter)]
+        [HarmonyPatch(typeof(ArmyData), nameof(ArmyData.MaxSquadsCount), MethodType.Getter)]
         public static class ArmyData_MaxSquadsCount_Patch {
             public static void Postfix(ref ArmyModifiableValue __result, ArmyData __instance) {
                 if (Settings.toggleLargeArmies && __result != null && __result.ModifiedValue != 0 && __instance.Faction == ArmyFaction.Crusaders) {
@@ -61,12 +61,12 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(ArmyData))]
         public static class ArmyData_CalculateExperience_Patch {
-            [HarmonyPatch("CalculateExperience")]
+            [HarmonyPatch(nameof(ArmyData.CalculateExperience))]
             [HarmonyPostfix]
             public static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * (float)Math.Round(Settings.armyExperienceMultiplier, 1));
 
             [HarmonyPrefix]
-            [HarmonyPatch("CalculateDangerRating")]
+            [HarmonyPatch(nameof(ArmyData.CalculateDangerRating))]
             public static bool PrefixCalculateDangerRating(ArmyData __instance, ref int __result) {
                 var armyRoot = BlueprintRoot.Instance.ArmyRoot;
                 var num1 = Mathf.FloorToInt((float)(__instance.CalculateExperience() / Math.Round(Settings.experienceMultiplier, 1) + armyRoot.ArmyDangerBonus) * armyRoot.ArmyDangerMultiplier);
@@ -84,13 +84,13 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(SummonUnitsAfterArmyBattle), "HandleArmiesBattleResultsApplied")]
+        [HarmonyPatch(typeof(SummonUnitsAfterArmyBattle), nameof(SummonUnitsAfterArmyBattle.HandleArmiesBattleResultsApplied))]
         public static class SummonUnitsAfterArmyBattle_Patch {
             public static void Prefix(ref TacticalCombatResults results) => results = new TacticalCombatResults(results.Attacker, results.Defender, Mathf.RoundToInt(results.BattleExp * Settings.postBattleSummonMultiplier),
                     results.CrusadeStatsBonus, results.Winner, results.ToResurrect, results.Units, results.Retreat);
         }
 
-        [HarmonyPatch(typeof(MercenarySlot), "Price", MethodType.Getter)]
+        [HarmonyPatch(typeof(MercenarySlot), nameof(MercenarySlot.Price), MethodType.Getter)]
         private static class MercenarySlot_Price_Patch {
             private static void Postfix(ref KingdomResourcesAmount __result) {
                 __result *= Settings.recruitmentCost;
@@ -100,7 +100,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(RuleCalculateUnitRecruitingCost), "ResultCost", MethodType.Getter)]
+        [HarmonyPatch(typeof(RuleCalculateUnitRecruitingCost), nameof(RuleCalculateUnitRecruitingCost.ResultCost), MethodType.Getter)]
         private static class RuleCalculateUnitRecruitingCost_ResultCost_Patch {
             private static void Postfix(ref KingdomResourcesAmount __result) {
                 var finances = __result.m_Finances > 0 ? Mathf.RoundToInt(Math.Max(1, Settings.recruitmentCost * __result.m_Finances)) : 0;
@@ -111,17 +111,17 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ArmyRecruitsManager), "Increase")]
+        [HarmonyPatch(typeof(ArmyRecruitsManager), nameof(ArmyRecruitsManager.Increase))]
         private static class ArmyRecruitsManager_Patch {
             private static void Prefix(ref int count) => count = Mathf.RoundToInt(count * Settings.recruitmentMultiplier);
         }
 
-        [HarmonyPatch(typeof(ArmyMercenariesManager), "Recruit")]
+        [HarmonyPatch(typeof(ArmyMercenariesManager), nameof(ArmyMercenariesManager.Recruit))]
         private static class ArmyMercenariesManager_Recruit_Patch {
             private static void Prefix(ref MercenarySlot slot) => slot.Recruits.Count = Mathf.RoundToInt(slot.Recruits.Count * Settings.recruitmentMultiplier);
         }
 
-        [HarmonyPatch(typeof(KingdomMoraleFlag), "ChangeDaysLeft")]
+        [HarmonyPatch(typeof(KingdomMoraleFlag), nameof(KingdomMoraleFlag.ChangeDaysLeft))]
         private static class KingdomMoraleFlag_Patch {
             private static void Prefix(ref int daysDelta) {
                 if (Settings.toggleCrusadeFlagsStayGreen && daysDelta < 0) {
@@ -130,7 +130,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(KingdomEvent), "CalculateResolutionTime")]
+        [HarmonyPatch(typeof(KingdomEvent), nameof(KingdomEvent.CalculateResolutionTime))]
         private static class KingdomEvent_CalculateResolutionTime_Patch {
             private static void Postfix(KingdomEvent __instance, ref int __result) {
                 if (Settings.kingdomTaskResolutionLengthMultiplier == 0) return;
@@ -141,7 +141,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
         
-        [HarmonyPatch(typeof(KingdomTaskEvent), "CanBeStarted")]
+        [HarmonyPatch(typeof(KingdomTaskEvent), nameof(KingdomTaskEvent.CanBeStarted))]
         public static class KingdomTaskEvent_CanBeStarted_Patch {
             public static void Postfix(ref bool __result) {
                 if (Settings.toggleIgnoreStartTaskRestrictions)
@@ -149,7 +149,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-       [HarmonyPatch(typeof(BlueprintKingdomEventBase), "GetAvailableLeader")]
+       [HarmonyPatch(typeof(BlueprintKingdomEventBase), nameof(BlueprintKingdomEventBase.GetAvailableLeader))]
        public static class BlueprintKingdomEventBase_GetAvailableLeader_Patch {
             public static void Postfix(BlueprintKingdomEventBase __instance, ref LeaderState __result) {
                 if (Settings.toggleIgnoreStartTaskRestrictions) 
@@ -157,7 +157,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(KingdomTaskEvent), "OneTimeCost", MethodType.Getter)]
+        [HarmonyPatch(typeof(KingdomTaskEvent), nameof(KingdomTaskEvent.OneTimeCost), MethodType.Getter)]
         public static class KingdomTaskEvent_OneTimeCost_Patch {
             public static void Postfix(ref KingdomResourcesAmount __result) {
                 if (Settings.toggleTaskNoResourcesCost)

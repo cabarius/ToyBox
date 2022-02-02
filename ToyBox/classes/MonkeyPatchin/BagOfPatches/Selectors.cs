@@ -14,7 +14,7 @@ namespace ToyBox.BagOfPatches {
     internal static class Selectors {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-        [HarmonyPatch(typeof(UnitCombatState), "AttackOfOpportunity")]
+        [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.AttackOfOpportunity))]
         private static class UnitCombatState_AttackOfOpportunity_Patch {
             private static bool Prefix(UnitEntityData target) {
                 if (settings.toggleAttacksofOpportunity && target.IsPlayerFaction) {

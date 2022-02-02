@@ -215,7 +215,7 @@ namespace ToyBox {
                 text + ((!text.Empty()) ? " " : string.Empty) + answer.DisplayText);
         }
 
-        [HarmonyPatch(typeof(UIConsts), "GetAnswerString")]
+        [HarmonyPatch(typeof(UIConsts), nameof(UIConsts.GetAnswerString))]
         private static class UIConsts_GetAnswerString_Patch {
             private static void Postfix(ref string __result, BlueprintAnswer answer, string bind, int index) {
                 try {
@@ -255,7 +255,7 @@ namespace ToyBox {
             }
         }
 
-        [HarmonyPatch(typeof(DialogCurrentPart), "Fill")]
+        [HarmonyPatch(typeof(DialogCurrentPart), nameof(DialogCurrentPart.Fill))]
         private static class DialogCurrentPart_Fill_Patch {
             private static void Postfix(DialogCurrentPart __instance) {
                 try {
@@ -281,7 +281,7 @@ namespace ToyBox {
             }
         }
 
-        [HarmonyPatch(typeof(KingdomUIEventWindow), "SetHeader")]
+        [HarmonyPatch(typeof(KingdomUIEventWindow), nameof(KingdomUIEventWindow.SetHeader))]
         private static class KingdomUIEventWindow_SetHeader_Patch {
             private static void Postfix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
                 try {
@@ -357,7 +357,7 @@ namespace ToyBox {
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapRandomEncounterController), "OnRandomEncounterStarted")]
+        [HarmonyPatch(typeof(GlobalMapRandomEncounterController), nameof(GlobalMapRandomEncounterController.OnRandomEncounterStarted))]
         private static class GlobalMapRandomEncounterController_OnRandomEncounterStarted_Patch {
             private static AccessTools.FieldRef<GlobalMapRandomEncounterController, TextMeshProUGUI> m_DescriptionRef;
 

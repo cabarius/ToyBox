@@ -25,9 +25,7 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
 
-        //        [HarmonyPatch(typeof(ItemSlot), "SetupEquipPossibility")]
-
-        [HarmonyPatch(typeof(LootSlotPCView), "BindViewImplementation")]
+        [HarmonyPatch(typeof(LootSlotPCView), nameof(LootSlotPCView.BindViewImplementation))]
         private static class ItemSlot_IsUsable_Patch {
             public static void Postfix(ViewBase<ItemSlotVM> __instance) {
                 if (__instance is LootSlotPCView itemSlotPCView) {
@@ -43,7 +41,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), "RefreshItem")]
+        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), nameof(ItemSlotView<EquipSlotVM>.RefreshItem))]
         private static class ItemSlotView_RefreshItem_Patch {
             public static void Postfix(InventoryEquipSlotView __instance) {
                 if (!__instance.SlotVM.HasItem || !__instance.SlotVM.IsScroll) {

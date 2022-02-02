@@ -25,7 +25,7 @@ namespace ToyBox {
                 }
             }
         }
-        [HarmonyPatch(typeof(UnitAlignment), "Set", new Type[] { typeof(Alignment), typeof(bool) })]
+        [HarmonyPatch(typeof(UnitAlignment), nameof(UnitAlignment.Set), new Type[] { typeof(Alignment), typeof(bool) })]
         private static class UnitAlignment_Set_Patch {
             private static void Prefix(UnitAlignment __instance, ref Kingmaker.Enums.Alignment alignment) {
                 if (settings.togglePreventAlignmentChanges) {
@@ -34,7 +34,7 @@ namespace ToyBox {
                 }
             }
         }
-        [HarmonyPatch(typeof(UnitAlignment), "Shift", new Type[] { typeof(AlignmentShiftDirection), typeof(int), typeof(IAlignmentShiftProvider) })]
+        [HarmonyPatch(typeof(UnitAlignment), nameof(UnitAlignment.Shift), new Type[] { typeof(AlignmentShiftDirection), typeof(int), typeof(IAlignmentShiftProvider) })]
         private static class UnitAlignment_Shift_Patch {
             private static bool Prefix(UnitAlignment __instance, AlignmentShiftDirection direction, ref int value, IAlignmentShiftProvider provider) {
                 try {
@@ -74,7 +74,7 @@ namespace ToyBox {
             }
         }
 
-        [HarmonyPatch(typeof(ForbidSpellbookOnAlignmentDeviation), "CheckAlignment")]
+        [HarmonyPatch(typeof(ForbidSpellbookOnAlignmentDeviation), nameof(ForbidSpellbookOnAlignmentDeviation.CheckAlignment))]
         private static class ForbidSpellbookOnAlignmentDeviation_CheckAlignment_Patch {
             private static bool Prefix(ForbidSpellbookOnAlignmentDeviation __instance) {
                 if (settings.toggleSpellbookAbilityAlignmentChecks) {

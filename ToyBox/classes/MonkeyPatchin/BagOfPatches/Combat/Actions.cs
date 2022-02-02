@@ -19,7 +19,7 @@ namespace ToyBox.BagOfPatches {
         public static Player player = Game.Instance.Player;
 
 
-        [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
+        [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.HasCooldownForCommand))]
         [HarmonyPatch(new Type[] { typeof(UnitCommand) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch1 {
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
@@ -32,7 +32,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(UnitCombatState), "HasCooldownForCommand")]
+        [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.HasCooldownForCommand))]
         [HarmonyPatch(new Type[] { typeof(UnitCommand.CommandType) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch2 {
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
@@ -45,7 +45,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(UnitCombatState), "OnNewRound")]
+        [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.OnNewRound))]
         public static class UnitCombatState_OnNewRound_Patch {
             public static bool Prefix(UnitCombatState __instance) {
                 if (__instance.Unit.IsDirectlyControllable && settings.toggleInstantCooldown) {
@@ -66,7 +66,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(UnitEntityData), "SpendAction")]
+        [HarmonyPatch(typeof(UnitEntityData), nameof(UnitEntityData.SpendAction))]
         public static class UnitEntityData_SpendAction_Patch {
 
             public static bool Prefix(UnitCommand.CommandType type, bool isFullRound, float timeSinceCommandStart, UnitEntityData __instance) {
