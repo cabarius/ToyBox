@@ -269,6 +269,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(IgnorePrerequisites), nameof(IgnorePrerequisites.Ignore), MethodType.Getter)]
         private static class IgnorePrerequisites_Ignore_Patch {
             private static void Postfix(ref bool __result) {
+                if (Game.Instance.LevelUpController == null) return;
                 var state = Game.Instance.LevelUpController.State;
 
                 if (!state.IsClassSelected) {
