@@ -127,9 +127,14 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref bool __result, AchievementEntity __instance) {
                 //modLogger.Log("AchievementEntity.IsDisabled");
                 if (settings.toggleAllowAchievementsDuringModdedGame) {
+                    if (__instance.Data.OnlyMainCampaign && !Game.Instance.Player.Campaign.IsMainGameContent) {
+                        __result = true;
+                        return;
+                    }
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
-                    __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || (UnityEngine.Object)__instance.Data.MinDifficulty != (UnityEngine.Object)null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave;
-                    // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive)
+                    BlueprintCampaign blueprintCampaign = __instance.Data.SpecificCampaign?.Get();
+                    __result = !__instance.Data.OnlyMainCampaign && blueprintCampaign != null && Game.Instance.Player.Campaign != blueprintCampaign || ((UnityEngine.Object)__instance.Data.MinDifficulty != (UnityEngine.Object)null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.MinCrusadeDifficulty > (KingdomDifficulty)(SettingsEntity<KingdomDifficulty>)SettingsRoot.Difficulty.KingdomDifficulty) || (__instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave);
+                        // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive));
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
                 }
             }

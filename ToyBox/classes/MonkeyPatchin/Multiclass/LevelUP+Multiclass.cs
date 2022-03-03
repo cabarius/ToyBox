@@ -137,8 +137,7 @@ namespace ToyBox.Multiclass {
                 if (spellbook1.Blueprint.SpellsKnown != null) {
                     for (var index = 0; index <= 10; ++index) {
                         var spellsKnown = spellbook1.Blueprint.SpellsKnown;
-                        var count = spellsKnown.GetCount(casterLevelAfter, index);
-                        var expectedCount = count ?? 0;
+                        var expectedCount = spellsKnown.GetCount(casterLevelAfter, index);
                         var actual = CasterHelpers.GetCachedSpellsKnown(unit, spellbook1, index);
 #if DEBUG
                         //Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {expectedCount-actual} spells of spell level:{index} based on expected={expectedCount} and actual={actual}");
