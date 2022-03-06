@@ -432,6 +432,7 @@ namespace ToyBox {
         public bool toggleShowDebugInfo = true;
         public bool toggleDevopmentMode = false;
         public bool toggleUberLoggerForwardPrefix = false;
+        public bool toggleGuidsClipboard = true;
 
         // Localization
         public string uiCultureCode = "en";

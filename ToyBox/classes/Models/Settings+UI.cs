@@ -30,6 +30,7 @@ namespace ToyBox {
 #if DEBUG
                 () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.settings.stripHtmlTagsFromUMMLogsTab),
 #endif
+                () => UI.Toggle("Display guids in most tooltips, use shift + left click on items/abilities to copy guid to clipboard", ref Main.settings.toggleGuidsClipboard),
               () => { }
             );
 #if DEBUG
