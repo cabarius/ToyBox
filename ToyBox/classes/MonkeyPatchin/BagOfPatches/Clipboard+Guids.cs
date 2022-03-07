@@ -86,7 +86,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             if (!settings.toggleGuidsClipboard)
                 return true;
 
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+            if (Input.GetMouseButtonUp(0) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) {
                 switch (__instance.MechanicActionBarSlot) {
                     case MechanicActionBarSlotAbility ab:
                         CopyToClipboard(ab.Ability.Blueprint.AssetGuidThreadSafe);
