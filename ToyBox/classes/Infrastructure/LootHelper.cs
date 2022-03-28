@@ -1,7 +1,9 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints.Loot;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Items;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._VM.Loot;
@@ -95,6 +97,19 @@ namespace ToyBox {
             foreach (var interactionLootPart in interactionLootParts) {
                 if (hidden) interactionLootPart.Owner.IsPerceptionCheckPassed = true;
                 interactionLootPart.Owner.SetIsRevealedSilent(true);
+            }
+        }
+
+        public static void ShowAllInevitablePortalLoot() {
+            var interactionLootRevealers = Game.Instance.State.MapObjects.All.OfType<MapObjectEntityData>()
+                .Where(e => e.IsInGame)
+                .SelectMany(e => e.Interactions).OfType<InteractionSkillCheckPart>().NotNull()
+                .Where(i => i.Settings?.DC == 0 && i.Settings.Skill == StatType.Unknown)
+                .SelectMany(i => i.Settings?.CheckPassedActions?.Get()?.Actions?.Actions).OfType<HideMapObject>().NotNull()
+                .Where(a => a.Unhide)
+                .Where(a => a.MapObject.GetValue()?.Get<InteractionLootPart>() is not null);
+            foreach (var revealer in interactionLootRevealers) {
+                revealer.RunAction();
             }
         }
     }
