@@ -54,6 +54,10 @@ namespace ToyBox {
                     UI.Space(210); UI.Label("Shows all chests/bags/etc on the map including hidden".green());
                 },
                 () => {
+                    UI.ActionButton("Reveal Inevitable Loot", () => LootHelper.ShowAllInevitablePortalLoot(), UI.Width(200));
+                    UI.Space(210); UI.Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
+                },
+                () => {
                     UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
                     UI.Space(100); UI.Label("Some items might be invisible until looted".green());
                 },
