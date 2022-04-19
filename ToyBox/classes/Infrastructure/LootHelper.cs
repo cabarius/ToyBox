@@ -105,7 +105,7 @@ namespace ToyBox {
                 .Where(e => e.IsInGame)
                 .SelectMany(e => e.Interactions).OfType<InteractionSkillCheckPart>().NotNull()
                 .Where(i => i.Settings?.DC == 0 && i.Settings.Skill == StatType.Unknown)
-                .SelectMany(i => i.Settings?.CheckPassedActions?.Get()?.Actions?.Actions).OfType<HideMapObject>().NotNull()
+                .SelectMany(i => i.Settings.CheckPassedActions?.Get()?.Actions?.Actions ?? new GameAction[0]).OfType<HideMapObject>()
                 .Where(a => a.Unhide)
                 .Where(a => a.MapObject.GetValue()?.Get<InteractionLootPart>() is not null);
             foreach (var revealer in interactionLootRevealers) {
