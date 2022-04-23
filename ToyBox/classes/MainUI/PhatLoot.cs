@@ -42,25 +42,31 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Loot", 1,
                 () => {
-                    UI.BindableActionButton(MassLootBox, UI.Width(200));
-                    UI.Space(5); UI.Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
+                    UI.BindableActionButton(MassLootBox, UI.Width(400));
+                    UI.Space(95);
+                    UI.Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
                 },
                 () => {
-                    UI.ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), UI.Width(200));
-                    UI.Space(210); UI.Label("Shows all chests/bags/etc on the map excluding hidden".green());
+                    UI.ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), UI.Width(400));
+                    UI.Space(300);
+                    UI.Label("Shows all chests/bags/etc on the map excluding hidden".green());
                 },
                 () => {
-                    UI.ActionButton("Reveal Hidden Ground Loot", () => LootHelper.ShowAllChestsOnMap(true), UI.Width(200));
-                    UI.Space(210); UI.Label("Shows all chests/bags/etc on the map including hidden".green());
+                    UI.ActionButton("Reveal Hidden Ground Loot", () => LootHelper.ShowAllChestsOnMap(true), UI.Width(400));
+                    UI.Space(300);
+                    UI.Label("Shows all chests/bags/etc on the map including hidden".green());
                 },
                 () => {
-                    UI.ActionButton("Reveal Inevitable Loot", () => LootHelper.ShowAllInevitablePortalLoot(), UI.Width(200));
-                    UI.Space(210); UI.Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
+                    UI.ActionButton("Reveal Inevitable Loot", () => LootHelper.ShowAllInevitablePortalLoot(), UI.Width(400));
+                    UI.Space(300);
+                    UI.Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
                 },
                 () => {
                     UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
-                    UI.Space(100); UI.Label("Some items might be invisible until looted".green());
+                    UI.Space(102);
+                    UI.Label("Some items might be invisible until looted".green());
                 },
+                () => UI.Div(),
                 () => {
                     UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity);
                     UI.Space(25);
