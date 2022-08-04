@@ -388,8 +388,13 @@ namespace ToyBox.BagOfPatches {
                 }
                 if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
-                    var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
-                    mainMenuVM?.EnterGame(new Action(mainMenuVM.LoadLastSave));
+
+                    var mainMenu = UnityEngine.Object.FindObjectOfType<MainMenu>();
+                    mainMenu.EnterGame(new Action(() => {
+                        if (Game.Instance.SaveManager.GetLatestSave() == null)
+                            return;
+                        Game.Instance.LoadGame(Game.Instance.SaveManager.GetLatestSave());
+                    }));
                 }
                 Main.freshlyLaunched = false;
             }
@@ -579,6 +584,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+#if false
         [HarmonyPatch(typeof(IngameMenuManager), nameof(IngameMenuManager.OpenGroupManager))]
         private static class IngameMenuManager_OpenGroupManager_Patch {
             private static bool Prefix(IngameMenuManager __instance) {
@@ -590,7 +596,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-
+#endif
         public static class UnitEntityData_CanRollPerception_Extension {
             public static bool TriggerReroll = false;
             public static bool CanRollPerception(UnitEntityData unit) {

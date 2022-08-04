@@ -146,9 +146,8 @@ namespace ToyBox {
                 Game.Instance.Player.FixPartyAfterChange();
                 Game.Instance.UI.SelectionManager.UpdateSelectedUnits();
                 var tempList = Game.Instance.Player.Party.Select(character => character.View).ToTempList<UnitEntityView>();
-                if (!(Game.Instance.UI.SelectionManager is SelectionManager selectionManager))
-                    return;
-                selectionManager.MultiSelect((IEnumerable<UnitEntityView>)tempList);
+                if (Game.Instance.UI.SelectionManager is SelectionManagerPC selectionManager) 
+                    selectionManager.MultiSelect((IEnumerable<UnitEntityView>)tempList);
             }
         }
         public static void ChangeParty() {

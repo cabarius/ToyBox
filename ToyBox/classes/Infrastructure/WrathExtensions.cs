@@ -13,6 +13,7 @@ using ModKit;
 using Kingmaker.UnitLogic.Alignments;
 using System.Linq;
 using Kingmaker;
+using Kingmaker.UI.FullScreenUITypes;
 
 namespace ModKit {
     public partial class UI {
@@ -116,6 +117,10 @@ namespace ToyBox {
                 return "";
 #endif
             }
+        }
+        public static UnitEntityData GetCurrentCharacter() {
+            var firstSelectedUnit = Game.Instance.SelectionCharacter.FirstSelectedUnit;
+            return (object)firstSelectedUnit != null ? firstSelectedUnit : (UnitEntityData)Game.Instance.Player.MainCharacter;
         }
     }
 }
