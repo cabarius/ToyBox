@@ -40,9 +40,9 @@ namespace ModKit {
         public static GL.VerticalScope VerticalScope(GUIStyle style, params GUILayoutOption[] options) => new(style, options);
         public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options) => new(scrollPosition, options);
         public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, GUIStyle style, params GUILayoutOption[] options) => new(scrollPosition, style, options);
-        public static void BeginVertical(params GUILayoutOption[] options) => GL.BeginHorizontal(options);
-        public static void BeginVertical(GUIStyle style, params GUILayoutOption[] options) => GL.BeginHorizontal(style, options);
+        public static void BeginVertical(params GUILayoutOption[] options) => GL.BeginVertical(options);
+        public static void BeginVertical(GUIStyle style, params GUILayoutOption[] options) => GL.BeginVertical(style, options);
 
-        public static void EndVertical() => GL.BeginHorizontal();
+        public static void EndVertical() => GL.EndVertical();
     }
 }
