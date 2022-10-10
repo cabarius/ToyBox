@@ -7,6 +7,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.BundlesLoading;
 using ModKit;
 using System;
+using Kingmaker.Blueprints.Facts;
 
 namespace ToyBox {
 
@@ -125,6 +126,13 @@ namespace ToyBox {
             var bps = GetBlueprints();
             return bps?.OfType<BPType>().ToList() ?? null;
         }
+
+        private IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<BlueprintGuid> guids) where BPType: BlueprintFact {
+            var bps = GetBlueprints<BPType>();
+            return bps?.Where(bp => guids.Contains(bp.AssetGuid));
+        }
+        
+        public IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<string> guids) where BPType: BlueprintFact => GetBlueprintsByGuids<BPType>(guids.Select(g => BlueprintGuid.Parse(g)));
     }
 
     public static class BlueprintLoader<BPType> {

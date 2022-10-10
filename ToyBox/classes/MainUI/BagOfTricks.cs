@@ -45,6 +45,9 @@ namespace ToyBox {
         private const string PreviewDialogResults = "Preview Results";
         private const string ResetAdditionalCameraAngles = "Fix Camera";
 
+        //For buffs exceptions
+        private static bool showBuffDurationExceptions = false;
+        
         public static void OnLoad() {
             // Combat
             KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
@@ -547,6 +550,12 @@ namespace ToyBox {
                 },
                 () => LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
+                () => DisclosureToggle("Exceptions to Buff Duration Multiplier (Advanced; will cause blueprints to load)", ref showBuffDurationExceptions),
+                () => {
+                    if (!showBuffDurationExceptions) return;
+
+                    BuffExclusionEditor.OnGUI();
+                },
                 () => { }
                 );
             Actions.ApplyTimeScale();

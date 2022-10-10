@@ -166,10 +166,12 @@
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
     <Compile Include="classes\Infrastructure\ItemRarity.cs" />
     <Compile Include="classes\Infrastructure\LootHelper.cs" />
+    <Compile Include="classes\Infrastructure\SettingsDefaults.cs" />
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
+    <Compile Include="classes\MainUI\Browser\BuffExclusionEditor.cs" />
     <Compile Include="classes\MainUI\Browser\EditorActions.cs" />
     <Compile Include="classes\MainUI\Browser\Editor.cs" />
     <Compile Include="classes\MainUI\Crusade\ArmiesEditor.cs" />
@@ -285,7 +287,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
