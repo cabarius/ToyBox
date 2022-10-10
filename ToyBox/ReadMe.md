@@ -38,6 +38,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
+### Ver 1.4.18
+* (***BuckAMayzing***) Fixed a bug where a couple of army debuffs (Nauseated, Stinking Cloud) were incorrectly being multiplied by the buff duration multiplier.
 ### Ver 1.4.17 (DLC 3 release 1.4.2a)
 * Support for Beta 1.4.2a
 ### Ver 1.4.16 (DLC 2 release 1.3.0k)
