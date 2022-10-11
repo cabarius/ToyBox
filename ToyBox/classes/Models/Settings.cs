@@ -424,6 +424,7 @@ namespace ToyBox {
         public HashSet<string> ignoredEquipmentRestrictionSet = new();
         public bool toggleIgnoreBuildingRestrictions = false;
         public HashSet<string> ignoredBuildingRestrictionSet = new();
+        public HashSet<string> buffsToIgnoreForDurationMultiplier = new(SettingsDefaults.DefaultBuffsToIgnoreForDurationMultiplier);
 
         // Development
         public LogLevel loggingLevel = LogLevel.Info;
