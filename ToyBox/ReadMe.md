@@ -40,6 +40,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.18
 * (***BuckAMayzing***) Fixed a bug where a couple of army debuffs (Nauseated, Stinking Cloud) were incorrectly being multiplied by the buff duration multiplier.
+* (***BuckAMayzing***) Fixed a bug which caused Vertical regions to crash the UI.
+* (***BuckAMayzing***) Added configurability for buffs to exclude from buff duration multiplier in Bag of Tricks.
 ### Ver 1.4.17 (DLC 3 release 1.4.2a)
 * Support for Beta 1.4.2a
 ### Ver 1.4.16 (DLC 2 release 1.3.0k)
