@@ -284,36 +284,15 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#if false
-        [HarmonyPatch(typeof(CharGenMythicPhaseVM), nameof(CharGenMythicPhaseVM.IsClassVisible))]
-        static class CharGenMythicPhaseVM_IsClassVisible_Patch {
-            private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
-                Logger.Log("IsClassVisible");
-                if (settings.toggleIgnoreClassAndFeatRestrictions) {
-                    __result = true;
-                }
-            }
-        }
 
-        [HarmonyPatch(typeof(CharGenMythicPhaseVM), nameof(CharGenMythicPhaseVM.IsClassAvailableToSelect))]
-        static class CharGenMythicPhaseVM_IsClassAvailableToSelect_Patch {
-            private static void Postfix(ref bool __result, BlueprintCharacterClass charClass) {
-                Logger.Log("CharGenMythicPhaseVM.IsClassAvailableToSelect");
-                if (settings.toggleIgnoreClassAndFeatRestrictions) {
-                    __result = true;
-                }
-            }
-        }
-        [HarmonyPatch(typeof(CharGenMythicPhaseVM), nameof(CharGenMythicPhaseVM.IsPossibleMythicSelection), MethodType.Getter)]
-        static class CharGenMythicPhaseVM_IsPossibleMythicSelection_Patch {
+        [HarmonyPatch(typeof(Kingmaker.DialogSystem.Blueprints.BlueprintMythicsSettings), nameof(Kingmaker.DialogSystem.Blueprints.BlueprintMythicsSettings.IsMythicClassUnlocked))]
+        public static class BlueprintMythicsSettings_IsMythicClassUnlocked_Patch {
             private static void Postfix(ref bool __result) {
-                Logger.Log("CharGenMythicPhaseVM.IsPossibleMythicSelection");
-                if (settings.toggleIgnoreClassAndFeatRestrictions) {
+                if (settings.toggleIgnoreClassRestrictions) {
                     __result = true;
                 }
             }
         }
-#endif
 
         [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.IsPossibleMythicSelection), MethodType.Getter)]
         private static class LevelUpControllerIsPossibleMythicSelection_Patch {
