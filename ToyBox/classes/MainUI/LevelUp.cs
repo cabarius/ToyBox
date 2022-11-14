@@ -72,7 +72,7 @@ namespace ToyBox {
                 (Action)(() => {
                     Toggle((string)"Ignore Class Restrictions", ref settings.toggleIgnoreClassRestrictions);
                     Space(25);
-                    Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
+                    Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from mythic rank 1. This may have interesting and unexpected effects. Backup early and often...".green());
                 }),
                 (Action)(() => {
                     Toggle((string)"Ignore Feat Restrictions", ref settings.toggleIgnoreFeatRestrictions);
