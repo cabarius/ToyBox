@@ -39,6 +39,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ### Ver 1.4.19
 * (***ArcaneTrixter***) Ignore Class Restrictions now works for mythic classes as well, regardless of quest and etude states.
+* (***ArcaneTrixter***) Adding spellbooks should now add the correct spellbook type rather than the base class.
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.18
 * (***BuckAMayzing***) Fixed a bug where a couple of army debuffs (Nauseated, Stinking Cloud) were incorrectly being multiplied by the buff duration multiplier.
