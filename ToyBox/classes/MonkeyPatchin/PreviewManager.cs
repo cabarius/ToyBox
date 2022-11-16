@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
@@ -248,7 +248,7 @@ namespace ToyBox {
                         }
                         if (line.Count > 0) results.Add($"{depth}: {line.Join()}");
                     }
-                    if (results.Count > 0) __result += $" \n<size=75%>[{results.Join()}]</size>";
+                    if (results.Count > 0) __result += $" \v<size=75%>[{results.Join()}]</size>";
                 }
                 catch (Exception ex) {
                     Mod.Error(ex);
