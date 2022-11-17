@@ -250,7 +250,7 @@ namespace ToyBox {
 
             // Spellbooks
             BlueprintAction.Register<BlueprintSpellbook>("Add",
-                                                         (bp, ch, n, index) => ch.Descriptor.DemandSpellbook(bp.CharacterClass),
+                                                         (bp, ch, n, index) => ch.Descriptor.DemandSpellbook(bp),
                                                          (bp, ch, index) => ch.Descriptor.Spellbooks.All(sb => sb.Blueprint != bp));
 
             BlueprintAction.Register<BlueprintSpellbook>("Remove",
