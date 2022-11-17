@@ -37,9 +37,14 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
+### Ver 1.4.20
+* Fixed the spacing on dialog previews, newline replaces with vertical tab.
+* Fixed dialog preview option also disabling answers' restrictions.
 ### Ver 1.4.19
+***Important**: *Make sure you are on the latest version of the game 2.0.4j or newer*
 * (***ArcaneTrixter***) Ignore Class Restrictions now works for mythic classes as well, regardless of quest and etude states.
 * (***ArcaneTrixter***) Adding spellbooks should now add the correct spellbook type rather than the base class.
+* (***ArcaneTrixter***) Fix half casters having incorrect caster level with Remove Level 20 Caster Level Cap
 ***Important**: *Make sure you are on the latest version of the game 1.0.8e or newer*
 ### Ver 1.4.18
 * (***BuckAMayzing***) Fixed a bug where a couple of army debuffs (Nauseated, Stinking Cloud) were incorrectly being multiplied by the buff duration multiplier.
