@@ -30,7 +30,8 @@ namespace ToyBox.Multiclass {
         [HarmonyPatch(typeof(LevelUpController), MethodType.Constructor, new Type[] {
             typeof(UnitEntityData),
             typeof(bool),
-            typeof(LevelUpState.CharBuildMode) })]
+            typeof(LevelUpState.CharBuildMode),
+            typeof(bool)})]
         private static class LevelUpController_ctor_Patch {
             [HarmonyPrefix, HarmonyPriority(Priority.First)]
             private static bool Prefix(LevelUpController __instance) {
