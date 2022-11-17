@@ -38,6 +38,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.4.19
+* (***ArcaneTrixter***) Fixed "Open Area Exit Loot Window" button.
+### Ver 1.4.19
 ***Important**: *Make sure you are on the latest version of the game 2.0.4j or newer*
 * (***ArcaneTrixter***) Ignore Class Restrictions now works for mythic classes as well, regardless of quest and etude states.
 * (***ArcaneTrixter***) Adding spellbooks should now add the correct spellbook type rather than the base class.
