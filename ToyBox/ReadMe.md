@@ -42,8 +42,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ArcaneTrixter***) Ignore Class Restrictions now works for mythic classes as well, regardless of quest and etude states.
 * (***ArcaneTrixter***) Adding spellbooks should now add the correct spellbook type rather than the base class.
 * (***ArcaneTrixter***) Fix half casters having incorrect caster level with Remove Level 20 Caster Level Cap
-* Fixed the spacing on dialog previews, newline replaces with vertical tab.
-* Fixed dialog preview option also disabling answers' restrictions.
+* (***Azdie***) Fixed the spacing on dialog previews, newline replaces with vertical tab.
+* (***Azdie***) Fixed dialog preview option also disabling answers' restrictions.
 ### Ver 1.4.18
 * (***BuckAMayzing***) Fixed a bug where a couple of army debuffs (Nauseated, Stinking Cloud) were incorrectly being multiplied by the buff duration multiplier.
 * (***BuckAMayzing***) Fixed a bug which caused Vertical regions to crash the UI.
