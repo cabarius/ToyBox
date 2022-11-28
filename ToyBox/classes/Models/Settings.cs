@@ -272,6 +272,7 @@ namespace ToyBox {
         public float vendorBuyPriceMultiplier = 1;
         public float fatigueHoursModifierMultiplier = 1;
         public float spellsPerDayMultiplier = 1;
+        public float memorizedSpellsMultiplier = 1;
         public float partyMovementSpeedMultiplier = 1;
         public float travelSpeedMultiplier = 1;
         public int characterCreationAbilityPointsMax = 18;
