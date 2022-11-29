@@ -506,7 +506,7 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Class Specific", 1,
-                () => Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 1, "", AutoWidth()),
+                () => Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
                         () => Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f,
                                 1f, 1, "", AutoWidth()),
                         () => {
