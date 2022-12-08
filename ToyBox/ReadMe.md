@@ -39,6 +39,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ### Ver 1.4.20
 * (***AeonBlack***) Fix Multiclass/Gestalt on DLC Player/Mercenary Respec. (Note: Still broken on Mercenary Recruit, Workaround: Hire and then Respec through Party Editor.)
+* (***ArcaneTrixter***) Updated default value of kineticist burn reduction. It's applying 0 unless modified, but it should reset to no-impact as default behavior.
+* (***ArcaneTrixter***) Split spellslot multipliers for prepared vs spontaneous casters.
+* (***ArcaneTrixter***) Fix uncapped caster levels mythic levels.
+* (***ArcaneTrixter***) Fixed "Open Area Exit Loot Window" button.
 ### Ver 1.4.19
 ***Important**: *Make sure you are on the latest version of the game 2.0.4j or newer*
 * (***ArcaneTrixter***) Ignore Class Restrictions now works for mythic classes as well, regardless of quest and etude states.
