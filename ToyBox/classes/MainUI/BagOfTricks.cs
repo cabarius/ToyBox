@@ -529,7 +529,8 @@ namespace ToyBox {
                 () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => Slider("Increase Carry Capacity", ref settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
                 () => Slider("Increase Carry Capacity (Party Only)", ref settings.encumberanceMultiplierPartyOnly, 1, 100, 1, "", AutoWidth()),
-                () => LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Spontaneous Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Prepared Spellslots", ref settings.memorizedSpellsMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => {
                     LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
                     Space(25);

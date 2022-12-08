@@ -92,7 +92,15 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.GetSpellsPerDay))]
         private static class Spellbook_GetSpellsPerDay_Patch {
-            private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.spellsPerDayMultiplier, 1));
+            private static void Postfix(ref int __result, Spellbook __instance) {
+                if (__instance.Blueprint.MemorizeSpells && !__instance.Blueprint.IsArcanist) { // prepapred spellcaster slots multiplier
+                    __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.memorizedSpellsMultiplier, 1));
+                    return;
+                }
+
+                // Spontaneous multiplier
+                __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.spellsPerDayMultiplier, 1));
+            }
         }
 
         [HarmonyPatch(typeof(Player), nameof(Player.GetCustomCompanionCost))]
