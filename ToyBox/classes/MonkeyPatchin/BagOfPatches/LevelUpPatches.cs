@@ -499,9 +499,12 @@ namespace ToyBox.BagOfPatches {
         }
 
         // Let user advance if no options left for feat selection
-        [HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM), nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
-        private static class CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch {
-            private static void Postfix(CharGenFeatureSelectorPhaseVM __instance, ref bool __result) {
+        [HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM))]
+        private static class CharGenFeatureSelectorPhaseVM_HandleOptionalFeatSelection_Patch {
+            [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
+            [HarmonyPostfix]
+            private static void Postfix_CharGenFeatureSelectorPhaseVM_CheckIsCompleted(CharGenFeatureSelectorPhaseVM __instance, ref bool __result) {
+
                 if (settings.toggleOptionalFeatSelection) {
                     __result = true;
                 }
@@ -518,7 +521,16 @@ namespace ToyBox.BagOfPatches {
                         __result = true;
                 }
             }
+
+            [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.OnPostBeginDetailedView))]
+            [HarmonyPostfix]
+            private static void Postfix_CharGenFeatureSelectorPhaseVM_OnPostBeginDetailedView(CharGenFeatureSelectorPhaseVM __instance) {
+                if (settings.toggleOptionalFeatSelection) {
+                    __instance.IsCompleted.Value = true;
+                }
+            }
         }
+
 #if false
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]
         public static class ProgressionData_CalculateLevelEntries_Patch {
