@@ -139,7 +139,7 @@ namespace ToyBox {
             if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
-            var filtered = blueprints.Where((bp) => bp.GetType().IsKindOf(type)).ToList();
+            var filtered = blueprints.Where((bp) => bp?.GetType().IsKindOf(type) == true).ToList();
             // FIXME - why do we get inconsistent partial results if we cache here
             //if (filtered.Count > 0)
             //    blueprintsByType[type] = filtered;
