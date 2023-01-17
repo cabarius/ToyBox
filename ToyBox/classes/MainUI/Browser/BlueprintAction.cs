@@ -113,7 +113,7 @@ namespace ToyBox {
         private static Dictionary<BlueprintFeatureSelection, BlueprintFeature[]> featureSelectionItems = new();
         public static BlueprintFeature FeatureSelectionItems(this BlueprintFeatureSelection feature, int index) {
             if (featureSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null;
-            value = feature.AllFeatures.OrderBy(x => x.Name).ToArray();
+            value = feature.AllFeatures.OrderBy(x => x.NameSafe()).ToArray();
             if (value == null) return null;
             featureSelectionItems[feature] = value;
             return index < value.Length ? value[index] : null;

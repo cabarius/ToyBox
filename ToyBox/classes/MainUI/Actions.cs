@@ -113,8 +113,21 @@ namespace ToyBox {
             Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
         }
         public static void RemoveAllBuffs() {
-            foreach (var target in Game.Instance.Player.Party) {
+            foreach (var target in Game.Instance.Player.PartyAndPets) {
                 foreach (var buff in new List<Buff>(target.Descriptor.Buffs.Enumerable)) {
+                    if (buff.Blueprint.IsClassFeature || buff.Blueprint.IsHiddenInUI) {
+                        continue;
+                    }
+
+                    if (buff.Blueprint.IsFromSpell) {
+                        target.Descriptor.RemoveFact(buff); // Always remove spell effects, even if they'd persist
+                        continue;
+                    }
+
+                    if (buff.Blueprint.StayOnDeath) { // Not a spell and persists through death, generally seems to be items
+                        continue;
+                    }
+
                     target.Descriptor.RemoveFact(buff);
                 }
             }

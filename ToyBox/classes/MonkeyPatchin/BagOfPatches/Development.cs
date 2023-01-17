@@ -116,5 +116,41 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 };
             }
         }
+
+        [HarmonyPatch(typeof(Kingmaker.EntitySystem.Persistence.JsonUtility.BlueprintConverter), nameof(Kingmaker.EntitySystem.Persistence.JsonUtility.BlueprintConverter.ReadJson))]
+        private static class ForceSuccessfulLoad_Blueprints_Patch {
+            private static bool Prefix(ref object __result, Newtonsoft.Json.JsonReader reader) {
+                if (settings.enableLoadWithMissingBlueprints) {
+                    var text = (string)reader.Value;
+                    if (string.IsNullOrEmpty(text) || text == "null") {
+                        __result = null; // We still can't look up a blueprint without a valid id
+                        return false;
+                    }
+                    SimpleBlueprint retrievedBlueprint;
+                    try {
+                        retrievedBlueprint = ResourcesLibrary.TryGetBlueprint(BlueprintGuid.Parse(text));
+                    }
+                    catch {
+                        retrievedBlueprint = null;
+                    }
+                    if (retrievedBlueprint == null) {
+                        Mod.Debug($"Failed to load blueprint by guid '{text}' but continued with null blueprint.");
+                    }
+                    __result = retrievedBlueprint;
+
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Kingmaker.EntitySystem.EntityFact), nameof(Kingmaker.EntitySystem.EntityFact.ComponentsDictionary), MethodType.Setter)]
+        private static class ForceSuccessfulLoad_OfFacts_Patch {
+            private static void Prefix(ref Kingmaker.EntitySystem.EntityFact __instance) {
+                if (__instance.Blueprint == null) {
+                    Mod.Debug($"Fact type '{__instance}' failed to load. UniqueID: {__instance.UniqueId}");
+                }
+            }
+        }
     }
 }
