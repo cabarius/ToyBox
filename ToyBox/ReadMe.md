@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.4.21
+* (***ArcaneTrixter***) Fixed etude null ref for Woljif Romance and other mods that introduce etudes without all expected fields.
 * (***ArcaneTrixter***) Cleaned up logic for infinite item use, should stop belt items from being eaten.
 * (***ArcaneTrixter***) Added option to "Enable Loading with Blueprint Errors" to enable loading modded saves and stripping added BPs back out of saves. This comes with many warnings, but could be a better alternative than restarting a game.
 * (***ArcaneTrixter***) Fixes for RemoveBuffs to not remove things it shouldn't
