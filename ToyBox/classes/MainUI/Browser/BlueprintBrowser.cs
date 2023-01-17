@@ -172,7 +172,7 @@ namespace ToyBox {
             limit = Math.Min(limit, Math.Max(count, count - limit));
             Mod.Trace($"{currentPage} / {pageCount} count: {count} => offset: {offset} limit: {limit} ");
             filteredBPs = unpagedBPs.Skip(offset).Take(limit).ToArray();
-            filteredBPNames = filteredBPs.Select(b => b.name).ToArray();
+            filteredBPNames = filteredBPs.Select(b => b.NameSafe()).ToArray();
 
         }
         public static void UpdateSearchResults() {
@@ -199,7 +199,7 @@ namespace ToyBox {
                     filtered.Add(blueprint);
                 }
                 else {
-                    var name = blueprint.name;
+                    var name = blueprint.NameSafe();
                     var displayName = blueprint.GetDisplayName();
                     var description = blueprint.GetDescription() ?? "";
                     if (terms.All(term => name.Matches(term))
@@ -214,7 +214,7 @@ namespace ToyBox {
                     }
                 }
             }
-            filteredBPs = filtered.OrderBy(bp => bp.name);
+            filteredBPs = filtered.OrderBy(bp => bp.NameSafe());
             matchCount = filtered.Count();
             UpdatePageCount();
             for (var i = 0; i < BlueprintListUI.ParamSelected.Length; i++) {

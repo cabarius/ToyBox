@@ -244,7 +244,7 @@ namespace ToyBox {
                             var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
                             if (nameStrings == null) {
                                 needsSelection = true;
-                                nameStrings = selectionBP.AllFeatures.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
+                                nameStrings = selectionBP.AllFeatures.Select(x => x.NameSafe()).OrderBy(x => x).ToArray().TrimCommonPrefix();
                                 selectionBPValuesNames[selectionBP] = nameStrings;
                             }
                             using (HorizontalScope(GUI.skin.button)) {
