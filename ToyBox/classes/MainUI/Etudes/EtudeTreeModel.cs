@@ -154,7 +154,7 @@ namespace ToyBox {
                 Priority = blueprintEtude.Priority
             };
 
-            if (etudeInfo.Comment.Length > 0) {
+            if (etudeInfo?.Comment?.Length > 0) {
                 if (commentTranslations.TryGetValue(etudeInfo.Comment.Trim(), out var translatedComment)) {
                     etudeInfo.Comment = translatedComment;
                 }
