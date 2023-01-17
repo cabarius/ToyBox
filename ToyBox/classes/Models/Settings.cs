@@ -112,6 +112,7 @@ namespace ToyBox {
         public bool toggleShowAcronymsInSpellAndActionSlots = false;
         public bool toggleWidenActionBarGroups = false;
         public bool toggleGameOverFixLeeerrroooooyJenkins = false;
+        public bool enableLoadWithMissingBlueprints = false;
 
         // Camera
         public bool toggleZoomOnAllMaps = false;
