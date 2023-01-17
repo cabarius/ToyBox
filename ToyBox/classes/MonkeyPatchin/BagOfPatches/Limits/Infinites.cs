@@ -63,60 +63,13 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.SpendCharges), new Type[] { typeof(UnitDescriptor) })]
         public static class ItemEntity_SpendCharges_Patch {
-            public static bool Prefix(ref bool __state) {
-                __state = settings.toggleInfiniteItems;
-                return !__state;
-            }
-            public static void Postfix(bool __state, ItemEntity __instance, ref bool __result, UnitDescriptor user) {
-                if (__state) {
+            public static bool Prefix(ref bool __result, UnitDescriptor user, ItemEntity __instance) {
+                if (settings.toggleInfiniteItems && user.IsPartyOrPet()) {
                     var blueprintItemEquipment = __instance.Blueprint as BlueprintItemEquipment;
-                    if (!blueprintItemEquipment || !blueprintItemEquipment.GainAbility) {
-                        __result = false;
-                        return;
-                    }
-                    if (!__instance.IsSpendCharges) {
-                        __result = true;
-                        return;
-                    }
-                    var hasNoCharges = false;
-                    if (__instance.Charges > 0) {
-                        ItemEntityUsable itemEntityUsable = new((BlueprintItemEquipmentUsable)__instance.Blueprint);
-                        if (user.State.Features.HandOfMagusDan && itemEntityUsable.Blueprint.Type == UsableItemType.Scroll) {
-                            RuleRollDice ruleRollDice = new(user.Unit, new DiceFormula(1, DiceType.D100));
-                            Rulebook.Trigger(ruleRollDice);
-                            if (ruleRollDice.Result <= 25) {
-                                __result = true;
-                                return;
-                            }
-                        }
-
-                        if (user.IsPartyOrPet()) {
-                            __result = true;
-                            return;
-                        }
-
-                        --__instance.Charges;
-                    }
-                    else {
-                        hasNoCharges = true;
-                    }
-
-                    if (__instance.Charges >= 1 || blueprintItemEquipment.RestoreChargesOnRest) {
-                        __result = !hasNoCharges;
-                        return;
-                    }
-
-                    if (__instance.Count > 1) {
-                        __instance.DecrementCount(1);
-                        __instance.Charges = 1;
-                    }
-                    else {
-                        var collection = __instance.Collection;
-                        collection?.Remove(__instance);
-                    }
-
-                    __result = !hasNoCharges;
+                    __result = blueprintItemEquipment && blueprintItemEquipment.GainAbility; // Don't skip the check about being a valid item and having an ability to use
+                    return false; // We're skipping spend charges because even if someone else has logic to sometimes not spend charges, we don't care. We said "infinite" use.
                 }
+                return true;
             }
         }
     }
