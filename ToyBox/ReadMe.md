@@ -39,6 +39,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ### Ver 1.4.21
 * (***ArcaneTrixter***) Cleaned up logic for infinite item use, should stop belt items from being eaten.
+* (***ArcaneTrixter***) Added option to "Enable Loading with Blueprint Errors" to enable loading modded saves and stripping added BPs back out of saves. This comes with many warnings, but could be a better alternative than restarting a game.
+* (***ArcaneTrixter***) Fixes for RemoveBuffs to not remove things it shouldn't
 ### Ver 1.4.20
 * (***AeonBlack***) Fix Multiclass/Gestalt on DLC Player/Mercenary Respec. (Note: Still broken on Mercenary Recruit, Workaround: Hire and then Respec through Party Editor.)
 * (***ArcaneTrixter***) Updated default value of kineticist burn reduction. It's applying 0 unless modified, but it should reset to no-impact as default behavior.

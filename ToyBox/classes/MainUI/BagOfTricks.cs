@@ -316,6 +316,10 @@ namespace ToyBox {
                         if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
                     }
                 }, AutoWidth()),
+                () => { Toggle("Enable Loading with Blueprint Errors".color(RGBA.maroon), ref settings.enableLoadWithMissingBlueprints); 25.space(); Label($"This {"incredibly dangerous".bold()} setting overrides the default behavior of failing to load saves depending on missing blueprint mods. This desperate action can potentially enable you to recover your saved game, though you'll have to respec at minimum.".orange()); },
+                () => { if (settings.enableLoadWithMissingBlueprints) {
+                        Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".orange());
+                    } },
                 () => {
                     using (VerticalScope()) {
                         Div(0, 25, 1280);
