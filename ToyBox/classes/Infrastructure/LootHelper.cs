@@ -120,7 +120,11 @@ namespace ToyBox {
         private LootPCView lootPCView;
 
         public MassLootWindowHandler() {
-            var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, MassLootHelper.GetMassLootFromCurrentArea(), null, new Action(Dispose));
+            var loot = MassLootHelper.GetMassLootFromCurrentArea();
+            if (!loot.Any()) {
+                return;
+            }
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, new Action(Dispose));
             lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
             lootPCView.Initialize();
             var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();

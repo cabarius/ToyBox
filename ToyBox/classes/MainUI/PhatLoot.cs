@@ -66,6 +66,13 @@ namespace ToyBox {
                     UI.Space(102);
                     UI.Label("Some items might be invisible until looted".green());
                 },
+                () => {
+                    if (settings.toggleMassLootEverything) {
+                        UI.Toggle("Mass Loot steals from living NPCs", ref settings.toggleLootAliveUnits);
+                        UI.Space(102);
+                        UI.Label("Previously always behaved this way".green());
+                    }
+                },
                 () => UI.Div(),
                 () => {
                     UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity);

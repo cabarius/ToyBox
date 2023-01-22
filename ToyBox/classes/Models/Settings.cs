@@ -202,6 +202,7 @@ namespace ToyBox {
         public RarityType lootFilterIgnore = RarityType.None;
         public RarityType lootFilterAutoSell = RarityType.None;
         public bool toggleMassLootEverything = false;
+        public bool toggleLootAliveUnits = false;
         public bool toggleLootChecklistFilterFriendlies = false;
         public bool toggleLootChecklistFilterBlueprint = false;
         public bool toggleLootChecklistFilterDescription = false;
