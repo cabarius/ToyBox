@@ -101,6 +101,8 @@ namespace ToyBox {
                             },
                             () => { }
                         );
+                        UI.Label("Minimum Rarity to change colors for:".cyan(), UI.AutoWidth());
+                        UI.RarityGrid(ref settings.minRarityToColor, 4, UI.AutoWidth());
                     }
 
                     // The following options let you configure loot filtering and auto sell levels:".green());

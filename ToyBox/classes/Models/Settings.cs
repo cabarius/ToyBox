@@ -199,6 +199,7 @@ namespace ToyBox {
 
         // Loot 
         public bool toggleColorLootByRarity = false;
+        public RarityType minRarityToColor = 0;
         public RarityType lootFilterIgnore = RarityType.None;
         public RarityType lootFilterAutoSell = RarityType.None;
         public bool toggleMassLootEverything = false;
