@@ -86,6 +86,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleColorLootByRarity && __result != null && __result.Length > 0) {
                     var bp = __instance.Blueprint;
                     var rarity = __instance.Rarity();
+                    if (rarity < settings.minRarityToColor) return;
                     if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic && rarity < RarityType.Uncommon) return;
                     if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic && rarity < RarityType.Uncommon) return;
                     var result = __result.Rarity(rarity);

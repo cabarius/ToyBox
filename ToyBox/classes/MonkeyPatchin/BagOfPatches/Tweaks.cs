@@ -426,8 +426,15 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(ref IEnumerable<LootWrapper> __result) {
                 if (!settings.toggleMassLootEverything) return true;
 
-                var all_units = Game.Instance.State.Units.All.Where(w => w.IsInGame);
-                var result_units = all_units.Where(unit => unit.HasLoot).Select(unit => new LootWrapper { Unit = unit }); //unit.IsRevealed && unit.IsDeadAndHasLoot
+                IEnumerable<UnitEntityData> all_units = Game.Instance.State.Units.All;
+                if (settings.toggleLootAliveUnits) {
+                    all_units = all_units.Where(unit => unit.IsInGame && unit.HasLoot);
+                }
+                else {
+                    all_units = all_units.Where(unit => unit.IsInGame && unit.IsDeadAndHasLoot);
+                }
+
+                var result_units = all_units.Select(unit => new LootWrapper { Unit = unit });
 
                 var all_entities = Game.Instance.State.Entities.All.Where(w => w.IsInGame);
                 var all_chests = all_entities.Select(s => s.Get<InteractionLootPart>()).Where(i => i?.Loot != Game.Instance.Player.SharedStash).NotNull();
