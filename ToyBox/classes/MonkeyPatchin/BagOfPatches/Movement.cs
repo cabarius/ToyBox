@@ -28,14 +28,11 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitEntityData), nameof(UnitEntityData.ModifiedSpeedMps), MethodType.Getter)]
         public static class UnitEntityData_CalculateSpeedModifier_Patch {
             private static void Postfix(UnitEntityData __instance, ref float __result) {
-                //Main.Log($"UnitEntityData_CalculateSpeedModifier_Patch: isInParty:{__instance.Descriptor.IsPartyOrPet()} result:{__result}".cyan());
-                if (settings.partyMovementSpeedMultiplier == 1.0f || !__instance.Descriptor.IsPartyOrPet())
+                if (settings.partyMovementSpeedMultiplier == 1.0f || (__instance?.Descriptor?.IsPartyOrPet() != true))
                     return;
                 var partTacticalCombat = __instance.Get<UnitPartTacticalCombat>();
                 if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return;
                 __result *= settings.partyMovementSpeedMultiplier;
-                //Main.Log($"finalREsult: {__result}".cyan());
-
             }
         }
 
