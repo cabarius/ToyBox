@@ -98,7 +98,7 @@ namespace ToyBox.classes.Infrastructure {
             var newMaxSpellLevel = spellbook.MaxSpellLevel;
             if (newMaxSpellLevel < oldMaxSpellLevel) {
                 RemoveSpellsOfLevel(spellbook, oldMaxSpellLevel);
-            }
+        }
         }
 
         public static void AddCasterLevel(Spellbook spellbook) {
@@ -129,6 +129,12 @@ namespace ToyBox.classes.Infrastructure {
             }
 
             toLearn.ForEach(x => spellbook.AddIfUnknown(level, x));
+        }
+
+        public static IEnumerable<BlueprintAbility> GetSpellsLearnableOfLevel(this Spellbook sb, int lvl) {
+            foreach (var s in sb.Blueprint.SpellList.GetSpells(lvl))
+                if (!sb.IsKnown(s))
+                    yield return s;
         }
 
         public static void HandleAddAllSpellsOnPartyEditor(UnitDescriptor unit, List<BlueprintAbility> abilities) {

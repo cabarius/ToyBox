@@ -140,10 +140,12 @@ namespace ToyBox.Multiclass {
                         var spellsKnown = spellbook1.Blueprint.SpellsKnown;
                         var expectedCount = spellsKnown.GetCount(casterLevelAfter, index);
                         var actual = CasterHelpers.GetCachedSpellsKnown(unit, spellbook1, index);
+                        int learnabl = spellbook1.GetSpellsLearnableOfLevel(index).Count();
+                        int spelladd = Math.Max(0, Math.Min(expectedCount - actual, learnabl));
 #if DEBUG
-                        //Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {expectedCount-actual} spells of spell level:{index} based on expected={expectedCount} and actual={actual}");
+                        Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {spelladd} spells of spell level:{index} based on expected={expectedCount}, actual={actual}, learnable={learnabl}");
 #endif
-                        spellSelectionData.SetLevelSpells(index, Math.Max(0, expectedCount - actual));
+                        spellSelectionData.SetLevelSpells(index, spelladd);
                     }
                 }
                 var maxSpellLevel = spellbook1.MaxSpellLevel;
