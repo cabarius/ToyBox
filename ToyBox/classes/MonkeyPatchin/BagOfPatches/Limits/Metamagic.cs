@@ -11,6 +11,10 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
@@ -45,6 +49,26 @@ namespace ToyBox.BagOfPatches {
                             return;
                         __instance.SpellMetamagics.Add(metamagicFeature);
                     }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.RequireFullRoundAction), MethodType.Getter)]
+        public static class AbilityData_RequireFullRoundAction {
+            private static bool IsSpontanReplacement(AbilityData abilityData) {
+                if (settings.toggleMetamagicIsFree)
+                    return false;
+                return abilityData.IsSpontaneous;
+            }
+
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+                MethodInfo torep = AccessTools.PropertyGetter(typeof(AbilityData), nameof(AbilityData.IsSpontaneous));
+                foreach (CodeInstruction c in instructions) {
+                    if (c.opcode == OpCodes.Call && (c.operand as MethodInfo) == torep) {
+                        Mod.Trace("AbilityData_RequireFullRoundAction found and replaced");
+                        c.operand = AccessTools.DeclaredMethod(typeof(AbilityData_RequireFullRoundAction), nameof(IsSpontanReplacement));
+                    }
+                    yield return c;
                 }
             }
         }
