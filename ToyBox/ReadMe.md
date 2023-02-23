@@ -39,12 +39,14 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ### Ver 1.4.21
 * (***mcb***) spell selection on levelup no longer prompts you to choose a spell if all spells of that level are known
+* (***mcb***) Free Metamagic now no longer increases casting time of spontaneous casters when casting spells with metamagics applied to them
 * (***ArcaneTrixter***) Fixed etude null ref for Woljif Romance and other mods that introduce etudes without all expected fields.
 * (***ArcaneTrixter***) Cleaned up logic for infinite item use, should stop belt items from being eaten.
 * (***ArcaneTrixter***) Added option to "Enable Loading with Blueprint Errors" to enable loading modded saves and stripping added BPs back out of saves. This comes with many warnings, but could be a better alternative than restarting a game.
 * (***ArcaneTrixter***) Fixes for RemoveBuffs to not remove things it shouldn't
 * (***ArcaneTrixter***) New option for Mass Loot to not steal from living NPCs, and a fix for crashing toybox when there was no loot for the area loot button.
 * (***ArcaneTrixter***) New option for loot coloring to set minimum rarity for loot coloration/highlighting.
+* (***ArcaneTrixter***) Fix for error in speed patch throwing exception on missing unit data in guard clause.
 ### Ver 1.4.20
 * (***AeonBlack***) Fix Multiclass/Gestalt on DLC Player/Mercenary Respec. (Note: Still broken on Mercenary Recruit, Workaround: Hire and then Respec through Party Editor.)
 * (***ArcaneTrixter***) Updated default value of kineticist burn reduction. It's applying 0 unless modified, but it should reset to no-impact as default behavior.
