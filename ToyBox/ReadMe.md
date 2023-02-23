@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.4.21
+* (***mcb***) spell selection on levelup no longer prompts you to choose a spell if all spells of that level are known
 * (***mcb***) Free Metamagic now no longer increases casting time of spontaneous casters when casting spells with metamagics applied to them
 * (***ArcaneTrixter***) Fixed etude null ref for Woljif Romance and other mods that introduce etudes without all expected fields.
 * (***ArcaneTrixter***) Cleaned up logic for infinite item use, should stop belt items from being eaten.
