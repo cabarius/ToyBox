@@ -96,10 +96,14 @@ namespace ToyBox {
         }
 
         private static void FilterBuffList(string search) {
+            var searchLower = search.ToLowerInvariant();
             var buffList = GetValidBuffsToAdd();
             _searchResults = string.IsNullOrEmpty(_searchString)
                 ? buffList
-                : buffList.Where(b => b.AssetGuidThreadSafe == search || b.GetDisplayName().Contains(search) || b.NameSafe().Contains(search));
+                : buffList.Where(b => 
+                    b.AssetGuidThreadSafe.ToLowerInvariant() == searchLower || 
+                    b.GetDisplayName().ToLowerInvariant().Contains(searchLower) ||
+                    b.NameSafe().ToLowerInvariant().Contains(searchLower));
             _displayedBuffs = GetPaginatedBuffs();
             SetPaginationString();
             //This will clamp down to the range of pages, so if you search while on the last page, for example, it will place you on the max page after the search is executed.
