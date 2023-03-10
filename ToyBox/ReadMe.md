@@ -39,6 +39,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ### Ver 1.4.22
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
+* (***BuckAMayzing***) Made buff exclusion search case insensitive
 ### Ver 1.4.21
 * (***mcb***) spell selection on levelup no longer prompts you to choose a spell if all spells of that level are known
 * (***mcb***) Free Metamagic now no longer increases casting time of spontaneous casters when casting spells with metamagics applied to them
