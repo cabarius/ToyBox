@@ -24,13 +24,13 @@ namespace ToyBox.BagOfPatches {
             public static void Prefix(ActionBarGroupPCView __instance) {
                 if (!settings.toggleWidenActionBarGroups) return;
                 var isSpellGroup = __instance is ActionBarSpellGroupPCView;
-                var rectTransform = __instance.RectTransform;
+                var rectTransform = __instance.m_RectTransform;
                 var itemCount = __instance.m_SlotsList.Count(s => !s.ViewModel?.IsEmpty.Value ?? false);
                 var columnCount = Math.Max(5, (int)(0.85 * Math.Sqrt(itemCount)));
                 var rowCount = (int)(Math.Ceiling((float)itemCount / columnCount));
                 if (isSpellGroup) {
                     //rowCount += 1; // nudge for spell group ??? TODO - why?
-                    rowCount = Math.Max(rowCount, (int)Math.Ceiling((((__instance as ActionBarSpellGroupPCView).m_Levels.Count - 1) * 26)/ 53f)) + 1;
+                    rowCount = Math.Max(rowCount, (int)Math.Ceiling((((__instance as ActionBarSpellGroupPCView).m_Levels.Count - 1) * 26) / 53f)) + 1;
                 }
                 var width = columnCount * 53f;
                 var xoffset = (columnCount - 5) * 53f;

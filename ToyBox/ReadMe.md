@@ -37,6 +37,10 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
+### Ver 1.4.22
+* * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
+* (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
+* (***BuckAMayzing***) Made buff exclusion search case insensitive
 ### Ver 1.4.21
 * (***mcb***) spell selection on levelup no longer prompts you to choose a spell if all spells of that level are known
 * (***mcb***) Free Metamagic now no longer increases casting time of spontaneous casters when casting spells with metamagics applied to them
