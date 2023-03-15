@@ -96,7 +96,7 @@ namespace ToyBox {
         }
 
         private static void FilterBuffList(string search) {
-            var searchLower = search.ToLowerInvariant();
+            var searchLower = !string.IsNullOrEmpty(search) ? search.ToLowerInvariant() : string.Empty;
             var buffList = GetValidBuffsToAdd();
             _searchResults = string.IsNullOrEmpty(_searchString)
                 ? buffList
