@@ -222,6 +222,7 @@ namespace ToyBox {
                     Space(30);
                     if (!isWide) ActionsGUI(ch);
                     Wrap(!IsWide, 283, 0);
+                    var prevSelectedChar = selectedCharacter;
                     var showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
                     if (DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
                         if (showClasses) {
@@ -266,6 +267,9 @@ namespace ToyBox {
                     }
                     else { Space(180); }
                     if (isWide) ActionsGUI(ch);
+                    if (prevSelectedChar != selectedCharacter) {
+                        selectedSpellbook = 0;
+                    }
                 }
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
                 //    UI.Div(20, 20);

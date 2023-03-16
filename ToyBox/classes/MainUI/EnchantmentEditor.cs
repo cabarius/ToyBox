@@ -299,10 +299,10 @@ namespace ToyBox.classes.MainUI {
         }
         public static void EnchantmentsListGUI() {
             UI.Div(5);
-            var enchantement = selectedCollatedEnchantments ?? filteredEnchantments;
+            var enchantements = selectedCollatedEnchantments ?? filteredEnchantments;
             
-            for (var i = 0; i < enchantement.Count; i++) {
-                var enchant = enchantement[i];
+            for (var i = 0; i < enchantements.Count; i++) {
+                var enchant = enchantements[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
                
                 using (UI.HorizontalScope()) {
@@ -440,40 +440,42 @@ namespace ToyBox.classes.MainUI {
         public static void AddClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
+            var enchantements = selectedCollatedEnchantments ?? filteredEnchantments;
             var selected = inventory.ElementAt(selectedItemIndex);
             if (selected is ItemEntityShield shield) {
                 if (!second)
-                    AddEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                    AddEnchantment(shield.ArmorComponent, enchantements[index]);
                 else
-                    AddEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                    AddEnchantment(shield.WeaponComponent, enchantements[index]);
                 editedItem = shield;
             }
             else if (second && selected is ItemEntityWeapon weapon) {
-                AddEnchantment(weapon.Second, filteredEnchantments[index]);
+                AddEnchantment(weapon.Second, enchantements[index]);
                 editedItem = weapon;
             }
             else {
-                AddEnchantment(selected, filteredEnchantments[index]);
+                AddEnchantment(selected, enchantements[index]);
                 editedItem = selected;
             }
         }
         public static void RemoveClicked(int index, bool second = false) {
             if (selectedItemIndex < 0 || selectedItemIndex >= inventory.Count) return;
             if (index < 0 || index >= filteredEnchantments.Count) return;
+            var enchantements = selectedCollatedEnchantments ?? filteredEnchantments;
             var selected = inventory.ElementAt(selectedItemIndex);
             if (selected is ItemEntityShield shield) {
                 if (!second)
-                    RemoveEnchantment(shield.ArmorComponent, filteredEnchantments[index]);
+                    RemoveEnchantment(shield.ArmorComponent, enchantements[index]);
                 else
-                    RemoveEnchantment(shield.WeaponComponent, filteredEnchantments[index]);
+                    RemoveEnchantment(shield.WeaponComponent, enchantements[index]);
                 editedItem = shield;
             }
             if (second && selected is ItemEntityWeapon weapon) {
-                RemoveEnchantment(weapon.Second, filteredEnchantments[index]);
+                RemoveEnchantment(weapon.Second, enchantements[index]);
                 editedItem = weapon;
             }
             else {
-                RemoveEnchantment(selected, filteredEnchantments[index]);
+                RemoveEnchantment(selected, enchantements[index]);
                 editedItem = selected;
             }
         }
