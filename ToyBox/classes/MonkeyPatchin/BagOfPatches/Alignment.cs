@@ -47,8 +47,8 @@ namespace ToyBox {
                             return false;
                         }
                         var vector = __instance.m_Vector;
-                        var num = (float)value / 50f;
-                        var directionVector = Traverse.Create(__instance).Method("GetDirection", new object[] { direction }).GetValue<Vector2>();
+                        var num = (float)value / __instance.Radius;
+                        var directionVector = __instance.GetDirection(direction);
                         var newAlignment = __instance.m_Vector + directionVector * num;
                         if (newAlignment.magnitude > 1f) {
                             //Instead of normalizing towards true neutral, normalize opposite to the alignment vector
@@ -58,12 +58,9 @@ namespace ToyBox {
                         if (direction == AlignmentShiftDirection.TrueNeutral && (Vector2.zero - __instance.m_Vector).magnitude < num) {
                             newAlignment = Vector2.zero;
                         }
-                        Traverse.Create(__instance).Property<Vector2>("Vector").Value = newAlignment;
-                        Traverse.Create(__instance).Method("UpdateValue").GetValue();
-                        //Traverse requires the parameter types to find interface parameters
-                        Traverse.Create(__instance).Method("OnChanged",
-                            new Type[] { typeof(AlignmentShiftDirection), typeof(Vector2), typeof(IAlignmentShiftProvider), typeof(bool) },
-                            new object[] { direction, vector, provider, true }).GetValue();
+                        __instance.SetVector(newAlignment);
+                        __instance.UpdateValue();
+                        __instance.OnChanged(direction, vector, provider, true);
                         return false;
                     }
                 }
