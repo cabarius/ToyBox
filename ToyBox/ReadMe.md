@@ -43,6 +43,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Enchantment: Fixed issue where the wrong enchantment would be added if you selected weapon enchantments
 * (***BuckAMayzing***) The "Fix Alignment" option was causing alignments to not be updated. This is now resolved.
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
+* (***dark0dave***) Added option to support standard ASCI based glyphs for checkboxes, toggles, etc
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
