@@ -1,4 +1,5 @@
 ﻿using Kingmaker;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Items;
@@ -57,20 +58,22 @@ namespace ToyBox {
         }
 
         public static void Export(this List<ItemEntity> items, string filename) {
-            var bps = items.Select(i => i.Blueprint).ToList();
-            SaveToFile(bps, filename);
+            var guids = items.Select(i => i.Blueprint.AssetGuid.ToString()).ToList();
+            SaveToFile(guids, filename);
         }
         public static void Import(this ItemsCollection items, string filename, bool replace = false) {
-            var bps = LoadFromFile<List<BlueprintItem>>(filename);
-            if (bps != null) {
+            var guids = LoadFromFile<List<string>>(filename);
+            if (guids != null) {
                 if (replace) {
                     var doomed = items.Items.Where<ItemEntity>(x => x.HoldingSlot == null).ToTempList<ItemEntity>();
                     foreach (var toDie in doomed) {
                         items.Remove(toDie);
                     }
                 }
-                foreach (var bp in bps) {
-                    items.Add(bp);
+                foreach (var guid in guids) {
+                    var bp = ResourcesLibrary.TryGetBlueprint<BlueprintItem>(guid);
+                    if (bp != null) 
+                        items.Add(bp);
                 }
             }
         }

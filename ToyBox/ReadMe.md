@@ -36,12 +36,12 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-
 ### Ver 1.4.23
-* (***BuckAMayzing***) The "Fix Alignment" option was causing alignments to not be updated. This is now resolved.
+* (***Narria***) Party Editor: Fixed crasher in changing characters after selecting other spellbook
+* (***Narria***) Enchantment: Fixed issue where the wrong enchantment would be added if you selected weapon enchantments
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 ### Ver 1.4.22
-* * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
+* Updated for Last Sarkorians DLC - Game Version 2.1.0w+
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
 * (***BuckAMayzing***) Made buff exclusion search case insensitive
 ### Ver 1.4.21
