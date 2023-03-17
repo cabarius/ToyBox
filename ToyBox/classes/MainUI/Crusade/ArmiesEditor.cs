@@ -187,12 +187,46 @@ namespace ToyBox.classes.MainUI {
                                                 Label("Stats".yellow());
                                                 ValueAdjuster("Level".cyan(), () => leader.Level, (l) => leader.m_Level = l, 1, 0, 20, 375.width());
                                                 var stats = leader.Stats;
-                                                ValueAdjuster("Attack Bonus".cyan(), () => stats.AttackBonus.BaseValue, (v) => stats.AttackBonus.BaseValue = v, 1, stats.AttackBonus.MinValue, stats.AttackBonus.MaxValue, Width(375));
-                                                ValueAdjuster("Defense Bonus".cyan(), () => stats.DefenseBonus.BaseValue, (v) => stats.DefenseBonus.BaseValue = v, 1, stats.DefenseBonus.MinValue, stats.DefenseBonus.MaxValue, Width(375));
-                                                ValueAdjuster("Infirmary Size".cyan(), () => stats.InfirmarySize.BaseValue, (v) => stats.InfirmarySize.BaseValue = v, 25, stats.InfirmarySize.MinValue, stats.InfirmarySize.MaxValue, Width(375));
-                                                ValueAdjuster("Max Mana".cyan(), () => stats.MaxMana.BaseValue, (v) => stats.MaxMana.BaseValue = v, 5, stats.MaxMana.MinValue, stats.MaxMana.MaxValue, Width(375));
-                                                ValueAdjuster("Mana Regen".cyan(), () => stats.ManaRegeneration.BaseValue, (v) => stats.ManaRegeneration.BaseValue = v, 1, stats.ManaRegeneration.MinValue, stats.ManaRegeneration.MaxValue, Width(375));
-                                                ValueAdjuster("Spell Strength".cyan(), () => stats.SpellStrength.BaseValue, (v) => stats.SpellStrength.BaseValue = v, 1, stats.SpellStrength.MinValue, stats.SpellStrength.MaxValue, Width(375));
+                                                ValueAdjuster("Attack Bonus".cyan(), 
+                                                    () => stats.AttackBonus.BaseValue, 
+                                                    (v) => stats.AttackBonus.BaseValue = v, 1,
+                                                    stats.AttackBonus.MinValue, 
+                                                    stats.AttackBonus.MaxValue, 
+                                                    Width(375));
+                                                ValueAdjuster("Defense Bonus".cyan(), 
+                                                    () => stats.DefenseBonus.BaseValue, 
+                                                    (v) => stats.DefenseBonus.BaseValue = v, 1,
+                                                    stats.DefenseBonus.MinValue, 
+                                                    stats.DefenseBonus.MaxValue, 
+                                                    Width(375));
+                                                ValueAdjuster("Infirmary Size".cyan(), 
+                                                    () => stats.InfirmarySize.BaseValue, 
+                                                    (v) => stats.InfirmarySize.BaseValue = v, 25,
+                                                    stats.InfirmarySize.MinValue, 
+                                                    stats.InfirmarySize.MaxValue, Width(375));
+                                                ValueAdjuster("Mana".cyan(),
+                                                    () => stats.CurrentMana,
+                                                    (v) => stats.CurrentMana = v, 5,
+                                                    stats.MaxMana.MinValue,
+                                                    stats.MaxMana.MaxValue,
+                                                    Width(375));
+                                                ValueAdjuster("Max Mana".cyan(), 
+                                                    () => stats.MaxMana.BaseValue, 
+                                                    (v) => stats.MaxMana.BaseValue = v, 5, 
+                                                    stats.MaxMana.MinValue, 
+                                                    stats.MaxMana.MaxValue, 
+                                                    Width(375));
+                                                ValueAdjuster("Mana Regen".cyan(), 
+                                                    () => stats.ManaRegeneration.BaseValue, 
+                                                    (v) => stats.ManaRegeneration.BaseValue = v, 1,
+                                                    stats.ManaRegeneration.MinValue, 
+                                                    stats.ManaRegeneration.MaxValue, 
+                                                    Width(375));
+                                                ValueAdjuster("Spell Strength".cyan(), 
+                                                    () => stats.SpellStrength.BaseValue, 
+                                                    (v) => stats.SpellStrength.BaseValue = v, 1,
+                                                    stats.SpellStrength.MinValue, 
+                                                    stats.SpellStrength.MaxValue, Width(375));
                                             }
                                         }
                                         using (HorizontalScope()) {
