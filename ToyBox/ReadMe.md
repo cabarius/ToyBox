@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.4.23
+* (***BuckAMayzing***) The "Fix Alignment" option was causing alignments to not be updated. This is now resolved.
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 ### Ver 1.4.22
 * * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
