@@ -4,12 +4,12 @@ using System.Linq;
 using UnityEngine;
 namespace ModKit.Utility {
     public static class GUIHelper {
-        public const string onMark = "<color=green><b>✔</b></color>";
-        public const string offMark = "<color=#A0A0A0E0>✖</color>";
+        public const string onMark = $"<color=green><b>{Glyphs.CheckOn()}!</b></color>";
+        public const string offMark = $"<color=#A0A0A0E0>{Glyphs.CheckOff()}!</color>";
 
-        public static string FormatOn = "▼".color(RGBA.white).Bold() + " {0}";
-        public static string FormatOff = "▶".color(RGBA.lime).Bold() + " {0}";
-        public static string FormatNone = " ▪".color(RGBA.white) + "   {0}";
+        public static string FormatOn = Glyphs.DisclosureOn().color(RGBA.white).Bold() + " {0}";
+        public static string FormatOff = Glyphs.DisclosureOff().color(RGBA.lime).Bold() + " {0}";
+        public static string FormatNone = $" {Glyphs.DisclosureEmpty()}!".color(RGBA.white) + "   {0}";
 
         public static string GetToggleText(ToggleState toggleState, string text) {
             return toggleState switch {

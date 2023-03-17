@@ -52,7 +52,7 @@ namespace ModKit {
                 using (HorizontalScope(options.AddDefaults())) {
                     Label(formatter(label), style, AutoWidth());
                     Space(5);
-                    if (GL.Button("✎", GUI.skin.box, AutoWidth())) {
+                    if (GL.Button(Glyphs.Edit(), GUI.skin.box, AutoWidth())) {
                         editState = (label, label);
                     }
                 }
@@ -62,10 +62,10 @@ namespace ModKit {
                 using (HorizontalScope(options)) {
                     TextField(ref editState.Item2, null, MinWidth(minWidth), AutoWidth());
                     Space(15);
-                    if (GL.Button("✖".red(), GUI.skin.box, AutoWidth())) {
+                    if (GL.Button(Glyphs.CheckOff().red(), GUI.skin.box, AutoWidth())) {
                         editState = (null, null);
                     }
-                    if (GL.Button("✔".green(), GUI.skin.box, AutoWidth())
+                    if (GL.Button(Glyphs.CheckOn().green(), GUI.skin.box, AutoWidth())
                         || userHasHitReturn && focusedControlName == label) {
                         label = editState.Item2;
                         changed = true;
