@@ -4,12 +4,12 @@ using UnityEngine;
 namespace ModKit {
     public static partial class UI {
 
-        public const string ChecklyphOn = $"<color=green><b>{Glyphs.CheckOn()}!</b></color>";
-        public const string CheckGlyphOff = $"<color=#B8B8B8FF>{Glyphs.CheckOff()}!</color>"; // #A0A0A0E0
-        public const string CheckGlyphEmpty = $" <color=#B8B8B8FF>{Glyphs.CheckEmpty()}!</color> ";
-        public const string DisclosureGlyphOn = $"<color=orange><b>{Glyphs.DisclosureOn()}!</b></color>"; // ▼▲∧⋀
-        public const string DisclosureGlyphOff = $"<color=#C0C0C0FF><b>{Glyphs.DisclosureOff()}!</b></color>"; // ▶▲∨⋁
-        public const string DisclosureGlyphEmpty = $" <color=#B8B8B8FF>{Glyphs.DisclosureEmpty()}!</color> ";
+        public static string ChecklyphOn = $"<color=green><b>{Glyphs.CheckOn}</b></color>";
+        public static string CheckGlyphOff = $"<color=#B8B8B8FF>{Glyphs.CheckOff}</color>"; // #A0A0A0E0
+        public static string CheckGlyphEmpty = $" <color=#B8B8B8FF>{Glyphs.CheckEmpty}</color> ";
+        public static string DisclosureGlyphOn = $"<color=orange><b>{Glyphs.DisclosureOn}</b></color>"; // ▼▲∧⋀
+        public static string DisclosureGlyphOff = $"<color=#C0C0C0FF><b>{Glyphs.DisclosureOff}</b></color>"; // ▶▲∨⋁
+        public static string DisclosureGlyphEmpty = $" <color=#B8B8B8FF>{Glyphs.DisclosureEmpty}</color> ";
 
         // Basic UI Elements (box, div, etc.)
 

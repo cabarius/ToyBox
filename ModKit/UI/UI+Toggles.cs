@@ -11,8 +11,8 @@ namespace ModKit {
         None = 2
     }
     public static partial class UI {
-        public const string onMark = $"<color=green><b>{Glyphs.CheckGlyphOn()}!</b></color>";
-        public const string offMark = $"<color=#A0A0A0E0>{Glyphs.CheckGlyphOff()}!</color>";
+        public static string onMark = $"<color=green><b>{Glyphs.CheckOn}</b></color>";
+        public static string offMark = $"<color=#A0A0A0E0>{Glyphs.CheckOff}</color>";
         public static bool IsOn(this ToggleState state) => state == ToggleState.On;
         public static bool IsOff(this ToggleState state) => state == ToggleState.Off;
         public static ToggleState Flip(this ToggleState state) {
