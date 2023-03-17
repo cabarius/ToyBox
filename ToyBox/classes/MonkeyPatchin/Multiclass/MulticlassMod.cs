@@ -109,7 +109,8 @@ namespace ToyBox.Multiclass {
         public static bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
             var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
-            return excludeSet.Contains(cl.AssetGuid.ToString());
+            var result = excludeSet.Contains(cl.AssetGuid.ToString());
+            return result;
         }
 
         public static void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {

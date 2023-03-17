@@ -37,9 +37,10 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.4.23
+* (***Narria***) If you gestalt a mythic class it will no longer appear as your main mythic path
+* (***Narria***) Army Editor now lets you edit current mana for a leader
 * (***Narria***) Party Editor: Fixed crasher in changing characters after selecting other spellbook
 * (***Narria***) Enchantment: Fixed issue where the wrong enchantment would be added if you selected weapon enchantments
-* (***Narria***) Army Editor now lets you edit current mana for a leader
 * (***BuckAMayzing***) The "Fix Alignment" option was causing alignments to not be updated. This is now resolved.
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 ### Ver 1.4.22
