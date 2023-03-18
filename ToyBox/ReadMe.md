@@ -44,6 +44,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***BuckAMayzing***) The "Fix Alignment" option was causing alignments to not be updated. This is now resolved.
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 * (***dark0dave***) Support on linux for standard ASCI based glyphs for checkboxes, toggles, etc
+* (***gespenstgaming***) IncreasED the creation ability point cap to 600.
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
