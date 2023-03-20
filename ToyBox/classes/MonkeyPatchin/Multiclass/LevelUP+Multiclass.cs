@@ -84,21 +84,6 @@ namespace ToyBox.Multiclass {
         }
 #endif
 
-        // This is to grab the spells known on load
-        [HarmonyPatch(typeof(UnitDescriptor), nameof(UnitDescriptor.PostLoad))]
-        public static class UnitDescriptor_PostLoad_Hook {
-            private static void Postfix(UnitEntityData entity) => CasterHelpers.CacheSpellsLearned(entity);
-        }
-
-        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.Commit))]
-        private static class LevelUpController_Commit_Posthook {
-            private static void Postfix(LevelUpController __instance) {
-                Mod.Debug("Clearing Cache because LevelUpController.Commit called");
-                CasterHelpers.ClearCachedSpellsLearned(__instance.Unit);
-                CasterHelpers.CacheSpellsLearned(__instance.Unit);
-            }
-        }
-
         // Do not proceed the spell selection if the caster level was not changed
         [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply))]
         [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
@@ -109,7 +94,6 @@ namespace ToyBox.Multiclass {
                 if (state.SelectedClass == null) {
                     return false;
                 }
-
                 var component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
                 if (component1 != null && component1.Levels.Contains(state.NextClassLevel)) {
                     return false;
@@ -133,13 +117,13 @@ namespace ToyBox.Multiclass {
                 }
                 var casterLevelAfter = CasterHelpers.GetRealCasterLevel(unit, spellbook1.Blueprint); // Calculates based on progression which includes class selected in level up screen
                 spellbook1.AddLevelFromClass(classData.CharacterClass); // This only adds one class at a time and will only ever increase by 1 or 2
-                var casterLevelBefore = casterLevelAfter - (classData.CharacterClass.IsMythic ? 2 : 1); // Technically only needed to see if this is our first level of a casting class
+                var isNewSpellCaster = (spellbook1.IsStandaloneMythic && casterLevelAfter == 2) || casterLevelAfter == 1;
                 var spellSelectionData = state.DemandSpellSelection(spellbook1.Blueprint, spellbook1.Blueprint.SpellList);
                 if (spellbook1.Blueprint.SpellsKnown != null) {
                     for (var index = 0; index <= 10; ++index) {
                         var spellsKnown = spellbook1.Blueprint.SpellsKnown;
                         var expectedCount = spellsKnown.GetCount(casterLevelAfter, index);
-                        var actual = CasterHelpers.GetCachedSpellsKnown(unit, spellbook1, index);
+                        var actual = CasterHelpers.GetActualSpellsLearnedForClass(unit, spellbook1, index);
                         int learnabl = spellbook1.GetSpellsLearnableOfLevel(index).Count();
                         int spelladd = Math.Max(0, Math.Min(expectedCount - actual, learnabl));
 #if DEBUG
@@ -150,7 +134,7 @@ namespace ToyBox.Multiclass {
                 }
                 var maxSpellLevel = spellbook1.MaxSpellLevel;
                 if (spellbook1.Blueprint.SpellsPerLevel > 0) {
-                    if (casterLevelBefore == 0) {
+                    if (isNewSpellCaster) {
                         spellSelectionData.SetExtraSpells(0, maxSpellLevel);
                         spellSelectionData.ExtraByStat = true;
                         spellSelectionData.UpdateMaxLevelSpells(unit);
