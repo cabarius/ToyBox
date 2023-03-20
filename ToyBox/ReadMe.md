@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.4.23
+* (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) If you gestalt a mythic class it will no longer appear as your main mythic path
 * (***Narria***) Army Editor now lets you edit current mana for a leader
 * (***Narria***) Party Editor: Fixed crasher in changing characters after selecting other spellbook

@@ -194,7 +194,7 @@
     <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintListUI.cs" />
-    <Compile Include="classes\MainUI\BlueprintLoader.cs" />
+    <Compile Include="classes\Infrastructure\BlueprintLoader.cs" />
     <Compile Include="classes\MainUI\ActionButtons.cs" />
     <Compile Include="classes\MainUI\Browser\FactsEditor.cs" />
     <Compile Include="classes\MainUI\Main.cs" />
@@ -287,7 +287,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

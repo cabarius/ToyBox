@@ -60,7 +60,7 @@ namespace ToyBox {
                                     UnitEntityData unit,
                                     List<T> facts,
                                     Func<T, SimpleBlueprint> blueprint,
-                                    IEnumerable<SimpleBlueprint> blueprints,
+                                    Func<IEnumerable<SimpleBlueprint>> blueprints,
                                     Func<T, string> title,
                                     Func<T, string> description = null,
                                     Func<T, int> value = null,
@@ -114,7 +114,7 @@ namespace ToyBox {
             if (showAll) {
                 // TODO - do we need this logic or can we make blueprint filtering fast enough to do keys by key searching?
                 //if (filteredBPs == null || searchChanged) {
-                UpdateSearchResults(searchText, blueprints);
+                UpdateSearchResults(searchText, blueprints());
                 //}
                 return BlueprintListUI.OnGUI(unit, filteredBPs, 100, remainingWidth - 100);
             }
@@ -188,12 +188,9 @@ namespace ToyBox {
             return todo;
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<EntityFact> facts) {
-            var blueprints = BlueprintLoader.Shared.GetBlueprints();
-
-            if (blueprints == null) return new List<Action>();
             return OnGUI<EntityFact>("Features", ch, facts,
                 (fact) => fact.Blueprint,
-                BlueprintExensions.GetBlueprints<BlueprintUnitFact>(),
+                () => BlueprintExensions.GetBlueprints<BlueprintUnitFact>(),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -201,11 +198,9 @@ namespace ToyBox {
                 );
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
-            var blueprints = BlueprintLoader.Shared.GetBlueprints();
-            if (blueprints == null) return new List<Action>();
             return OnGUI<Feature>("Features", ch, feature,
                 (fact) => fact.Blueprint,
-                BlueprintExensions.GetBlueprints<BlueprintFeature>(),
+                () => BlueprintExensions.GetBlueprints<BlueprintFeature>(),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -213,11 +208,9 @@ namespace ToyBox {
                 );
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
-            var blueprints = BlueprintLoader.Shared.GetBlueprints();
-            if (blueprints == null) return new List<Action>();
             return OnGUI<Buff>("Features", ch, buff,
                 (fact) => fact.Blueprint,
-                BlueprintExensions.GetBlueprints<BlueprintBuff>(),
+                () => BlueprintExensions.GetBlueprints<BlueprintBuff>(),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -225,11 +218,9 @@ namespace ToyBox {
                 );
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
-            var blueprints = BlueprintLoader.Shared.GetBlueprints();
-            if (blueprints == null) return new List<Action>();
             return OnGUI<Ability>("Abilities", ch, ability,
                 (fact) => fact.Blueprint,
-                BlueprintExensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
+                () => BlueprintExensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -241,25 +232,20 @@ namespace ToyBox {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
 
-            var learnable = settings.showFromAllSpellbooks ? CasterHelpers.GetAllSpells(level) : spellbookBP.SpellList.GetSpells(level);
-            var blueprints = BlueprintLoader.Shared.GetBlueprints();
-            if (blueprints == null) return new List<Action>();
 
             return OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
                 (fact) => fact.Blueprint,
-                learnable,
-                (fact) => fact.Name,
+                () => settings.showFromAllSpellbooks ? CasterHelpers.GetAllSpells(level) : spellbookBP.SpellList.GetSpells(level),
+            (fact) => fact.Name,
                 (fact) => fact.Description,
                 null,
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
-            var blueprints = BlueprintLoader.Shared.GetBlueprints();
-            if (blueprints == null) return new List<Action>();
             return OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
                 (sb) => sb.Blueprint,
-                BlueprintExensions.GetBlueprints<BlueprintSpellbook>(),
+                () => BlueprintExensions.GetBlueprints<BlueprintSpellbook>(),
                 (sb) => sb.Blueprint.GetDisplayName(),
                 (sb) => sb.Blueprint.GetDescription(),
                 null,
