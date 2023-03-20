@@ -12,8 +12,8 @@ namespace ToyBox {
         public static void ResetGUI() { }
         public static void OnGUI() {
             HStack("Character Creation", 1,
-                () => Slider("Build Points (Main)", ref settings.characterCreationAbilityPointsPlayer, 1, 200, 25, "", AutoWidth()),
-                () => Slider("Build Points (Mercenary)", ref settings.characterCreationAbilityPointsMerc, 1, 200, 20, "", AutoWidth()),
+                () => Slider("Build Points (Main)", ref settings.characterCreationAbilityPointsPlayer, 1, 600, 25, "", AutoWidth()),
+                () => Slider("Build Points (Mercenary)", ref settings.characterCreationAbilityPointsMerc, 1, 600, 20, "", AutoWidth()),
                 () => Slider("Ability Max", ref settings.characterCreationAbilityPointsMax, 0, 50, 18, "", AutoWidth()),
                 () => Slider("Ability Min", ref settings.characterCreationAbilityPointsMin, 0, 50, 7, "", AutoWidth()),
                 //() => {
