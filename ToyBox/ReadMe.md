@@ -42,11 +42,13 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Army Editor now lets you edit current mana for a leader
 * (***Narria***) Party Editor: Fixed crasher in changing characters after selecting other spellbook
 * (***Narria***) Enchantment: Fixed issue where the wrong enchantment would be added if you selected weapon enchantments
-* (*** Narria***) Fixed bug where enable achievements with mod active was not working for all achievements or DLC
+* (***Narria***) Fixed bug where enable achievements with mod active was not working for all achievements or DLC
 * (***BuckAMayzing***) The "Fix Alignment" option was causing alignments to not be updated. This is now resolved.
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 * (***dark0dave***) Support on linux for standard ASCI based glyphs for checkboxes, toggles, etc
 * (***ArcaneTrixter***) Fix bugs reported for merged spellbooks.
+* (***ArcaneTrixter***) Enhancement for Ignore Alignment Requirements to enable divine casters to ignore deity alignments. Looking at you, Camellia!
+* (***ArcaneTrixter***) Adding cheating option to ignore anything at all that would prevent you from using an ability.
 * (***gespenstgaming***) Increased the creation ability point cap to 600.
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
