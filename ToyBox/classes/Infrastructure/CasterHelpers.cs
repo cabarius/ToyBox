@@ -15,12 +15,12 @@ using System.Linq;
 namespace ToyBox.classes.Infrastructure {
     public static class CasterHelpers {
         private static readonly Dictionary<string, List<int>> UnitSpellsKnown = new();
+        // This is to figure out how many caster levels you actually have real levels in
         public static Dictionary<BlueprintSpellbook, int> GetOriginalCasterLevel(UnitDescriptor unit) {
             var mythicLevel = 0;
             BlueprintSpellbook mythicSpellbook = null;
             Dictionary<BlueprintSpellbook, int> casterLevelDictionary = new();
             foreach (var classInfo in unit.Progression.Classes) {
-
                 if (classInfo.CharacterClass == BlueprintRoot.Instance.Progression.MythicStartingClass ||
                     classInfo.CharacterClass == BlueprintRoot.Instance.Progression.MythicCompanionClass) {
                     if (mythicSpellbook == null) {
@@ -157,56 +157,26 @@ namespace ToyBox.classes.Infrastructure {
             selectedSpellbook.RemoveSpellsOfLevel(PartyEditor.selectedSpellbookLevel);
         }
 
-        public static int GetCachedSpellsKnown(UnitDescriptor unit, Spellbook spellbook, int level) {
-            var key = $"{unit.CharacterName}.{spellbook.Blueprint.Name}";
-            if (!UnitSpellsKnown.TryGetValue(key, out var spellsKnownList)) {
-                //Mod.Trace($"Can't find cached spells known data for character {unit.CharacterName} with key: {key}");
-                return level > 1 ? GetCachedSpellsKnown(unit, spellbook, level - 1) : 0;
-            }
+        public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
+            // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
+            var spellsToIgnore = unit.Facts.List.SelectMany(x =>
+                x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell)
+                .Where(x => x.CharacterClass == spellbook.Blueprint.CharacterClass && (x.Archetype == null || unit.Progression.IsArchetype(x.Archetype))).Select(y => y.Spell)
+                .ToList();
 
-            return spellsKnownList.Count > level ? spellsKnownList[level] : spellsKnownList.LastOrDefault();
-        }
-
-        public static void CacheSpellsLearned(UnitEntityData unit) {
-            var addedSpellComponents = unit.Facts.List.SelectMany(x =>
-                x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell).ToList();
-            foreach (var unitSpellbook in unit.Spellbooks) {
-                var spellsToIgnore = addedSpellComponents
-                    .Where(x => x.CharacterClass == unitSpellbook.Blueprint.CharacterClass && (x.Archetype == null || unit.Progression.IsArchetype(x.Archetype))).Select(y => y.Spell).ToList();
-                var key = $"{unit.CharacterName}.{unitSpellbook.Blueprint.Name}";
-                if (UnitSpellsKnown.ContainsKey(key)) {
-                    continue;
-                }
-                var spellsLearnedList = new List<int>();
-                for (var i = 0; i < 10; i++) {
-                    spellsLearnedList.Add(GetActualSpellsLearned(unitSpellbook, i, spellsToIgnore));
-                }
-                UnitSpellsKnown.Add(key, spellsLearnedList);
-                var list = string.Join(", ", spellsLearnedList);
-                Mod.Trace($"Caching {list} for {key}");
-            }
-        }
-
-        public static void ClearCachedSpellsLearned(UnitEntityData unit) {
-            foreach (var unitSpellbook in unit.Spellbooks) {
-                var key = $"{unit.CharacterName}.{unitSpellbook.Blueprint.Name}";
-                if (UnitSpellsKnown.ContainsKey(key)) {
-                    Mod.Trace($"Clearing cached value for {key}");
-                    UnitSpellsKnown.Remove(key);
-                }
-            }
+            return GetActualSpellsLearned(spellbook, level, spellsToIgnore);
         }
 
         public static int GetActualSpellsLearned(Spellbook spellbook, int level, List<BlueprintAbility> spellsToIgnore) {
             var known = spellbook.SureKnownSpells(level)
-                .Where(x => !x.IsTemporary)
-                .Where(x => !x.CopiedFromScroll)
-                .Where(x => !x.IsFromMythicSpellList)
-                .Where(x => x.SourceItem == null)
-                .Where(x => x.SourceItemEquipmentBlueprint == null)
-                .Where(x => x.SourceItemUsableBlueprint == null)
-                .Where(x => !x.IsMysticTheurgeCombinedSpell)
-                .Where(x => !spellsToIgnore.Contains(x.Blueprint))
+                .Where(x => !x.IsTemporary
+                && !x.CopiedFromScroll
+                && !x.IsFromMythicSpellList
+                && x.SourceItem == null
+                && x.SourceItemEquipmentBlueprint == null
+                && x.SourceItemUsableBlueprint == null
+                && !x.IsMysticTheurgeCombinedSpell
+                && !spellsToIgnore.Contains(x.Blueprint))
                 .Distinct()
                 .ToList();
 
