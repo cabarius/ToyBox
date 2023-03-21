@@ -47,6 +47,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 * (***dark0dave***) Support on linux for standard ASCI based glyphs for checkboxes, toggles, etc
 * (***ArcaneTrixter***) Fix bugs reported for merged spellbooks.
+* (***ArcaneTrixter***) Fix Ignore Attribute Cap.
 * (***gespenstgaming***) Increased the creation ability point cap to 600.
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
