@@ -171,6 +171,7 @@
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\BrainEditor.cs" />
     <Compile Include="classes\MainUI\Browser\BuffExclusionEditor.cs" />
     <Compile Include="classes\MainUI\Browser\EditorActions.cs" />
     <Compile Include="classes\MainUI\Browser\Editor.cs" />
@@ -184,7 +185,10 @@
     <Compile Include="classes\MainUI\Etudes\EtudesEditor.cs" />
     <Compile Include="classes\MainUI\Etudes\EtudeTreeModel.cs" />
     <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
-    <Compile Include="classes\MainUI\FeaturesTreeEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\ClassesEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\FeaturesTreeEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\SpellsEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\StatsEditor.cs" />
     <Compile Include="classes\MainUI\PhatLoot.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
@@ -202,7 +206,7 @@
     <Compile Include="classes\MainUI\BagOfTricks.cs" />
     <Compile Include="classes\MainUI\CharacterPicker.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />
-    <Compile Include="classes\MainUI\PartyEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
     <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
@@ -287,7 +291,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
