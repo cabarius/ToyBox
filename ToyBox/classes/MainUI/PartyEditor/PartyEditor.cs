@@ -168,7 +168,7 @@ namespace ToyBox {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)) {
                         if (isWide) {
-                            if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(600))) {
+                            if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
                                 ch.Descriptor.CustomName = name;
                                 Main.SetNeedsResetGameUI();
                             }
@@ -268,12 +268,12 @@ namespace ToyBox {
                     }
                     else { Space(180); }
                     var showBrain = ch == selectedCharacter && selectedToggle == ToggleChoice.Brain;
-#if false
+#if DEBUG
+                    Space(10);
                     if (DisclosureToggle("Gambits", ref showBrain, 125)) {
                         if (showBrain) { selectedCharacter = ch; selectedToggle = ToggleChoice.Brain; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    Space(10);
 #endif
                     if (isWide) ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {

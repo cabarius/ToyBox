@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -141,6 +142,35 @@ namespace ToyBox {
             }
             return v;
         }
+        // Annotation attributes
+        public static Dictionary<string, string> GetCustomAttributes<T>(this T model) where T : class {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            PropertyInfo[] props = typeof(T).GetProperties();
+            foreach (PropertyInfo prop in props) {
+                var values = prop.GetCustomAttributes(true).Select(attr => (string)attr.GetType().GetProperty("Text").GetValue(attr, null));
+                var attributesStr = String.Join(",", values);
+                result.Add(prop.Name, attributesStr);
+#if false
+                foreach (var attribute in attributes) {
+                    var strings = attribute.GetType()
+                        .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                        .Select(prop => $"{prop.Name} : {(string)prop.GetValue(attribute, null)}");
+                    var attributesStr = String.Join(",", strings);
+                    result.Add(prop.Name, attributesStr);
+
+                }
+#endif
+            }
+            return result;
+        }
+        public static T GetAttributeFrom<T>(this object instance, string propertyName) where T : Attribute {
+            var attrType = typeof(T);
+            var property = instance.GetType().GetProperty(propertyName);
+            return (T)property.GetCustomAttributes(attrType, false).First();
+        }
+        public static IEnumerable<T> GetAttributes<T>(this Type t) where T : Attribute => t.GetCustomAttributes(typeof(T), true).Cast<T>();
+        public static IEnumerable<T> GetAttributes<T>(this object obj) where T : Attribute => obj.GetType().GetCustomAttributes(typeof(T), true).Cast<T>();
     }
     public class KeyComparer : IComparer<string> {
 
