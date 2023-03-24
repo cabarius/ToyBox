@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.4.23
+* (***Narria***) Added AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature.
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well
 * (***Narria***) If you gestalt a mythic class it will no longer appear as your main mythic path
