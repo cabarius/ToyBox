@@ -55,6 +55,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ArcaneTrixter***) Enhancement for Ignore Alignment Requirements to enable divine casters to ignore deity alignments. Looking at you, Camellia!
 * (***ArcaneTrixter***) Adding cheating option to ignore anything at all that would prevent you from using an ability.
 * (***gespenstgaming***) Increased the creation ability point cap to 600.
+* (***ADDB***) Added field for army general experience.
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
