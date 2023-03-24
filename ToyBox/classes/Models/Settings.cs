@@ -224,7 +224,7 @@ namespace ToyBox {
         public float enemyLeaderPowerMultiplier = 1;
         public float kingdomTaskResolutionLengthMultiplier = 0;
         public bool toggleIgnoreEventSolutionRestrictions = false;
-        public bool toggleHideEventSolutionRestrictions = false;
+        public bool toggleHideEventSolutionRestrictionsPreview = false;
         public int unitCount = 100;
 
         // Settlement
