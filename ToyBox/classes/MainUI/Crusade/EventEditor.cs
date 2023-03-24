@@ -25,11 +25,9 @@ namespace ToyBox.classes.MainUI {
                 () => Toggle("Instant Events", ref settings.toggleInstantEvent),
                 () => Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
                 () => {
-                    if (settings.toggleIgnoreEventSolutionRestrictions) {
-                        50.space();
-                        Toggle("Stop showing Restrictions", ref settings.toggleHideEventSolutionRestrictions);
-                        25.space();
-                    }
+                    Toggle("Stop Showing Restrictions", ref settings.toggleHideEventSolutionRestrictions, Width(350));
+                    Space(25);
+                    Label("Only useful if using Preview Events or Ignore Restrictions".green());
                 },
                 () => {
                     using (VerticalScope()) {

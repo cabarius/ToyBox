@@ -402,7 +402,7 @@ namespace ToyBox {
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = eventSolution.IsAvail ? "#005800><b>" : "#800000>";
                 if (showResults || !settings.toggleHideEventSolutionRestrictions) {
-                    if (eventSolution.m_AvailConditions.HasConditions) {
+                    if (eventSolution.m_AvailConditions.HasConditions && !settings.toggleHideEventSolutionRestrictions) {
                         if (settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
                             extraText += $"\n<color=#005800><b>[Overridden]:</b></color> ";
                         else
