@@ -391,7 +391,8 @@ namespace ToyBox {
                                         bool isOn = false) {
                 // Should it be previewEventResults here?
                 // Or previewDialogResults && previewEventResults
-                if (!settings.previewDialogResults) return true;
+                bool showResults = settings.previewDialogResults || settings.previewEventResults;
+                if (!showResults && !settings.toggleIgnoreEventSolutionRestrictions) return true;
                 __instance.gameObject.SetActive(true);
                 __instance.EventSolution = eventSolution;
                 __instance.Toggle.group = toggleGroup;
@@ -400,10 +401,12 @@ namespace ToyBox {
                 var extraText = "";
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = isAvail ? "#005800><b>" : "#800000>";
-                if (eventSolution.m_AvailConditions.HasConditions)
-                    extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption())).MergeSpaces(true)}]</b></color>";
-                if (eventSolution.m_SuccessEffects.Actions.Length > 0)
-                    extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}]";
+                if (showResults) {
+                    if (eventSolution.m_AvailConditions.HasConditions)
+                        extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption())).MergeSpaces(true)}]</b></color>";
+                    if (eventSolution.m_SuccessEffects.Actions.Length > 0)
+                        extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}]";
+                }
                 if (isAvail) {
                     if (extraText.Length > 0)
                         __instance.m_TextLabel.text = $"{eventSolution.SolutionText}<size=75%>{extraText}</size>";
@@ -433,7 +436,7 @@ namespace ToyBox {
                 var item = addIntermediateItemAct.ItemToGive;
                 if (item != null) {
                     var pattern = @"<link=([^>]*)>";
-                    var matches = Regex.Matches(result, pattern);                    
+                    var matches = Regex.Matches(result, pattern);
                     if (matches.Cast<Match>().FirstOrDefault()?
                         .Groups.Cast<Group>().FirstOrDefault()?
                         .Captures.Cast<Capture>().FirstOrDefault()?
@@ -495,13 +498,13 @@ namespace ToyBox {
                         if (relicProject.TriggerCondition.HasConditions &&
                             relicProject.TriggerCondition.Conditions.First() is FlagUnlocked unlockedFlag) {
                             var conditionFlag = unlockedFlag.ConditionFlag;
-                            if (blueprint.ElementsArray.Exists(elem 
+                            if (blueprint.ElementsArray.Exists(elem
                                     => elem is KingdomActionStartEvent actE
-                                       && actE.Event.ElementsArray.Exists(elem2 
+                                       && actE.Event.ElementsArray.Exists(elem2
                                            => elem2 is UnlockFlag unlockFlag
                                            && unlockFlag.flag == conditionFlag
                                            )
-                                       ) 
+                                       )
                                      && relicProject.ElementsArray.Find(elem => elem is KingdomActionStartEvent) is KingdomActionStartEvent subActionEvent
                                      && subActionEvent.Event is BlueprintCrusadeEvent subBp
                                      && subBp.EventSolutions.Length >= 1
