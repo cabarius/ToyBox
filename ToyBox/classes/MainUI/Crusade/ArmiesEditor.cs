@@ -67,7 +67,6 @@ namespace ToyBox.classes.MainUI {
                 Label("You must unlock the crusade before you can access these toys.".yellow().bold());
                 return;
             }
-            if (allLeaderSkills == null) GetAllLeaderSkills();
             HStack("Tweaks", 1,
                 () => Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
                 () => {

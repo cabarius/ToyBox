@@ -33,7 +33,7 @@ namespace ToyBox {
             Buffs,
             Abilities,
             Spells,
-            Brain,
+            AI,
             None,
         };
 
@@ -168,7 +168,7 @@ namespace ToyBox {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)) {
                         if (isWide) {
-                            if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(600))) {
+                            if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
                                 ch.Descriptor.CustomName = name;
                                 Main.SetNeedsResetGameUI();
                             }
@@ -267,14 +267,12 @@ namespace ToyBox {
                         }
                     }
                     else { Space(180); }
-                    var showBrain = ch == selectedCharacter && selectedToggle == ToggleChoice.Brain;
-#if false
-                    if (DisclosureToggle("Gambits", ref showBrain, 125)) {
-                        if (showBrain) { selectedCharacter = ch; selectedToggle = ToggleChoice.Brain; }
+                    var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
+                    Space(10);
+                    if (DisclosureToggle("AI", ref showAI, 125)) {
+                        if (showAI) { selectedCharacter = ch; selectedToggle = ToggleChoice.AI; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    Space(10);
-#endif
                     if (isWide) ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {
                         selectedSpellbook = 0;
@@ -312,7 +310,7 @@ namespace ToyBox {
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     todo = OnSpellsGUI(ch, spellbooks);
                 }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Brain) {
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.AI) {
                     OnBrainGUI(ch);
                 }
                 if (selectedCharacter != GetSelectedCharacter()) {

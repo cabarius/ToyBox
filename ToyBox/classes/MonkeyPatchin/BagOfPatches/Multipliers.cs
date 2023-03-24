@@ -159,8 +159,7 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!caster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
-                            var adjusted = Math.Max(0, Math.Min((float)long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
-                            duration = TimeSpan.FromTicks(Convert.ToInt64(adjusted));
+                            duration = GetNewBuffDuration((TimeSpan)duration);
                         }
                     }
                 }
@@ -183,8 +182,7 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
-                            adjusted = Math.Max(0, Math.Min((float)long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
-                            duration = TimeSpan.FromTicks(Convert.ToInt64(adjusted));
+                            duration = GetNewBuffDuration((TimeSpan)duration);
                         }
                     }
                 }
@@ -195,6 +193,20 @@ namespace ToyBox.BagOfPatches {
 
                 //Mod.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
             }
+        }
+
+        private static TimeSpan GetNewBuffDuration(TimeSpan originalDuration) {
+            var ticks = originalDuration.Ticks;
+            var checkValue = (long)(long.MaxValue / settings.buffDurationMultiplierValue);
+            long adjusted;
+            if (ticks > checkValue) { // ticks * multipler > max -> return max
+                adjusted = long.MaxValue;
+            }
+            else {
+                adjusted = (long)(ticks * settings.buffDurationMultiplierValue);
+            }
+            adjusted = Math.Max(0, adjusted);
+            return TimeSpan.FromTicks(Convert.ToInt64(adjusted));
         }
 
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.AddEnchantment), new Type[] {

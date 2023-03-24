@@ -120,6 +120,9 @@
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
@@ -159,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\CustomEnchantmentStackingFix.cs" />
+    <Compile Include="classes\Infrastructure\AssetLoader.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
     <Compile Include="classes\Infrastructure\Cheats.cs" />
     <Compile Include="classes\Infrastructure\HumanFriendly.cs" />
@@ -168,9 +172,10 @@
     <Compile Include="classes\Infrastructure\LootHelper.cs" />
     <Compile Include="classes\Infrastructure\SettingsDefaults.cs" />
     <Compile Include="classes\Infrastructure\Teleport.cs" />
+    <Compile Include="classes\Infrastructure\UIHelpers.cs" />
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
-    <Compile Include="classes\Infrastructure\BlueprintExtensions.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensions.cs" />
     <Compile Include="classes\MainUI\PartyEditor\BrainEditor.cs" />
     <Compile Include="classes\MainUI\Browser\BuffExclusionEditor.cs" />
     <Compile Include="classes\MainUI\Browser\EditorActions.cs" />
@@ -198,7 +203,7 @@
     <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintListUI.cs" />
-    <Compile Include="classes\Infrastructure\BlueprintLoader.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintLoader.cs" />
     <Compile Include="classes\MainUI\ActionButtons.cs" />
     <Compile Include="classes\MainUI\Browser\FactsEditor.cs" />
     <Compile Include="classes\MainUI\Main.cs" />
@@ -291,7 +296,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
