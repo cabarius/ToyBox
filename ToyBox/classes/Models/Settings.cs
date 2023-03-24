@@ -60,7 +60,7 @@ namespace ToyBox {
             if (cachedPerSave == null) {
                 Mod.Warn("per save settings not found, creating new...");
                 cachedPerSave = new PerSaveSettings {
-                };   
+                };
                 SavePerSaveSettings();
             }
         }
@@ -92,7 +92,7 @@ namespace ToyBox {
                 Mod.Error(e);
             }
         }
-        public PerSaveSettings perSave{
+        public PerSaveSettings perSave {
             get {
                 if (cachedPerSave != null) return cachedPerSave;
                 ReloadPerSaveSettings();
@@ -224,6 +224,7 @@ namespace ToyBox {
         public float enemyLeaderPowerMultiplier = 1;
         public float kingdomTaskResolutionLengthMultiplier = 0;
         public bool toggleIgnoreEventSolutionRestrictions = false;
+        public bool toggleHideEventSolutionRestrictions = false;
         public int unitCount = 100;
 
         // Settlement

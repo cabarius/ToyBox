@@ -401,10 +401,10 @@ namespace ToyBox {
                 var extraText = "";
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = isAvail ? "#005800><b>" : "#800000>";
-                if (showResults) {
+                if (showResults || !settings.toggleHideEventSolutionRestrictions) {
                     if (eventSolution.m_AvailConditions.HasConditions)
                         extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption())).MergeSpaces(true)}]</b></color>";
-                    if (eventSolution.m_SuccessEffects.Actions.Length > 0)
+                    if (eventSolution.m_SuccessEffects.Actions.Length > 0 && showResults)
                         extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}]";
                 }
                 if (isAvail) {
