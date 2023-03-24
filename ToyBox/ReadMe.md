@@ -41,6 +41,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature.
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well
+* (***Narria***) Fixed issue where **Expand Answers For Conditional Responses** did not work for cases where there was a default outcome. Now when you meet Cial in ch3, Liches can choose the non Lichy response.
 * (***Narria***) If you gestalt a mythic class it will no longer appear as your main mythic path
 * (***Narria***) Army Editor now lets you edit current mana for a leader
 * (***Narria***) Party Editor: Fixed crasher in changing characters after selecting other spellbook

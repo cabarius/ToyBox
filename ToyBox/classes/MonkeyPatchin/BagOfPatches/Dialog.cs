@@ -255,7 +255,7 @@ namespace ToyBox.BagOfPatches {
                                 expandedAnswers.Add(answer);
                             else {
                                 var cues = cueSelection.Cues.Dereference<BlueprintCueBase>();
-                                if (cues.All(c => c.Conditions.HasConditions)) {
+                                if (cues.Any(c => c.Conditions.HasConditions)) {
                                     foreach (var cueBase in cueSelection.Cues.Dereference<BlueprintCueBase>()) {
                                         if (answer.ShowOnce) {
                                             var dialog = Game.Instance.Player.Dialog;
