@@ -4,6 +4,7 @@ using System;
 using GL = UnityEngine.GUILayout;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace ModKit {
     public static partial class UI {
@@ -167,11 +168,24 @@ namespace ModKit {
 
         // Action Buttons
 
-        public static void ActionButton(string title, Action action, params GUILayoutOption[] options) {
-            if (GL.Button(title, options.AddDefaults())) { action?.Invoke(); }
+        public static bool ActionButton(string title, Action action, params GUILayoutOption[] options) {
+            if (!GL.Button(title, options.AddDefaults())) {
+                return false;
+            }
+
+            action?.Invoke();
+
+            return true;
         }
-        public static void ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
-            if (GL.Button(title, style, options.AddDefaults())) { action?.Invoke(); }
+
+        public static bool ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
+            if (!GL.Button(title, style, options.AddDefaults())) {
+                return false;
+            }
+
+            action?.Invoke();
+
+            return true;
         }
 
         public static void DangerousActionButton(string title, string warning, ref bool areYouSureState ,Action action, params GUILayoutOption[] options) {
