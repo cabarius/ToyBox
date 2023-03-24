@@ -369,12 +369,42 @@ namespace ToyBox.BagOfPatches {
                 }
             }
 
+            [HarmonyPatch(typeof(UnitPartForbiddenSpellbooks), nameof(UnitPartForbiddenSpellbooks.IsForbidden))]
+            [HarmonyPostfix]
+            public static void PostfixForbiddenSpellbookRestriction(ref bool __result) {
+                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
+                    __result = false;
+                }
+            }
+
+            [HarmonyPatch(typeof(UnitPartForbiddenSpellbooks), nameof(UnitPartForbiddenSpellbooks.Add))]
+            [HarmonyPrefix]
+            public static bool PrefixForbidSpellbook(ForbidSpellbookReason reason) {
+                if (settings.toggleIgnoreAbilityAlignmentRestriction && reason == ForbidSpellbookReason.Alignment) { // Don't add to forbidden list
+                    return false;
+                }
+                return true;
+            }
+
             [HarmonyPatch(typeof(AbilityTargetAlignment), nameof(AbilityTargetAlignment.IsTargetRestrictionPassed))]
             [HarmonyPostfix]
             public static void PostfixTargetRestriction(ref bool __result) {
                 if (settings.toggleIgnoreAbilityAlignmentRestriction) {
                     __result = true;
                 }
+            }
+        }
+
+        [HarmonyPatch]
+        private static class AbilityData_CanBeCastByCaster_Patch {
+            [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.CanBeCastByCaster), MethodType.Getter)]
+            [HarmonyPrefix]
+            public static bool PostfixCasterRestriction(ref bool __result, AbilityData __instance) {
+                if (settings.toggleIgnoreAbilityAnyRestriction && __instance?.Caster?.Unit?.Descriptor?.IsPartyOrPet() == true) {
+                    __result = true;
+                    return false;
+                }
+                return true;
             }
         }
 

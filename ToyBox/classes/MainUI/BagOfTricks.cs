@@ -15,6 +15,7 @@ using ToyBox;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
+using static ToyBox.BagOfPatches.PartyView;
 
 namespace ToyBox {
     public static class BagOfTricks {
@@ -255,6 +256,7 @@ namespace ToyBox {
                     Space(25);
                     Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
+                // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
                 () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); 25.space(); Label("Hold down shift during launch to bypass".green()); },
@@ -493,6 +495,7 @@ namespace ToyBox {
                 () => ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
+                () => Toggle("Ignore all Requirements for Abilities", ref settings.toggleIgnoreAbilityAnyRestriction),
                 () => Toggle("Ignore Pet Sizes For Mounting", ref settings.toggleMakePetsRidable),
                 () => Toggle("Ride Any Unit As Your Mount", ref settings.toggleRideAnything),
                 () => { }

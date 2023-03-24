@@ -183,7 +183,8 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
-                            adjusted = Math.Max(0, Math.Min((float)long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
+                            adjusted = Math.Max(0, Math.Min((float)int.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
+                            // using int.MaxValue here so the convert and FromTicks has no chance of overflow
                             duration = TimeSpan.FromTicks(Convert.ToInt64(adjusted));
                         }
                     }

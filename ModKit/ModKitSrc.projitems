@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\Private\Toggle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\RichText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Styles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Browser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Builders.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+HTML.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Controls.cs" />
