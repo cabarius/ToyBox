@@ -48,6 +48,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***BuckAMayzing***) The "Fix Alignment" option was causing alignments to not be updated. This is now resolved.
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 * (***dark0dave***) Support on linux for standard ASCI based glyphs for checkboxes, toggles, etc
+* (***ArcaneTrixter***) Fix buff duration overflow issue.
 * (***ArcaneTrixter***) Fix bugs reported for merged spellbooks.
 * (***ArcaneTrixter***) Fix Ignore Attribute Cap.
 * (***ArcaneTrixter***) Enhancement for Ignore Alignment Requirements to enable divine casters to ignore deity alignments. Looking at you, Camellia!
