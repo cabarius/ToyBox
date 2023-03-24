@@ -1,4 +1,5 @@
-﻿using Kingmaker;
+﻿using Epic.OnlineServices.Lobby;
+using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items;
@@ -12,12 +13,15 @@ using Newtonsoft.Json;
 using Owlcat.Runtime.Core.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Web.UI;
 using UnityEngine;
+using Attribute = System.Attribute;
 
 namespace ToyBox {
 
@@ -142,26 +146,104 @@ namespace ToyBox {
             }
             return v;
         }
+        // Object to Dictionary
+        public static IDictionary<string, object> ToDictionary(this object source) => source.ToDictionary<object>();
+        
+        public static IDictionary<string, T> ToDictionary<T>(this object source) {
+            if (source == null)
+                ThrowExceptionWhenSourceArgumentIsNull();
+
+            var dictionary = new Dictionary<string, T>();
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(source))
+                AddPropertyToDictionary<T>(property, source, dictionary);
+            return dictionary;
+        }
+        private static void AddPropertyToDictionary<T>(PropertyDescriptor property, object source, Dictionary<string, T> dictionary) {
+            object value = property.GetValue(source);
+            if (IsOfType<T>(value))
+                dictionary.Add(property.Name, (T)value);
+        }
+        private static bool IsOfType<T>(object value) => value is T;
+        private static void ThrowExceptionWhenSourceArgumentIsNull() {
+            throw new ArgumentNullException("source", "Unable to convert object to a dictionary. The source object is null.");
+        }
+
         // Annotation attributes
+        public static string StringValue(this PropertyInfo prop, object obj) {
+            var value = prop.GetValue(obj);
+            if (value is string str) return str;
+            return value.ToString();
+        }
+        public static string StringValue(this FieldInfo field, object obj) {
+            var value = field.GetValue(obj);
+            if (value is string str) return str;
+            return value.ToString();
+        }
+        public static Dictionary<string, string> ToStringDictionary(this object obj) {
+            var propDict = obj.GetType()
+                            .GetProperties(BindingFlags.Instance | BindingFlags.NonPublic)
+                            .Where(field => field.GetValue(obj) is string)
+                            .ToDictionary(prop => prop.Name, prop => prop.StringValue(obj)
+                            );
+            var fieldDict = obj.GetType()
+                            .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                            .Where(field => field.GetValue(obj) is string)
+                            .ToDictionary(field => field.Name, field => field.StringValue(obj)
+                            );
+            return propDict.MergeLeft(fieldDict);
+        }
         public static Dictionary<string, string> GetCustomAttributes<T>(this T model) where T : class {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
-            PropertyInfo[] props = typeof(T).GetProperties();
-            foreach (PropertyInfo prop in props) {
-                var values = prop.GetCustomAttributes(true).Select(attr => (string)attr.GetType().GetProperty("Text").GetValue(attr, null));
-                var attributesStr = String.Join(",", values);
-                result.Add(prop.Name, attributesStr);
-#if false
-                foreach (var attribute in attributes) {
-                    var strings = attribute.GetType()
-                        .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                        .Select(prop => $"{prop.Name} : {(string)prop.GetValue(attribute, null)}");
-                    var attributesStr = String.Join(",", strings);
-                    result.Add(prop.Name, attributesStr);
-
+#if true
+            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
+            foreach (var prop in props) {
+                var text = prop.GetCustomAttributes(true).OfType<InfoBoxAttribute>().Select(info => info.Text);
+                if (text != null) {
+                    result[prop.Name] = String.Join(", ", text);
                 }
-#endif
             }
+            FieldInfo[] fields = typeof(T).GetFields(BindingFlags.NonPublic);
+            foreach (var field in fields) {
+                var text = field.GetCustomAttributes(true).OfType<InfoBoxAttribute>().Select(info => info.Text);
+                if (text != null) {
+                    result[field.Name] = String.Join(", ", text);
+                }
+            }
+
+#else
+            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
+            foreach (PropertyInfo prop in props) {
+                var attributes = prop.GetCustomAttributes(true);
+                if (attributes.Count() > 0) {
+                    foreach (var attribute in attributes) {
+                        var strings = attribute.ToStringDictionary();
+                        foreach (var pair in strings) {
+                            try {
+                                result.Add($"{prop.Name}.{pair.Key}", pair.Value);
+                            }
+                            catch { }
+                        }
+
+                    }
+                }
+            }
+            FieldInfo[] fields = typeof(T).GetFields(BindingFlags.NonPublic);
+            foreach (FieldInfo field in fields) {
+                var attributes = field.GetCustomAttributes(true);
+                if (attributes.Count() > 0) {
+                    foreach (var attribute in attributes) {
+                        var strings = attribute.ToStringDictionary();
+                        foreach (var pair in strings) {
+                            try {
+                                result.Add($"{field.Name}.{pair.Key}", pair.Value);
+                            }
+                            catch { }
+                        }
+                    }
+                }
+            }
+#endif
             return result;
         }
         public static T GetAttributeFrom<T>(this object instance, string propertyName) where T : Attribute {
@@ -180,5 +262,25 @@ namespace ToyBox {
             else
                 return left.CompareTo(right);
         }
+    }
+    public static class DictionaryExtensions {
+        // Works in C#3/VS2008:
+        // Returns a new dictionary of this ... others merged leftward.
+        // Keeps the type of 'this', which must be default-instantiable.
+        // Example: 
+        //   result = map.MergeLeft(other1, other2, ...)
+        public static T MergeLeft<T, K, V>(this T me, params IDictionary<K, V>[] others)
+            where T : IDictionary<K, V>, new() {
+            T newMap = new T();
+            foreach (IDictionary<K, V> src in
+                (new List<IDictionary<K, V>> { me }).Concat(others)) {
+                // ^-- echk. Not quite there type-system.
+                foreach (KeyValuePair<K, V> p in src) {
+                    newMap[p.Key] = p.Value;
+                }
+            }
+            return newMap;
+        }
+
     }
 }

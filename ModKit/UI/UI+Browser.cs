@@ -36,13 +36,13 @@ namespace ModKit {
                 Func<Definition, string> title,
                 Func<Definition, string> searchKey = null,
                 Func<Definition, string> sortKey = null,
-                int indent = 50,
-                float titleMinWidth = 100,
-                float titleMaxWidth = 300,
                 Action<Item, Definition> OnRowGUI = null,
                 Action<Item, Definition> OnChildrenGUI = null,
-                float childrenIndent = 50,
-                bool search = true
+                int indent = 50,
+                bool showDiv = true,
+                bool search = true,
+                float titleMinWidth = 100,
+                float titleMaxWidth = 300
                 ) {
                 if (searchKey == null) searchKey = title;
                 if (sortKey == null) sortKey = title;
@@ -94,7 +94,8 @@ namespace ModKit {
 
                 var sorted = definitions?.OrderBy(title);
                 _matchCount = 0;
-                Div(indent);
+                if (showDiv)
+                    Div(indent);
                 foreach (var def in sorted) {
                     var name = title(def);
                     var nameLower = name.ToLower();

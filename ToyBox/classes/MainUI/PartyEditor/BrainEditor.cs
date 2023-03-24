@@ -44,34 +44,36 @@ namespace ToyBox {
                 bp => bp.GetDisplayName(),
                 bp => $"{bp.GetDisplayName()} {bp.GetDescription()}",
                 bp => bp.GetDisplayName(),
-                50, 100, 200,
                 (action, bp) => {
                     var attributes = bp.GetCustomAttributes();
                     var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
-                    Label($"bla bla bla {text.green()}", AutoWidth());
+                    Label($"{text.green()}", AutoWidth());
                 },
                 (action, bp) => {
                     bool changed = false;
-                    using (HorizontalScope()) {
-                        150.space();
-                        Label($"{ch.CharacterName} Considerations".orange());
+                    if (action.ActorConsiderations.Count > 0) {
+                        using (HorizontalScope()) {
+                            150.space();
+                            Label($"{"Actor Considerations".orange().bold()} - {ch.CharacterName.cyan()}");
+                        }
+                        Browser<Consideration, Consideration>.OnGUI(
+                            $"{ch.CharacterName}-{bp.AssetGuid}-ActorConsiderations",
+                            ref changed,
+                            action.ActorConsiderations,
+                            () => BlueprintExensions.GetBlueprints<Consideration>(),
+                            c => c,
+                            c => c.AssetGuid.ToString(),
+                            c => c.GetDisplayName(),
+                            c => c.GetDisplayName(),
+                            c => c.GetDisplayName(),
+                            (c, bp) => {
+                                var attributes = bp.GetCustomAttributes();
+                                var text = String.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
+                                Label(text.green(), AutoWidth());
+                            }, null, 
+                            150, true, false
+                            );
                     }
-                    Browser<Consideration, Consideration>.OnGUI(
-                        $"{ch.CharacterName}-{bp.AssetGuid}-ActorConsiderations", 
-                        ref changed,
-                        action.ActorConsiderations,
-                        () => BlueprintExensions.GetBlueprints<Consideration>(),
-                        c => c,
-                        c => c.AssetGuid.ToString(),
-                        c => c.GetDisplayName(),
-                        c => c.GetDisplayName(),
-                        c => c.GetDisplayName(),
-                        150, 100, 200, (c, bp) => {
-                            var attributes = bp.GetCustomAttributes();
-                            var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
-                            Label(text.green(), AutoWidth());
-                        }, null, 50, false
-                        );
                     using (HorizontalScope()) {
                         150.space();
                         Label($"Target Consideration".orange());
@@ -86,12 +88,13 @@ namespace ToyBox {
                         c => c.GetDisplayName(),
                         c => c.GetDisplayName(),
                         c => c.GetDisplayName(),
-                        150, 100, 200, (c, bp) => {
-                            var attributes = bp.GetCustomAttributes();
-                            var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
-                            Label(text.green(), AutoWidth());
-                        }, null, 50, false
-                        );
+                            (c, bp) => {
+                                var attributes = bp.GetCustomAttributes();
+                                var text = String.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
+                                Label(text.green(), AutoWidth());
+                            }, null,
+                            150, true, false
+                            );
                 }
                 );
         }

@@ -104,11 +104,12 @@ namespace ToyBox {
                     Space(25);
                     ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor), AutoWidth());
                 }
+                var matchesText = "";
                 if (matchCount > 0 && searchText.Length > 0) {
-                    var matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
+                    matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                     if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
-                    Label(matchesText, ExpandWidth(false));
                 }
+                Label(matchesText, ExpandWidth(false));
             }
             var remainingWidth = ummWidth;
             if (showAll) {

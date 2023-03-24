@@ -33,7 +33,7 @@ namespace ToyBox {
             Buffs,
             Abilities,
             Spells,
-            Brain,
+            AI,
             None,
         };
 
@@ -267,11 +267,11 @@ namespace ToyBox {
                         }
                     }
                     else { Space(180); }
-                    var showBrain = ch == selectedCharacter && selectedToggle == ToggleChoice.Brain;
+                    var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
 #if DEBUG
                     Space(10);
-                    if (DisclosureToggle("Gambits", ref showBrain, 125)) {
-                        if (showBrain) { selectedCharacter = ch; selectedToggle = ToggleChoice.Brain; }
+                    if (DisclosureToggle("AI", ref showAI, 125)) {
+                        if (showAI) { selectedCharacter = ch; selectedToggle = ToggleChoice.AI; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
 #endif
@@ -312,7 +312,7 @@ namespace ToyBox {
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     todo = OnSpellsGUI(ch, spellbooks);
                 }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Brain) {
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.AI) {
                     OnBrainGUI(ch);
                 }
                 if (selectedCharacter != GetSelectedCharacter()) {
