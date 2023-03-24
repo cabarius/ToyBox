@@ -495,6 +495,7 @@ namespace ToyBox {
                 () => ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
                 () => Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
+                () => Toggle("Ignore all Requirements for Abilities", ref settings.toggleIgnoreAbilityAnyRestriction),
                 () => Toggle("Ignore Pet Sizes For Mounting", ref settings.toggleMakePetsRidable),
                 () => Toggle("Ride Any Unit As Your Mount", ref settings.toggleRideAnything),
                 () => { }

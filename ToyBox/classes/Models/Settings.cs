@@ -421,6 +421,7 @@ namespace ToyBox {
         public HashSet<string> ignoredPrerequisiteSet = new(); // adding this granularity might be nice
 
         public bool toggleIgnoreAbilityAlignmentRestriction = false;
+        public bool toggleIgnoreAbilityAnyRestriction = false;
         public bool toggleIgnoreAolityCasterCheckers = false;
         public HashSet<string> ignoredAbilityCasterCheckerSet = new();
         public bool toggleIgnoreActivatableAbilityRestrictions = false;
