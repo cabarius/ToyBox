@@ -57,8 +57,7 @@ namespace ModKit {
                         editState = (label, label);
                     }
                 }
-            }
-            else {
+            } else {
                 GUI.SetNextControlName(label);
                 using (HorizontalScope(options)) {
                     TextField(ref editState.Item2, null, MinWidth(minWidth), AutoWidth());
@@ -188,7 +187,7 @@ namespace ModKit {
             return true;
         }
 
-        public static void DangerousActionButton(string title, string warning, ref bool areYouSureState ,Action action, params GUILayoutOption[] options) {
+        public static void DangerousActionButton(string title, string warning, ref bool areYouSureState, Action action, params GUILayoutOption[] options) {
             using (HorizontalScope()) {
                 var areYouSure = areYouSureState;
                 ActionButton(title, () => { areYouSure = !areYouSure; });
@@ -274,6 +273,22 @@ namespace ModKit {
         }
 
         // Value Editors 
+
+        public static bool ValueAdjustorEditable(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+            var changed = false;
+            using (HorizontalScope()) {
+                Label(title.cyan(), options);
+                Space(15);
+                var value = get();
+                changed = ValueAdjuster(ref value, increment, min, max);
+                if (changed)
+                    set(value);
+                using (VerticalScope(Width(75))) {
+                    ActionIntTextField(ref value, set, Width(75));
+                }
+            }
+            return changed;
+        }
 
         public static bool ValueEditor(string title, Func<int> get, Action<int> set, ref int increment, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             var changed = false;

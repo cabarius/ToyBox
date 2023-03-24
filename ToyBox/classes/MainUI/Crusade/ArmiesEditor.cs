@@ -97,7 +97,7 @@ namespace ToyBox.classes.MainUI {
                 UpdateArmies();
             if (playerArmies != null)
                 ArmiesGUI("Player Armies", playerArmies);
-            if (playerArmies != null && demonArmies != null) 
+            if (playerArmies != null && demonArmies != null)
                 Div(0, 25, 0);
             if (demonArmies != null)
                 ArmiesGUI("Demon Armies", demonArmies);
@@ -186,23 +186,24 @@ namespace ToyBox.classes.MainUI {
                                             using (VerticalScope()) {
                                                 Label("Stats".yellow());
                                                 ValueAdjuster("Level".cyan(), () => leader.Level, (l) => leader.m_Level = l, 1, 0, 20, 375.width());
+                                                ValueAdjustorEditable("Experience".cyan(), () => leader.Experience, (e) => leader.m_Experience = e, 100, 0, int.MaxValue, 375.width());
                                                 var stats = leader.Stats;
-                                                ValueAdjuster("Attack Bonus".cyan(), 
-                                                    () => stats.AttackBonus.BaseValue, 
+                                                ValueAdjuster("Attack Bonus".cyan(),
+                                                    () => stats.AttackBonus.BaseValue,
                                                     (v) => stats.AttackBonus.BaseValue = v, 1,
-                                                    stats.AttackBonus.MinValue, 
-                                                    stats.AttackBonus.MaxValue, 
+                                                    stats.AttackBonus.MinValue,
+                                                    stats.AttackBonus.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Defense Bonus".cyan(), 
-                                                    () => stats.DefenseBonus.BaseValue, 
+                                                ValueAdjuster("Defense Bonus".cyan(),
+                                                    () => stats.DefenseBonus.BaseValue,
                                                     (v) => stats.DefenseBonus.BaseValue = v, 1,
-                                                    stats.DefenseBonus.MinValue, 
-                                                    stats.DefenseBonus.MaxValue, 
+                                                    stats.DefenseBonus.MinValue,
+                                                    stats.DefenseBonus.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Infirmary Size".cyan(), 
-                                                    () => stats.InfirmarySize.BaseValue, 
+                                                ValueAdjuster("Infirmary Size".cyan(),
+                                                    () => stats.InfirmarySize.BaseValue,
                                                     (v) => stats.InfirmarySize.BaseValue = v, 25,
-                                                    stats.InfirmarySize.MinValue, 
+                                                    stats.InfirmarySize.MinValue,
                                                     stats.InfirmarySize.MaxValue, Width(375));
                                                 ValueAdjuster("Mana".cyan(),
                                                     () => stats.CurrentMana,
@@ -210,22 +211,22 @@ namespace ToyBox.classes.MainUI {
                                                     stats.MaxMana.MinValue,
                                                     stats.MaxMana.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Max Mana".cyan(), 
-                                                    () => stats.MaxMana.BaseValue, 
-                                                    (v) => stats.MaxMana.BaseValue = v, 5, 
-                                                    stats.MaxMana.MinValue, 
-                                                    stats.MaxMana.MaxValue, 
+                                                ValueAdjuster("Max Mana".cyan(),
+                                                    () => stats.MaxMana.BaseValue,
+                                                    (v) => stats.MaxMana.BaseValue = v, 5,
+                                                    stats.MaxMana.MinValue,
+                                                    stats.MaxMana.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Mana Regen".cyan(), 
-                                                    () => stats.ManaRegeneration.BaseValue, 
+                                                ValueAdjuster("Mana Regen".cyan(),
+                                                    () => stats.ManaRegeneration.BaseValue,
                                                     (v) => stats.ManaRegeneration.BaseValue = v, 1,
-                                                    stats.ManaRegeneration.MinValue, 
-                                                    stats.ManaRegeneration.MaxValue, 
+                                                    stats.ManaRegeneration.MinValue,
+                                                    stats.ManaRegeneration.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Spell Strength".cyan(), 
-                                                    () => stats.SpellStrength.BaseValue, 
+                                                ValueAdjuster("Spell Strength".cyan(),
+                                                    () => stats.SpellStrength.BaseValue,
                                                     (v) => stats.SpellStrength.BaseValue = v, 1,
-                                                    stats.SpellStrength.MinValue, 
+                                                    stats.SpellStrength.MinValue,
                                                     stats.SpellStrength.MaxValue, Width(375));
                                             }
                                         }
@@ -344,7 +345,7 @@ namespace ToyBox.classes.MainUI {
                                                 toggleShowSquadStates[squads] = showAddSquad;
                                             }
                                         }
-                                        if(showAddSquad) {
+                                        if (showAddSquad) {
                                             Div(0, 10);
                                             var count = 0;
                                             var kingdom = KingdomState.Instance;
@@ -353,9 +354,9 @@ namespace ToyBox.classes.MainUI {
                                             var recruitManager = kingdom.RecruitsManager;
                                             var growthPool = recruitManager.Growth;
                                             using (VerticalScope()) {
-                                                using (HorizontalScope()) { 
-                                                Label("Unit Count".cyan(), AutoWidth());
-                                                count = IntTextField(ref settings.unitCount, null, Width(150));
+                                                using (HorizontalScope()) {
+                                                    Label("Unit Count".cyan(), AutoWidth());
+                                                    count = IntTextField(ref settings.unitCount, null, Width(150));
                                                 }
 
                                                 foreach (var poolInfo in mercenariesPool) {
@@ -381,8 +382,8 @@ namespace ToyBox.classes.MainUI {
                                             }
                                             if (squadToAdd != null) {
                                                 var merge = false;
-                                                foreach(var squad in army.Data.Squads) {
-                                                    if(squad.Unit.NameSafe() == squadToAdd.NameSafe()) {
+                                                foreach (var squad in army.Data.Squads) {
+                                                    if (squad.Unit.NameSafe() == squadToAdd.NameSafe()) {
                                                         merge = true;
                                                         break;
                                                     }
@@ -390,7 +391,7 @@ namespace ToyBox.classes.MainUI {
                                                 army.Data.Add(squadToAdd, count, merge, null);
                                             }
                                         }
-                                       
+
                                         if (squadToRemove != null) {
                                             squadToRemove.Army.RemoveSquad(squadToRemove);
                                         }
@@ -411,7 +412,7 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
-       
+
 
         public static GlobalMapState MainGlobalMapState() {
             var player = Game.Instance?.Player ?? null;
