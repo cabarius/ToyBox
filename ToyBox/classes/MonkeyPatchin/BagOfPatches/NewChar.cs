@@ -51,13 +51,13 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(StatsDistribution), nameof(StatsDistribution.CanAdd))]
         public static class StatsDistribution_CanAdd_Patch {
-            public static void Prefix() {
-
-            }
             public static void Postfix(ref bool __result, StatType attribute, StatsDistribution __instance) {
                 var attributeMax = settings.characterCreationAbilityPointsMax;
                 if (!__instance.Available) {
                     __result = false;
+                }
+                else if (settings.toggleIgnoreAttributeCap) {
+                    __result = true;
                 }
                 else {
                     if (attributeMax <= 18) {

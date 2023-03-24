@@ -18,6 +18,7 @@ using HarmonyLib;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Utility;
 
 namespace ToyBox {
 
@@ -102,7 +103,6 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
-
         public static List<string> CollationNames(this BlueprintIngredient bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.Destructible) names.Add("Destructible");
@@ -133,6 +133,10 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
+        // Custom Attributes that Owlcat uses 
+        public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
+
+        public static string GetInfoBoxDescription(this SimpleBlueprint bp) => String.Join("\n", bp.GetInfoBoxes().Select(attr => attr.Text));
 
         private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
         public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {

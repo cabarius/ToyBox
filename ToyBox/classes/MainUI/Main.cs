@@ -22,7 +22,7 @@ namespace ToyBox {
     [EnableReloading]
 #endif
     internal static class Main {
-        private static Harmony HarmonyInstance;
+        internal static Harmony HarmonyInstance;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         private static string modId;
         public static Settings settings;
