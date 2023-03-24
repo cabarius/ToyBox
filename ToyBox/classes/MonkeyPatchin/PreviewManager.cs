@@ -400,10 +400,15 @@ namespace ToyBox {
                 __instance.Toggle.onValueChanged.AddListener(onToggle);
                 var extraText = "";
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
-                var color = isAvail ? "#005800><b>" : "#800000>";
+                var color = eventSolution.IsAvail ? "#005800><b>" : "#800000>";
                 if (showResults || !settings.toggleHideEventSolutionRestrictions) {
-                    if (eventSolution.m_AvailConditions.HasConditions)
-                        extraText += $"\n<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption())).MergeSpaces(true)}]</b></color>";
+                    if (eventSolution.m_AvailConditions.HasConditions) {
+                        if (settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
+                            extraText += $"\n<color=#005800><b>[Overridden]:</b></color> ";
+                        else
+                            extraText += $"\n";
+                        extraText += $"<color={color}[{string.Join(", ", eventSolution.m_AvailConditions.Conditions.Select(c => c.GetCaption())).MergeSpaces(true)}]</b></color>";
+                    }
                     if (eventSolution.m_SuccessEffects.Actions.Length > 0 && showResults)
                         extraText += $"\n[{string.Join(", ", eventSolution.m_SuccessEffects.Actions.Select(c => c.GetCaption())).MergeSpaces(true)}]";
                 }
