@@ -197,7 +197,7 @@ namespace ToyBox.BagOfPatches {
 
         private static TimeSpan GetNewBuffDuration(TimeSpan originalDuration) {
             var ticks = originalDuration.Ticks;
-            var checkValue = (long)(long.MaxValue / settings.buffDurationMultiplierValue);
+            var checkValue = (double)(long.MaxValue / settings.buffDurationMultiplierValue);
             long adjusted;
             if (ticks > checkValue) { // ticks * multipler > max -> return max
                 adjusted = long.MaxValue;
