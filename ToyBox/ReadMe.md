@@ -49,6 +49,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***BuckAMayzing***) Fixed issue with buff multiplier exclusions introduced in Version 1.4.22
 * (***dark0dave***) Support on linux for standard ASCI based glyphs for checkboxes, toggles, etc
 * (***ArcaneTrixter***) Fix bugs reported for merged spellbooks.
+* (***ArcaneTrixter***) Fix Ignore Attribute Cap.
 * (***ArcaneTrixter***) Enhancement for Ignore Alignment Requirements to enable divine casters to ignore deity alignments. Looking at you, Camellia!
 * (***ArcaneTrixter***) Adding cheating option to ignore anything at all that would prevent you from using an ability.
 * (***gespenstgaming***) Increased the creation ability point cap to 600.
