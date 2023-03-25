@@ -28,6 +28,7 @@ using CameraMode = Kingmaker.View.CameraMode;
 using DG.Tweening;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.QA.Statistics;
 
 namespace ToyBox.BagOfPatches {
     internal static class Multipliers {
@@ -65,8 +66,13 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Player), nameof(Player.GainPartyExperience))]
         public static class Player_GainPartyExperience_Patch {
             [HarmonyPrefix]
-            public static bool Prefix(Player __instance, ref int gained) {
-                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplier, 1));
+            public static bool Prefix(Player __instance, ref int gained, ExperienceGainStatistic.GainType statType) {
+                if (settings.useCombatExpSlider && statType == ExperienceGainStatistic.GainType.Mob) {
+                    gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.combatExperienceMultiplier, 1));
+                }
+                else {
+                    gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplier, 1));
+                }
                 return true;
             }
         }

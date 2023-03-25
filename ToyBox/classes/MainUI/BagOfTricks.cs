@@ -48,7 +48,7 @@ namespace ToyBox {
 
         //For buffs exceptions
         private static bool showBuffDurationExceptions = false;
-        
+
         public static void OnLoad() {
             // Combat
             KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
@@ -319,9 +319,11 @@ namespace ToyBox {
                     }
                 }, AutoWidth()),
                 () => { Toggle("Enable Loading with Blueprint Errors".color(RGBA.maroon), ref settings.enableLoadWithMissingBlueprints); 25.space(); Label($"This {"incredibly dangerous".bold()} setting overrides the default behavior of failing to load saves depending on missing blueprint mods. This desperate action can potentially enable you to recover your saved game, though you'll have to respec at minimum.".orange()); },
-                () => { if (settings.enableLoadWithMissingBlueprints) {
+                () => {
+                    if (settings.enableLoadWithMissingBlueprints) {
                         Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".orange());
-                    } },
+                    }
+                },
                 () => {
                     using (VerticalScope()) {
                         Div(0, 25, 1280);
@@ -418,7 +420,7 @@ namespace ToyBox {
                     50.space();
                     if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
                     100.space();
-                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange()+ " Holding alt while Mouse3 dragging lets you move the camera location.".green());
+                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange() + " Holding alt while Mouse3 dragging lets you move the camera location.".green());
                 },
                 () => {
                     50.space();
@@ -531,6 +533,17 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Multipliers", 1,
                 () => LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => {
+                    using (VerticalScope()) {
+                        DisclosureToggle("Use Combat Experience Slider (Overrides Experience Slider for experience gained from Combat)", ref settings.useCombatExpSlider);
+                        if (settings.useCombatExpSlider) {
+                            using (HorizontalScope()) {
+                                Space(25);
+                                LogSlider("Combat Experience", ref settings.combatExperienceMultiplier, 0f, 20, 1, 1, "", AutoWidth());
+                            }
+                        }
+                    }
+                },
                 () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),

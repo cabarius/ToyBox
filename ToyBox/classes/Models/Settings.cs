@@ -272,6 +272,8 @@ namespace ToyBox {
         public int encumberanceMultiplier = 1;
         public int encumberanceMultiplierPartyOnly = 1;
         public float experienceMultiplier = 1;
+        public bool useCombatExpSlider = false;
+        public float combatExperienceMultiplier = 1;
         public float moneyMultiplier = 1;
         public float vendorSellPriceMultiplier = 1;
         public float vendorBuyPriceMultiplier = 1;
