@@ -67,10 +67,34 @@ namespace ToyBox.BagOfPatches {
         public static class Player_GainPartyExperience_Patch {
             [HarmonyPrefix]
             public static bool Prefix(Player __instance, ref int gained, ExperienceGainStatistic.GainType statType) {
-                if (settings.useCombatExpSlider && statType == ExperienceGainStatistic.GainType.Mob) {
-                    gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.combatExperienceMultiplier, 1));
+                bool useNormal = true;
+                switch (statType) {
+                    case ExperienceGainStatistic.GainType.Mob: {
+                            if (settings.useCombatExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierCombat, 1));
+                                useNormal = false;
+                            }
+                        }; break;
+                    case ExperienceGainStatistic.GainType.Check: {
+                            if (settings.useSkillChecksExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierSkillChecks, 1));
+                                useNormal = false;
+                            }
+                        }; break;
+                    case ExperienceGainStatistic.GainType.Quest: {
+                            if (settings.useQuestsExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierQuests, 1));
+                                useNormal = false;
+                            }
+                        }; break;
+                    case ExperienceGainStatistic.GainType.Trap: {
+                            if (settings.useTrapsExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierTraps, 1));
+                                useNormal = false;
+                            }
+                        }; break;
                 }
-                else {
+                if (useNormal) {
                     gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplier, 1));
                 }
                 return true;

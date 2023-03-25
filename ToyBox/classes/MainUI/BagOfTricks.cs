@@ -531,19 +531,56 @@ namespace ToyBox {
                         () => { }
                         );
             Div(0, 25);
-            HStack("Multipliers", 1,
-                () => LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+            HStack("Experience Multipliers", 1,
+                () => LogSlider("All Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => {
                     using (VerticalScope()) {
-                        DisclosureToggle("Use Combat Experience Slider (Overrides Experience Slider for experience gained from Combat)", ref settings.useCombatExpSlider);
+                        DisclosureToggle("Combat Experience", ref settings.useCombatExpSlider);
                         if (settings.useCombatExpSlider) {
                             using (HorizontalScope()) {
                                 Space(25);
-                                LogSlider("Combat Experience", ref settings.combatExperienceMultiplier, 0f, 20, 1, 1, "", AutoWidth());
+                                LogSlider("Combat Experience", ref settings.experienceMultiplierCombat, 0f, 20, 1, 1, "", AutoWidth());
                             }
                         }
                     }
                 },
+                () => {
+                    using (VerticalScope()) {
+                        DisclosureToggle("Quests Experience", ref settings.useQuestsExpSlider);
+                        if (settings.useQuestsExpSlider) {
+                            using (HorizontalScope()) {
+                                Space(25);
+                                LogSlider("Quests Experience", ref settings.experienceMultiplierQuests, 0f, 20, 1, 1, "", AutoWidth());
+                            }
+                        }
+                    }
+                },
+                () => {
+                    using (VerticalScope()) {
+                        DisclosureToggle("Skill Checks Experience", ref settings.useSkillChecksExpSlider);
+                        if (settings.useSkillChecksExpSlider) {
+                            using (HorizontalScope()) {
+                                Space(25);
+                                LogSlider("Skill Checks Experience", ref settings.experienceMultiplierSkillChecks, 0f, 20, 1, 1, "", AutoWidth());
+                            }
+                        }
+                    }
+                },
+                () => {
+                    using (VerticalScope()) {
+                        DisclosureToggle("Traps Experience", ref settings.useTrapsExpSlider);
+                        if (settings.useTrapsExpSlider) {
+                            using (HorizontalScope()) {
+                                Space(25);
+                                LogSlider("Traps Experience", ref settings.experienceMultiplierTraps, 0f, 20, 1, 1, "", AutoWidth());
+                            }
+                        }
+                    }
+                }
+                );
+            Div(0, 25);
+            HStack("Other Multipliers", 1,
+                () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
