@@ -75,8 +75,7 @@ namespace ToyBox {
                         Label("level".green() + $": {prog.CharacterLevel}", Width(100f));
                         ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), AutoWidth());
                     }
-                    Space(25);
-                    ActionButton("Reset", () => ch.resetClassLevel(), Width(125));
+                    ActionButton("Reset", () => ch.resetClassLevel(), Width(150));
                     Space(23);
                     using (VerticalScope()) {
                         Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green());
@@ -93,11 +92,10 @@ namespace ToyBox {
                         IntTextField(ref tmpExp, null, Width(150f));
                         prog.Experience = tmpExp;
                     }
-                    Space(25);
-                    ActionButton("Set", () => {
+                    ActionButton("Adjust based on Level", () => {
                         var newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
                         prog.Experience = newXP;
-                    }, Width(125));
+                    }, Width(150));
                     Space(27);
                     Label("This sets your experience to match the current value of character level.".green());
                 }
@@ -128,10 +126,9 @@ namespace ToyBox {
                             prog.MythicExperience = tmpMythicExp / 10;
                         }
                     }
-                    Space(25);
-                    ActionButton("Set", () => {
+                    ActionButton("Adjust based on Level", () => {
                         prog.MythicExperience = prog.MythicLevel;
-                    }, Width(125));
+                    }, Width(150));
                     Space(27);
                     Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
                 }
