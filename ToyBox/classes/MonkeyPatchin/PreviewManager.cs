@@ -393,6 +393,7 @@ namespace ToyBox {
                 // Or previewDialogResults && previewEventResults
                 bool showResults = settings.previewDialogResults || settings.previewEventResults;
                 if (!showResults && !settings.toggleIgnoreEventSolutionRestrictions) return true;
+                bool showRestrictions = (settings.toggleIgnoreEventSolutionRestrictions || settings.previewDialogResults) && !settings.toggleHideEventSolutionRestrictionsPreview;
                 __instance.gameObject.SetActive(true);
                 __instance.EventSolution = eventSolution;
                 __instance.Toggle.group = toggleGroup;
@@ -401,8 +402,8 @@ namespace ToyBox {
                 var extraText = "";
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = eventSolution.IsAvail ? "#005800><b>" : "#800000>";
-                if (showResults || !settings.toggleHideEventSolutionRestrictionsPreview) {
-                    if (eventSolution.m_AvailConditions.HasConditions && !settings.toggleHideEventSolutionRestrictionsPreview) {
+                if (showResults || showRestrictions) {
+                    if (eventSolution.m_AvailConditions.HasConditions && showRestrictions) {
                         if (settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
                             extraText += $"\n<color=#005800><b>[Overridden]:</b></color> ";
                         else
