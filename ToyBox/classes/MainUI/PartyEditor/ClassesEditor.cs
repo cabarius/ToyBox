@@ -67,54 +67,72 @@ namespace ToyBox {
             else {
                 var prog = ch.Descriptor.Progression;
                 using (HorizontalScope()) {
-                    Space(100);
-                    Label("Character Level".cyan(), Width(250));
-                    ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), AutoWidth());
-                    Space(25);
-                    Label("level".green() + $": {prog.CharacterLevel}", Width(100f));
-                    ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), AutoWidth());
+                    using (HorizontalScope(Width(600))) {
+                        Space(100);
+                        Label("Character Level".cyan(), Width(250));
+                        ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), AutoWidth());
+                        Space(25);
+                        Label("level".green() + $": {prog.CharacterLevel}", Width(100f));
+                        ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), AutoWidth());
+                    }
                     Space(25);
                     ActionButton("Reset", () => ch.resetClassLevel(), Width(125));
                     Space(23);
                     using (VerticalScope()) {
-                        Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green() + "If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange());
+                        Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green());
+                        Label("If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange());
                         LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
                     }
                 }
                 using (HorizontalScope()) {
-                    Space(100);
-                    Label("Experience".cyan(), Width(250));
-                    Space(82);
-                    Label($"{prog.Experience}", Width(150f));
-                    Space(36);
+                    using (HorizontalScope(Width(600))) {
+                        Space(100);
+                        Label("Experience".cyan(), Width(250));
+                        Space(25);
+                        int tmpExp = prog.Experience;
+                        IntTextField(ref tmpExp, null, Width(150f));
+                        prog.Experience = tmpExp;
+                    }
+                    Space(25);
                     ActionButton("Set", () => {
                         var newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
                         prog.Experience = newXP;
                     }, Width(125));
-                    Space(23);
+                    Space(27);
                     Label("This sets your experience to match the current value of character level.".green());
                 }
                 Div(100, 25);
                 using (HorizontalScope()) {
-                    Space(100);
-                    Label("Mythic Level".cyan(), Width(250));
-                    ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), AutoWidth());
-                    Space(25);
-                    Label("my lvl".green() + $": {prog.MythicLevel}", Width(100f));
-                    ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), AutoWidth());
-                    Space(175);
+                    using (HorizontalScope(Width(600))) {
+                        Space(100);
+                        Label("Mythic Level".cyan(), Width(250));
+                        ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), AutoWidth());
+                        Space(25);
+                        Label("my lvl".green() + $": {prog.MythicLevel}", Width(100f));
+                        ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), AutoWidth());
+                    }
+                    Space(181);
                     Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
                 }
                 using (HorizontalScope()) {
-                    Space(100);
-                    Label("Experience".cyan(), Width(250));
-                    Space(82);
-                    Label($"{prog.MythicExperience}", Width(150f));
-                    Space(36);
+                    using (HorizontalScope(Width(600))) {
+                        Space(100);
+                        Label("Experience".cyan(), Width(250));
+                        Space(25);
+                        int tmpMythicExp = prog.MythicExperience;
+                        IntTextField(ref tmpMythicExp, null, Width(150f));
+                        if (0 <= tmpMythicExp && tmpMythicExp <= 10) {
+                            prog.MythicExperience = tmpMythicExp;
+                        } // If Mythic experience is 0, entering any number besides 1 is > 10, meaning the number would be overwritten with; this is to prevent that
+                        else if (tmpMythicExp % 10 == 0) {
+                            prog.MythicExperience = tmpMythicExp / 10;
+                        }
+                    }
+                    Space(25);
                     ActionButton("Set", () => {
                         prog.MythicExperience = prog.MythicLevel;
                     }, Width(125));
-                    Space(23);
+                    Space(27);
                     Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
                 }
                 var classCount = classData.Count(x => !x.CharacterClass.IsMythic);

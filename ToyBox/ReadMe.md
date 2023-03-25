@@ -58,6 +58,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***gespenstgaming***) Increased the creation ability point cap to 600.
 * (***ADDB***) Added field for army general experience.
 * (***ADDB***) Fixed Preview Event Results and made Ignore Event Solution Restrictions independent from Preview Flags. Added toggle to disable showing restrictions.
+* (***ADDB***) Made Individual Class and Mythic Experience editable in Party -> Classes tab.
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
