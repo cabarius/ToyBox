@@ -401,8 +401,8 @@ namespace ToyBox {
                 var extraText = "";
                 var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
                 var color = eventSolution.IsAvail ? "#005800><b>" : "#800000>";
-                if (showResults || !settings.toggleHideEventSolutionRestrictions) {
-                    if (eventSolution.m_AvailConditions.HasConditions && !settings.toggleHideEventSolutionRestrictions) {
+                if (showResults || !settings.toggleHideEventSolutionRestrictionsPreview) {
+                    if (eventSolution.m_AvailConditions.HasConditions && !settings.toggleHideEventSolutionRestrictionsPreview) {
                         if (settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
                             extraText += $"\n<color=#005800><b>[Overridden]:</b></color> ";
                         else
