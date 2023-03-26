@@ -532,7 +532,7 @@ namespace ToyBox {
                         );
             Div(0, 25);
             HStack("Experience Multipliers", 1,
-                () => LogSlider("All Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("All Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", 325, AutoWidth()),
                 () => {
                     using (VerticalScope()) {
                         DisclosureToggle("Combat Experience", ref settings.useCombatExpSlider);
