@@ -105,6 +105,7 @@ namespace ToyBox {
                         UI.RarityGrid(ref settings.minRarityToColor, 4, UI.AutoWidth());
                     }
                 },
+                () => UI.Label("Warning: ".orange().bold() + "The following is experimental and might behave unexpectedly. This also does not work with loot dropped by enemies.".green()),
                 () => {
                     UI.Toggle("Hide Items On Map By Rarity", ref settings.hideLootOnMap, Width(170));
                     UI.Space(25);

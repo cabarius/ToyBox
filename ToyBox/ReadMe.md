@@ -62,6 +62,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) Added experience multipliers for different experience sources.
 * (***ADDB***) Made Individual Class and Mythic Experience editable in Party -> Classes tab.
 * (***ADDB***) Fixed a bug where activation Decree Preview would still show when opening an Event Window after opening a Decree.
+* (***ADDB***) (Experimental) Added a feature that allows hiding map loot pins on the map if the contained loot doesn't reach at least a selected rarity.
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
