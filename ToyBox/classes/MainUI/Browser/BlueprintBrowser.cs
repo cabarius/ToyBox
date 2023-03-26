@@ -30,6 +30,7 @@ using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
+using Kingmaker.Kingdom.Blueprints;
 
 namespace ToyBox {
     public static class BlueprintBrowser {
@@ -78,6 +79,8 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CollationNames(bp.CharacterClass.Name.ToString())),
             new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintKingdomBuff>("Kingdom Buffs", null, bp => bp.CollationNames()),
+
             new NamedTypeFilter<BlueprintItem>("Item", null,  (bp) => {
                 if (bp.m_NonIdentifiedNameText?.ToString().Length > 0) return bp.CollationNames(bp.m_NonIdentifiedNameText);
                 return bp.CollationNames(bp.ItemType.ToString());

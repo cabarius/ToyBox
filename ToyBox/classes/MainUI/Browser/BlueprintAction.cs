@@ -19,6 +19,8 @@ using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
@@ -297,6 +299,15 @@ namespace ToyBox {
 
                                                         return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
                                                     });
+            // Kingdom Bufs
+            BlueprintAction.Register<BlueprintKingdomBuff>("Add",
+                                                       (bp, ch, n, index) => KingdomState.Instance?.AddBuff(bp, null, null, 0),
+                                                       (bp, ch, index) => (KingdomState.Instance != null) && !KingdomState.Instance.ActiveBuffs.HasFact(bp));
+
+            BlueprintAction.Register<BlueprintKingdomBuff>("Remove",
+                                                       (bp, ch, n, index) => KingdomState.Instance?.ActiveBuffs.RemoveFact(bp),
+                                                       (bp, ch, index) => (KingdomState.Instance != null) && KingdomState.Instance.ActiveBuffs.HasFact(bp));
+
 
             // Abilities
             BlueprintAction.Register<BlueprintAbility>("Add",
