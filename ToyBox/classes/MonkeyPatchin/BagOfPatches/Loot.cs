@@ -4,17 +4,24 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.EntitySystem;
 using Kingmaker.Items;
 using Kingmaker.Items.Parts;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._PCView.Tooltip.Bricks;
 using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.UI.MVVM._VM.Slots;
+using Kingmaker.Utility;
+using Kingmaker.View.MapObjects;
 using ModKit;
 using Owlcat.Runtime.UI.MVVM;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -136,8 +143,8 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        
-       [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
+
+        [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class LootCollectorPCView_BindViewImplementation_Patch {
             public static void Postfix(LootCollectorPCView __instance) {
                 if (!settings.toggleColorLootByRarity) return;
@@ -177,6 +184,31 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_MainTitle.outlineColor = (Color32)Color.magenta;
                 __instance.m_MainTitle.outlineWidth = 5;
 #endif
+            }
+        }
+        [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
+        private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
+
+            public static void PostFix(LocalMapMarkerPCView __instance) {
+                if (__instance == null || !settings.hideLootOnMap || settings.maxRarityToHide == RarityType.None)
+                    return;
+                if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot) {
+                    LocalMapCommonMarkerVM markerVm = __instance.ViewModel as LocalMapCommonMarkerVM;
+                    LocalMapMarkerPart mapPart = markerVm.m_Marker as LocalMapMarkerPart;
+                    MapObjectView MOV = mapPart?.Owner.View as MapObjectView;
+                    InteractionLootPart lootPart = (MOV.Data.Interactions[0] as InteractionLootPart);
+                    var loot = lootPart.Loot;
+                    RarityType highest = RarityType.None;
+                    foreach (var item in loot) {
+                        RarityType itemRarity = item.Rarity();
+                        if (itemRarity > highest) {
+                            highest = itemRarity;
+                        }
+                    }
+                    if (highest <= settings.maxRarityToHide) {
+                        mapPart.SetHidden(true);
+                    }
+                }
             }
         }
     }

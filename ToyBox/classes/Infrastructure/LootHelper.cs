@@ -11,6 +11,7 @@ using Kingmaker.UI.MVVM._VM.Loot;
 using Kingmaker.UnitLogic;
 using Kingmaker.Utility;
 using Kingmaker.View.MapObjects;
+using ModKit;
 using Newtonsoft.Json;
 using Owlcat.Runtime.Core.Utils;
 using Owlcat.Runtime.UI.Controls.Button;
@@ -24,6 +25,7 @@ using UnityEngine;
 
 namespace ToyBox {
     public static class LootHelper {
+        public static Settings settings = Main.settings;
         public static string NameAndOwner(this ItemEntity u) => u.Name + (u.Owner != null ? $" ({u.Owner.CharacterName})" : "");
 
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
@@ -99,6 +101,7 @@ namespace ToyBox {
                 if (hidden) interactionLootPart.Owner.IsPerceptionCheckPassed = true;
                 interactionLootPart.Owner.SetIsRevealedSilent(true);
             }
+            updateHidden();
         }
 
         public static void ShowAllInevitablePortalLoot() {
@@ -113,33 +116,67 @@ namespace ToyBox {
                 revealer.RunAction();
             }
         }
-    }
 
-    internal class MassLootWindowHandler {
-
-        private LootPCView lootPCView;
-
-        public MassLootWindowHandler() {
-            var loot = MassLootHelper.GetMassLootFromCurrentArea();
-            if (!loot.Any()) {
-                return;
-            }
-            var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, new Action(Dispose));
-            lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
-            lootPCView.Initialize();
-            var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();
-            if(buttons.Length > 2) {
-                for(int i = 2; i < buttons.Length; i++) {
-                    GameObject.DestroyImmediate(buttons[i].gameObject);
+        public static void updateHidden() {
+            var interactionLootParts = Game.Instance.State.MapObjects.All
+                .Where<EntityDataBase>(e => e.IsInGame)
+                .Select<EntityDataBase, InteractionLootPart>(i => i.Get<InteractionLootPart>())
+                .Where<InteractionLootPart>(i => i?.Loot != Game.Instance.Player.SharedStash)
+                .NotNull<InteractionLootPart>();
+            foreach (var interactionLootPart in interactionLootParts) {
+                List<LocalMapMarkerPart> localMapMarkerParts = interactionLootPart.Owner.Parts.GetAll<LocalMapMarkerPart>();
+                LocalMapMarkerPart localMapMarkerPart;
+                if (localMapMarkerParts?.Count > 0) {
+                    localMapMarkerPart = localMapMarkerParts[0];
+                }
+                else {
+                    return;
+                }
+                if (interactionLootPart.Owner.IsPerceptionCheckPassed && interactionLootPart.Owner.IsRevealed) {
+                    var loot = interactionLootPart.Loot;
+                    RarityType highest = RarityType.None;
+                    foreach (var item in loot) {
+                        RarityType itemRarity = item.Rarity();
+                        if (itemRarity > highest) {
+                            highest = itemRarity;
+                        }
+                    }
+                    if (highest <= settings.maxRarityToHide && settings.hideLootOnMap) {
+                        localMapMarkerPart.SetHidden(true);
+                    }
+                    else {
+                        localMapMarkerPart.SetHidden(false);
+                    }
                 }
             }
-
-            lootPCView.Bind(lootVM);
         }
 
-        private void Dispose() {
-            lootPCView.Unbind();
-            lootPCView.DestroyView();
+        internal class MassLootWindowHandler {
+
+            private LootPCView lootPCView;
+
+            public MassLootWindowHandler() {
+                var loot = MassLootHelper.GetMassLootFromCurrentArea();
+                if (!loot.Any()) {
+                    return;
+                }
+                var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, new Action(Dispose));
+                lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
+                lootPCView.Initialize();
+                var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();
+                if (buttons.Length > 2) {
+                    for (int i = 2; i < buttons.Length; i++) {
+                        GameObject.DestroyImmediate(buttons[i].gameObject);
+                    }
+                }
+
+                lootPCView.Bind(lootVM);
+            }
+
+            private void Dispose() {
+                lootPCView.Unbind();
+                lootPCView.DestroyView();
+            }
         }
     }
 }
