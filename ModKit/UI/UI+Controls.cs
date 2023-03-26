@@ -87,7 +87,11 @@ namespace ModKit {
         public static int IntTextField(ref int value, string name = null, params GUILayoutOption[] options) {
             var text = $"{value}";
             TextField(ref text, name, options);
-            int.TryParse(text, out value);
+            if (int.TryParse(text, out var val)) {
+                value = val;
+            } else if (text == "") {
+                value = 0;
+            }
             return value;
         }
         public static float FloatTextField(ref float value, string name = null, params GUILayoutOption[] options) {
@@ -95,6 +99,8 @@ namespace ModKit {
             TextField(ref text, name, options);
             if (float.TryParse(text, out var val)) {
                 value = val;
+            } else if (text == "") {
+                value = 0;
             }
             return value;
         }
