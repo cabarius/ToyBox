@@ -446,5 +446,48 @@ namespace ModKit {
                 set(value);
             return changed;
         }
+
+        public static bool LogSliderCustomLabelWidth(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", int labelWidth = 300, params GUILayoutOption[] options) {
+            if (min < 0)
+                throw new Exception("LogSlider - min value: {min} must be >= 0");
+            BeginHorizontal(options);
+            using (VerticalScope(Width(labelWidth))) {
+                Space((sliderTop - 1).point());
+                Label(title.cyan(), Width(labelWidth));
+                Space(sliderBottom.point());
+            }
+            Space(25);
+            value = Math.Max(min, Math.Min(max, value));    // clamp it
+            var offset = 1;
+            var places = (int)Math.Max(0, Math.Min(15, decimals + 1.01 - Math.Log10(value + offset)));
+            var logMin = 100f * (float)Math.Log10(min + offset);
+            var logMax = 100f * (float)Math.Log10(max + offset);
+            var logValue = 100f * (float)Math.Log10(value + offset);
+            var logNewValue = logValue;
+            using (VerticalScope(Width(200))) {
+                Space((sliderTop + 4).point());
+                logNewValue = (float)(GL.HorizontalSlider(logValue, logMin, logMax, Width(200)));
+                Space(sliderBottom.point());
+            }
+            var newValue = (float)Math.Round(Math.Pow(10, logNewValue / 100f) - offset, places);
+            Space(25);
+            using (VerticalScope(Width(75))) {
+                Space((sliderTop + 2).point());
+                FloatTextField(ref newValue, null, Width(75));
+                Space(sliderBottom.point());
+            }
+            if (units.Length > 0)
+                Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
+            Space(25);
+            using (VerticalScope(AutoWidth())) {
+                Space((sliderTop + 0).point());
+                ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
+                Space(sliderBottom.point());
+            }
+            EndHorizontal();
+            var changed = value != newValue;
+            value = Math.Min(max, Math.Max(min, newValue));
+            return changed;
+        }
     }
 }
