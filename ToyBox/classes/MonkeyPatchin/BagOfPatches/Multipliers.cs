@@ -28,6 +28,7 @@ using CameraMode = Kingmaker.View.CameraMode;
 using DG.Tweening;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.QA.Statistics;
 
 namespace ToyBox.BagOfPatches {
     internal static class Multipliers {
@@ -65,8 +66,37 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Player), nameof(Player.GainPartyExperience))]
         public static class Player_GainPartyExperience_Patch {
             [HarmonyPrefix]
-            public static bool Prefix(Player __instance, ref int gained) {
-                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplier, 1));
+            public static bool Prefix(Player __instance, ref int gained, ExperienceGainStatistic.GainType statType) {
+                bool useNormal = true;
+                switch (statType) {
+                    case ExperienceGainStatistic.GainType.Mob: {
+                            if (settings.useCombatExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierCombat, 1));
+                                useNormal = false;
+                            }
+                        }; break;
+                    case ExperienceGainStatistic.GainType.Check: {
+                            if (settings.useSkillChecksExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierSkillChecks, 1));
+                                useNormal = false;
+                            }
+                        }; break;
+                    case ExperienceGainStatistic.GainType.Quest: {
+                            if (settings.useQuestsExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierQuests, 1));
+                                useNormal = false;
+                            }
+                        }; break;
+                    case ExperienceGainStatistic.GainType.Trap: {
+                            if (settings.useTrapsExpSlider) {
+                                gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplierTraps, 1));
+                                useNormal = false;
+                            }
+                        }; break;
+                }
+                if (useNormal) {
+                    gained = Mathf.RoundToInt(gained * (float)Math.Round(settings.experienceMultiplier, 1));
+                }
                 return true;
             }
         }

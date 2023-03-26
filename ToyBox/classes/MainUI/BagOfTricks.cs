@@ -48,7 +48,7 @@ namespace ToyBox {
 
         //For buffs exceptions
         private static bool showBuffDurationExceptions = false;
-        
+
         public static void OnLoad() {
             // Combat
             KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
@@ -319,9 +319,11 @@ namespace ToyBox {
                     }
                 }, AutoWidth()),
                 () => { Toggle("Enable Loading with Blueprint Errors".color(RGBA.maroon), ref settings.enableLoadWithMissingBlueprints); 25.space(); Label($"This {"incredibly dangerous".bold()} setting overrides the default behavior of failing to load saves depending on missing blueprint mods. This desperate action can potentially enable you to recover your saved game, though you'll have to respec at minimum.".orange()); },
-                () => { if (settings.enableLoadWithMissingBlueprints) {
+                () => {
+                    if (settings.enableLoadWithMissingBlueprints) {
                         Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".orange());
-                    } },
+                    }
+                },
                 () => {
                     using (VerticalScope()) {
                         Div(0, 25, 1280);
@@ -418,7 +420,7 @@ namespace ToyBox {
                     50.space();
                     if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
                     100.space();
-                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange()+ " Holding alt while Mouse3 dragging lets you move the camera location.".green());
+                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange() + " Holding alt while Mouse3 dragging lets you move the camera location.".green());
                 },
                 () => {
                     50.space();
@@ -529,8 +531,48 @@ namespace ToyBox {
                         () => { }
                         );
             Div(0, 25);
-            HStack("Multipliers", 1,
-                () => LogSlider("Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+            HStack("Experience Multipliers", 1,
+                () => LogSlider("All Experience", ref settings.experienceMultiplier, 0f, 20, 1, 1, "", 300, AutoWidth()),
+                () => {
+                    using (HorizontalScope()) {
+                        Toggle("Override Experience Multiplier for Combat", ref settings.useCombatExpSlider, Width(275));
+                        if (settings.useCombatExpSlider) {
+                            Space(10);
+                            LogSlider("", ref settings.experienceMultiplierCombat, 0f, 20, 1, 1, "", 12, AutoWidth());
+                        }
+                    }
+                },
+                () => {
+                    using (HorizontalScope()) {
+                        Toggle("Override Experience Multiplier for Quests", ref settings.useQuestsExpSlider, Width(275));
+                        if (settings.useQuestsExpSlider) {
+                            Space(10);
+                            LogSlider("", ref settings.experienceMultiplierQuests, 0f, 20, 1, 1, "", 12, AutoWidth());
+                        }
+                    }
+                },
+                () => {
+                    using (HorizontalScope()) {
+                        Toggle("Override Experience Multiplier for Skill Checks", ref settings.useSkillChecksExpSlider, Width(275));
+                        if (settings.useSkillChecksExpSlider) {
+                            Space(10);
+                            LogSlider("", ref settings.experienceMultiplierSkillChecks, 0f, 20, 1, 1, "", 12, AutoWidth());
+                        }
+                    }
+                },
+                () => {
+                    using (HorizontalScope()) {
+                        Toggle("Override Experience Multiplier for Traps Experience", ref settings.useTrapsExpSlider, Width(275));
+                        if (settings.useTrapsExpSlider) {
+                            Space(10);
+                            LogSlider("", ref settings.experienceMultiplierTraps, 0f, 20, 1, 1, "", 12, AutoWidth());
+                        }
+                    }
+                }
+                );
+            Div(0, 25);
+            HStack("Other Multipliers", 1,
+                () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
