@@ -75,7 +75,7 @@ namespace ToyBox {
                 },
                 () => UI.Div(),
                 () => {
-                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity);
+                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, Width(170));
                     UI.Space(25);
                     using (UI.VerticalScope()) {
                         UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
@@ -104,9 +104,22 @@ namespace ToyBox {
                         UI.Label("Minimum Rarity to change colors for:".cyan(), UI.AutoWidth());
                         UI.RarityGrid(ref settings.minRarityToColor, 4, UI.AutoWidth());
                     }
-
-                    // The following options let you configure loot filtering and auto sell levels:".green());
                 },
+                () => {
+                    UI.Toggle("Hide Items On Map By Rarity", ref settings.hideLootOnMap, Width(170));
+                    UI.Space(25);
+                    using (UI.VerticalScope()) {
+                        UI.Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires using the update button.".orange()}".green());
+                        UI.Label("Maximum Rarity To Hide:".cyan(), UI.AutoWidth());
+                        UI.RarityGrid(ref settings.maxRarityToHide, 4, UI.AutoWidth());
+                    }
+                },
+                () => {
+                    UI.ActionButton("Update Map", () => LootHelper.updateHidden(), UI.Width(400));
+                    UI.Space(300);
+                    UI.Label("Lets changes to hide item settings take effect".green());
+                },
+                // The following options let you configure loot filtering and auto sell levels:".green());
 #if false
                 () => UI.RarityGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
                 () => UI.RarityGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
@@ -156,7 +169,7 @@ namespace ToyBox {
                             foreach (var present in presents) {
                                 var pahtLewts = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity());
                                 var unit = present.Unit;
-                                if (pahtLewts.Count() > 0 && (unit == null || (settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy))) { 
+                                if (pahtLewts.Count() > 0 && (unit == null || (settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy))) {
                                     isEmpty = false;
                                     UI.Div();
                                     using (UI.HorizontalScope()) {
