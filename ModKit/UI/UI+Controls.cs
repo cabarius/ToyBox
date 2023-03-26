@@ -397,13 +397,13 @@ namespace ModKit {
             value = (int)fvalue;
             return changed;
         }
-        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", int titleWidth = 300, params GUILayoutOption[] options) {
+        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             if (min < 0)
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             BeginHorizontal(options);
-            using (VerticalScope(Width(titleWidth))) {
+            using (VerticalScope(Width(300))) {
                 Space((sliderTop - 1).point());
-                Label(title.cyan(), Width(titleWidth));
+                Label(title.cyan(), Width(300));
                 Space(sliderBottom.point());
             }
             Space(25);
@@ -445,9 +445,6 @@ namespace ModKit {
             if (changed)
                 set(value);
             return changed;
-        }
-        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
-            return LogSlider(title, ref value, min, max, defaultValue, decimals, units, 300, options);
         }
     }
 }
