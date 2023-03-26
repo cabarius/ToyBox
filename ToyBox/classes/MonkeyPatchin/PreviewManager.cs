@@ -389,8 +389,7 @@ namespace ToyBox {
                                         UnityAction<bool> onToggle,
                                         ToggleGroup toggleGroup,
                                         bool isOn = false) {
-                // Should it be previewEventResults here?
-                // Or previewDialogResults && previewEventResults
+
                 bool showResults = settings.previewDialogResults || settings.previewEventResults;
                 if (!showResults && !settings.toggleIgnoreEventSolutionRestrictions) return true;
                 bool showRestrictions = (settings.toggleIgnoreEventSolutionRestrictions || settings.previewDialogResults) && !settings.toggleHideEventSolutionRestrictionsPreview;
@@ -470,7 +469,6 @@ namespace ToyBox {
                         var currentEventSolution2 = __instance.m_Footer.CurrentEventSolution;
                         resultDescription.text = ((currentEventSolution2 != null) ? currentEventSolution2.ResultText : null);
                         __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
-
                     }
                     else
                         __instance.m_ResultDescription.text = string.Empty;
@@ -553,6 +551,13 @@ namespace ToyBox {
                 __instance.m_Disposables.Add(__instance.m_MechanicalDescription.SetLinkTooltip(null, null, default));
 
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(KingdomUIEventWindow), nameof(KingdomUIEventWindow.OnClose))]
+        private static class KingdomUIEventWindow_OnClose_Patch {
+            private static void Prefix(KingdomUIEventWindow __instance) {
+                __instance.m_MechanicalDescription.text = null;
             }
         }
 
