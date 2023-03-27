@@ -75,7 +75,7 @@ namespace ToyBox {
                 },
                 () => UI.Div(),
                 () => {
-                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity, Width(170));
+                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity);
                     UI.Space(25);
                     using (UI.VerticalScope()) {
                         UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
@@ -107,7 +107,7 @@ namespace ToyBox {
                 },
                 () => UI.Label("Warning: ".orange().bold() + "The following is experimental and might behave unexpectedly. This also does not work with loot dropped by enemies.".green()),
                 () => {
-                    UI.Toggle("Hide Items On Map By Rarity", ref settings.hideLootOnMap, Width(170));
+                    UI.Toggle("Hide Items On Map By Rarity", ref settings.hideLootOnMap);
                     UI.Space(25);
                     using (UI.VerticalScope()) {
                         UI.Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires using the update button.".orange()}".green());
