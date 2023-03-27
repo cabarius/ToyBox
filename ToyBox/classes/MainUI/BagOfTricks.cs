@@ -535,7 +535,7 @@ namespace ToyBox {
                 () => LogSlider("All Experience", ref settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override Experience Multiplier for Combat", ref settings.useCombatExpSlider, Width(275));
+                        Toggle("Override for Combat", ref settings.useCombatExpSlider, Width(275));
                         if (settings.useCombatExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierCombat, 0f, 100f, 1, 1, "", 12, AutoWidth());
@@ -544,7 +544,7 @@ namespace ToyBox {
                 },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override Experience Multiplier for Quests", ref settings.useQuestsExpSlider, Width(275));
+                        Toggle("Override for Quests", ref settings.useQuestsExpSlider, Width(275));
                         if (settings.useQuestsExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierQuests, 0f, 100f, 1, 1, "", 12, AutoWidth());
@@ -553,7 +553,7 @@ namespace ToyBox {
                 },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override Experience Multiplier for Skill Checks", ref settings.useSkillChecksExpSlider, Width(275));
+                        Toggle("Override for Skill Checks", ref settings.useSkillChecksExpSlider, Width(275));
                         if (settings.useSkillChecksExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierSkillChecks, 0f, 100f, 1, 1, "", 12, AutoWidth());
@@ -562,7 +562,7 @@ namespace ToyBox {
                 },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override Experience Multiplier for Traps Experience", ref settings.useTrapsExpSlider, Width(275));
+                        Toggle("Override for Traps", ref settings.useTrapsExpSlider, Width(275));
                         if (settings.useTrapsExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierTraps, 0f, 100f, 1, 1, "", 12, AutoWidth());
