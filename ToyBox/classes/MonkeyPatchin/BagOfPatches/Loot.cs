@@ -8,17 +8,18 @@ using Kingmaker.Items;
 using Kingmaker.Items.Parts;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._PCView.Tooltip.Bricks;
 using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.UI.MVVM._VM.Slots;
 using ModKit;
+using UniRx;
 using Owlcat.Runtime.UI.MVVM;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     internal static class Loot {
@@ -136,8 +137,8 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        
-       [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
+
+        [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class LootCollectorPCView_BindViewImplementation_Patch {
             public static void Postfix(LootCollectorPCView __instance) {
                 if (!settings.UsingLootRarity) return;
@@ -177,6 +178,19 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_MainTitle.outlineColor = (Color32)Color.magenta;
                 __instance.m_MainTitle.outlineWidth = 5;
 #endif
+            }
+        }
+        [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
+        private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
+            public static void Postfix(LocalMapMarkerPCView __instance) {
+                if (__instance == null || !settings.hideLootOnMap || settings.maxRarityToHide == RarityType.None)
+                    return;
+
+                Mod.Log(__instance.GetType().ToString().green());
+                if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
+                    __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
+                        (__instance as LocalMapLootMarkerPCView)?.Hide();
+                    }));
             }
         }
     }

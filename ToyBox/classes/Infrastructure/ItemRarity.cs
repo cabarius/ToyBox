@@ -14,6 +14,12 @@ using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.UI.Common;
 using Kingmaker;
+using Kingmaker.View.MapObjects;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
+using Kingmaker.View;
+using Kingmaker.EntitySystem.Entities;
 using UnityEngine.UI;
 
 namespace ToyBox {
@@ -146,6 +152,49 @@ namespace ToyBox {
             return name;
         }
         public static string GetString(this RarityType rarity, float adjust = 0) => rarity.ToString().Rarity(rarity, adjust);
+        public static void Hide(this LocalMapLootMarkerPCView localMapLootMarkerPCView) {
+            LocalMapCommonMarkerVM markerVm = localMapLootMarkerPCView.ViewModel as LocalMapCommonMarkerVM;
+            LocalMapMarkerPart mapPart = markerVm.m_Marker as LocalMapMarkerPart;
+            RarityType highest = RarityType.None;
+            if (mapPart?.GetMarkerType() == LocalMapMarkType.Loot) {
+                MapObjectView MOV = mapPart.Owner.View as MapObjectView;
+                InteractionLootPart lootPart = (MOV.Data.Interactions[0] as InteractionLootPart);
+                var loot = lootPart.Loot;
+                foreach (var item in loot) {
+                    RarityType itemRarity = item.Rarity();
+                    if (itemRarity > highest) {
+                        highest = itemRarity;
+                    }
+                }
+                if (highest <= settings.maxRarityToHide && settings.hideLootOnMap) {
+                    localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
+                }
+                else {
+                    localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
+                }
+            }
+            else if (mapPart == null) {
+                UnitLocalMapMarker unitMarker = markerVm.m_Marker as UnitLocalMapMarker;
+                if (unitMarker != null) {
+                    UnitEntityView unit = unitMarker.m_Unit;
+                    UnitEntityData data = unit.Data;
+                    foreach (ItemEntity item in data.Inventory) {
+                        if (item.IsLootable) {
+                            RarityType itemRarity = item.Rarity();
+                            if (itemRarity > highest) {
+                                highest = itemRarity;
+                            }
+                        }
+                    }
+                    if (highest <= settings.maxRarityToHide && settings.hideLootOnMap) {
+                        localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
+                    }
+                    else {
+                        localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
+                    }
+                }
+            }
+        }
     }
 }
 namespace ModKit {
