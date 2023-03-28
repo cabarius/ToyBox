@@ -71,7 +71,7 @@ namespace ToyBox {
         }
         public static int Rating(this ItemEntity item) => item.Blueprint.Rating(item);
         public static int Rating(this BlueprintItem bp) {
-            var bpRating =  bp.CollectEnchantments().Sum((e) => e.Rating());
+            var bpRating = bp.CollectEnchantments().Sum((e) => e.Rating());
             var bpEnchRating = bp.CollectEnchantments().Sum((e) => e.Rating());
             return Math.Max(bpRating, bpEnchRating);
         }
@@ -167,7 +167,7 @@ namespace ToyBox {
                         highest = itemRarity;
                     }
                 }
-                if (highest <= settings.maxRarityToHide && settings.hideLootOnMap) {
+                if (highest <= settings.maxRarityToHide) {
                     localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
                 }
                 else {
@@ -187,7 +187,7 @@ namespace ToyBox {
                             }
                         }
                     }
-                    if (highest <= settings.maxRarityToHide && settings.hideLootOnMap) {
+                    if (highest <= settings.maxRarityToHide) {
                         localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
                     }
                     else {

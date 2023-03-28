@@ -110,25 +110,24 @@ namespace ToyBox {
                         Label("Minimum Rarity to change colors for:".cyan(), AutoWidth());
                         RarityGrid(ref settings.minRarityToColor, 4, AutoWidth());
                     }
-                },
-                () => {
-                    using (VerticalScope()) {
-                        Div(0, 25);
-                        Label("Warning: ".orange().bold() + "The following is experimental and might behave unexpectedly. This also does not work with loot dropped by enemies.".green());
-                        using (HorizontalScope()) {
-                            Toggle("Hide Items On Map By Rarity", ref settings.hideLootOnMap);
-                            Space(25);
-                            using (VerticalScope()) {
-                                Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}".green());
-                                Label("Maximum Rarity To Hide:".cyan(), AutoWidth());
-                                RarityGrid(ref settings.maxRarityToHide, 4, AutoWidth());
+                });
+            Div(0, 25);
+            HStack("Loot Rarity Filtering", 1,
+                    () => {
+                        using (VerticalScope()) {
+                            Label("Warning: ".orange().bold() + "The following is experimental and might behave unexpectedly.".green());
+                            using (HorizontalScope()) {
+                                using (VerticalScope()) {
+                                    Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}".green());
+                                    Label("Maximum Rarity To Hide:".cyan(), AutoWidth());
+                                    RarityGrid(ref settings.maxRarityToHide, 4, AutoWidth());
+                                }
                             }
                         }
-                    }
-                },
+                    },
             // The following options let you configure loot filtering and auto sell levels:".green());
             () => { }
-                );
+                    );
             Div(0, 25);
             var isEmpty = true;
             HStack("Loot Checklist", 1,
