@@ -81,7 +81,7 @@ namespace ToyBox.BagOfPatches {
         public static class PlayerAlignmentIs_CheckCondition_Patch {
             public static void Postfix(PlayerAlignmentIs __instance, ref bool __result) {
                 if (!settings.toggleDialogRestrictions || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                Mod.Debug($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (PlayerAlignmentIsOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
                 else __result = true;
             }

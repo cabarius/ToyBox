@@ -38,6 +38,14 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.4.24 (coming soon)
+* (***Narria***) Loot coloring improvents
+  * Changed epic color to a purple
+  * Changed unreadable mythic color to magenta
+  * Added ability to show rarity as a [Rarity] suffix that is independent of the color
+* (***Narria***) Enchantment Editor improvements
+  * Now show item rating and rating of enchantments
+  * Improved grading of enchantments so that ones that have 0 cost (which I think is a bug) count as common (rating 5)
+  * Fixed bug where weapon type selection would be lost when you selected a weapon other than the first one in the list and then closed and reopened the mod window
 * (***Narria***) Added AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature.
 ### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All

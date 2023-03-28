@@ -142,7 +142,7 @@ namespace ToyBox {
         public static void To(this BlueprintAreaEnterPoint enterPoint) => GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
         public static void To(this BlueprintGlobalMap globalMap) => GameHelper.EnterToArea(globalMap.GlobalMapEnterPoint, AutoSaveMode.None);
         public static void To(this BlueprintArea area) {
-            var areaEnterPoints = BlueprintExensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
+            var areaEnterPoints = BlueprintExtensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
             var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
             if (blueprint is BlueprintAreaEnterPoint enterPoint) {
                 GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);

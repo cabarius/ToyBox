@@ -82,7 +82,7 @@ namespace ToyBox {
             foreach (var obj in Objects) {
                 UnityEngine.Object.DestroyImmediate(obj);
             }
-            BlueprintExensions.ResetCollationCache();
+            BlueprintExtensions.ResetCollationCache();
             HarmonyInstance.UnpatchAll(modId);
             NeedsActionInit = true;
             return true;
@@ -106,7 +106,7 @@ namespace ToyBox {
             CharacterPicker.ResetGUI();
             BlueprintBrowser.ResetGUI();
             QuestEditor.ResetGUI();
-            BlueprintExensions.ResetCollationCache();
+            BlueprintExtensions.ResetCollationCache();
             caughtException = null;
         }
 

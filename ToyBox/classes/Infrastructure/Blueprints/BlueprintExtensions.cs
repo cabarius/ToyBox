@@ -22,7 +22,7 @@ using Kingmaker.Utility;
 
 namespace ToyBox {
 
-    public static partial class BlueprintExensions {
+    public static partial class BlueprintExtensions {
         public static Settings settings => Main.settings;
 
         private static ConditionalWeakTable<object, List<string>> cachedCollationNames = new() { };

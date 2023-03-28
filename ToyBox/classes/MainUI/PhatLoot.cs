@@ -25,97 +25,103 @@ namespace ToyBox {
 
         public static void OnGUI() {
 #if DEBUG
-            UI.Div(0, 25);
+            Div(0, 25);
             var inventory = Game.Instance.Player.Inventory;
             var items = inventory.ToList();
-            UI.HStack("Inventory", 1,
+            HStack("Inventory", 1,
                 () => {
-                    UI.ActionButton("Export", () => items.Export("inventory.json"), UI.Width(150));
-                    UI.Space(25);
-                    UI.ActionButton("Import", () => inventory.Import("inventory.json"), UI.Width(150));
-                    UI.Space(25);
-                    UI.ActionButton("Replace", () => inventory.Import("inventory.json", true), UI.Width(150));
+                    ActionButton("Export", () => items.Export("inventory.json"), Width(150));
+                    Space(25);
+                    ActionButton("Import", () => inventory.Import("inventory.json"), Width(150));
+                    Space(25);
+                    ActionButton("Replace", () => inventory.Import("inventory.json", true), Width(150));
                 },
                 () => { }
             );
 #endif
-            UI.Div(0, 25);
-            UI.HStack("Loot", 1,
+            Div(0, 25);
+            HStack("Loot", 1,
                 () => {
-                    UI.BindableActionButton(MassLootBox, UI.Width(400));
-                    UI.Space(95);
-                    UI.Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
+                    BindableActionButton(MassLootBox, Width(400));
+                    Space(95);
+                    Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
                 },
                 () => {
-                    UI.ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), UI.Width(400));
-                    UI.Space(300);
-                    UI.Label("Shows all chests/bags/etc on the map excluding hidden".green());
+                    ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), Width(400));
+                    Space(300);
+                    Label("Shows all chests/bags/etc on the map excluding hidden".green());
                 },
                 () => {
-                    UI.ActionButton("Reveal Hidden Ground Loot", () => LootHelper.ShowAllChestsOnMap(true), UI.Width(400));
-                    UI.Space(300);
-                    UI.Label("Shows all chests/bags/etc on the map including hidden".green());
+                    ActionButton("Reveal Hidden Ground Loot", () => LootHelper.ShowAllChestsOnMap(true), Width(400));
+                    Space(300);
+                    Label("Shows all chests/bags/etc on the map including hidden".green());
                 },
                 () => {
-                    UI.ActionButton("Reveal Inevitable Loot", () => LootHelper.ShowAllInevitablePortalLoot(), UI.Width(400));
-                    UI.Space(300);
-                    UI.Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
+                    ActionButton("Reveal Inevitable Loot", () => LootHelper.ShowAllInevitablePortalLoot(), Width(400));
+                    Space(300);
+                    Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
                 },
                 () => {
-                    UI.Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
-                    UI.Space(102);
-                    UI.Label("Some items might be invisible until looted".green());
+                    Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
+                    Space(102);
+                    Label("Some items might be invisible until looted".green());
                 },
                 () => {
                     if (settings.toggleMassLootEverything) {
-                        UI.Toggle("Mass Loot steals from living NPCs", ref settings.toggleLootAliveUnits);
-                        UI.Space(102);
-                        UI.Label("Previously always behaved this way".green());
+                        Toggle("Mass Loot steals from living NPCs", ref settings.toggleLootAliveUnits);
+                        Space(102);
+                        Label("Previously always behaved this way".green());
                     }
                 },
-                () => UI.Div(),
+                () => { }
+            );
+            Div(0, 25);
+            HStack("Loot Coloring", 1,
                 () => {
-                    UI.Toggle("Color Items By Rarity", ref settings.toggleColorLootByRarity);
-                    UI.Space(25);
-                    using (UI.VerticalScope()) {
-                        UI.Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
-                        UI.Label("The coloring of rarity goes as follows:".green());
-                        UI.HStack("Rarity".orange(), 1,
+                    using (VerticalScope()) {
+                        Toggle("Show Rarity Tags", ref settings.toggleShowRarityTags);
+                        Toggle("Color Item Names", ref settings.toggleColorLootByRarity);
+                    }
+                    Space(25);
+                    using (VerticalScope()) {
+                        Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
+                        Label("The coloring of rarity goes as follows:".green());
+                        HStack("Rarity".orange(), 1,
                             () => {
-                                UI.Label("Trash".Rarity(RarityType.Trash).bold(), UI.rarityStyle, UI.Width(200));
-                                UI.Space(5); UI.Label("Common".Rarity(RarityType.Common).bold(), UI.rarityStyle, UI.Width(200));
-                                UI.Space(5); UI.Label("Uncommon".Rarity(RarityType.Uncommon).bold(), UI.rarityStyle, UI.Width(200));
+                                Label("Trash".Rarity(RarityType.Trash).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Common".Rarity(RarityType.Common).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Uncommon".Rarity(RarityType.Uncommon).bold(), rarityStyle, Width(200));
                             },
                             () => {
-                                UI.Space(3); UI.Label("Rare".Rarity(RarityType.Rare).bold(), UI.rarityStyle, UI.Width(200));
-                                UI.Space(5); UI.Label("Epic".Rarity(RarityType.Epic).bold(), UI.rarityStyle, UI.Width(200));
-                                UI.Space(5); UI.Label("Legendary".Rarity(RarityType.Legendary).bold(), UI.rarityStyle, UI.Width(200));
+                                Space(3); Label("Rare".Rarity(RarityType.Rare).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Epic".Rarity(RarityType.Epic).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Legendary".Rarity(RarityType.Legendary).bold(), rarityStyle, Width(200));
                             },
                             () => {
-                                UI.Space(5); UI.Label("Mythic".Rarity(RarityType.Mythic).bold(), UI.rarityStyle, UI.Width(200));
-                                UI.Space(5); UI.Label("Godly".Rarity(RarityType.Godly).bold(), UI.rarityStyle, UI.Width(200));
-                                UI.Space(5); UI.Label("Notable".Rarity(RarityType.Notable).bold() + "*".orange().bold(), UI.rarityStyle, UI.Width(200));
+                                Space(5); Label("Mythic".Rarity(RarityType.Mythic).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Godly".Rarity(RarityType.Godly).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Notable".Rarity(RarityType.Notable).bold() + "*".orange().bold(), rarityStyle, Width(200));
                             },
                             () => {
-                                UI.Space(3); UI.Label("*".orange().bold() + " Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green(), UI.Width(615));
+                                Space(3); Label("*".orange().bold() + " Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green(), Width(615));
                             },
                             () => { }
                         );
-                        UI.Label("Minimum Rarity to change colors for:".cyan(), UI.AutoWidth());
-                        UI.RarityGrid(ref settings.minRarityToColor, 4, UI.AutoWidth());
+                        Label("Minimum Rarity to change colors for:".cyan(), AutoWidth());
+                        RarityGrid(ref settings.minRarityToColor, 4, AutoWidth());
                     }
-
-                    // The following options let you configure loot filtering and auto sell levels:".green());
                 },
+            // The following options let you configure loot filtering and auto sell levels:".green());
+
 #if false
-                () => UI.RarityGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
-                () => UI.RarityGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
+            () => UI.RarityGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
+            () => UI.RarityGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
 #endif
-                () => { }
-            );
-            UI.Div(0, 25);
+            () => { }
+                );
+            Div(0, 25);
             var isEmpty = true;
-            UI.HStack("Loot Checklist", 1,
+            HStack("Loot Checklist", 1,
                 () => {
                     var areaName = "";
                     if (Main.IsInGame) {
@@ -123,26 +129,26 @@ namespace ToyBox {
                         var areaPrivateName = Game.Instance.CurrentlyLoadedArea.name;
                         if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }
-                    UI.Label(areaName.orange().bold(), UI.Width(300));
-                    UI.Label("Rarity: ".cyan(), UI.AutoWidth());
-                    UI.RarityGrid(ref settings.lootChecklistFilterRarity, 4, UI.AutoWidth());
+                    Label(areaName.orange().bold(), Width(300));
+                    Label("Rarity: ".cyan(), AutoWidth());
+                    RarityGrid(ref settings.lootChecklistFilterRarity, 4, AutoWidth());
                 },
                 () => {
-                    UI.ActionTextField(
+                    ActionTextField(
                     ref searchText,
                     "itemSearchText",
                     (text) => { },
                     () => { },
-                    UI.Width(300));
-                    UI.Space(25); UI.Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
-                    UI.Space(25); UI.Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint, UI.AutoWidth());
-                    UI.Space(25); UI.Toggle("Description", ref settings.toggleLootChecklistFilterDescription, UI.AutoWidth());
+                    Width(300));
+                    Space(25); Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
+                    Space(25); Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint, AutoWidth());
+                    Space(25); Toggle("Description", ref settings.toggleLootChecklistFilterDescription, AutoWidth());
                 },
                 () => {
-                    if (!Main.IsInGame) { UI.Label("Not available in the Main Menu".orange()); return; }
+                    if (!Main.IsInGame) { Label("Not available in the Main Menu".orange()); return; }
                     var presentGroups = LootHelper.GetMassLootFromCurrentArea().GroupBy(p => p.InteractionLoot != null ? "Containers" : "Units");
                     var indent = 3;
-                    using (UI.VerticalScope()) {
+                    using (VerticalScope()) {
                         foreach (var group in presentGroups.Reverse()) {
                             var presents = group.AsEnumerable().OrderByDescending(p => {
                                 var loot = p.GetLewtz(searchText);
@@ -151,58 +157,58 @@ namespace ToyBox {
                             });
                             var rarity = settings.lootChecklistFilterRarity;
                             var count = presents.Where(p => p.Unit == null || (settings.toggleLootChecklistFilterFriendlies && !p.Unit.IsPlayersEnemy || p.Unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && p.Unit.IsPlayersEnemy)).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
-                            UI.Label($"{group.Key.cyan()}: {count}");
-                            UI.Div(indent);
+                            Label($"{group.Key.cyan()}: {count}");
+                            Div(indent);
                             foreach (var present in presents) {
                                 var pahtLewts = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity());
                                 var unit = present.Unit;
                                 if (pahtLewts.Count() > 0 && (unit == null || (settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy))) { 
                                     isEmpty = false;
-                                    UI.Div();
-                                    using (UI.HorizontalScope()) {
-                                        UI.Space(indent);
-                                        UI.Label($"{present.GetName()}".orange().bold(), UI.Width(325));
+                                    Div();
+                                    using (HorizontalScope()) {
+                                        Space(indent);
+                                        Label($"{present.GetName()}".orange().bold(), Width(325));
                                         if (present.InteractionLoot != null) {
                                             if (present.InteractionLoot?.Owner?.PerceptionCheckDC > 0)
-                                                UI.Label($" Perception DC: {present.InteractionLoot?.Owner?.PerceptionCheckDC}".green().bold(), UI.Width(125));
+                                                Label($" Perception DC: {present.InteractionLoot?.Owner?.PerceptionCheckDC}".green().bold(), Width(125));
                                             else
-                                                UI.Label($" Perception DC: NA".orange().bold(), UI.Width(125));
+                                                Label($" Perception DC: NA".orange().bold(), Width(125));
                                             int? trickDc = present.InteractionLoot?.Owner?.Get<DisableDeviceRestrictionPart>()?.DC;
                                             if (trickDc > 0)
-                                                UI.Label($" Trickery DC: {trickDc}".green().bold(), UI.Width(125));
+                                                Label($" Trickery DC: {trickDc}".green().bold(), Width(125));
                                             else
-                                                UI.Label($" Trickery DC: NA".orange().bold(), UI.Width(125));
+                                                Label($" Trickery DC: NA".orange().bold(), Width(125));
                                         }
-                                        UI.Space(25);
-                                        using (UI.VerticalScope()) {
+                                        Space(25);
+                                        using (VerticalScope()) {
                                             foreach (var lewt in pahtLewts) {
                                                 var description = lewt.Blueprint.Description;
                                                 var showBP = settings.toggleLootChecklistFilterBlueprint;
                                                 var showDesc = settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
-                                                using (UI.HorizontalScope()) {
+                                                using (HorizontalScope()) {
                                                     //Main.Log($"rarity: {lewt.Blueprint.Rarity()} - color: {lewt.Blueprint.Rarity().color()}");
-                                                    UI.Label(lewt.Name.Rarity(lewt.Blueprint.Rarity()), showDesc || showBP ? UI.Width(350) : UI.AutoWidth());
+                                                    Label(lewt.Name.StripHTML().Rarity(lewt.Blueprint.Rarity()), showDesc || showBP ? Width(350) : AutoWidth());
                                                     if (showBP) {
-                                                        UI.Space(100); UI.Label(lewt.Blueprint.GetDisplayName().grey(), showDesc ? UI.Width(350) : UI.AutoWidth());
+                                                        Space(100); Label(lewt.Blueprint.GetDisplayName().grey(), showDesc ? Width(350) : AutoWidth());
                                                     }
                                                     if (showDesc) {
-                                                        UI.Space(100); UI.Label(description.StripHTML().green());
+                                                        Space(100); Label(description.StripHTML().green());
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    UI.Space(25);
+                                    Space(25);
                                 }
                             }
-                            UI.Space(25);
+                            Space(25);
                         }
                     }
                 },
                 () => {
                     if (isEmpty)
-                        using (UI.HorizontalScope()) {
-                            UI.Label("No Loot Available".orange(), UI.AutoWidth());
+                        using (HorizontalScope()) {
+                            Label("No Loot Available".orange(), AutoWidth());
                         }
                 }
             );

@@ -446,10 +446,10 @@ namespace ToyBox {
                         .Groups.Cast<Group>().FirstOrDefault()?
                         .Captures.Cast<Capture>().FirstOrDefault()?
                         .Value is string link) {
-                        result += $" {link}[{item.Name.Rarity(item.Rarity())}]</link>".SizePercent(75);
+                        result += $" {link}[{item.Name.RarityInGame(item.Rarity())}]</link>".SizePercent(75);
                     }
                     else
-                        result += $" [{item.Name.Rarity(item.Rarity())}]".SizePercent(75);
+                        result += $" [{item.Name.RarityInGame(item.Rarity())}]".SizePercent(75);
                 }
             }
             return result;

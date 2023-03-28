@@ -130,7 +130,7 @@ namespace ToyBox {
             var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();
             if(buttons.Length > 2) {
                 for(int i = 2; i < buttons.Length; i++) {
-                    GameObject.DestroyImmediate(buttons[i].gameObject);
+                    UnityEngine.Object.DestroyImmediate(buttons[i].gameObject);
                 }
             }
 

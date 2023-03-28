@@ -191,7 +191,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<EntityFact> facts) {
             return OnGUI<EntityFact>("Features", ch, facts,
                 (fact) => fact.Blueprint,
-                () => BlueprintExensions.GetBlueprints<BlueprintUnitFact>(),
+                () => BlueprintExtensions.GetBlueprints<BlueprintUnitFact>(),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -201,7 +201,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
             return OnGUI<Feature>("Features", ch, feature,
                 (fact) => fact.Blueprint,
-                () => BlueprintExensions.GetBlueprints<BlueprintFeature>(),
+                () => BlueprintExtensions.GetBlueprints<BlueprintFeature>(),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -211,7 +211,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
             return OnGUI<Buff>("Features", ch, buff,
                 (fact) => fact.Blueprint,
-                () => BlueprintExensions.GetBlueprints<BlueprintBuff>(),
+                () => BlueprintExtensions.GetBlueprints<BlueprintBuff>(),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -221,7 +221,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
             return OnGUI<Ability>("Abilities", ch, ability,
                 (fact) => fact.Blueprint,
-                () => BlueprintExensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
+                () => BlueprintExtensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),
@@ -246,7 +246,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             return OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
                 (sb) => sb.Blueprint,
-                () => BlueprintExensions.GetBlueprints<BlueprintSpellbook>(),
+                () => BlueprintExtensions.GetBlueprints<BlueprintSpellbook>(),
                 (sb) => sb.Blueprint.GetDisplayName(),
                 (sb) => sb.Blueprint.GetDescription(),
                 null,

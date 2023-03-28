@@ -200,6 +200,8 @@ namespace ToyBox {
 
         // Loot 
         public bool toggleColorLootByRarity = false;
+        public bool toggleShowRarityTags = false;
+        public bool UsingLootRarity => toggleColorLootByRarity || toggleShowRarityTags;
         public RarityType minRarityToColor = 0;
         public RarityType lootFilterIgnore = RarityType.None;
         public RarityType lootFilterAutoSell = RarityType.None;
