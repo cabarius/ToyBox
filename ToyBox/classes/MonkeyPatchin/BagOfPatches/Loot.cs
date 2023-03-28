@@ -49,7 +49,7 @@ namespace ToyBox.BagOfPatches {
                     __instance.m_Icon.color = new Color(0.5f, 1.0f, 0.5f, 1.0f);
                 }
                 var item = __instance.Item;
-                if (settings.toggleColorLootByRarity && item != null) {
+                if (settings.UsingLootRarity && item != null) {
                     _ = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
                     var cb = item.Get<ItemPartShowInfoCallback>();
                     if (cb != null && (!cb.m_Settings.Once || !cb.m_Triggered)) {
@@ -81,13 +81,13 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
         private static class ItemEntity_Name_Patch {
             public static void Postfix(ItemEntity __instance, ref string __result) {
-                if (settings.toggleColorLootByRarity && __result != null && __result.Length > 0) {
+                if (settings.UsingLootRarity && __result != null && __result.Length > 0) {
                     var bp = __instance.Blueprint;
                     var rarity = __instance.Rarity();
                     if (rarity < settings.minRarityToColor) return;
                     if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic && rarity < RarityType.Uncommon) return;
                     if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic && rarity < RarityType.Uncommon) return;
-                    var result = __result.Rarity(rarity);
+                    var result = __result.RarityInGame(rarity);
                     //Main.Log($"ItemEntity_Name_Patch - Name: {__result} type:{__instance.GetType().FullName} - {rarity.ToString()} -> {result}");
                     __result = result;
                 }
@@ -101,7 +101,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(InventoryPCView), nameof(InventoryPCView.BindViewImplementation))]
         private static class InventoryPCView_BindViewImplementation_Patch {
             public static void Postfix(InventoryPCView __instance) {
-                if (!settings.toggleColorLootByRarity) return;
+                if (!settings.UsingLootRarity) return;
                 var decoration = __instance.gameObject?
                     .transform.Find("Inventory/Stash/StashContainer/StashScrollView/decoration");
                 var image = decoration?.GetComponent<UnityEngine.UI.Image>();
@@ -113,7 +113,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(InventoryEquipSlotPCView), nameof(InventoryEquipSlotPCView.BindViewImplementation))]
         private static class InventoryEquipSlotPCView_BindViewImplementation_Patch {
             public static void Postfix(InventoryEquipSlotPCView __instance) {
-                if (!settings.toggleColorLootByRarity) return;
+                if (!settings.UsingLootRarity) return;
                 var backfill = __instance.gameObject?
                     .transform.Find("Backfill");
                 var image = backfill?.GetComponent<UnityEngine.UI.Image>();
@@ -125,7 +125,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(WeaponSetPCView), nameof(WeaponSetPCView.BindViewImplementation))]
         private static class WeaponSetPCView_BindViewImplementation_Patch {
             public static void Postfix(WeaponSetPCView __instance) {
-                if (!settings.toggleColorLootByRarity) return;
+                if (!settings.UsingLootRarity) return;
                 var selected = __instance.gameObject?
                     .transform.Find("SelectedObject");
                 var image = selected?.GetComponent<UnityEngine.UI.Image>();
@@ -138,7 +138,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class LootCollectorPCView_BindViewImplementation_Patch {
             public static void Postfix(LootCollectorPCView __instance) {
-                if (!settings.toggleColorLootByRarity) return;
+                if (!settings.UsingLootRarity) return;
                 var image = __instance.gameObject?
                     .transform.Find("Collector/StashScrollView/Decoration")?
                     .GetComponent<UnityEngine.UI.Image>();
@@ -149,7 +149,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(VendorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class VendorPCView_BindViewImplementation_Patch {
             public static void Postfix(VendorPCView __instance) {
-                if (!settings.toggleColorLootByRarity) return;
+                if (!settings.UsingLootRarity) return;
                 var vendorImage = __instance.gameObject?
                     .transform.Find("MainContent/VendorBlock/VendorStashScrollView/decoration")?
                     .GetComponent<UnityEngine.UI.Image>();
@@ -163,7 +163,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
         private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
             public static void Postfix(TooltipBrickEntityHeaderView __instance) {
-                if (!settings.toggleColorLootByRarity) return;
+                if (!settings.UsingLootRarity) return;
                 var image = __instance.gameObject?
                     .transform.Find("TextBlock/Back/ItemBackContainer")?
                     .GetComponent<UnityEngine.UI.Image>();

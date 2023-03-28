@@ -37,8 +37,20 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
-### Ver 1.4.23
+### Ver 1.4.24 (coming soon)
+* (***Narria***) Loot coloring improvents
+  * Changed epic color to a purple
+  * Changed unreadable mythic color to magenta
+  * Changed godly color to cyan
+  * Added ability to show rarity as a [Rarity] suffix that is independent of the color
+* (***Narria***) Enchantment Editor improvements
+  * Now show item rating and rating of enchantments
+  * Sort items by rating
+  * Added toggle to show ratings in list of items 
+  * Improved grading of enchantments so that ones that have 0 cost (which I think is a bug) count as common (rating 5)
+  * Fixed bug where weapon type selection would be lost when you selected a weapon other than the first one in the list and then closed and reopened the mod window
 * (***Narria***) Added AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature.
+### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well
 * (***Narria***) Fixed issue where **Expand Answers For Conditional Responses** did not work for cases where there was a default outcome. Now when you meet Cial in ch3, Liches can choose the non Lichy response.

@@ -29,8 +29,13 @@ using UnityEngine.SceneManagement;
 namespace ToyBox {
     public static class LootHelper {
         public static Settings settings = Main.settings;
-        public static string NameAndOwner(this ItemEntity u) => u.Name + (u.Owner != null ? $" ({u.Owner.CharacterName})" : "");
+        public static string NameAndOwner(this ItemEntity u, bool showRating) =>
+            (showRating ? $"{u.Rating()} ".orange().bold() : "")
+            + (u.Owner != null ? $"({u.Owner.CharacterName}) ".orange() : "")
+            + u.Name;
+        public static string NameAndOwner(this ItemEntity u) => u.NameAndOwner(Main.settings.showRatingInItemPicker);
 
+        public static string NameAndOwner(this ItemEntity u) => u.NameAndOwner(Main.settings.showRatingInItemPicker);
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
             var rarity = item.Rarity();
             if ((int)rarity < (int)filter) return false;

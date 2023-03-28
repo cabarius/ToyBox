@@ -60,7 +60,7 @@ namespace ToyBox {
                 spellbook = spellbooks.ElementAt(selectedSpellbook);
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
-                    var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
+                    var blueprints = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
                     todo = BlueprintListUI.OnGUI(ch, blueprints, 100);
                 }
                 else {

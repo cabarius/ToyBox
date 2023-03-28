@@ -92,12 +92,16 @@ namespace ToyBox {
                         IntTextField(ref tmpExp, null, Width(150f));
                         prog.Experience = tmpExp;
                     }
-                    ActionButton("Adjust based on Level", () => {
-                        var newXP = prog.ExperienceTable.GetBonus(Mathf.RoundToInt(prog.CharacterLevel));
-                        prog.Experience = newXP;
-                    }, Width(150));
-                    Space(27);
-                    Label("This sets your experience to match the current value of character level.".green());
+                }
+                using (HorizontalScope()) {
+                    using (HorizontalScope(Width(781))) {
+                        Space(100);
+                        ActionButton("Adjust based on Level", () => {
+                            prog.MythicExperience = prog.MythicLevel;
+                        }, AutoWidth());
+                        Space(27);
+                    }
+                    Label("This sets your experience to match the current value of character level".green());
                 }
                 Div(100, 25);
                 using (HorizontalScope()) {
@@ -126,10 +130,15 @@ namespace ToyBox {
                             prog.MythicExperience = tmpMythicExp / 10;
                         }
                     }
-                    ActionButton("Adjust based on Level", () => {
-                        prog.MythicExperience = prog.MythicLevel;
-                    }, Width(150));
-                    Space(27);
+                }
+                using (HorizontalScope()) {
+                    using (HorizontalScope(Width(781))) {
+                        Space(100);
+                        ActionButton("Adjust based on Level", () => {
+                            prog.MythicExperience = prog.MythicLevel;
+                        }, AutoWidth());
+                        Space(27);
+                    }
                     Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
                 }
                 var classCount = classData.Count(x => !x.CharacterClass.IsMythic);

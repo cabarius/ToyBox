@@ -13,6 +13,7 @@ using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 using ModKit;
 using ModKit.Utility;
+using static ModKit.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,8 +50,7 @@ namespace ToyBox.classes.MainUI {
         public static void OnShowGUI() => UpdateItems();
         public static void OnGUI() {
             if (!Main.IsInGame) return;
-            UI.Label("Sandal says '".orange() + "Enchantment'".cyan().bold());
-
+            Label("Sandal says '".orange() + "Enchantment'".cyan().bold());
             // load blueprints
             if (enchantments == null) {
                 var blueprints = BlueprintLoader.Shared.GetBlueprints();
@@ -75,75 +75,80 @@ namespace ToyBox.classes.MainUI {
             }
 
             // Stackable browser
-            using (UI.HorizontalScope(UI.Width(350))) {
-                var remainingWidth = UI.ummWidth;
+            using (HorizontalScope(Width(350))) {
+                var remainingWidth = ummWidth;
 
                 // First column - Type Selection Grid
-                using (UI.VerticalScope()) {
-                    UI.ActionSelectionGrid(
+                using (VerticalScope()) {
+                    ActionSelectionGrid(
                         ref selectedItemType,
                         ItemTypeNames,
                         1,
                         index => { selectedItemIndex = index; UpdateItems(); },
-                        UI.buttonStyle,
-                        UI.Width(175));
-                        UI.Space(25);
-                        if (UI.VPicker("Ench. Types".cyan(), ref collationKey, collationKeys, "All", (s) => s, ref collationSearchText, UI.Width(175))) {
+                        buttonStyle,
+                        Width(175));
+                    Space(25);
+                        if (VPicker("Ench. Types".cyan(), ref collationKey, collationKeys, "All", (s) => s, ref collationSearchText, Width(175))) {
                         Mod.Debug($"collationKey: {collationKey}");
                         UpdateCollation();
                     }
                 }
                 var itemTypeName = ItemTypeNames[selectedItemType];
                 remainingWidth -= 250;
-                UI.Space(10);
+                Space(10);
                 // Second column - Item Selection Grid
-                using (UI.VerticalScope(GUI.skin.box)) {
-                    UI.ActionTextField(
+                using (VerticalScope(GUI.skin.box)) {
+                    ActionTextField(
                         ref itemSearchText,
                         "itemSearchText",
                         (text) => UpdateItems(),
                         () => UpdateItems(),
-                        UI.Width(375));
-                    using (UI.HorizontalScope()) {
-                        UI.ActionButton("Export", () => inventory.Export(itemTypeName + ".json"), UI.Width(160));
-                        UI.ActionButton("Import", () => {
+                        Width(375));
+                    using (HorizontalScope()) {
+                        10.space();
+                        Toggle("Ratings", ref settings.showRatingInItemPicker, 147.width());
+                        10.space();
+                        ActionButton("Export", () => inventory.Export(itemTypeName + ".json"), 100.width());
+                        ActionButton("Import", () => {
                             Game.Instance.Player.Inventory.Import(itemTypeName + ".json");
                             UpdateItems();
-                        }, UI.Width(160));
+                        }, 100.width());
                     }
                     if (inventory.Count > 0) {
-                        UI.ActionSelectionGrid(
+                        ActionSelectionGrid(
                             ref selectedItemIndex,
                             inventory.Select(item => item.NameAndOwner()).ToArray(),
                             1,
                             index => selectedItem = inventory[selectedItemIndex],
-                            UI.rarityButtonStyle,
-                            UI.Width(375));
+                            rarityButtonStyle,
+                            Width(375));
                     }
                     else {
-                        UI.Label("No Items".grey(), UI.Width(375));
+                        Label("No Items".grey(), Width(375));
                     }
                 }
                 remainingWidth -= 400;
-                UI.Space(10);
+                Space(10);
                 // Section Column - Main Area
-                using (UI.VerticalScope(UI.MinWidth(remainingWidth))) {
-                    UI.Label("Import/Export allows you to save and add a list of items to a file based on the type (e.g. Weapon.json). These files live in a new ToyBox folder that in the same folder that contains your saved games ".green());
+                using (VerticalScope(MinWidth(remainingWidth))) {
+                    Label("Import/Export allows you to save and add a list of items to a file based on the type (e.g. Weapon.json). These files live in a new ToyBox folder that in the same folder that contains your saved games ".green());
                     if (selectedItem != null) {
                         var item = selectedItem;
                         //UI.Label("Target".cyan());
-                        UI.Div();
-                        using (UI.HorizontalScope(GUI.skin.box, UI.MinHeight(125))) {
+                        Div();
+                        using (HorizontalScope(GUI.skin.box, MinHeight(125))) {
                             var rarity = item.Rarity();
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
-                            UI.Space(25);
-                            using (UI.VerticalScope(UI.Width(400))) {
-                                UI.Label(item.NameAndOwner().bold(), UI.Width(400));
+                            Space(25);
+                            using (VerticalScope(Width(400))) {
+                                Label(item.NameAndOwner(false).bold(), Width(400));
+                                25.space();
                                 var bp = item.Blueprint;
-                                using (UI.HorizontalScope()) {
+                                Label($"rating: {item.Rating().ToString().orange().bold()}".cyan());
+                                using (HorizontalScope()) {
                                     var modifers = bp.Attributes();
                                     if (item.IsEpic) modifers = modifers.Prepend("epic ");
-                                    UI.Label(string.Join(" ", modifers).cyan(), UI.AutoWidth());
+                                    Label(string.Join(" ", modifers).cyan(), AutoWidth());
                                     //if (bp is BlueprintItemWeapon bpW) {
                                     //    if (bpW.IsMagic) UI.Label("magic ".cyan(), UI.AutoWidth());
                                     //    if (bpW.IsNotable) UI.Label("notable ".Rarity(RarityType.Notable), UI.AutoWidth());
@@ -158,37 +163,37 @@ namespace ToyBox.classes.MainUI {
                                     //}
                                 }
                             }
-                            UI.Space(25);
+                            Space(25);
                             if (item is ItemEntityShield shield) {
-                                using (UI.VerticalScope()) {
-                                    using (UI.HorizontalScope()) {
-                                        UI.Label("Shield".orange(), UI.Width(100));
+                                using (VerticalScope()) {
+                                    using (HorizontalScope()) {
+                                        Label("Shield".orange(), Width(100));
                                         TargetItemGUI(shield.ArmorComponent);
                                     }
-                                    UI.Div();
+                                    Div();
                                     if (shield.WeaponComponent != null) {
-                                        using (UI.HorizontalScope()) {
-                                            UI.Label("Spikes".orange(), UI.Width(100));
+                                        using (HorizontalScope()) {
+                                            Label("Spikes".orange(), Width(100));
                                             TargetItemGUI(shield.WeaponComponent);
                                         }
-                                        UI.ActionButton("Remove ", () => shield.WeaponComponent = null, UI.AutoWidth());
+                                        ActionButton("Remove ", () => shield.WeaponComponent = null, AutoWidth());
                                     }
                                     else {
                                         var compTitle = shield.Blueprint.WeaponComponent?.name;
                                         compTitle = compTitle != null ? " from " + compTitle.yellow() : "";
-                                        UI.ActionButton("Add " + "Spikes".orange() + compTitle, () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), UI.AutoWidth());
+                                        ActionButton("Add " + "Spikes".orange() + compTitle, () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), AutoWidth());
                                     }
                                 }
                             }
                             else if (item is ItemEntityWeapon weapon && weapon.Second != null) {
-                                using (UI.VerticalScope()) {
-                                    using (UI.HorizontalScope()) {
-                                        UI.Label("Main".orange(), UI.Width(100));
+                                using (VerticalScope()) {
+                                    using (HorizontalScope()) {
+                                        Label("Main".orange(), Width(100));
                                         TargetItemGUI(weapon);
                                     }
-                                    UI.Div();
-                                    using (UI.HorizontalScope()) {
-                                        UI.Label("2nd".orange(), UI.Width(100));
+                                    Div();
+                                    using (HorizontalScope()) {
+                                        Label("2nd".orange(), Width(100));
                                         TargetItemGUI(weapon.Second);
                                     }
                                 }
@@ -197,68 +202,68 @@ namespace ToyBox.classes.MainUI {
                                 TargetItemGUI(item);
                             }
                         }
-                        using (UI.HorizontalScope()) {
-                            UI.ActionButton("Sandal".cyan() + ", yer a Trickster!", () => {
+                        using (HorizontalScope()) {
+                            ActionButton("Sandal".cyan() + ", yer a Trickster!", () => {
                                 AddTricksterEnchantmentsTier1(item);
-                            }, UI.AutoWidth());
-                            UI.ActionButton("Gimmie More!".Rarity(RarityType.Epic), () => {
+                            }, AutoWidth());
+                            ActionButton("Gimmie More!".Rarity(RarityType.Epic), () => {
                                 AddTricksterEnchantmentsTier2or3(item, false);
-                            }, UI.rarityButtonStyle, UI.AutoWidth());
-                            UI.ActionButton("En-chaannt-ment".Rarity(RarityType.Legendary), () => {
+                            }, rarityButtonStyle, AutoWidth());
+                            ActionButton("En-chaannt-ment".Rarity(RarityType.Legendary), () => {
                                 AddTricksterEnchantmentsTier2or3(item, true);
-                            }, UI.rarityButtonStyle, UI.AutoWidth());
-                            UI.Label("Sandal".cyan() + " has discovered the mythic path of Trickster and can reveal hidden secrets in your items".green());
+                            }, rarityButtonStyle, AutoWidth());
+                            Label("Sandal".cyan() + " has discovered the mythic path of Trickster and can reveal hidden secrets in your items".green());
                         }
-                        UI.Div();
+                        Div();
                     }
                     // Search Field and modifiers
-                    UI.Space(10);
-                    using (UI.HorizontalScope()) {
-                        UI.ActionTextField(
+                    Space(10);
+                    using (HorizontalScope()) {
+                        ActionTextField(
                             ref settings.searchTextEnchantments,
                             "searchText",
                             (text) => { UpdateSearchResults(); },
                             () => { UpdateSearchResults(); },
-                            UI.MinWidth(100), UI.MaxWidth(450));
-                        UI.Space(25);
-                        UI.Label("Search Limit", UI.AutoWidth());
-                        UI.ActionIntTextField(
+                            MinWidth(100), MaxWidth(450));
+                        Space(25);
+                        Label("Search Limit", AutoWidth());
+                        ActionIntTextField(
                             ref settings.searchLimit,
                             "searchLimit",
                             (limit) => { },
                             () => { UpdateSearchResults(); },
-                            UI.MinWidth(75), UI.MaxWidth(175));
+                            MinWidth(75), MaxWidth(175));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
-                        UI.Space(25);
-                        if (UI.Toggle("Search Descriptions", ref settings.searchesDescriptions)) UpdateSearchResults();
-                        UI.Space(25);
-                        UI.Toggle("Show GUIDs", ref settings.showAssetIDs);
-                        UI.Space(25);
-                        UI.Toggle("Components", ref settings.showComponents);
+                        Space(25);
+                        if (Toggle("Search Descriptions", ref settings.searchesDescriptions)) UpdateSearchResults();
+                        Space(25);
+                        Toggle("Show GUIDs", ref settings.showAssetIDs);
+                        Space(25);
+                        Toggle("Components", ref settings.showComponents);
                         //UI.Space(25);
                         //UI.Toggle("Elements", ref settings.showElements);
                     }
-                    UI.Space(10);
-                    using (UI.HorizontalScope()) {
-                        UI.ActionButton("Search", () => UpdateSearchResults(), UI.AutoWidth());
-                        UI.Space(25);
+                    Space(10);
+                    using (HorizontalScope()) {
+                        ActionButton("Search", () => UpdateSearchResults(), AutoWidth());
+                        Space(25);
                         if (matchCount > 0 && settings.searchTextEnchantments.Length > 0) {
                             var matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
                             if (matchCount > settings.searchLimit) { matchesText += "Displaying: ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
-                            UI.Label(matchesText, UI.ExpandWidth(false));
+                            Label(matchesText, ExpandWidth(false));
                         }
                     }
-                    using (UI.HorizontalScope()) {
-                        UI.Space(5);
-                        UI.Label("Enchantment".blue(), UI.Width(400));
-                        UI.Space(314);
-                        UI.Label("Rating".blue(), UI.Width(75));
-                        UI.Space(310);
-                        UI.Label("Description".blue());
+                    using (HorizontalScope()) {
+                        Space(5);
+                        Label("Enchantment".blue(), Width(400));
+                        Space(314);
+                        Label("Rating".blue(), Width(75));
+                        Space(310);
+                        Label("Description".blue());
 
                     }
-                    UI.Space(10);
-                    UI.Div();
+                    Space(10);
+                    Div();
                     // List of enchantments with buttons to add to item
                     EnchantmentsListGUI();
                 }
@@ -268,25 +273,27 @@ namespace ToyBox.classes.MainUI {
         public static void TargetItemGUI(ItemEntity item) {
             var enchantements = GetEnchantments(item);
             if (enchantements.Count > 0) {
-                using (UI.VerticalScope()) {
+                using (VerticalScope()) {
                     var index = 0;
                     foreach (var entry in enchantements) {
-                        if (index++ > 0) UI.Div();
+                        if (index++ > 0) Div();
                         var enchant = entry.Key;
                         var enchantBP = enchant.Blueprint;
                         var name = enchantBP.name;
                         if (name != null && name.Length > 0) {
                             name = name.Rarity(enchantBP.Rarity());
-                            using (UI.HorizontalScope()) {
-                                UI.Label(name, UI.Width(450));
-                                UI.Space(25);
-                                UI.Label(entry.Value ? "Custom".yellow() : "Perm".orange(), UI.Width(100));
-                                UI.Space(25);
-                                UI.ActionButton("Remove", () => RemoveEnchantment(item, enchant), UI.AutoWidth());
+                            using (HorizontalScope()) {
+                                Label(name, Width(450));
+                                Space(25);
+                                Label($"{(enchantBP.Rating()).ToString().orange().bold()}".cyan(), 50.width());
+                                Space(25);
+                                Label(entry.Value ? "Custom".yellow() : "Perm".orange(), Width(100));
+                                Space(25);
+                                ActionButton("Remove", () => RemoveEnchantment(item, enchant), AutoWidth());
                                 var description = enchantBP.Description;
                                 if (description != null) {
-                                    UI.Space(25);
-                                    UI.Label(description.StripHTML().green());
+                                    Space(25);
+                                    Label(description.StripHTML().green());
                                 }
                             }
                         }
@@ -294,84 +301,84 @@ namespace ToyBox.classes.MainUI {
                 }
             }
             else {
-                UI.Label("No Enchantments".orange());
+                Label("No Enchantments".orange());
             }
         }
         public static void EnchantmentsListGUI() {
-            UI.Div(5);
+            Div(5);
             var enchantements = selectedCollatedEnchantments ?? filteredEnchantments;
             
             for (var i = 0; i < enchantements.Count; i++) {
                 var enchant = enchantements[i];
                 var title = enchant.name.Rarity(enchant.Rarity());
                
-                using (UI.HorizontalScope()) {
-                    UI.Space(5);
-                    UI.Label(title, UI.Width(400));
+                using (HorizontalScope()) {
+                    Space(5);
+                    Label(title, Width(400));
                     if (selectedItem is ItemEntityShield shield) {
-                        UI.ActionButton("+ " + "Armor".orange(), () => AddClicked(i), UI.Width(150));
+                        ActionButton("+ " + "Armor".orange(), () => AddClicked(i), Width(150));
                         if (shield.ArmorComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                            UI.ActionButton("- " + "Armor".orange(), () => RemoveClicked(i), UI.Width(150));
+                            ActionButton("- " + "Armor".orange(), () => RemoveClicked(i), Width(150));
                         else
-                            UI.Space(154);
+                            Space(154);
                         if (shield.WeaponComponent != null) {
-                            UI.ActionButton("+ " + "Spikes".orange(), () => AddClicked(i, true), UI.Width(150));
+                            ActionButton("+ " + "Spikes".orange(), () => AddClicked(i, true), Width(150));
                             if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                                UI.ActionButton("- " + "Spikes".orange(), () => RemoveClicked(i, true), UI.Width(150));
+                                ActionButton("- " + "Spikes".orange(), () => RemoveClicked(i, true), Width(150));
                             else
-                                UI.Space(154);
+                                Space(154);
                         }
                     }
                     else if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
-                        UI.ActionButton("+ " + "Main".orange(), () => AddClicked(i), UI.Width(150));
+                        ActionButton("+ " + "Main".orange(), () => AddClicked(i), Width(150));
                         if (weapon.Enchantments.Any(e => e.Blueprint == enchant))
-                            UI.ActionButton("- " + "Main".orange(), () => RemoveClicked(i), UI.Width(150));
+                            ActionButton("- " + "Main".orange(), () => RemoveClicked(i), Width(150));
                         else
-                            UI.Space(154);
-                        UI.ActionButton("+ " + "2nd".orange(), () => AddClicked(i, true), UI.Width(150));
+                            Space(154);
+                        ActionButton("+ " + "2nd".orange(), () => AddClicked(i, true), Width(150));
                         if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant))
-                            UI.ActionButton("- " + "2nd".orange(), () => RemoveClicked(i, true), UI.Width(150));
+                            ActionButton("- " + "2nd".orange(), () => RemoveClicked(i, true), Width(150));
                         else
-                            UI.Space(154);
+                            Space(154);
                     }
                     else {
-                        UI.ActionButton("Add", () => AddClicked(i), UI.Width(150));
+                        ActionButton("Add", () => AddClicked(i), Width(150));
                         if (selectedItem?.Enchantments.Any(e => e.Blueprint == enchant) ?? false)
-                            UI.ActionButton("Remove", () => RemoveClicked(i), UI.Width(150));
+                            ActionButton("Remove", () => RemoveClicked(i), Width(150));
                         else
-                            UI.Space(154);
+                            Space(154);
                     }
 
-                    UI.Space(10);
-                    UI.Label($"{enchant.Rating()}".yellow(), 75.width()); // ⊙
-                    UI.Space(10);
+                    Space(10);
+                    Label($"{enchant.Rating()}".yellow(), 75.width()); // ⊙
+                    Space(10);
                     var description = enchant.Description.StripHTML().green();
                     if (enchant.Comment?.Length > 0) description = enchant.Comment.orange() + " " + description;
                     if (enchant.Prefix?.Length > 0) description = enchant.Prefix.yellow() + " " + description;
                     if (enchant.Suffix?.Length > 0) description = enchant.Suffix.yellow() + " " + description;
                     if (settings.showAssetIDs) {
-                        using (UI.VerticalScope()) {
-                            using (UI.HorizontalScope()) {
-                                UI.Label(enchant.CollationNames().First().cyan(), UI.Width(300));
-                                GUILayout.TextField(enchant.AssetGuid.ToString(), UI.AutoWidth());
+                        using (VerticalScope()) {
+                            using (HorizontalScope()) {
+                                Label(enchant.CollationNames().First().cyan(), Width(300));
+                                GUILayout.TextField(enchant.AssetGuid.ToString(), AutoWidth());
                             }
-                            UI.Label(description);
+                            Label(description);
                             
                         }
                     }
                     else {
-                        UI.Label(enchant.CollationNames().First().cyan(), UI.Width(300));
-                        UI.Label(description);
+                        Label(enchant.CollationNames().First().cyan(), Width(300));
+                        Label(description);
                     }
                 }
-                UI.Div();
+                Div();
             }
         }
         public static void UpdateItems() {
             var searchText = itemSearchText.ToLower();
             inventory = (from item in Game.Instance.Player.Inventory
-                         where item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == selectedItemIndex
-                         orderby item.Rarity() descending, item.Name
+                         where item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == selectedItemType
+                         orderby item.Rating() descending, item.Name
                          select item
                          ).ToList();
             if (editedItem != null) {

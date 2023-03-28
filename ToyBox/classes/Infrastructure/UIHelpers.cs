@@ -45,10 +45,10 @@ namespace ToyBox {
         }
 
         public static void DestroyChildren(this GameObject obj, params string[] paths) {
-            obj.ChildObjects(paths).ForEach(GameObject.Destroy);
+            obj.ChildObjects(paths).ForEach(UnityEngine.Object.Destroy);
         }
         public static void DestroyChildrenImmediate(this GameObject obj, params string[] paths) {
-            obj.ChildObjects(paths).ForEach(GameObject.DestroyImmediate);
+            obj.ChildObjects(paths).ForEach(UnityEngine.Object.DestroyImmediate);
         }
 
         public static void AddTo(this Transform obj, GameObject parent) { obj.AddTo(parent.transform); }

@@ -268,11 +268,13 @@ namespace ToyBox {
                     }
                     else { Space(180); }
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
+#if DEBUG
                     Space(10);
                     if (DisclosureToggle("AI", ref showAI, 125)) {
                         if (showAI) { selectedCharacter = ch; selectedToggle = ToggleChoice.AI; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
+#endif
                     if (isWide) ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {
                         selectedSpellbook = 0;

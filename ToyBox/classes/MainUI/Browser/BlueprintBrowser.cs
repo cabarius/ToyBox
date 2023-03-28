@@ -192,7 +192,7 @@ namespace ToyBox {
             var selectedType = selectedTypeFilter.type;
             IEnumerable<SimpleBlueprint> bps = null;
             if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
-            else bps = from bp in BlueprintExensions.BlueprintsOfType(selectedType)
+            else bps = from bp in BlueprintExtensions.BlueprintsOfType(selectedType)
                        where selectedTypeFilter.filter(bp)
                        select bp;
             var filtered = new List<SimpleBlueprint>();

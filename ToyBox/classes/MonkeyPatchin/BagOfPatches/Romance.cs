@@ -128,7 +128,7 @@ namespace ToyBox.BagOfPatches {
         public static class PcFemale_CheckCondition_Patch {
             public static void Postfix(PcFemale __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                Mod.Debug($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (PcFemaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }
@@ -136,7 +136,7 @@ namespace ToyBox.BagOfPatches {
         public static class PcMale_CheckCondition_Patch {
             public static void Postfix(PcMale __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                Mod.Debug($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }
@@ -146,7 +146,7 @@ namespace ToyBox.BagOfPatches {
         public static class ItemsEnough_CheckCondition_Patch {
             public static void Postfix(ItemsEnough __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance.ToString()} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                Mod.Debug($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
              //   if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }

@@ -200,6 +200,8 @@ namespace ToyBox {
 
         // Loot 
         public bool toggleColorLootByRarity = false;
+        public bool toggleShowRarityTags = false;
+        public bool UsingLootRarity => toggleColorLootByRarity || toggleShowRarityTags;
         public RarityType minRarityToColor = 0;
         public RarityType lootFilterIgnore = RarityType.None;
         public RarityType lootFilterAutoSell = RarityType.None;
@@ -353,7 +355,9 @@ namespace ToyBox {
         public bool showFromAllSpellbooks = false;
         public bool showDisplayAndInternalNames = false;
 
+        // Enchantment (Sandal)
         public string searchTextEnchantments = "";
+        public bool showRatingInItemPicker = false;
 
         // Dialog & Previews (Dialogs, Events ,etc)
         public bool previewDialogResults = false;

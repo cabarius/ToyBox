@@ -116,10 +116,10 @@ namespace ToyBox.classes.Infrastructure {
         public static void AddAllSpellsOfSelectedLevel(Spellbook spellbook, int level) {
             List<BlueprintAbility> toLearn;
             if (Main.settings.showFromAllSpellbooks) {
-                var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                var normal = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>()
                     .Where(x => ((BlueprintSpellbook)x).SpellList != null)
                     .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level));
-                var mythic = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
+                var mythic = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>()
                     .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
                     .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
                 toLearn = normal.Concat(mythic).Distinct().ToList();
@@ -210,7 +210,7 @@ namespace ToyBox.classes.Infrastructure {
             if (AllSpellsCache.TryGetValue(level, out var spells))
                 return spells;
             else {
-                var spellbooks = BlueprintExensions.GetBlueprints<BlueprintSpellbook>();
+                var spellbooks = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>();
                 if (spellbooks == null) return null;
                 Mod.Log($"spellbooks: {spellbooks.Count()}");
 

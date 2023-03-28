@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Kingmaker.Blueprints.Items;
 using UnityEngine;
@@ -11,6 +12,7 @@ using ModKit;
 using ToyBox;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Armors;
+using Kingmaker.UI.Common;
 using Kingmaker;
 using Kingmaker.View.MapObjects;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
@@ -18,6 +20,7 @@ using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.View;
 using Kingmaker.EntitySystem.Entities;
+using UnityEngine.UI;
 
 namespace ToyBox {
     public enum RarityType {
@@ -32,7 +35,7 @@ namespace ToyBox {
         Godly,
         Notable,
     }
-    public static partial class BlueprintExensions {
+    public static partial class BlueprintExtensions {
         public static RGBA[] RarityColors = {
             RGBA.none,
             RGBA.trash,
@@ -45,6 +48,7 @@ namespace ToyBox {
             RGBA.godly,
             RGBA.notable,
         };
+        public const int RarityScaling = 10;
         public static RarityType Rarity(this int rating) {
             var rarity = RarityType.Trash;
             if (rating > 100) rarity = RarityType.Godly;
@@ -56,34 +60,45 @@ namespace ToyBox {
             else if (rating > 5) rarity = RarityType.Common;
             return rarity;
         }
+        public static int Rating(this BlueprintItemEnchantment bp) {
+            int rating;
+            if (bp is BlueprintWeaponEnchantment || bp is BlueprintArmorEnchantment)
+                rating = Math.Max(5, bp.EnchantmentCost * RarityScaling);
+            else
+                rating = (bp.IdentifyDC * 5) / 2;
+            return rating;
+        }
+        public static int Rating(this ItemEntity item) => item.Blueprint.Rating(item);
+        public static int Rating(this BlueprintItem bp) {
+            var bpRating =  bp.CollectEnchantments().Sum((e) => e.Rating());
+            var bpEnchRating = bp.CollectEnchantments().Sum((e) => e.Rating());
+            return Math.Max(bpRating, bpEnchRating);
+        }
         public static int Rating(this BlueprintItem bp, ItemEntity item = null) {
             var rating = 0;
+            var itemRating = 0;
+            var itemEnchRating = 0;
+            var bpRating = 0;
             try {
-                var itemRating = 0;
-                var itemEnchRating = 0;
-                var bpRating = 0;
-                var bpEnchRating = 0;
                 if (item != null) {
-                    itemRating = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
-                    itemEnchRating = item.Enchantments.Sum(e => (int)e.Blueprint.Rating());
-                    //Main.Log($"item enchantValue: {enchantValue}");
+                    itemRating = item.Enchantments.Sum(e => e.Blueprint.Rating());
+                    itemEnchRating = item.Enchantments.Sum(e => e.Blueprint.Rating());
+                    //Mod.Log($"item itemRating: {itemRating} - {itemEnchRating}");
                     if (Game.Instance?.SelectionCharacter?.CurrentSelectedCharacter is var currentCharacter) {
                         var component = bp.GetComponent<CopyItem>();
                         if (component != null && component.CanCopy(item, currentCharacter)) {
-                            itemRating = Math.Max(itemRating, 10);
+                            itemRating = Math.Max(itemRating, RarityScaling);
                         }
                     }
                     itemRating = Math.Max(itemRating, itemEnchRating);
                 }
-                bpRating = 10 * bp.CollectEnchantments().Sum((e) => e.EnchantmentCost);
-                bpEnchRating = bp.CollectEnchantments().Sum((e) => (int)e.Rating());
-                bpRating = Math.Max(bpRating, bpEnchRating);
+                bpRating = bp.Rating();
                 //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
                 rating = Math.Max(itemRating, bpRating);
             }
             catch {
             }
-            //var rating = item.EnchantmentValue * 10;
+            //var rating = item.EnchantmentValue * rarityScaling;
             var cost = bp.Cost;
             var logCost = cost > 1 ? Math.Log(cost) / Math.Log(5) : 0;
             if (rating == 0 && bp is BlueprintItemEquipmentUsable usableBP) {
@@ -93,10 +108,10 @@ namespace ToyBox {
                 rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
             }
 #if false
-            Main.Log($"{bp.Name.Rarity(rarity)} : {bp.GetType().Name.grey().bold()} -  enchantValue: {enchantValue} logCost: {logCost} - rating: {rating}");
+            Mod.Log($"{bp.Name} : {bp.GetType().Name.grey().bold()} -  itemRating: {itemRating} bpRating: {bpRating} logCost: {logCost} - rating: {rating}");
 #endif
-            if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) rating = Math.Min(rating, 9);
-            if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) rating = Math.Min(rating, 9);
+            if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic) rating = Math.Min(rating, RarityScaling - 1);
+            if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic) rating = Math.Min(rating, RarityScaling - 1);
 
             return rating;
         }
@@ -124,18 +139,18 @@ namespace ToyBox {
             }
             return Rarity(bp.Rating(item));
         }
-
-        public static int Rating(this BlueprintItemEnchantment bp) {
-            int rating;
-            if (bp is BlueprintWeaponEnchantment || bp is BlueprintArmorEnchantment)
-                rating = 10 * bp.EnchantmentCost;
-            else
-                rating = (bp.IdentifyDC * 5) / 2;
-            return rating;
-        }
         public static RarityType Rarity(this BlueprintItemEnchantment bp) => bp.Rating().Rarity();
         public static Color color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
         public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
+        public static string RarityInGame(this string s, RarityType rarity, float adjust = 0) {
+            var name = settings.toggleColorLootByRarity ? s.color(RarityColors[(int)rarity]) : s;
+            if (settings.toggleShowRarityTags)
+                if (settings.toggleColorLootByRarity)
+                    return name + " " + $"[{rarity}]".darkGrey().bold(); //.SizePercent(75);
+                else
+                    return name + " " + $"[{rarity}]".Rarity(rarity).bold(); //.SizePercent(75);
+            return name;
+        }
         public static string GetString(this RarityType rarity, float adjust = 0) => rarity.ToString().Rarity(rarity, adjust);
         public static void Hide(this LocalMapLootMarkerPCView localMapLootMarkerPCView) {
             LocalMapCommonMarkerVM markerVm = localMapLootMarkerPCView.ViewModel as LocalMapCommonMarkerVM;
