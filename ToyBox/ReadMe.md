@@ -50,6 +50,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Improved grading of enchantments so that ones that have 0 cost (which I think is a bug) count as common (rating 5)
   * Fixed bug where weapon type selection would be lost when you selected a weapon other than the first one in the list and then closed and reopened the mod window
 * (***Narria***) Added AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature.
+* (***ADDB***) (Experimental) Added a feature that allows hiding map loot pins on the map if the contained loot doesn't reach at least a selected rarity.
 ### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well
@@ -74,7 +75,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) Added experience multipliers for different experience sources.
 * (***ADDB***) Made Individual Class and Mythic Experience editable in Party -> Classes tab.
 * (***ADDB***) Fixed a bug where activation Decree Preview would still show when opening an Event Window after opening a Decree.
-* (***ADDB***) (Experimental) Added a feature that allows hiding map loot pins on the map if the contained loot doesn't reach at least a selected rarity.
 ### Ver 1.4.22
 * Updated for Last Sarkorians DLC - Game Version 2.1.0w+
 * (***ArcaneTrixter***) Fixed actions bars patches being broken by game update.
