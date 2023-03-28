@@ -45,9 +45,6 @@ namespace ModKit {
         godly = 0x2cb8b4ff, //pink, red
         notable = 0x98761fff, //0xb1821fff, 0xffe000ff, // 0xC08020ff //0xffd840ff, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
     }
-
-
-
     public static class ColorUtils {
         public static Color color(this RGBA rga, float adjust = 0) {
             var red = (float)((long)rga >> 24) / 256f;
