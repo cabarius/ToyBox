@@ -111,8 +111,8 @@ namespace ToyBox {
                     UI.Space(25);
                     using (UI.VerticalScope()) {
                         UI.Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires using the update button.".orange()}".green());
-                        UI.Label("Maximum Rarity To Hide:".cyan(), UI.AutoWidth());
-                        UI.RarityGrid(ref settings.maxRarityToHide, 4, UI.AutoWidth());
+                        UI.Label("Minimum Rarity To Show:".cyan(), UI.AutoWidth());
+                        UI.RarityGrid(ref settings.minRarityToShow, 4, UI.AutoWidth());
                     }
                 },
                 () => {

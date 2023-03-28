@@ -24,6 +24,7 @@ using Owlcat.Runtime.UI.MVVM;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityModManagerNet;
 
@@ -186,29 +187,13 @@ namespace ToyBox.BagOfPatches {
 #endif
             }
         }
-        [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
+        [HarmonyPatch(typeof(LocalMapLootMarkerPCView), nameof(LocalMapLootMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
 
-            public static void PostFix(LocalMapMarkerPCView __instance) {
-                if (__instance == null || !settings.hideLootOnMap || settings.maxRarityToHide == RarityType.None)
+            public static void PostFix(LocalMapLootMarkerPCView __instance) {
+                if (__instance == null || !settings.hideLootOnMap || settings.minRarityToShow == RarityType.None)
                     return;
-                if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot) {
-                    LocalMapCommonMarkerVM markerVm = __instance.ViewModel as LocalMapCommonMarkerVM;
-                    LocalMapMarkerPart mapPart = markerVm.m_Marker as LocalMapMarkerPart;
-                    MapObjectView MOV = mapPart?.Owner.View as MapObjectView;
-                    InteractionLootPart lootPart = (MOV.Data.Interactions[0] as InteractionLootPart);
-                    var loot = lootPart.Loot;
-                    RarityType highest = RarityType.None;
-                    foreach (var item in loot) {
-                        RarityType itemRarity = item.Rarity();
-                        if (itemRarity > highest) {
-                            highest = itemRarity;
-                        }
-                    }
-                    if (highest <= settings.maxRarityToHide) {
-                        mapPart.SetHidden(true);
-                    }
-                }
+                __instance.Hide();
             }
         }
     }

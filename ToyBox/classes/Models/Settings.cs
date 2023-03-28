@@ -210,7 +210,7 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterDescription = false;
         public RarityType lootChecklistFilterRarity = RarityType.None;
         public bool hideLootOnMap = false;
-        public RarityType maxRarityToHide = RarityType.None;
+        public RarityType minRarityToShow = RarityType.None;
 
         // Crusade
         public bool toggleInfiniteArmyRerolls = false;
