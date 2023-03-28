@@ -76,7 +76,7 @@ namespace ToyBox {
                 () => { }
             );
             Div(0, 25);
-            HStack("Loot Coloring", 1,
+            HStack("Loot Rarity Coloring", 1,
                 () => {
                     using (VerticalScope()) {
                         Toggle("Show Rarity Tags", ref settings.toggleShowRarityTags);
@@ -111,21 +111,22 @@ namespace ToyBox {
                         RarityGrid(ref settings.minRarityToColor, 4, AutoWidth());
                     }
                 },
-                () => UI.Label("Warning: ".orange().bold() + "The following is experimental and might behave unexpectedly. This also does not work with loot dropped by enemies.".green()),
                 () => {
-                    UI.Toggle("Hide Items On Map By Rarity", ref settings.hideLootOnMap);
-                    UI.Space(25);
-                    using (UI.VerticalScope()) {
-                        UI.Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}".green());
-                        UI.Label("Maximum Rarity To Hide:".cyan(), UI.AutoWidth());
-                        UI.RarityGrid(ref settings.maxRarityToHide, 4, UI.AutoWidth());
+                    using (VerticalScope()) {
+                        Div(0, 25);
+                        Label("Warning: ".orange().bold() + "The following is experimental and might behave unexpectedly. This also does not work with loot dropped by enemies.".green());
+                        using (HorizontalScope()) {
+                            Toggle("Hide Items On Map By Rarity", ref settings.hideLootOnMap);
+                            Space(25);
+                            using (VerticalScope()) {
+                                Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}".green());
+                                Label("Maximum Rarity To Hide:".cyan(), AutoWidth());
+                                RarityGrid(ref settings.maxRarityToHide, 4, AutoWidth());
+                            }
+                        }
                     }
                 },
             // The following options let you configure loot filtering and auto sell levels:".green());
-#if false
-            () => UI.RarityGrid("Hide Level ", ref settings.lootFilterIgnore, 0, UI.AutoWidth()),
-            () => UI.RarityGrid("Auto Sell Level ", ref settings.lootFilterAutoSell, 0, UI.AutoWidth()),
-#endif
             () => { }
                 );
             Div(0, 25);
