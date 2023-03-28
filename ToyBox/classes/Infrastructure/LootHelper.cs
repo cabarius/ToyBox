@@ -108,7 +108,6 @@ namespace ToyBox {
                 if (hidden) interactionLootPart.Owner.IsPerceptionCheckPassed = true;
                 interactionLootPart.Owner.SetIsRevealedSilent(true);
             }
-            updateHidden();
         }
 
         public static void ShowAllInevitablePortalLoot() {
@@ -121,18 +120,6 @@ namespace ToyBox {
                 .Where(a => a.MapObject.GetValue()?.Get<InteractionLootPart>() is not null);
             foreach (var revealer in interactionLootRevealers) {
                 revealer.RunAction();
-            }
-        }
-        public static void updateHidden() {
-            // root -> InGamePCView(Clone) -> InGameStaticPartPCView
-            var MarksLoot = SceneManager.GetSceneByName("UI_Ingame_Scene").GetRootGameObjects()[1].findChild("InGameStaticPartPCView")
-                                    // -> StaticCanvas -> ServiceWindowsPCView -> Background -> Windows
-                                    .findChild("StaticCanvas").findChild("ServiceWindowsPCView").findChild("Background").findChild("Windows")
-                                    // -> LocalMapPCView -> ContentGroup -> MapBlock -> Map -> MarksLoot -> LocalMapLootMarkerView(Clone)
-                                    .findChild("LocalMapPCView").findChild("ContentGroup").findChild("MapBlock").findChild("Map").findChild("MarksLoot");
-            foreach (var localMapLootMarkerViewClone in MarksLoot.getChildren()) {
-                LocalMapLootMarkerPCView localMapLootMarkerPCView = localMapLootMarkerViewClone.GetComponent<LocalMapLootMarkerPCView>();
-                localMapLootMarkerPCView.Hide();
             }
         }
     }
