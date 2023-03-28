@@ -41,6 +41,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Loot coloring improvents
   * Changed epic color to a purple
   * Changed unreadable mythic color to magenta
+  * Changed godly color to cyan
   * Added ability to show rarity as a [Rarity] suffix that is independent of the color
 * (***Narria***) Enchantment Editor improvements
   * Now show item rating and rating of enchantments
