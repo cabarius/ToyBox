@@ -13,7 +13,10 @@ using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._PCView.Tooltip.Bricks;
 using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.UI.MVVM._VM.Slots;
+using ModKit;
+using UniRx;
 using Owlcat.Runtime.UI.MVVM;
 using UnityEngine;
 using UnityEngine.UI;
@@ -177,12 +180,17 @@ namespace ToyBox.BagOfPatches {
 #endif
             }
         }
-        [HarmonyPatch(typeof(LocalMapLootMarkerPCView), nameof(LocalMapLootMarkerPCView.BindViewImplementation))]
+        [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
-            public static void PostFix(LocalMapLootMarkerPCView __instance) {
+            public static void Postfix(LocalMapMarkerPCView __instance) {
                 if (__instance == null || !settings.hideLootOnMap || settings.maxRarityToHide == RarityType.None)
                     return;
-                __instance.Hide();
+
+                Mod.Log(__instance.GetType().ToString().green());
+                if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
+                    __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
+                        (__instance as LocalMapLootMarkerPCView)?.Hide();
+                    }));
             }
         }
     }
