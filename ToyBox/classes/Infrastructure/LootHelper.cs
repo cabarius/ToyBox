@@ -120,20 +120,15 @@ namespace ToyBox {
             }
         }
         public static void updateHidden() {
-            var InGamePCViewClone = SceneManager.GetSceneByName("UI_Ingame_Scene").GetRootGameObjects()[1];
             // root -> InGamePCView(Clone) -> InGameStaticPartPCView
-            var InGameStaticPartPCView = InGamePCViewClone.getChildren()[0];
-            // -> StaticCanvas -> ServiceWindowsPCView -> Background
-            var Background = InGameStaticPartPCView.getChildren()[2].getChildren()[7].getChildren()[0];
-            // -> Windows -> LocalMapPCView -> ContentGroup -> MapBlock
-            var MapBlock = Background.getChildren()[3].getChildren()[6].getChildren()[2].getChildren()[0];
-            // -> Map -> MarksLoot -> LocalMapLootMarkerView(Clone)
-            var MarksLoot = MapBlock.getChildren()[2].getChildren()[4];
+            var MarksLoot = SceneManager.GetSceneByName("UI_Ingame_Scene").GetRootGameObjects()[1].findChild("InGameStaticPartPCView")
+                                    // -> StaticCanvas -> ServiceWindowsPCView -> Background -> Windows
+                                    .findChild("StaticCanvas").findChild("ServiceWindowsPCView").findChild("Background").findChild("Windows")
+                                    // -> LocalMapPCView -> ContentGroup -> MapBlock -> Map -> MarksLoot -> LocalMapLootMarkerView(Clone)
+                                    .findChild("LocalMapPCView").findChild("ContentGroup").findChild("MapBlock").findChild("Map").findChild("MarksLoot");
             foreach (var localMapLootMarkerViewClone in MarksLoot.getChildren()) {
                 LocalMapLootMarkerPCView localMapLootMarkerPCView = localMapLootMarkerViewClone.GetComponent<LocalMapLootMarkerPCView>();
-                if (localMapLootMarkerPCView.IsDiscovered()) {
-                    localMapLootMarkerPCView.Hide();
-                }
+                localMapLootMarkerPCView.Hide();
             }
         }
     }

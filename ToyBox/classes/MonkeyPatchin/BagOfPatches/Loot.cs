@@ -4,7 +4,6 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.EntitySystem;
 using Kingmaker.Items;
 using Kingmaker.Items.Parts;
 using Kingmaker.UI.MVVM._PCView.Loot;
@@ -14,19 +13,10 @@ using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._PCView.Tooltip.Bricks;
 using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.UI.MVVM._VM.Slots;
-using Kingmaker.Utility;
-using Kingmaker.View.MapObjects;
-using ModKit;
 using Owlcat.Runtime.UI.MVVM;
-using System.Linq;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityModManagerNet;
 
 namespace ToyBox.BagOfPatches {
     internal static class Loot {
@@ -189,9 +179,8 @@ namespace ToyBox.BagOfPatches {
         }
         [HarmonyPatch(typeof(LocalMapLootMarkerPCView), nameof(LocalMapLootMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
-
             public static void PostFix(LocalMapLootMarkerPCView __instance) {
-                if (__instance == null || !settings.hideLootOnMap || settings.minRarityToShow == RarityType.None)
+                if (__instance == null || !settings.hideLootOnMap || settings.maxRarityToHide == RarityType.None)
                     return;
                 __instance.Hide();
             }
