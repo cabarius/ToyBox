@@ -44,6 +44,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Added ability to show rarity as a [Rarity] suffix that is independent of the color
 * (***Narria***) Enchantment Editor improvements
   * Now show item rating and rating of enchantments
+  * Sort items by rating
+  * Added toggle to show ratings in list of items 
   * Improved grading of enchantments so that ones that have 0 cost (which I think is a bug) count as common (rating 5)
   * Fixed bug where weapon type selection would be lost when you selected a weapon other than the first one in the list and then closed and reopened the mod window
 * (***Narria***) Added AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature.

@@ -51,7 +51,6 @@ namespace ToyBox.classes.MainUI {
         public static void OnGUI() {
             if (!Main.IsInGame) return;
             Label("Sandal says '".orange() + "Enchantment'".cyan().bold());
-
             // load blueprints
             if (enchantments == null) {
                 var blueprints = BlueprintLoader.Shared.GetBlueprints();
@@ -106,11 +105,14 @@ namespace ToyBox.classes.MainUI {
                         () => UpdateItems(),
                         Width(375));
                     using (HorizontalScope()) {
-                        ActionButton("Export", () => inventory.Export(itemTypeName + ".json"), Width(160));
+                        10.space();
+                        Toggle("Ratings", ref settings.showRatingInItemPicker, 147.width());
+                        10.space();
+                        ActionButton("Export", () => inventory.Export(itemTypeName + ".json"), 100.width());
                         ActionButton("Import", () => {
                             Game.Instance.Player.Inventory.Import(itemTypeName + ".json");
                             UpdateItems();
-                        }, Width(160));
+                        }, 100.width());
                     }
                     if (inventory.Count > 0) {
                         ActionSelectionGrid(
@@ -139,10 +141,10 @@ namespace ToyBox.classes.MainUI {
                             //Main.Log($"item.Name - {item.Name.ToString().Rarity(rarity)} rating: {item.Blueprint.Rating(item)}");
                             Space(25);
                             using (VerticalScope(Width(400))) {
-                                Label(item.NameAndOwner().bold(), Width(400));
+                                Label(item.NameAndOwner(false).bold(), Width(400));
                                 25.space();
                                 var bp = item.Blueprint;
-                                Label($"rating: {bp.Rating(item).ToString().orange().bold()}".cyan());
+                                Label($"rating: {item.Rating().ToString().orange().bold()}".cyan());
                                 using (HorizontalScope()) {
                                     var modifers = bp.Attributes();
                                     if (item.IsEpic) modifers = modifers.Prepend("epic ");
@@ -376,7 +378,7 @@ namespace ToyBox.classes.MainUI {
             var searchText = itemSearchText.ToLower();
             inventory = (from item in Game.Instance.Player.Inventory
                          where item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == selectedItemType
-                         orderby item.Rarity() descending, item.Name
+                         orderby item.Rating() descending, item.Name
                          select item
                          ).ToList();
             if (editedItem != null) {

@@ -62,6 +62,7 @@ namespace ToyBox {
                 rating = (bp.IdentifyDC * 5) / 2;
             return rating;
         }
+        public static int Rating(this ItemEntity item) => item.Blueprint.Rating(item);
         public static int Rating(this BlueprintItem bp) {
             var bpRating =  bp.CollectEnchantments().Sum((e) => e.Rating());
             var bpEnchRating = bp.CollectEnchantments().Sum((e) => e.Rating());
