@@ -21,6 +21,7 @@ using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.View;
 using Kingmaker.EntitySystem.Entities;
 using UnityEngine.UI;
+using System.Reflection;
 
 namespace ToyBox {
     public enum RarityType {
