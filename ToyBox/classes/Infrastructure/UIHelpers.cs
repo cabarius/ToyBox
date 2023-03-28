@@ -40,6 +40,9 @@ namespace ToyBox {
             return (from Transform child in obj.transform
                     select child?.gameObject).ToArray();
         }
+        public static GameObject findChild(this GameObject obj, String n) {
+            return obj.transform.Find(n).gameObject;
+        }
 
         public static void DestroyChildren(this GameObject obj, params string[] paths) {
             obj.ChildObjects(paths).ForEach(GameObject.Destroy);
