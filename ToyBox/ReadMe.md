@@ -39,11 +39,20 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ### Ver 1.4.24 (coming soon)
 * (***Narria***) Loot coloring improvents
+  * Added rarity tags when color loot items is active
+  * Added new alternative to just color the rarity tags and show titles in black text
   * Fixed rating for necklaces and rings
-  * Changed epic color to a purple
-  * Changed unreadable mythic color to magenta
-  * Changed godly color to cyan
-  * Added ability to show rarity as a [Rarity] suffix that is independent of the color
+    * This uncovered a need for an additional loot level so I added a new level called Primal which is equal to the old Godly and then increased the item rating required for godly to represent truely insane items like the +8 belt of physical perfection which gives +8 to 3 stats which calculates out to a rating of 240
+    * Recolored loot tiers and made them more readable
+    * Here are the item rating to rarity tiers and new color asignments.
+      * 200+ Godly - Red
+      * 100+ Primal - Cyan
+      * 60+ Mythic - Pink
+      * 40+ Legendary - Orange
+      * 30+ Epic - Purple
+      * 20+ Rare - Blue
+      * 10+ Uncommon - Green
+    * Note: You can now see item ratings in the Enchantment tab.
 * (***Narria***) Enchantment Editor improvements
   * Added **All** option to selecting item types
   * Now show item rating (blueprint rating) and rating of enchantments
