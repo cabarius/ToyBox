@@ -46,12 +46,13 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Recolored loot tiers and made them more readable
     * Here are the item rating to rarity tiers and new color asignments.
       * 200+ Godly - Red
-      * 100+ Primal - Cyan
-      * 60+ Mythic - Pink
-      * 40+ Legendary - Orange
+      * 115+ Primal - Cyan
+      * 80+ Mythic - Pink
+      * 50+ Legendary - Orange
       * 30+ Epic - Purple
       * 20+ Rare - Blue
       * 10+ Uncommon - Green
+    * You can think of a normal +1 weapon or armor being worth 10 rating points
     * Note: You can now see item ratings in the Enchantment tab.
 * (***Narria***) Enchantment Editor improvements
   * Added **All** option to selecting item types

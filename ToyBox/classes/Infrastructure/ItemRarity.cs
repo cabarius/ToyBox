@@ -56,9 +56,9 @@ namespace ToyBox {
         public static RarityType Rarity(this int rating) {
             var rarity = RarityType.Trash;
             if (rating >= 200) rarity = RarityType.Godly;
-            else if (rating >= 100) rarity = RarityType.Primal;
-            else if (rating >= 60) rarity = RarityType.Mythic;
-            else if (rating >= 40) rarity = RarityType.Legendary;
+            else if (rating >= 115) rarity = RarityType.Primal;
+            else if (rating >= 80) rarity = RarityType.Mythic;
+            else if (rating >= 50) rarity = RarityType.Legendary;
             else if (rating >= 30) rarity = RarityType.Epic;
             else if (rating >= 20) rarity = RarityType.Rare;
             else if (rating >= 10) rarity = RarityType.Uncommon;
