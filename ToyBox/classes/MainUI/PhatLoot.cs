@@ -130,6 +130,7 @@ namespace ToyBox {
             () => { }
                     );
             Div(0, 25);
+            if (Game.Instance.CurrentlyLoadedArea == null) return;
             var isEmpty = true;
             HStack("Loot Checklist", 1,
                 () => {
