@@ -31,6 +31,8 @@ using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Kingdom.Blueprints;
+using Kingmaker.AI.Blueprints.Considerations;
+using Kingmaker.AI.Blueprints;
 
 namespace ToyBox {
     public static class BlueprintBrowser {
@@ -75,6 +77,9 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.CollationNames(bp.School.ToString())),
+            new NamedTypeFilter<BlueprintBrain>("Brains", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintAiAction>("AIActions", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<Consideration>("Considerations", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbilityResource>("Ability Rsrc", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CollationNames(bp.CharacterClass.Name.ToString())),

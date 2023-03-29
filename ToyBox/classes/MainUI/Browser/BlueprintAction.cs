@@ -1,6 +1,7 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using Kingmaker;
+using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.QuestSystem;
@@ -391,7 +392,6 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintUnlockableFlag>("<",
                 (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n),
                 (bp, ch, index) => flags.IsUnlocked(bp));
-
             // Cutscenes
             BlueprintAction.Register<Cutscene>("Play", (bp, ch, n, index) => {
                 Actions.ToggleModWindow();
