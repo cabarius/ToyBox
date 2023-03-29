@@ -20,6 +20,7 @@ using UniRx;
 using Owlcat.Runtime.UI.MVVM;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace ToyBox.BagOfPatches {
     internal static class Loot {
@@ -62,7 +63,6 @@ namespace ToyBox.BagOfPatches {
                     var rarity = item.Rarity();
                     var color = rarity.color();
                     //Main.Log($"ItemSlotView_RefreshItem_Patch - {item.Name} - {color}");
-                    var colorTranslucent = new Color(color.r, color.g, color.b, color.a * 0.65f);
                     if (rarity == RarityType.Notable && __instance.m_NotableLayer != null) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");
                         if (objFX != null && objFX.TryGetComponent<Image>(out var image)) image.color = color;
@@ -72,6 +72,8 @@ namespace ToyBox.BagOfPatches {
                             __instance.SlotVM.IsMagic.SetValueAndForceNotify(true);
 
                         if (__instance.m_MagicLayer != null) {
+                            var ratingAlpha = (float)Math.Min(120, item.Rating()+20)/120;
+                            var colorTranslucent = new Color(color.r, color.g, color.b, color.a * ratingAlpha); // 0.45f);
                             var obj = __instance.m_MagicLayer.gameObject;
                             obj.GetComponent<Image>().color = colorTranslucent;
                             var objFX = __instance.m_MagicLayer.Find("MagicLayerFX");

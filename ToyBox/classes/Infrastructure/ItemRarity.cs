@@ -22,6 +22,7 @@ using Kingmaker.View;
 using Kingmaker.EntitySystem.Entities;
 using UnityEngine.UI;
 using System.Reflection;
+using Kingmaker.Designers.Mechanics.EquipmentEnchants;
 
 namespace ToyBox {
     public enum RarityType {
@@ -33,6 +34,7 @@ namespace ToyBox {
         Epic,
         Legendary,
         Mythic,
+        Primal,
         Godly,
         Notable,
     }
@@ -46,13 +48,15 @@ namespace ToyBox {
             RGBA.epic,
             RGBA.legendary,
             RGBA.mythic,
+            RGBA.primal,
             RGBA.godly,
             RGBA.notable,
         };
         public const int RarityScaling = 10;
         public static RarityType Rarity(this int rating) {
             var rarity = RarityType.Trash;
-            if (rating > 100) rarity = RarityType.Godly;
+            if (rating >= 200) rarity = RarityType.Godly;
+            else if (rating >= 100) rarity = RarityType.Primal;
             else if (rating >= 60) rarity = RarityType.Mythic;
             else if (rating >= 40) rarity = RarityType.Legendary;
             else if (rating >= 30) rarity = RarityType.Epic;
@@ -65,8 +69,10 @@ namespace ToyBox {
             int rating;
             if (bp is BlueprintWeaponEnchantment || bp is BlueprintArmorEnchantment)
                 rating = Math.Max(5, bp.EnchantmentCost * RarityScaling);
-            else
-                rating = (bp.IdentifyDC * 5) / 2;
+            else {
+                var modifierRating = bp.Components?.Sum(c => c is AddStatBonusEquipment sbe ?sbe.Value : 0) ?? 0;
+                rating = Math.Max(RarityScaling * modifierRating, (bp.IdentifyDC * 5) / 2);
+            }
             return rating;
         }
         public static int Rating(this ItemEntity item) => item.Blueprint.Rating(item);

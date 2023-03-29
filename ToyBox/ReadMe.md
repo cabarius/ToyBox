@@ -39,6 +39,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 
 ### Ver 1.4.24 (coming soon)
 * (***Narria***) Loot coloring improvents
+  * Fixed rating for necklaces and rings
   * Changed epic color to a purple
   * Changed unreadable mythic color to magenta
   * Changed godly color to cyan

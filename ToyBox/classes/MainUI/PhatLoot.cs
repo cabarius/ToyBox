@@ -99,11 +99,12 @@ namespace ToyBox {
                             },
                             () => {
                                 Space(5); Label("Mythic".Rarity(RarityType.Mythic).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Primal".Rarity(RarityType.Primal).bold(), rarityStyle, Width(200));
                                 Space(5); Label("Godly".Rarity(RarityType.Godly).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Notable".Rarity(RarityType.Notable).bold() + "*".orange().bold(), rarityStyle, Width(200));
                             },
                             () => {
-                                Space(3); Label("*".orange().bold() + " Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green(), Width(615));
+                                Space(5); Label("Notable".Rarity(RarityType.Notable).bold(), rarityStyle, Width(200));
+                                Space(5); Label("Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green());
                             },
                             () => { }
                         );
