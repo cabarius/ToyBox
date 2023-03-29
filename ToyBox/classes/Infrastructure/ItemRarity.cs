@@ -67,13 +67,17 @@ namespace ToyBox {
         }
         public static int Rating(this BlueprintItemEnchantment bp) {
             int rating;
+            var modifierRating = RarityScaling * bp.Components?.Sum(
+                c => c is AddStatBonusEquipment sbe ? sbe.Value 
+                    : c is AllSavesBonusEquipment asbe ? asbe.Value
+                    : 0
+                    ) ?? 0;
             if (bp is BlueprintWeaponEnchantment || bp is BlueprintArmorEnchantment)
                 rating = Math.Max(5, bp.EnchantmentCost * RarityScaling);
             else {
-                var modifierRating = bp.Components?.Sum(c => c is AddStatBonusEquipment sbe ?sbe.Value : 0) ?? 0;
-                rating = Math.Max(RarityScaling * modifierRating, (bp.IdentifyDC * 5) / 2);
+                rating = (bp.IdentifyDC * 5) / 2;
             }
-            return rating;
+            return Math.Max(modifierRating, rating);
         }
         public static int Rating(this ItemEntity item) => item.Blueprint.Rating(item);
         public static int Rating(this BlueprintItem bp) {
