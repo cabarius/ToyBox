@@ -183,7 +183,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
             public static void Postfix(LocalMapMarkerPCView __instance) {
-                if (__instance == null || !settings.hideLootOnMap || settings.maxRarityToHide == RarityType.None)
+                if (__instance == null || settings.maxRarityToHide == RarityType.None)
                     return;
 
                 Mod.Log(__instance.GetType().ToString().green());
