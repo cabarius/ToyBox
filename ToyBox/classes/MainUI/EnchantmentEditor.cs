@@ -106,7 +106,7 @@ namespace ToyBox.classes.MainUI {
                         Width(375));
                     using (HorizontalScope()) {
                         10.space();
-                        Toggle("Ratings", ref settings.showRatingInItemPicker, 147.width());
+                        Toggle("Ratings", ref settings.showRatingForEnchantmentInventoryItems, 147.width());
                         10.space();
                         ActionButton("Export", () => inventory.Export(itemTypeName + ".json"), 100.width());
                         ActionButton("Import", () => {

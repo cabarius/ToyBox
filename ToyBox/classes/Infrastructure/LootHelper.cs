@@ -7,9 +7,7 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Items;
 using Kingmaker.UI.MVVM._PCView.Loot;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.Loot;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UnitLogic;
 using Kingmaker.Utility;
 using Kingmaker.View.MapObjects;
@@ -24,17 +22,14 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace ToyBox {
     public static class LootHelper {
-        public static Settings settings = Main.settings;
         public static string NameAndOwner(this ItemEntity u, bool showRating) =>
             (showRating ? $"{u.Rating()} ".orange().bold() : "")
             + (u.Owner != null ? $"({u.Owner.CharacterName}) ".orange() : "")
             + u.Name;
-
-        public static string NameAndOwner(this ItemEntity u) => u.NameAndOwner(Main.settings.showRatingInItemPicker);
+        public static string NameAndOwner(this ItemEntity u) => u.NameAndOwner(Main.settings.showRatingForEnchantmentInventoryItems);
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
             var rarity = item.Rarity();
             if ((int)rarity < (int)filter) return false;
@@ -123,32 +118,32 @@ namespace ToyBox {
             }
         }
     }
-}
 
-internal class MassLootWindowHandler {
+    internal class MassLootWindowHandler {
 
-    private LootPCView lootPCView;
+        private LootPCView lootPCView;
 
-    public MassLootWindowHandler() {
-        var loot = MassLootHelper.GetMassLootFromCurrentArea();
-        if (!loot.Any()) {
-            return;
-        }
-        var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, new Action(Dispose));
-        lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
-        lootPCView.Initialize();
-        var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();
-        if (buttons.Length > 2) {
-            for (int i = 2; i < buttons.Length; i++) {
-                GameObject.DestroyImmediate(buttons[i].gameObject);
+        public MassLootWindowHandler() {
+            var loot = MassLootHelper.GetMassLootFromCurrentArea();
+            if (!loot.Any()) {
+                return;
             }
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, new Action(Dispose));
+            lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
+            lootPCView.Initialize();
+            var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();
+            if(buttons.Length > 2) {
+                for(int i = 2; i < buttons.Length; i++) {
+                    UnityEngine.Object.DestroyImmediate(buttons[i].gameObject);
+                }
+            }
+
+            lootPCView.Bind(lootVM);
         }
 
-        lootPCView.Bind(lootVM);
-    }
-
-    private void Dispose() {
-        lootPCView.Unbind();
-        lootPCView.DestroyView();
+        private void Dispose() {
+            lootPCView.Unbind();
+            lootPCView.DestroyView();
+        }
     }
 }

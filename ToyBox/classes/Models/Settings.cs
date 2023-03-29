@@ -356,7 +356,7 @@ namespace ToyBox {
 
         // Enchantment (Sandal)
         public string searchTextEnchantments = "";
-        public bool showRatingInItemPicker = false;
+        public bool showRatingForEnchantmentInventoryItems = true;
 
         // Dialog & Previews (Dialogs, Events ,etc)
         public bool previewDialogResults = false;
