@@ -44,7 +44,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Changed godly color to cyan
   * Added ability to show rarity as a [Rarity] suffix that is independent of the color
 * (***Narria***) Enchantment Editor improvements
-  * Now show item rating and rating of enchantments
+  * Added **All** option to selecting item types
+  * Now show item rating (blueprint rating) and rating of enchantments
   * Sort items by rating
   * Added toggle to show ratings in list of items 
   * Improved grading of enchantments so that ones that have 0 cost (which I think is a bug) count as common (rating 5)

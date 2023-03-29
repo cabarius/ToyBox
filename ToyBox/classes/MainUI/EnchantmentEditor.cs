@@ -34,7 +34,7 @@ namespace ToyBox.classes.MainUI {
         public static ItemEntity selectedItem = null;
         public static ItemEntity editedItem = null;
         public static string itemSearchText = "";
-        public static string[] ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType));
+        public static string[] ItemTypeNames = null;
         private static List<ItemEntity> inventory;
         private static List<BlueprintItemEnchantment> enchantments;
         private static List<BlueprintItemEnchantment> filteredEnchantments = new();
@@ -50,6 +50,8 @@ namespace ToyBox.classes.MainUI {
         public static void OnShowGUI() => UpdateItems();
         public static void OnGUI() {
             if (!Main.IsInGame) return;
+            if (ItemTypeNames == null) 
+                ItemTypeNames =  Enum.GetNames(typeof(ItemsFilter.ItemType)).ToList().Prepend("All").ToArray();
             Label("Sandal says '".orange() + "Enchantment'".cyan().bold());
             // load blueprints
             if (enchantments == null) {
@@ -84,7 +86,10 @@ namespace ToyBox.classes.MainUI {
                         ref selectedItemType,
                         ItemTypeNames,
                         1,
-                        index => { selectedItemIndex = index; UpdateItems(); },
+                        index => { 
+                            selectedItemIndex = index;
+                            UpdateItems(); 
+                        },
                         buttonStyle,
                         Width(175));
                     Space(25);
@@ -144,7 +149,7 @@ namespace ToyBox.classes.MainUI {
                                 Label(item.NameAndOwner(false).bold(), Width(400));
                                 25.space();
                                 var bp = item.Blueprint;
-                                Label($"rating: {item.Rating().ToString().orange().bold()}".cyan());
+                                Label($"rating: {item.Rating().ToString().orange().bold()} (bp:{item.Blueprint.Rating().ToString().orange().bold()})".cyan());
                                 using (HorizontalScope()) {
                                     var modifers = bp.Attributes();
                                     if (item.IsEpic) modifers = modifers.Prepend("epic ");
@@ -375,9 +380,13 @@ namespace ToyBox.classes.MainUI {
             }
         }
         public static void UpdateItems() {
+            var selectedItemTypeEnumIndex = selectedItemType - 1;
             var searchText = itemSearchText.ToLower();
             inventory = (from item in Game.Instance.Player.Inventory
-                         where item.Name.ToLower().Contains(searchText) && (int)item.Blueprint.ItemType == selectedItemType
+                         where item.Name.ToLower().Contains(searchText) 
+                            && (selectedItemType == 0
+                                || (int)item.Blueprint.ItemType == selectedItemTypeEnumIndex
+                                )
                          orderby item.Rating() descending, item.Name
                          select item
                          ).ToList();
