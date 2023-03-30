@@ -37,10 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 
-### Ver 1.4.25 (coming soon)
-* (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
-
-### Ver 1.4.24
+### Ver 1.4.24 (coming soon)
 * (***Narria***) Loot coloring improvents
   * Added rarity tags when color loot items is active
   * Added new alternative to just color the rarity tags and show titles in black text
@@ -68,6 +65,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added Brains, AIActions and Considerations to Search 'n Pick
 * (***Narria***) Fixed crasher during character creaton on the loot screen
 * (***ADDB***) (Experimental) Added a feature that allows hiding map loot pins on the map if the contained loot doesn't reach at least a selected rarity.
+* (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
 ### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well
