@@ -454,7 +454,7 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Cheats", 1,
-                () => Toggle("Kill enemy on Engage", ref settings.togglekillOnEngage),
+                () => Toggle("Murder Hobo (Kill all enemies on Engage)", ref settings.togglekillOnEngage),
                 () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)", ref settings.toggleUnlimitedStatModifierStacking),
                 () => {
                     using (HorizontalScope()) {
