@@ -207,6 +207,11 @@ namespace ToyBox {
                     Toggle("Friendship is Magic".bold(), ref settings.toggleFriendshipIsMagic, 300.width());
                     25.space();
                     Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
+                },   
+                () => {
+                    Toggle("Disallow Companions Leaving Party", ref settings.toggleBlockUnrecruit, 300.width());
+                    25.space();
+                    Label("Warning: ".color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can  otherwise break your save".orange());
                 },
                 () => Toggle("Make Previously Chosen Answers More Clear", ref settings.toggleMakePreviousAnswersMoreClear),
                 () => {
@@ -493,7 +498,6 @@ namespace ToyBox {
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat),
-                () => Toggle("Disallow Companions Leaving Party (experimental; only enable while needed)", ref settings.toggleBlockUnrecruit),
                 () => Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
                 () => ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
                 () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
