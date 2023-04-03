@@ -217,7 +217,7 @@ namespace ToyBox {
                     Toggle("Friendship is Magic".bold(), ref settings.toggleFriendshipIsMagic, 300.width());
                     25.space();
                     Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
-                },   
+                },
                 () => {
                     Toggle("Disallow Companions Leaving Party", ref settings.toggleBlockUnrecruit);
                     25.space();
@@ -272,6 +272,7 @@ namespace ToyBox {
                     Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
                 // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
+                () => Toggle("Make game continue to play music on lost focus", ref settings.toggleContinueAudioOnLostFocus),
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
                 () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); 25.space(); Label("Hold down shift during launch to bypass".green()); },
