@@ -32,6 +32,7 @@ namespace ToyBox {
         private const string KillAllEnemies = "Kill All Enemies";
         //private const string SummonZoo = "Summon Zoo"
         private const string LobotomizeAllEnemies = "Lobotomize Enemies";
+        private const string ToggleMurderHobo = "Toggle Murder Hobo";
 
         // cheats common
         private const string TeleportPartyToYou = "Teleport Party To You";
@@ -80,6 +81,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(ResetAdditionalCameraAngles, () => {
                 Main.resetExtraCameraAngles = true;
             });
+            KeyBindings.RegisterAction(ToggleMurderHobo, () => settings.togglekillOnEngage = !settings.togglekillOnEngage);
         }
         public static void ResetGUI() { }
         public static void OnGUI() {
@@ -133,7 +135,15 @@ namespace ToyBox {
                 () => BindableActionButton(GoddesBuffs),
                 () => BindableActionButton(RemoveBuffs),
                 () => BindableActionButton(RemoveDeathsDoor),
-                () => BindableActionButton(KillAllEnemies),
+                () => {
+                    BindableActionButton(KillAllEnemies);
+                    Space(-50);
+                    using (HorizontalScope(Width(8000))) {
+                        Toggle($"Be a {"Murder Hobo".orange().bold()} and kill all who try to enage you (how dare they!)", ref settings.togglekillOnEngage);
+                        Space(-75);
+                        KeyBindPicker(ToggleMurderHobo, "", 50);
+                    }
+                },
                 //() => UI.BindableActionButton(SummonZoo),
                 () => BindableActionButton(LobotomizeAllEnemies),
                 () => { }
@@ -454,7 +464,6 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Cheats", 1,
-                () => Toggle("Murder Hobo (Kill all enemies on Engage)", ref settings.togglekillOnEngage),
                 () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)", ref settings.toggleUnlimitedStatModifierStacking),
                 () => {
                     using (HorizontalScope()) {
@@ -575,19 +584,21 @@ namespace ToyBox {
             HStack("Other Multipliers", 1,
                 () => {
                     LogSlider("Fog of War Range", ref settings.fowMultiplier, 0f, 100f, 1, 1, "", AutoWidth());
-                    List<UnitEntityData> units = Game.Instance.Player.m_PartyAndPets;
+                    List<UnitEntityData> units = Game.Instance?.Player?.m_PartyAndPets;
                     foreach (var unit in units) {
                         FogOfWarController.VisionRadiusMultiplier = settings.fowMultiplier;
                         FogOfWarRevealerSettings revealer = unit.View.FogOfWarRevealer;
-                        if (settings.fowMultiplier == 1) {
-                            revealer.DefaultRadius = true;
-                            revealer.UseDefaultFowBorder = true;
-                            revealer.Radius = 1.0f;
-                        }
-                        else {
-                            revealer.DefaultRadius = false;
-                            revealer.UseDefaultFowBorder = false;
-                            revealer.Radius = FogOfWarController.VisionRadius * settings.fowMultiplier;
+                        if (revealer != null) {
+                            if (settings.fowMultiplier == 1) {
+                                revealer.DefaultRadius = true;
+                                revealer.UseDefaultFowBorder = true;
+                                revealer.Radius = 1.0f;
+                            }
+                            else {
+                                revealer.DefaultRadius = false;
+                                revealer.UseDefaultFowBorder = false;
+                                revealer.Radius = FogOfWarController.VisionRadius * settings.fowMultiplier;
+                            }
                         }
                     }
                 },
