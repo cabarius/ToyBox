@@ -219,7 +219,7 @@ namespace ToyBox {
                     Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
                 },   
                 () => {
-                    Toggle("Disallow Companions Leaving Party", ref settings.toggleBlockUnrecruit, 300.width());
+                    Toggle("Disallow Companions Leaving Party", ref settings.toggleBlockUnrecruit);
                     25.space();
                     Label("Warning: ".color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can  otherwise break your save".orange());
                 },

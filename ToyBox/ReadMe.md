@@ -68,6 +68,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) Added Kill on Engage toggle (Which kills a unit as soon as it joins a fight against Character).
 * (***ADDB***) Added Fog of War Radius multiplier.
 * (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
+* (***CascadingDragon***) 
 ### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well
