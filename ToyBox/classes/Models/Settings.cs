@@ -196,6 +196,7 @@ namespace ToyBox {
         public bool toggleMakePetsRidable = false;
         public bool toggleRideAnything = false;
         public bool toggleUnlimitedStatModifierStacking = false;
+        public bool togglekillOnEngage = false;
         public bool toggleDisableCorruption = false;
 
         // Loot 
