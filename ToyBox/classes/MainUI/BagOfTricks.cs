@@ -7,15 +7,15 @@ using Kingmaker.Cheats;
 using Kingmaker.Kingdom;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Alignments;
-using Kingmaker.UI.Dialog;
-using Kingmaker.Utility;
 using ModKit;
 using ToyBox;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
-using static ToyBox.BagOfPatches.PartyView;
+using Kingmaker.Controllers;
+using Kingmaker.View;
+using Kingmaker.EntitySystem.Entities;
+using System.Collections.Generic;
 
 namespace ToyBox {
     public static class BagOfTricks {
@@ -573,6 +573,24 @@ namespace ToyBox {
                 );
             Div(0, 25);
             HStack("Other Multipliers", 1,
+                () => {
+                    LogSlider("Fog of War Range", ref settings.fowMultiplier, 0f, 100f, 1, 1, "", AutoWidth());
+                    List<UnitEntityData> units = Game.Instance.Player.m_PartyAndPets;
+                    foreach (var unit in units) {
+                        FogOfWarController.VisionRadiusMultiplier = settings.fowMultiplier;
+                        FogOfWarRevealerSettings revealer = unit.View.FogOfWarRevealer;
+                        if (settings.fowMultiplier == 1) {
+                            revealer.DefaultRadius = true;
+                            revealer.UseDefaultFowBorder = true;
+                            revealer.Radius = 1.0f;
+                        }
+                        else {
+                            revealer.DefaultRadius = false;
+                            revealer.UseDefaultFowBorder = false;
+                            revealer.Radius = FogOfWarController.VisionRadius * settings.fowMultiplier;
+                        }
+                    }
+                },
                 () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
