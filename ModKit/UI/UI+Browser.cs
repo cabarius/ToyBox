@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using ModKit.Utility;
 using ModKit;
 using UnityEngine;
-using static Kingmaker.Blueprints.Classes.StatsDistributionPreset;
+//using static Kingmaker.Blueprints.Classes.StatsDistributionPreset;
 
 namespace ModKit {
 
