@@ -65,6 +65,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added Brains, AIActions and Considerations to Search 'n Pick
 * (***Narria***) Fixed crasher during character creaton on the loot screen
 * (***ADDB***) (Experimental) Added a feature that allows hiding map loot pins on the map if the contained loot doesn't reach at least a selected rarity.
+* (***ADDB***) Added Fog of War Radius multiplier.
 * (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
 ### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
