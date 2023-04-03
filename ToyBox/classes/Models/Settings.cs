@@ -283,6 +283,7 @@ namespace ToyBox {
         public bool useQuestsExpSlider = false;
         public bool useSkillChecksExpSlider = false;
         public bool useTrapsExpSlider = false;
+        public float fowMultiplier = 1;
         public float moneyMultiplier = 1;
         public float vendorSellPriceMultiplier = 1;
         public float vendorBuyPriceMultiplier = 1;
