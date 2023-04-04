@@ -58,7 +58,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * DataViewer - you can now peek into the details of blueprints with a disclosure triangle by the blueprint class
   * Added subcategories for Mythic, Arcane, Divine, etc for the Classes category
   * Added subcategories for conditions for quest objectives, dialogs, cues, answers
-  * Added option to display elements 
+  * Added option to display elements (including conditions)
 * (***Narria***) Enchantment Editor improvements
   * Added **All** option to selecting item types
   * Now show item rating (blueprint rating) and rating of enchantments
