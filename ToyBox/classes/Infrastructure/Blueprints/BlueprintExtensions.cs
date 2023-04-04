@@ -19,6 +19,7 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
+using Kingmaker.ElementsSystem;
 
 namespace ToyBox {
 
@@ -140,6 +141,8 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
+        public static string[] CaptionNames(this SimpleBlueprint bp) => bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] { };
+        public static List<String> CaptionCollationNames(this SimpleBlueprint bp) => bp.CollationNames(bp.CaptionNames());
         // Custom Attributes that Owlcat uses 
         public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
 

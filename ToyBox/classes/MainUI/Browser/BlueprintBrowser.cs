@@ -114,17 +114,17 @@ namespace ToyBox {
             new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.CollationNames(bp.Priority.ToString())),
             //new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.CollationNames(bp.m_Type.ToString())),
-            new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp =>bp.CollationNames(bp.m_Type.ToString())),
+            new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp => bp.CaptionCollationNames()),
             new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp =>bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? "" )),
-            new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CollationNames()),
-            new NamedTypeFilter<BlueprintDialog>("Dialog", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CaptionCollationNames()),
+            new NamedTypeFilter<BlueprintDialog>("Dialog",null, bp => bp.CaptionCollationNames()),
             new NamedTypeFilter<BlueprintCue>("Cues", null, bp => {
                 if (bp.Conditions.HasConditions) {
                     return bp.CollationNames(bp.Conditions.Conditions.First().NameSafe().SubstringBetweenCharacters('$', '$'));
                 }
                 return new List<string> { "-" };
                 }),
-            new NamedTypeFilter<BlueprintAnswer>("Answer", null),
+            new NamedTypeFilter<BlueprintAnswer>("Answer", null, bp => bp.CaptionCollationNames()),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp =>  bp.CollationNames()),
@@ -327,6 +327,8 @@ namespace ToyBox {
                         Toggle("Show GUIDs", ref settings.showAssetIDs, AutoWidth());
                         25.space();
                         Toggle("Components", ref settings.showComponents, AutoWidth());
+                        25.space();
+                        Toggle("Elements", ref settings.showElements, AutoWidth());
                         25.space();
                         Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, AutoWidth());
                     }

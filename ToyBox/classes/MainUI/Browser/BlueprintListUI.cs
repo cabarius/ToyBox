@@ -189,7 +189,7 @@ namespace ToyBox {
                             else description = componentStr + "\n" + description;
                         }
                         if (settings.showElements && bpso.ElementsArray?.Count > 0) {
-                            var elementsStr = string.Join<object>(" ", bpso.ElementsArray).magenta();
+                            var elementsStr = string.Join<object>(" + ".cyan(), bpso.ElementsArray).yellow();
                             if (description.Length == 0) description = elementsStr;
                             else description = elementsStr + "\n" + description;
                         }
