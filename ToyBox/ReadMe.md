@@ -72,7 +72,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) Changed ValueAdjuster UI so that its elements don't clip into each other anymore.
 * (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
 * (***CascadingDragon***) Moved "Disallow Companions" back to Dialog section
-* (***CascadingDragon***) Added options to add points to Alignment
+* (***CascadingDragon***) Added options to shift alignment numerically
 ### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well

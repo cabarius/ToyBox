@@ -19,6 +19,7 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.UnitLogic.Alignments;
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -28,39 +29,47 @@ namespace ToyBox {
             Div(100, 20, 755);
             var alignment = ch.Descriptor.Alignment.ValueRaw;
             using (HorizontalScope()) {
-                Space(100);
+                100.space();
                 Label("Alignment", Width(425));
                 Label($"{alignment.Name()}".color(alignment.Color()).bold(), Width(1250f));
             }
             using (HorizontalScope()) {
-                Space(528);
+                528.space();
                 AlignmentGrid(alignment, (a) => ch.Descriptor.Alignment.Set(a));
             }
             Div(100, 20, 755);
             var alignmentMask = ch.Descriptor.Alignment.m_LockedAlignmentMask;
             using (HorizontalScope()) {
-                Space(100);
-                Label("Alignment Lock", Width(425));
+                100.space();
+                Label("Alignment Lock", 425.width());
                 //UI.Label($"{alignmentMask.ToString()}".color(alignmentMask.Color()).bold(), UI.Width(325));
                 Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
             }
 
             using (HorizontalScope()) {
-                Space(528);
+                528.space();
                 var maskIndex = Array.IndexOf(AlignmentMasks, alignmentMask);
                 var titles = AlignmentMasks.Select(
                     a => a.ToString().color(a.Color()).bold()).ToArray();
-                if (SelectionGrid(ref maskIndex, titles, 3, Width(800))) {
+                if (SelectionGrid(ref maskIndex, titles, 3, 800.width())) {
                     ch.Descriptor.Alignment.LockAlignment(AlignmentMasks[maskIndex], new Alignment?());
                 }
             }
             Div(100, 20, 755);
             using (HorizontalScope()) {
-                Space(100);
-                Label("Alignment Value", AutoWidth());
-                Space(25);
-                var increment = IntTextField(ref settings.increment, null, Width(55));
-                Space(150);
+                var charAlignment = ch.Descriptor.Alignment;
+                100.space();
+                Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 100).ToString().Cyan()} by", 330.width());
+                5.space();
+                var increment = IntTextField(ref settings.alignmentIncrement, null, 55.width());
+                var maskIndex = -1;
+                30.space();
+                var titles = AlignmentShiftDirections.Select(
+                    a => $"{increment.ToString("+0;-#").orange()} {a.ToString().color(a.Color()).bold()}").ToArray();
+                if (SelectionGrid(ref maskIndex, titles, 3, 800.width())) {
+                    charAlignment.Shift(AlignmentShiftDirections[maskIndex], increment, ToyboxAlignmentProvider);
+                }
+#if false
                 ActionButton($"Add {increment}" + " Law".cyan(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Lawful, increment, ToyboxAlignmentProvider), AutoWidth());
                 Space(10);
                 ActionButton($"Add {increment}" + " Chaos".pink(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Chaotic, increment, ToyboxAlignmentProvider), AutoWidth());
@@ -68,6 +77,7 @@ namespace ToyBox {
                 ActionButton($"Add {increment}" + " Good".green(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Good, increment, ToyboxAlignmentProvider), AutoWidth());
                 Space(10);
                 ActionButton($"Add {increment}" + " Evil".red(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Evil, increment, ToyboxAlignmentProvider), AutoWidth());
+#endif
             }
             Div(100, 20, 755);
             using (HorizontalScope()) {
