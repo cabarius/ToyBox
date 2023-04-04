@@ -38,6 +38,21 @@ namespace ToyBox {
                 AlignmentGrid(alignment, (a) => ch.Descriptor.Alignment.Set(a));
             }
             Div(100, 20, 755);
+            using (HorizontalScope()) {
+                var charAlignment = ch.Descriptor.Alignment;
+                100.space();
+                Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()} by", 340.width());
+                5.space();
+                var increment = IntTextField(ref settings.alignmentIncrement, null, 55.width());
+                var maskIndex = -1;
+                20.space();
+                var titles = AlignmentShiftDirections.Select(
+                    a => $"{increment.ToString("+0;-#").orange()} {a.ToString().color(a.Color()).bold()}").ToArray();
+                if (SelectionGrid(ref maskIndex, titles, 3, 650.width())) {
+                    charAlignment.Shift(AlignmentShiftDirections[maskIndex], increment, ToyboxAlignmentProvider);
+                }
+            }
+            Div(100, 20, 755);
             var alignmentMask = ch.Descriptor.Alignment.m_LockedAlignmentMask;
             using (HorizontalScope()) {
                 100.space();
@@ -51,33 +66,9 @@ namespace ToyBox {
                 var maskIndex = Array.IndexOf(AlignmentMasks, alignmentMask);
                 var titles = AlignmentMasks.Select(
                     a => a.ToString().color(a.Color()).bold()).ToArray();
-                if (SelectionGrid(ref maskIndex, titles, 3, 800.width())) {
+                if (SelectionGrid(ref maskIndex, titles, 3, 650.width())) {
                     ch.Descriptor.Alignment.LockAlignment(AlignmentMasks[maskIndex], new Alignment?());
                 }
-            }
-            Div(100, 20, 755);
-            using (HorizontalScope()) {
-                var charAlignment = ch.Descriptor.Alignment;
-                100.space();
-                Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 100).ToString().Cyan()} by", 330.width());
-                5.space();
-                var increment = IntTextField(ref settings.alignmentIncrement, null, 55.width());
-                var maskIndex = -1;
-                30.space();
-                var titles = AlignmentShiftDirections.Select(
-                    a => $"{increment.ToString("+0;-#").orange()} {a.ToString().color(a.Color()).bold()}").ToArray();
-                if (SelectionGrid(ref maskIndex, titles, 3, 800.width())) {
-                    charAlignment.Shift(AlignmentShiftDirections[maskIndex], increment, ToyboxAlignmentProvider);
-                }
-#if false
-                ActionButton($"Add {increment}" + " Law".cyan(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Lawful, increment, ToyboxAlignmentProvider), AutoWidth());
-                Space(10);
-                ActionButton($"Add {increment}" + " Chaos".pink(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Chaotic, increment, ToyboxAlignmentProvider), AutoWidth());
-                Space(10);
-                ActionButton($"Add {increment}" + " Good".green(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Good, increment, ToyboxAlignmentProvider), AutoWidth());
-                Space(10);
-                ActionButton($"Add {increment}" + " Evil".red(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Evil, increment, ToyboxAlignmentProvider), AutoWidth());
-#endif
             }
             Div(100, 20, 755);
             using (HorizontalScope()) {
