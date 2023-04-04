@@ -13,6 +13,7 @@ using ModKit;
 using static ModKit.UI;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items;
+using ModKit.DataViewer;
 
 namespace ToyBox {
     public class BlueprintListUI {
@@ -195,6 +196,13 @@ namespace ToyBox {
                     }
                     using (VerticalScope(Width(remWidth))) {
                         using (HorizontalScope(Width(remWidth))) {
+                            var expanded = BlueprintBrowser.expandedBlueprints.ContainsKey(blueprint);
+                            if (DisclosureToggle("", ref expanded, 0)) {
+                                BlueprintBrowser.expandedBlueprints.Clear();
+                                if (expanded) {
+                                    BlueprintBrowser.expandedBlueprints[blueprint] = new ReflectionTreeView(blueprint);
+                                }
+                            }
                             Space(-17);
                             if (settings.showAssetIDs) {
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
@@ -287,6 +295,11 @@ namespace ToyBox {
                             Space(15);
                         }
                     }
+                }
+                ReflectionTreeView reflectionTreeView = null;
+                BlueprintBrowser.expandedBlueprints.TryGetValue(blueprint, out reflectionTreeView);
+                if (reflectionTreeView != null) {
+                    reflectionTreeView.OnGUI(false);
                 }
                 Div(indent);
                 index++;

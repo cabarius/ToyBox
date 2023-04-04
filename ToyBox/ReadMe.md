@@ -54,6 +54,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
       * 10+ Uncommon - Green
     * You can think of a normal +1 weapon or armor being worth 10 rating points
     * Note: You can now see item ratings in the Enchantment tab.
+* (***Narria***) Search 'n Pick Improvements
+  * DataViewer - you can now peek into the details of blueprints with a disclosure triangle by the blueprint class
+  * Added subcategories for Mythic, Arcane, Divine, etc for the Classes category
 * (***Narria***) Enchantment Editor improvements
   * Added **All** option to selecting item types
   * Now show item rating (blueprint rating) and rating of enchantments

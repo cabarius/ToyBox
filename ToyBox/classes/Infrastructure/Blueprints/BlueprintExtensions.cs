@@ -87,6 +87,13 @@ namespace ToyBox {
             return names;
         }
         public static List<string> CollationNames(this SimpleBlueprint bp, params string[] extras) => DefaultCollationNames(bp, extras);
+        public static List<string> CollationNames(this BlueprintCharacterClass bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            if (bp.IsArcaneCaster) names.Add("Arcane");
+            if (bp.IsDivineCaster) names.Add("Divine");
+            if (bp.IsMythic) names.Add("Mythic");
+            return names;
+        }          
         public static List<string> CollationNames(this BlueprintSpellbook bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.CharacterClass.IsDivineCaster) names.Add("Divine");
