@@ -68,6 +68,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) (Experimental) Added a feature that allows hiding map loot pins on the map if the contained loot doesn't reach at least a selected rarity.
 * (***ADDB***) Added Kill on Engage toggle (Which kills a unit as soon as it joins a fight against Character).
 * (***ADDB***) Added Fog of War Radius multiplier.
+* (***ADDB***) Added toggle to continue playing music on lost focus.
 * (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
 * (***CascadingDragon***) Moved "Disallow Companions" back to Dialog section
 * (***CascadingDragon***) Added options to add points to Alignment

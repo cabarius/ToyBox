@@ -50,6 +50,7 @@ using UnityEngine;
 using Kingmaker.EntitySystem.Stats;
 using ModKit;
 using Kingmaker.Controllers.Combat;
+using Kingmaker.Visual.Sound;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -433,7 +434,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Player), nameof(Player.GameOver))]
         private static class Player_GameOverReason_Patch {
             private static bool Prefix(Player __instance, Player.GameOverReasonType reason) {
-                if (!settings.toggleGameOverFixLeeerrroooooyJenkins || reason  != Player.GameOverReasonType.EssentialUnitIsDead) return true;
+                if (!settings.toggleGameOverFixLeeerrroooooyJenkins || reason != Player.GameOverReasonType.EssentialUnitIsDead) return true;
                 return false;
             }
         }
@@ -674,6 +675,28 @@ namespace ToyBox.BagOfPatches {
                         CheatsCombat.KillUnit(unit);
                     }
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(AkSoundEngineController), nameof(AkSoundEngineController.OnApplicationFocus))]
+        public static class AkSoundEngineController_OnApplicationFocus_Patch {
+            private static bool Prefix(AkSoundEngineController __instance) {
+                if (settings.toggleContinueAudioOnLostFocus) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(SoundState), nameof(SoundState.OnApplicationFocusChanged))]
+        public static class SoundState_OnApplicationFocusChanged_Patch {
+            private static bool Prefix(SoundState __instance) {
+                if (settings.toggleContinueAudioOnLostFocus) {
+                    return false;
+                }
+                return true;
             }
         }
     }
