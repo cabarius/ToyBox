@@ -15,7 +15,6 @@ using Kingmaker.UI.MVVM._PCView.Vendor;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.UI.MVVM._VM.Slots;
-using ModKit;
 using UniRx;
 using Owlcat.Runtime.UI.MVVM;
 using UnityEngine;
@@ -72,7 +71,7 @@ namespace ToyBox.BagOfPatches {
                             __instance.SlotVM.IsMagic.SetValueAndForceNotify(true);
 
                         if (__instance.m_MagicLayer != null) {
-                            var ratingAlpha = (float)Math.Min(120, item.Rating()+20)/120;
+                            var ratingAlpha = (float)Math.Min(120, item.Rating() + 20) / 120;
                             var colorTranslucent = new Color(color.r, color.g, color.b, color.a * ratingAlpha); // 0.45f);
                             var obj = __instance.m_MagicLayer.gameObject;
                             obj.GetComponent<Image>().color = colorTranslucent;
@@ -185,10 +184,9 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
             public static void Postfix(LocalMapMarkerPCView __instance) {
-                if (__instance == null || settings.maxRarityToHide == RarityType.None)
+                if (__instance == null)
                     return;
 
-                Mod.Log(__instance.GetType().ToString().green());
                 if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
                     __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
                         (__instance as LocalMapLootMarkerPCView)?.Hide();

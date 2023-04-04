@@ -68,7 +68,7 @@ namespace ToyBox {
         public static int Rating(this BlueprintItemEnchantment bp) {
             int rating;
             var modifierRating = RarityScaling * bp.Components?.Sum(
-                c => c is AddStatBonusEquipment sbe ? sbe.Value 
+                c => c is AddStatBonusEquipment sbe ? sbe.Value
                     : c is AllSavesBonusEquipment asbe ? asbe.Value
                     : 0
                     ) ?? 0;
@@ -166,15 +166,29 @@ namespace ToyBox {
         public static void Hide(this LocalMapLootMarkerPCView localMapLootMarkerPCView) {
             LocalMapCommonMarkerVM markerVm = localMapLootMarkerPCView.ViewModel as LocalMapCommonMarkerVM;
             LocalMapMarkerPart mapPart = markerVm.m_Marker as LocalMapMarkerPart;
-            RarityType highest = RarityType.None;
             if (mapPart?.GetMarkerType() == LocalMapMarkType.Loot) {
                 MapObjectView MOV = mapPart.Owner.View as MapObjectView;
                 InteractionLootPart lootPart = (MOV.Data.Interactions[0] as InteractionLootPart);
-                var loot = lootPart.Loot;
-                foreach (var item in loot) {
-                    RarityType itemRarity = item.Rarity();
-                    if (itemRarity > highest) {
-                        highest = itemRarity;
+                doHide(lootPart.Loot, localMapLootMarkerPCView);
+            }
+            else if (mapPart == null) {
+                UnitLocalMapMarker unitMarker = markerVm.m_Marker as UnitLocalMapMarker;
+                if (unitMarker != null) {
+                    UnitEntityView unit = unitMarker.m_Unit;
+                    UnitEntityData data = unit.Data;
+                    doHide(data.Inventory, localMapLootMarkerPCView);
+                }
+            }
+        }
+        public static void doHide(ItemsCollection loot, LocalMapLootMarkerPCView localMapLootMarkerPCView) {
+            if (loot != Game.Instance.Player.SharedStash) {
+                RarityType highest = RarityType.None;
+                foreach (ItemEntity item in loot) {
+                    if (item.IsLootable) {
+                        RarityType itemRarity = item.Rarity();
+                        if (itemRarity > highest) {
+                            highest = itemRarity;
+                        }
                     }
                 }
                 if (highest <= settings.maxRarityToHide) {
@@ -182,27 +196,6 @@ namespace ToyBox {
                 }
                 else {
                     localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
-                }
-            }
-            else if (mapPart == null) {
-                UnitLocalMapMarker unitMarker = markerVm.m_Marker as UnitLocalMapMarker;
-                if (unitMarker != null) {
-                    UnitEntityView unit = unitMarker.m_Unit;
-                    UnitEntityData data = unit.Data;
-                    foreach (ItemEntity item in data.Inventory) {
-                        if (item.IsLootable) {
-                            RarityType itemRarity = item.Rarity();
-                            if (itemRarity > highest) {
-                                highest = itemRarity;
-                            }
-                        }
-                    }
-                    if (highest <= settings.maxRarityToHide) {
-                        localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
-                    }
-                    else {
-                        localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
-                    }
                 }
             }
         }
