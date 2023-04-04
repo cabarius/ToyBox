@@ -221,10 +221,8 @@ namespace ModKit {
                 Space(-21);
                 ActionButton("min ".cyan(), () => { }, textBoxStyle, AutoWidth());
             }
-            Space(-8);
             var temp = false;
             Button($"{v}".orange().bold(), ref temp, textBoxStyle, AutoWidth());
-            Space(-8);
             if (v < max)
                 ActionButton(" > ", () => { v = Math.Min(v + increment, max); }, textBoxStyle, AutoWidth());
             else {
