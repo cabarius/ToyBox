@@ -111,7 +111,10 @@ namespace ToyBox.BagOfPatches {
                     __instance.m_ScrollRoutine = (Coroutine)null;
                 }
                 if (__instance.m_ScrollRoutine == null) {
+                    var eulerAngles = __instance.transform.rotation.eulerAngles;
                     var scrollOffset = __instance.m_ScrollOffset;
+                    if (eulerAngles.x > 180)
+                        scrollOffset.y = -scrollOffset.y;
                     if ((bool)(SimpleBlueprint)BlueprintRoot.Instance && !Game.Instance.IsControllerGamepad && (bool)(SettingsEntity<bool>)SettingsRoot.Controls.ScreenEdgeScrolling && (Cursor.visible || (bool)(SettingsEntity<bool>)SettingsRoot.Controls.CameraScrollOutOfScreenEnabled) && Game.Instance.CurrentMode != GameModeType.FullScreenUi)
                         scrollOffset += __instance.GetCameraScrollShiftByMouse();
                     var scrollVector2 = scrollOffset + __instance.CameraDragToMove() + __instance.m_ScrollBy2D;
@@ -220,7 +223,7 @@ namespace ToyBox.BagOfPatches {
                         }
                         else if (usePitch) {
                             eulerAngles.x += yRotationSign * mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
-                            //Mod.Debug($"eulerX: {eulerAngles.x}");
+                            Mod.Debug($"eulerX: {eulerAngles.x} Y: {eulerAngles.y} Z: {eulerAngles.z}");
                         }
                     }
                     __instance.transform.DOKill();
