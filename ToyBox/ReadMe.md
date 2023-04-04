@@ -69,6 +69,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) Added Kill on Engage toggle (Which kills a unit as soon as it joins a fight against Character).
 * (***ADDB***) Added Fog of War Radius multiplier.
 * (***ADDB***) Added toggle to continue playing music on lost focus.
+* (***ADDB***) Changed ValueAdjuster UI so that its elements don't clip into each other anymore.
 * (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
 * (***CascadingDragon***) Moved disallow companions from leaving party back to dialog and clarify warning text.
 ### Ver 1.4.23
