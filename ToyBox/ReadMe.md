@@ -65,7 +65,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Added toggle to show ratings in list of items 
   * Improved grading of enchantments so that ones that have 0 cost (which I think is a bug) count as common (rating 5)
   * Fixed bug where weapon type selection would be lost when you selected a weapon other than the first one in the list and then closed and reopened the mod window
-* (***Narria***) Added temporary AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature which will be in its own top level tab
+* (***Narria***) Added temporary AI category to Party view.  Right now you can see what AI actions/considerations are active on a units brain. This is the beginning of an improved AI/Gambits feature which will be in its own top level tab
 * (***Narria***) Added Brains, AIActions and Considerations to Search 'n Pick
 * (***Narria***) Fixed crasher during character creation on the loot screen
 * (***Narria***) Fixed issue where the arrow key Y scrolling becomes inverted when tilt the camera higher than like 45 or 60 degrees
