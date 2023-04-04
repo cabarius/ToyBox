@@ -88,6 +88,19 @@ namespace ToyBox {
                 Space(528);
                 ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, Width(197));
             }
+            using (HorizontalScope()) {
+                if (ch != null && ch.HashKey() != null) {
+                    Space(100);
+                    var scaleMult = Main.settings.perSave.scaleVisualModelSettings.GetValueOrDefault(ch.HashKey(), 1.0f);
+                    if (LogSliderCustomLabelWidth("Visual Character Size Multiplier", ref scaleMult, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
+                        Main.settings.perSave.scaleVisualModelSettings[ch.HashKey()] = scaleMult;
+                        Settings.SavePerSaveSettings();
+                    }
+                    if (scaleMult != ch.View.gameObject.transform.localScale[0]) {
+                        ch.View.gameObject.transform.localScale = new Vector3(scaleMult, scaleMult, scaleMult);
+                    }
+                }
+            }
             Div(100, 20, 755);
             using (HorizontalScope()) {
                 Space(100);

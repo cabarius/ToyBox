@@ -34,6 +34,10 @@ namespace ToyBox {
         [JsonProperty]
         public Dictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new();
 
+        // This is the scaling modifier which is applied to the visual model of each character
+        [JsonProperty]
+        public Dictionary<string, float> scaleVisualModelSettings = new();
+
         // Dictionary of Name/IsLegendaryHero for configuration per party member
         [JsonProperty]
         public Dictionary<string, bool> charIsLegendaryHero = new();
