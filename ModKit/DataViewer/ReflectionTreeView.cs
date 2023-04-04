@@ -6,6 +6,8 @@ using System.Linq;
 using UnityEngine;
 using static ModKit.Utility.StringExtensions;
 using ModKit;
+using static ModKit.UI;
+using System.Reflection.Emit;
 
 namespace ModKit.DataViewer {
     public class ReflectionTreeView {
@@ -223,21 +225,25 @@ namespace ModKit.DataViewer {
             }
         }
         private void DrawNode(Node node, int depth, bool collapse) {
-            ToggleState expanded = node.Expanded;
-            if (depth >= _skipLevels && !(collapse && depth > 0)) {
-                if (!node.hasChildren)
-                    expanded = ToggleState.None;
-                else if (node.Expanded == ToggleState.None)
-                    expanded = ToggleState.Off;
-                DrawNodePrivate(node, depth, ref expanded);
-                node.Expanded = expanded;
-            }
-            if (collapse)
-                node.Expanded = ToggleState.Off;
+            try {
+                ToggleState expanded = node.Expanded;
+                if (depth >= _skipLevels && !(collapse && depth > 0)) {
+                    if (!node.hasChildren)
+                        expanded = ToggleState.None;
+                    else if (node.Expanded == ToggleState.None)
+                        expanded = ToggleState.Off;
+                    DrawNodePrivate(node, depth, ref expanded);
+                    node.Expanded = expanded;
+                }
+                if (collapse)
+                    node.Expanded = ToggleState.Off;
 
-            // children
-            if (expanded.IsOn()) {
-                DrawChildren(node, depth + 1, collapse);
+                // children
+                if (expanded.IsOn()) {
+                    DrawChildren(node, depth + 1, collapse);
+                }
+            }
+            catch (Exception e) {
             }
         }
 
