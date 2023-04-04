@@ -184,14 +184,14 @@ namespace ToyBox {
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {
                         if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {
-                            var componentStr = string.Join<object>(" ", bpso.ComponentsArray).color(RGBA.teal);
+                            var componentStr = string.Join<object>(", ", bpso.ComponentsArray).color(RGBA.brown);
                             if (description.Length == 0) description = componentStr;
-                            else description = componentStr + "\n" + description;
+                            else description = description + "\n" + componentStr;
                         }
                         if (settings.showElements && bpso.ElementsArray?.Count > 0) {
-                            var elementsStr = string.Join<object>(" + ".cyan(), bpso.ElementsArray).yellow();
+                            var elementsStr = string.Join<object>("\n", bpso.ElementsArray.Select(e => $"{e.GetType().Name.cyan()} {e.GetCaption()}")).yellow();
                             if (description.Length == 0) description = elementsStr;
-                            else description = elementsStr + "\n" + description;
+                            else description = description + "\n" + elementsStr;
                         }
                     }
                     using (VerticalScope(Width(remWidth))) {
