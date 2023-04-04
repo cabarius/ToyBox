@@ -105,6 +105,7 @@ namespace ToyBox {
         public int increment = 10000;
 
         // Quality of Life
+        public bool toggleContinueAudioOnLostFocus = false;
         public bool highlightObjectsToggle = false;
         public bool toggleHighlightCopyableScrolls = false;
         public bool toggleShiftClickToUseInventorySlot = false;
