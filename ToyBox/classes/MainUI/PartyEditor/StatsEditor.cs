@@ -22,6 +22,8 @@ using Kingmaker.UnitLogic.Parts;
 
 namespace ToyBox {
     public partial class PartyEditor {
+        public static Kingmaker.UnitLogic.Alignments.IAlignmentShiftProvider ToyboxAlignmentProvider { get; private set; } //Will remember to set custom description... Eventually
+
         public static void OnStatsGUI(UnitEntityData ch) {
             Div(100, 20, 755);
             var alignment = ch.Descriptor.Alignment.ValueRaw;
@@ -51,6 +53,21 @@ namespace ToyBox {
                 if (SelectionGrid(ref maskIndex, titles, 3, Width(800))) {
                     ch.Descriptor.Alignment.LockAlignment(AlignmentMasks[maskIndex], new Alignment?());
                 }
+            }
+            Div(100, 20, 755);
+            using (HorizontalScope()) {
+                Space(100);
+                Label("Alignment Value", AutoWidth());
+                Space(25);
+                var increment = IntTextField(ref settings.increment, null, Width(55));
+                Space(150);
+                ActionButton($"Add {increment}" + " Law".cyan(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Lawful, increment, ToyboxAlignmentProvider), AutoWidth());
+                Space(10);
+                ActionButton($"Add {increment}" + " Chaos".pink(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Chaotic, increment, ToyboxAlignmentProvider), AutoWidth());
+                Space(10);
+                ActionButton($"Add {increment}" + " Good".green(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Good, increment, ToyboxAlignmentProvider), AutoWidth());
+                Space(10);
+                ActionButton($"Add {increment}" + " Evil".red(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Evil, increment, ToyboxAlignmentProvider), AutoWidth());
             }
             Div(100, 20, 755);
             using (HorizontalScope()) {
