@@ -81,14 +81,14 @@ namespace ToyBox {
                     var name = blueprint.NameSafe();
                     var displayName = blueprint.GetDisplayName();
                     string title;
-                    if (settings.showDisplayAndInternalNames && displayName.Length > 0) {
+                    if (settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
                         if (titles.Contains("Remove") || titles.Contains("Lock")) {
                             title = displayName.cyan().bold();
                         }
                         else {
                             title = titleFormater(displayName);
                         }
-                        title += $"{title} : {name.color(RGBA.darkgrey)}";
+                        title = $"{title} : {name.color(RGBA.darkgrey)}";
                     }
                     else {
                         if (titles.Contains("Remove") || titles.Contains("Lock")) {

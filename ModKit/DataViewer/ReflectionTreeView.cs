@@ -64,9 +64,9 @@ namespace ModKit.DataViewer {
             if (_tree == null)
                 return;
             if (_buttonStyle == null)
-                _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft, stretchHeight = true };
+                _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
             if (_valueStyle == null)
-                _valueStyle = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.MiddleLeft, stretchHeight = true };
+                _valueStyle = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
 
             int startIndexUBound = Math.Max(0, _nodesCount - MaxRows);
 
