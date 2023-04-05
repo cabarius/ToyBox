@@ -515,7 +515,11 @@ namespace ToyBox.BagOfPatches {
                     this.item = item;
                 }
                 public void run() {
-                    __instance.InsertItem(item);
+                    try {
+                        Mod.Debug($"refill {item.m_Blueprint.Name.cyan()}");
+                        __instance.InsertItem(item);
+                    }
+                    catch (Exception e) { Mod.Error($"{e}"); }
                 }
 
             }
@@ -525,11 +529,8 @@ namespace ToyBox.BagOfPatches {
                         var blueprint = __state.Blueprint;
                         var item = Game.Instance.Player.Inventory.Items.FindOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
                         if (item != null) {
-                            try {
-                                var runnable = new doSomething(__instance, item);
-                                Game.Instance.ScheduleAction(runnable.run);
-                            }
-                            catch (Exception e) { Mod.Error($"{e}"); }
+                            var runnable = new doSomething(__instance, item);
+                            Game.Instance.ScheduleAction(runnable.run);
                         }
                         __state = null;
                     }
