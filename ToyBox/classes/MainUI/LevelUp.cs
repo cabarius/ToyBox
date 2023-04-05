@@ -55,7 +55,6 @@ namespace ToyBox {
                     25.space();
                     Label("This allows you to select combinations of archetypes when selecting a class for the first time that contain distinct spellbooks".green());
                 },
-                () => Toggle("Enable  'Next' when no feat selections are available", ref settings.toggleNextWhenNoAvailableFeatSelections),
                 () => Toggle("Make All Feature Selections Optional", ref settings.toggleOptionalFeatSelection),
                 () => {
                     Toggle("Ignore Attribute Cap", ref settings.toggleIgnoreAttributeCap);
@@ -102,7 +101,7 @@ namespace ToyBox {
                 () => { UI.Toggle("Ignore Feat Prerequisites When Choosing A Class", ref settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass); },
                 () => { UI.Toggle("Ignore Feat Prerequisits (List) When Choosing A Class", ref settings.toggle); },
 #endif
-                () => Toggle("Remove Level 20 Caster Level Cap", ref settings.toggleUncappedCasterLevel), 
+                () => Toggle("Remove Level 20 Caster Level Cap", ref settings.toggleUncappedCasterLevel),
                 () => Toggle("Party Level Cap 40 (continuous growth after 20)", ref settings.toggleContinousLevelCap),
                 () => Toggle("Party Level Cap 24 (exponential growth)", ref settings.toggleExponentialLevelCap),
 

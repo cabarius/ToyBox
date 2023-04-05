@@ -265,7 +265,6 @@ namespace ToyBox {
         public bool toggleIgnoreFeatureListPrerequisites = false;
         public bool toggleFeaturesIgnorePrerequisites = false;
         public bool toggleSkipSpellSelection = false;
-        public bool toggleNextWhenNoAvailableFeatSelections = true;
         public bool toggleOptionalFeatSelection = false;
         public bool toggleUniversalSpellbookd = false;
         public bool toggleUncappedCasterLevel = false;

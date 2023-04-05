@@ -493,7 +493,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleOptionalFeatSelection) {
                     __result = true;
                 }
-                else if (settings.toggleNextWhenNoAvailableFeatSelections || settings.featsMultiplier != 1) {
+                else if (settings.featsMultiplier != 1) {
                     var featureSelectorStateVM = __instance.FeatureSelectorStateVM;
                     var selectionState = featureSelectorStateVM.SelectionState;
                     var selectionVM = __instance.FeatureSelectorStateVM;
