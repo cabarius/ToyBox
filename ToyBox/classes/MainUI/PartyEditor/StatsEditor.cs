@@ -73,21 +73,6 @@ namespace ToyBox {
             Div(100, 20, 755);
             using (HorizontalScope()) {
                 Space(100);
-                Label("Alignment Value", AutoWidth());
-                Space(25);
-                var increment = IntTextField(ref settings.increment, null, Width(55));
-                Space(150);
-                ActionButton($"Add {increment}" + " Law".cyan(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Lawful, increment, ToyboxAlignmentProvider), AutoWidth());
-                Space(10);
-                ActionButton($"Add {increment}" + " Chaos".pink(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Chaotic, increment, ToyboxAlignmentProvider), AutoWidth());
-                Space(10);
-                ActionButton($"Add {increment}" + " Good".green(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Good, increment, ToyboxAlignmentProvider), AutoWidth());
-                Space(10);
-                ActionButton($"Add {increment}" + " Evil".red(), () => ch.Descriptor.Alignment.Shift(Kingmaker.UnitLogic.Alignments.AlignmentShiftDirection.Evil, increment, ToyboxAlignmentProvider), AutoWidth());
-            }
-            Div(100, 20, 755);
-            using (HorizontalScope()) {
-                Space(100);
                 Label("Size", Width(425));
                 var size = ch.Descriptor.State.Size;
                 Label($"{size}".orange().bold(), Width(175));
