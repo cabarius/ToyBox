@@ -75,7 +75,7 @@ namespace ToyBox {
             var mutatorLookup = actions.Distinct().ToDictionary(a => a.name, a => a);
             using (HorizontalScope()) {
                 100.space();
-                ActionTextField(ref searchText, "searhText", null, () => { searchChanged = true; }, Width(320));
+                ActionTextField(ref searchText, "searchText", null, () => { searchChanged = true; }, Width(320));
                 25.space();
                 Label("Limit", ExpandWidth(false));
                 ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, Width(175));
