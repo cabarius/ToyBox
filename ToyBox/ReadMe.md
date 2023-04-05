@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.4.25 (coming soon)
 * (***ADDB***) Fixed Search 'n Pick crashing when using search in Main Menu.
+* (***ADDB***) Added Visual Character Size Multiplier.
 ### Ver 1.4.24
 * (***Narria***) Loot coloring improvents
   * Added rarity tags when color loot items is active
