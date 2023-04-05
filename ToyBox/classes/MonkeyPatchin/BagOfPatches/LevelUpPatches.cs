@@ -479,38 +479,38 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        // Let user advance if no options left for feat selection
-        [HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM))]
-        private static class CharGenFeatureSelectorPhaseVM_HandleOptionalFeatSelection_Patch {
-            [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
-            [HarmonyPostfix]
-            private static void Postfix_CharGenFeatureSelectorPhaseVM_CheckIsCompleted(CharGenFeatureSelectorPhaseVM __instance, ref bool __result) {
+        // Let user advance if no options left for feat selection, NO LONGER NEEDED as of 2.12D
+        //[HarmonyPatch(typeof(CharGenFeatureSelectorPhaseVM))]
+        //private static class CharGenFeatureSelectorPhaseVM_HandleOptionalFeatSelection_Patch {
+        //    [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
+        //    [HarmonyPostfix]
+        //    private static void Postfix_CharGenFeatureSelectorPhaseVM_CheckIsCompleted(CharGenFeatureSelectorPhaseVM __instance, ref bool __result) {
 
-                if (settings.toggleOptionalFeatSelection) {
-                    __result = true;
-                }
-                else if (settings.toggleNextWhenNoAvailableFeatSelections || settings.featsMultiplier != 1) {
-                    var featureSelectorStateVM = __instance.FeatureSelectorStateVM;
-                    var selectionState = featureSelectorStateVM.SelectionState;
-                    var selectionVM = __instance.FeatureSelectorStateVM;
-                    var state = Game.Instance.LevelUpController.State;
-                    IFeatureSelection selection = selection = selectionVM.Feature as IFeatureSelection;
-                    var availableItems = selection?.Items
-                        .Where((IFeatureSelectionItem item) => selection.CanSelect(state.Unit, state, selectionState, item));
-                    //Main.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");
-                    if (availableItems.Count() == 0)
-                        __result = true;
-                }
-            }
+        //        if (settings.toggleOptionalFeatSelection) {
+        //            __result = true;
+        //        }
+        //        else if (settings.toggleNextWhenNoAvailableFeatSelections || settings.featsMultiplier != 1) {
+        //            var featureSelectorStateVM = __instance.FeatureSelectorStateVM;
+        //            var selectionState = featureSelectorStateVM.SelectionState;
+        //            var selectionVM = __instance.FeatureSelectorStateVM;
+        //            var state = Game.Instance.LevelUpController.State;
+        //            IFeatureSelection selection = selection = selectionVM.Feature as IFeatureSelection;
+        //            var availableItems = selection?.Items
+        //                .Where((IFeatureSelectionItem item) => selection.CanSelect(state.Unit, state, selectionState, item));
+        //            //Main.Log($"CharGenFeatureSelectorPhaseVM_CheckIsCompleted_Patch - availableCount: {availableItems.Count()}");
+        //            if (availableItems.Count() == 0)
+        //                __result = true;
+        //        }
+        //    }
 
-            [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.OnPostBeginDetailedView))]
-            [HarmonyPostfix]
-            private static void Postfix_CharGenFeatureSelectorPhaseVM_OnPostBeginDetailedView(CharGenFeatureSelectorPhaseVM __instance) {
-                if (settings.toggleOptionalFeatSelection) {
-                    __instance.IsCompleted.Value = true;
-                }
-            }
-        }
+        //    [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.OnPostBeginDetailedView))]
+        //    [HarmonyPostfix]
+        //    private static void Postfix_CharGenFeatureSelectorPhaseVM_OnPostBeginDetailedView(CharGenFeatureSelectorPhaseVM __instance) {
+        //        if (settings.toggleOptionalFeatSelection) {
+        //            __instance.IsCompleted.Value = true;
+        //        }
+        //    }
+        //}
 
 #if false
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]
