@@ -36,8 +36,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-
-### Ver 1.4.24 (coming soon)
+### Ver 1.4.24
 * (***Narria***) Loot coloring improvents
   * Added rarity tags when color loot items is active
   * Added new alternative to just color the rarity tags and show titles in black text
@@ -54,6 +53,11 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
       * 10+ Uncommon - Green
     * You can think of a normal +1 weapon or armor being worth 10 rating points
     * Note: You can now see item ratings in the Enchantment tab.
+* (***Narria***) Search 'n Pick Improvements
+  * DataViewer - you can now peek into the details of blueprints with a disclosure triangle by the blueprint class
+  * Added subcategories for Mythic, Arcane, Divine, etc for the Classes category
+  * Added subcategories for conditions for quest objectives, dialogs, cues, answers
+  * Added option to display elements (including conditions)
 * (***Narria***) Enchantment Editor improvements
   * Added **All** option to selecting item types
   * Now show item rating (blueprint rating) and rating of enchantments
@@ -61,17 +65,18 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Added toggle to show ratings in list of items 
   * Improved grading of enchantments so that ones that have 0 cost (which I think is a bug) count as common (rating 5)
   * Fixed bug where weapon type selection would be lost when you selected a weapon other than the first one in the list and then closed and reopened the mod window
-* (***Narria***) Added temporary AI category to Party view.  Right now you can see what AI actions/considerations are active on a units breain. This is the beginning of an improved AI/Gambits feature which will be in its own top level tab
+* (***Narria***) Added temporary AI category to Party view.  Right now you can see what AI actions/considerations are active on a units brain. This is the beginning of an improved AI/Gambits feature which will be in its own top level tab
 * (***Narria***) Added Brains, AIActions and Considerations to Search 'n Pick
-* (***Narria***) Fixed crasher during character creaton on the loot screen
+* (***Narria***) Fixed crasher during character creation on the loot screen
 * (***Narria***) Fixed issue where the arrow key Y scrolling becomes inverted when tilt the camera higher than like 45 or 60 degrees
 * (***ADDB***) (Experimental) Added a feature that allows hiding map loot pins on the map if the contained loot doesn't reach at least a selected rarity.
 * (***ADDB***) Added Kill on Engage toggle (Which kills a unit as soon as it joins a fight against Character).
 * (***ADDB***) Added Fog of War Radius multiplier.
 * (***ADDB***) Added toggle to continue playing music on lost focus.
+* (***ADDB***) Changed ValueAdjuster UI so that its elements don't clip into each other anymore.
 * (***BuckAMayzing***) Prevented resurrected companions and summoned creatures from being unable to act when buff duration multiplier was set to a very high number
 * (***CascadingDragon***) Moved "Disallow Companions" back to Dialog section
-* (***CascadingDragon***) Added options to add points to Alignment
+* (***CascadingDragon***) Added options to shift alignment numerically
 ### Ver 1.4.23
 * (***Narria***) Party Editor is faster for browsing existing features/spells/etc - Blueprints don't load until you select Show All
 * (***Narria***) Deferred Blueprint loading for Armies as well

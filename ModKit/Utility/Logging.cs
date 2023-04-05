@@ -1,4 +1,5 @@
 ﻿// some stuff borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+using ModKit.Utility;
 using System;
 using UnityModManagerNet;
 using static UnityModManagerNet.UnityModManager;
@@ -37,6 +38,7 @@ namespace ModKit {
             if (logLevel >= LogLevel.Info)
                 modLogger?.Log("[Info] " + str);
         }
+        public static void Log(int indent, string s) { Log("    ".Repeat(indent) + s); }
         public static void Debug(string str) {
             if (logLevel >= LogLevel.Debug)
                 modLogger?.Log("[Debug] ".green() + str);

@@ -19,6 +19,7 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
+using Kingmaker.ElementsSystem;
 
 namespace ToyBox {
 
@@ -87,6 +88,13 @@ namespace ToyBox {
             return names;
         }
         public static List<string> CollationNames(this SimpleBlueprint bp, params string[] extras) => DefaultCollationNames(bp, extras);
+        public static List<string> CollationNames(this BlueprintCharacterClass bp, params string[] extras) {
+            var names = DefaultCollationNames(bp, extras);
+            if (bp.IsArcaneCaster) names.Add("Arcane");
+            if (bp.IsDivineCaster) names.Add("Divine");
+            if (bp.IsMythic) names.Add("Mythic");
+            return names;
+        }          
         public static List<string> CollationNames(this BlueprintSpellbook bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.CharacterClass.IsDivineCaster) names.Add("Divine");
@@ -133,6 +141,8 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
+        public static string[] CaptionNames(this SimpleBlueprint bp) => bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] { };
+        public static List<String> CaptionCollationNames(this SimpleBlueprint bp) => bp.CollationNames(bp.CaptionNames());
         // Custom Attributes that Owlcat uses 
         public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
 

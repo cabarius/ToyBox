@@ -13,6 +13,7 @@ using ModKit;
 using static ModKit.UI;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items;
+using ModKit.DataViewer;
 
 namespace ToyBox {
     public class BlueprintListUI {
@@ -80,14 +81,14 @@ namespace ToyBox {
                     var name = blueprint.NameSafe();
                     var displayName = blueprint.GetDisplayName();
                     string title;
-                    if (settings.showDisplayAndInternalNames && displayName.Length > 0) {
+                    if (settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
                         if (titles.Contains("Remove") || titles.Contains("Lock")) {
                             title = displayName.cyan().bold();
                         }
                         else {
                             title = titleFormater(displayName);
                         }
-                        title += $"{title} : {name.color(RGBA.darkgrey)}";
+                        title = $"{title} : {name.color(RGBA.darkgrey)}";
                     }
                     else {
                         if (titles.Contains("Remove") || titles.Contains("Lock")) {
@@ -183,18 +184,25 @@ namespace ToyBox {
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {
                         if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {
-                            var componentStr = string.Join<object>(" ", bpso.ComponentsArray).color(RGBA.teal);
+                            var componentStr = string.Join<object>(", ", bpso.ComponentsArray).color(RGBA.brown);
                             if (description.Length == 0) description = componentStr;
-                            else description = componentStr + "\n" + description;
+                            else description = description + "\n" + componentStr;
                         }
                         if (settings.showElements && bpso.ElementsArray?.Count > 0) {
-                            var elementsStr = string.Join<object>(" ", bpso.ElementsArray).magenta();
+                            var elementsStr = string.Join<object>("\n", bpso.ElementsArray.Select(e => $"{e.GetType().Name.cyan()} {e.GetCaption()}")).yellow();
                             if (description.Length == 0) description = elementsStr;
-                            else description = elementsStr + "\n" + description;
+                            else description = description + "\n" + elementsStr;
                         }
                     }
                     using (VerticalScope(Width(remWidth))) {
                         using (HorizontalScope(Width(remWidth))) {
+                            var expanded = BlueprintBrowser.expandedBlueprints.ContainsKey(blueprint);
+                            if (DisclosureToggle("", ref expanded, 0)) {
+                                BlueprintBrowser.expandedBlueprints.Clear();
+                                if (expanded) {
+                                    BlueprintBrowser.expandedBlueprints[blueprint] = new ReflectionTreeView(blueprint);
+                                }
+                            }
                             Space(-17);
                             if (settings.showAssetIDs) {
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
@@ -287,6 +295,11 @@ namespace ToyBox {
                             Space(15);
                         }
                     }
+                }
+                ReflectionTreeView reflectionTreeView = null;
+                BlueprintBrowser.expandedBlueprints.TryGetValue(blueprint, out reflectionTreeView);
+                if (reflectionTreeView != null) {
+                    reflectionTreeView.OnGUI(false);
                 }
                 Div(indent);
                 index++;

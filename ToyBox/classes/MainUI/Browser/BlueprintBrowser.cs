@@ -33,6 +33,7 @@ using Kingmaker.ElementsSystem;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AI.Blueprints;
+using ModKit.DataViewer;
 
 namespace ToyBox {
     public static class BlueprintBrowser {
@@ -67,12 +68,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames( bp.Groups.Select(g => g.ToString()).ToArray())),
             new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string> {bp.ParameterType.ToString() }),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Selection", null, bp => bp.CollationNames(bp.Group.ToString(), bp.Group2.ToString())),
-            new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames("Standard")),
-                                                                          //bp => bp.IsArcaneCaster ? "Arcane"
-                                                                          //    : bp.IsDivineCaster ? "Divine"
-                                                                          //    : bp.IsMythic ? "Mythic"
-                                                                          //    : bp.IsHigherMythic ? "Higher Mythic"
-                                                                          //    : "Standard"),
+            new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => bp.Classes.Select(cl => cl.Name).ToList()),
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationNames()),
@@ -118,17 +114,17 @@ namespace ToyBox {
             new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.CollationNames(bp.Priority.ToString())),
             //new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.CollationNames(bp.m_Type.ToString())),
-            new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp =>bp.CollationNames(bp.m_Type.ToString())),
+            new NamedTypeFilter<BlueprintQuestObjective>("QuestObj", null, bp => bp.CaptionCollationNames()),
             new NamedTypeFilter<BlueprintEtude>("Etudes", null, bp =>bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? "" )),
-            new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CollationNames()),
-            new NamedTypeFilter<BlueprintDialog>("Dialog", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintUnlockableFlag>("Flags", null, bp => bp.CaptionCollationNames()),
+            new NamedTypeFilter<BlueprintDialog>("Dialog",null, bp => bp.CaptionCollationNames()),
             new NamedTypeFilter<BlueprintCue>("Cues", null, bp => {
                 if (bp.Conditions.HasConditions) {
                     return bp.CollationNames(bp.Conditions.Conditions.First().NameSafe().SubstringBetweenCharacters('$', '$'));
                 }
                 return new List<string> { "-" };
                 }),
-            new NamedTypeFilter<BlueprintAnswer>("Answer", null),
+            new NamedTypeFilter<BlueprintAnswer>("Answer", null, bp => bp.CaptionCollationNames()),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp =>  bp.CollationNames()),
@@ -152,11 +148,13 @@ namespace ToyBox {
         public static NamedTypeFilter selectedTypeFilter = null;
 
         public static IEnumerable<SimpleBlueprint> blueprints = null;
+        public static Dictionary<SimpleBlueprint, ReflectionTreeView> expandedBlueprints = new();
 
         public static void ResetSearch() {
             filteredBPs = null;
             filteredBPNames = null;
             collatedBPs = null;
+            expandedBlueprints.Clear();
             BlueprintListUI.needsLayout = true;
         }
         public static void ResetGUI() {
@@ -329,6 +327,8 @@ namespace ToyBox {
                         Toggle("Show GUIDs", ref settings.showAssetIDs, AutoWidth());
                         25.space();
                         Toggle("Components", ref settings.showComponents, AutoWidth());
+                        25.space();
+                        Toggle("Elements", ref settings.showElements, AutoWidth());
                         25.space();
                         Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, AutoWidth());
                     }

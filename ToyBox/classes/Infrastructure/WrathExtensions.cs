@@ -45,7 +45,6 @@ namespace ModKit {
                     AlignmentMaskType.LawfulNeutral,    AlignmentMaskType.TrueNeutral,      AlignmentMaskType.ChaoticNeutral,
                     AlignmentMaskType.LawfulEvil,       AlignmentMaskType.NeutralEvil,      AlignmentMaskType.ChaoticEvil,
         };
-
         public static RGBA Color(this AlignmentMaskType a) {
             switch (a) {
                 case AlignmentMaskType.None: return RGBA.grey;
@@ -63,6 +62,39 @@ namespace ModKit {
                 case AlignmentMaskType.LawfulEvil: return RGBA.purple;
                 case AlignmentMaskType.NeutralEvil: return RGBA.fuchsia;
                 case AlignmentMaskType.ChaoticEvil: return RGBA.red;
+            }
+            return RGBA.grey;
+        }
+        public static AlignmentShiftDirection[] AlignmentShiftDirections = new AlignmentShiftDirection[] {
+            AlignmentShiftDirection.LawfulGood,
+            AlignmentShiftDirection.Good,
+            // AlignmentShiftDirection.NeutralGood, // skip this for clearer UI and avoiding wierd oscilations
+            AlignmentShiftDirection.ChaoticGood,
+            AlignmentShiftDirection.Lawful,
+            //AlignmentShiftDirection.LawfulNeutral,
+            AlignmentShiftDirection.TrueNeutral,
+            AlignmentShiftDirection.Chaotic,
+            //AlignmentShiftDirection.ChaoticNeutral,
+            AlignmentShiftDirection.LawfulEvil,
+            AlignmentShiftDirection.Evil,
+            //AlignmentShiftDirection.NeutralEvil,
+            AlignmentShiftDirection.ChaoticEvil
+        };
+        public static RGBA Color(this AlignmentShiftDirection a) {
+            switch (a) {
+                case AlignmentShiftDirection.Good: return RGBA.lime;
+                case AlignmentShiftDirection.Evil: return RGBA.fuchsia;
+                case AlignmentShiftDirection.Lawful: return RGBA.blue; ;
+                case AlignmentShiftDirection.Chaotic: return RGBA.orange;
+                case AlignmentShiftDirection.LawfulGood: return RGBA.aqua;
+                case AlignmentShiftDirection.NeutralGood: return RGBA.lime;
+                case AlignmentShiftDirection.ChaoticGood: return RGBA.yellow;
+                case AlignmentShiftDirection.LawfulNeutral: return RGBA.blue;
+                case AlignmentShiftDirection.TrueNeutral: return RGBA.white;
+                case AlignmentShiftDirection.ChaoticNeutral: return RGBA.orange;
+                case AlignmentShiftDirection.LawfulEvil: return RGBA.purple;
+                case AlignmentShiftDirection.NeutralEvil: return RGBA.fuchsia;
+                case AlignmentShiftDirection.ChaoticEvil: return RGBA.red;
             }
             return RGBA.grey;
         }
