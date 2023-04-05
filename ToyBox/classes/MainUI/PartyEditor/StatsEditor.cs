@@ -91,9 +91,9 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 if (ch != null && ch.HashKey() != null) {
                     Space(100);
-                    var scaleMult = Main.settings.perSave.scaleVisualModelSettings.GetValueOrDefault(ch.HashKey(), 1.0f);
+                    var scaleMult = Main.settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ch.HashKey(), 1.0f);
                     if (LogSliderCustomLabelWidth("Visual Character Size Multiplier", ref scaleMult, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
-                        Main.settings.perSave.scaleVisualModelSettings[ch.HashKey()] = scaleMult;
+                        Main.settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = scaleMult;
                         Settings.SavePerSaveSettings();
                     }
                     if (scaleMult != ch.View.gameObject.transform.localScale[0]) {

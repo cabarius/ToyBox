@@ -36,7 +36,7 @@ namespace ToyBox {
 
         // This is the scaling modifier which is applied to the visual model of each character
         [JsonProperty]
-        public Dictionary<string, float> scaleVisualModelSettings = new();
+        public Dictionary<string, float> characterModelSizeMultiplier = new();
 
         // Dictionary of Name/IsLegendaryHero for configuration per party member
         [JsonProperty]
