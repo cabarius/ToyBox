@@ -91,13 +91,11 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 if (ch != null && ch.HashKey() != null) {
                     Space(100);
-                    var scaleMult = Main.settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ch.HashKey(), 1.0f);
-                    if (LogSliderCustomLabelWidth("Visual Character Size Multiplier", ref scaleMult, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
+                    var scaleMult = ch.View.gameObject.transform.localScale[0];
+                    if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".color(RGBA.none) + " (This setting is per-save)", ref scaleMult, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
                         Main.settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = scaleMult;
-                        Settings.SavePerSaveSettings();
-                    }
-                    if (scaleMult != ch.View.gameObject.transform.localScale[0]) {
                         ch.View.gameObject.transform.localScale = new Vector3(scaleMult, scaleMult, scaleMult);
+                        Settings.SavePerSaveSettings();
                     }
                 }
             }
