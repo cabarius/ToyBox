@@ -42,7 +42,7 @@ namespace ToyBox {
             BlueprintCharacterClass charClass => charClass.Name,
             BlueprintItem item => item.Name,
             BlueprintItemEnchantment enchant => enchant.Name,
-            BlueprintUnitFact fact => fact.Name,
+            BlueprintUnitFact fact => fact.NameSafe(),
             _ => bp.name
         };
         public static string GetDisplayName(this BlueprintSpellbook bp) {
@@ -55,7 +55,7 @@ namespace ToyBox {
             if (badList.Contains(bp.AssetGuid)) return modifers;
             var traverse = Traverse.Create(bp);
             foreach (var property in Traverse.Create(bp).Properties()) {
-                    if (property.StartsWith("Is")) {
+                if (property.StartsWith("Is")) {
                     try {
                         var value = traverse.Property<bool>(property)?.Value;
                         if (value.HasValue && value.GetValueOrDefault()) {
@@ -94,7 +94,7 @@ namespace ToyBox {
             if (bp.IsDivineCaster) names.Add("Divine");
             if (bp.IsMythic) names.Add("Mythic");
             return names;
-        }          
+        }
         public static List<string> CollationNames(this BlueprintSpellbook bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.CharacterClass.IsDivineCaster) names.Add("Divine");

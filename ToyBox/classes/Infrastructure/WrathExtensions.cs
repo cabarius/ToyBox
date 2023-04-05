@@ -131,7 +131,7 @@ namespace ToyBox {
                 var guid = bp.AssetGuid;
                 if (guid == "b60252a8ae028ba498340199f48ead67" || guid == "fb379e61500421143b52c739823b4082") return null;
                 var associatedBlueprint = bp as IUIDataProvider;
-                return associatedBlueprint?.Description.StripHTML();
+                return associatedBlueprint?.Description?.StripHTML();
                 // Why did BoT do this instead of the above which is what MechanicsContext.SelectUIData() does for description
 #if false
                 var description = bp.Des

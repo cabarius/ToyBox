@@ -213,7 +213,13 @@ namespace ToyBox {
                         || settings.searchesDescriptions && 
                             (  terms.All(term => description.Matches(term))
                             || blueprint is BlueprintItem itemBP 
-                                && terms.All(term => itemBP.FlavorText.Matches(term))
+                                && terms.All(term => {
+                                    try {
+                                        return itemBP.FlavorText.Matches(term);                                        
+                                    } catch (NullReferenceException e) {
+                                        return false;
+                                    }
+                                })
                             )
                         ) {
                         filtered.Add(blueprint);
@@ -305,7 +311,7 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         ActionTextField(
                             ref settings.searchText,
-                            "searhText",
+                            "searchText",
                             (text) => { },
                             () => UpdateSearchResults(),
                             Width(400));
