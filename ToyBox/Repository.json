@@ -1,9 +1,8 @@
 ﻿{
-	"Releases":
-	[
-		{
-			"Id": "ToyBox",
-			"Version": "1.4.24"
-		}
-	]
+  "Releases": [
+    {
+      "Id": "ToyBox",
+      "Version": "1.4.25"
+    }
+  ]
 }
