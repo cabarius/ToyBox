@@ -44,7 +44,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Temporarily removed the refill belt consumable feature since it's weird.
 * (***ADDB***) Fixed Search 'n Pick crashing when using search in Main Menu.
 * (***ADDB***) Added Visual Character Size Multiplier.
-
 ### Ver 1.4.24
 * (***Narria***) Loot coloring improvents
   * Added rarity tags when color loot items is active
