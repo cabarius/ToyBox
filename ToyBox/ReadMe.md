@@ -37,12 +37,14 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.4.26 (coming soon)
+* (***ADDB***) Fixed and reintroduced refill belt consumables.
 ### Ver 1.4.25
-* (***CascadingDragon***) and (***ADDB***) Update for game version 2.1.2d.
+* (CascadingDragon) and (ADDB) Update for game version 2.1.2d.
   * Fixed? optional trait selection skip and removed the one where no traits left (since official game introduced that feature).
-  * Fixed refill belt consumable.
-* (***ADDB***) Fixed Search 'n Pick crashing when using search in Main Menu.
-* (***ADDB***) Added Visual Character Size Multiplier.
+  * Temporarily removed the refill belt consumable feature since it's weird.
+* (ADDB) Fixed Search 'n Pick crashing when using search in Main Menu.
+* (ADDB) Added Visual Character Size Multiplier.
+
 ### Ver 1.4.24
 * (***Narria***) Loot coloring improvents
   * Added rarity tags when color loot items is active
