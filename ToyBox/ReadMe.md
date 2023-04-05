@@ -36,8 +36,13 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-### Ver 1.4.25 (coming soon)
+### Ver 1.4.26 (coming soon)
+### Ver 1.4.25
 * (***CascadingDragon***) and (***ADDB***) Update for game version 2.1.2d.
+  * Fixed? optional trait selection skip and removed the one where no traits left (since official game introduced that feature).
+  * Temporarily removed the refill belt consumable feature since it's weird.
+* (***ADDB***) Fixed Search 'n Pick crashing when using search in Main Menu.
+* (***ADDB***) Added Visual Character Size Multiplier.
 ### Ver 1.4.24
 * (***Narria***) Loot coloring improvents
   * Added rarity tags when color loot items is active
