@@ -55,7 +55,6 @@ namespace ToyBox {
                     25.space();
                     Label("This allows you to select combinations of archetypes when selecting a class for the first time that contain distinct spellbooks".green());
                 },
-                //() => Toggle("Enable  'Next' when no feat selections are available", ref settings.toggleNextWhenNoAvailableFeatSelections),
                 () => Toggle("Make All Feature Selections Optional", ref settings.toggleOptionalFeatSelection),
                 () => {
                     Toggle("Ignore Attribute Cap", ref settings.toggleIgnoreAttributeCap);
