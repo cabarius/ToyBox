@@ -46,4 +46,4 @@ Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteou
 
 Learn to mod Owlcat Games (Kingmaker and Wrath of the Righteous) [here](https://github.com/spacehamster/OwlcatModdingWiki/wiki/Beginner-Guide)
         
-[Join our discord](https://discord.gg/wotr) and go to #mod-dev-technical and #mod-user-general meet the mod authors: **Narria** and her kind collaborators **ArcaneTrixter**, **Aphelion (SonicZentropy)**, **Delth** and others.  We love to chat about modding and teaching others to mod.
+[Join our discord](https://discord.gg/owlcat) and go to #mod-dev-technical and #mod-user-general meet the mod authors: **Narria** and her kind collaborators **ArcaneTrixter**, **Aphelion (SonicZentropy)**, **Delth** and others.  We love to chat about modding and teaching others to mod.
