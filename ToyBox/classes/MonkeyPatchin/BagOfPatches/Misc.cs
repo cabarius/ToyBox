@@ -52,6 +52,7 @@ using ModKit;
 using Kingmaker.EntitySystem.Persistence;
 using ToyBox.Multiclass;
 using Kingmaker.UI.MVVM._PCView.ActionBar;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
@@ -616,6 +617,17 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 }
                 return true;
+            }
+        }
+        [HarmonyPatch(typeof(LogThreadService), nameof(LogThreadService.OnGameLoaded))]
+        public static class LogThreadService_OnGameLoaded_Patch {
+            private static void Postfix() {
+                foreach (var ID in Main.settings.perSave.characterModelSizeMultiplier.Keys) {
+                    foreach (UnitEntityData cha in Game.Instance.State.Units.Where((u) => u.CharacterName.Equals(ID))) {
+                        float scale = Main.settings.perSave.characterModelSizeMultiplier[ID];
+                        cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
+                    }
+                }
             }
         }
     }
