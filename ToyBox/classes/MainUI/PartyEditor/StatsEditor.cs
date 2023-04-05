@@ -60,7 +60,6 @@ namespace ToyBox {
                 //UI.Label($"{alignmentMask.ToString()}".color(alignmentMask.Color()).bold(), UI.Width(325));
                 Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
             }
-
             using (HorizontalScope()) {
                 528.space();
                 var maskIndex = Array.IndexOf(AlignmentMasks, alignmentMask);
