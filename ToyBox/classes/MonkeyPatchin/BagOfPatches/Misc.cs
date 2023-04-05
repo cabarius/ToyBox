@@ -496,7 +496,6 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.CheckAndReplace(ref unit);
             }
         }
-#if false
         [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), nameof(Kingmaker.Items.Slots.ItemSlot.RemoveItem), new Type[] { typeof(bool), typeof(bool) })]
         private static class ItemSlot_RemoveItem_Patch {
             private static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
@@ -508,28 +507,35 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
             }
+            public class doSomething {
+                private Kingmaker.Items.Slots.ItemSlot __instance;
+                private ItemEntity item;
+                public doSomething(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity item) {
+                    this.__instance = __instance;
+                    this.item = item;
+                }
+                public void run() {
+                    __instance.InsertItem(item);
+                }
 
+            }
             private static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state) {
                 if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
                     if (__state != null) {
                         var blueprint = __state.Blueprint;
                         var item = Game.Instance.Player.Inventory.Items.FindOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
                         if (item != null) {
-                            Game.Instance.ScheduleAction(() => {
-                                try {
-                                    Mod.Debug($"refill {item.m_Blueprint.Name.cyan()}");
-                                    __instance.InsertItem(item);
-                                }
-                                catch (Exception e) { Mod.Error($"{e}"); }
-                            });
+                            try {
+                                var runnable = new doSomething(__instance, item);
+                                Game.Instance.ScheduleAction(runnable.run);
+                            }
+                            catch (Exception e) { Mod.Error($"{e}"); }
                         }
                         __state = null;
                     }
                 }
             }
         }
-#endif
-
         // To eliminate some log spam
         /*[HarmonyPatch(typeof(SteamAchievementsManager), nameof(SteamAchievementsManager.OnUserStatsStored), new Type[] { typeof(UserStatsStored_t) })]
         public static class SteamAchievementsManager_OnUserStatsStored_Patch {

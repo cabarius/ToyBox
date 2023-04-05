@@ -40,7 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.4.25
 * (***CascadingDragon***) and (***ADDB***) Update for game version 2.1.2d.
   * Fixed? optional trait selection skip and removed the one where no traits left (since official game introduced that feature).
-  * Temporarily removed the refill belt consumable feature since it's weird.
+  * Fixed refill belt consumable.
 * (***ADDB***) Fixed Search 'n Pick crashing when using search in Main Menu.
 * (***ADDB***) Added Visual Character Size Multiplier.
 ### Ver 1.4.24
