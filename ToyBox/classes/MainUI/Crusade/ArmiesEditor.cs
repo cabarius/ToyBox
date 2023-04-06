@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
+using Kingmaker.PubSubSystem;
 
 namespace ToyBox.classes.MainUI {
     public static class ArmiesEditor {
@@ -80,7 +81,7 @@ namespace ToyBox.classes.MainUI {
             hasStartUp = true;
         }
         public static void addAllCurrentUnits() {
-            var playerArmies = from army in classes.MainUI.ArmiesEditor.ArmiesByDistanceFromPlayer()
+            var playerArmies = from army in ArmiesByDistanceFromPlayer()
                                where army.Item1.Data.Faction == ArmyFaction.Crusaders
                                select army;
             foreach (var army in playerArmies) {
@@ -126,60 +127,75 @@ namespace ToyBox.classes.MainUI {
             if (!hasStartUp) {
                 startUp();
             }
+            var mercenaryManager = KingdomState.Instance.MercenariesManager;
             HStack("Mercenary Units", 1,
                     () => {
-                        ActionButton("Add Units", () => addAllCurrentUnits(), AutoWidth());
+                        ActionButton("Add Units", () => addAllCurrentUnits(), Width(100));
                         Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units".cyan());
                     },
-                () => Toggle("Should add Units from new armies to Mercenary units if not recruitable?".cyan(), ref Main.settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
-                () => DisclosureToggle("Show All Army Units".cyan(), ref discloseArmies),
-                () => {
-                    if (discloseArmies) {
-                        if (bps == null || bps?.Count() == 0) {
-                            hasStartUp = false;
-                        }
-
-                        using (VerticalScope()) {
-                            using (HorizontalScope()) {
-                                Label("Unit Name", Width(400));
-                                Label("Add/Remove to/from Mercenary Pool", Width(250));
-                                Label("Is recruitable", Width(150));
-                                Label("Mercenary Weight", AutoWidth());
+                    () => {
+                        ActionButton("Reroll All", () => {
+                            mercenaryManager.CurrentSlots.RemoveAll((v) => true);
+                            mercenaryManager.RollSlots(mercenaryManager.MaxAllowedSlots - mercenaryManager.CurrentSlots.Count);
+                            EventBus.RaiseEvent<IArmyMercenarySlotsHandler>(delegate (IArmyMercenarySlotsHandler h) {
+                                h.HandleSlotsRerolled();
+                            });
+                        }, Width(100));
+                        Label("Rerolls Mercenary Units for free".cyan());
+                    },
+                    () => {
+                        ValueAdjustorEditable("Mercenary Slots", () => mercenaryManager.MaxAllowedSlots,
+                            v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots), 1, 0, 200);
+                    },
+                    () => Toggle("Should add Units from new armies to Mercenary units if not recruitable?".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
+                    () => DisclosureToggle("Show All Army Units".cyan(), ref discloseArmies),
+                    () => {
+                        if (discloseArmies) {
+                            if (bps == null || bps?.Count() == 0) {
+                                hasStartUp = false;
                             }
-                            foreach (var entry in bps) {
+
+                            using (VerticalScope()) {
                                 using (HorizontalScope()) {
-                                    Label(entry.NameSafe().orange(), Width(400));
-                                    bool isPart = isInMercenaryPool[entry.GetHashCode()];
-                                    using (HorizontalScope(Width(250))) {
-                                        if (Toggle("", ref isPart, "Remove".red(), "Add".green(), 0, textBoxStyle, divStyle, AutoWidth())) {
-                                            isInMercenaryPool[entry.GetHashCode()] = isPart;
-                                            if (isPart) {
-                                                KingdomState.Instance.MercenariesManager.AddMercenary(entry, 1);
+                                    Label("Unit Name", Width(400));
+                                    Label("Add/Remove to/from Mercenary Pool", Width(250));
+                                    Label("Is recruitable", Width(150));
+                                    Label("Mercenary Weight", AutoWidth());
+                                }
+                                foreach (var entry in bps) {
+                                    using (HorizontalScope()) {
+                                        Label(entry.NameSafe().orange(), Width(400));
+                                        bool isPart = isInMercenaryPool[entry.GetHashCode()];
+                                        using (HorizontalScope(Width(250))) {
+                                            if (Toggle("", ref isPart, "Remove".red(), "Add".green(), 0, textBoxStyle, divStyle, AutoWidth())) {
+                                                isInMercenaryPool[entry.GetHashCode()] = isPart;
+                                                if (isPart) {
+                                                    mercenaryManager.AddMercenary(entry, 1);
+                                                }
+                                                else {
+                                                    mercenaryManager.RemoveMercenary(entry);
+                                                }
+                                            }
+                                        }
+                                        string txt = isInRecruitPool[entry.GetHashCode()] ? "Recruitable".green() : "Not Recruitable".red();
+                                        Label(txt, Width(150));
+                                        if (isInMercenaryPool[entry.GetHashCode()]) {
+                                            var res = mercenaryManager.Pool.FirstOrDefault(unit => unit.Unit == entry);
+                                            if (res != null) {
+                                                var tmp = res.Weight;
+                                                if (LogSliderCustomLabelWidth("Weight", ref tmp, 0.01f, 100, 1, 2, "", 70, AutoWidth())) {
+                                                    res.UpdateWeight(tmp);
+                                                }
                                             }
                                             else {
-                                                KingdomState.Instance.MercenariesManager.RemoveMercenary(entry);
+                                                Label("Weird", AutoWidth());
                                             }
-                                        }
-                                    }
-                                    string txt = isInRecruitPool[entry.GetHashCode()] ? "Recruitable".green() : "Not Recruitable".red();
-                                    Label(txt, Width(150));
-                                    if (isInMercenaryPool[entry.GetHashCode()]) {
-                                        var res = KingdomState.Instance.MercenariesManager.Pool.FirstOrDefault(unit => unit.Unit == entry);
-                                        if (res != null) {
-                                            var tmp = res.Weight;
-                                            if (LogSliderCustomLabelWidth("Weight", ref tmp, 0.01f, 100, 1, 2, "", 70, AutoWidth())) {
-                                                res.UpdateWeight(tmp);
-                                            }
-                                        }
-                                        else {
-                                            Label("Weird", AutoWidth());
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                });
+                    });
 
             Div(0, 25);
 
