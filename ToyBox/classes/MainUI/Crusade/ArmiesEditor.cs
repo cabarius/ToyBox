@@ -128,10 +128,10 @@ namespace ToyBox.classes.MainUI {
                 startUp();
             }
             var mercenaryManager = KingdomState.Instance.MercenariesManager;
-            HStack("Mercenary Units", 1,
+            HStack("Mercenaries", 1,
                     () => {
                         ActionButton("Add Units", () => addAllCurrentUnits(), Width(100));
-                        Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units".cyan());
+                        Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units.".cyan());
                     },
                     () => {
                         ActionButton("Reroll All", () => {
@@ -141,13 +141,13 @@ namespace ToyBox.classes.MainUI {
                                 h.HandleSlotsRerolled();
                             });
                         }, Width(100));
-                        Label("Rerolls Mercenary Units for free".cyan());
+                        Label("Rerolls Mercenary Units for free.".cyan());
                     },
                     () => {
                         ValueAdjustorEditable("Mercenary Slots", () => mercenaryManager.MaxAllowedSlots,
                             v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots), 1, 0, 200);
                     },
-                    () => Toggle("Should add Units from new armies to Mercenary units if not recruitable?".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
+                    () => Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
                     () => DisclosureToggle("Show All Army Units".cyan(), ref discloseArmies),
                     () => {
                         if (discloseArmies) {

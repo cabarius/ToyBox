@@ -38,6 +38,12 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.4.26 (coming soon)
 * (***ADDB***) Became slightly less stupid and fixed refill belt consumable feature.
+* (***ADDB***) Added a new feature to affect Crusade Mercenaries.
+  * Added a Button to add all units in your current armies to your Mercenary pool if they are not recruitable.
+  * Added a Button to reroll all Mercenary units (ignoring leftover rerolls and locked slots).
+  * Added a ValueAdjustor where you can change the amount of Mercenary Slots.
+  * (Experimental) Added a toggle to automatically add new Units in friendly armies to the Mercenary pool if not recruitable.
+  * Added a list showing all ArmyUnits, a toggle to add/remove them from the Mercenary Pool, a Label whether they are Recruitable and a slider to change their Pool Weight (affecting reroll chances for Mercenary).
 ### Ver 1.4.25
 * (***CascadingDragon***) and (***ADDB***) Update for game version 2.1.2d.
   * Fixed? optional trait selection skip and removed the one where no traits left (since official game introduced that feature).
