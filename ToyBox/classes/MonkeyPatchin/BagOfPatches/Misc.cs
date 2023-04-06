@@ -496,7 +496,6 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.CheckAndReplace(ref unit);
             }
         }
-#if false
         [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), nameof(Kingmaker.Items.Slots.ItemSlot.RemoveItem), new Type[] { typeof(bool), typeof(bool) })]
         private static class ItemSlot_RemoveItem_Patch {
             private static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
@@ -528,7 +527,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#endif
 
         // To eliminate some log spam
         /*[HarmonyPatch(typeof(SteamAchievementsManager), nameof(SteamAchievementsManager.OnUserStatsStored), new Type[] { typeof(UserStatsStored_t) })]
