@@ -176,17 +176,14 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             public static void Postfix(ArmyData __instance, BlueprintUnit unit) {
                 if (__instance.Faction == ArmyFaction.Crusaders) {
                     if (Settings.toggleAddNewUnitsAsMercenaries) {
-                        IEnumerable<BlueprintUnit> recruitPool = null;
                         if (ArmiesEditor.hasStartUp) {
                             if (!ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] && !ArmiesEditor.isInRecruitPool[unit.GetHashCode()]) {
                                 ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] = true;
                                 KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
                             }
                             else {
-                                if (recruitPool == null) {
-                                    recruitPool = from recruitable in KingdomState.Instance.RecruitsManager.Pool
-                                                  select recruitable.Unit;
-                                }
+                                IEnumerable<BlueprintUnit> recruitPool = from recruitable in KingdomState.Instance.RecruitsManager.Pool
+                                                                         select recruitable.Unit;
                                 if (!recruitPool.Contains(unit) && !KingdomState.Instance.MercenariesManager.HasUnitInPool(unit)) {
                                     KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
                                 }
