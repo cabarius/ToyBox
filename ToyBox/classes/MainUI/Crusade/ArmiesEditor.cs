@@ -61,6 +61,38 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
+        public static bool hasStartUp = false;
+        public static readonly object locker = new();
+        public static Dictionary<int, bool> isInMercenaryPool = new();
+        public static Dictionary<int, bool> isInRecruitPool = new();
+        public static IEnumerable<BlueprintUnit> bps;
+
+        public static void startUp() {
+            bps = from unit in BlueprintExtensions.GetBlueprints<BlueprintUnit>()
+                  where unit.NameSafe().StartsWith("Army")
+                  select unit;
+            IEnumerable<BlueprintUnit> recruitPool = from recruitable in KingdomState.Instance.RecruitsManager.Pool
+                                                     select recruitable.Unit;
+            foreach (var entry in bps) {
+                isInRecruitPool[entry.GetHashCode()] = recruitPool.Contains(entry);
+                isInMercenaryPool[entry.GetHashCode()] = KingdomState.Instance.MercenariesManager.HasUnitInPool(entry);
+            }
+            hasStartUp = true;
+        }
+        public static void addAllCurrentUnits() {
+            var playerArmies = from army in classes.MainUI.ArmiesEditor.ArmiesByDistanceFromPlayer()
+                               where army.Item1.Data.Faction == ArmyFaction.Crusaders
+                               select army;
+            foreach (var army in playerArmies) {
+                foreach (var squad in army.Item1.Data.Squads) {
+                    var unit = squad.Unit.GetHashCode();
+                    if (!isInMercenaryPool[unit] && !isInRecruitPool[unit]) {
+                        KingdomState.Instance.MercenariesManager.AddMercenary(squad.Unit, 1);
+                    }
+                }
+            }
+        }
+        public static bool discloseArmies = false;
         public static void OnGUI() {
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
@@ -90,6 +122,65 @@ namespace ToyBox.classes.MainUI {
                 () => Slider("Player Leader Ability Strength", ref settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", AutoWidth()),
                 () => Slider("Enemy Leader Ability Strength", ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", AutoWidth())
             );
+            Div(0, 25);
+            if (!hasStartUp) {
+                startUp();
+            }
+            HStack("Mercenary Units", 1,
+                    () => {
+                        ActionButton("Add Units", () => addAllCurrentUnits(), AutoWidth());
+                        Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units".cyan());
+                    },
+                () => Toggle("Should add Units from new armies to Mercenary units if not recruitable?".cyan(), ref Main.settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
+                () => DisclosureToggle("Show All Army Units".cyan(), ref discloseArmies),
+                () => {
+                    if (discloseArmies) {
+                        if (bps == null || bps?.Count() == 0) {
+                            hasStartUp = false;
+                        }
+
+                        using (VerticalScope()) {
+                            using (HorizontalScope()) {
+                                Label("Unit Name", Width(400));
+                                Label("Add/Remove to/from Mercenary Pool", Width(250));
+                                Label("Is recruitable", Width(150));
+                                Label("Mercenary Weight", AutoWidth());
+                            }
+                            foreach (var entry in bps) {
+                                using (HorizontalScope()) {
+                                    Label(entry.NameSafe().orange(), Width(400));
+                                    bool isPart = isInMercenaryPool[entry.GetHashCode()];
+                                    using (HorizontalScope(Width(250))) {
+                                        if (Toggle("", ref isPart, "Remove".red(), "Add".green(), 0, textBoxStyle, divStyle, AutoWidth())) {
+                                            isInMercenaryPool[entry.GetHashCode()] = isPart;
+                                            if (isPart) {
+                                                KingdomState.Instance.MercenariesManager.AddMercenary(entry, 1);
+                                            }
+                                            else {
+                                                KingdomState.Instance.MercenariesManager.RemoveMercenary(entry);
+                                            }
+                                        }
+                                    }
+                                    string txt = isInRecruitPool[entry.GetHashCode()] ? "Recruitable".green() : "Not Recruitable".red();
+                                    Label(txt, Width(150));
+                                    if (isInMercenaryPool[entry.GetHashCode()]) {
+                                        var res = KingdomState.Instance.MercenariesManager.Pool.FirstOrDefault(unit => unit.Unit == entry);
+                                        if (res != null) {
+                                            var tmp = res.Weight;
+                                            if (LogSliderCustomLabelWidth("Weight", ref tmp, 0.01f, 100, 1, 2, "", 70, AutoWidth())) {
+                                                res.UpdateWeight(tmp);
+                                            }
+                                        }
+                                        else {
+                                            Label("Weird", AutoWidth());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
             Div(0, 25);
 
             if (armies == null)

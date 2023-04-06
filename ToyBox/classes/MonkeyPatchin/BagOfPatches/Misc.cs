@@ -628,7 +628,6 @@ namespace ToyBox.BagOfPatches {
                         cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
                     }
                 }
-                Playground.hasStartUp = false;
             }
         }
     }

@@ -4,6 +4,7 @@ using Kingmaker.Armies.Blueprints;
 using Kingmaker.Armies.State;
 using Kingmaker.Armies.TacticalCombat;
 using Kingmaker.Armies.TacticalCombat.Parts;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.State;
@@ -15,6 +16,9 @@ using Kingmaker.Kingdom.Flags;
 using Kingmaker.Kingdom.Rules;
 using Kingmaker.Kingdom.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToyBox.classes.MainUI;
 using UnityEngine;
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     public static class Crusade {
@@ -167,18 +171,26 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GlobalMapState), nameof(GlobalMapState.CreateArmy), new[] { typeof(ArmyFaction), typeof(BlueprintArmyPreset), typeof(GlobalMapPosition), typeof(bool), typeof(bool) })]
-        public static class GlobalMapState_CreateArmy_Patch {
-            public static void Postfix(ref GlobalMapArmyState __result) {
-                if (Settings.toggleAddNewUnitsAsMercenaries) {
-                    if (!Playground.hasStartUp) {
-                        Playground.startUp();
-                    }
-                    foreach (var squad in __result.Data.Squads) {
-                        var unit = squad.Unit;
-                        if (!Playground.isInMercenaryPool[unit.GetHashCode()] && !Playground.isInRecruitPool[unit.GetHashCode()]) {
-                            Playground.isInMercenaryPool[unit.GetHashCode()] = true;
-                            KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
+        [HarmonyPatch(typeof(ArmyData), nameof(ArmyData.Add))]
+        public static class ArmyData_Add_Patch {
+            public static void Postfix(ArmyData __instance, BlueprintUnit unit) {
+                if (__instance.Faction == ArmyFaction.Crusaders) {
+                    if (Settings.toggleAddNewUnitsAsMercenaries) {
+                        IEnumerable<BlueprintUnit> recruitPool = null;
+                        if (ArmiesEditor.hasStartUp) {
+                            if (!ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] && !ArmiesEditor.isInRecruitPool[unit.GetHashCode()]) {
+                                ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] = true;
+                                KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
+                            }
+                            else {
+                                if (recruitPool == null) {
+                                    recruitPool = from recruitable in KingdomState.Instance.RecruitsManager.Pool
+                                                  select recruitable.Unit;
+                                }
+                                if (!recruitPool.Contains(unit) && !KingdomState.Instance.MercenariesManager.HasUnitInPool(unit)) {
+                                    KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
+                                }
+                            }
                         }
                     }
                 }
