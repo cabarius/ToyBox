@@ -183,7 +183,7 @@ namespace ToyBox.classes.MainUI {
                                             var res = mercenaryManager.Pool.FirstOrDefault(unit => unit.Unit == entry);
                                             if (res != null) {
                                                 var tmp = res.Weight;
-                                                if (LogSliderCustomLabelWidth("Weight", ref tmp, 0.01f, 100, 1, 2, "", 70, AutoWidth())) {
+                                                if (LogSliderCustomLabelWidth("Weight", ref tmp, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
                                                     res.UpdateWeight(tmp);
                                                 }
                                             }
