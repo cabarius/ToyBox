@@ -1,10 +1,12 @@
 ﻿using HarmonyLib;
 using Kingmaker.Armies;
+using Kingmaker.Armies.Blueprints;
 using Kingmaker.Armies.State;
 using Kingmaker.Armies.TacticalCombat;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Globalmap.State;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Armies;
 using Kingmaker.Kingdom.Blueprints;
@@ -136,11 +138,11 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 if (Settings.kingdomTaskResolutionLengthMultiplier == 0) return;
                 if (__instance.EventBlueprint.IsResolveByBaron) return; //this is a guard from KingdomResolution, not sure why it's there or if we still need it
                 //KingdomResolution split this into multiple settings, but this should be good enough until someone who cares checks what blueprint types we have
-                __result = Mathf.RoundToInt(__result * (Settings.kingdomTaskResolutionLengthMultiplier+1));
+                __result = Mathf.RoundToInt(__result * (Settings.kingdomTaskResolutionLengthMultiplier + 1));
                 __result = __result < 1 ? 1 : __result;
             }
         }
-        
+
         [HarmonyPatch(typeof(KingdomTaskEvent), nameof(KingdomTaskEvent.CanBeStarted))]
         public static class KingdomTaskEvent_CanBeStarted_Patch {
             public static void Postfix(ref bool __result) {
@@ -149,10 +151,10 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-       [HarmonyPatch(typeof(BlueprintKingdomEventBase), nameof(BlueprintKingdomEventBase.GetAvailableLeader))]
-       public static class BlueprintKingdomEventBase_GetAvailableLeader_Patch {
+        [HarmonyPatch(typeof(BlueprintKingdomEventBase), nameof(BlueprintKingdomEventBase.GetAvailableLeader))]
+        public static class BlueprintKingdomEventBase_GetAvailableLeader_Patch {
             public static void Postfix(BlueprintKingdomEventBase __instance, ref LeaderState __result) {
-                if (Settings.toggleIgnoreStartTaskRestrictions) 
+                if (Settings.toggleIgnoreStartTaskRestrictions)
                     __result = new LeaderState(__instance.GetDefaultResolutionType());
             }
         }
@@ -162,6 +164,24 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             public static void Postfix(ref KingdomResourcesAmount __result) {
                 if (Settings.toggleTaskNoResourcesCost)
                     __result = new KingdomResourcesAmount();
+            }
+        }
+
+        [HarmonyPatch(typeof(GlobalMapState), nameof(GlobalMapState.CreateArmy), new[] { typeof(ArmyFaction), typeof(BlueprintArmyPreset), typeof(GlobalMapPosition), typeof(bool), typeof(bool) })]
+        public static class GlobalMapState_CreateArmy_Patch {
+            public static void Postfix(ref GlobalMapArmyState __result) {
+                if (Settings.toggleAddNewUnitsAsMercenaries) {
+                    if (!Playground.hasStartUp) {
+                        Playground.startUp();
+                    }
+                    foreach (var squad in __result.Data.Squads) {
+                        var unit = squad.Unit;
+                        if (!Playground.isInMercenaryPool[unit.GetHashCode()] && !Playground.isInRecruitPool[unit.GetHashCode()]) {
+                            Playground.isInMercenaryPool[unit.GetHashCode()] = true;
+                            KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
+                        }
+                    }
+                }
             }
         }
     }
