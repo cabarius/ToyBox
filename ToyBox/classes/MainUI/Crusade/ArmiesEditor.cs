@@ -155,12 +155,6 @@ namespace ToyBox.classes.MainUI {
                     () => {
                         if (discloseMercenaryUnits) {
                             using (VerticalScope()) {
-                                using (HorizontalScope()) {
-                                    Label("Unit Name", Width(400));
-                                    Label("Add/Remove to/from Mercenary Pool", Width(250));
-                                    Label("Is recruitable", Width(150));
-                                    Label("Mercenary Weight", AutoWidth());
-                                }
                                 bool changed = false;
                                 Browser<BlueprintUnit, BlueprintUnit>.OnGUI(
                                     "Army Units",
@@ -177,6 +171,15 @@ namespace ToyBox.classes.MainUI {
                                     (unit) => unit.GetDisplayName(),
                                     (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
                                     (unit) => unit.GetDisplayName(),
+                                    () => {
+                                        var bluh = ummWidth - 50;
+                                        var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 50;
+                                        Label("Unit Name", Width((int)titleWidth));
+                                        10.space();
+                                        Label("Add/Remove to/from Mercenary Pool", Width(250));
+                                        Label("Is recruitable", Width(150));
+                                        Label("Mercenary Pool Weight", AutoWidth());
+                                    },
                                     (bpUnit, unit) => {
                                         bool isPart = isInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
                                         using (HorizontalScope(Width(250))) {
