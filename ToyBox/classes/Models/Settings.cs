@@ -226,6 +226,7 @@ namespace ToyBox {
         public bool toggleCrusadeFlagsStayGreen = false;
         public bool toggleIgnoreStartTaskRestrictions = false;
         public bool toggleTaskNoResourcesCost = false;
+        public bool toggleAddNewUnitsAsMercenaries = false;
         public float postBattleSummonMultiplier = 1;
         public float recruitmentCost = 1;
         public float recruitmentMultiplier = 1;
