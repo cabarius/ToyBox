@@ -279,17 +279,6 @@ namespace ModKit {
         // Value Editors 
 
         public static bool ValueAdjustorEditable(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
-            static void change(Action<int> set, int value, int min, int max) {
-                if (value >= min) {
-                    if (value <= max) {
-                        set(value);
-                    } else {
-                        set(max);
-                    }
-                } else {
-                    set(min);
-                }
-            }
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), options);
@@ -297,12 +286,12 @@ namespace ModKit {
                 var value = get();
                 changed = ValueAdjuster(ref value, increment, min, max);
                 if (changed) {
-                    change(set, value, min, max);
+                    set(Math.Max(Math.Min(value, max), min));
                 }
                 Space(50);
                 using (VerticalScope(Width(75))) {
                     ActionIntTextField(ref value, set, Width(75));
-                    change(set, value, min, max);
+                    set(Math.Max(Math.Min(value, max), min));
                 }
             }
             return changed;

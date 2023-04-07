@@ -62,23 +62,18 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
-        public static bool hasStartUp = false;
         public static readonly object locker = new();
         public static Dictionary<int, bool> isInMercenaryPool = new();
         public static Dictionary<int, bool> isInRecruitPool = new();
         public static IEnumerable<BlueprintUnit> bps;
 
         public static void startUp() {
-            bps = from unit in BlueprintExtensions.GetBlueprints<BlueprintUnit>()
-                  where unit.NameSafe().StartsWith("Army")
-                  select unit;
-            IEnumerable<BlueprintUnit> recruitPool = from recruitable in KingdomState.Instance.RecruitsManager.Pool
-                                                     select recruitable.Unit;
+            bps = from unit in BlueprintExtensions.GetBlueprints<BlueprintUnit>().Where((u) => u.NameSafe().StartsWith("Army"));
+            IEnumerable<BlueprintUnit> recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
             foreach (var entry in bps) {
                 isInRecruitPool[entry.GetHashCode()] = recruitPool.Contains(entry);
                 isInMercenaryPool[entry.GetHashCode()] = KingdomState.Instance.MercenariesManager.HasUnitInPool(entry);
             }
-            hasStartUp = true;
         }
         public static void addAllCurrentUnits() {
             var playerArmies = from army in ArmiesByDistanceFromPlayer()
@@ -93,7 +88,7 @@ namespace ToyBox.classes.MainUI {
                 }
             }
         }
-        public static bool discloseArmies = false;
+        public static bool discloseMercenaryUnits = false;
         public static void OnGUI() {
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
@@ -124,10 +119,10 @@ namespace ToyBox.classes.MainUI {
                 () => Slider("Enemy Leader Ability Strength", ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", AutoWidth())
             );
             Div(0, 25);
-            if (!hasStartUp) {
+            var mercenaryManager = KingdomState.Instance.MercenariesManager;
+            if (bps == null || bps?.Count() == 0) {
                 startUp();
             }
-            var mercenaryManager = KingdomState.Instance.MercenariesManager;
             HStack("Mercenaries", 1,
                     () => {
                         ActionButton("Add Units", () => addAllCurrentUnits(), Width(100));
@@ -148,13 +143,9 @@ namespace ToyBox.classes.MainUI {
                             v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots), 1, 0, 200);
                     },
                     () => Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
-                    () => DisclosureToggle("Show All Army Units".cyan(), ref discloseArmies),
+                    () => DisclosureToggle("Show All Army Units".cyan(), ref discloseMercenaryUnits),
                     () => {
-                        if (discloseArmies) {
-                            if (bps == null || bps?.Count() == 0) {
-                                hasStartUp = false;
-                            }
-
+                        if (discloseMercenaryUnits) {
                             using (VerticalScope()) {
                                 using (HorizontalScope()) {
                                     Label("Unit Name", Width(400));
