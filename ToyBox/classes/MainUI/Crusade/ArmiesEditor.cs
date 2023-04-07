@@ -66,7 +66,7 @@ namespace ToyBox.classes.MainUI {
         public static Dictionary<int, bool> isInMercenaryPool = new();
         public static Dictionary<int, bool> isInRecruitPool = new();
         public static IEnumerable<BlueprintUnit> bps;
-        public static IEnumerable<BlueprintUnit> recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
+        public static IEnumerable<BlueprintUnit> recruitPool;
         public static bool poolChanged = true;
         public static List<BlueprintUnit> mercenaryUnits;
 
@@ -123,14 +123,12 @@ namespace ToyBox.classes.MainUI {
             );
             Div(0, 25);
             var mercenaryManager = KingdomState.Instance.MercenariesManager;
-            if (bps == null || bps?.Count() == 0) {
-                startUp();
-            }
             if (poolChanged) {
                 mercenaryUnits = mercenaryManager.Pool.Select((u) => u.Unit).ToList();
                 foreach (var unit in mercenaryUnits) {
                     isInMercenaryPool[unit.GetHashCode()] = true;
                 }
+                recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
                 mercenaryUnits.AddRange(recruitPool);
             }
             HStack("Mercenaries", 1,
@@ -168,7 +166,12 @@ namespace ToyBox.classes.MainUI {
                                     "Army Units",
                                     ref changed,
                                     mercenaryUnits,
-                                    () => bps,
+                                    () => {
+                                        if (bps == null || bps?.Count() == 0) {
+                                            startUp();
+                                        }
+                                        return bps;
+                                    },
                                     (unit) => unit,
                                     (unit) => unit.NameSafe(),
                                     (unit) => unit.GetDisplayName(),
