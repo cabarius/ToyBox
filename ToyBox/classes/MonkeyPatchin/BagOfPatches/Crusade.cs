@@ -176,7 +176,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             public static void Postfix(ArmyData __instance, BlueprintUnit unit) {
                 if (__instance.Faction == ArmyFaction.Crusaders) {
                     if (Settings.toggleAddNewUnitsAsMercenaries) {
-                        if (ArmiesEditor.hasStartUp) {
+                        if (ArmiesEditor.bps != null && ArmiesEditor.bps?.Count() != 0) {
                             if (!ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] && !ArmiesEditor.isInRecruitPool[unit.GetHashCode()]) {
                                 ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] = true;
                                 KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
@@ -191,6 +191,18 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                         }
                     }
                 }
+            }
+        }
+        [HarmonyPatch(typeof(ArmyMercenariesManager), nameof(ArmyMercenariesManager.AddMercenary))]
+        public static class ArmyMercenariesManager_AddMercenary_Patch {
+            public static void Postfix() {
+                ArmiesEditor.poolChanged = true;
+            }
+        }
+        [HarmonyPatch(typeof(ArmyMercenariesManager), nameof(ArmyMercenariesManager.RemoveMercenary))]
+        public static class ArmyMercenariesManager_RemoveMercenary_Patch {
+            public static void Postfix() {
+                ArmiesEditor.poolChanged = true;
             }
         }
     }

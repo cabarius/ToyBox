@@ -66,9 +66,12 @@ namespace ToyBox.classes.MainUI {
         public static Dictionary<int, bool> isInMercenaryPool = new();
         public static Dictionary<int, bool> isInRecruitPool = new();
         public static IEnumerable<BlueprintUnit> bps;
+        public static IEnumerable<BlueprintUnit> recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
+        public static bool poolChanged = true;
+        public static List<BlueprintUnit> mercenaryUnits;
 
         public static void startUp() {
-            bps = from unit in BlueprintExtensions.GetBlueprints<BlueprintUnit>().Where((u) => u.NameSafe().StartsWith("Army"));
+            bps = BlueprintExtensions.GetBlueprints<BlueprintUnit>().Where((u) => u.NameSafe().StartsWith("Army"));
             IEnumerable<BlueprintUnit> recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
             foreach (var entry in bps) {
                 isInRecruitPool[entry.GetHashCode()] = recruitPool.Contains(entry);
@@ -123,6 +126,13 @@ namespace ToyBox.classes.MainUI {
             if (bps == null || bps?.Count() == 0) {
                 startUp();
             }
+            if (poolChanged) {
+                mercenaryUnits = mercenaryManager.Pool.Select((u) => u.Unit).ToList();
+                foreach (var unit in mercenaryUnits) {
+                    isInMercenaryPool[unit.GetHashCode()] = true;
+                }
+                mercenaryUnits.AddRange(recruitPool);
+            }
             HStack("Mercenaries", 1,
                     () => {
                         ActionButton("Add Units", () => addAllCurrentUnits(), Width(100));
@@ -153,25 +163,34 @@ namespace ToyBox.classes.MainUI {
                                     Label("Is recruitable", Width(150));
                                     Label("Mercenary Weight", AutoWidth());
                                 }
-                                foreach (var entry in bps) {
-                                    using (HorizontalScope()) {
-                                        Label(entry.NameSafe().orange(), Width(400));
-                                        bool isPart = isInMercenaryPool[entry.GetHashCode()];
+                                bool changed = false;
+                                Browser<BlueprintUnit, BlueprintUnit>.OnGUI(
+                                    "Army Units",
+                                    ref changed,
+                                    mercenaryUnits,
+                                    () => bps,
+                                    (unit) => unit,
+                                    (unit) => unit.NameSafe(),
+                                    (unit) => unit.GetDisplayName(),
+                                    (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
+                                    (unit) => unit.GetDisplayName(),
+                                    (bpUnit, unit) => {
+                                        bool isPart = isInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
                                         using (HorizontalScope(Width(250))) {
                                             if (Toggle("", ref isPart, "Remove".red(), "Add".green(), 0, textBoxStyle, divStyle, AutoWidth())) {
-                                                isInMercenaryPool[entry.GetHashCode()] = isPart;
+                                                isInMercenaryPool[unit.GetHashCode()] = isPart;
                                                 if (isPart) {
-                                                    mercenaryManager.AddMercenary(entry, 1);
+                                                    mercenaryManager.AddMercenary(unit, 1);
                                                 }
                                                 else {
-                                                    mercenaryManager.RemoveMercenary(entry);
+                                                    mercenaryManager.RemoveMercenary(unit);
                                                 }
                                             }
                                         }
-                                        string txt = isInRecruitPool[entry.GetHashCode()] ? "Recruitable".green() : "Not Recruitable".red();
+                                        string txt = isInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit)) ? "Recruitable".green() : "Not Recruitable".red();
                                         Label(txt, Width(150));
-                                        if (isInMercenaryPool[entry.GetHashCode()]) {
-                                            var res = mercenaryManager.Pool.FirstOrDefault(unit => unit.Unit == entry);
+                                        if (isPart) {
+                                            var res = mercenaryManager.Pool.FirstOrDefault(un => un.Unit == unit);
                                             if (res != null) {
                                                 var tmp = res.Weight;
                                                 if (LogSliderCustomLabelWidth("Weight", ref tmp, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
@@ -182,8 +201,7 @@ namespace ToyBox.classes.MainUI {
                                                 Label("Weird", AutoWidth());
                                             }
                                         }
-                                    }
-                                }
+                                    });
                             }
                         }
                     });
