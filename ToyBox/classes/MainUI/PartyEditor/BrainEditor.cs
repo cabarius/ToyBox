@@ -44,6 +44,7 @@ namespace ToyBox {
                 bp => bp.GetDisplayName(),
                 bp => $"{bp.GetDisplayName()} {bp.GetDescription()}",
                 bp => bp.GetDisplayName(),
+                null,
                 (action, bp) => {
                     var attributes = bp.GetCustomAttributes();
                     var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
@@ -66,11 +67,12 @@ namespace ToyBox {
                             c => c.GetDisplayName(),
                             c => c.GetDisplayName(),
                             c => c.GetDisplayName(),
+                            null,
                             (c, bp) => {
                                 var attributes = bp.GetCustomAttributes();
                                 var text = String.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                 Label(text.green(), AutoWidth());
-                            }, null, 
+                            }, null,
                             150, true, false
                             );
                     }
@@ -79,7 +81,7 @@ namespace ToyBox {
                         Label($"Target Consideration".orange());
                     }
                     Browser<Consideration, Consideration>.OnGUI(
-                        $"{ch.CharacterName}-{bp.AssetGuid}-TargetConsiderations", 
+                        $"{ch.CharacterName}-{bp.AssetGuid}-TargetConsiderations",
                         ref changed,
                         action.TargetConsiderations,
                         () => BlueprintExtensions.GetBlueprints<Consideration>(),
@@ -88,6 +90,7 @@ namespace ToyBox {
                         c => c.GetDisplayName(),
                         c => c.GetDisplayName(),
                         c => c.GetDisplayName(),
+                        null,
                             (c, bp) => {
                                 var attributes = bp.GetCustomAttributes();
                                 var text = String.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));

@@ -62,23 +62,21 @@ namespace ToyBox.classes.MainUI {
             }
         }
 
-        public static bool hasStartUp = false;
         public static readonly object locker = new();
         public static Dictionary<int, bool> isInMercenaryPool = new();
         public static Dictionary<int, bool> isInRecruitPool = new();
         public static IEnumerable<BlueprintUnit> bps;
+        public static IEnumerable<BlueprintUnit> recruitPool;
+        public static bool poolChanged = true;
+        public static List<BlueprintUnit> mercenaryUnits;
 
         public static void startUp() {
-            bps = from unit in BlueprintExtensions.GetBlueprints<BlueprintUnit>()
-                  where unit.NameSafe().StartsWith("Army")
-                  select unit;
-            IEnumerable<BlueprintUnit> recruitPool = from recruitable in KingdomState.Instance.RecruitsManager.Pool
-                                                     select recruitable.Unit;
+            bps = BlueprintExtensions.GetBlueprints<BlueprintUnit>().Where((u) => u.NameSafe().StartsWith("Army"));
+            IEnumerable<BlueprintUnit> recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
             foreach (var entry in bps) {
                 isInRecruitPool[entry.GetHashCode()] = recruitPool.Contains(entry);
                 isInMercenaryPool[entry.GetHashCode()] = KingdomState.Instance.MercenariesManager.HasUnitInPool(entry);
             }
-            hasStartUp = true;
         }
         public static void addAllCurrentUnits() {
             var playerArmies = from army in ArmiesByDistanceFromPlayer()
@@ -93,7 +91,7 @@ namespace ToyBox.classes.MainUI {
                 }
             }
         }
-        public static bool discloseArmies = false;
+        public static bool discloseMercenaryUnits = false;
         public static void OnGUI() {
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
@@ -124,10 +122,15 @@ namespace ToyBox.classes.MainUI {
                 () => Slider("Enemy Leader Ability Strength", ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", AutoWidth())
             );
             Div(0, 25);
-            if (!hasStartUp) {
-                startUp();
-            }
             var mercenaryManager = KingdomState.Instance.MercenariesManager;
+            if (poolChanged) {
+                mercenaryUnits = mercenaryManager.Pool.Select((u) => u.Unit).ToList();
+                foreach (var unit in mercenaryUnits) {
+                    isInMercenaryPool[unit.GetHashCode()] = true;
+                }
+                recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
+                mercenaryUnits.AddRange(recruitPool);
+            }
             HStack("Mercenaries", 1,
                     () => {
                         ActionButton("Add Units", () => addAllCurrentUnits(), Width(100));
@@ -148,39 +151,52 @@ namespace ToyBox.classes.MainUI {
                             v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots), 1, 0, 200);
                     },
                     () => Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
-                    () => DisclosureToggle("Show All Army Units".cyan(), ref discloseArmies),
+                    () => DisclosureToggle("Show All Army Units".cyan(), ref discloseMercenaryUnits),
                     () => {
-                        if (discloseArmies) {
-                            if (bps == null || bps?.Count() == 0) {
-                                hasStartUp = false;
-                            }
-
+                        if (discloseMercenaryUnits) {
                             using (VerticalScope()) {
-                                using (HorizontalScope()) {
-                                    Label("Unit Name", Width(400));
-                                    Label("Add/Remove to/from Mercenary Pool", Width(250));
-                                    Label("Is recruitable", Width(150));
-                                    Label("Mercenary Weight", AutoWidth());
-                                }
-                                foreach (var entry in bps) {
-                                    using (HorizontalScope()) {
-                                        Label(entry.NameSafe().orange(), Width(400));
-                                        bool isPart = isInMercenaryPool[entry.GetHashCode()];
+                                bool changed = false;
+                                Browser<BlueprintUnit, BlueprintUnit>.OnGUI(
+                                    "Army Units",
+                                    ref changed,
+                                    mercenaryUnits,
+                                    () => {
+                                        if (bps == null || bps?.Count() == 0) {
+                                            startUp();
+                                        }
+                                        return bps;
+                                    },
+                                    (unit) => unit,
+                                    (unit) => unit.NameSafe(),
+                                    (unit) => unit.GetDisplayName(),
+                                    (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
+                                    (unit) => unit.GetDisplayName(),
+                                    () => {
+                                        var bluh = ummWidth - 50;
+                                        var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 50;
+                                        Label("Unit Name", Width((int)titleWidth));
+                                        10.space();
+                                        Label("Add/Remove to/from Mercenary Pool", Width(250));
+                                        Label("Is recruitable", Width(150));
+                                        Label("Mercenary Pool Weight", AutoWidth());
+                                    },
+                                    (bpUnit, unit) => {
+                                        bool isPart = isInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
                                         using (HorizontalScope(Width(250))) {
                                             if (Toggle("", ref isPart, "Remove".red(), "Add".green(), 0, textBoxStyle, divStyle, AutoWidth())) {
-                                                isInMercenaryPool[entry.GetHashCode()] = isPart;
+                                                isInMercenaryPool[unit.GetHashCode()] = isPart;
                                                 if (isPart) {
-                                                    mercenaryManager.AddMercenary(entry, 1);
+                                                    mercenaryManager.AddMercenary(unit, 1);
                                                 }
                                                 else {
-                                                    mercenaryManager.RemoveMercenary(entry);
+                                                    mercenaryManager.RemoveMercenary(unit);
                                                 }
                                             }
                                         }
-                                        string txt = isInRecruitPool[entry.GetHashCode()] ? "Recruitable".green() : "Not Recruitable".red();
+                                        string txt = isInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit)) ? "Recruitable".green() : "Not Recruitable".red();
                                         Label(txt, Width(150));
-                                        if (isInMercenaryPool[entry.GetHashCode()]) {
-                                            var res = mercenaryManager.Pool.FirstOrDefault(unit => unit.Unit == entry);
+                                        if (isPart) {
+                                            var res = mercenaryManager.Pool.FirstOrDefault(un => un.Unit == unit);
                                             if (res != null) {
                                                 var tmp = res.Weight;
                                                 if (LogSliderCustomLabelWidth("Weight", ref tmp, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
@@ -191,8 +207,7 @@ namespace ToyBox.classes.MainUI {
                                                 Label("Weird", AutoWidth());
                                             }
                                         }
-                                    }
-                                }
+                                    });
                             }
                         }
                     });

@@ -36,6 +36,7 @@ namespace ModKit {
                 Func<Definition, string> title,
                 Func<Definition, string> searchKey = null,
                 Func<Definition, string> sortKey = null,
+                Action OnHeaderGUI = null,
                 Action<Item, Definition> OnRowGUI = null,
                 Action<Item, Definition> OnChildrenGUI = null,
                 int indent = 50,
@@ -82,11 +83,10 @@ namespace ModKit {
                 }
                 var currentDict = current.ToDictionary(definition, c => c);
                 List<Definition> definitions;
-                if (_showAll && search) {            
+                if (_showAll && search) {
                     UpdateSearchResults(_searchText, available(), searchKey, sortKey);
                     definitions = _filteredDefinitions?.ToList();
-                }
-                else {
+                } else {
                     definitions = currentDict.Keys.ToList();
                 }
 
@@ -96,6 +96,12 @@ namespace ModKit {
                 _matchCount = 0;
                 if (showDiv)
                     Div(indent);
+                if (OnHeaderGUI != null) {
+                    using (HorizontalScope(AutoWidth())) {
+                        space(indent);
+                        OnHeaderGUI();
+                    }
+                }
                 foreach (var def in sorted) {
                     var name = title(def);
                     var nameLower = name.ToLower();
@@ -120,8 +126,7 @@ namespace ModKit {
                         if (OnChildrenGUI == null) {
                             Label(text, width((int)titleWidth));
                             // remwidth -= titlewidth;
-                        }
-                        else {
+                        } else {
                             DisclosureStates.TryGetValue(titleKey, out showChildren);
                             if (DisclosureToggle(text, ref showChildren, titleWidth)) {
                                 DisclosureStates[titleKey] = showChildren;
@@ -139,7 +144,7 @@ namespace ModKit {
                 }
             }
             [UsedImplicitly]
-            public static void UpdateSearchResults(string searchTextParam, 
+            public static void UpdateSearchResults(string searchTextParam,
                 IEnumerable<Definition> definitions,
                 Func<Definition, string> searchKey,
                 Func<Definition, string> sortKey
@@ -154,8 +159,7 @@ namespace ModKit {
                     if (def.GetType().ToString().Contains(searchTextParam)
                        ) {
                         filtered.Add(def);
-                    }
-                    else {
+                    } else {
                         var name = searchKey(def).ToLower();
                         if (terms.All(term => name.Matches(term))) {
                             filtered.Add(def);
