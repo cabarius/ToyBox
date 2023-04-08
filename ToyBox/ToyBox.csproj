@@ -34,12 +34,15 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <Target Name="Publicise" AfterTargets="Clean">
-    <ItemGroup>
-      <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp.dll" />
-      <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll" />
-      <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll" />
-    </ItemGroup>
+  <ItemGroup>
+    <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp.dll" />
+    <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll" />
+    <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll" />
+  </ItemGroup>
+  <Target Name="Publicise"
+          AfterTargets="BeforeBuild;Clean"
+          Inputs="@(PubliciseInputAssemblies)"
+          Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.hash">
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
   </Target>
   <ItemGroup>
