@@ -382,6 +382,7 @@ namespace ToyBox.classes.MainUI {
         public static void UpdateItems() {
             var selectedItemTypeEnumIndex = selectedItemType - 1;
             var searchText = itemSearchText.ToLower();
+            if (Game.Instance?.Player?.Inventory == null) return;
             inventory = (from item in Game.Instance.Player.Inventory
                          where item.Name.ToLower().Contains(searchText) 
                             && (selectedItemType == 0

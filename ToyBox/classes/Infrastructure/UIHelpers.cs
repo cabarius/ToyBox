@@ -1,4 +1,5 @@
-﻿using Kingmaker.Utility;
+﻿using Kingmaker.Localization;
+using Kingmaker.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,5 +77,9 @@ namespace ToyBox {
                 ret += str.Substring(1);
             return ret;
         }
+
+        public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
+        public static LocalizedString Localized(this string key) => new LocalizedString() { Key = key };
+
     }
 }

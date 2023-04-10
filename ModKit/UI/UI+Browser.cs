@@ -81,7 +81,7 @@ namespace ModKit {
                         }
                     }
                 }
-                var currentDict = current.ToDictionary(definition, c => c);
+                var currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                 List<Definition> definitions;
                 if (_showAll && search) {
                     UpdateSearchResults(_searchText, available(), searchKey, sortKey);

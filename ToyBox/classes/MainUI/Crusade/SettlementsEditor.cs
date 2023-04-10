@@ -1,5 +1,4 @@
 ﻿
-using Kingmaker.Kingdom;
 using ModKit;
 using static ModKit.UI;
 using ModKit.Utility;
@@ -7,7 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
-
+using Kingmaker;
+using Kingmaker.Kingdom;
 
 namespace ToyBox.classes.MainUI {
     public static class SettlementsEditor {
@@ -15,6 +15,7 @@ namespace ToyBox.classes.MainUI {
         private static Dictionary<object, bool> toggleStates = new();
 
         public static void OnGUI() {
+            if (Game.Instance?.Player == null) return;
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
                 Label("You must unlock the crusade before you can access these toys.".yellow().bold());

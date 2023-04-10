@@ -37,14 +37,16 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.4.26 (coming soon)
+* (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
+* (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***ADDB***) Became slightly less stupid and fixed refill belt consumable feature.
 * (***ADDB***) Fix Murder Hobo for Leaper's Smile swarms.
-* (***ADDB***) Added a new feature to affect Crusade Mercenaries.
-  * Added a Button to add all units in your current armies to your Mercenary pool if they are not recruitable.
-  * Added a Button to reroll all Mercenary units (ignoring leftover rerolls and locked slots).
+* (***ADDB*** & ***Narria***) Added a new feature to affect Crusade Mercenaries and Kingdom Recruits.
+  * Added Button to add all units in your current armies to your Mercenary pool if they are not recruitable.
+  * Added Bindable Button to reroll all Mercenary units (ignoring leftover rerolls and locked slots).
   * Added a ValueAdjustor where you can change the amount of Mercenary Slots.
   * (Experimental) Added a toggle to automatically add new Units in friendly armies to the Mercenary pool if not recruitable.
-  * Added a list showing all ArmyUnits, a toggle to add/remove them from the Mercenary Pool, a Label whether they are Recruitable and a slider to change their Pool Weight (affecting reroll chances for Mercenary).
+  * Added a list showing all ArmyUnits, a toggle to add/remove them from the Mercenary and Recruitment Pools, a label indicating which pool(s) they are in and a slider to change their Pool Weight (affecting reroll chances for Mercenary).
 ### Ver 1.4.25
 * (***CascadingDragon***) and (***ADDB***) Update for game version 2.1.2d.
   * Fixed? optional trait selection skip and removed the one where no traits left (since official game introduced that feature).
