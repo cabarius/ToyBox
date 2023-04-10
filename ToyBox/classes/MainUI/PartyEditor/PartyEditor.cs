@@ -117,7 +117,7 @@ namespace ToyBox {
         }
         public static void OnGUI() {
             var player = Game.Instance.Player;
-            if (player != null) return;
+            if (player == null) return;
             var filterChoices = CharacterPicker.GetPartyFilterChoices();
             if (filterChoices == null) { return; }
 
