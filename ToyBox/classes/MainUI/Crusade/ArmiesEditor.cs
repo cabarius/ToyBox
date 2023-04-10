@@ -19,6 +19,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.PubSubSystem;
 using static Kingmaker.Dungeon.DungeonStageState;
+using Kingmaker.Cheats;
 
 namespace ToyBox.classes.MainUI {
     public static class ArmiesEditor {
@@ -64,8 +65,8 @@ namespace ToyBox.classes.MainUI {
         }
 
         public static readonly object locker = new();
-        public static Dictionary<int, bool> isInMercenaryPool = new();
-        public static Dictionary<int, bool> isInRecruitPool = new();
+        public static Dictionary<int, bool> IsInMercenaryPool = new();
+        public static Dictionary<int, bool> IsInRecruitPool = new();
         public static IEnumerable<BlueprintUnit> armyBlueprints;
         public static IEnumerable<BlueprintUnit> recruitPool;
         public static bool poolChanged = true;
@@ -75,8 +76,8 @@ namespace ToyBox.classes.MainUI {
             armyBlueprints = BlueprintExtensions.GetBlueprints<BlueprintUnit>().Where((u) => u.NameSafe().StartsWith("Army"));
             IEnumerable<BlueprintUnit> recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
             foreach (var entry in armyBlueprints) {
-                isInRecruitPool[entry.GetHashCode()] = recruitPool.Contains(entry);
-                isInMercenaryPool[entry.GetHashCode()] = KingdomState.Instance.MercenariesManager.HasUnitInPool(entry);
+                IsInRecruitPool[entry.GetHashCode()] = recruitPool.Contains(entry);
+                IsInMercenaryPool[entry.GetHashCode()] = KingdomState.Instance.MercenariesManager.HasUnitInPool(entry);
             }
         }
         public static void AddAllCurrentUnits() {
@@ -86,13 +87,25 @@ namespace ToyBox.classes.MainUI {
             foreach (var army in playerArmies) {
                 foreach (var squad in army.Item1.Data.Squads) {
                     var unit = squad.Unit.GetHashCode();
-                    if (!isInMercenaryPool[unit] && !isInRecruitPool[unit]) {
+                    if (!IsInMercenaryPool[unit] && !IsInRecruitPool[unit]) {
                         KingdomState.Instance.MercenariesManager.AddMercenary(squad.Unit, 1);
                     }
                 }
             }
         }
         public static bool discloseMercenaryUnits = false;
+        private const string RerollAll = "Reroll Mercs";
+
+        public static void OnLoad() {
+            KeyBindings.RegisterAction(RerollAll, () => {
+                var mercenaryManager = KingdomState.Instance.MercenariesManager;
+                mercenaryManager.CurrentSlots.RemoveAll((v) => true);
+                mercenaryManager.RollSlots(mercenaryManager.MaxAllowedSlots - mercenaryManager.CurrentSlots.Count);
+                EventBus.RaiseEvent<IArmyMercenarySlotsHandler>(delegate (IArmyMercenarySlotsHandler h) {
+                    h.HandleSlotsRerolled();
+                });
+            });
+        }
         public static void OnGUI() {
             if (Game.Instance?.Player == null) return;
             var kingdom = KingdomState.Instance;
@@ -125,27 +138,24 @@ namespace ToyBox.classes.MainUI {
             );
             Div(0, 25);
             var mercenaryManager = KingdomState.Instance.MercenariesManager;
+            var recruitsManager = KingdomState.Instance.RecruitsManager;
             if (poolChanged) {
                 mercenaryUnits = mercenaryManager.Pool.Select((u) => u.Unit).ToList();
                 foreach (var unit in mercenaryUnits) {
-                    isInMercenaryPool[unit.GetHashCode()] = true;
+                    IsInMercenaryPool[unit.GetHashCode()] = true;
                 }
                 recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
                 mercenaryUnits.AddRange(recruitPool);
             }
             HStack("Mercenaries", 1,
                     () => {
-                        ActionButton("Add All Units", () => AddAllCurrentUnits(), Width(200));
+                        ActionButton("Add All Units", () => AddAllCurrentUnits(), 200.width());
+                        110.space();
                         Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units.".green());
                     },
                     () => {
-                        ActionButton("Reroll All", () => {
-                            mercenaryManager.CurrentSlots.RemoveAll((v) => true);
-                            mercenaryManager.RollSlots(mercenaryManager.MaxAllowedSlots - mercenaryManager.CurrentSlots.Count);
-                            EventBus.RaiseEvent<IArmyMercenarySlotsHandler>(delegate (IArmyMercenarySlotsHandler h) {
-                                h.HandleSlotsRerolled();
-                            });
-                        }, Width(200));
+                        BindableActionButton(RerollAll, 200.width());
+                        Space(-93);
                         Label("Rerolls Mercenary Units for free.".green());
                     },
                     () => {
@@ -168,7 +178,7 @@ namespace ToyBox.classes.MainUI {
                                     () => armyBlueprints,
                                     (unit) => unit,
                                     (unit) => unit.NameSafe(),
-                                    (unit) => unit.GetDisplayName(),
+                                    (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
                                     (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
                                     (unit) => unit.GetDisplayName(),
                                     () => {
@@ -176,33 +186,46 @@ namespace ToyBox.classes.MainUI {
                                         var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
                                         Label("Unit", Width((int)titleWidth));
                                         35.space();
-                                        Label("Action", Width(125));
-                                        25.space();
-                                        Label("Pool", Width(150));
+                                        Label("Action", Width(310));
+                                        28.space();
+                                        Label("Pool", Width(200));
                                         25.space();
                                         Label("Recruitment Weight (Mercenary only)", AutoWidth());
                                     },
                                     (bpUnit, unit) => {
-                                        bool isInMercPool = isInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
-                                        ActionButton(isInMercPool ? "Remove" : "Add", () => {
-                                            if (isInMercPool) {
-                                                mercenaryManager.RemoveMercenary(unit);
-                                                isInMercPool = false;
-                                            }
-                                            else {
-                                                mercenaryManager.AddMercenary(unit, 1);
-                                                isInMercPool = true;
-                                            }
-                                            isInMercenaryPool[unit.GetHashCode()] = isInMercPool;
-                                        }, 125.width());
-                                        bool isInKingdomPool = isInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
-                                        var poolText = isInKingdomPool 
-                                            ? "Kingdom".green() 
-                                            : isInMercPool 
-                                                ? "Mercenary".orange()
-                                                : "None".yellow();
+                                        bool isInMercPool = IsInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
+                                        bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
+                                        ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
+                                                    () => {
+                                                        if (isInMercPool) {
+                                                            mercenaryManager.RemoveMercenary(unit);
+                                                            isInMercPool = false;
+                                                        }
+                                                        else {
+                                                            mercenaryManager.AddMercenary(unit, 1);
+                                                            isInMercPool = true;
+                                                        }
+                                                        IsInMercenaryPool[unit.GetHashCode()] = isInMercPool;
+                                                    }, 150.width());
+                                        10.space();
+                                        ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
+                                                    () => {
+                                                        if (isInKingdomPool) {
+                                                            var count = recruitsManager.GetCountInPool(unit);
+                                                            recruitsManager.DecreasePool(unit, count);
+                                                            isInKingdomPool = false;
+                                                        }
+                                                        else {
+                                                            var pool = recruitsManager.Pool;
+                                                            var count = pool.Sum(r =>  r.Count) / pool.Count;
+                                                            recruitsManager.IncreasePool(unit, count);
+                                                            isInKingdomPool = true;
+                                                        }
+                                                        IsInRecruitPool[unit.GetHashCode()] = isInKingdomPool;
+                                                    }, 150.width());
+                                        var poolText = $"{(isInMercPool ? $"Merc".cyan() : "")} {(isInKingdomPool ? $"Recruit ({recruitsManager.GetCountInPool(unit)})".orange() : "")}".Trim();
                                         50.space();
-                                        Label(poolText, Width(150));
+                                        Label(poolText, Width(200));
                                         25.space();
                                         if (isInMercPool) {
                                             var poolInfo = mercenaryManager.Pool.FirstOrDefault(pi => pi.Unit == unit);

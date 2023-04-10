@@ -177,8 +177,8 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 if (__instance.Faction == ArmyFaction.Crusaders) {
                     if (Settings.toggleAddNewUnitsAsMercenaries) {
                         if (ArmiesEditor.armyBlueprints != null && ArmiesEditor.armyBlueprints?.Count() != 0) {
-                            if (!ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] && !ArmiesEditor.isInRecruitPool[unit.GetHashCode()]) {
-                                ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] = true;
+                            if (!ArmiesEditor.IsInMercenaryPool[unit.GetHashCode()] && !ArmiesEditor.IsInRecruitPool[unit.GetHashCode()]) {
+                                ArmiesEditor.IsInMercenaryPool[unit.GetHashCode()] = true;
                                 KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
                             }
                             else {
