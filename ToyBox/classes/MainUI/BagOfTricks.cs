@@ -140,9 +140,14 @@ namespace ToyBox {
                 () => BindableActionButton(LobotomizeAllEnemies),
                 () => {
                     using (HorizontalScope()) {
-                        Toggle($"Be a {"Murder Hobo".orange().bold()} and kill all who try to enage you (how dare they!)", ref settings.togglekillOnEngage);
-                        Space(-75);
-                        KeyBindPicker(ToggleMurderHobo, "", 50);
+                        using (VerticalScope(220.width())) {
+                            using (HorizontalScope()) {
+                                Toggle($"Be a {"Murder".red().bold()} Hobo".orange(), ref settings.togglekillOnEngage,222.width());
+                                KeyBindPicker(ToggleMurderHobo, "", 50);
+                            }
+                        }
+                        50.space();
+                        Label($"If ticked, this will {"MURDER".red().bold()} all who try to enage you (how dare they!)".green(), AutoWidth());
                     }
                 }
                 );
