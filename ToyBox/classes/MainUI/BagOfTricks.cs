@@ -147,7 +147,7 @@ namespace ToyBox {
                             }
                         }
                         50.space();
-                        Label($"If ticked, this will {"MURDER".red().bold()} all who try to enage you (how dare they!)".green(), AutoWidth());
+                        Label($"If ticked, this will {"MURDER".red().bold()} all who dare to enage you!)".green(), AutoWidth());
                     }
                 }
                 );
