@@ -17,6 +17,7 @@ using Kingmaker.ElementsSystem;
 using ModKit;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Items;
+using Kingmaker.Controllers.Combat;
 
 namespace ToyBox {
     public enum UnitSelectType {
@@ -29,6 +30,7 @@ namespace ToyBox {
     }
 
     public static class UnitEntityDataUtils {
+        public static Settings settings => Main.settings;
         public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.ModifiedSpeedMps).Max();
 
         public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType) {
@@ -125,6 +127,16 @@ namespace ToyBox {
                 }
             }
         }
+        public static void maybeKill(UnitCombatState unitCombatState) {
+
+            if (settings.togglekillOnEngage) {
+                List<UnitEntityData> partyUnits = Game.Instance.Player.m_PartyAndPets;
+                UnitEntityData unit = unitCombatState.Unit;
+                if (unit.IsPlayersEnemy && !partyUnits.Contains(unit)) {
+                    CheatsCombat.KillUnit(unit);
+                }
+            }
+        }
 #else
 note this code from Owlcat 
   private static void RecruitCompanion(string parameters)
@@ -194,10 +206,10 @@ note this code from Owlcat
             ch = Game.Instance?.Player?.AllCharacters.Find(c => c.CharacterName == levelUpUnit.CharacterName);
             return ch != null;
         }
-        
+
         public static bool TryGetClass(this UnitEntityData unit, BlueprintCharacterClass cl, out ClassData cd) {
             cd = unit.Progression.Classes.Find(c => c.CharacterClass == cl);
             return cd != null;
-        } 
+        }
     }
 }

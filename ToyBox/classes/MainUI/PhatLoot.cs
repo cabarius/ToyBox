@@ -24,6 +24,7 @@ namespace ToyBox {
         }
 
         public static void OnGUI() {
+            if (Game.Instance?.Player?.Inventory == null) return;
 #if DEBUG
             Div(0, 25);
             var inventory = Game.Instance.Player.Inventory;
@@ -136,7 +137,10 @@ namespace ToyBox {
                 () => {
                     var areaName = "";
                     if (Main.IsInGame) {
-                        areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
+                        try {
+                            areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
+                        }
+                        catch { }
                         var areaPrivateName = Game.Instance.CurrentlyLoadedArea.name;
                         if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }

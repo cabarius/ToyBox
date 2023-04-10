@@ -17,6 +17,7 @@ namespace ToyBox.classes.MainUI {
         public static Settings settings => Main.settings;
 
         public static void OnGUI() {
+            if (Game.Instance?.Player == null) return;
             var ks = KingdomState.Instance;
             if (ks == null) {
                 UI.Label("You must unlock the crusade before you can access these toys.".yellow().bold());

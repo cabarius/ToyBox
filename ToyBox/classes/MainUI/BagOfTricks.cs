@@ -135,18 +135,16 @@ namespace ToyBox {
                 () => BindableActionButton(GoddesBuffs),
                 () => BindableActionButton(RemoveBuffs),
                 () => BindableActionButton(RemoveDeathsDoor),
+                () => BindableActionButton(KillAllEnemies),
+                //() => UI.BindableActionButton(SummonZoo),
+                () => BindableActionButton(LobotomizeAllEnemies),
                 () => {
-                    BindableActionButton(KillAllEnemies);
-                    Space(-50);
-                    using (HorizontalScope(Width(8000))) {
+                    using (HorizontalScope()) {
                         Toggle($"Be a {"Murder Hobo".orange().bold()} and kill all who try to enage you (how dare they!)", ref settings.togglekillOnEngage);
                         Space(-75);
                         KeyBindPicker(ToggleMurderHobo, "", 50);
                     }
-                },
-                //() => UI.BindableActionButton(SummonZoo),
-                () => BindableActionButton(LobotomizeAllEnemies),
-                () => { }
+                }
                 );
             Div(0, 25);
             HStack("Teleport", 2,
@@ -174,17 +172,17 @@ namespace ToyBox {
                     Space(-75);
                     Label("This resets all the skill check rolls for all interactable objects in the area".green());
                 },
-                () => {
-                    NonBindableActionButton("Set Perception to 40", () => {
-                        CheatsCommon.StatPerception();
-                        Actions.RunPerceptionTriggers();
-                    });
-                },
-                () => BindableActionButton(ChangWeather),
-                () => NonBindableActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
-                () => NonBindableActionButton("Identify All", () => Actions.IdentifyAll()),
-                () => { }
-                );
+            () => {
+                NonBindableActionButton("Set Perception to 40", () => {
+                    CheatsCommon.StatPerception();
+                    Actions.RunPerceptionTriggers();
+                });
+            },
+            () => BindableActionButton(ChangWeather),
+            () => NonBindableActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
+            () => NonBindableActionButton("Identify All", () => Actions.IdentifyAll()),
+            () => { }
+            );
             Div(0, 25);
             HStack("Preview", 0, () => {
                 Toggle("Dialog Results", ref settings.previewDialogResults);
@@ -590,19 +588,21 @@ namespace ToyBox {
                 () => {
                     LogSlider("Fog of War Range", ref settings.fowMultiplier, 0f, 100f, 1, 1, "", AutoWidth());
                     List<UnitEntityData> units = Game.Instance?.Player?.m_PartyAndPets;
-                    foreach (var unit in units) {
-                        FogOfWarController.VisionRadiusMultiplier = settings.fowMultiplier;
-                        FogOfWarRevealerSettings revealer = unit.View.FogOfWarRevealer;
-                        if (revealer != null) {
-                            if (settings.fowMultiplier == 1) {
-                                revealer.DefaultRadius = true;
-                                revealer.UseDefaultFowBorder = true;
-                                revealer.Radius = 1.0f;
-                            }
-                            else {
-                                revealer.DefaultRadius = false;
-                                revealer.UseDefaultFowBorder = false;
-                                revealer.Radius = FogOfWarController.VisionRadius * settings.fowMultiplier;
+                    if (units != null) {
+                        foreach (var unit in units) {
+                            FogOfWarController.VisionRadiusMultiplier = settings.fowMultiplier;
+                            FogOfWarRevealerSettings revealer = unit.View?.FogOfWarRevealer;
+                            if (revealer != null) {
+                                if (settings.fowMultiplier == 1) {
+                                    revealer.DefaultRadius = true;
+                                    revealer.UseDefaultFowBorder = true;
+                                    revealer.Radius = 1.0f;
+                                }
+                                else {
+                                    revealer.DefaultRadius = false;
+                                    revealer.UseDefaultFowBorder = false;
+                                    revealer.Radius = FogOfWarController.VisionRadius * settings.fowMultiplier;
+                                }
                             }
                         }
                     }

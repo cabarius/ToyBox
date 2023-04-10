@@ -193,6 +193,7 @@ namespace ToyBox {
             if (NeedsActionInit) {
                 BagOfTricks.OnLoad();
                 PhatLoot.OnLoad();
+                ArmiesEditor.OnLoad();
                 NeedsActionInit = false;
             }
             //if (resetExtraCameraAngles) {

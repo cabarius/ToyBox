@@ -26,6 +26,7 @@ namespace ToyBox {
             }
             UI.Space(15);
             MigrationOptions(indent);
+            if (Game.Instance?.BlueprintRoot?.Progression == null) return;
             var options = MulticlassOptions.Get(ch);
             var classes = Game.Instance.BlueprintRoot.Progression.CharacterClasses;
             var mythicClasses = Game.Instance.BlueprintRoot.Progression.CharacterMythics;
