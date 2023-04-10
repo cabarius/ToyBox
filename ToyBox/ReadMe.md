@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.4.26 (coming soon)
 * (***ADDB***) Became slightly less stupid and fixed refill belt consumable feature.
+* (***ADDB***) Fix Murder Hobo for Leaper's Smile swarms.
 * (***ADDB***) Added a new feature to affect Crusade Mercenaries.
   * Added a Button to add all units in your current armies to your Mercenary pool if they are not recruitable.
   * Added a Button to reroll all Mercenary units (ignoring leftover rerolls and locked slots).
