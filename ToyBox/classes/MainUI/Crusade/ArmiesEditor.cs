@@ -94,6 +94,7 @@ namespace ToyBox.classes.MainUI {
         }
         public static bool discloseMercenaryUnits = false;
         public static void OnGUI() {
+            if (Game.Instance?.Player == null) return;
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
                 Label("You must unlock the crusade before you can access these toys.".yellow().bold());
