@@ -23,7 +23,10 @@ using Kingmaker.UnitLogic.Alignments;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Kingmaker.UnitLogic.Alignments.IAlignmentShiftProvider ToyboxAlignmentProvider { get; private set; } //Will remember to set custom description... Eventually
+        public class ToyBoxAlignmentProvider : IAlignmentShiftProvider {
+            AlignmentShift IAlignmentShiftProvider.AlignmentShift => new AlignmentShift() { Description = "ToyBox Party Editor".Localized() };
+        }
+        public static IAlignmentShiftProvider ToyboxAlignmentProvider => new ToyBoxAlignmentProvider();
 
         public static void OnStatsGUI(UnitEntityData ch) {
             Div(100, 20, 755);

@@ -176,7 +176,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             public static void Postfix(ArmyData __instance, BlueprintUnit unit) {
                 if (__instance.Faction == ArmyFaction.Crusaders) {
                     if (Settings.toggleAddNewUnitsAsMercenaries) {
-                        if (ArmiesEditor.bps != null && ArmiesEditor.bps?.Count() != 0) {
+                        if (ArmiesEditor.armyBlueprints != null && ArmiesEditor.armyBlueprints?.Count() != 0) {
                             if (!ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] && !ArmiesEditor.isInRecruitPool[unit.GetHashCode()]) {
                                 ArmiesEditor.isInMercenaryPool[unit.GetHashCode()] = true;
                                 KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
