@@ -2,12 +2,9 @@
 
 using HarmonyLib;
 using JetBrains.Annotations;
-using Owlcat.Runtime.UniRx;
 using Kingmaker;
 using Kingmaker.Achievements;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
@@ -17,42 +14,35 @@ using Kingmaker.Controllers;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Enums.Damage;
 using Kingmaker.GameModes;
 using Kingmaker.Items;
 using Kingmaker.RuleSystem;
-using Kingmaker.Settings;
+using Kingmaker.UI._ConsoleUI.CombatStartScreen;
 //using Kingmaker.UI._ConsoleUI.Models;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
+// using Steamworks;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._PCView.Slots;
+using Kingmaker.UI.MVVM._PCView.Vendor;
+using Kingmaker.UI.MVVM._VM.Common;
+using Kingmaker.UI.MVVM._VM.CounterWindow;
+using Kingmaker.UI.TurnBasedMode;
 //using Kingmaker.UI.RestCamp;
-using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.Utility;
 using Kingmaker.View;
+using ModKit;
+using Owlcat.Runtime.UniRx;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-// using Steamworks;
-using Kingmaker.Achievements.Platforms;
-using Kingmaker.UI.ServiceWindow;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
-using Kingmaker.UI.MVVM._PCView.Slots;
-using Kingmaker.UI.MVVM._VM.Common;
-using Kingmaker.UI.MVVM._VM.CounterWindow;
-using Kingmaker.UI.Loot;
-using Kingmaker.UI.MVVM._PCView.Vendor;
-using Kingmaker.UI.TurnBasedMode;
-using Kingmaker.UI._ConsoleUI.CombatStartScreen;
-using Kingmaker.Items.Slots;
-using ModKit;
-using Kingmaker.EntitySystem.Persistence;
-using ToyBox.Multiclass;
-using Kingmaker.UI.MVVM._PCView.ActionBar;
-using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
@@ -622,12 +612,28 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LogThreadService), nameof(LogThreadService.OnGameLoaded))]
         public static class LogThreadService_OnGameLoaded_Patch {
             private static void Postfix() {
+                PartyEditor.lastScaleSize = new();
                 foreach (var ID in Main.settings.perSave.characterModelSizeMultiplier.Keys) {
                     foreach (UnitEntityData cha in Game.Instance.State.Units.Where((u) => u.CharacterName.Equals(ID))) {
-                        float scale = Main.settings.perSave.characterModelSizeMultiplier[ID];
+                        float scale = Main.settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
                         cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
+                        PartyEditor.lastScaleSize[cha.HashKey()] = scale;
                     }
                 }
+            }
+        }
+        [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.TryReplaceView))]
+        private static class Polymorph_TryReplaceView_Patch {
+            private static void Postfix(Polymorph __instance) {
+                float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
+                __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
+            }
+        }
+        [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.RestoreView))]
+        private static class Polymorph_RestoreView_Patch {
+            private static void Postfix(Polymorph __instance) {
+                float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
+                __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
             }
         }
     }
