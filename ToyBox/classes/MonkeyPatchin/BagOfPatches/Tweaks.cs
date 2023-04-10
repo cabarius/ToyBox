@@ -668,13 +668,14 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.Engage))]
         public static class UnitCombatState_Engage_Patch {
             private static void Postfix(UnitCombatState __instance) {
-                if (settings.togglekillOnEngage) {
-                    List<UnitEntityData> partyUnits = Game.Instance.Player.m_PartyAndPets;
-                    UnitEntityData unit = __instance.Unit;
-                    if (unit.IsPlayersEnemy && !partyUnits.Contains(unit)) {
-                        CheatsCombat.KillUnit(unit);
-                    }
-                }
+                UnitEntityDataUtils.maybeKill(__instance);
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.JoinCombat))]
+        public static class UnitCombatState_JoinCombat_Patch {
+            private static void Postfix(UnitCombatState __instance) {
+                UnitEntityDataUtils.maybeKill(__instance);
             }
         }
 

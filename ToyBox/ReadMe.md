@@ -40,6 +40,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***ADDB***) Became slightly less stupid and fixed refill belt consumable feature.
+* (***ADDB***) Fix Murder Hobo for Leaper's Smile swarms.
 * (***ADDB*** & ***Narria***) Added a new feature to affect Crusade Mercenaries and Kingdom Recruits.
   * Added Button to add all units in your current armies to your Mercenary pool if they are not recruitable.
   * Added Bindable Button to reroll all Mercenary units (ignoring leftover rerolls and locked slots).
