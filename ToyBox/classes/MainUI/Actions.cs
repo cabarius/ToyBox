@@ -106,8 +106,13 @@ namespace ToyBox {
 
         public static void ToggleModWindow() => UnityModManager.UI.Instance.ToggleWindow();
         public static void RunPerceptionTriggers() {
+            // On the local map
             foreach (var obj in Game.Instance.State.MapObjects) {
                 obj.LastPerceptionRollRank = new Dictionary<UnitReference, int>();
+            }
+            // On the global map
+            foreach (var obj in Game.Instance.Player.AllGlobalMaps[0].Points.Values) {
+                obj.LastPerceptionRolled = 0;
             }
 
             Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
@@ -159,7 +164,7 @@ namespace ToyBox {
                 Game.Instance.Player.FixPartyAfterChange();
                 Game.Instance.UI.SelectionManager.UpdateSelectedUnits();
                 var tempList = Game.Instance.Player.Party.Select(character => character.View).ToTempList<UnitEntityView>();
-                if (Game.Instance.UI.SelectionManager is SelectionManagerPC selectionManager) 
+                if (Game.Instance.UI.SelectionManager is SelectionManagerPC selectionManager)
                     selectionManager.MultiSelect((IEnumerable<UnitEntityView>)tempList);
             }
         }
