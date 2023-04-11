@@ -45,6 +45,7 @@ namespace ToyBox {
         public static IEnumerable<IGrouping<string, SimpleBlueprint>> collatedBPs = null;
         public static IEnumerable<SimpleBlueprint> selectedCollatedBPs = null;
         public static List<string> collationKeys = null;
+        public static List<string> collationTitles = null;
         public static int selectedCollationIndex = 0;
         private static bool firstSearch = true;
         public static string[] filteredBPNames = null;
@@ -244,9 +245,13 @@ namespace ToyBox {
                 var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
                 collationKeys = new List<string> { "All" };
                 collationKeys.AddRange(keys);
+                var titles = collatedBPs.ToList().Select(cbp => $"{cbp.Key} ({cbp.Count()})").ToList();
+                collationTitles = new List<string> { $"All ({collatedBPs.Count()})" };
+                collationTitles.AddRange(titles);
             }
             else {
                 collationKeys = null;
+                collationTitles = null;
             }
 
             unpagedBPs = filteredBPs;
@@ -287,12 +292,12 @@ namespace ToyBox {
                 var collationChanged = false;
                 if (collatedBPs != null) {
                     using (VerticalScope(GUI.skin.box)) {
-                        var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-                        if (VPicker("Categories", ref selectedKey, collationKeys, null, s => s, ref collationSearchText, Width(300))) {
+                        var selectedKey = collationTitles.ElementAt(selectedCollationIndex);
+                        if (VPicker("Categories", ref selectedKey, collationTitles, null, s => s, ref collationSearchText, Width(300))) {
                             collationChanged = true; BlueprintListUI.needsLayout = true;
                         }
                         if (selectedKey != null)
-                            selectedCollationIndex = collationKeys.IndexOf(selectedKey);
+                            selectedCollationIndex = collationTitles.IndexOf(selectedKey);
 
 #if false
                         UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(),

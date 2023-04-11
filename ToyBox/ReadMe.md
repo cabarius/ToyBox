@@ -41,6 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***Narria***) DataViewer views now filter out properties with empty collections
 * (***Narria***) Quest Editor option to inspect quests and quest objectives with DataViewer
+* (***Narria***) Added Dice Roll overrides for Skill checks only (thanks AlterAsc) and cleaned up the options a bit to make them more clear
+* (***Marria***) Search 'n Pick: Added counts to the collation categories
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Reroll Perception button now also rerolls perception on the global map.
 * (***ADDB***) Fixed belt consumable feature.

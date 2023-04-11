@@ -658,11 +658,13 @@ namespace ToyBox {
                 () => EnumGrid("Always Roll 1", ref settings.alwaysRoll1, AutoWidth()),
                 () => EnumGrid("Never Roll 20", ref settings.neverRoll20, AutoWidth()),
                 () => EnumGrid("Never Roll 1", ref settings.neverRoll1, AutoWidth()),
-                () => EnumGrid("Always Roll 20 Initiative ", ref settings.roll20Initiative, AutoWidth()),
-                () => EnumGrid("Always Roll 1 Initiative", ref settings.roll1Initiative, AutoWidth()),
-                () => EnumGrid("Always Roll 20 Out Of Combat", ref settings.alwaysRoll20OutOfCombat, AutoWidth()),
-                () => EnumGrid("Take 10 Out of Combat (Always)", ref settings.take10always, AutoWidth()),
-                () => EnumGrid("Take 10 Out of Combat (Minimum)", ref settings.take10minimum, AutoWidth()),
+                () => EnumGrid("Initiative: Always Roll 20", ref settings.roll20Initiative, AutoWidth()),
+                () => EnumGrid("Initiative: Always Roll 1", ref settings.roll1Initiative, AutoWidth()),
+                () => EnumGrid("Non Combat: Take 10", ref settings.take10always, AutoWidth()),
+//                () => EnumGrid("Non Combat: Take 10 (Min)", ref settings.take10minimum, AutoWidth()),
+                () => EnumGrid("Non Combat: Take 20", ref settings.alwaysRoll20OutOfCombat, AutoWidth()),
+                () => EnumGrid("Skill Checks: Take 10", ref settings.skillsTake10, AutoWidth()),
+                () => EnumGrid("Skill Checks: Take 20", ref settings.skillsTake20, AutoWidth()),
                 () => { }
                 );
             Div(0, 25);

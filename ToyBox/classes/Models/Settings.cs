@@ -328,6 +328,8 @@ namespace ToyBox {
         public UnitSelectType roll1Initiative = UnitSelectType.Off;
         public UnitSelectType take10always = UnitSelectType.Off;
         public UnitSelectType take10minimum = UnitSelectType.Off;
+        public UnitSelectType skillsTake10 = UnitSelectType.Off;
+        public UnitSelectType skillsTake20 = UnitSelectType.Off;
 
         // Summons
         public bool toggleMakeSummmonsControllable = false;

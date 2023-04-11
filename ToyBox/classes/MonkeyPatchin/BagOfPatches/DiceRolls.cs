@@ -85,10 +85,12 @@ namespace ToyBox.BagOfPatches {
                         result = 10;
                         min = 10;
                     }
+#if false
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10minimum) && result < 10 && !initiator.IsInCombat) {
                         result = UnityEngine.Random.Range(10, 21);
                         min = 10;
                     }
+#endif
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll20) && result == 20) {
                         result = UnityEngine.Random.Range(min, 20);
                     }
@@ -109,6 +111,26 @@ namespace ToyBox.BagOfPatches {
                     __result = 20 + __instance.Modifier;
                     Mod.Trace("Modified InitiativeRoll: " + __result);
                 }
+            }
+        }
+
+        // Thanks AlterAsc - https://github.com/alterasc/CombatRelief/blob/main/CombatRelief/SkillRolls.cs
+        [HarmonyPatch(typeof(RuleSkillCheck), nameof(RuleSkillCheck.RollD20))]
+        public static class RuleSkillCheck_RollD20_Patch {
+            [HarmonyPrefix]
+            private static bool Prefix(ref RuleRollD20 __result, RuleSkillCheck __instance) {
+                if (__instance.Initiator.IsInCombat) {
+                    return true;
+                }
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.skillsTake20)) {
+                    __result = RuleRollD20.FromInt(__instance.Initiator, 20);
+                    return false;
+                }
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.skillsTake10)) {
+                    __result = RuleRollD20.FromInt(__instance.Initiator, 10);
+                    return false;
+                }
+                return true;
             }
         }
     }
