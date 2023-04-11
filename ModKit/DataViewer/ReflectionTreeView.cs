@@ -225,7 +225,7 @@ namespace ModKit.DataViewer {
                     var instText = "";  // if (node.InstanceID is int instID) instText = "@" + instID.ToString();
                     name = name.MarkedSubstring(searchText);
                     var enumerableCount = node.EnumerableCount;
-                    if (enumerableCount == 0 || node.IsNull) return;
+                    if (enumerableCount == 0 || node.IsNull) return; // TODO - make this a config option
                     if (enumerableCount >= 0) name = name + $"[{enumerableCount}]".yellow();
                     var typeName = node.InstType?.Name ?? node.Type?.Name;
                     UI.ToggleButton(ref expanded,
