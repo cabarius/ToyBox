@@ -1,25 +1,16 @@
-﻿using UnityEngine;
+﻿using Kingmaker.Blueprints;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Stats;
+using Kingmaker.UnitLogic.Alignments;
+using ModKit;
+using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Designers;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.UnitLogic;
-using ToyBox.Multiclass;
-using Alignment = Kingmaker.Enums.Alignment;
-using ModKit;
-using static ModKit.UI;
-using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
-using Kingmaker.PubSubSystem;
-using Kingmaker.Blueprints;
-using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Parts;
-using Kingmaker.UnitLogic.Alignments;
+using UnityEngine;
+using static ModKit.UI;
+using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -28,6 +19,7 @@ namespace ToyBox {
         }
         public static IAlignmentShiftProvider ToyboxAlignmentProvider => new ToyBoxAlignmentProvider();
 
+        public static Dictionary<string, float> lastScaleSize = new();
         public static void OnStatsGUI(UnitEntityData ch) {
             Div(100, 20, 755);
             var alignment = ch.Descriptor.Alignment.ValueRaw;
@@ -95,9 +87,14 @@ namespace ToyBox {
                 if (ch != null && ch.HashKey() != null) {
                     Space(100);
                     var scaleMult = ch.View.gameObject.transform.localScale[0];
-                    if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".color(RGBA.none) + " (This setting is per-save)", ref scaleMult, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
-                        Main.settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = scaleMult;
-                        ch.View.gameObject.transform.localScale = new Vector3(scaleMult, scaleMult, scaleMult);
+                    var lastScale = lastScaleSize.GetValueOrDefault(ch.HashKey(), 1);
+                    if (lastScale != scaleMult) {
+                        ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
+                    }
+                    if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".color(RGBA.none) + " (This setting is per-save)", ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
+                        Main.settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
+                        ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
+                        lastScaleSize[ch.HashKey()] = lastScale;
                         Settings.SavePerSaveSettings();
                     }
                 }
