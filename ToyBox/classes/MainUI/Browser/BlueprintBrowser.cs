@@ -42,7 +42,7 @@ namespace ToyBox {
 
         public static IEnumerable<SimpleBlueprint> unpagedBPs = null;
         public static IEnumerable<SimpleBlueprint> filteredBPs = null;
-        public static IEnumerable<IGrouping<string, SimpleBlueprint>> collatedBPs = null;
+        public static Dictionary<string, List<SimpleBlueprint>> collatedBPs = null;
         public static IEnumerable<SimpleBlueprint> selectedCollatedBPs = null;
         public static List<string> collationKeys = null;
         public static List<string> collationTitles = null;
@@ -79,8 +79,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintAiAction>("AIActions", null, bp => bp.CollationNames()),
             new NamedTypeFilter<Consideration>("Considerations", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbilityResource>("Ability Rsrc", null, bp => bp.CollationNames()),
-            new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationNames()),
-            new NamedTypeFilter<BlueprintSpellbook>("Class SBs", null, bp => bp.CollationNames(bp.CharacterClass.Name.ToString())),
+            new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationNames(bp.CharacterClass.Name.ToString())),
             new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintKingdomBuff>("Kingdom Buffs", null, bp => bp.CollationNames()),
 
@@ -235,18 +234,18 @@ namespace ToyBox {
             }
             uncolatedMatchCount = matchCount;
             if (selectedTypeFilter.collator != null) {
-                collatedBPs = from bp in filtered
+                collatedBPs = (from bp in filtered
                     from key in selectedTypeFilter.collator(bp)
                     //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
                     group bp by key into g
                     orderby g.Key.LongSortKey(), g.Key
-                    select g;
+                    select g).ToDictionary(g => g.Key, g => g.ToList().Distinct().ToList());
                 _ = collatedBPs.Count();
                 var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
                 collationKeys = new List<string> { "All" };
                 collationKeys.AddRange(keys);
-                var titles = collatedBPs.ToList().Select(cbp => $"{cbp.Key} ({cbp.Count()})").ToList();
-                collationTitles = new List<string> { $"All ({collatedBPs.Count()})" };
+                var titles = collatedBPs.ToList().Select(cbp => $"{cbp.Key} ({cbp.Value.Count()})").ToList();
+                collationTitles = new List<string> { $"All ({filtered.Count()})" };
                 collationTitles.AddRange(titles);
             }
             else {
@@ -262,10 +261,10 @@ namespace ToyBox {
         public static void UpdateCollation() {
             if (collationKeys == null || collatedBPs == null) return;
             var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-            foreach (var group in collatedBPs) {
-                if (group.Key == selectedKey) {
-                    matchCount = group.Count();
-                    selectedCollatedBPs = group.Take(settings.searchLimit).ToArray();
+            foreach (var pair in collatedBPs) {
+                if (pair.Key == selectedKey) {
+                    matchCount = pair.Value.Count();
+                    selectedCollatedBPs = pair.Value.Take(settings.searchLimit).Distinct().ToArray();
                     UpdatePageCount();
                 }
             }

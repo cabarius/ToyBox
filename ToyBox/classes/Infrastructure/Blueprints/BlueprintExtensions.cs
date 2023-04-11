@@ -30,10 +30,13 @@ namespace ToyBox {
         private static HashSet<BlueprintGuid> badList = new();
         public static void ResetCollationCache() => cachedCollationNames = new() { };
         private static void AddOrUpdateCachedNames(SimpleBlueprint bp, List<string> names) {
+            names = names.Distinct().ToList();
             if (cachedCollationNames.TryGetValue(bp, out _)) {
                 cachedCollationNames.Remove(bp);
+                //Mod.Log($"removing: {bp.NameSafe()}");
             }
             cachedCollationNames.Add(bp, names);
+            //Mod.Log($"adding: {bp.NameSafe()} - {names.Count} - {String.Join(", ", names)}");
         }
 
         public static string GetDisplayName(this SimpleBlueprint bp) => bp switch {
@@ -81,7 +84,7 @@ namespace ToyBox {
                 names.Add(typeName);
                 foreach (var attribute in bp.Attributes())
                     names.Add(attribute.orange());
-                cachedCollationNames.Add(bp, names);
+                cachedCollationNames.Add(bp, names.Distinct().ToList());
             }
 
             if (extras != null) names = names.Concat(extras).ToList();
