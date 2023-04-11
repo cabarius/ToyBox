@@ -663,7 +663,7 @@ namespace ToyBox {
                 () => EnumGrid("Non Combat: Take 10", ref settings.take10always, AutoWidth()),
 //                () => EnumGrid("Non Combat: Take 10 (Min)", ref settings.take10minimum, AutoWidth()),
                 () => EnumGrid("Non Combat: Take 20", ref settings.alwaysRoll20OutOfCombat, AutoWidth()),
-                () => { 330.space(); Label("The following skill checks apply out of combat".green()); },
+                () => { 330.space(); Label("The following skill check adjustments apply only out of combat".green()); },
                 () => EnumGrid("Skill Checks: Take 10", ref settings.skillsTake10, AutoWidth()),
                 () => EnumGrid("Skill Checks: Take 20", ref settings.skillsTake20, AutoWidth()),
                 () => { }
