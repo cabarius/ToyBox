@@ -34,6 +34,7 @@ using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
+using Kingmaker.AreaLogic.QuestSystem;
 
 namespace ToyBox {
     public static class BlueprintBrowser {
@@ -148,13 +149,12 @@ namespace ToyBox {
         public static NamedTypeFilter selectedTypeFilter = null;
 
         public static IEnumerable<SimpleBlueprint> blueprints = null;
-        public static Dictionary<SimpleBlueprint, ReflectionTreeView> expandedBlueprints = new();
 
         public static void ResetSearch() {
             filteredBPs = null;
             filteredBPNames = null;
             collatedBPs = null;
-            expandedBlueprints.Clear();
+            ReflectionTreeView.ClearExpanded();
             BlueprintListUI.needsLayout = true;
         }
         public static void ResetGUI() {

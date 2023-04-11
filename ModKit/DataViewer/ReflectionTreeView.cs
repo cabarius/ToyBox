@@ -8,9 +8,33 @@ using static ModKit.Utility.StringExtensions;
 using ModKit;
 using static ModKit.UI;
 using System.Reflection.Emit;
+using ToyBox;
 
 namespace ModKit.DataViewer {
     public class ReflectionTreeView {
+
+        private static Dictionary<object, ReflectionTreeView> ExpandedObjects = new();
+        public static void ClearExpanded() { ExpandedObjects.Clear(); }
+        public static void DetailToggle(string title, object key, object target = null, int width = 600) {
+            if (target == null) target = key;
+            var expanded = ExpandedObjects.ContainsKey(key);
+            if (DisclosureToggle(title, ref expanded, width)) {
+                ExpandedObjects.Clear();
+                if (expanded) {
+                    ExpandedObjects[key] = new ReflectionTreeView(target);
+                }
+            }
+        }
+        public static void DetailsOnGUI(object key) {
+            ReflectionTreeView reflectionTreeView = null;
+            ExpandedObjects.TryGetValue(key, out reflectionTreeView);
+            if (reflectionTreeView != null) {
+                reflectionTreeView.OnGUI(false);
+            }
+
+        }
+
+
         private ReflectionTree _tree;
         private ReflectionSearchResult _searchResults = new ReflectionSearchResult();
         private float _height;
@@ -201,6 +225,7 @@ namespace ModKit.DataViewer {
                     var instText = "";  // if (node.InstanceID is int instID) instText = "@" + instID.ToString();
                     name = name.MarkedSubstring(searchText);
                     var enumerableCount = node.EnumerableCount;
+                    if (enumerableCount == 0) return;
                     if (enumerableCount >= 0) name = name + $"[{enumerableCount}]".yellow();
                     var typeName = node.InstType?.Name ?? node.Type?.Name;
                     UI.ToggleButton(ref expanded,

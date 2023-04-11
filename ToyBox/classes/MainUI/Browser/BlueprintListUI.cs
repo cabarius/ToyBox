@@ -196,15 +196,9 @@ namespace ToyBox {
                     }
                     using (VerticalScope(Width(remWidth))) {
                         using (HorizontalScope(Width(remWidth))) {
-                            var expanded = BlueprintBrowser.expandedBlueprints.ContainsKey(blueprint);
-                            if (DisclosureToggle("", ref expanded, 0)) {
-                                BlueprintBrowser.expandedBlueprints.Clear();
-                                if (expanded) {
-                                    BlueprintBrowser.expandedBlueprints[blueprint] = new ReflectionTreeView(blueprint);
-                                }
-                            }
+                            ReflectionTreeView.DetailToggle("", blueprint, blueprint, 0);
                             Space(-17);
-                            if (settings.showAssetIDs) {
+                            if (settings.showAssetIDs) { 
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
                                 GUILayout.TextField(blueprint.AssetGuid.ToString(), ExpandWidth(false));
                             }
@@ -296,11 +290,7 @@ namespace ToyBox {
                         }
                     }
                 }
-                ReflectionTreeView reflectionTreeView = null;
-                BlueprintBrowser.expandedBlueprints.TryGetValue(blueprint, out reflectionTreeView);
-                if (reflectionTreeView != null) {
-                    reflectionTreeView.OnGUI(false);
-                }
+                ReflectionTreeView.DetailsOnGUI(blueprint);
                 Div(indent);
                 index++;
             }

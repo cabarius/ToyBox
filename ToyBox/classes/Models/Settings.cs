@@ -387,6 +387,7 @@ namespace ToyBox {
         // Quests
         public bool toggleQuestHideCompleted = true;
         public bool toggleQuestsShowUnrevealedObjectives = false;
+        public bool toggleQuestInspector = false;
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?

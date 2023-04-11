@@ -12,6 +12,7 @@ using Kingmaker;
 using Kingmaker.AreaLogic.QuestSystem;
 using ModKit;
 using static ModKit.UI;
+using ModKit.DataViewer;
 
 namespace ToyBox {
     public static class QuestExensions {
@@ -60,6 +61,8 @@ namespace ToyBox {
                 Toggle("Hide Completed", ref settings.toggleQuestHideCompleted);
                 25.space();
                 Toggle("Show Unrevealed Steps", ref settings.toggleQuestsShowUnrevealedObjectives);
+                25.space();
+                Toggle("Inspect Quests and Objectives", ref settings.toggleQuestInspector);
             }
             GUILayout.Space(5f);
             selectedQuests = (selectedQuests.Length != quests.Length) ? new bool[quests.Length] : selectedQuests;
@@ -76,9 +79,14 @@ namespace ToyBox {
                             50.space();
                             Label(quest.Blueprint.Title.ToString().orange().bold(), Width(600));
                             50.space();
-                            DisclosureToggle(quest.stateString(), ref selectedQuests[index]);                                                           
+                            DisclosureToggle(quest.stateString(), ref selectedQuests[index]); 
+                            if (settings.toggleQuestInspector)
+                                ReflectionTreeView.DetailToggle("Inspect", quest, quest, 0);
                             50.space();
                             Label(quest.Blueprint.Description.ToString().StripHTML().green());
+                        }
+                        if (settings.toggleQuestInspector) {
+                            ReflectionTreeView.DetailsOnGUI(quest);
                         }
                         if (selectedQuests[index]) {
                             var objectiveIndex = 0;
@@ -93,6 +101,8 @@ namespace ToyBox {
                                             Label(questObjective.titleColored(), Width(600));
                                             25.space();
                                             Label(questObjective.stateString(), Width(150));
+                                            if (settings.toggleQuestInspector)
+                                                ReflectionTreeView.DetailToggle("Inspect", questObjective, questObjective, 0);
                                             Space(25);
                                             using (HorizontalScope(300)) {
                                                 Space(0);
@@ -123,6 +133,9 @@ namespace ToyBox {
                                             Label(questObjective.Blueprint.Description.ToString().StripHTML().green(), 1000.width());
                                             Label("", AutoWidth());
                                         }
+                                        if (settings.toggleQuestInspector) {
+                                            ReflectionTreeView.DetailsOnGUI(questObjective);
+                                        }
                                         if (questObjective.State == QuestObjectiveState.Started) {
                                             var childIndex = 0;
                                             foreach (var childObjective in quest.Objectives) {
@@ -137,6 +150,8 @@ namespace ToyBox {
                                                             Label(childObjective.titleColored(), Width(600));
                                                             25.space();
                                                             Label(childObjective.stateString(), Width(150));
+                                                            if (settings.toggleQuestInspector)
+                                                                ReflectionTreeView.DetailToggle("Inspect", questObjective, questObjective, 0);
                                                             Space(25);
                                                             using (HorizontalScope(300)) {
                                                                 if (childObjective.State == QuestObjectiveState.None) {
@@ -152,6 +167,9 @@ namespace ToyBox {
                                                             DrawTeleports(childObjective);
                                                             Label(childObjective.Blueprint.Description.ToString().StripHTML().green(), 1000.width());
                                                             Label("", AutoWidth());
+                                                        }
+                                                        if (settings.toggleQuestInspector) {
+                                                            ReflectionTreeView.DetailsOnGUI(childObjective);
                                                         }
                                                     }
                                                 }
@@ -169,12 +187,12 @@ namespace ToyBox {
             Space(25);
         }
         public static void DrawTeleports(QuestObjective objective) {
-            using (HorizontalScope(MaxWidth(750))) {
+            using (HorizontalScope(MaxWidth(850))) {
                 var areas = objective.Blueprint.Areas;
                 var locations = objective.Blueprint.Locations;
                 if (areas.Count > 0 || locations.Count > 0) {
                     if (locations.Count > 0) {
-                        Label("Teleport");
+                        Label("TP");
                         25.space();
                         using (VerticalScope(MaxWidth(600))) {
                             foreach (var location in locations) {
