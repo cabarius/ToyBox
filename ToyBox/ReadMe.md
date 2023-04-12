@@ -44,6 +44,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added Dice Roll overrides for Skill checks only (thanks AlterAsc) and cleaned up the options a bit to make them more clear
 * (***Marria***) Search 'n Pick: Added counts to the collation categories
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
+* (***ADDB***) Changed Browser to improve performance.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Reroll Perception button now also rerolls perception on the global map.
 * (***ADDB***) Fixed belt consumable feature.

@@ -23,7 +23,7 @@ namespace ModKit {
             private string _searchText = "";
             private int _searchLimit = 100;
             private int _pageCount;
-            private int _currentPage;
+            private int _currentPage = 1;
             public bool _searchChanged = true;
             private int _matchCount;
             private bool _showAll;
@@ -89,12 +89,21 @@ namespace ModKit {
                             Label(matchesText, ExpandWidth(false));
                         }
                         if (_matchCount > _searchLimit) {
-                            string pageText = "Page: ".orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
-                            pageText += "   ";
+                            string pageLabel = "Page: ".orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
                             25.space();
-                            if (ValueAdjustorEditable(pageText, () => _currentPage, (v) => _currentPage = v, 1, 1, _pageCount, AutoWidth())) {
-                                _updatePages = true;
-                            }
+                            Label(pageLabel, ExpandWidth(false));
+                            ActionButton("-", () => {
+                                if (_currentPage > 1) {
+                                    _currentPage -= 1;
+                                    _updatePages = true;
+                                }
+                            }, AutoWidth());
+                            ActionButton("+", () => {
+                                if (_currentPage < _pageCount) {
+                                    _currentPage += 1;
+                                    _updatePages = true;
+                                }
+                            }, AutoWidth());
                         }
                     }
                 }
@@ -206,6 +215,7 @@ namespace ModKit {
                 if (_searchLimit > 0) {
                     _pageCount = (int)Math.Ceiling((double)_matchCount / _searchLimit);
                     _currentPage = Math.Min(_currentPage, _pageCount);
+                    _currentPage = Math.Max(1, _currentPage);
                 } else {
                     _pageCount = 1;
                     _currentPage = 1;
