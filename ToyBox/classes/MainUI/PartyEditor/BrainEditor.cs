@@ -9,9 +9,9 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Browser<AiAction, BlueprintAiAction> browser = new();
-        public static Browser<Consideration, Consideration> browser2 = new();
-        public static Browser<Consideration, Consideration> browser3 = new();
+        public static Browser<AiAction, BlueprintAiAction> browser = new(true, 600, true, true);
+        public static Browser<Consideration, Consideration> browser2 = new(true, 600, true, true);
+        public static Browser<Consideration, Consideration> browser3 = new(true, 15, true, true);
         public static void OnBrainGUI(UnitEntityData ch) {
             bool changed = false;
             browser.OnGUI(
@@ -32,7 +32,7 @@ namespace ToyBox {
                 },
                 (action, bp) => {
                     bool changed = false;
-                    if (action.ActorConsiderations.Count > 0) {
+                    if (action?.ActorConsiderations.Count > 0) {
                         using (HorizontalScope()) {
                             150.space();
                             Label($"{"Actor Considerations".orange().bold()} - {ch.CharacterName.cyan()}");
@@ -63,7 +63,7 @@ namespace ToyBox {
                     browser3.OnGUI(
                         $"{ch.CharacterName}-{bp.AssetGuid}-TargetConsiderations",
                         ref changed,
-                        action.TargetConsiderations,
+                        action?.TargetConsiderations,
                         () => BlueprintExtensions.GetBlueprints<Consideration>(),
                         c => c,
                         c => c.AssetGuid.ToString(),

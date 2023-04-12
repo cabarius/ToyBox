@@ -16,24 +16,31 @@ namespace ModKit {
             // By default it shows just the title but you can provide an optional RowUI to show more complex row UI including buttons to add and remove items and so forth. This will be layed out after the title
             // You an also provide UI that renders children below the row
 
-            private IEnumerable<Definition> _pagedResults;
+            private IEnumerable<Definition> _pagedResults = new List<Definition>();
             private IEnumerable<Definition> _filteredOrderedDefinitions;
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> DisclosureStates = new();
             private string _searchText = "";
             private int _searchLimit = 100;
             private int _pageCount;
-            private int _currentPage = 1;
-            public bool _searchChanged = true;
             private int _matchCount;
+            private int _currentPage = 1;
+            private int _tick = 0;
+            private DateTime lockedUntil;
+            public int TicksPerUpdate = 30;
+            public bool searchChanged = true;
+            public bool RefreshResultsPeriodically = true;
+            public bool SearchAsYouType = true;
             private bool _showAll;
             private bool _updatePages = false;
-            private int _tick = 0;
-            // Is available a static data source? If yes cache results after calling once.
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
-            public Browser(bool availableIsStatic = false) {
+            public Browser(bool refreshResultsPeriodically = true, int ticksPerUpdate = 30, bool searchAsYouType = true, bool availableIsStatic = false) {
+                RefreshResultsPeriodically = refreshResultsPeriodically;
+                TicksPerUpdate = ticksPerUpdate;
+                SearchAsYouType = searchAsYouType;
                 _availableIsStatic = availableIsStatic;
+
             }
 
             public void OnGUI(
@@ -53,25 +60,28 @@ namespace ModKit {
                 bool showDiv = true,
                 bool search = true,
                 float titleMinWidth = 100,
-                float titleMaxWidth = 300,
-                int ticksPerUpdate = 1,
-                bool noTickNecessary = false
+                float titleMaxWidth = 300
                 ) {
                 if (searchKey == null) searchKey = title;
                 if (sortKey == null) sortKey = title;
-                List<Definition> definitions = update(current, available, title, search, searchKey, sortKey, definition, ticksPerUpdate, noTickNecessary);
-                _tick++;
+                if (current == null) current = new List<Item>();
+                List<Definition> definitions = update(current, available, title, search, searchKey, sortKey, definition);
                 if (search || _searchLimit < _matchCount) {
                     if (search) {
                         using (HorizontalScope()) {
                             indent.space();
-                            ActionTextField(ref _searchText, "searchText", null, () => { _searchChanged = true; }, width(320));
+                            ActionTextField(ref _searchText, "searchText", (text) => {
+                                if (SearchAsYouType) {
+                                    lockedUntil = DateTime.Now.AddMilliseconds(250);
+                                    searchChanged = true;
+                                }
+                            }, () => { searchChanged = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
-                            ActionIntTextField(ref _searchLimit, "searchLimit", null, () => { _updatePages = true; }, width(175));
+                            ActionIntTextField(ref _searchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
                             if (_searchLimit > 1000) { _searchLimit = 1000; }
                             25.space();
-                            _searchChanged |= DisclosureToggle("Show All".Orange().Bold(), ref _showAll);
+                            searchChanged |= DisclosureToggle("Show All".Orange().Bold(), ref _showAll);
                             25.space();
                         }
                     }
@@ -79,10 +89,10 @@ namespace ModKit {
                     using (HorizontalScope()) {
                         if (search) {
                             space(indent);
-                            ActionButton("Search", () => { _searchChanged = true; }, AutoWidth());
+                            ActionButton("Search", () => { searchChanged = true; }, AutoWidth());
                         }
                         space(25);
-                        if (_matchCount > 0 && _searchText.Length > 0) {
+                        if (_matchCount > 0 || _searchText.Length > 0) {
                             var matchesText = "Matches: ".Green().Bold() + $"{_matchCount}".Orange().Bold();
                             if (_matchCount > _searchLimit) { matchesText += " => ".Cyan() + $"{_searchLimit}".Cyan().Bold(); }
 
@@ -152,20 +162,25 @@ namespace ModKit {
             }
 
             private List<Definition> update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, Func<Definition, string> title, bool search,
-                Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition, int ticksPerUpdate, bool noTickNecessary) {
-                if (_showAll && _availableIsStatic && (_availableCache == null || _availableCache?.Count() == 0)) {
-                    _availableCache = available();
-                    _searchChanged = true;
-                }
-                if (_searchChanged || (_tick % ticksPerUpdate == 0 && !noTickNecessary)) {
-                    _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
-                    var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
-                    UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
-                    _searchChanged = false;
-                } else if (_updatePages) {
-                    _updatePages = false;
-                    UpdatePageCount();
-                    UpdatePaginatedResults();
+                Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition) {
+                if (Event.current.type == EventType.Layout) {
+                    if (_showAll && _availableIsStatic && (_availableCache == null || _availableCache?.Count() == 0)) {
+                        _availableCache = available();
+                        searchChanged = true;
+                    }
+                    if (searchChanged || ((_tick % TicksPerUpdate == 0) && RefreshResultsPeriodically)) {
+                        if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
+                            _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
+                            var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
+                            UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
+                            searchChanged = false;
+                        }
+                    } else if (_updatePages) {
+                        _updatePages = false;
+                        UpdatePageCount();
+                        UpdatePaginatedResults();
+                    }
+                    _tick++;
                 }
                 return _pagedResults?.ToList();
             }

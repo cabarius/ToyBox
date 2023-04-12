@@ -24,8 +24,7 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;
         public static IEnumerable<(GlobalMapArmyState, float)> demonArmies;
         public static string skillsSearchText = "";
-        public static Browser<BlueprintUnit, BlueprintUnit> browser = new(true);
-
+        public static Browser<BlueprintUnit, BlueprintUnit> browser = new(true, 600, true, true);
 
         public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {
@@ -195,7 +194,7 @@ namespace ToyBox.classes.MainUI {
                                             bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
                                             ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
                                                         () => {
-                                                            browser._searchChanged = true;
+                                                            browser.searchChanged = true;
                                                             if (isInMercPool) {
                                                                 mercenaryManager.RemoveMercenary(unit);
                                                                 isInMercPool = false;
@@ -209,7 +208,7 @@ namespace ToyBox.classes.MainUI {
                                             10.space();
                                             ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
                                                         () => {
-                                                            browser._searchChanged = true;
+                                                            browser.searchChanged = true;
                                                             if (isInKingdomPool) {
                                                                 var count = recruitsManager.GetCountInPool(unit);
                                                                 recruitsManager.DecreasePool(unit, count);
@@ -239,7 +238,7 @@ namespace ToyBox.classes.MainUI {
                                                     Label("Weird", AutoWidth());
                                                 }
                                             }
-                                        }, null, 50, true, true, 100, 300, 600, false);
+                                        });
                             }
                         }
                     });

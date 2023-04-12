@@ -46,6 +46,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
 * (***ADDB***) Changed Browser to improve performance.
 * (***ADDB***) Fixed belt consumable feature.
+* (***ADDB***) Fixed visual size scaling breaking when using any sort of polymorph.
 * (***ADDB***) Reroll Perception button now also rerolls perception on the global map.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fix Murder Hobo for Leaper's Smile swarms.
