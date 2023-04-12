@@ -24,7 +24,7 @@ namespace ModKit {
             private int _searchLimit = 100;
             private int _pageCount;
             private int _currentPage;
-            private bool _searchChanged = true;
+            public bool _searchChanged = true;
             private int _matchCount;
             private bool _showAll;
             private bool _updatePages = false;
@@ -54,11 +54,12 @@ namespace ModKit {
                 bool search = true,
                 float titleMinWidth = 100,
                 float titleMaxWidth = 300,
-                int ticksPerUpdate = 1
+                int ticksPerUpdate = 1,
+                bool noTickNecessary = false
                 ) {
                 if (searchKey == null) searchKey = title;
                 if (sortKey == null) sortKey = title;
-                List<Definition> definitions = update(current, available, title, search, searchKey, sortKey, definition, ticksPerUpdate);
+                List<Definition> definitions = update(current, available, title, search, searchKey, sortKey, definition, ticksPerUpdate, noTickNecessary);
                 _tick++;
                 if (search || _searchLimit < _matchCount) {
                     if (search) {
@@ -141,12 +142,13 @@ namespace ModKit {
                 }
             }
 
-            private List<Definition> update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, Func<Definition, string> title,
-                bool search, Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition, int ticksPerUpdate) {
+            private List<Definition> update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, Func<Definition, string> title, bool search,
+                Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition, int ticksPerUpdate, bool noTickNecessary) {
                 if (_showAll && _availableIsStatic && (_availableCache == null || _availableCache?.Count() == 0)) {
                     _availableCache = available();
+                    _searchChanged = true;
                 }
-                if (_searchChanged || _tick % ticksPerUpdate == 0) {
+                if (_searchChanged || (_tick % ticksPerUpdate == 0 && !noTickNecessary)) {
                     _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                     var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
                     UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
