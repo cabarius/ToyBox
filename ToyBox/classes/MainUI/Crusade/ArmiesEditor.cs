@@ -239,7 +239,7 @@ namespace ToyBox.classes.MainUI {
                                                     Label("Weird", AutoWidth());
                                                 }
                                             }
-                                        }, null, 50, true, true, 100, 300, 1, true);
+                                        }, null, 50, true, true, 100, 300, 600, false);
                             }
                         }
                     });
