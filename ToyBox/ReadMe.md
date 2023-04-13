@@ -45,6 +45,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Marria***) Search 'n Pick: Added counts to the collation categories
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
 * (***ADDB***) Fixed belt consumable feature.
+* (***ADDB***) Allow Achievements now no longer wrongly awards achievements (achievements locked behind difficulty or main campaign or platform).
 * (***ADDB***) Reroll Perception button now also rerolls perception on the global map.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fix Murder Hobo for Leaper's Smile swarms.
