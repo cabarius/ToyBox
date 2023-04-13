@@ -116,16 +116,16 @@ namespace ToyBox.BagOfPatches {
         // Disables the lockout for reporting achievements
         [HarmonyPatch(typeof(AchievementEntity), nameof(AchievementEntity.IsDisabled), MethodType.Getter)]
         public static class AchievementEntity_IsDisabled_Patch {
-            private static bool Postfix(ref bool __result, AchievementEntity __instance) {
+            private static void Postfix(ref bool __result, AchievementEntity __instance) {
                 //modLogger.Log("AchievementEntity.IsDisabled");
                 if (settings.toggleAllowAchievementsDuringModdedGame) {
                     if (__instance.Data.ExcludedFromCurrentPlatform) {
                         __result = true;
-                        return false;
+                        return;
                     }
                     if (__instance.Data.OnlyMainCampaign && !Game.Instance.Player.Campaign.IsMainGameContent) {
                         __result = true;
-                        return false;
+                        return;
                     }
                     BlueprintCampaignReference specificCampaign = __instance.Data.SpecificCampaign;
                     BlueprintCampaign blueprintCampaign = ((specificCampaign != null) ? specificCampaign.Get() : null);
@@ -135,9 +135,8 @@ namespace ToyBox.BagOfPatches {
                         && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0)
                         || __instance.Data.MinCrusadeDifficulty > SettingsRoot.Difficulty.KingdomDifficulty
                         || (__instance.Data.IronMan && !SettingsRoot.Difficulty.OnlyOneSave);
-                    return false;
+                    return;
                 }
-                return true;
             }
         }
         // Removes the flag that taints the save file of a user who mods their game
