@@ -59,7 +59,8 @@ namespace ModKit {
                 bool showDiv = true,
                 bool search = true,
                 float titleMinWidth = 100,
-                float titleMaxWidth = 300
+                float titleMaxWidth = 300,
+                string searchTextPassedFromParent = ""
                 ) {
                 if (searchKey == null) searchKey = title;
                 if (sortKey == null) sortKey = title;
@@ -83,8 +84,15 @@ namespace ModKit {
                             searchChanged |= DisclosureToggle("Show All".Orange().Bold(), ref _showAll);
                             25.space();
                         }
+                    } else {
+                        if (_searchText != searchTextPassedFromParent) {
+                            searchChanged = true;
+                            _searchText = searchTextPassedFromParent;
+                            if (_searchText == null) {
+                                _searchText = "";
+                            }
+                        }
                     }
-
                     using (HorizontalScope()) {
                         if (search) {
                             space(indent);
