@@ -4,41 +4,39 @@ using System.Text;
 
 namespace ModKit.DataViewer {
     public static class Extensions {
-        public static Key IndexerKey<Key,Item>(this Item item) => Indexer<Key, Item>.IndexerKey(item);
-        public static Item IndexerItem<Key, Item>(this Key k) => Indexer<Key, Item>.IndexerItem(k);
     }
-    public class Indexer<Key, Item> { // TKey must be unique or crashy crashy
-        public  static Func<Item, Key> GetKey { get; set; }
-        public static Key IndexerKey(Item item) => GetKey(item);
-        public static Item IndexerItem(Key key) =>  _lookup.GetValueOrDefault(key).item;
+    public class Indexer<TKey, TItem> { // TKey must be unique or crashy crashy
+        public  static Func<TItem, TKey> GetKey { get; set; }
+        public static TKey Key(TItem item) => GetKey(item);
+        public static TItem Item(TKey key) =>  _lookup.GetValueOrDefault(key).Item;
 
-        private static readonly Dictionary<Key, Entry<Item>> _lookup = new();
+        private static readonly Dictionary<TKey, Entry> _lookup = new();
 
         public class KeyPath {
             public object Instance { get; private set; }
-            public string[] path { get; private set; }
+            public string[] Path { get; private set; }
             public KeyPath(object instance, params string[] path) {
                 Instance = instance;
-                this.path = path;
+                this.Path = path;
             }
             public KeyPath(object instance, string path) {
                 Instance = instance;
-                this.path = path.Split('.');
+                this.Path = path.Split('.');
             }
         }
-        public class Entry<Item> {
-            public Entry(Item i) {
-                item = i;
+        public class Entry {
+            public Entry(TItem i) {
+                Item = i;
             }
 
-            public Item item { get; private set; } = default(Item);
+            public TItem Item { get; private set; } = default(TItem);
             public HashSet<KeyPath> ReferencedBy { get; private set; } = new HashSet<KeyPath> { };
             public HashSet<KeyPath> SubItems { get; private set; } = new HashSet<KeyPath> { };
         }
 
-        public void Add(Item item) {
-            var key = IndexerKey(item);
-            _lookup[key] = new Entry<Item>(item);
+        public void Add(TItem item) {
+            var key = Key(item);
+            _lookup[key] = new Entry(item);
         }
     }
 }
