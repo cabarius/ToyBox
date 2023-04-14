@@ -19,6 +19,7 @@ using Kingmaker.Enums.Damage;
 using Kingmaker.GameModes;
 using Kingmaker.Items;
 using Kingmaker.RuleSystem;
+using Kingmaker.Settings;
 using Kingmaker.UI._ConsoleUI.CombatStartScreen;
 //using Kingmaker.UI._ConsoleUI.Models;
 using Kingmaker.UI.Common;
@@ -118,7 +119,23 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(ref bool __result, AchievementEntity __instance) {
                 //modLogger.Log("AchievementEntity.IsDisabled");
                 if (settings.toggleAllowAchievementsDuringModdedGame) {
-                    __result = false;
+                    if (__instance.Data.ExcludedFromCurrentPlatform) {
+                        __result = true;
+                        return;
+                    }
+                    if (__instance.Data.OnlyMainCampaign && !Game.Instance.Player.Campaign.IsMainGameContent) {
+                        __result = true;
+                        return;
+                    }
+                    BlueprintCampaignReference specificCampaign = __instance.Data.SpecificCampaign;
+                    BlueprintCampaign blueprintCampaign = ((specificCampaign != null) ? specificCampaign.Get() : null);
+                    __result = (!__instance.Data.OnlyMainCampaign && blueprintCampaign != null
+                        && Game.Instance.Player.Campaign != blueprintCampaign)
+                        || (__instance.Data.MinDifficulty != null
+                        && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0)
+                        || __instance.Data.MinCrusadeDifficulty > SettingsRoot.Difficulty.KingdomDifficulty
+                        || (__instance.Data.IronMan && !SettingsRoot.Difficulty.OnlyOneSave);
+                    return;
                 }
             }
         }

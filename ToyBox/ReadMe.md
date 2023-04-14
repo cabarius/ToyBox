@@ -47,6 +47,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) Changed Browser to improve performance.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fixed visual size scaling breaking when using any sort of polymorph.
+* (***ADDB***) Allow Achievements now no longer wrongly awards achievements (achievements locked behind difficulty or main campaign or platform).
 * (***ADDB***) Reroll Perception button now also rerolls perception on the global map.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fix Murder Hobo for Leaper's Smile swarms.
