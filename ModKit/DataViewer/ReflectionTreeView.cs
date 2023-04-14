@@ -8,7 +8,6 @@ using static ModKit.Utility.StringExtensions;
 using ModKit;
 using static ModKit.UI;
 using System.Reflection.Emit;
-using ToyBox;
 
 namespace ModKit.DataViewer {
     public class ReflectionTreeView {
