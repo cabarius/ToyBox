@@ -3,6 +3,7 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToyBox;
 using UnityEngine;
 //using static Kingmaker.Blueprints.Classes.StatsDistributionPreset;
 
@@ -25,22 +26,20 @@ namespace ModKit {
             private int _pageCount;
             private int _matchCount;
             private int _currentPage = 1;
-            private int _tick = 0;
             private DateTime lockedUntil;
-            public int TicksPerUpdate = 30;
             public bool searchChanged = true;
-            public bool RefreshResultsPeriodically = true;
             public bool SearchAsYouType = true;
             private bool _showAll;
             private bool _updatePages = false;
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
-            public Browser(bool refreshResultsPeriodically = true, int ticksPerUpdate = 30, bool searchAsYouType = true, bool availableIsStatic = false) {
-                RefreshResultsPeriodically = refreshResultsPeriodically;
-                TicksPerUpdate = ticksPerUpdate;
+            public void OnShowGUI() {
+                searchChanged = true;
+            }
+            public Browser(bool searchAsYouType = true, bool availableIsStatic = false) {
                 SearchAsYouType = searchAsYouType;
                 _availableIsStatic = availableIsStatic;
-
+                Main.NotifyOnShowGUI += OnShowGUI;
             }
 
             public void OnGUI(
@@ -168,7 +167,7 @@ namespace ModKit {
                         _availableCache = available();
                         searchChanged = true;
                     }
-                    if (searchChanged || ((_tick % TicksPerUpdate == 0) && RefreshResultsPeriodically)) {
+                    if (searchChanged) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
                             _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                             var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
@@ -180,7 +179,6 @@ namespace ModKit {
                         UpdatePageCount();
                         UpdatePaginatedResults();
                     }
-                    _tick++;
                 }
                 return _pagedResults?.ToList();
             }

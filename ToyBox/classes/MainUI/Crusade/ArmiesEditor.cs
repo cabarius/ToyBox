@@ -24,7 +24,7 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;
         public static IEnumerable<(GlobalMapArmyState, float)> demonArmies;
         public static string skillsSearchText = "";
-        public static Browser<BlueprintUnit, BlueprintUnit> browser = new(true, 600, true, true);
+        public static Browser<BlueprintUnit, BlueprintUnit> browser = new(true, true);
 
         public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {

@@ -4,14 +4,15 @@ using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using static ModKit.UI;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Browser<AiAction, BlueprintAiAction> browser = new(true, 600, true, true);
-        public static Browser<Consideration, Consideration> browser2 = new(true, 600, true, true);
-        public static Browser<Consideration, Consideration> browser3 = new(true, 15, true, true);
+        public static Browser<AiAction, BlueprintAiAction> browser = new(true, true);
+        public static Browser<Consideration, Consideration> browser2 = new(true, true);
+        public static Dictionary<BlueprintAiAction, Browser<Consideration, Consideration>> browsers3 = new();
         public static void OnBrainGUI(UnitEntityData ch) {
             bool changed = false;
             browser.OnGUI(
@@ -59,6 +60,11 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         150.space();
                         Label($"Target Consideration".orange());
+                    }
+                    var browser3 = browsers3.GetValueOrDefault(bp, null);
+                    if (browser3 == null) {
+                        browser3 = new Browser<Consideration, Consideration>();
+                        browsers3[bp] = browser3;
                     }
                     browser3.OnGUI(
                         $"{ch.CharacterName}-{bp.AssetGuid}-TargetConsiderations",
