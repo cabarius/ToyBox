@@ -10,15 +10,10 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Browser<AiAction, BlueprintAiAction> browser = new(true, 600, true, true);
-        public static Browser<Consideration, Consideration> browser2 = new(true, 600, true, true);
-        public static Dictionary<BlueprintAiAction, Browser<Consideration, Consideration>> browsers3;
-        public static UnitEntityData lastCaller;
+        public static Browser<AiAction, BlueprintAiAction> browser = new(true, true);
+        public static Browser<Consideration, Consideration> browser2 = new(true, true);
+        public static Dictionary<BlueprintAiAction, Browser<Consideration, Consideration>> browsers3 = new();
         public static void OnBrainGUI(UnitEntityData ch) {
-            if (ch != lastCaller) {
-                lastCaller = ch;
-                browsers3 = new();
-            }
             bool changed = false;
             browser.OnGUI(
                 $"{ch.CharacterName}-Gambits",

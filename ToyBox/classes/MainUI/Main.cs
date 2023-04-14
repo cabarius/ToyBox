@@ -1,21 +1,20 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // Special thanks to @SpaceHampster and @Velk17 from Pathfinder: Wrath of the Rightous Discord server for teaching me how to mod Unity games
-using UnityEngine;
-using UnityModManagerNet;
 using HarmonyLib;
+using Kingmaker;
+using Kingmaker.GameModes;
+using Kingmaker.Utility;
+using ModKit;
+using Owlcat.Runtime.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Kingmaker;
-using Kingmaker.Utility;
-using Owlcat.Runtime.Core.Logging;
-using ToyBox.Multiclass;
-using ModKit;
-using ModKit.Utility;
-using ToyBox.classes.MainUI;
-using Kingmaker.GameModes;
 using ToyBox.classes.Infrastructure;
+using ToyBox.classes.MainUI;
+using ToyBox.Multiclass;
+using UnityEngine;
+using UnityModManagerNet;
 
 namespace ToyBox {
 #if DEBUG
@@ -168,12 +167,16 @@ namespace ToyBox {
         }
 
         private static void OnSaveGUI(UnityModManager.ModEntry modEntry) => settings.Save(modEntry);
-
+        public delegate void ShowGUINotifierMethod();
+        public static ShowGUINotifierMethod NotifyOnShowGUI;
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
             ArmiesEditor.OnShowGUI();
             EtudesEditor.OnShowGUI();
+            if (NotifyOnShowGUI != null) {
+                NotifyOnShowGUI();
+            }
         }
 
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
