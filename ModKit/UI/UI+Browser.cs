@@ -33,13 +33,13 @@ namespace ModKit {
             private bool _updatePages = false;
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
-            public void onShowGUI() {
+            public void OnShowGUI() {
                 searchChanged = true;
             }
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false) {
                 SearchAsYouType = searchAsYouType;
                 _availableIsStatic = availableIsStatic;
-                Main.NotifyOnShowGUI += onShowGUI;
+                Main.NotifyOnShowGUI += OnShowGUI;
             }
 
             public void OnGUI(
