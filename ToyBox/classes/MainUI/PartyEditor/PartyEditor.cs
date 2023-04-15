@@ -1,10 +1,12 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
+using Kingmaker.AreaLogic.QuestSystem;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Parts;
 using ModKit;
+using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -265,11 +267,13 @@ namespace ToyBox {
                         else { selectedToggle = ToggleChoice.None; }
                     }
 #endif
+                    ReflectionTreeView.DetailToggle("Ins", ch, ch, 0);
                     if (isWide) ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {
                         selectedSpellbook = 0;
                     }
                 }
+                ReflectionTreeView.DetailsOnGUI(ch);
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
                 //    UI.Div(20, 20);
                 //}
