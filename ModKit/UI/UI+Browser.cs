@@ -31,6 +31,7 @@ namespace ModKit {
             public bool SearchAsYouType = true;
             private bool _showAll;
             private bool _updatePages = false;
+            private bool _startedLoading = false;
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
             public void OnShowGUI() {
@@ -44,7 +45,6 @@ namespace ModKit {
 
             public void OnGUI(
                 string callerKey,
-                ref bool changed,
                 IEnumerable<Item> current,
                 Func<IEnumerable<Definition>> available,    // Func because available may be slow
                 Func<Item, Definition> definition,
@@ -60,7 +60,8 @@ namespace ModKit {
                 bool search = true,
                 float titleMinWidth = 100,
                 float titleMaxWidth = 300,
-                string searchTextPassedFromParent = ""
+                string searchTextPassedFromParent = "",
+                bool showItemDiv = false
                 ) {
                 if (searchKey == null) searchKey = title;
                 if (sortKey == null) sortKey = title;
@@ -81,7 +82,7 @@ namespace ModKit {
                             ActionIntTextField(ref _searchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
                             if (_searchLimit > 1000) { _searchLimit = 1000; }
                             25.space();
-                            searchChanged |= DisclosureToggle("Show All".Orange().Bold(), ref _showAll);
+                            _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref _showAll);
                             25.space();
                         }
                     } else {
@@ -133,6 +134,9 @@ namespace ModKit {
                     }
                 }
                 foreach (var def in definitions) {
+                    if (showItemDiv) {
+                        Div(indent);
+                    }
                     var name = title(def);
                     var nameLower = name.ToLower();
                     _currentDict.TryGetValue(def, out var item);
@@ -171,9 +175,15 @@ namespace ModKit {
             private List<Definition> update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, Func<Definition, string> title, bool search,
                 Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition) {
                 if (Event.current.type == EventType.Layout) {
-                    if (_showAll && _availableIsStatic && (_availableCache == null || _availableCache?.Count() == 0)) {
+                    if (_startedLoading) {
                         _availableCache = available();
-                        searchChanged = true;
+                        if (_availableCache?.Count() > 0) {
+                            _startedLoading = false;
+                            searchChanged = true;
+                            if (!_availableIsStatic) {
+                                _availableCache = null;
+                            }
+                        }
                     }
                     if (searchChanged) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
