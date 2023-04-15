@@ -76,6 +76,7 @@ namespace ToyBox.classes.MainUI {
                     var selectedBrain = ch.Brain.Blueprint;
                     if (GridPicker<BlueprintBrain>("Braaainzzz!", ref selectedBrain, AllBraaainz, null, br => br.GetDisplayName(), ref brainSearchText, 1, 500.width())) {
                         ch.Brain.SetBrain(selectedBrain);
+                        ActionBrowser.needsReloadData = true;
                     }
                 }
                 else

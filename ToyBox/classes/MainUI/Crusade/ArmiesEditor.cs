@@ -192,7 +192,7 @@ namespace ToyBox.classes.MainUI {
                                             bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
                                             ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
                                                         () => {
-                                                            browser.searchChanged = true;
+                                                            browser.needsReloadData = true;
                                                             if (isInMercPool) {
                                                                 mercenaryManager.RemoveMercenary(unit);
                                                                 isInMercPool = false;
@@ -206,7 +206,7 @@ namespace ToyBox.classes.MainUI {
                                             10.space();
                                             ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
                                                         () => {
-                                                            browser.searchChanged = true;
+                                                            browser.needsReloadData = true;
                                                             if (isInKingdomPool) {
                                                                 var count = recruitsManager.GetCountInPool(unit);
                                                                 recruitsManager.DecreasePool(unit, count);
