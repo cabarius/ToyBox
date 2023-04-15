@@ -1,8 +1,4 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -13,11 +9,13 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using ModKit;
-using static ModKit.UI;
 using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToyBox.classes.Infrastructure;
-using Kingmaker.EntitySystem;
-using Kingmaker.Blueprints.Facts;
+using UnityEngine;
+using static ModKit.UI;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -73,6 +71,7 @@ namespace ToyBox {
             if (callerKey != prevCallerKey) { searchChanged = true; showAll = false; }
             prevCallerKey = callerKey;
             var mutatorLookup = actions.Distinct().ToDictionary(a => a.name, a => a);
+
             using (HorizontalScope()) {
                 100.space();
                 ActionTextField(ref searchText, "searchText", null, () => { searchChanged = true; }, Width(320));
@@ -188,25 +187,89 @@ namespace ToyBox {
             }
             return todo;
         }
-        public static List<Action> OnGUI(UnitEntityData ch, List<EntityFact> facts) {
-            return OnGUI<EntityFact>("Features", ch, facts,
-                (fact) => fact.Blueprint,
-                () => BlueprintExtensions.GetBlueprints<BlueprintUnitFact>(),
-                (fact) => fact.Name,
-                (fact) => fact.Description,
-                (fact) => fact.GetRank(),
-                BlueprintAction.ActionsForType(typeof(BlueprintUnitFact))
-                );
-        }
+        public static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
-            return OnGUI<Feature>("Features", ch, feature,
-                (fact) => fact.Blueprint,
-                () => BlueprintExtensions.GetBlueprints<BlueprintFeature>(),
-                (fact) => fact.Name,
-                (fact) => fact.Description,
-                (fact) => fact.GetRank(),
-                BlueprintAction.ActionsForType(typeof(BlueprintFeature))
-                );
+            List<Action> todo = new();
+            if (showTree) {
+                using (HorizontalScope()) {
+                    Space(670);
+                    Toggle("Show Tree", ref showTree, Width(250));
+                }
+                treeEditor.OnGUI(ch, false);
+            }
+            else {
+
+                FeatureBrowser.OnGUI("Features",
+                    feature,
+                    () => BlueprintExtensions.GetBlueprints<BlueprintFeature>(),
+                    (feature) => feature.Blueprint,
+                    (feature) => feature.name,
+                    (feature) => settings.showDisplayAndInternalNames ? (feature.Name.Length > 0 ? feature.Name.cyan().bold() + $" : {feature.NameSafe().color(RGBA.darkgrey)}"
+                    : feature.name.cyan().bold()) : (feature.Name.Length > 0) ? feature.Name.cyan().bold() : feature.name.cyan().bold(),
+                    (feature) => $"{feature.Name} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Description}",
+                    (feature) => (feature.Name.Length > 0) ? feature.Name : feature.name,
+                    () => {
+                        using (HorizontalScope()) {
+                            Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
+                            60.space();
+                            Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
+                            60.space();
+                            Toggle("Show Tree", ref showTree, Width(250));
+                        }
+                    },
+                    (feature, blueprintfeature) => {
+                        var mutatorLookup = BlueprintAction.ActionsForType(typeof(BlueprintFeature)).Distinct().ToDictionary(a => a.name, a => a);
+                        var add = mutatorLookup.GetValueOrDefault("Add", null);
+                        var remove = mutatorLookup.GetValueOrDefault("Remove", null);
+                        var decrease = mutatorLookup.GetValueOrDefault("<", null);
+                        var increase = mutatorLookup.GetValueOrDefault(">", null);
+
+                        mutatorLookup.Remove("Add");
+                        mutatorLookup.Remove("Remove");
+                        mutatorLookup.Remove("<");
+                        mutatorLookup.Remove(">");
+                        var remainingWidth = ummWidth;
+                        // Indent
+                        remainingWidth -= 50;
+                        var titleWidth = (remainingWidth / (IsWide ? 3.0f : 4.0f)) - 100; ;
+                        remainingWidth -= titleWidth;
+                        if (feature != null) {
+                            if (decrease.canPerform(blueprintfeature, ch) || increase.canPerform(blueprintfeature, ch)) {
+                                var v = feature.GetRank();
+                                decrease.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => decrease.action(blueprintfeature, ch, repeatCount)), 60);
+                                Space(10f);
+                                Label($"{v}".orange().bold(), Width(30));
+                                increase.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => increase.action(blueprintfeature, ch, repeatCount)), 60);
+                                Space(17);
+                                remainingWidth -= 190;
+                            }
+                            else {
+                                Space(190);
+                                remainingWidth -= 190;
+                            }
+                        }
+                        else {
+                            Space(190);
+                            remainingWidth -= 190;
+                        }
+                        if (remove.canPerform(blueprintfeature, ch)) {
+                            remove.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => remove.action(blueprintfeature, ch, repeatCount)), 175);
+                        }
+                        else {
+                            add.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => add.action(blueprintfeature, ch, repeatCount)), 175);
+                        }
+                        remainingWidth -= 178;
+                        Space(20); remainingWidth -= 20;
+                        using (VerticalScope(Width(remainingWidth - 100))) {
+                            if (settings.showAssetIDs)
+                                GUILayout.TextField(blueprintfeature.AssetGuid.ToString(), AutoWidth());
+                            if (blueprintfeature.Description != null) {
+                                Label(blueprintfeature.Description.StripHTML().green(), Width(remainingWidth - 100));
+                            }
+                        }
+                    }, null, 50, false, true, 100, 300, "", true);
+            }
+            return todo;
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
             return OnGUI<Buff>("Features", ch, buff,
