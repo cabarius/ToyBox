@@ -3,7 +3,7 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToyBox;
+//using ToyBox;
 using UnityEngine;
 //using static Kingmaker.Blueprints.Classes.StatsDistributionPreset;
 
@@ -39,7 +39,7 @@ namespace ModKit {
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false) {
                 SearchAsYouType = searchAsYouType;
                 _availableIsStatic = availableIsStatic;
-                Main.NotifyOnShowGUI += OnShowGUI;
+                Mod.NotifyOnShowGUI += OnShowGUI;
             }
 
             public void OnGUI(

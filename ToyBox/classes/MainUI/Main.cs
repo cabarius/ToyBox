@@ -167,16 +167,12 @@ namespace ToyBox {
         }
 
         private static void OnSaveGUI(UnityModManager.ModEntry modEntry) => settings.Save(modEntry);
-        public delegate void ShowGUINotifierMethod();
-        public static ShowGUINotifierMethod NotifyOnShowGUI;
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
             ArmiesEditor.OnShowGUI();
             EtudesEditor.OnShowGUI();
-            if (NotifyOnShowGUI != null) {
-                NotifyOnShowGUI();
-            }
+            Mod.OnShowGUI();
         }
 
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
