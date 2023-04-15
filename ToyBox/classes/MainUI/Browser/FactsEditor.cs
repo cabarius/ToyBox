@@ -8,6 +8,7 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.Utility;
 using ModKit;
 using ModKit.Utility;
 using System;
@@ -22,6 +23,37 @@ namespace ToyBox {
         private static bool showTree = false;
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
+        private static string getName<Definition>(Definition feature) where Definition : BlueprintUnitFact {
+            bool isEmpty = feature.Name.IsNullOrEmpty();
+            string name;
+            if (settings.showDisplayAndInternalNames) {
+                if (isEmpty) {
+                    name = feature.name.cyan().bold();
+                }
+                else {
+                    name = feature.Name;
+                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                        name = feature.name.cyan().bold();
+                    }
+                    else {
+                        name = name.cyan().bold() + $" : {feature.name.color(RGBA.darkgrey)}";
+                    }
+                }
+            }
+            else {
+                if (isEmpty) {
+                    name = feature.name;
+                }
+                else {
+                    name = feature.Name;
+                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                        name = feature.name;
+                    }
+                }
+                name = name.cyan().bold();
+            }
+            return name;
+        }
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Item, Definition> browser, List<Item> fact, string name)
             where Item : UnitFact
             where Definition : BlueprintUnitFact {
@@ -39,11 +71,9 @@ namespace ToyBox {
                     fact,
                     () => BlueprintExtensions.GetBlueprints<Definition>(),
                     (feature) => (Definition)feature.Blueprint,
-                    (feature) => feature.name,
-                    (feature) => settings.showDisplayAndInternalNames ? (feature.Name.Length > 0 ? feature.Name.cyan().bold() + $" : {feature.NameSafe().color(RGBA.darkgrey)}"
-                    : feature.name.cyan().bold()) : (feature.Name.Length > 0) ? feature.Name.cyan().bold() : feature.name.cyan().bold(),
-                    (feature) => $"{feature.Name} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Description}",
-                    (feature) => (feature.Name.Length > 0) ? feature.Name : feature.name,
+                    (feature) => getName<Definition>(feature),
+                    (feature) => $"{getName<Definition>(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Description}",
+                    (feature) => getName<Definition>(feature),
                     () => {
                         using (HorizontalScope()) {
                             Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
@@ -54,7 +84,7 @@ namespace ToyBox {
                         }
                     },
                     (feature, blueprint) => {
-                        var mutatorLookup = BlueprintAction.ActionsForType(typeof(BlueprintFeature)).Distinct().ToDictionary(a => a.name, a => a);
+                        var mutatorLookup = BlueprintAction.ActionsForType(typeof(Definition)).Distinct().ToDictionary(a => a.name, a => a);
                         var add = mutatorLookup.GetValueOrDefault("Add", null);
                         var remove = mutatorLookup.GetValueOrDefault("Remove", null);
                         var decrease = mutatorLookup.GetValueOrDefault("<", null);
@@ -70,7 +100,9 @@ namespace ToyBox {
                         var titleWidth = (remainingWidth / (IsWide ? 3.0f : 4.0f)) - 100; ;
                         remainingWidth -= titleWidth;
                         if (feature != null) {
-                            if (decrease.canPerform(blueprint, ch) || increase.canPerform(blueprint, ch)) {
+                            bool canDecrease = decrease?.canPerform(blueprint, ch) ?? false;
+                            bool canIncrease = increase?.canPerform(blueprint, ch) ?? false;
+                            if (canDecrease || canIncrease) {
                                 var v = feature.GetRank();
                                 decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease.action(blueprint, ch, repeatCount)), 60);
                                 Space(10f);
@@ -88,10 +120,12 @@ namespace ToyBox {
                             Space(190);
                             remainingWidth -= 190;
                         }
-                        if (remove.canPerform(blueprint, ch)) {
+                        bool canAdd = add?.canPerform(blueprint, ch) ?? false;
+                        bool canRemove = remove?.canPerform(blueprint, ch) ?? false;
+                        if (canRemove) {
                             remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => remove.action(blueprint, ch, repeatCount)), 175);
                         }
-                        else {
+                        else if (canAdd) {
                             add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => add.action(blueprint, ch, repeatCount)), 175);
                         }
                         remainingWidth -= 178;

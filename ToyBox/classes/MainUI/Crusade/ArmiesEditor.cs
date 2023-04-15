@@ -172,7 +172,6 @@ namespace ToyBox.classes.MainUI {
                                             return armyBlueprints;
                                         },
                                         (unit) => unit,
-                                        (unit) => unit.NameSafe(),
                                         (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
                                         (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
                                         (unit) => unit.GetDisplayName(),
@@ -192,7 +191,7 @@ namespace ToyBox.classes.MainUI {
                                             bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
                                             ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
                                                         () => {
-                                                            browser.searchChanged = true;
+                                                            browser.reloadData = true;
                                                             if (isInMercPool) {
                                                                 mercenaryManager.RemoveMercenary(unit);
                                                                 isInMercPool = false;
@@ -206,7 +205,7 @@ namespace ToyBox.classes.MainUI {
                                             10.space();
                                             ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
                                                         () => {
-                                                            browser.searchChanged = true;
+                                                            browser.reloadData = true;
                                                             if (isInKingdomPool) {
                                                                 var count = recruitsManager.GetCountInPool(unit);
                                                                 recruitsManager.DecreasePool(unit, count);

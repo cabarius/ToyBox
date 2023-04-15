@@ -27,7 +27,7 @@ namespace ModKit {
             private int _matchCount;
             private int _currentPage = 1;
             private DateTime lockedUntil;
-            public bool searchChanged = true;
+            public bool reloadData = true;
             public bool SearchAsYouType = true;
             private bool _showAll;
             private bool _updatePages = false;
@@ -35,7 +35,7 @@ namespace ModKit {
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
             public void OnShowGUI() {
-                searchChanged = true;
+                reloadData = true;
             }
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false) {
                 SearchAsYouType = searchAsYouType;
@@ -48,7 +48,6 @@ namespace ModKit {
                 IEnumerable<Item> current,
                 Func<IEnumerable<Definition>> available,    // Func because available may be slow
                 Func<Item, Definition> definition,
-                Func<Definition, string> identifier,
                 Func<Definition, string> title,
                 Func<Definition, string> searchKey = null,
                 Func<Definition, string> sortKey = null,
@@ -74,9 +73,9 @@ namespace ModKit {
                             ActionTextField(ref _searchText, "searchText", (text) => {
                                 if (SearchAsYouType) {
                                     lockedUntil = DateTime.Now.AddMilliseconds(250);
-                                    searchChanged = true;
+                                    reloadData = true;
                                 }
-                            }, () => { searchChanged = true; }, width(320));
+                            }, () => { reloadData = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
                             ActionIntTextField(ref _searchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
@@ -87,7 +86,7 @@ namespace ModKit {
                         }
                     } else {
                         if (_searchText != searchTextPassedFromParent) {
-                            searchChanged = true;
+                            reloadData = true;
                             _searchText = searchTextPassedFromParent;
                             if (_searchText == null) {
                                 _searchText = "";
@@ -97,7 +96,7 @@ namespace ModKit {
                     using (HorizontalScope()) {
                         if (search) {
                             space(indent);
-                            ActionButton("Search", () => { searchChanged = true; }, AutoWidth());
+                            ActionButton("Search", () => { reloadData = true; }, AutoWidth());
                         }
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
@@ -111,14 +110,22 @@ namespace ModKit {
                             25.space();
                             Label(pageLabel, ExpandWidth(false));
                             ActionButton("-", () => {
-                                if (_currentPage > 1) {
-                                    _currentPage -= 1;
+                                if (_currentPage >= 1) {
+                                    if (_currentPage == 1) {
+                                        _currentPage = _pageCount;
+                                    } else {
+                                        _currentPage -= 1;
+                                    }
                                     _updatePages = true;
                                 }
                             }, AutoWidth());
                             ActionButton("+", () => {
-                                if (_currentPage < _pageCount) {
-                                    _currentPage += 1;
+                                if (_currentPage <= _pageCount) {
+                                    if (_currentPage == _pageCount) {
+                                        _currentPage = 1;
+                                    } else {
+                                        _currentPage += 1;
+                                    }
                                     _updatePages = true;
                                 }
                             }, AutoWidth());
@@ -179,18 +186,18 @@ namespace ModKit {
                         _availableCache = available();
                         if (_availableCache?.Count() > 0) {
                             _startedLoading = false;
-                            searchChanged = true;
+                            reloadData = true;
                             if (!_availableIsStatic) {
                                 _availableCache = null;
                             }
                         }
                     }
-                    if (searchChanged) {
+                    if (reloadData) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
                             _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                             var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
                             UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
-                            searchChanged = false;
+                            reloadData = false;
                         }
                     } else if (_updatePages) {
                         _updatePages = false;
