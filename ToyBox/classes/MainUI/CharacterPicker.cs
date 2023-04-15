@@ -5,6 +5,7 @@ using Kingmaker;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
+using static ModKit.UI;
 
 namespace ToyBox {
     public class CharacterPicker {
@@ -36,10 +37,15 @@ namespace ToyBox {
             }
             return partyFilterChoices;
         }
+        public static List<UnitEntityData> GetCharacterList() {
+            var partyFilterChoices = GetPartyFilterChoices();
+            if (partyFilterChoices == null) { return null; }
+            return partyFilterChoices[Main.settings.selectedPartyFilter].func();
+        }
 
         private static int selectedIndex = 0;
         public static UnitEntityData GetSelectedCharacter() {
-            var characters = PartyEditor.GetCharacterList();
+            var characters = GetCharacterList();
             if (characters == null || characters.Count == 0) {
                 return Game.Instance.Player.MainCharacter;
             }
@@ -50,23 +56,37 @@ namespace ToyBox {
         }
         public static void ResetGUI() => selectedIndex = 0;
 
-        public static void OnGUI() {
+        public static NamedFunc<List<UnitEntityData>> OnFilterPickerGUI() {
+            var filterChoices = GetPartyFilterChoices();
+            if (filterChoices == null) { return null; }
 
-            var characters = PartyEditor.GetCharacterList();
+            var characterListFunc = TypePicker(
+                null,
+                ref Main.settings.selectedPartyFilter,
+                filterChoices
+                );
+            return characterListFunc;
+        }
+        public static void OnCharacterPickerGUI(float indent = 0) {
+
+            var characters = GetCharacterList();
             if (characters == null) { return; }
-            UI.ActionSelectionGrid(ref selectedIndex,
-                characters.Select((ch) => ch.CharacterName).ToArray(),
-                8,
-                (index) => { BlueprintBrowser.UpdateSearchResults(); },
-                UI.AutoWidth());
+            using (HorizontalScope(AutoWidth())) {
+                Space(indent);
+                ActionSelectionGrid(ref selectedIndex,
+                    characters.Select((ch) => ch.CharacterName).ToArray(),
+                    8,
+                    (index) => { BlueprintBrowser.UpdateSearchResults(); },
+                    AutoWidth());
+            }
             var selectedCharacter = GetSelectedCharacter();
             if (selectedCharacter != null) {
-                UI.Space(10);
-                UI.HStack(null, 0, () => {
-                    UI.Label($"{GetSelectedCharacter().CharacterName}".orange().bold(), UI.AutoWidth());
-                    UI.Space(5);
-                    UI.Label("will be used for adding/remove features, buffs, etc ".green());
-                });
+                using (HorizontalScope(AutoWidth())) {
+                    Space(indent);
+                    Label($"{GetSelectedCharacter().CharacterName}".orange().bold(), AutoWidth());
+                    Space(5);
+                    Label("will be used for editing ".green());
+                }
             }
         }
     }

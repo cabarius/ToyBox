@@ -10,7 +10,6 @@ using UnityEngine;
 namespace ModKit {
 
     public static partial class UI {
-
         public class Browser<Item, Definition> {
             // Simple browser that displays a searchable collection of items along with a collection of available definitions.
             // It provides a toggle to show the definitions mixed in with the items. 
@@ -44,25 +43,25 @@ namespace ModKit {
             }
 
             public void OnGUI(
-                string callerKey,
-                IEnumerable<Item> current,
-                Func<IEnumerable<Definition>> available,    // Func because available may be slow
-                Func<Item, Definition> definition,
-                Func<Definition, string> identifier,
-                Func<Definition, string> title,
-                Func<Definition, string> searchKey = null,
-                Func<Definition, string> sortKey = null,
-                Action OnHeaderGUI = null,
-                Action<Item, Definition> OnRowGUI = null,
-                Action<Item, Definition> OnChildrenGUI = null,
-                int indent = 50,
-                bool showDiv = true,
-                bool search = true,
-                float titleMinWidth = 100,
-                float titleMaxWidth = 300,
-                string searchTextPassedFromParent = "",
-                bool showItemDiv = false
-                ) {
+                    string callerKey,
+                    IEnumerable<Item> current,
+                    Func<IEnumerable<Definition>> available,    // Func because available may be slow
+                    Func<Item, Definition> definition,
+                    Func<Definition, string> identifier,
+                    Func<Definition, string> title,
+                    Func<Definition, string> searchKey = null,
+                    Func<Definition, string> sortKey = null,
+                    Action OnHeaderGUI = null,
+                    Action<Item, Definition> OnRowGUI = null,
+                    Action<Item, Definition> OnChildrenGUI = null,
+                    int indent = 50,
+                    bool showDiv = true,
+                    bool search = true,
+                    float titleMinWidth = 100,
+                    float titleMaxWidth = 300,
+                    string searchTextPassedFromParent = "",
+                    bool showItemDiv = false
+                    ) {
                 if (searchKey == null) searchKey = title;
                 if (sortKey == null) sortKey = title;
                 if (current == null) current = new List<Item>();

@@ -374,7 +374,7 @@ namespace ToyBox {
                     Space(10);
 
                     if (filteredBPs != null) {
-                        CharacterPicker.OnGUI();
+                        CharacterPicker.OnCharacterPickerGUI();
                         UnitReference selected = CharacterPicker.GetSelectedCharacter();
                         var bps = filteredBPs;
                         if (selectedCollationIndex == 0) {
