@@ -20,6 +20,7 @@ using Owlcat.Runtime.UI.MVVM;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Kingmaker.Items.Slots;
 
 namespace ToyBox.BagOfPatches {
     internal static class Loot {
@@ -191,6 +192,13 @@ namespace ToyBox.BagOfPatches {
                     __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
                         (__instance as LocalMapLootMarkerPCView)?.Hide();
                     }));
+            }
+        }
+        [HarmonyPatch(typeof(ItemSlot), nameof(ItemSlot.CanRemoveItem))]
+        private static class ItemSlot_CanRemoveItem_Patch {
+            public static void Postfix(ref bool __result) {
+                if (settings.toggleOverrideLockedItems)
+                    __result = true;
             }
         }
     }

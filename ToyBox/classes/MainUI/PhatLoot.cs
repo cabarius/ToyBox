@@ -63,16 +63,21 @@ namespace ToyBox {
                     Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
                 },
                 () => {
-                    Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything);
-                    Space(102);
+                    Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything, 600.width());
+                    102.space();
                     Label("Some items might be invisible until looted".green());
                 },
                 () => {
                     if (settings.toggleMassLootEverything) {
-                        Toggle("Mass Loot steals from living NPCs", ref settings.toggleLootAliveUnits);
-                        Space(102);
+                        Toggle("Mass Loot steals from living NPCs", ref settings.toggleLootAliveUnits, 600.width());
+                        102.space();
                         Label("Previously always behaved this way".green());
                     }
+                },
+                () => {
+                    Toggle("Allow Looting Of Locked Items", ref settings.toggleOverrideLockedItems, 600.width());
+                    102.space();
+                    Label("This allows you to loot items that are locked such as items carried by certain NPCs and items locked on your characters".green() + "\nWARNING: ".yellow().bold() + "This may affect story progression (e.g. your purple knife)".yellow());
                 },
                 () => { }
             );
