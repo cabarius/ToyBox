@@ -1,7 +1,7 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Blueprints.Facts;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -13,196 +13,32 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
 
 namespace ToyBox {
     public class FactsEditor {
-        public static Settings settings => Main.settings;
-        public static IEnumerable<SimpleBlueprint> filteredBPs = null;
-        private static string prevCallerKey = "";
-        private static string searchText = "";
-        private static int searchLimit = 100;
-        private static readonly int repeatCount = 1;
-        public static int matchCount = 0;
-        private static bool showAll = false;
+        private static Settings settings => Main.settings;
         private static bool showTree = false;
+        private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
-
-        public static void UpdateSearchResults(string searchText, IEnumerable<SimpleBlueprint> blueprints) {
-            if (blueprints == null) return;
-            var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
-            var filtered = new List<SimpleBlueprint>();
-            foreach (var blueprint in blueprints) {
-                if (blueprint.AssetGuid.ToString().Contains(searchText)
-                    || blueprint.GetType().ToString().Contains(searchText)
-                    ) {
-                    filtered.Add(blueprint);
-                }
-                else {
-                    var name = blueprint.name.ToLower();
-                    var displayName = blueprint.GetDisplayName().ToLower();
-                    if (terms.All(term => name.Matches(term))
-                        || terms.All(term => displayName.Matches(term))
-                        ) {
-                        filtered.Add(blueprint);
-                    }
-                }
-            }
-            matchCount = filtered.Count();
-            filteredBPs = filtered.OrderBy(bp => bp.name).Take(searchLimit).ToArray();
-            BlueprintListUI.needsLayout = true;
-        }
-        public static List<Action> OnGUI<T>(string callerKey,
-                                    UnitEntityData unit,
-                                    List<T> facts,
-                                    Func<T, SimpleBlueprint> blueprint,
-                                    Func<IEnumerable<SimpleBlueprint>> blueprints,
-                                    Func<T, string> title,
-                                    Func<T, string> description = null,
-                                    Func<T, int> value = null,
-                                    IEnumerable<BlueprintAction> actions = null
-                ) {
-            List<Action> todo = new();
-            var searchChanged = false;
-            var refreshTree = false;
-            if (actions == null) actions = new List<BlueprintAction>();
-            if (callerKey != prevCallerKey) { searchChanged = true; showAll = false; }
-            prevCallerKey = callerKey;
-            var mutatorLookup = actions.Distinct().ToDictionary(a => a.name, a => a);
-
-            using (HorizontalScope()) {
-                100.space();
-                ActionTextField(ref searchText, "searchText", null, () => { searchChanged = true; }, Width(320));
-                25.space();
-                Label("Limit", ExpandWidth(false));
-                ActionIntTextField(ref searchLimit, "searchLimit", null, () => { searchChanged = true; }, Width(175));
-                if (searchLimit > 1000) { searchLimit = 1000; }
-                25.space();
-                searchChanged |= DisclosureToggle("Show All".orange().bold(), ref showAll);
-                25.space();
-                refreshTree |= DisclosureToggle("Show Tree".orange().bold(), ref showTree);
-                50.space();
-                Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
-                25.space();
-                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, AutoWidth());
-            }
-            if (showTree) {
-                treeEditor.OnGUI(unit, refreshTree);
-                return new List<Action>();
-            }
-            using (HorizontalScope()) {
-                Space(100);
-                ActionButton("Search", () => { searchChanged = true; }, AutoWidth());
-                Space(25);
-                if (showAll && typeof(T) == typeof(AbilityData)) { // This dynamic type check is obviously tech debt and should be refactored, but we don't want to deal with Search All Spellbooks/Add All being on the facts editor as it is now
-                    if (Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks, AutoWidth())) { searchChanged = true; }
-                    Space(25);
-                    ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor, filteredBPs.Cast<BlueprintAbility>().ToList()), AutoWidth());
-                    Space(25);
-                    ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(unit.Descriptor), AutoWidth());
-                }
-                var matchesText = "";
-                if (matchCount > 0 && searchText.Length > 0) {
-                    matchesText = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                    if (matchCount > searchLimit) { matchesText += " => ".cyan() + $"{searchLimit}".cyan().bold(); }
-                }
-                Label(matchesText, ExpandWidth(false));
-            }
-            var remainingWidth = ummWidth;
-            if (showAll) {
-                // TODO - do we need this logic or can we make blueprint filtering fast enough to do keys by key searching?
-                //if (filteredBPs == null || searchChanged) {
-                UpdateSearchResults(searchText, blueprints());
-                //}
-                return BlueprintListUI.OnGUI(unit, filteredBPs, 100, remainingWidth - 100);
-            }
-            var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
-
-            var add = mutatorLookup.GetValueOrDefault("Add", null);
-            var remove = mutatorLookup.GetValueOrDefault("Remove", null);
-            var decrease = mutatorLookup.GetValueOrDefault("<", null);
-            var increase = mutatorLookup.GetValueOrDefault(">", null);
-
-            mutatorLookup.Remove("Add");
-            mutatorLookup.Remove("Remove");
-            mutatorLookup.Remove("<");
-            mutatorLookup.Remove(">");
-
-            var sorted = facts.OrderBy((f) => title(f));
-            matchCount = 0;
-            Div(100);
-            foreach (var fact in sorted) {
-                var remWidth = remainingWidth;
-                if (fact == null) continue;
-                var bp = blueprint(fact);
-                var name = title(fact);
-                var nameLower = name.ToLower();
-                if (name != null && name.Length > 0 && (searchText.Length == 0 || terms.All(term => nameLower.Contains(term)))) {
-                    matchCount++;
-                    using (HorizontalScope()) {
-                        Space(100); remWidth -= 100;
-                        var titleWidth = (remainingWidth / (IsWide ? 3.0f : 4.0f)) - 100;
-                        string text;
-                        if (settings.showDisplayAndInternalNames)
-                            text = $"{name.cyan().bold()} : {bp.NameSafe().color(RGBA.darkgrey)}";
-                        else {
-                            text = name.cyan().bold();
-                        }
-                        Label(text, Width(titleWidth));
-                        remWidth -= titleWidth;
-                        Space(10); remWidth -= 10;
-                        if (value != null) {
-                            var v = value(fact);
-                            decrease.BlueprintActionButton(unit, bp, () => todo.Add(() => decrease.action(bp, unit, repeatCount)), 60);
-                            Space(10f);
-                            Label($"{v}".orange().bold(), Width(30));
-                            increase.BlueprintActionButton(unit, bp, () => todo.Add(() => increase.action(bp, unit, repeatCount)), 60);
-                            remWidth -= 166;
-                        }
-#if false
-                    UI.Space(30);
-                    add.BlueprintActionButton(unit, bp, () => todo.Add(add.action(bp, unit, repeatCount)), 150);
-#endif
-                        Space(10); remWidth -= 10;
-                        remove.BlueprintActionButton(unit, bp, () => todo.Add(() => remove.action(bp, unit, repeatCount)), 175);
-                        remWidth -= 178;
-#if false
-                    foreach (var action in actions) {
-                        action.MutatorButton(unit, bp, () => todo.Add(() => muator.action(bp, unit, repeatCount)), 150);
-                    }
-#endif
-                        Space(20); remWidth -= 20;
-                        using (VerticalScope(Width(remWidth - 100))) {
-                            if (settings.showAssetIDs)
-                                GUILayout.TextField(blueprint(fact).AssetGuid.ToString(), AutoWidth());
-                            if (description != null) {
-                                Label(description(fact).StripHTML().green(), Width(remWidth - 100));
-                            }
-                        }
-                    }
-                    Div(100);
-                }
-            }
-            return todo;
-        }
-        public static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
-        public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
+        public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Item, Definition> browser, List<Item> fact, string name)
+            where Item : UnitFact
+            where Definition : BlueprintUnitFact {
+            bool updateTree = false;
             List<Action> todo = new();
             if (showTree) {
                 using (HorizontalScope()) {
                     Space(670);
                     Toggle("Show Tree", ref showTree, Width(250));
                 }
-                treeEditor.OnGUI(ch, false);
+                treeEditor.OnGUI(ch, updateTree);
             }
             else {
-
-                FeatureBrowser.OnGUI("Features",
-                    feature,
-                    () => BlueprintExtensions.GetBlueprints<BlueprintFeature>(),
-                    (feature) => feature.Blueprint,
+                browser.OnGUI(name,
+                    fact,
+                    () => BlueprintExtensions.GetBlueprints<Definition>(),
+                    (feature) => (Definition)feature.Blueprint,
                     (feature) => feature.name,
                     (feature) => settings.showDisplayAndInternalNames ? (feature.Name.Length > 0 ? feature.Name.cyan().bold() + $" : {feature.NameSafe().color(RGBA.darkgrey)}"
                     : feature.name.cyan().bold()) : (feature.Name.Length > 0) ? feature.Name.cyan().bold() : feature.name.cyan().bold(),
@@ -214,10 +50,10 @@ namespace ToyBox {
                             60.space();
                             Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
                             60.space();
-                            Toggle("Show Tree", ref showTree, Width(250));
+                            updateTree |= Toggle("Show Tree", ref showTree, Width(250));
                         }
                     },
-                    (feature, blueprintfeature) => {
+                    (feature, blueprint) => {
                         var mutatorLookup = BlueprintAction.ActionsForType(typeof(BlueprintFeature)).Distinct().ToDictionary(a => a.name, a => a);
                         var add = mutatorLookup.GetValueOrDefault("Add", null);
                         var remove = mutatorLookup.GetValueOrDefault("Remove", null);
@@ -234,12 +70,12 @@ namespace ToyBox {
                         var titleWidth = (remainingWidth / (IsWide ? 3.0f : 4.0f)) - 100; ;
                         remainingWidth -= titleWidth;
                         if (feature != null) {
-                            if (decrease.canPerform(blueprintfeature, ch) || increase.canPerform(blueprintfeature, ch)) {
+                            if (decrease.canPerform(blueprint, ch) || increase.canPerform(blueprint, ch)) {
                                 var v = feature.GetRank();
-                                decrease.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => decrease.action(blueprintfeature, ch, repeatCount)), 60);
+                                decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease.action(blueprint, ch, repeatCount)), 60);
                                 Space(10f);
                                 Label($"{v}".orange().bold(), Width(30));
-                                increase.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => increase.action(blueprintfeature, ch, repeatCount)), 60);
+                                increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase.action(blueprint, ch, repeatCount)), 60);
                                 Space(17);
                                 remainingWidth -= 190;
                             }
@@ -252,51 +88,44 @@ namespace ToyBox {
                             Space(190);
                             remainingWidth -= 190;
                         }
-                        if (remove.canPerform(blueprintfeature, ch)) {
-                            remove.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => remove.action(blueprintfeature, ch, repeatCount)), 175);
+                        if (remove.canPerform(blueprint, ch)) {
+                            remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => remove.action(blueprint, ch, repeatCount)), 175);
                         }
                         else {
-                            add.BlueprintActionButton(ch, blueprintfeature, () => todo.Add(() => add.action(blueprintfeature, ch, repeatCount)), 175);
+                            add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => add.action(blueprint, ch, repeatCount)), 175);
                         }
                         remainingWidth -= 178;
                         Space(20); remainingWidth -= 20;
                         using (VerticalScope(Width(remainingWidth - 100))) {
                             if (settings.showAssetIDs)
-                                GUILayout.TextField(blueprintfeature.AssetGuid.ToString(), AutoWidth());
-                            if (blueprintfeature.Description != null) {
-                                Label(blueprintfeature.Description.StripHTML().green(), Width(remainingWidth - 100));
+                                GUILayout.TextField(blueprint.AssetGuid.ToString(), AutoWidth());
+                            if (blueprint.Description != null) {
+                                Label(blueprint.Description.StripHTML().green(), Width(remainingWidth - 100));
                             }
                         }
                     }, null, 50, false, true, 100, 300, "", true);
             }
             return todo;
         }
+        private static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
+        private static Browser<Ability, BlueprintAbility> AbilityBrowser = new();
+        private static Browser<Buff, BlueprintBuff> BuffBrowser = new();
+        public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
+            return OnGUI<Feature, BlueprintFeature>(ch, FeatureBrowser, feature, "Features");
+        }
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
-            return OnGUI<Buff>("Features", ch, buff,
-                (fact) => fact.Blueprint,
-                () => BlueprintExtensions.GetBlueprints<BlueprintBuff>(),
-                (fact) => fact.Name,
-                (fact) => fact.Description,
-                (fact) => fact.GetRank(),
-               BlueprintAction.ActionsForType(typeof(BlueprintBuff))
-                );
+            return OnGUI<Buff, BlueprintBuff>(ch, BuffBrowser, buff, "Buffs");
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
-            return OnGUI<Ability>("Abilities", ch, ability,
-                (fact) => fact.Blueprint,
-                () => BlueprintExtensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
-                (fact) => fact.Name,
-                (fact) => fact.Description,
-                (fact) => fact.GetRank(),
-                BlueprintAction.ActionsForType(typeof(BlueprintAbility))
-                );
+            return OnGUI<Ability, BlueprintAbility>(ch, AbilityBrowser, ability, "Abilities");
         }
 
         public static List<Action> OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
             var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
             var spellbookBP = spellbook.Blueprint;
 
-
+            return new List<Action>();
+#if false
             return OnGUI<AbilityData>($"Spells.{spellbookBP.Name}", ch, spells,
                 (fact) => fact.Blueprint,
                 () => settings.showFromAllSpellbooks ? CasterHelpers.GetAllSpells(level) : spellbookBP.SpellList.GetSpells(level),
@@ -305,9 +134,13 @@ namespace ToyBox {
                 null,
                 BlueprintAction.ActionsForType(typeof(BlueprintAbility))
                 );
+#endif
         }
+
         public static List<Action> OnGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
-            return OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
+            return new List<Action>();
+#if false
+                return OnGUI<Spellbook>("Spellbooks", ch, spellbooks,
                 (sb) => sb.Blueprint,
                 () => BlueprintExtensions.GetBlueprints<BlueprintSpellbook>(),
                 (sb) => sb.Blueprint.GetDisplayName(),
@@ -315,6 +148,8 @@ namespace ToyBox {
                 null,
                 BlueprintAction.ActionsForType(typeof(BlueprintSpellbook))
                 );
+                
+#endif
         }
     }
 }
