@@ -14,10 +14,8 @@ namespace ToyBox {
         public static Browser<Consideration, Consideration> browser2 = new(true, true);
         public static Dictionary<BlueprintAiAction, Browser<Consideration, Consideration>> browsers3 = new();
         public static void OnBrainGUI(UnitEntityData ch) {
-            bool changed = false;
             browser.OnGUI(
                 $"{ch.CharacterName}-Gambits",
-                ref changed,
                 ch.Brain.Actions,
                 () => BlueprintExtensions.GetBlueprints<BlueprintAiAction>(),
                 a => (BlueprintAiAction)a.Blueprint,
@@ -32,7 +30,6 @@ namespace ToyBox {
                     Label($"{text.green()}", AutoWidth());
                 },
                 (action, bp) => {
-                    bool changed = false;
                     if (action?.ActorConsiderations.Count > 0) {
                         using (HorizontalScope()) {
                             150.space();
@@ -40,7 +37,6 @@ namespace ToyBox {
                         }
                         browser2.OnGUI(
                             $"{ch.CharacterName}-{bp.AssetGuid}-ActorConsiderations",
-                            ref changed,
                             action.ActorConsiderations,
                             () => BlueprintExtensions.GetBlueprints<Consideration>(),
                             c => c,
@@ -68,7 +64,6 @@ namespace ToyBox {
                     }
                     browser3.OnGUI(
                         $"{ch.CharacterName}-{bp.AssetGuid}-TargetConsiderations",
-                        ref changed,
                         action?.TargetConsiderations,
                         () => BlueprintExtensions.GetBlueprints<Consideration>(),
                         c => c,

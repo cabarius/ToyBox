@@ -162,10 +162,8 @@ namespace ToyBox.classes.MainUI {
                     () => {
                         if (discloseMercenaryUnits) {
                             using (VerticalScope()) {
-                                bool changed = false;
                                 browser.OnGUI(
                                         "Army Units",
-                                        ref changed,
                                         mercenaryUnits,
                                         () => {
                                             if (armyBlueprints == null || armyBlueprints?.Count() == 0) {
