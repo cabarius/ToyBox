@@ -49,9 +49,7 @@ namespace ToyBox {
             if (characters == null || characters.Count == 0) {
                 return Game.Instance.Player.MainCharacter;
             }
-            if (selectedIndex > characters.Count) {
-                selectedIndex = 0;
-            }
+            if (selectedIndex >= characters.Count) selectedIndex = 0;
             return characters[selectedIndex];
         }
         public static void ResetGUI() => selectedIndex = 0;
