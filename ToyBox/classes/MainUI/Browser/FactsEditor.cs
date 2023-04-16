@@ -144,6 +144,7 @@ namespace ToyBox {
                                 100, true, true);
                         }
                         else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
+                            FeatureSelectionBrowser.ReloadData();
                             return (item, def) => ParamterizedFeatureBrowser.OnGUI(
                                 $"{item.Name}-parameterSelection",
                                 ch.ParamterizedFeatureItems(parametrizedFeature),
