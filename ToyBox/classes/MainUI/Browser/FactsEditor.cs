@@ -23,7 +23,8 @@ namespace ToyBox {
         private static bool showTree = false;
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
-        public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo) where Definition : BlueprintScriptableObject, IUIDataProvider {
+        public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
+            where Definition : BlueprintScriptableObject, IUIDataProvider {
             var mutatorLookup = BlueprintAction.ActionsForType(typeof(Definition)).Distinct().ToDictionary(a => a.name, a => a);
             var add = mutatorLookup.GetValueOrDefault("Add", null);
             var remove = mutatorLookup.GetValueOrDefault("Remove", null);
@@ -45,7 +46,7 @@ namespace ToyBox {
                 var rankFeature = feature as UnitFact;
                 if ((canDecrease || canIncrease) && rankFeature != null) {
                     var v = rankFeature.GetRank();
-                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease.action(blueprint, ch, repeatCount)), 60);
+                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { usedBrowser.needsReloadData |= v == 1; decrease.action(blueprint, ch, repeatCount); }), 60);
                     Space(10f);
                     Label($"{v}".orange().bold(), Width(30));
                     increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase.action(blueprint, ch, repeatCount)), 60);
