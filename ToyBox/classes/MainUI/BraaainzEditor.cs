@@ -100,7 +100,7 @@ namespace ToyBox.classes.MainUI {
                     var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
                     Label($"{text.green()}", AutoWidth());
                 },
-                (action, bp) => {
+                (action, bp) => (action, bp) => {
                     if (action?.ActorConsiderations.Count > 0) {
                         using (HorizontalScope()) {
                             150.space();

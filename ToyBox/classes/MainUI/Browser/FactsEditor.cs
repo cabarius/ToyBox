@@ -1,7 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Facts;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -22,6 +24,13 @@ namespace ToyBox {
         private static bool showTree = false;
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
+
+        private static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
+        private static Browser<BlueprintFeature, BlueprintFeature> FeatureSelectionBrowser = new();
+        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParamterizedFeatureBrowser = new();
+        private static Browser<Ability, BlueprintAbility> AbilityBrowser = new();
+        private static Browser<Buff, BlueprintBuff> BuffBrowser = new();
+
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Item, Definition> browser, List<Item> fact, string name)
             where Item : UnitFact
             where Definition : BlueprintUnitFact {
@@ -103,13 +112,71 @@ namespace ToyBox {
                                 Label(blueprint.Description.StripHTML().green(), Width(remainingWidth - 100));
                             }
                         }
-                    }, null, 50, false, true, 100, 300, "", true);
+                    },
+                    (fact, blueprint) => {
+                        if (blueprint is BlueprintFeatureSelection featureSelection) {
+                            FeatureSelectionBrowser.ReloadData();
+                            return (f, def) => FeatureSelectionBrowser.OnGUI(
+                                $"{f.Name}-featureSelection",
+                                ch.FeatureSelectionValues(featureSelection),
+                                () => featureSelection.AllFeatures.OrderBy(f => f.Name),
+                                f => f,
+                                f => f.NameSafe(),
+                                f => f.GetDisplayName(),
+                                null,
+                                null,
+                                null,
+                                (_, f) => {
+                                    if (ch.HasFeatureSelection(featureSelection, f))
+                                        ActionButton("Remove", () => {
+                                            ch.RemoveFeatureSelection(featureSelection, f);
+                                            FeatureSelectionBrowser.ReloadData();
+                                        }, 150.width());
+                                    else
+                                        ActionButton("Add", () => {
+                                            ch.AddFeatureSelection(featureSelection, f);
+                                            FeatureSelectionBrowser.ReloadData();
+                                        }, 150.width());
+                                    15.space();
+                                    Label(f.GetDescription().green());
+                                },
+                                null, 
+                                100, true, true);
+                        }
+                        else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
+                            return (item, def) => ParamterizedFeatureBrowser.OnGUI(
+                                $"{item.Name}-parameterSelection",
+                                ch.ParamterizedFeatureItems(parametrizedFeature),
+                                () => parametrizedFeature.Items.OrderBy(i => i.Name),
+                                i => i,
+                                i => i.Name,
+                                i => i.Name,
+                                null,
+                                null,
+                                null,
+                                (_, i) => {
+                                    if (ch.HasParamemterizedFeatureItem(parametrizedFeature, i))
+                                        ActionButton("Remove", () => {
+                                            ch.RemoveParameterizedFeatureItem(parametrizedFeature, i);
+                                            FeatureSelectionBrowser.ReloadData();
+                                        }, 150.width());
+                                    else
+                                        ActionButton("Add", () => {
+                                            ch.AddParameterizedFeatureItem(parametrizedFeature, i);
+                                            FeatureSelectionBrowser.ReloadData();
+                                        }, 150.width());
+                                    15.space();
+                                    Label(i.Description.green());
+                                }, 
+                                null,
+                                100, true, true);
+
+                        }
+                        return null;
+                    }, 50, false, true, 100, 300, "", true);
             }
             return todo;
         }
-        private static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
-        private static Browser<Ability, BlueprintAbility> AbilityBrowser = new();
-        private static Browser<Buff, BlueprintBuff> BuffBrowser = new();
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
             return OnGUI<Feature, BlueprintFeature>(ch, FeatureBrowser, feature, "Features");
         }

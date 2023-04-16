@@ -27,6 +27,7 @@ namespace ModKit {
             private int _currentPage = 1;
             private DateTime lockedUntil;
             public bool needsReloadData = true;
+            public void ReloadData() { needsReloadData = true; }
             public bool SearchAsYouType = true;
             private bool _showAll;
             private bool _updatePages = false;
@@ -34,6 +35,7 @@ namespace ModKit {
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
             IEnumerable<Item> previousCurrent = null;
+            string prevCallerKey = String.Empty;
             public void OnShowGUI() {
                 needsReloadData = true;
             }
@@ -54,7 +56,7 @@ namespace ModKit {
                     Func<Definition, string> sortKey = null,
                     Action OnHeaderGUI = null,
                     Action<Item, Definition> OnRowGUI = null,
-                    Action<Item, Definition> OnChildrenGUI = null,
+                    Func<Item, Definition, Action<Item, Definition>> OnChildrenGUI = null,
                     int indent = 50,
                     bool showDiv = true,
                     bool search = true,
@@ -63,6 +65,10 @@ namespace ModKit {
                     string searchTextPassedFromParent = "",
                     bool showItemDiv = false
                     ) {
+                if (callerKey != prevCallerKey) {
+                    prevCallerKey = callerKey;
+                    DisclosureStates.Clear();
+                }
                 if (searchKey == null) searchKey = title;
                 if (sortKey == null) sortKey = title;
                 if (current == null) current = new List<Item>();
@@ -151,13 +157,15 @@ namespace ModKit {
                         if (item != null) {
                             text = text.Cyan().Bold();
                         }
-                        if (OnChildrenGUI == null) {
+                        if (OnChildrenGUI == null || OnChildrenGUI(item, def) == null) {
                             Label(text, width((int)titleWidth));
                             // remwidth -= titlewidth;
                         } else {
                             DisclosureStates.TryGetValue(titleKey, out showChildren);
                             if (DisclosureToggle(text, ref showChildren, titleWidth)) {
+                                DisclosureStates.Clear();
                                 DisclosureStates[titleKey] = showChildren;
+                                ReloadData();
                             }
                         }
                         var lastRect = GUILayoutUtility.GetLastRect();
@@ -167,7 +175,7 @@ namespace ModKit {
                             OnRowGUI(item, def);
                     }
                     if (showChildren) {
-                        OnChildrenGUI(item, def);
+                        OnChildrenGUI(item, def)(item, def);
                     }
                 }
             }
