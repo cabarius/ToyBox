@@ -1,7 +1,21 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Facts;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UI;
+using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.Buffs;
+using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.Utility;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using static ModKit.UI;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -37,21 +51,23 @@ namespace ToyBox {
                     increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase.action(blueprint, ch, repeatCount)), 60);
                     Space(17);
                     remainingWidth -= 190;
-                } else {
+                }
+                else {
                     Space(190);
                     remainingWidth -= 190;
                 }
-            } else {
+            }
+            else {
                 Space(190);
                 remainingWidth -= 190;
             }
             bool canAdd = add?.canPerform(blueprint, ch) ?? false;
             bool canRemove = remove?.canPerform(blueprint, ch) ?? false;
             if (canRemove) {
-                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { remove.action(blueprint, ch, repeatCount); usedBrowser.reloadData = true; }), 175);
+                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { remove.action(blueprint, ch, repeatCount); usedBrowser.needsReloadData = true; }), 175);
             }
             if (canAdd) {
-                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { add.action(blueprint, ch, repeatCount); usedBrowser.reloadData = true; }), 175);
+                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { add.action(blueprint, ch, repeatCount); usedBrowser.needsReloadData = true; }), 175);
             }
             remainingWidth -= 178;
             Space(20); remainingWidth -= 20;
@@ -69,18 +85,22 @@ namespace ToyBox {
             if (settings.showDisplayAndInternalNames) {
                 if (isEmpty) {
                     name = feature.name.cyan().bold();
-                } else {
+                }
+                else {
                     name = feature.Name;
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = feature.name.cyan().bold();
-                    } else {
+                    }
+                    else {
                         name = name.cyan().bold() + $" : {feature.name.color(RGBA.darkgrey)}";
                     }
                 }
-            } else {
+            }
+            else {
                 if (isEmpty) {
                     name = feature.name;
-                } else {
+                }
+                else {
                     name = feature.Name;
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = feature.name;
@@ -101,7 +121,8 @@ namespace ToyBox {
                     Toggle("Show Tree", ref showTree, Width(250));
                 }
                 treeEditor.OnGUI(ch, updateTree);
-            } else {
+            }
+            else {
                 browser.OnGUI(name,
                     fact,
                     () => BlueprintExtensions.GetBlueprints<Definition>(),

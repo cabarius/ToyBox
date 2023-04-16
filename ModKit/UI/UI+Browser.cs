@@ -1,6 +1,9 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using ModKit.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace ModKit {
 
@@ -21,7 +24,7 @@ namespace ModKit {
             private int _matchCount;
             private int _currentPage = 1;
             private DateTime lockedUntil;
-            public bool reloadData = true;
+            public bool needsReloadData = true;
             public bool SearchAsYouType = true;
             private bool _showAll;
             private bool _updatePages = false;
@@ -29,7 +32,7 @@ namespace ModKit {
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
             public void OnShowGUI() {
-                reloadData = true;
+                needsReloadData = true;
             }
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false) {
                 SearchAsYouType = searchAsYouType;
@@ -67,9 +70,9 @@ namespace ModKit {
                             ActionTextField(ref _searchText, "searchText", (text) => {
                                 if (SearchAsYouType) {
                                     lockedUntil = DateTime.Now.AddMilliseconds(250);
-                                    reloadData = true;
+                                    needsReloadData = true;
                                 }
-                            }, () => { reloadData = true; }, width(320));
+                            }, () => { needsReloadData = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
                             ActionIntTextField(ref _searchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
@@ -80,7 +83,7 @@ namespace ModKit {
                         }
                     } else {
                         if (_searchText != searchTextPassedFromParent) {
-                            reloadData = true;
+                            needsReloadData = true;
                             _searchText = searchTextPassedFromParent;
                             if (_searchText == null) {
                                 _searchText = "";
@@ -90,7 +93,7 @@ namespace ModKit {
                     using (HorizontalScope()) {
                         if (search) {
                             space(indent);
-                            ActionButton("Search", () => { reloadData = true; }, AutoWidth());
+                            ActionButton("Search", () => { needsReloadData = true; }, AutoWidth());
                         }
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
@@ -180,18 +183,18 @@ namespace ModKit {
                         _availableCache = available();
                         if (_availableCache?.Count() > 0) {
                             _startedLoading = false;
-                            reloadData = true;
+                            needsReloadData = true;
                             if (!_availableIsStatic) {
                                 _availableCache = null;
                             }
                         }
                     }
-                    if (reloadData) {
+                    if (needsReloadData) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
                             _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                             var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
                             UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
-                            reloadData = false;
+                            needsReloadData = false;
                         }
                     } else if (_updatePages) {
                         _updatePages = false;

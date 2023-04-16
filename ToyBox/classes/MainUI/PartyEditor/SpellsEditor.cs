@@ -99,7 +99,7 @@ namespace ToyBox {
                             AutoWidth()
                         );
                         if (tempSelected != selectedSpellbookLevel) {
-                            SpellBrowser.reloadData = true;
+                            SpellBrowser.needsReloadData = true;
                         }
                         Space(20);
                         if (casterLevel > 0) {
@@ -134,7 +134,7 @@ namespace ToyBox {
                                 availableSpells = new HashSet<BlueprintAbility>(CasterHelpers.GetAllSpells(selectedSpellbookLevel));
                                 if (_startedLoading) {
                                     if (availableSpells?.Count > 0) {
-                                        SpellBrowser.reloadData = true;
+                                        SpellBrowser.needsReloadData = true;
                                         _startedLoading = false;
                                     }
                                 }
@@ -156,7 +156,7 @@ namespace ToyBox {
                                 Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
                                 60.space();
                                 if (Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks)) {
-                                    SpellBrowser.reloadData = true;
+                                    SpellBrowser.needsReloadData = true;
                                     _startedLoading = true;
                                 }
                                 Space(25);

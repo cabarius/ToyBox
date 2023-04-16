@@ -1,24 +1,11 @@
-﻿using Kingmaker;
-using Kingmaker.AI.Blueprints.Considerations;
+﻿using Kingmaker.AI;
 using Kingmaker.AI.Blueprints;
-using Kingmaker.AI;
-using Kingmaker.Armies;
-using Kingmaker.Armies.Blueprints;
-using Kingmaker.Armies.State;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Root;
+using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.Globalmap.State;
-using Kingmaker.Globalmap.View;
-using Kingmaker.Kingdom;
-using Kingmaker.PubSubSystem;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
 using ModKit;
-using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityModManagerNet;
 using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
@@ -90,7 +77,6 @@ namespace ToyBox.classes.MainUI {
                 ch.Brain.Actions,
                 () => BlueprintExtensions.GetBlueprints<BlueprintAiAction>(),
                 a => (BlueprintAiAction)a.Blueprint,
-                bp => bp.AssetGuid.ToString(),
                 bp => bp.GetDisplayName(),
                 bp => $"{bp.GetDisplayName()} {bp.GetDescription()}",
                 bp => bp.GetDisplayName(),
@@ -111,7 +97,6 @@ namespace ToyBox.classes.MainUI {
                             action.ActorConsiderations,
                             () => BlueprintExtensions.GetBlueprints<Consideration>(),
                             c => c,
-                            c => c.AssetGuid.ToString(),
                             c => c.GetDisplayName(),
                             c => c.GetDisplayName(),
                             c => c.GetDisplayName(),
@@ -138,7 +123,6 @@ namespace ToyBox.classes.MainUI {
                         action?.TargetConsiderations,
                         () => BlueprintExtensions.GetBlueprints<Consideration>(),
                         c => c,
-                        c => c.AssetGuid.ToString(),
                         c => c.GetDisplayName(),
                         c => c.GetDisplayName(),
                         c => c.GetDisplayName(),
