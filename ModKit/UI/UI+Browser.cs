@@ -1,16 +1,10 @@
-﻿using JetBrains.Annotations;
-using ModKit.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToyBox;
-using UnityEngine;
-//using static Kingmaker.Blueprints.Classes.StatsDistributionPreset;
 
 namespace ModKit {
 
     public static partial class UI {
-
         public class Browser<Item, Definition> {
             // Simple browser that displays a searchable collection of items along with a collection of available definitions.
             // It provides a toggle to show the definitions mixed in with the items. 
@@ -40,7 +34,7 @@ namespace ModKit {
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false) {
                 SearchAsYouType = searchAsYouType;
                 _availableIsStatic = availableIsStatic;
-                Main.NotifyOnShowGUI += OnShowGUI;
+                Mod.NotifyOnShowGUI += OnShowGUI;
             }
 
             public void OnGUI(

@@ -1,20 +1,5 @@
-﻿using Kingmaker;
-using Kingmaker.Armies;
-using Kingmaker.Armies.Blueprints;
-using Kingmaker.Armies.State;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Root;
-using Kingmaker.Globalmap.State;
-using Kingmaker.Globalmap.View;
-using Kingmaker.Kingdom;
-using Kingmaker.PubSubSystem;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using ModKit;
-using ModKit.Utility;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using UnityModManagerNet;
-using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
     public static class ArmiesEditor {
@@ -115,8 +100,7 @@ namespace ToyBox.classes.MainUI {
                     if (settings.toggleLargeArmies) {
                         BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
-                    }
-                    else {
+                    } else {
                         BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 4;
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
                     }
@@ -191,12 +175,11 @@ namespace ToyBox.classes.MainUI {
                                             bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
                                             ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
                                                         () => {
-                                                            browser.reloadData = true;
+                                                            browser.needsReloadData = true;
                                                             if (isInMercPool) {
                                                                 mercenaryManager.RemoveMercenary(unit);
                                                                 isInMercPool = false;
-                                                            }
-                                                            else {
+                                                            } else {
                                                                 mercenaryManager.AddMercenary(unit, 1);
                                                                 isInMercPool = true;
                                                             }
@@ -205,13 +188,12 @@ namespace ToyBox.classes.MainUI {
                                             10.space();
                                             ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
                                                         () => {
-                                                            browser.reloadData = true;
+                                                            browser.needsReloadData = true;
                                                             if (isInKingdomPool) {
                                                                 var count = recruitsManager.GetCountInPool(unit);
                                                                 recruitsManager.DecreasePool(unit, count);
                                                                 isInKingdomPool = false;
-                                                            }
-                                                            else {
+                                                            } else {
                                                                 var pool = recruitsManager.Pool;
                                                                 var count = pool.Sum(r => r.Count) / pool.Count;
                                                                 recruitsManager.IncreasePool(unit, count);
@@ -230,8 +212,7 @@ namespace ToyBox.classes.MainUI {
                                                     if (LogSliderCustomLabelWidth("Weight", ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
                                                         poolInfo.UpdateWeight(weight);
                                                     }
-                                                }
-                                                else {
+                                                } else {
                                                     Label("Weird", AutoWidth());
                                                 }
                                             }
@@ -289,8 +270,7 @@ namespace ToyBox.classes.MainUI {
                                             selectedArmy = army == selectedArmy ? null : army;
                                             toggleStates[leader] = showLeader;
                                         }
-                                    }
-                                    else Space(353);
+                                    } else Space(353);
                                     var squads = army.Data.Squads;
                                     Label(squads.Count.ToString().cyan(), Width(35));
                                     showSquads = toggleStates.GetValueOrDefault(squads, false);
@@ -554,8 +534,7 @@ namespace ToyBox.classes.MainUI {
                 );
                 if (selectedArmy != null) {
                     armySelection[title] = selectedArmy;
-                }
-                else {
+                } else {
                     armySelection.Remove(title);
                 }
             }
@@ -593,8 +572,7 @@ namespace ToyBox.classes.MainUI {
                 var travelData = mapState?.PathManager?.CalculateArmyPathToPosition(army, position);
                 var length = travelData?.GetLength(false);
                 dist = length.HasValue ? length.GetValueOrDefault() : -1.0f;
-            }
-            catch { }
+            } catch { }
             return dist;
         }
         public static IEnumerable<(GlobalMapArmyState, float)> ArmiesByDistanceFromPlayer() {

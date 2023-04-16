@@ -1,10 +1,12 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
+using Kingmaker.AreaLogic.QuestSystem;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Parts;
 using ModKit;
+using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +29,7 @@ namespace ToyBox {
         };
 
         private static ToggleChoice selectedToggle = ToggleChoice.None;
-        private static int selectedCharacterIndex = 0;
+        private static int editingCharacterIndex = 0;
         private static UnitEntityData charToAdd = null;
         private static UnitEntityData charToRecruit = null;
         private static UnitEntityData charToRemove = null;
@@ -43,21 +45,15 @@ namespace ToyBox {
         private static UnitEntityData spellbookEditCharacter = null;
         private static readonly Dictionary<string, int> statEditorStorage = new();
         public static Dictionary<string, Spellbook> SelectedSpellbook = new();
-
-        public static List<UnitEntityData> GetCharacterList() {
-            var partyFilterChoices = CharacterPicker.GetPartyFilterChoices();
-            if (partyFilterChoices == null) { return null; }
-            return partyFilterChoices[Main.settings.selectedPartyFilter].func();
-        }
-
-        private static UnitEntityData GetSelectedCharacter() {
-            var characterList = GetCharacterList();
+        private static UnitEntityData GetEditCharacter() {
+            var characterList = CharacterPicker.GetCharacterList();
             if (characterList == null || characterList.Count == 0) return null;
-            if (selectedCharacterIndex >= characterList.Count) selectedCharacterIndex = 0;
-            return characterList[selectedCharacterIndex];
+            if (editingCharacterIndex >= characterList.Count) editingCharacterIndex = 0;
+            return characterList[editingCharacterIndex];
         }
+
         public static void ResetGUI() {
-            selectedCharacterIndex = 0;
+            editingCharacterIndex = 0;
             selectedSpellbook = 0;
             selectedSpellbookLevel = 0;
             CharacterPicker.partyFilterChoices = null;
@@ -107,18 +103,11 @@ namespace ToyBox {
         public static void OnGUI() {
             var player = Game.Instance.Player;
             if (player == null) return;
-            var filterChoices = CharacterPicker.GetPartyFilterChoices();
-            if (filterChoices == null) { return; }
-
             charToAdd = null;
             charToRecruit = null;
             charToRemove = null;
             charToUnrecruit = null;
-            var characterListFunc = TypePicker(
-                null,
-                ref Main.settings.selectedPartyFilter,
-                filterChoices
-                );
+            var characterListFunc = CharacterPicker.OnFilterPickerGUI();
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
             if (characterListFunc.name == "Nearby") {
@@ -129,7 +118,7 @@ namespace ToyBox {
             var chIndex = 0;
             recruitableCount = 0;
             respecableCount = 0;
-            var selectedCharacter = GetSelectedCharacter();
+            var selectedCharacter = GetEditCharacter();
             var isWide = IsWide;
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
@@ -258,18 +247,13 @@ namespace ToyBox {
                     }
                     else { Space(180); }
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
-#if DEBUG
-                    Space(10);
-                    if (DisclosureToggle("AI", ref showAI, 125)) {
-                        if (showAI) { selectedCharacter = ch; selectedToggle = ToggleChoice.AI; }
-                        else { selectedToggle = ToggleChoice.None; }
-                    }
-#endif
+                    ReflectionTreeView.DetailToggle("Ins", ch, ch, 0);
                     if (isWide) ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {
                         selectedSpellbook = 0;
                     }
                 }
+                ReflectionTreeView.DetailsOnGUI(ch);
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
                 //    UI.Div(20, 20);
                 //}
@@ -302,11 +286,8 @@ namespace ToyBox {
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     todo = OnSpellsGUI(ch, spellbooks);
                 }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.AI) {
-                    OnBrainGUI(ch);
-                }
-                if (selectedCharacter != GetSelectedCharacter()) {
-                    selectedCharacterIndex = characterList.IndexOf(selectedCharacter);
+                if (selectedCharacter != GetEditCharacter()) {
+                    editingCharacterIndex = characterList.IndexOf(selectedCharacter);
                 }
                 chIndex += 1;
             }

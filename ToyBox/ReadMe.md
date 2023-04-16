@@ -44,6 +44,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added Dice Roll overrides for Skill checks only (thanks AlterAsc) and cleaned up the options a bit to make them more clear
 * (***Marria***) Search 'n Pick: Added counts to the collation categories
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
+* (***Narria***) Added ability to Inspect units in Party Editor (Data Viewer style)
+* (***Narria***) Added tweak in Loot Tab to allow you to loot locked items
 * (***ADDB***) Changed Browser to improve performance.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fixed visual size scaling breaking when using any sort of polymorph.

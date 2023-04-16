@@ -5,6 +5,7 @@ using Kingmaker;
 using Kingmaker.GameModes;
 using Kingmaker.Utility;
 using ModKit;
+using static ModKit.UI;
 using Owlcat.Runtime.Core.Logging;
 using System;
 using System.Collections.Generic;
@@ -59,13 +60,13 @@ namespace ToyBox {
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
                 modEntry.OnToggle = OnToggle;
-                modEntry.OnShowGUI = OnShowGUI;
+                modEntry.OnShowGUI = OnShowGUI; 
                 modEntry.OnHideGUI = OnHideGUI;
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnUpdate = OnUpdate;
                 modEntry.OnSaveGUI = OnSaveGUI;
                 Objects = new List<GameObject>();
-                UI.KeyBindings.OnLoad(modEntry);
+                KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendly.EnsureFriendlyTypesContainAll();
                 Mod.logLevel = settings.loggingLevel;
@@ -116,18 +117,18 @@ namespace ToyBox {
             if (!Enabled) return;
             IsModGUIShown = true;
             if (!IsInGame) {
-                UI.Label("ToyBox has limited functionality from the main menu".yellow().bold());
+                Label("ToyBox has limited functionality from the main menu".yellow().bold());
             }
-            if (!UI.IsWide) {
-                UI.Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
+            if (!IsWide) {
+                Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
             }
             try {
                 var e = Event.current;
-                UI.userHasHitReturn = e.keyCode == KeyCode.Return;
-                UI.focusedControlName = GUI.GetNameOfFocusedControl();
+                userHasHitReturn = e.keyCode == KeyCode.Return;
+                focusedControlName = GUI.GetNameOfFocusedControl();
                 if (caughtException != null) {
-                    UI.Label("ERROR".red().bold() + $": caught exception {caughtException}");
-                    UI.ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, UI.AutoWidth());
+                    Label("ERROR".red().bold() + $": caught exception {caughtException}");
+                    ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, AutoWidth());
                     return;
                 }
 #if false
@@ -139,25 +140,26 @@ namespace ToyBox {
                     UI.LinkButton("WoTR Discord", "https://discord.gg/wotr");
                 }
 #endif
-                UI.TabBar(ref settings.selectedTab,
+                TabBar(ref settings.selectedTab,
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
-                            UI.Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
+                            Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
                         }
-                        else UI.Space(25);
+                        else Space(25);
                     },
                     new NamedAction("Bag of Tricks", () => BagOfTricks.OnGUI()),
                     new NamedAction("Level Up", () => LevelUp.OnGUI()),
                     new NamedAction("Party", () => PartyEditor.OnGUI()),
                     new NamedAction("Loot", () => PhatLoot.OnGUI()),
                     new NamedAction("Enchantment", () => EnchantmentEditor.OnGUI()),
-#if false
+#if DEBUG
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
                     new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
                     new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
                     new NamedAction("Armies", () => ArmiesEditor.OnGUI()),
                     new NamedAction("Events/Decrees", () => EventEditor.OnGUI()),
+                    new NamedAction("Gambits (AI)", () => BraaainzEditor.OnGUI()),
                     new NamedAction("Etudes", () => EtudesEditor.OnGUI()),
                     new NamedAction("Quests", () => QuestEditor.OnGUI()),
                     new NamedAction("Settings", () => SettingsUI.OnGUI())
@@ -170,16 +172,12 @@ namespace ToyBox {
         }
 
         private static void OnSaveGUI(UnityModManager.ModEntry modEntry) => settings.Save(modEntry);
-        public delegate void ShowGUINotifierMethod();
-        public static ShowGUINotifierMethod NotifyOnShowGUI;
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
             ArmiesEditor.OnShowGUI();
             EtudesEditor.OnShowGUI();
-            if (NotifyOnShowGUI != null) {
-                NotifyOnShowGUI();
-            }
+            Mod.OnShowGUI();
         }
 
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
@@ -233,7 +231,7 @@ namespace ToyBox {
             }
             var currentMode = Game.Instance.CurrentMode;
             if (IsModGUIShown || Event.current == null || !Event.current.isKey) return;
-            UI.KeyBindings.OnUpdate();
+            KeyBindings.OnUpdate();
             if (IsInGame
                 && settings.toggleTeleportKeysEnabled
                 && (currentMode == GameModeType.Default
@@ -242,14 +240,14 @@ namespace ToyBox {
                     )
                 ) {
                 if (currentMode == GameModeType.GlobalMap) {
-                    if (UI.KeyBindings.IsActive("TeleportParty"))
+                    if (KeyBindings.IsActive("TeleportParty"))
                         Teleport.TeleportPartyOnGlobalMap();
                 }
-                if (UI.KeyBindings.IsActive("TeleportMain"))
+                if (KeyBindings.IsActive("TeleportMain"))
                     Teleport.TeleportUnit(Game.Instance.Player.MainCharacter.Value, Utils.PointerPosition());
-                if (UI.KeyBindings.IsActive("TeleportSelected"))
+                if (KeyBindings.IsActive("TeleportSelected"))
                     Teleport.TeleportSelected();
-                if (UI.KeyBindings.IsActive("TeleportParty"))
+                if (KeyBindings.IsActive("TeleportParty"))
                     Teleport.TeleportParty();
             }
         }

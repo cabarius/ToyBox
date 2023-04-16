@@ -15,6 +15,18 @@ namespace ModKit {
         void HandleModDisable();
     }
 
+    public partial class Mod {
+        public delegate void ShowGUINotifierMethod();
+        public static ShowGUINotifierMethod NotifyOnShowGUI;
+
+        public static void OnShowGUI() {
+            if (NotifyOnShowGUI != null) {
+                NotifyOnShowGUI();
+            }
+
+        }
+    }
+
     public class ModManager<TCore, TSettings>
         where TCore : class, new()
         where TSettings : UnityModManager.ModSettings, new() {
