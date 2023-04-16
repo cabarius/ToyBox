@@ -18,7 +18,7 @@ namespace ModKit {
             // You an also provide UI that renders children below the row
 
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
-            private IEnumerable<Definition> _filteredOrderedDefinitions;
+            public IEnumerable<Definition> filteredOrderedDefinitions;
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> DisclosureStates = new();
             private string _searchText = "";
@@ -244,7 +244,7 @@ namespace ModKit {
                     filtered = definitions.ToList();
                 }
                 _matchCount = filtered.Count;
-                _filteredOrderedDefinitions = filtered.OrderBy(sortKey);
+                filteredOrderedDefinitions = filtered.OrderBy(sortKey);
                 UpdatePageCount();
                 UpdatePaginatedResults();
                 _updatePages = false;
@@ -265,7 +265,7 @@ namespace ModKit {
                 var offset = Math.Min(count, (_currentPage - 1) * limit);
                 limit = Math.Min(limit, Math.Max(count, count - limit));
                 Mod.Trace($"{_currentPage} / {_pageCount} count: {count} => offset: {offset} limit: {limit} ");
-                _pagedResults = _filteredOrderedDefinitions.Skip(offset).Take(limit).ToArray();
+                _pagedResults = filteredOrderedDefinitions.Skip(offset).Take(limit).ToArray();
             }
         }
     }

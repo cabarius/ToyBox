@@ -24,7 +24,7 @@ namespace ToyBox {
         private static bool showTree = false;
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
-        public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, List<Action> todo) where Definition : BlueprintScriptableObject, IUIDataProvider {
+        public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo) where Definition : BlueprintScriptableObject, IUIDataProvider {
             var mutatorLookup = BlueprintAction.ActionsForType(typeof(Definition)).Distinct().ToDictionary(a => a.name, a => a);
             var add = mutatorLookup.GetValueOrDefault("Add", null);
             var remove = mutatorLookup.GetValueOrDefault("Remove", null);
@@ -65,10 +65,10 @@ namespace ToyBox {
             bool canAdd = add?.canPerform(blueprint, ch) ?? false;
             bool canRemove = remove?.canPerform(blueprint, ch) ?? false;
             if (canRemove) {
-                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => remove.action(blueprint, ch, repeatCount)), 175);
+                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { remove.action(blueprint, ch, repeatCount); usedBrowser.reloadData = true; }), 175);
             }
-            else if (canAdd) {
-                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => add.action(blueprint, ch, repeatCount)), 175);
+            if (canAdd) {
+                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { add.action(blueprint, ch, repeatCount); usedBrowser.reloadData = true; }), 175);
             }
             remainingWidth -= 178;
             Space(20); remainingWidth -= 20;
@@ -140,28 +140,36 @@ namespace ToyBox {
                             updateTree |= Toggle("Show Tree", ref showTree, Width(250));
                         }
                     },
-                    (feature, blueprint) => RowGUI(feature, blueprint, ch, todo), null, 50, false, true, 100, 300, "", true);
+                    (feature, blueprint) => RowGUI(feature, blueprint, ch, browser, todo), null, 50, false, true, 100, 300, "", true);
             }
             return todo;
         }
-        private static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
-        private static Browser<Ability, BlueprintAbility> AbilityBrowser = new();
-        private static Browser<Buff, BlueprintBuff> BuffBrowser = new();
+        private static Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
+        private static Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
+        private static Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
+            var FeatureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
+            if (FeatureBrowser == null) {
+                FeatureBrowser = new Browser<Feature, BlueprintFeature>();
+                FeatureBrowserDict[ch] = FeatureBrowser;
+            }
             return OnGUI<Feature, BlueprintFeature>(ch, FeatureBrowser, feature, "Features");
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
+            var BuffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
+            if (BuffBrowser == null) {
+                BuffBrowser = new Browser<Buff, BlueprintBuff>();
+                BuffBrowserDict[ch] = BuffBrowser;
+            }
             return OnGUI<Buff, BlueprintBuff>(ch, BuffBrowser, buff, "Buffs");
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
+            var AbilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
+            if (AbilityBrowser == null) {
+                AbilityBrowser = new Browser<Ability, BlueprintAbility>();
+                AbilityBrowserDict[ch] = AbilityBrowser;
+            }
             return OnGUI<Ability, BlueprintAbility>(ch, AbilityBrowser, ability, "Abilities");
-        }
-
-        public static List<Action> OnGUI(UnitEntityData ch, Spellbook spellbook, int level) {
-            var spells = spellbook.GetKnownSpells(level).OrderBy(d => d.Name).ToList();
-            var spellbookBP = spellbook.Blueprint;
-
-            return new List<Action>();
         }
     }
 }

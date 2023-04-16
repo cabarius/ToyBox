@@ -2,6 +2,8 @@
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
 using ModKit.Utility;
@@ -14,7 +16,9 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Browser<Spellbook, BlueprintSpellbook> SpellbookBrowser = new();
+        public static Dictionary<UnitEntityData, Browser<Spellbook, BlueprintSpellbook>> SpellbookBrowserDict = new();
+        public static Dictionary<UnitEntityData, Browser<AbilityData, BlueprintAbility>> SpellBrowserDict = new();
+        private static bool _startedLoading = false;
         public static List<Action> OnSpellsGUI(UnitEntityData ch, IEnumerable<Spellbook> spellbooks) {
             List<Action> todo = new();
             Space(20);
@@ -50,6 +54,11 @@ namespace ToyBox {
                 spellbook = spellbooks.ElementAt(selectedSpellbook);
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
+                    var SpellbookBrowser = SpellbookBrowserDict.GetValueOrDefault(ch, null);
+                    if (SpellbookBrowser == null) {
+                        SpellbookBrowser = new Browser<Spellbook, BlueprintSpellbook>();
+                        SpellbookBrowserDict[ch] = SpellbookBrowser;
+                    }
                     SpellbookBrowser.OnGUI("Spellbook Browser",
                         spellbooks,
                         () => BlueprintExtensions.GetBlueprints<BlueprintSpellbook>(),
@@ -64,25 +73,34 @@ namespace ToyBox {
                                 Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
                             }
                         },
-                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, todo), null, 50, false, true, 100, 300, "", true);
+                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellbookBrowser, todo), null, 50, false, true, 100, 300, "", true);
                 }
                 else {
+                    var SpellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
+                    if (SpellBrowser == null) {
+                        SpellBrowser = new Browser<AbilityData, BlueprintAbility>();
+                        SpellBrowserDict[ch] = SpellBrowser;
+                    }
                     var maxLevel = spellbook.Blueprint.MaxSpellLevel;
                     var casterLevel = spellbook.CasterLevel;
                     using (HorizontalScope()) {
+                        int tempSelected = selectedSpellbookLevel;
                         EnumerablePicker(
                             "Spells known",
                             ref selectedSpellbookLevel,
                             Enumerable.Range(0, spellbook.Blueprint.MaxSpellLevel + 1),
                             0,
                             (lvl) => {
-                                var levelText = spellbook.Blueprint.SpellsPerDay.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
+                                var levelText = spellbook.Blueprint?.SpellsPerDay?.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
                                 var knownCount = spellbook.GetKnownSpells(lvl).Count;
                                 var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                 return levelText + countText;
                             },
                             AutoWidth()
                         );
+                        if (tempSelected != selectedSpellbookLevel) {
+                            SpellBrowser.reloadData = true;
+                        }
                         Space(20);
                         if (casterLevel > 0) {
                             ActionButton("-1 CL", () => CasterHelpers.LowerCasterLevel(spellbook), AutoWidth());
@@ -105,8 +123,49 @@ namespace ToyBox {
                             }, AutoWidth());
                         }
                     }
+
+                    var spells = spellbook.GetKnownSpells(selectedSpellbookLevel).OrderBy(d => d.Name).ToList();
                     SelectedSpellbook[ch.HashKey()] = spellbook;
-                    todo = FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
+                    SpellBrowser.OnGUI($"{FactsEditor.getName(spellbook.Blueprint)} Spells",
+                        spells,
+                        () => {
+                            HashSet<BlueprintAbility> availableSpells;
+                            if (settings.showFromAllSpellbooks) {
+                                availableSpells = new HashSet<BlueprintAbility>(CasterHelpers.GetAllSpells(selectedSpellbookLevel));
+                                if (_startedLoading) {
+                                    if (availableSpells?.Count > 0) {
+                                        SpellBrowser.reloadData = true;
+                                        _startedLoading = false;
+                                    }
+                                }
+                            }
+                            else {
+                                availableSpells = new HashSet<BlueprintAbility>(spellbook.Blueprint.SpellList.GetSpells(selectedSpellbookLevel));
+                            }
+                            spells.ForEach((s) => availableSpells.Add(s.Blueprint));
+                            return availableSpells;
+                        },
+                        (feature) => feature.Blueprint,
+                        (feature) => FactsEditor.getName(feature),
+                        (feature) => $"{FactsEditor.getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Comment}",
+                        (feature) => FactsEditor.getName(feature),
+                        () => {
+                            using (HorizontalScope()) {
+                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
+                                60.space();
+                                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
+                                60.space();
+                                if (Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks)) {
+                                    SpellBrowser.reloadData = true;
+                                    _startedLoading = true;
+                                }
+                                Space(25);
+                                ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor, SpellBrowser.filteredOrderedDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
+                                Space(25);
+                                ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor), AutoWidth());
+                            }
+                        },
+                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellBrowser, todo), null, 50, false, true, 100, 300, "", true);
                 }
             }
             return todo;
