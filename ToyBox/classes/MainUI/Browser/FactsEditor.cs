@@ -40,15 +40,15 @@ namespace ToyBox {
                     () => BlueprintExtensions.GetBlueprints<Definition>(),
                     (feature) => (Definition)feature.Blueprint,
                     (feature) => feature.name,
-                    (feature) => settings.showDisplayAndInternalNames ? (feature.Name.Length > 0 ? feature.Name.cyan().bold() + $" : {feature.NameSafe().color(RGBA.darkgrey)}"
-                    : feature.name.cyan().bold()) : (feature.Name.Length > 0) ? feature.Name.cyan().bold() : feature.name.cyan().bold(),
+                    (feature) => settings.showDisplayAndInternalNames ? (feature.Name.Length > 0 ? feature.Name + $" : {feature.NameSafe().color(RGBA.darkgrey)}"
+                    : feature.name) : (feature.Name.Length > 0) ? feature.Name : feature.name,
                     (feature) => $"{feature.Name} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Description}",
                     (feature) => (feature.Name.Length > 0) ? feature.Name : feature.name,
                     () => {
                         using (HorizontalScope()) {
                             Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
                             60.space();
-                            Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
+                            Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 250.width());
                             60.space();
                             updateTree |= Toggle("Show Tree", ref showTree, Width(250));
                         }

@@ -244,6 +244,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Spellbooks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Summons.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
+    <Compile Include="classes\MonkeyPatchin\Braaainz.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
