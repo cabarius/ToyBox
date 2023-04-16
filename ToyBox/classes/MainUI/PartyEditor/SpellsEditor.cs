@@ -1,30 +1,20 @@
-﻿using UnityEngine;
+﻿using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.FactLogic;
+using ModKit;
+using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Designers;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.UnitLogic;
-using ToyBox.Multiclass;
-using Alignment = Kingmaker.Enums.Alignment;
-using ModKit;
-using static ModKit.UI;
-using ModKit.Utility;
 using ToyBox.classes.Infrastructure;
-using Kingmaker.PubSubSystem;
-using Kingmaker.Blueprints;
-using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Parts;
-using static Kingmaker.Utility.UnitDescription.UnitDescription;
-using ToyBox.BagOfPatches;
+using static ModKit.UI;
 
 
 namespace ToyBox {
     public partial class PartyEditor {
+        public static Browser<Spellbook, BlueprintSpellbook> SpellbookBrowser = new();
         public static List<Action> OnSpellsGUI(UnitEntityData ch, IEnumerable<Spellbook> spellbooks) {
             List<Action> todo = new();
             Space(20);
@@ -60,8 +50,21 @@ namespace ToyBox {
                 spellbook = spellbooks.ElementAt(selectedSpellbook);
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
-                    var blueprints = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
-                    todo = BlueprintListUI.OnGUI(ch, blueprints, 100);
+                    SpellbookBrowser.OnGUI("Spellbook Browser",
+                        spellbooks,
+                        () => BlueprintExtensions.GetBlueprints<BlueprintSpellbook>(),
+                        (feature) => feature.Blueprint,
+                        (feature) => FactsEditor.getName(feature),
+                        (feature) => $"{FactsEditor.getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Comment}",
+                        (feature) => FactsEditor.getName(feature),
+                        () => {
+                            using (HorizontalScope()) {
+                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
+                                60.space();
+                                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
+                            }
+                        },
+                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, todo), null, 50, false, true, 100, 300, "", true);
                 }
                 else {
                     var maxLevel = spellbook.Blueprint.MaxSpellLevel;
@@ -106,14 +109,6 @@ namespace ToyBox {
                     todo = FactsEditor.OnGUI(ch, spellbook, selectedSpellbookLevel);
                 }
             }
-#if false
-                    else {
-                        spellbookEditCharacter = ch;
-                        editSpellbooks = true;
-                        var blueprints = BlueprintExensions.GetBlueprints<BlueprintSpellbook>().OrderBy((bp) => bp.GetDisplayName());
-                        todo = BlueprintListUI.OnGUI(ch, blueprints, 100);
-                    }
-#endif
             return todo;
         }
     }
