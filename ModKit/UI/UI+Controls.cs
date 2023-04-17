@@ -229,9 +229,8 @@ namespace ModKit {
             else if (showMinMax) {
                 ActionButton(" max".cyan(), () => { }, textBoxStyle, AutoWidth());
                 Space(-27);
-            } else {
+            } else
                 34.space();
-            }
             if (v != value) {
                 value = v;
                 return true;
