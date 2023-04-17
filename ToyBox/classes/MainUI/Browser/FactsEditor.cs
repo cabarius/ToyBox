@@ -136,7 +136,7 @@ namespace ToyBox {
                                         Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 200.width());
                                     }
                                     else
-                                        260.space();
+                                        268.space();
                                     if (ch.HasFeatureSelection(featureSelection, f))
                                         ActionButton("Remove", () => {
                                             ch.RemoveFeatureSelection(featureSelection, entry.data, f);
