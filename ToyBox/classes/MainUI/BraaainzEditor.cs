@@ -29,7 +29,7 @@ namespace ToyBox.classes.MainUI {
         private static List<BlueprintBrain> AllBraaainz {
             get {
                 if (allBraaainz == null) {
-                    allBraaainz = BlueprintLoader.Shared.GetBlueprints<BlueprintBrain>();
+                    allBraaainz = BlueprintLoader.Shared.GetBlueprints<BlueprintBrain>()?.OrderBy(bp => bp.GetDisplayName())?.ToList();
                 }
                 return allBraaainz;
             }

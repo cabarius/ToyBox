@@ -50,7 +50,8 @@ namespace ToyBox {
             BlueprintItem item => item.Name,
             BlueprintItemEnchantment enchant => enchant.Name,
             BlueprintUnitFact fact => fact.NameSafe(),
-            _ => bp.name
+            SimpleBlueprint blueprint => blueprint.name,
+            _ => "n/a"
         };
         public static string GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
