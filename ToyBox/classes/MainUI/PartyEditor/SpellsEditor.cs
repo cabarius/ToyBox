@@ -54,26 +54,7 @@ namespace ToyBox {
                 spellbook = spellbooks.ElementAt(selectedSpellbook);
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
-                    var SpellbookBrowser = SpellbookBrowserDict.GetValueOrDefault(ch, null);
-                    if (SpellbookBrowser == null) {
-                        SpellbookBrowser = new Browser<Spellbook, BlueprintSpellbook>();
-                        SpellbookBrowserDict[ch] = SpellbookBrowser;
-                    }
-                    SpellbookBrowser.OnGUI("Spellbook Browser",
-                        spellbooks,
-                        () => BlueprintExtensions.GetBlueprints<BlueprintSpellbook>(),
-                        (feature) => feature.Blueprint,
-                        (feature) => FactsEditor.getName(feature),
-                        (feature) => $"{FactsEditor.getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Comment}",
-                        (feature) => FactsEditor.getName(feature),
-                        () => {
-                            using (HorizontalScope()) {
-                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
-                                60.space();
-                                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
-                            }
-                        },
-                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellbookBrowser, todo), null, 50, false, true, 100, 300, "", true);
+                    SpellBookBrowserOnGUI(ch, spellbooks, todo);
                 }
                 else {
                     var SpellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
@@ -168,7 +149,36 @@ namespace ToyBox {
                         (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellBrowser, todo), null, 50, false, true, 100, 300, "", true);
                 }
             }
+            else {
+                SpellBookBrowserOnGUI(ch, spellbooks, todo, true);
+            }
             return todo;
+        }
+        private static void SpellBookBrowserOnGUI(UnitEntityData ch, IEnumerable<Spellbook> spellbooks, List<Action> todo, bool forceShowAll = false) {
+            var SpellbookBrowser = SpellbookBrowserDict.GetValueOrDefault(ch, null);
+            if (SpellbookBrowser == null) {
+                SpellbookBrowser = new Browser<Spellbook, BlueprintSpellbook>();
+                SpellbookBrowserDict[ch] = SpellbookBrowser;
+            }
+            if (forceShowAll) {
+                SpellbookBrowser.showAll = true;
+                SpellbookBrowser.needsReloadData = true;
+            }
+            SpellbookBrowser.OnGUI("Spellbook Browser",
+                        spellbooks,
+                        () => BlueprintExtensions.GetBlueprints<BlueprintSpellbook>(),
+                        (feature) => feature.Blueprint,
+                        (feature) => FactsEditor.getName(feature),
+                        (feature) => $"{FactsEditor.getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Comment}",
+                        (feature) => FactsEditor.getName(feature),
+                        () => {
+                            using (HorizontalScope()) {
+                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
+                                60.space();
+                                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
+                            }
+                        },
+                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellbookBrowser, todo), null, 50, false, true, 100, 300, "", true);
         }
     }
 }

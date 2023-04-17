@@ -26,7 +26,7 @@ namespace ModKit {
             private DateTime lockedUntil;
             public bool needsReloadData = true;
             public bool SearchAsYouType = true;
-            private bool _showAll;
+            public bool showAll;
             private bool _updatePages = false;
             private bool _startedLoading = false;
             private bool _availableIsStatic;
@@ -78,7 +78,7 @@ namespace ModKit {
                             ActionIntTextField(ref _searchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
                             if (_searchLimit > 1000) { _searchLimit = 1000; }
                             25.space();
-                            _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref _showAll);
+                            _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref showAll);
                             25.space();
                         }
                     } else {
@@ -192,7 +192,7 @@ namespace ModKit {
                     if (needsReloadData) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
                             _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
-                            var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
+                            var defs = (showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
                             UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
                             needsReloadData = false;
                         }
