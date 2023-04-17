@@ -2,7 +2,9 @@
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.PubSubSystem;
 using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -19,10 +21,28 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public class FactsEditor {
+        public class CollectionChangedSubscriber : IFactCollectionUpdatedHandler {
+            public CollectionChangedSubscriber() {
+                EventBus.Subscribe(this);
+            }
+            public void HandleFactCollectionUpdated(EntityFactsProcessor collection) {
+                foreach (var b in BuffBrowserDict.Values) {
+                    b.needsReloadData = true;
+                }
+                foreach (var b in FeatureBrowserDict.Values) {
+                    b.needsReloadData = true;
+                }
+                foreach (var b in AbilityBrowserDict.Values) {
+                    b.needsReloadData = true;
+                }
+            }
+        }
         private static Settings settings => Main.settings;
         private static bool showTree = false;
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
+        private static readonly CollectionChangedSubscriber collectionChangedSubscriber = new();
+
         public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
             where Definition : BlueprintScriptableObject, IUIDataProvider {
             var mutatorLookup = BlueprintAction.ActionsForType(typeof(Definition)).Distinct().ToDictionary(a => a.name, a => a);
@@ -46,7 +66,7 @@ namespace ToyBox {
                 var rankFeature = feature as UnitFact;
                 if ((canDecrease || canIncrease) && rankFeature != null) {
                     var v = rankFeature.GetRank();
-                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { usedBrowser.needsReloadData |= v == 1; decrease.action(blueprint, ch, repeatCount); }), 60);
+                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease.action(blueprint, ch, repeatCount)), 60);
                     Space(10f);
                     Label($"{v}".orange().bold(), Width(30));
                     increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase.action(blueprint, ch, repeatCount)), 60);
@@ -65,10 +85,10 @@ namespace ToyBox {
             bool canAdd = add?.canPerform(blueprint, ch) ?? false;
             bool canRemove = remove?.canPerform(blueprint, ch) ?? false;
             if (canRemove) {
-                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { remove.action(blueprint, ch, repeatCount); usedBrowser.needsReloadData = true; }), 175);
+                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { usedBrowser.needsReloadData = true; remove.action(blueprint, ch, repeatCount); }), 175);
             }
             if (canAdd) {
-                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { add.action(blueprint, ch, repeatCount); usedBrowser.needsReloadData = true; }), 175);
+                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { usedBrowser.needsReloadData = true; add.action(blueprint, ch, repeatCount); }), 175);
             }
             remainingWidth -= 178;
             Space(20); remainingWidth -= 20;
