@@ -6,6 +6,7 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
+using ModKit.DataViewer;
 using ModKit.Utility;
 using System;
 using System.Collections.Generic;
@@ -132,10 +133,14 @@ namespace ToyBox {
                         (feature) => FactsEditor.getName(feature),
                         () => {
                             using (HorizontalScope()) {
-                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
-                                60.space();
-                                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
-                                60.space();
+                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, 150.width());
+                                20.space();
+                                Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 200.width());
+                                20.space();
+                                Toggle("Show Inspector", ref FactsEditor.showInspector, 150.width());
+                                if (Toggle("Search Descriptions", ref settings.searchesDescriptions, 250.width())) {
+                                    SpellBrowser.needsReloadData = true;
+                                }
                                 if (Toggle("Search All Spellbooks", ref settings.showFromAllSpellbooks)) {
                                     SpellBrowser.needsReloadData = true;
                                     _startedLoading = true;
@@ -146,7 +151,10 @@ namespace ToyBox {
                                 ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor), AutoWidth());
                             }
                         },
-                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellBrowser, todo), null, 50, false, true, 100, 300, "", true);
+                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellBrowser, todo), (feature, blueprint) => {
+                            ReflectionTreeView.DetailsOnGUI(blueprint);
+                            return null;
+                        }, 50, false, true, 100, 300, "", true);
                 }
             }
             else {
@@ -173,12 +181,20 @@ namespace ToyBox {
                         (feature) => FactsEditor.getName(feature),
                         () => {
                             using (HorizontalScope()) {
-                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
-                                60.space();
-                                Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
+                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, 150.width());
+                                20.space();
+                                Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 200.width());
+                                20.space();
+                                Toggle("Show Inspector", ref FactsEditor.showInspector, 150.width());
+                                if (Toggle("Search Descriptions", ref settings.searchesDescriptions, 250.width())) {
+                                    SpellbookBrowser.needsReloadData = true;
+                                }
                             }
                         },
-                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellbookBrowser, todo), null, 50, false, true, 100, 300, "", true);
+                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, SpellbookBrowser, todo), (feature, blueprint) => {
+                            ReflectionTreeView.DetailsOnGUI(blueprint);
+                            return null;
+                        }, 50, false, true, 100, 300, "", true);
         }
     }
 }
