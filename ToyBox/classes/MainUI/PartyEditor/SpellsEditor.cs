@@ -169,7 +169,7 @@ namespace ToyBox {
                 SpellbookBrowserDict[ch] = SpellbookBrowser;
             }
             if (forceShowAll) {
-                SpellbookBrowser.showAll = true;
+                SpellbookBrowser.ShowAll = true;
                 SpellbookBrowser.needsReloadData = true;
             }
             SpellbookBrowser.OnGUI("Spellbook Browser",

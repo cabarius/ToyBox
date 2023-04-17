@@ -1,10 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using System;
-using GL = UnityEngine.GUILayout;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using UnityEngine;
+using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
@@ -213,21 +212,25 @@ namespace ModKit {
 
         // Value Adjusters
 
-        public static bool ValueAdjuster(ref int value, int increment = 1, int min = 0, int max = int.MaxValue) {
+        public static bool ValueAdjuster(ref int value, int increment = 1, int min = 0, int max = int.MaxValue, bool showMinMax = true) {
             var v = value;
             if (v > min)
                 ActionButton(" < ", () => { v = Math.Max(v - increment, min); }, textBoxStyle, AutoWidth());
-            else {
+            else if (showMinMax) {
                 Space(-21);
                 ActionButton("min ".cyan(), () => { }, textBoxStyle, AutoWidth());
+            } else {
+                34.space();
             }
             var temp = false;
             Button($"{v}".orange().bold(), ref temp, textBoxStyle, AutoWidth());
             if (v < max)
                 ActionButton(" > ", () => { v = Math.Min(v + increment, max); }, textBoxStyle, AutoWidth());
-            else {
+            else if (showMinMax) {
                 ActionButton(" max".cyan(), () => { }, textBoxStyle, AutoWidth());
                 Space(-27);
+            } else {
+                34.space();
             }
             if (v != value) {
                 value = v;
@@ -235,9 +238,9 @@ namespace ModKit {
             }
             return false;
         }
-        public static bool ValueAdjuster(Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue) {
+        public static bool ValueAdjuster(Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, bool showMinMax = true) {
             var value = get();
-            var changed = ValueAdjuster(ref value, increment, min, max);
+            var changed = ValueAdjuster(ref value, increment, min, max, showMinMax);
             if (changed)
                 set(value);
             return changed;
@@ -251,13 +254,13 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue) {
+        public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, bool showMinMax = true) {
             var changed = false;
             using (HorizontalScope(Width(400))) {
                 Label(title.cyan(), Width(300));
                 Space(15);
                 var value = get();
-                changed = ValueAdjuster(ref value, increment, min, max);
+                changed = ValueAdjuster(ref value, increment, min, max, showMinMax);
                 if (changed)
                     set(value);
             }

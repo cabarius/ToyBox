@@ -50,8 +50,8 @@ namespace ToyBox {
         private static Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
         private static Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
         private static Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
-        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
-        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new();
+        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { SearchLimit = 12 };
+        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { SearchLimit = 12 };
 
 
         public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
@@ -186,12 +186,18 @@ namespace ToyBox {
                                     null,
                                     (entry, f) => {
                                         if (entry != null) {
-                                            Label($"{entry.level}", 50.width());
+                                            var level = entry.level;
+                                            if (ValueAdjuster(ref level, 1, 0, 20, false)) {
+                                                ch.RemoveFeatureSelection(featureSelection, entry.data, f);
+                                                ch.AddFeatureSelection(featureSelection, f, level);
+                                                FeatureSelectionBrowser.ReloadData();
+                                                browser.ReloadData();
+                                            }
                                             10.space();
-                                            Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 200.width());
+                                            Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 250.width());
                                         }
                                         else
-                                            268.space();
+                                            354.space();
                                         if (ch.HasFeatureSelection(featureSelection, f))
                                             ActionButton("Remove", () => {
                                                 ch.RemoveFeatureSelection(featureSelection, entry.data, f);
@@ -215,7 +221,7 @@ namespace ToyBox {
                                     () => parametrizedFeature.Items.OrderBy(i => i.Name),
                                     i => i,
                                     i => i.Name,
-                                    i => $"{i.Name} " + (settings.searchesDescriptions ? i.Description : ""),
+                                    i => $"{i.Name} " + (settings.searchesDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
                                     i => i.Name,
                                     null,
                                     (_, i) => {
@@ -232,7 +238,7 @@ namespace ToyBox {
                                                 browser.needsReloadData = true;
                                             }, 150.width());
                                         15.space();
-                                        Label(i.Description.StripHTML().green());
+                                        Label(i.Param?.Blueprint?.GetDescription().StripHTML().green());
                                     }, null, 100);
                             }
                         }

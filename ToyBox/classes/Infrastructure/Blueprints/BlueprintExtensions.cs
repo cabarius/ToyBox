@@ -220,13 +220,13 @@ namespace ToyBox {
                 from byLevelPair in pair.Value.SelectionsByLevel
                 from feature in byLevelPair.Value
                 select new FeatureSelectionEntry { feature = feature, level = byLevelPair.Key, data = pair.Value }).ToList();
-        public static void AddFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature) {
+        public static void AddFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature, int level = 1) {
             var source = new FeatureSource();
-            ch?.Progression?.AddSelection(bp, source, 1, feature);
+            ch?.Progression?.AddSelection(bp, source, level, feature);
             var featureCollection = ch?.Progression?.Features;
             var fact = new Feature(feature, featureCollection.Owner, null);
             fact = featureCollection.Manager.Add<Feature>(fact);
-            fact.SetSource(source, 1);
+            fact.SetSource(source, level);
             // ch?.Progression?.Features.AddFeature(bp).SetSource(source, 1);
         }
         public static void RemoveFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, FeatureSelectionData data, BlueprintFeature feature) {
