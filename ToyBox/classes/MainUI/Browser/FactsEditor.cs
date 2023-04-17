@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -26,7 +27,7 @@ namespace ToyBox {
         private static readonly FeaturesTreeEditor treeEditor = new();
 
         private static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
-        private static Browser<BlueprintFeature, BlueprintFeature> FeatureSelectionBrowser = new();
+        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
         private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParamterizedFeatureBrowser = new();
         private static Browser<Ability, BlueprintAbility> AbilityBrowser = new();
         private static Browser<Buff, BlueprintBuff> BuffBrowser = new();
@@ -46,20 +47,22 @@ namespace ToyBox {
             else {
                 browser.OnGUI(name,
                     fact,
-                    () => BlueprintExtensions.GetBlueprints<Definition>(),
+                    () => GetBlueprints<Definition>(),
                     (feature) => (Definition)feature.Blueprint,
                     (feature) => feature.name,
                     (feature) => settings.showDisplayAndInternalNames ? (feature.Name.Length > 0 ? feature.Name + $" : {feature.NameSafe().color(RGBA.darkgrey)}"
                     : feature.name) : (feature.Name.Length > 0) ? feature.Name : feature.name,
-                    (feature) => $"{feature.Name} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Description}",
+                    (feature) => $"{feature.Name} {feature.NameSafe()} {feature.GetDisplayName()}" + (settings.searchesDescriptions ? feature.Description : ""),
                     (feature) => (feature.Name.Length > 0) ? feature.Name : feature.name,
                     () => {
                         using (HorizontalScope()) {
-                            Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
-                            60.space();
-                            Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 250.width());
-                            60.space();
-                            updateTree |= Toggle("Show Tree", ref showTree, Width(250));
+                            Toggle("Show GUIDs", ref Main.settings.showAssetIDs, 150.width());
+                            20.space();
+                            Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 230.width());
+                            20.space();
+                            updateTree |= Toggle("Show Tree", ref showTree, Width(130));
+                            20.space();
+                            if (Toggle("Search Descriptions", ref settings.searchesDescriptions, 250.width())) browser.ReloadData();
                         }
                     },
                     (feature, blueprint) => {
@@ -116,26 +119,35 @@ namespace ToyBox {
                     (fact, blueprint) => {
                         if (blueprint is BlueprintFeatureSelection featureSelection) {
                             FeatureSelectionBrowser.ReloadData();
-                            return (f, def) => FeatureSelectionBrowser.OnGUI(
+                            return (entry, f) => FeatureSelectionBrowser.OnGUI(
                                 $"{f.Name}-featureSelection",
-                                ch.FeatureSelectionValues(featureSelection),
+                                ch.FeatureSelectionEntries(featureSelection),
                                 () => featureSelection.AllFeatures.OrderBy(f => f.Name),
-                                f => f,
+                                entry => entry.feature,
                                 f => f.NameSafe(),
                                 f => f.GetDisplayName(),
                                 null,
                                 null,
                                 null,
-                                (_, f) => {
+                                (entry, f) => {
+                                    if (entry != null) {
+                                        Label($"{entry.level}", 50.width());
+                                        10.space();
+                                        Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 200.width());
+                                    }
+                                    else
+                                        260.space();
                                     if (ch.HasFeatureSelection(featureSelection, f))
                                         ActionButton("Remove", () => {
-                                            ch.RemoveFeatureSelection(featureSelection, f);
+                                            ch.RemoveFeatureSelection(featureSelection, entry.data, f);
                                             FeatureSelectionBrowser.ReloadData();
+                                            browser.ReloadData();
                                         }, 150.width());
                                     else
                                         ActionButton("Add", () => {
                                             ch.AddFeatureSelection(featureSelection, f);
                                             FeatureSelectionBrowser.ReloadData();
+                                            browser.ReloadData();
                                         }, 150.width());
                                     15.space();
                                     Label(f.GetDescription().green());
@@ -145,7 +157,7 @@ namespace ToyBox {
                         }
                         else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
                             ParamterizedFeatureBrowser.ReloadData();
-                            return (item, def) => ParamterizedFeatureBrowser.OnGUI(
+                            return (_, item) => ParamterizedFeatureBrowser.OnGUI(
                                 $"{item.Name}-parameterSelection",
                                 ch.ParamterizedFeatureItems(parametrizedFeature),
                                 () => parametrizedFeature.Items.OrderBy(i => i.Name),
@@ -160,11 +172,13 @@ namespace ToyBox {
                                         ActionButton("Remove", () => {
                                             ch.RemoveParameterizedFeatureItem(parametrizedFeature, i);
                                             FeatureSelectionBrowser.ReloadData();
+                                            browser.ReloadData();
                                         }, 150.width());
                                     else
                                         ActionButton("Add", () => {
                                             ch.AddParameterizedFeatureItem(parametrizedFeature, i);
                                             FeatureSelectionBrowser.ReloadData();
+                                            browser.ReloadData();
                                         }, 150.width());
                                     15.space();
                                     Label(i.Description.green());

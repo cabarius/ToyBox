@@ -21,6 +21,9 @@ using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Utility;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem;
+using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker;
 
 namespace ToyBox {
 
@@ -198,6 +201,11 @@ namespace ToyBox {
         }
 
         // BlueprintFeatureSelection Helpers
+        public class FeatureSelectionEntry {
+            public BlueprintFeature feature = null;
+            public int level = 0;
+            public FeatureSelectionData data;
+        }
         public static bool HasFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature) {
             var progression = ch?.Descriptor?.Progression;
             if (progression == null) return false;
@@ -208,23 +216,30 @@ namespace ToyBox {
             return false;
         }
         public static List<BlueprintFeature> FeatureSelectionValues(this UnitEntityData ch, BlueprintFeatureSelection bp) => bp.AllFeatures.Where(f => ch.HasFeatureSelection(bp, f)).ToList();
+        public static List<FeatureSelectionEntry> FeatureSelectionEntries(this UnitEntityData ch, BlueprintFeatureSelection bp)
+            => (from pair in ch.Descriptor.Progression.Selections
+             where pair.Key == bp
+             from byLevelPair in pair.Value.SelectionsByLevel
+             from feature in byLevelPair.Value
+             select new FeatureSelectionEntry { feature = feature, level = byLevelPair.Key, data = pair.Value }).ToList();
         public static void AddFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature) {
             var source = new FeatureSource();
-            ch?.Descriptor?.Progression.Features.AddFeature(bp).SetSource(source, 1);
-            ch?.Progression?.AddSelection(bp, source, 0, feature);
+            ch?.Progression?.AddSelection(bp, source, 1, feature);
+            var featureCollection = ch?.Progression?.Features;
+            var fact = new Feature(feature, featureCollection.Owner, null);
+            fact = featureCollection.Manager.Add<Feature>(fact);
+            fact.SetSource(source, 1);
+//            ch?.Progression?.Features.AddFeature(bp).SetSource(source, 1);
         }
-        public static void RemoveFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature) {
-            // FIXME - fix this
-#if false
+        public static void RemoveFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, FeatureSelectionData data, BlueprintFeature feature) {
             var progression = ch?.Descriptor?.Progression;
-            var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == feature);
-            var selections = ch?.Descriptor?.Progression.Selections;
+            var fact = progression.Features.GetFact(feature);
             BlueprintFeatureSelection featureSelection = null;
             FeatureSelectionData featureSelectionData = null;
-            var level = -1;
-            foreach (var selection in selections) {
+            int level = -1;
+            foreach (var selection in progression.Selections) {
                 foreach (var keyValuePair in selection.Value.SelectionsByLevel) {
-                    if (keyValuePair.Value.HasItem<BlueprintFeature>(bp)) {
+                    if (keyValuePair.Value.HasItem<BlueprintFeature>(feature)) {
                         featureSelection = selection.Key;
                         featureSelectionData = selection.Value;
                         level = keyValuePair.Key;
@@ -234,9 +249,11 @@ namespace ToyBox {
                 if (level >= 0)
                     break;
             }
-            featureSelectionData?.RemoveSelection(level, feature);
-            progression.Features.RemoveFact(bp);
-#endif
+            if (featureSelection != null) {
+                featureSelectionData.RemoveSelection(level, feature);
+            }
+            MechanicsContext parentContext = fact.Context.ParentContext;
+            progression.Features.RemoveFact(fact);
         }
 
         // BlueprintParametrizedFeature Helpers
