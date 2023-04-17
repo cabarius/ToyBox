@@ -149,7 +149,7 @@ namespace ToyBox {
                     new NamedAction("Party", () => PartyEditor.OnGUI()),
                     new NamedAction("Loot", () => PhatLoot.OnGUI()),
                     new NamedAction("Enchantment", () => EnchantmentEditor.OnGUI()),
-#if DEBUG
+#if false
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
                     new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),

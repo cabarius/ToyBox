@@ -67,7 +67,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-#if false
+#if true
         [HarmonyPatch(typeof(AiBrainController), nameof(AiBrainController.FindBestAction))]
         private static class AiBrainController_FindAction_patch {
             private static string MaybeListToString(object o) {
