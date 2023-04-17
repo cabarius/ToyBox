@@ -1,6 +1,7 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
@@ -18,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -35,6 +37,7 @@ namespace ToyBox {
                 foreach (var b in AbilityBrowserDict.Values) {
                     b.needsReloadData = true;
                 }
+                //TODO: Can/Should do for buffs?
             }
         }
         private static Settings settings => Main.settings;
@@ -42,6 +45,13 @@ namespace ToyBox {
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
         private static readonly CollectionChangedSubscriber collectionChangedSubscriber = new();
+
+        private static Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
+        private static Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
+        private static Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
+        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
+        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new();
+
 
         public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
             where Definition : BlueprintScriptableObject, IUIDataProvider {
@@ -103,31 +113,17 @@ namespace ToyBox {
         public static string getName<Definition>(Definition feature) where Definition : BlueprintScriptableObject, IUIDataProvider {
             bool isEmpty = feature.Name.IsNullOrEmpty();
             string name;
-            if (settings.showDisplayAndInternalNames) {
-                if (isEmpty) {
-                    name = feature.name.cyan().bold();
-                }
-                else {
-                    name = feature.Name;
-                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
-                        name = feature.name.cyan().bold();
-                    }
-                    else {
-                        name = name.cyan().bold() + $" : {feature.name.color(RGBA.darkgrey)}";
-                    }
-                }
+            if (isEmpty) {
+                name = feature.name;
             }
             else {
-                if (isEmpty) {
+                name = feature.Name;
+                if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                     name = feature.name;
                 }
-                else {
-                    name = feature.Name;
-                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
-                        name = feature.name;
-                    }
+                else if (settings.showDisplayAndInternalNames) {
+                    name = name + $" : {feature.name.color(RGBA.darkgrey)}";
                 }
-                name = name.cyan().bold();
             }
             return name;
         }
@@ -146,27 +142,95 @@ namespace ToyBox {
             else {
                 browser.OnGUI(name,
                     fact,
-                    () => BlueprintExtensions.GetBlueprints<Definition>(),
+                    () => GetBlueprints<Definition>(),
                     (feature) => (Definition)feature.Blueprint,
                     (feature) => getName(feature),
-                    (feature) => $"{getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Description}",
+                    (feature) => $"{getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} " + (settings.searchesDescriptions ? feature.Description : ""),
                     (feature) => getName(feature),
                     () => {
                         using (HorizontalScope()) {
-                            Toggle("Show GUIDs", ref Main.settings.showAssetIDs, Width(250));
-                            60.space();
-                            Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, Width(250));
-                            60.space();
-                            updateTree |= Toggle("Show Tree", ref showTree, Width(250));
+                            Toggle("Show GUIDs", ref Main.settings.showAssetIDs, 150.width());
+                            20.space();
+                            Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 230.width());
+                            20.space();
+                            updateTree |= Toggle("Show Tree", ref showTree, Width(130));
+                            20.space();
+                            if (Toggle("Search Descriptions", ref settings.searchesDescriptions, 250.width())) {
+                                browser.needsReloadData = true;
+                                FeatureSelectionBrowser.needsReloadData = true;
+                                ParameterizedFeatureBrowser.needsReloadData = true;
+                            }
                         }
                     },
-                    (feature, blueprint) => RowGUI(feature, blueprint, ch, browser, todo), null, 50, false, true, 100, 300, "", true);
+                    (feature, blueprint) => RowGUI(feature, blueprint, ch, browser, todo),
+                    (fact, blueprint) => {
+                        if (blueprint is BlueprintFeatureSelection featureSelection) {
+                            return (entry, f) => FeatureSelectionBrowser.OnGUI(
+                                $"{f.Name}-featureSelection",
+                                ch.FeatureSelectionEntries(featureSelection),
+                                () => featureSelection.AllFeatures.OrderBy(f => f.Name),
+                                entry => entry.feature,
+                                f => getName(f),
+                                f => $"{getName(f)} {f.NameSafe()} {f.GetDisplayName()} " + (settings.searchesDescriptions ? f.Description : ""),
+                                f => getName(f),
+                                null,
+                                (entry, f) => {
+                                    if (entry != null) {
+                                        Label($"{entry.level}", 50.width());
+                                        10.space();
+                                        Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 200.width());
+                                    }
+                                    else
+                                        268.space();
+                                    if (ch.HasFeatureSelection(featureSelection, f))
+                                        ActionButton("Remove", () => {
+                                            ch.RemoveFeatureSelection(featureSelection, entry.data, f);
+                                            FeatureSelectionBrowser.needsReloadData = true;
+                                            browser.needsReloadData = true;
+                                        }, 150.width());
+                                    else
+                                        ActionButton("Add", () => {
+                                            ch.AddFeatureSelection(featureSelection, f);
+                                            FeatureSelectionBrowser.needsReloadData = true;
+                                            browser.needsReloadData = true;
+                                        }, 150.width());
+                                    15.space();
+                                    Label(f.GetDescription().StripHTML().green());
+                                }, null, 100);
+                        }
+                        else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
+                            return (_, item) => ParameterizedFeatureBrowser.OnGUI(
+                                $"{item.Name}-parameterSelection",
+                                ch.ParamterizedFeatureItems(parametrizedFeature),
+                                () => parametrizedFeature.Items.OrderBy(i => i.Name),
+                                i => i,
+                                i => i.Name,
+                                i => $"{i.Name} " + (settings.searchesDescriptions ? i.Description : ""),
+                                i => i.Name,
+                                null,
+                                (_, i) => {
+                                    if (ch.HasParamemterizedFeatureItem(parametrizedFeature, i))
+                                        ActionButton("Remove", () => {
+                                            ch.RemoveParameterizedFeatureItem(parametrizedFeature, i);
+                                            FeatureSelectionBrowser.needsReloadData = true;
+                                            browser.needsReloadData = true;
+                                        }, 150.width());
+                                    else
+                                        ActionButton("Add", () => {
+                                            ch.AddParameterizedFeatureItem(parametrizedFeature, i);
+                                            FeatureSelectionBrowser.needsReloadData = true;
+                                            browser.needsReloadData = true;
+                                        }, 150.width());
+                                    15.space();
+                                    Label(i.Description.StripHTML().green());
+                                }, null, 100);
+
+                        }
+                        return null;
+                    }, 50, false, true, 100, 300, "", true);
             }
             return todo;
         }
-        private static Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
-        private static Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
-        private static Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
             var FeatureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
             if (FeatureBrowser == null) {

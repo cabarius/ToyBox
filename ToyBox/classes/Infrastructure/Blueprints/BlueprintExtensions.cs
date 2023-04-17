@@ -1,25 +1,26 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using HarmonyLib;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Craft;
 using Kingmaker.Blueprints.Facts;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using System.Runtime.CompilerServices;
-using ModKit;
-using Kingmaker.Blueprints.Items.Weapons;
-using HarmonyLib;
-using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Utility;
+using Kingmaker.Craft;
 using Kingmaker.ElementsSystem;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.Utility;
+using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ToyBox {
 
@@ -46,7 +47,8 @@ namespace ToyBox {
             BlueprintItem item => item.Name,
             BlueprintItemEnchantment enchant => enchant.Name,
             BlueprintUnitFact fact => fact.NameSafe(),
-            _ => bp.name
+            SimpleBlueprint blueprint => blueprint.name,
+            _ => "n/a"
         };
         public static string GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
@@ -194,6 +196,77 @@ namespace ToyBox {
                 }
             }
             return count;
+        }
+
+        // BlueprintFeatureSelection Helpers
+        public class FeatureSelectionEntry {
+            public BlueprintFeature feature = null;
+            public int level = 0;
+            public FeatureSelectionData data;
+        }
+        public static bool HasFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature) {
+            var progression = ch?.Descriptor?.Progression;
+            if (progression == null) return false;
+            if (!progression.Features.HasFact(bp)) return false;
+            if (progression.Selections.TryGetValue(bp, out var selection)) {
+                if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == feature))) return true;
+            }
+            return false;
+        }
+        public static List<BlueprintFeature> FeatureSelectionValues(this UnitEntityData ch, BlueprintFeatureSelection bp) => bp.AllFeatures.Where(f => ch.HasFeatureSelection(bp, f)).ToList();
+        public static List<FeatureSelectionEntry> FeatureSelectionEntries(this UnitEntityData ch, BlueprintFeatureSelection bp)
+            => (from pair in ch.Descriptor.Progression.Selections
+                where pair.Key == bp
+                from byLevelPair in pair.Value.SelectionsByLevel
+                from feature in byLevelPair.Value
+                select new FeatureSelectionEntry { feature = feature, level = byLevelPair.Key, data = pair.Value }).ToList();
+        public static void AddFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature) {
+            var source = new FeatureSource();
+            ch?.Progression?.AddSelection(bp, source, 1, feature);
+            var featureCollection = ch?.Progression?.Features;
+            var fact = new Feature(feature, featureCollection.Owner, null);
+            fact = featureCollection.Manager.Add<Feature>(fact);
+            fact.SetSource(source, 1);
+            // ch?.Progression?.Features.AddFeature(bp).SetSource(source, 1);
+        }
+        public static void RemoveFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, FeatureSelectionData data, BlueprintFeature feature) {
+            var progression = ch?.Descriptor?.Progression;
+            var fact = progression.Features.GetFact(feature);
+            BlueprintFeatureSelection featureSelection = null;
+            FeatureSelectionData featureSelectionData = null;
+            int level = -1;
+            foreach (var selection in progression.Selections) {
+                foreach (var keyValuePair in selection.Value.SelectionsByLevel) {
+                    if (keyValuePair.Value.HasItem<BlueprintFeature>(feature)) {
+                        featureSelection = selection.Key;
+                        featureSelectionData = selection.Value;
+                        level = keyValuePair.Key;
+                        break;
+                    }
+                }
+                if (level >= 0)
+                    break;
+            }
+            if (featureSelection != null) {
+                featureSelectionData.RemoveSelection(level, feature);
+            }
+            MechanicsContext parentContext = fact.Context.ParentContext;
+            progression.Features.RemoveFact(fact);
+        }
+
+        // BlueprintParametrizedFeature Helpers
+        public static bool HasParamemterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
+            if (bp.Items.Count() == 0) return false;
+            var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
+            return existing != null;
+        }
+        public static List<IFeatureSelectionItem> ParamterizedFeatureItems(this UnitEntityData ch, BlueprintParametrizedFeature bp) => bp.Items.Where(f => ch.HasParamemterizedFeatureItem(bp, f)).ToList();
+        public static void AddParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
+            ch?.Descriptor?.AddFact<UnitFact>(bp, null, item.Param);
+        }
+        public static void RemoveParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
+            var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
+            ch?.Progression?.Features?.RemoveFact(fact);
         }
     }
 }
