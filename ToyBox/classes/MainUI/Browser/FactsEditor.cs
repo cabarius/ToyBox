@@ -150,7 +150,7 @@ namespace ToyBox {
                                             browser.ReloadData();
                                         }, 150.width());
                                     15.space();
-                                    Label(f.GetDescription().green());
+                                    Label(f.GetDescription().StripHTML().green());
                                 },
                                 null, 
                                 100, true, true);
@@ -181,7 +181,7 @@ namespace ToyBox {
                                             browser.ReloadData();
                                         }, 150.width());
                                     15.space();
-                                    Label(i.Description.green());
+                                    Label(i.Description.StripHTML().green());
                                 }, 
                                 null,
                                 100, true, true);
