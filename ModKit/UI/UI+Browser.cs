@@ -21,15 +21,15 @@ namespace ModKit {
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> DisclosureStates = new();
             private string _searchText = "";
-            private int _searchLimit = 100;
+            public int SearchLimit = 100;
+            public bool SearchAsYouType = true;
+            public bool ShowAll;
             private int _pageCount;
             private int _matchCount;
             private int _currentPage = 1;
             private DateTime lockedUntil;
             public bool needsReloadData = true;
             public void ReloadData() { needsReloadData = true; }
-            public bool SearchAsYouType = true;
-            private bool _showAll;
             private bool _updatePages = false;
             private bool _startedLoading = false;
             private bool _availableIsStatic;
@@ -73,7 +73,7 @@ namespace ModKit {
                 if (sortKey == null) sortKey = title;
                 if (current == null) current = new List<Item>();
                 List<Definition> definitions = update(current, available, title, search, searchKey, sortKey, definition);
-                if (search || _searchLimit < _matchCount) {
+                if (search || SearchLimit < _matchCount) {
                     if (search) {
                         using (HorizontalScope()) {
                             indent.space();
@@ -85,10 +85,10 @@ namespace ModKit {
                             }, () => { needsReloadData = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
-                            ActionIntTextField(ref _searchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
-                            if (_searchLimit > 1000) { _searchLimit = 1000; }
+                            ActionIntTextField(ref SearchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
+                            if (SearchLimit > 1000) { SearchLimit = 1000; }
                             25.space();
-                            _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref _showAll);
+                            _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref ShowAll);
                             25.space();
                         }
                     } else {
@@ -108,11 +108,11 @@ namespace ModKit {
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
                             var matchesText = "Matches: ".Green().Bold() + $"{_matchCount}".Orange().Bold();
-                            if (_matchCount > _searchLimit) { matchesText += " => ".Cyan() + $"{_searchLimit}".Cyan().Bold(); }
+                            if (_matchCount > SearchLimit) { matchesText += " => ".Cyan() + $"{SearchLimit}".Cyan().Bold(); }
 
                             Label(matchesText, ExpandWidth(false));
                         }
-                        if (_matchCount > _searchLimit) {
+                        if (_matchCount > SearchLimit) {
                             string pageLabel = "Page: ".orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
                             25.space();
                             Label(pageLabel, ExpandWidth(false));
@@ -196,7 +196,7 @@ namespace ModKit {
                     if (needsReloadData) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
                             _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
-                            var defs = (_showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
+                            var defs = (ShowAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
                             UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
                             needsReloadData = false;
                         }
@@ -251,8 +251,8 @@ namespace ModKit {
                 _updatePages = false;
             }
             public void UpdatePageCount() {
-                if (_searchLimit > 0) {
-                    _pageCount = (int)Math.Ceiling((double)_matchCount / _searchLimit);
+                if (SearchLimit > 0) {
+                    _pageCount = (int)Math.Ceiling((double)_matchCount / SearchLimit);
                     _currentPage = Math.Min(_currentPage, _pageCount);
                     _currentPage = Math.Max(1, _currentPage);
                 } else {
@@ -261,7 +261,7 @@ namespace ModKit {
                 }
             }
             public void UpdatePaginatedResults() {
-                var limit = _searchLimit;
+                var limit = SearchLimit;
                 var count = _matchCount;
                 var offset = Math.Min(count, (_currentPage - 1) * limit);
                 limit = Math.Min(limit, Math.Max(count, count - limit));

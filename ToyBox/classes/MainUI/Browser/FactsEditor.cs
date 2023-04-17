@@ -27,8 +27,8 @@ namespace ToyBox {
         private static readonly FeaturesTreeEditor treeEditor = new();
 
         private static Browser<Feature, BlueprintFeature> FeatureBrowser = new();
-        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
-        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParamterizedFeatureBrowser = new();
+        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { SearchLimit = 12 };
+        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParamterizedFeatureBrowser = new() { SearchLimit = 12 };
         private static Browser<Ability, BlueprintAbility> AbilityBrowser = new();
         private static Browser<Buff, BlueprintBuff> BuffBrowser = new();
 
@@ -131,12 +131,18 @@ namespace ToyBox {
                                 null,
                                 (entry, f) => {
                                     if (entry != null) {
-                                        Label($"{entry.level}", 50.width());
+                                        var level = entry.level;
+                                        if (ValueAdjuster(ref level, 1, 0, 20, false)) {
+                                            ch.RemoveFeatureSelection(featureSelection, entry.data, f);
+                                            ch.AddFeatureSelection(featureSelection, f, level);
+                                            FeatureSelectionBrowser.ReloadData();
+                                            browser.ReloadData();
+                                        }
                                         10.space();
-                                        Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 200.width());
+                                        Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 250.width());
                                     }
                                     else
-                                        268.space();
+                                        354.space();
                                     if (ch.HasFeatureSelection(featureSelection, f))
                                         ActionButton("Remove", () => {
                                             ch.RemoveFeatureSelection(featureSelection, entry.data, f);
@@ -181,7 +187,7 @@ namespace ToyBox {
                                             browser.ReloadData();
                                         }, 150.width());
                                     15.space();
-                                    Label(i.Description.StripHTML().green());
+                                    Label(i.Param?.Blueprint?.GetDescription().StripHTML().green());
                                 }, 
                                 null,
                                 100, true, true);
