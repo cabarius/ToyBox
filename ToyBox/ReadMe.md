@@ -46,6 +46,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
 * (***Narria***) Added ability to Inspect units in Party Editor (Data Viewer style)
 * (***Narria***) Added tweak in Loot Tab to allow you to loot locked items
+* (***Narria***) Added search to inspectors (Data Viewer)
+* (***Narria***) Fixed various issues with feature selection and parameterized features which means you can now add and remove a lot more things like Racial Herritage, Weapon Focus and Oracle Mystery Selections
+* (***Narria***) New spiffy UI for editing parameterized feats and feature selections
 * (***ADDB***) Changed Browser to improve performance.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fixed visual size scaling breaking when using any sort of polymorph.

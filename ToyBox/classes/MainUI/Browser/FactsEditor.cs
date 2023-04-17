@@ -37,7 +37,6 @@ namespace ToyBox {
                 foreach (var b in AbilityBrowserDict.Values) {
                     b.needsReloadData = true;
                 }
-                //TODO: Can/Should do for buffs?
             }
         }
         private static Settings settings => Main.settings;
@@ -122,7 +121,7 @@ namespace ToyBox {
                     name = feature.name;
                 }
                 else if (settings.showDisplayAndInternalNames) {
-                    name = name + $" : {feature.name.color(RGBA.darkgrey)}";
+                    name += $" : {feature.name.color(RGBA.darkgrey)}";
                 }
             }
             return name;

@@ -25,6 +25,7 @@ namespace ModKit {
             private int _currentPage = 1;
             private DateTime lockedUntil;
             public bool needsReloadData = true;
+            public void ReloadData() { needsReloadData = true; }
             public bool SearchAsYouType = true;
             public bool showAll;
             private bool _updatePages = false;
@@ -198,7 +199,18 @@ namespace ModKit {
                     if (needsReloadData) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
                             _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
-                            var defs = (showAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
+                            IEnumerable<Definition> defs;
+                            if (showAll) {
+                                if (_startedLoading) {
+                                    defs = _currentDict.Keys.ToList();
+                                } else if (_availableIsStatic) {
+                                    defs = _availableCache;
+                                } else {
+                                    defs = available();
+                                }
+                            } else {
+                                defs = _currentDict.Keys.ToList();
+                            }
                             UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
                             needsReloadData = false;
                         }
