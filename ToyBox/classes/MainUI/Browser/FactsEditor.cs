@@ -50,8 +50,8 @@ namespace ToyBox {
         private static Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
         private static Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
         private static Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
-        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { SearchLimit = 12 };
-        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { SearchLimit = 12 };
+        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
+        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new();
 
 
         public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)

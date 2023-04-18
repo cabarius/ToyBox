@@ -3,6 +3,7 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToyBox;
 using UnityEngine;
 
 namespace ModKit {
@@ -13,13 +14,12 @@ namespace ModKit {
             // It provides a toggle to show the definitions mixed in with the items. 
             // By default it shows just the title but you can provide an optional RowUI to show more complex row UI including buttons to add and remove items and so forth. This will be layed out after the title
             // You an also provide UI that renders children below the row
-
+            public Settings settings => Main.settings;
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
             public IEnumerable<Definition> filteredOrderedDefinitions;
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> DisclosureStates = new();
             private string _searchText = "";
-            public int SearchLimit = 25;
             public bool SearchAsYouType = true;
             public bool ShowAll;
             private int _pageCount;
@@ -69,7 +69,7 @@ namespace ModKit {
                 if (sortKey == null) sortKey = title;
                 if (current == null) current = new List<Item>();
                 List<Definition> definitions = update(current, available, title, search, searchKey, sortKey, definition);
-                if (search || SearchLimit < _matchCount) {
+                if (search || settings.searchLimit < _matchCount) {
                     if (search) {
                         using (HorizontalScope()) {
                             indent.space();
@@ -81,8 +81,8 @@ namespace ModKit {
                             }, () => { needsReloadData = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
-                            ActionIntTextField(ref SearchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
-                            if (SearchLimit > 1000) { SearchLimit = 1000; }
+                            ActionIntTextField(ref settings.searchLimit, "settings.SearchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
+                            if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                             25.space();
                             _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref ShowAll);
                             25.space();
@@ -104,11 +104,11 @@ namespace ModKit {
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
                             var matchesText = "Matches: ".Green().Bold() + $"{_matchCount}".Orange().Bold();
-                            if (_matchCount > SearchLimit) { matchesText += " => ".Cyan() + $"{SearchLimit}".Cyan().Bold(); }
+                            if (_matchCount > settings.searchLimit) { matchesText += " => ".Cyan() + $"{settings.searchLimit}".Cyan().Bold(); }
 
                             Label(matchesText, ExpandWidth(false));
                         }
-                        if (_matchCount > SearchLimit) {
+                        if (_matchCount > settings.searchLimit) {
                             string pageLabel = "Page: ".orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
                             25.space();
                             Label(pageLabel, ExpandWidth(false));
@@ -265,8 +265,8 @@ namespace ModKit {
                 _updatePages = false;
             }
             public void UpdatePageCount() {
-                if (SearchLimit > 0) {
-                    _pageCount = (int)Math.Ceiling((double)_matchCount / SearchLimit);
+                if (settings.searchLimit > 0) {
+                    _pageCount = (int)Math.Ceiling((double)_matchCount / settings.searchLimit);
                     _currentPage = Math.Min(_currentPage, _pageCount);
                     _currentPage = Math.Max(1, _currentPage);
                 } else {
@@ -275,7 +275,7 @@ namespace ModKit {
                 }
             }
             public void UpdatePaginatedResults() {
-                var limit = SearchLimit;
+                var limit = settings.searchLimit;
                 var count = _matchCount;
                 var offset = Math.Min(count, (_currentPage - 1) * limit);
                 limit = Math.Min(limit, Math.Max(count, count - limit));

@@ -1,20 +1,14 @@
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using ModKit.Utility;
-using System.Collections.Generic;
-using UnityModManagerNet;
-using UnityEngine;
-using ModKit;
-using System.Collections;
-using System.Linq;
-using Newtonsoft.Json;
-using Kingmaker.EntitySystem;
 using Kingmaker;
-using Kingmaker.Armies.TacticalCombat.Parts;
-using Kingmaker.UnitLogic.Parts;
-using JetBrains.Annotations;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Persistence;
-using Kingmaker.PubSubSystem;
+using ModKit;
+using ModKit.Utility;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityModManagerNet;
 
 namespace ToyBox {
     public class PerSaveSettings : EntityPart {
@@ -352,7 +346,7 @@ namespace ToyBox {
         public int selectedPartyFilter = 0;
 
         // Blueprint Browser
-        public int searchLimit = 100;
+        public int searchLimit = 12;
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
         public bool searchDescriptions = false; // keeping around for a bit to not break saves 
