@@ -28,8 +28,8 @@ namespace ToyBox {
             Div(100, 20);
             using (HorizontalScope()) {
                 Space(100);
-                Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass);
-                if (settings.toggleMulticlass) {
+                Toggle("Multiple Classes On Level-Up", ref Settings.toggleMulticlass);
+                if (Settings.toggleMulticlass) {
                     Space(40);
                     if (DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
                         multiclassEditCharacter = selectedCharacter;
@@ -42,16 +42,16 @@ namespace ToyBox {
                 Space(100);
                 ActionToggle("Allow Levels Past 20",
                     () => {
-                        var hasValue = settings.perSave.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
+                        var hasValue = Settings.perSave.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
                         return hasValue && isLegendaryHero;
                     },
                     (val) => {
-                        if (settings.perSave.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
-                            settings.perSave.charIsLegendaryHero[ch.HashKey()] = val;
+                        if (Settings.perSave.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
+                            Settings.perSave.charIsLegendaryHero[ch.HashKey()] = val;
                             Settings.SavePerSaveSettings();
                         }
                         else {
-                            settings.perSave.charIsLegendaryHero.Add(ch.HashKey(), val);
+                            Settings.perSave.charIsLegendaryHero.Add(ch.HashKey(), val);
                             Settings.SavePerSaveSettings();
                         }
                     },

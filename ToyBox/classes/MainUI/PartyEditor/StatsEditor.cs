@@ -38,7 +38,7 @@ namespace ToyBox {
                 100.space();
                 Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()} by", 340.width());
                 5.space();
-                var increment = IntTextField(ref settings.alignmentIncrement, null, 55.width());
+                var increment = IntTextField(ref Settings.alignmentIncrement, null, 55.width());
                 var maskIndex = -1;
                 20.space();
                 var titles = AlignmentShiftDirections.Select(

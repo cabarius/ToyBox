@@ -11,7 +11,7 @@ using Kingmaker.View.MapObjects.InteractionRestrictions;
 
 namespace ToyBox {
     public class PhatLoot {
-        public static Settings settings => Main.settings;
+        public static Settings Settings => Main.settings;
         public static string searchText = "";
 
         //
@@ -19,9 +19,7 @@ namespace ToyBox {
 
         public static void ResetGUI() { }
 
-        public static void OnLoad() {
-            KeyBindings.RegisterAction(MassLootBox, () => LootHelper.OpenMassLoot());
-        }
+        public static void OnLoad() => KeyBindings.RegisterAction(MassLootBox, LootHelper.OpenMassLoot);
 
         public static void OnGUI() {
             if (Game.Instance?.Player?.Inventory == null) return;
@@ -58,24 +56,24 @@ namespace ToyBox {
                     Label("Shows all chests/bags/etc on the map including hidden".green());
                 },
                 () => {
-                    ActionButton("Reveal Inevitable Loot", () => LootHelper.ShowAllInevitablePortalLoot(), Width(400));
+                    ActionButton("Reveal Inevitable Loot", LootHelper.ShowAllInevitablePortalLoot, Width(400));
                     Space(300);
                     Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
                 },
                 () => {
-                    Toggle("Mass Loot Shows Everything When Leaving Map", ref settings.toggleMassLootEverything, 600.width());
+                    Toggle("Mass Loot Shows Everything When Leaving Map", ref Settings.toggleMassLootEverything, 600.width());
                     102.space();
                     Label("Some items might be invisible until looted".green());
                 },
                 () => {
-                    if (settings.toggleMassLootEverything) {
-                        Toggle("Mass Loot steals from living NPCs", ref settings.toggleLootAliveUnits, 600.width());
+                    if (Settings.toggleMassLootEverything) {
+                        Toggle("Mass Loot steals from living NPCs", ref Settings.toggleLootAliveUnits, 600.width());
                         102.space();
                         Label("Previously always behaved this way".green());
                     }
                 },
                 () => {
-                    Toggle("Allow Looting Of Locked Items", ref settings.toggleOverrideLockedItems, 600.width());
+                    Toggle("Allow Looting Of Locked Items", ref Settings.toggleOverrideLockedItems, 600.width());
                     102.space();
                     Label("This allows you to loot items that are locked such as items carried by certain NPCs and items locked on your characters".green() + "\nWARNING: ".yellow().bold() + "This may affect story progression (e.g. your purple knife)".yellow());
                 },
@@ -85,8 +83,8 @@ namespace ToyBox {
             HStack("Loot Rarity Coloring", 1,
                 () => {
                     using (VerticalScope()) {
-                        Toggle("Show Rarity Tags", ref settings.toggleShowRarityTags);
-                        Toggle("Color Item Names", ref settings.toggleColorLootByRarity);
+                        Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags);
+                        Toggle("Color Item Names", ref Settings.toggleColorLootByRarity);
                     }
                     Space(25);
                     using (VerticalScope()) {
@@ -115,7 +113,7 @@ namespace ToyBox {
                             () => { }
                         );
                         Label("Minimum Rarity to change colors for:".cyan(), AutoWidth());
-                        RarityGrid(ref settings.minRarityToColor, 4, AutoWidth());
+                        RarityGrid(ref Settings.minRarityToColor, 4, AutoWidth());
                     }
                 });
             Div(0, 25);
@@ -127,7 +125,7 @@ namespace ToyBox {
                                 using (VerticalScope()) {
                                     Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}".green());
                                     Label("Maximum Rarity To Hide:".cyan(), AutoWidth());
-                                    RarityGrid(ref settings.maxRarityToHide, 4, AutoWidth());
+                                    RarityGrid(ref Settings.maxRarityToHide, 4, AutoWidth());
                                 }
                             }
                         }
@@ -151,7 +149,7 @@ namespace ToyBox {
                     }
                     Label(areaName.orange().bold(), Width(300));
                     Label("Rarity: ".cyan(), AutoWidth());
-                    RarityGrid(ref settings.lootChecklistFilterRarity, 4, AutoWidth());
+                    RarityGrid(ref Settings.lootChecklistFilterRarity, 4, AutoWidth());
                 },
                 () => {
                     ActionTextField(
@@ -160,9 +158,9 @@ namespace ToyBox {
                     (text) => { },
                     () => { },
                     Width(300));
-                    Space(25); Toggle("Show Friendly", ref settings.toggleLootChecklistFilterFriendlies);
-                    Space(25); Toggle("Blueprint", ref settings.toggleLootChecklistFilterBlueprint, AutoWidth());
-                    Space(25); Toggle("Description", ref settings.toggleLootChecklistFilterDescription, AutoWidth());
+                    Space(25); Toggle("Show Friendly", ref Settings.toggleLootChecklistFilterFriendlies);
+                    Space(25); Toggle("Blueprint", ref Settings.toggleLootChecklistFilterBlueprint, AutoWidth());
+                    Space(25); Toggle("Description", ref Settings.toggleLootChecklistFilterDescription, AutoWidth());
                 },
                 () => {
                     if (!Main.IsInGame) { Label("Not available in the Main Menu".orange()); return; }
@@ -174,15 +172,20 @@ namespace ToyBox {
                                 var loot = p.GetLewtz(searchText);
                                 if (loot.Count == 0) return 0;
                                 else return (int)loot.Max(l => l.Rarity());
-                            });
-                            var rarity = settings.lootChecklistFilterRarity;
-                            var count = presents.Where(p => p.Unit == null || (settings.toggleLootChecklistFilterFriendlies && !p.Unit.IsPlayersEnemy || p.Unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && p.Unit.IsPlayersEnemy)).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
+                            }).ToList();
+                            var rarity = Settings.lootChecklistFilterRarity;
+                            var count = presents.Where(p => p.Unit == null || (Settings.toggleLootChecklistFilterFriendlies && !p.Unit.IsPlayersEnemy || p.Unit.IsPlayersEnemy) || (!Settings.toggleLootChecklistFilterFriendlies && p.Unit.IsPlayersEnemy)).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
                             Label($"{group.Key.cyan()}: {count}");
                             Div(indent);
                             foreach (var present in presents) {
-                                var pahtLewts = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity());
+                                var phatLewtz = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity()).ToList();
                                 var unit = present.Unit;
-                                if (pahtLewts.Count() > 0 && (unit == null || (settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy) || (!settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy))) {
+                                if (phatLewtz.Any() 
+                                    && (unit == null 
+                                        || (Settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy)
+                                        || (!Settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy)
+                                        )
+                                    ) {
                                     isEmpty = false;
                                     Div();
                                     using (HorizontalScope()) {
@@ -201,19 +204,18 @@ namespace ToyBox {
                                         }
                                         Space(25);
                                         using (VerticalScope()) {
-                                            foreach (var lewt in pahtLewts) {
+                                            foreach (var lewt in phatLewtz) {
                                                 var description = lewt.Blueprint.Description;
-                                                var showBP = settings.toggleLootChecklistFilterBlueprint;
-                                                var showDesc = settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
+                                                var showBP = Settings.toggleLootChecklistFilterBlueprint;
+                                                var showDesc = Settings.toggleLootChecklistFilterDescription && description != null && description.Length > 0;
                                                 using (HorizontalScope()) {
                                                     //Main.Log($"rarity: {lewt.Blueprint.Rarity()} - color: {lewt.Blueprint.Rarity().color()}");
                                                     Label(lewt.Name.StripHTML().Rarity(lewt.Blueprint.Rarity()), showDesc || showBP ? Width(350) : AutoWidth());
                                                     if (showBP) {
                                                         Space(100); Label(lewt.Blueprint.GetDisplayName().grey(), showDesc ? Width(350) : AutoWidth());
                                                     }
-                                                    if (showDesc) {
-                                                        Space(100); Label(description.StripHTML().green());
-                                                    }
+                                                    if (!showDesc) continue;
+                                                    Space(100); Label(description.StripHTML().green());
                                                 }
                                             }
                                         }
@@ -226,10 +228,10 @@ namespace ToyBox {
                     }
                 },
                 () => {
-                    if (isEmpty)
-                        using (HorizontalScope()) {
-                            Label("No Loot Available".orange(), AutoWidth());
-                        }
+                    if (!isEmpty) return;
+                    using (HorizontalScope()) {
+                        Label("No Loot Available".orange(), AutoWidth());
+                    }
                 }
             );
         }

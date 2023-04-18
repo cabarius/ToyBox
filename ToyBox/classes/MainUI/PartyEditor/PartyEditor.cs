@@ -13,7 +13,7 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Settings settings => Main.settings;
+        public static Settings Settings => Main.settings;
 
         private enum ToggleChoice {
             Classes,
@@ -26,6 +26,7 @@ namespace ToyBox {
             AI,
             None,
         };
+        private const int NarrowIndent = 413;
 
         private static ToggleChoice selectedToggle = ToggleChoice.None;
         private static int editingCharacterIndex = 0;
@@ -55,7 +56,7 @@ namespace ToyBox {
             editingCharacterIndex = 0;
             selectedSpellbook = 0;
             selectedSpellbookLevel = 0;
-            CharacterPicker.partyFilterChoices = null;
+            CharacterPicker.PartyFilterChoices = null;
             Main.settings.selectedPartyFilter = 0;
         }
 
@@ -83,9 +84,8 @@ namespace ToyBox {
                 Space(25);
 
             }
-            else {
-                Space(178);
-            }
+//            else
+//                Space(178);
             if (RespecHelper.GetRespecableUnits().Contains(ch)) {
                 respecableCount++;
                 ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, Width(150));
@@ -98,6 +98,7 @@ namespace ToyBox {
             ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
                 AutoWidth());
 #endif
+            Label("", AutoWidth());
         }
         public static void OnGUI() {
             var player = Game.Instance.Player;
@@ -139,7 +140,7 @@ namespace ToyBox {
                 var xpTable = progression.ExperienceTable;
                 var level = progression.CharacterLevel;
                 var mythicLevel = progression.MythicLevel;
-                var spellbooks = ch.Spellbooks;
+                var spellbooks = ch.Spellbooks.ToList();
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 var isOnTeam = player.AllCharacters.Contains(ch);
                 using (HorizontalScope()) {
@@ -199,57 +200,56 @@ namespace ToyBox {
                     }
                     else { Space(66); }
                     Space(30);
-                    if (!isWide) ActionsGUI(ch);
-                    Wrap(!IsWide, 283, 0);
+                    Wrap(IsNarrow, NarrowIndent, 0);
                     var prevSelectedChar = selectedCharacter;
                     var showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
-                    if (DisclosureToggle($"{classData.Count} Classes", ref showClasses)) {
+                    if (DisclosureToggle($"{classData.Count} Classes", ref showClasses, 140)) {
                         if (showClasses) {
                             selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Trace($"selected {ch.CharacterName}");
                         }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
-                    if (DisclosureToggle("Stats", ref showStats, 125)) {
+                    if (DisclosureToggle("Stats", ref showStats,95)) {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    Wrap(IsNarrow, 279);
                     //var showFacts = ch == selectedCharacter && selectedToggle == ToggleChoice.Facts;
                     //if (UI.DisclosureToggle("Facts", ref showFacts, 125)) {
                     //    if (showFacts) { selectedCharacter = ch; selectedToggle = ToggleChoice.Facts; }
                     //    else { selectedToggle = ToggleChoice.None; }
                     //}
                     var showFeatures = ch == selectedCharacter && selectedToggle == ToggleChoice.Features;
-                    if (DisclosureToggle("Features", ref showFeatures, 150)) {
+                    if (DisclosureToggle("Features", ref showFeatures, 125)) {
                         if (showFeatures) { selectedCharacter = ch; selectedToggle = ToggleChoice.Features; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
+                    Wrap(!IsWide, NarrowIndent, 0);
                     var showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
-                    if (DisclosureToggle("Buffs", ref showBuffs, 125)) {
+                    if (DisclosureToggle("Buffs", ref showBuffs, 90)) {
                         if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    Wrap(IsNarrow, 304);
                     var showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
                     if (DisclosureToggle("Abilities", ref showAbilities, 125)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    Space(10);
                     var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
-                    if (DisclosureToggle($"{spellCount} Spells", ref showSpells)) {
+                    if (DisclosureToggle($"{spellCount} Spells", ref showSpells,150)) {
                         if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-                    else { Space(180); }
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
-                    ReflectionTreeView.DetailToggle("Ins", ch, ch, 0);
-                    if (isWide) ActionsGUI(ch);
+                    ReflectionTreeView.DetailToggle("Ins", ch, ch, 75);
+                    Wrap(!isWide, NarrowIndent - 20); 
+                    ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {
                         selectedSpellbook = 0;
                     }
                 }
+                if (!isWide) Div(00, 10);
+                5.space();
                 ReflectionTreeView.DetailsOnGUI(ch);
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
                 //    UI.Div(20, 20);

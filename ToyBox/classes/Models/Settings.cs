@@ -358,6 +358,7 @@ namespace ToyBox {
         public bool showDivisions = true;
         public bool showFromAllSpellbooks = false;
         public bool showDisplayAndInternalNames = false;
+        public bool factEditorShowInspector = true;
 
         // Enchantment (Sandal)
         public string searchTextEnchantments = "";

@@ -15,9 +15,8 @@ namespace ToyBox.classes.MainUI {
         private static List<BlueprintBrain> _allBraaainz = null;
         private static List<BlueprintBrain> AllBraaainz {
             get {
-                if (_allBraaainz == null) {
-                    _allBraaainz = BlueprintLoader.Shared.GetBlueprints<BlueprintBrain>()?.OrderBy(bp => bp.GetDisplayName())?.ToList();
-                }
+                if (_allBraaainz != null) return _allBraaainz;
+                _allBraaainz = BlueprintLoader.Shared.GetBlueprints<BlueprintBrain>()?.OrderBy(bp => bp.GetDisplayName())?.ToList();
                 return _allBraaainz;
             }
         }
@@ -85,6 +84,7 @@ namespace ToyBox.classes.MainUI {
                     var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
                     Label($"{text.green()}", AutoWidth());
                 },
+                null,
                 (action, bp) => (aiAction, bp) => {
                     if (aiAction?.ActorConsiderations.Count > 0) {
                         using (HorizontalScope()) {
@@ -104,7 +104,9 @@ namespace ToyBox.classes.MainUI {
                                 var attributes = bp.GetCustomAttributes();
                                 var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                 Label(text.green(), AutoWidth());
-                            }, null,
+                            },
+                            null,
+                            null,
                             150, true, false
                             );
                     }
@@ -130,7 +132,9 @@ namespace ToyBox.classes.MainUI {
                                 var attributes = bp.GetCustomAttributes();
                                 var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                 Label(text.green(), AutoWidth());
-                            }, null,
+                            },
+                        null,
+                        null,
                             150, true, false
                             );
                 }

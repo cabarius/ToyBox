@@ -169,8 +169,7 @@ namespace ToyBox {
                 DoHide(lootPart.Loot, localMapLootMarkerPCView);
             }
             else if (mapPart == null) {
-                var unitMarker = markerVm.m_Marker as UnitLocalMapMarker;
-                if (unitMarker == null) return;
+                if (markerVm.m_Marker is not UnitLocalMapMarker unitMarker) return;
                 UnitEntityView unit = unitMarker.m_Unit;
                 UnitEntityData data = unit.Data;
                 DoHide(data.Inventory, localMapLootMarkerPCView);
