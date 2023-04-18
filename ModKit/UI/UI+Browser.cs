@@ -81,7 +81,7 @@ namespace ModKit {
                             }, () => { needsReloadData = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
-                            ActionIntTextField(ref settings.searchLimit, "settings.SearchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
+                            ActionIntTextField(ref settings.searchLimit, "Search Limit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
                             if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                             25.space();
                             _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref ShowAll);
