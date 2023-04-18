@@ -55,7 +55,6 @@ namespace ToyBox.classes.MainUI {
                     10.space();
                     DisclosureToggle("Pick Existing", ref pickBrain);
                 }
-
             }
             if (pickBrain) {
                 var braainz = AllBraaainz;

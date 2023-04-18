@@ -13,7 +13,7 @@ namespace ToyBox {
                 }
 
                 RestController.ApplyRest(selectedUnit.Descriptor);
-                Rulebook.Trigger(new RuleHealDamage(selectedUnit, selectedUnit, default(DiceFormula), selectedUnit.Descriptor.Stats.HitPoints.ModifiedValue));
+                Rulebook.Trigger(new RuleHealDamage(selectedUnit, selectedUnit, default, selectedUnit.Descriptor.Stats.HitPoints.ModifiedValue));
                 foreach (var attribute in selectedUnit.Stats.Attributes) {
                     attribute.Damage = 0;
                     attribute.Drain = 0;

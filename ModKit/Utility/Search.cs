@@ -217,5 +217,4 @@ namespace ModKit {
     }
 #endif
     }
-
 }

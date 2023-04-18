@@ -459,7 +459,7 @@ namespace ToyBox {
             private static bool Prefix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
                 var blueprint = kingdomEventView.Blueprint;
                 __instance.m_Description.text = blueprint.LocalizedDescription;
-                __instance.m_Disposables.Add(__instance.m_Description.SetLinkTooltip(null, null, default(TooltipConfig)));
+                __instance.m_Disposables.Add(__instance.m_Description.SetLinkTooltip(null, null, default));
                 var isActive = kingdomEventView.IsCrusadeEvent && kingdomEventView.IsFinished;
                 __instance.m_ResultDescription.gameObject.SetActive(isActive);
                 if (isActive) {
@@ -468,7 +468,7 @@ namespace ToyBox {
                         var resultDescription = __instance.m_ResultDescription;
                         var currentEventSolution2 = __instance.m_Footer.CurrentEventSolution;
                         resultDescription.text = ((currentEventSolution2 != null) ? currentEventSolution2.ResultText : null);
-                        __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip(null, null, default(TooltipConfig)));
+                        __instance.m_Disposables.Add(__instance.m_ResultDescription.SetLinkTooltip(null, null, default));
                     }
                     else
                         __instance.m_ResultDescription.text = string.Empty;

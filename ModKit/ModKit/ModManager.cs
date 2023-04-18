@@ -23,7 +23,6 @@ namespace ModKit {
             if (NotifyOnShowGUI != null) {
                 NotifyOnShowGUI();
             }
-
         }
     }
 

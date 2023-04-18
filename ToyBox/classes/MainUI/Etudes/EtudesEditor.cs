@@ -383,7 +383,6 @@ namespace ToyBox {
             if (etude.ChildrenId.Count > 0 && (etude.ShowChildren.IsOn() || etude.hasSearchResults)) {
                 ShowParentTree(etude, indent + 1, ignoreFilter);
             }
-
         }
         private static void ShowParentTree(EtudeInfo etude, int indent, bool ignoreFilter = false) {
             foreach (var childID in etude.ChildrenId) {

@@ -30,7 +30,6 @@ namespace ModKit.DataViewer {
             } else {
                 return false;
             }
-
         }
 
 

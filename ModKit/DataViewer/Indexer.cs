@@ -39,12 +39,10 @@ namespace ModKit.DataViewer {
             public HashSet<KeyPath> ReferencedBy { get; private set; } = new HashSet<KeyPath> { };
             public HashSet<KeyPath> SubItems { get; private set; } = new HashSet<KeyPath> { };
             public Dictionary<KeyPath, string> Properties { get; private set; }
-            private TItem _item { get; set; } = default(TItem);
+            private TItem _item { get; set; } = default;
             public TItem Item {
                 get {
-                    if (_item == null) {
-                        _item = GetItem(Key);
-                    }
+                    _item ??= GetItem(Key);
                     return _item;
                 }
             }
@@ -55,7 +53,6 @@ namespace ModKit.DataViewer {
                 _item = item;
                 Key = key;
             }
-
         }
 
         public void Add(TItem item) {

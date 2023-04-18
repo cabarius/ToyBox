@@ -281,6 +281,5 @@ namespace ToyBox {
             }
             return newMap;
         }
-
     }
 }
