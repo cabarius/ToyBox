@@ -61,7 +61,7 @@ namespace ToyBox.BagOfPatches {
                         __instance.SlotVM.IsNotable.SetValueAndForceNotify(true);
                     }
                     var rarity = item.Rarity();
-                    var color = rarity.color();
+                    var color = rarity.Color();
                     //Main.Log($"ItemSlotView_RefreshItem_Patch - {item.Name} - {color}");
                     if (rarity == RarityType.Notable && __instance.m_NotableLayer != null) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");

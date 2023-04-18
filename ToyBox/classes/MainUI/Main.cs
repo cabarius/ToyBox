@@ -24,25 +24,25 @@ namespace ToyBox {
     internal static class Main {
         internal static Harmony HarmonyInstance;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
-        private static string modId;
+        private static string _modId;
         public static Settings settings;
         public static MulticlassMod multiclassMod;
         public static bool Enabled;
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
         public static bool NeedsActionInit = true;
-        private static bool needsResetGameUI = false;
-        private static bool resetRequested = false;
-        private static DateTime resetRequestTime = DateTime.Now;
+        private static bool _needsResetGameUI = false;
+        private static bool _resetRequested = false;
+        private static DateTime _resetRequestTime = DateTime.Now;
         public static bool resetExtraCameraAngles = false;
         public static void SetNeedsResetGameUI() {
-            resetRequested = true;
-            resetRequestTime = DateTime.Now;
-            Mod.Debug($"resetRequested - {resetRequestTime}");
+            _resetRequested = true;
+            _resetRequestTime = DateTime.Now;
+            Mod.Debug($"resetRequested - {_resetRequestTime}");
         }
         public static bool IsInGame => Game.Instance.Player?.Party.Any() ?? false;
 
-        private static Exception caughtException = null;
+        private static Exception _caughtException = null;
 
         public static List<GameObject> Objects;
 
@@ -51,7 +51,7 @@ namespace ToyBox {
 #if DEBUG
                 modEntry.OnUnload = Unload;
 #endif
-                modId = modEntry.Info.Id;
+                _modId = modEntry.Info.Id;
 
                 Mod.OnLoad(modEntry);
                 settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
@@ -83,7 +83,7 @@ namespace ToyBox {
                 UnityEngine.Object.DestroyImmediate(obj);
             }
             BlueprintExtensions.ResetCollationCache();
-            HarmonyInstance.UnpatchAll(modId);
+            HarmonyInstance.UnpatchAll(_modId);
             NeedsActionInit = true;
             return true;
         }
@@ -92,8 +92,6 @@ namespace ToyBox {
             Enabled = value;
             return true;
         }
-
-        private static void ResetSearch() => BlueprintBrowser.ResetSearch();
 
         private static void ResetGUI(UnityModManager.ModEntry modEntry) {
             settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
@@ -107,7 +105,7 @@ namespace ToyBox {
             BlueprintBrowser.ResetGUI();
             QuestEditor.ResetGUI();
             BlueprintExtensions.ResetCollationCache();
-            caughtException = null;
+            _caughtException = null;
         }
 
         private static void OnGUI(UnityModManager.ModEntry modEntry) {
@@ -123,8 +121,8 @@ namespace ToyBox {
                 var e = Event.current;
                 userHasHitReturn = e.keyCode == KeyCode.Return;
                 focusedControlName = GUI.GetNameOfFocusedControl();
-                if (caughtException != null) {
-                    Label("ERROR".red().bold() + $": caught exception {caughtException}");
+                if (_caughtException != null) {
+                    Label("ERROR".red().bold() + $": caught exception {_caughtException}");
                     ActionButton("Reset".orange().bold(), () => { ResetGUI(modEntry); }, AutoWidth());
                     return;
                 }
@@ -144,27 +142,27 @@ namespace ToyBox {
                         }
                         else Space(25);
                     },
-                    new NamedAction("Bag of Tricks", () => BagOfTricks.OnGUI()),
-                    new NamedAction("Level Up", () => LevelUp.OnGUI()),
-                    new NamedAction("Party", () => PartyEditor.OnGUI()),
-                    new NamedAction("Loot", () => PhatLoot.OnGUI()),
-                    new NamedAction("Enchantment", () => EnchantmentEditor.OnGUI()),
+                    new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
+                    new NamedAction("Level Up", LevelUp.OnGUI),
+                    new NamedAction("Party", PartyEditor.OnGUI),
+                    new NamedAction("Loot", PhatLoot.OnGUI),
+                    new NamedAction("Enchantment", EnchantmentEditor.OnGUI),
 #if false
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
-                    new NamedAction("Search 'n Pick", () => BlueprintBrowser.OnGUI()),
-                    new NamedAction("Crusade", () => CrusadeEditor.OnGUI()),
-                    new NamedAction("Armies", () => ArmiesEditor.OnGUI()),
-                    new NamedAction("Events/Decrees", () => EventEditor.OnGUI()),
-                    new NamedAction("Gambits (AI)", () => BraaainzEditor.OnGUI()),
-                    new NamedAction("Etudes", () => EtudesEditor.OnGUI()),
-                    new NamedAction("Quests", () => QuestEditor.OnGUI()),
-                    new NamedAction("Settings", () => SettingsUI.OnGUI())
+                    new NamedAction("Search 'n Pick", BlueprintBrowser.OnGUI),
+                    new NamedAction("Crusade", CrusadeEditor.OnGUI),
+                    new NamedAction("Armies", ArmiesEditor.OnGUI),
+                    new NamedAction("Events/Decrees", EventEditor.OnGUI),
+                    new NamedAction("Gambits (AI)", BraaainzEditor.OnGUI),
+                    new NamedAction("Etudes", EtudesEditor.OnGUI),
+                    new NamedAction("Quests", QuestEditor.OnGUI),
+                    new NamedAction("Settings", SettingsUI.OnGUI)
                     );
             }
             catch (Exception e) {
                 Console.Write($"{e}");
-                caughtException = e;
+                _caughtException = e;
             }
         }
 
@@ -200,18 +198,18 @@ namespace ToyBox {
             //if (resetExtraCameraAngles) {
             //    Game.Instance.UI.GetCameraRig().TickRotate(); // Kludge - TODO: do something better...
             //}
-            if (resetRequested) {
-                var timeSinceRequest = DateTime.Now.Subtract(resetRequestTime).TotalMilliseconds;
+            if (_resetRequested) {
+                var timeSinceRequest = DateTime.Now.Subtract(_resetRequestTime).TotalMilliseconds;
                 //Main.Log($"timeSinceRequest - {timeSinceRequest}");
                 if (timeSinceRequest > 1000) {
                     Mod.Debug($"resetExecuted - {timeSinceRequest}".cyan());
-                    needsResetGameUI = true;
-                    resetRequested = false;
+                    _needsResetGameUI = true;
+                    _resetRequested = false;
                 }
             }
-            if (needsResetGameUI) {
+            if (_needsResetGameUI) {
                 Game.Instance.ScheduleAction(() => {
-                    needsResetGameUI = false;
+                    _needsResetGameUI = false;
                     Game.ResetUI();
 
                     // TODO - Find out why the intiative tracker comes up when I do Game.ResetUI.  The following kludge makes it go away

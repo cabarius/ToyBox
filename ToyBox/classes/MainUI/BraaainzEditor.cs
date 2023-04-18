@@ -10,21 +10,21 @@ using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
     public static class BraaainzEditor {
-        public static Settings settings => Main.settings;
+        public static Settings Settings => Main.settings;
 
-        private static List<BlueprintBrain> allBraaainz = null;
+        private static List<BlueprintBrain> _allBraaainz = null;
         private static List<BlueprintBrain> AllBraaainz {
             get {
-                if (allBraaainz == null) {
-                    allBraaainz = BlueprintLoader.Shared.GetBlueprints<BlueprintBrain>()?.OrderBy(bp => bp.GetDisplayName())?.ToList();
+                if (_allBraaainz == null) {
+                    _allBraaainz = BlueprintLoader.Shared.GetBlueprints<BlueprintBrain>()?.OrderBy(bp => bp.GetDisplayName())?.ToList();
                 }
-                return allBraaainz;
+                return _allBraaainz;
             }
         }
 
-        private static bool pickBrain = false;
-        private static bool customBrain = false;
-        private static string brainSearchText = "";
+        private static bool _pickBrain = false;
+        private static bool _customBrain = false;
+        private static string _brainSearchText = "";
 
         public static Browser<AiAction, BlueprintAiAction> ActionBrowser = new(true, true);
         public static Browser<Consideration, Consideration> ConsiderationBrowser = new(true, true);
@@ -50,17 +50,17 @@ namespace ToyBox.classes.MainUI {
             using (HorizontalScope()) {
                 Label("Current Brain: ".cyan() + ch.Brain.Blueprint.GetDisplayName());
                 10.space();
-                if (Toggle("Customize", ref customBrain)) if (customBrain) pickBrain = false;
-                if (!customBrain) {
+                if (Toggle("Customize", ref _customBrain)) if (_customBrain) _pickBrain = false;
+                if (!_customBrain) {
                     10.space();
-                    DisclosureToggle("Pick Existing", ref pickBrain);
+                    DisclosureToggle("Pick Existing", ref _pickBrain);
                 }
             }
-            if (pickBrain) {
-                var braainz = AllBraaainz;
-                if (braainz != null) {
+            if (_pickBrain) {
+                var braaainz = AllBraaainz;
+                if (braaainz != null) {
                     var selectedBrain = ch.Brain.Blueprint;
-                    if (GridPicker<BlueprintBrain>("Braaainzzz!", ref selectedBrain, AllBraaainz, null, br => br.GetDisplayName(), ref brainSearchText, 1, 500.width())) {
+                    if (GridPicker<BlueprintBrain>("Braaainzzz!", ref selectedBrain, AllBraaainz, null, br => br.GetDisplayName(), ref _brainSearchText, 1, 500.width())) {
                         ch.Brain.SetBrain(selectedBrain);
                         ch.Brain.RestoreAvailableActions();
                         ActionBrowser.needsReloadData = true;
@@ -74,7 +74,7 @@ namespace ToyBox.classes.MainUI {
             ActionBrowser.OnGUI(
                 $"{ch.CharacterName}-Gambits",
                 ch.Brain.Actions,
-                () => BlueprintExtensions.GetBlueprints<BlueprintAiAction>(),
+                BlueprintExtensions.GetBlueprints<BlueprintAiAction>,
                 a => (BlueprintAiAction)a.Blueprint,
                 bp => bp.GetDisplayName(),
                 bp => $"{bp.GetDisplayName()} {bp.GetDescription()}",
@@ -85,16 +85,16 @@ namespace ToyBox.classes.MainUI {
                     var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
                     Label($"{text.green()}", AutoWidth());
                 },
-                (action, bp) => (action, bp) => {
-                    if (action?.ActorConsiderations.Count > 0) {
+                (action, bp) => (aiAction, bp) => {
+                    if (aiAction?.ActorConsiderations.Count > 0) {
                         using (HorizontalScope()) {
                             150.space();
                             Label($"{"Actor Considerations".orange().bold()} - {ch.CharacterName.cyan()}");
                         }
                         ConsiderationBrowser.OnGUI(
                             $"{ch.CharacterName}-{bp.AssetGuid}-ActorConsiderations",
-                            action.ActorConsiderations,
-                            () => BlueprintExtensions.GetBlueprints<Consideration>(),
+                            aiAction.ActorConsiderations,
+                            BlueprintExtensions.GetBlueprints<Consideration>,
                             c => c,
                             c => c.GetDisplayName(),
                             c => c.GetDisplayName(),
@@ -102,7 +102,7 @@ namespace ToyBox.classes.MainUI {
                             null,
                             (c, bp) => {
                                 var attributes = bp.GetCustomAttributes();
-                                var text = String.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
+                                var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                 Label(text.green(), AutoWidth());
                             }, null,
                             150, true, false
@@ -119,8 +119,8 @@ namespace ToyBox.classes.MainUI {
                     }
                     targetConsiderationsBrowser.OnGUI(
                         $"{ch.CharacterName}-{bp.AssetGuid}-TargetConsiderations",
-                        action?.TargetConsiderations,
-                        () => BlueprintExtensions.GetBlueprints<Consideration>(),
+                        aiAction?.TargetConsiderations,
+                        BlueprintExtensions.GetBlueprints<Consideration>,
                         c => c,
                         c => c.GetDisplayName(),
                         c => c.GetDisplayName(),
@@ -128,7 +128,7 @@ namespace ToyBox.classes.MainUI {
                         null,
                             (c, bp) => {
                                 var attributes = bp.GetCustomAttributes();
-                                var text = String.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
+                                var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                 Label(text.green(), AutoWidth());
                             }, null,
                             150, true, false

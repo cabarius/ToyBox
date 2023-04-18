@@ -38,7 +38,7 @@ using Kingmaker.AreaLogic.QuestSystem;
 
 namespace ToyBox {
     public static class BlueprintBrowser {
-        public static Settings settings => Main.settings;
+        public static Settings Settings => Main.settings;
 
         public static IEnumerable<SimpleBlueprint> unpagedBPs = null;
         public static IEnumerable<SimpleBlueprint> filteredBPs = null;
@@ -159,11 +159,11 @@ namespace ToyBox {
         }
         public static void ResetGUI() {
             ResetSearch();
-            settings.selectedBPTypeFilter = 1;
+            Settings.selectedBPTypeFilter = 1;
         }
         public static void UpdatePageCount() {
-            if (settings.searchLimit > 0) {
-                pageCount = matchCount / settings.searchLimit;
+            if (Settings.searchLimit > 0) {
+                pageCount = matchCount / Settings.searchLimit;
                 currentPage = Math.Min(currentPage, pageCount);
             }
             else {
@@ -172,7 +172,7 @@ namespace ToyBox {
             }
         }
         public static void UpdatePaginatedResults() {
-            var limit = settings.searchLimit;
+            var limit = Settings.searchLimit;
             var count = unpagedBPs.Count();
             var offset = Math.Min(count, currentPage * limit);
             limit = Math.Min(limit, Math.Max(count, count - limit));
@@ -186,12 +186,12 @@ namespace ToyBox {
             selectedCollationIndex = 0;
             selectedCollatedBPs = null;
             BlueprintListUI.needsLayout = true;
-            if (settings.searchText.Trim().Length == 0) {
+            if (Settings.searchText.Trim().Length == 0) {
                 ResetSearch();
             }
-            var searchText = settings.searchText;
+            var searchText = Settings.searchText;
             var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
-            selectedTypeFilter = blueprintTypeFilters[settings.selectedBPTypeFilter];
+            selectedTypeFilter = blueprintTypeFilters[Settings.selectedBPTypeFilter];
             var selectedType = selectedTypeFilter.type;
             IEnumerable<SimpleBlueprint> bps = null;
             if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
@@ -210,7 +210,7 @@ namespace ToyBox {
                     var description = blueprint.GetDescription() ?? "";
                     if (terms.All(term => name.Matches(term))
                         || terms.All(term => displayName.Matches(term))
-                        || settings.searchesDescriptions && 
+                        || Settings.searchesDescriptions && 
                             (  terms.All(term => description.Matches(term))
                             || blueprint is BlueprintItem itemBP 
                                 && terms.All(term => {
@@ -264,13 +264,13 @@ namespace ToyBox {
             foreach (var pair in collatedBPs) {
                 if (pair.Key == selectedKey) {
                     matchCount = pair.Value.Count();
-                    selectedCollatedBPs = pair.Value.Take(settings.searchLimit).Distinct().ToArray();
+                    selectedCollatedBPs = pair.Value.Take(Settings.searchLimit).Distinct().ToArray();
                     UpdatePageCount();
                 }
             }
             BlueprintListUI.needsLayout = true;
         }
-        public static IEnumerable OnGUI() {
+        public static void OnGUI() {
             if (blueprints == null) {
                 blueprints = BlueprintLoader.Shared.GetBlueprints();
                 if (blueprints != null) UpdateSearchResults();
@@ -280,7 +280,7 @@ namespace ToyBox {
                 var remainingWidth = ummWidth;
                 // First column - Type Selection Grid
                 using (VerticalScope(GUI.skin.box)) {
-                    ActionSelectionGrid(ref settings.selectedBPTypeFilter,
+                    ActionSelectionGrid(ref Settings.selectedBPTypeFilter,
                         blueprintTypeFilters.Select(tf => tf.name).ToArray(),
                         1,
                         (selected) => { UpdateSearchResults(); },
@@ -314,7 +314,7 @@ namespace ToyBox {
                     // Search Field and modifiers
                     using (HorizontalScope()) {
                         ActionTextField(
-                            ref settings.searchText,
+                            ref Settings.searchText,
                             "searchText",
                             (text) => { },
                             () => UpdateSearchResults(),
@@ -323,24 +323,24 @@ namespace ToyBox {
                         Label("Limit", AutoWidth());
                         15.space();
                         ActionIntTextField(
-                            ref settings.searchLimit,
+                            ref Settings.searchLimit,
                             "searchLimit",
                             (limit) => { },
                             () => UpdateSearchResults(),
                             Width(75));
-                        if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
+                        if (Settings.searchLimit > 1000) { Settings.searchLimit = 1000; }
                         25.space();
-                        if (Toggle("Search Descriptions", ref settings.searchesDescriptions, AutoWidth())) UpdateSearchResults();
+                        if (Toggle("Search Descriptions", ref Settings.searchesDescriptions, AutoWidth())) UpdateSearchResults();
                         25.space();
-                        if (Toggle("Attributes", ref settings.showAttributes, AutoWidth())) UpdateSearchResults();
+                        if (Toggle("Attributes", ref Settings.showAttributes, AutoWidth())) UpdateSearchResults();
                         25.space();
-                        Toggle("Show GUIDs", ref settings.showAssetIDs, AutoWidth());
+                        Toggle("Show GUIDs", ref Settings.showAssetIDs, AutoWidth());
                         25.space();
-                        Toggle("Components", ref settings.showComponents, AutoWidth());
+                        Toggle("Components", ref Settings.showComponents, AutoWidth());
                         25.space();
-                        Toggle("Elements", ref settings.showElements, AutoWidth());
+                        Toggle("Elements", ref Settings.showElements, AutoWidth());
                         25.space();
-                        Toggle("Show Display & Internal Names", ref settings.showDisplayAndInternalNames, AutoWidth());
+                        Toggle("Show Display & Internal Names", ref Settings.showDisplayAndInternalNames, AutoWidth());
                     }
                     // Search Button and Results Summary
                     using (HorizontalScope()) {
@@ -353,7 +353,7 @@ namespace ToyBox {
                         }
                         else if (matchCount > 0) {
                             var title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                            if (matchCount > settings.searchLimit) { title += " => ".cyan() + $"{settings.searchLimit}".cyan().bold(); }
+                            if (matchCount > Settings.searchLimit) { title += " => ".cyan() + $"{Settings.searchLimit}".cyan().bold(); }
                             Label(title, ExpandWidth(false));
                         }
                         Space(130);
@@ -414,7 +414,6 @@ namespace ToyBox {
                     Space(25);
                 }
             }
-            return null;
         }
     }
 }
