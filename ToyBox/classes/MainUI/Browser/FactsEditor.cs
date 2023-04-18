@@ -197,28 +197,24 @@ namespace ToyBox {
                                         else
                                             354.space();
                                         if (ch.HasFeatureSelection(featureSelection, f))
-                                            ActionButton("Remove",
-                                                         () => {
-                                                             if (selectionEntry == null) return;
-                                                             ch.RemoveFeatureSelection(featureSelection,
-                                                                 selectionEntry.data,
+                                            ActionButton("Remove", () => {
+                                                if (selectionEntry == null) return;
+                                                ch.RemoveFeatureSelection(featureSelection,
+                                                                selectionEntry.data,
                                                                  f);
-                                                             FeatureSelectionBrowser.needsReloadData = true;
-                                                             browser.needsReloadData = true;
-                                                         },
-                                                         150.width());
+                                                FeatureSelectionBrowser.needsReloadData = true;
+                                                browser.needsReloadData = true;
+                                            }, 150.width());
                                         else
-                                            ActionButton("Add",
-                                                         () => {
-                                                             ch.AddFeatureSelection(featureSelection, f);
-                                                             FeatureSelectionBrowser.needsReloadData = true;
-                                                             browser.needsReloadData = true;
-                                                         },
-                                                         150.width());
+                                            ActionButton("Add", () => { 
+                                                ch.AddFeatureSelection(featureSelection, f);
+                                                FeatureSelectionBrowser.needsReloadData = true;
+                                                browser.needsReloadData = true;
+                                            }, 150.width());
                                         15.space();
                                         Label(f.GetDescription().StripHTML().green());
                                     }, null, null, 100);
-                            }
+                        }
                         else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
                             if (blueprint != _selectedDetailsBlueprint) ParameterizedFeatureBrowser.ReloadData();
                             _selectedDetailsBlueprint = blueprint;
