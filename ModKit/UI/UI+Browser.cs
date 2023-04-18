@@ -19,7 +19,7 @@ namespace ModKit {
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> DisclosureStates = new();
             private string _searchText = "";
-            public int SearchLimit = 100;
+            public int SearchLimit = 25;
             public bool SearchAsYouType = true;
             public bool ShowAll;
             private int _pageCount;
