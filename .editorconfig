@@ -1,4 +1,4 @@
-﻿[*.cs]
+[*.cs]
 
 # IDE0008: Use explicit type
 csharp_style_var_elsewhere = true
@@ -20,7 +20,7 @@ csharp_style_expression_bodied_local_functions = when_on_single_line:silent
 csharp_space_around_binary_operators = before_and_after
 
 # IDE1006: Naming Styles
-dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.ide1006.severity = none
 
 [*.{cs,vb}]
 #### Naming styles ####
@@ -77,3 +77,54 @@ dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
 dotnet_style_prefer_auto_properties = true:silent
+
+[*]
+
+# Microsoft .NET properties
+csharp_preserve_single_line_blocks = true
+
+# ReSharper properties
+resharper_align_linq_query = true
+resharper_align_multiline_argument = true
+resharper_align_multiline_binary_patterns = true
+resharper_align_multiline_calls_chain = true
+resharper_align_multiline_expression = true
+resharper_align_multiline_extends_list = true
+resharper_align_multiline_parameter = true
+resharper_align_multiple_declaration = true
+resharper_align_multline_type_parameter_constrains = true
+resharper_align_multline_type_parameter_list = true
+resharper_align_tuple_components = true
+resharper_allow_comment_after_lbrace = true
+resharper_blank_lines_around_single_line_type = 0
+resharper_constructor_or_destructor_body = expression_body
+resharper_csharp_align_first_arg_by_paren = true
+resharper_csharp_blank_lines_around_invocable = 0
+resharper_csharp_empty_block_style = together
+resharper_csharp_indent_invocation_pars = outside_and_inside
+resharper_csharp_indent_method_decl_pars = outside_and_inside
+resharper_csharp_indent_statement_pars = outside
+resharper_csharp_stick_comment = false
+resharper_csharp_wrap_arguments_style = chop_if_long
+resharper_csharp_wrap_before_binary_opsign = true
+resharper_csharp_wrap_parameters_style = chop_if_long
+resharper_indent_anonymous_method_block = true
+resharper_indent_nested_fixed_stmt = true
+resharper_indent_nested_foreach_stmt = true
+resharper_indent_nested_for_stmt = true
+resharper_indent_nested_lock_stmt = true
+resharper_indent_nested_usings_stmt = true
+resharper_indent_nested_while_stmt = true
+resharper_indent_pars = outside_and_inside
+resharper_indent_typearg_angles = outside_and_inside
+resharper_indent_typeparam_angles = outside_and_inside
+resharper_keep_existing_declaration_block_arrangement = false
+resharper_keep_existing_embedded_block_arrangement = false
+resharper_local_function_body = expression_body
+resharper_method_or_operator_body = expression_body
+resharper_nested_ternary_style = expanded
+resharper_outdent_statement_labels = true
+resharper_place_linq_into_on_new_line = false
+resharper_place_simple_case_statement_on_same_line = true
+resharper_wrap_chained_binary_expressions = chop_if_long
+resharper_wrap_chained_binary_patterns = chop_if_long
