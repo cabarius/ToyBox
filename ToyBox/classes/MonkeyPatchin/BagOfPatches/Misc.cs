@@ -44,6 +44,7 @@ using System.Linq;
 using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
+using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {

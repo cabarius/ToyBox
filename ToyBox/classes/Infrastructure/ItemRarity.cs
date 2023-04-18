@@ -154,9 +154,9 @@ namespace ToyBox {
         public static Color color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
         public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
         public static string RarityInGame(this string s, RarityType rarity, float adjust = 0) {
-            var name = settings.toggleColorLootByRarity ? s.color(RarityColors[(int)rarity]) : s;
-            if (settings.toggleShowRarityTags)
-                if (settings.toggleColorLootByRarity)
+            var name = Settings.toggleColorLootByRarity ? s.color(RarityColors[(int)rarity]) : s;
+            if (Settings.toggleShowRarityTags)
+                if (Settings.toggleColorLootByRarity)
                     return name + " " + $"[{rarity}]".darkGrey().bold(); //.SizePercent(75);
                 else
                     return name + " " + $"[{rarity}]".Rarity(rarity).bold(); //.SizePercent(75);
@@ -191,7 +191,7 @@ namespace ToyBox {
                         }
                     }
                 }
-                if (highest <= settings.maxRarityToHide) {
+                if (highest <= Settings.maxRarityToHide) {
                     localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
                 }
                 else {

@@ -50,7 +50,8 @@ namespace ModKit {
             var changed = false;
             if (editState.Item1 != label) {
                 using (HorizontalScope(options.AddDefaults())) {
-                    Label(formatter(label), style, AutoWidth());
+                    label = formatter != null ? formatter(label) : label;
+                    Label(label, style, AutoWidth());
                     Space(5);
                     if (GL.Button(Glyphs.Edit, GUI.skin.box, AutoWidth())) {
                         editState = (label, label);
@@ -64,6 +65,7 @@ namespace ModKit {
                     if (GL.Button(Glyphs.CheckOff.red(), GUI.skin.box, AutoWidth())) {
                         editState = (null, null);
                     }
+                    // ReSharper disable once InvertIf
                     if (GL.Button(Glyphs.CheckOn.green(), GUI.skin.box, AutoWidth())
                         || userHasHitReturn && focusedControlName == label) {
                         label = editState.Item2;
@@ -331,41 +333,41 @@ namespace ModKit {
                 Space(25);
                 ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
             }
-            var changed = value != newValue;
+            var changed = Math.Abs(value - newValue) > float.Epsilon;
             value = newValue;
             return changed;
         }
 
-        private const int sliderTop = 3;
-        private const int sliderBottom = -7;
+        private const int SliderTop = 3;
+        private const int SliderBottom = -7;
         public static bool Slider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var newValue = value;
             using (HorizontalScope(options)) {
                 using (VerticalScope(Width(300))) {
-                    Space((sliderTop - 1).point());
+                    Space((SliderTop - 1).point());
                     Label(title.cyan(), Width(300));
-                    Space(sliderBottom.point());
+                    Space(SliderBottom.point());
                 }
                 Space(25);
                 using (VerticalScope(Width(200))) {
-                    Space((sliderTop + 4).point());
+                    Space((SliderTop + 4).point());
                     newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, Width(200)), decimals);
-                    Space(sliderBottom.point());
+                    Space(SliderBottom.point());
                 }
                 Space(25);
                 using (VerticalScope(Width(75))) {
-                    Space((sliderTop + 2).point());
+                    Space((SliderTop + 2).point());
                     FloatTextField(ref newValue, null, Width(75));
-                    Space(sliderBottom.point());
+                    Space(SliderBottom.point());
                 }
                 if (units.Length > 0)
                     Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
                 Space(25);
                 using (VerticalScope(AutoWidth())) {
-                    Space((sliderTop - 0).point());
+                    Space((SliderTop - 0).point());
                     ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
-                    Space(sliderBottom.point());
+                    Space(SliderBottom.point());
                 }
             }
             var changed = value != newValue;
@@ -381,23 +383,23 @@ namespace ModKit {
             return changed;
         }
         public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
-            float fvalue = value;
-            var changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
-            value = (int)fvalue;
+            float floatValue = value;
+            var changed = Slider(title, ref floatValue, min, max, (float)defaultValue, 0, units, options);
+            value = (int)floatValue;
             return changed;
         }
         public static bool Slider(string title, Func<int> get, Action<int> set, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
-            float fvalue = get();
-            var changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
+            float floatValue = get();
+            var changed = Slider(title, ref floatValue, min, max, (float)defaultValue, 0, units, options);
             if (changed)
-                set((int)fvalue);
+                set((int)floatValue);
             return changed;
         }
 
         public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
-            float fvalue = value;
-            var changed = Slider(ref fvalue, min, max, (float)defaultValue, 0, units, options);
-            value = (int)fvalue;
+            float floatValue = value;
+            var changed = Slider(ref floatValue, min, max, (float)defaultValue, 0, units, options);
+            value = (int)floatValue;
             return changed;
         }
         public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
@@ -405,40 +407,40 @@ namespace ModKit {
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             BeginHorizontal(options);
             using (VerticalScope(Width(300))) {
-                Space((sliderTop - 1).point());
+                Space((SliderTop - 1).point());
                 Label(title.cyan(), Width(300));
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             Space(25);
             value = Math.Max(min, Math.Min(max, value));    // clamp it
-            var offset = 1;
+            const int offset = 1;
             var places = (int)Math.Max(0, Math.Min(15, decimals + 1.01 - Math.Log10(value + offset)));
             var logMin = 100f * (float)Math.Log10(min + offset);
             var logMax = 100f * (float)Math.Log10(max + offset);
             var logValue = 100f * (float)Math.Log10(value + offset);
-            var logNewValue = logValue;
+            float logNewValue;
             using (VerticalScope(Width(200))) {
-                Space((sliderTop + 4).point());
+                Space((SliderTop + 4).point());
                 logNewValue = (float)(GL.HorizontalSlider(logValue, logMin, logMax, Width(200)));
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             var newValue = (float)Math.Round(Math.Pow(10, logNewValue / 100f) - offset, places);
             Space(25);
             using (VerticalScope(Width(75))) {
-                Space((sliderTop + 2).point());
+                Space((SliderTop + 2).point());
                 FloatTextField(ref newValue, null, Width(75));
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             if (units.Length > 0)
                 Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
             Space(25);
             using (VerticalScope(AutoWidth())) {
-                Space((sliderTop + 0).point());
+                Space((SliderTop + 0).point());
                 ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             EndHorizontal();
-            var changed = value != newValue;
+            var changed = Math.Abs(value - newValue) > float.Epsilon;
             value = Math.Min(max, Math.Max(min, newValue));
             return changed;
         }
@@ -455,9 +457,9 @@ namespace ModKit {
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             BeginHorizontal(options);
             using (VerticalScope(Width(labelWidth))) {
-                Space((sliderTop - 1).point());
+                Space((SliderTop - 1).point());
                 Label(title.cyan(), Width(labelWidth));
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             Space(25);
             value = Math.Max(min, Math.Min(max, value));    // clamp it
@@ -466,29 +468,29 @@ namespace ModKit {
             var logMin = 100f * (float)Math.Log10(min + offset);
             var logMax = 100f * (float)Math.Log10(max + offset);
             var logValue = 100f * (float)Math.Log10(value + offset);
-            var logNewValue = logValue;
+            float logNewValue;
             using (VerticalScope(Width(200))) {
-                Space((sliderTop + 4).point());
+                Space((SliderTop + 4).point());
                 logNewValue = (float)(GL.HorizontalSlider(logValue, logMin, logMax, Width(200)));
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             var newValue = (float)Math.Round(Math.Pow(10, logNewValue / 100f) - offset, places);
             Space(25);
             using (VerticalScope(Width(75))) {
-                Space((sliderTop + 2).point());
+                Space((SliderTop + 2).point());
                 FloatTextField(ref newValue, null, Width(75));
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             if (units.Length > 0)
                 Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
             Space(25);
             using (VerticalScope(AutoWidth())) {
-                Space((sliderTop + 0).point());
+                Space((SliderTop + 0).point());
                 ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
-                Space(sliderBottom.point());
+                Space(SliderBottom.point());
             }
             EndHorizontal();
-            var changed = value != newValue;
+            var changed = Math.Abs(value - newValue) > float.Epsilon;
             value = Math.Min(max, Math.Max(min, newValue));
             return changed;
         }

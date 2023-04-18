@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace ModKit
 {
-    public static class Utilties
+    public static class Utilities
     {
         public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default)
         {

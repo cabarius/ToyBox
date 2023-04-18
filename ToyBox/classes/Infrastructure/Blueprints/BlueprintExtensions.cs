@@ -25,18 +25,18 @@ using System.Runtime.CompilerServices;
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
-        public static Settings settings => Main.settings;
+        public static Settings Settings => Main.settings;
 
-        private static ConditionalWeakTable<object, List<string>> cachedCollationNames = new() { };
-        private static HashSet<BlueprintGuid> badList = new();
-        public static void ResetCollationCache() => cachedCollationNames = new() { };
+        private static ConditionalWeakTable<object, List<string>> _cachedCollationNames = new() { };
+        private static readonly HashSet<BlueprintGuid> BadList = new();
+        public static void ResetCollationCache() => _cachedCollationNames = new ConditionalWeakTable<object, List<string>> { };
         private static void AddOrUpdateCachedNames(SimpleBlueprint bp, List<string> names) {
             names = names.Distinct().ToList();
-            if (cachedCollationNames.TryGetValue(bp, out _)) {
-                cachedCollationNames.Remove(bp);
+            if (_cachedCollationNames.TryGetValue(bp, out _)) {
+                _cachedCollationNames.Remove(bp);
                 //Mod.Log($"removing: {bp.NameSafe()}");
             }
-            cachedCollationNames.Add(bp, names);
+            _cachedCollationNames.Add(bp, names);
             //Mod.Log($"adding: {bp.NameSafe()} - {names.Count} - {String.Join(", ", names)}");
         }
 
@@ -52,32 +52,30 @@ namespace ToyBox {
         };
         public static string GetDisplayName(this BlueprintSpellbook bp) {
             var name = bp.DisplayName;
-            if (name == null || name.Length == 0) name = bp.name.Replace("Spellbook", "");
+            if (string.IsNullOrEmpty(name)) name = bp.name.Replace("Spellbook", "");
             return name;
         }
         public static IEnumerable<string> Attributes(this SimpleBlueprint bp) {
-            List<string> modifers = new();
-            if (badList.Contains(bp.AssetGuid)) return modifers;
+            List<string> modifiers = new();
+            if (BadList.Contains(bp.AssetGuid)) return modifiers;
             var traverse = Traverse.Create(bp);
-            foreach (var property in Traverse.Create(bp).Properties()) {
-                if (property.StartsWith("Is")) {
-                    try {
-                        var value = traverse.Property<bool>(property)?.Value;
-                        if (value.HasValue && value.GetValueOrDefault()) {
-                            modifers.Add(property); //.Substring(2));
-                        }
-                    }
-                    catch (Exception e) {
-                        Mod.Warn($"${bp.name}.{property} thew an exception: {e.Message}");
-                        badList.Add(bp.AssetGuid);
-                        break;
+            foreach (var property in Traverse.Create(bp).Properties().Where(property => property.StartsWith("Is"))) {
+                try {
+                    var value = traverse.Property<bool>(property)?.Value;
+                    if (value.HasValue && value.GetValueOrDefault()) {
+                        modifiers.Add(property); //.Substring(2));
                     }
                 }
+                catch (Exception e) {
+                    Mod.Warn($"${bp.name}.{property} thew an exception: {e.Message}");
+                    BadList.Add(bp.AssetGuid);
+                    break;
+                }
             }
-            return modifers;
+            return modifiers;
         }
         private static List<string> DefaultCollationNames(this SimpleBlueprint bp, string[] extras) {
-            cachedCollationNames.TryGetValue(bp, out var names);
+            _cachedCollationNames.TryGetValue(bp, out var names);
             if (names == null) {
                 names = new List<string> { };
                 var typeName = bp.GetType().Name.Replace("Blueprint", "");
@@ -86,7 +84,7 @@ namespace ToyBox {
                 names.Add(typeName);
                 foreach (var attribute in bp.Attributes())
                     names.Add(attribute.orange());
-                cachedCollationNames.Add(bp, names.Distinct().ToList());
+                _cachedCollationNames.Add(bp, names.Distinct().ToList());
             }
 
             if (extras != null) names = names.Concat(extras).ToList();
@@ -151,11 +149,11 @@ namespace ToyBox {
         // Custom Attributes that Owlcat uses 
         public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
 
-        public static string GetInfoBoxDescription(this SimpleBlueprint bp) => String.Join("\n", bp.GetInfoBoxes().Select(attr => attr.Text));
+        public static string GetInfoBoxDescription(this SimpleBlueprint bp) => string.Join("\n", bp.GetInfoBoxes().Select(attr => attr.Text));
 
         private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
         public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {
-            if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type];
+            if (blueprintsByType.TryGetValue(type, out var ofType)) return ofType;
             var blueprints = BlueprintLoader.Shared.GetBlueprints();
             if (blueprints == null) return new List<SimpleBlueprint>();
             var filtered = blueprints.Where((bp) => bp?.GetType().IsKindOf(type) == true).ToList();
@@ -167,10 +165,10 @@ namespace ToyBox {
 
         public static IEnumerable<BPType> BlueprintsOfType<BPType>() where BPType : SimpleBlueprint {
             var type = typeof(BPType);
-            if (blueprintsByType.ContainsKey(type)) return blueprintsByType[type].OfType<BPType>();
+            if (blueprintsByType.TryGetValue(type, out var value)) return value.OfType<BPType>();
             var blueprints = BlueprintLoader.Shared.GetBlueprints<BPType>();
             if (blueprints == null) return new List<BPType>();
-            var filtered = blueprints.Where((bp) => bp is BPType).ToList();
+            var filtered = blueprints.Where((bp) => bp != null).ToList();
             // FIXME - why do we get inconsistent partial results if we cache here
             //if (filtered.Count > 0)
             //    blueprintsByType[type] = filtered;
@@ -184,17 +182,9 @@ namespace ToyBox {
             if (component == null)
                 return count;
             if (component.AnyFeatureFromSelection) {
-                foreach (var allFeature in selection.AllFeatures) {
-                    if (!unit.Progression.Features.HasFact((BlueprintFact)allFeature)) {
-                        count++;
-                    }
-                }
+                count += selection.AllFeatures.Count(allFeature => !unit.Progression.Features.HasFact((BlueprintFact)allFeature));
             }
-            foreach (var feature in component.Features) {
-                if (!unit.Progression.Features.HasFact((BlueprintFact)feature)) {
-                    count++;
-                }
-            }
+            count += component.Features.Count(feature => !unit.Progression.Features.HasFact((BlueprintFact)feature));
             return count;
         }
 
@@ -208,10 +198,8 @@ namespace ToyBox {
             var progression = ch?.Descriptor?.Progression;
             if (progression == null) return false;
             if (!progression.Features.HasFact(bp)) return false;
-            if (progression.Selections.TryGetValue(bp, out var selection)) {
-                if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == feature))) return true;
-            }
-            return false;
+            return progression.Selections.TryGetValue(bp, out var selection) 
+                   && selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == feature));
         }
         public static List<BlueprintFeature> FeatureSelectionValues(this UnitEntityData ch, BlueprintFeatureSelection bp) => bp.AllFeatures.Where(f => ch.HasFeatureSelection(bp, f)).ToList();
         public static List<FeatureSelectionEntry> FeatureSelectionEntries(this UnitEntityData ch, BlueprintFeatureSelection bp)
@@ -224,25 +212,25 @@ namespace ToyBox {
             var source = new FeatureSource();
             ch?.Progression?.AddSelection(bp, source, level, feature);
             var featureCollection = ch?.Progression?.Features;
+            if (featureCollection == null) return;
             var fact = new Feature(feature, featureCollection.Owner, null);
             fact = featureCollection.Manager.Add<Feature>(fact);
-            fact.SetSource(source, level);
+            fact?.SetSource(source, level);
             // ch?.Progression?.Features.AddFeature(bp).SetSource(source, 1);
         }
         public static void RemoveFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, FeatureSelectionData data, BlueprintFeature feature) {
             var progression = ch?.Descriptor?.Progression;
+            if (progression == null) return;
             var fact = progression.Features.GetFact(feature);
             BlueprintFeatureSelection featureSelection = null;
             FeatureSelectionData featureSelectionData = null;
-            int level = -1;
+            var level = -1;
             foreach (var selection in progression.Selections) {
-                foreach (var keyValuePair in selection.Value.SelectionsByLevel) {
-                    if (keyValuePair.Value.HasItem<BlueprintFeature>(feature)) {
-                        featureSelection = selection.Key;
-                        featureSelectionData = selection.Value;
-                        level = keyValuePair.Key;
-                        break;
-                    }
+                foreach (var keyValuePair in selection.Value.SelectionsByLevel.Where(keyValuePair => keyValuePair.Value.HasItem<BlueprintFeature>(feature))) {
+                    featureSelection = selection.Key;
+                    featureSelectionData = selection.Value;
+                    level = keyValuePair.Key;
+                    break;
                 }
                 if (level >= 0)
                     break;
@@ -250,20 +238,18 @@ namespace ToyBox {
             if (featureSelection != null) {
                 featureSelectionData.RemoveSelection(level, feature);
             }
-            MechanicsContext parentContext = fact.Context.ParentContext;
+            if (fact == null) return;
             progression.Features.RemoveFact(fact);
         }
 
         // BlueprintParametrizedFeature Helpers
-        public static bool HasParamemterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
-            if (bp.Items.Count() == 0) return false;
+        public static bool HasParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
+            if (!bp.Items.Any()) return false;
             var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
             return existing != null;
         }
-        public static List<IFeatureSelectionItem> ParamterizedFeatureItems(this UnitEntityData ch, BlueprintParametrizedFeature bp) => bp.Items.Where(f => ch.HasParamemterizedFeatureItem(bp, f)).ToList();
-        public static void AddParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
-            ch?.Descriptor?.AddFact<UnitFact>(bp, null, item.Param);
-        }
+        public static List<IFeatureSelectionItem> ParameterizedFeatureItems(this UnitEntityData ch, BlueprintParametrizedFeature bp) => bp.Items.Where(f => ch.HasParameterizedFeatureItem(bp, f)).ToList();
+        public static void AddParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, item.Param);
         public static void RemoveParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
             var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
             ch?.Progression?.Features?.RemoveFact(fact);

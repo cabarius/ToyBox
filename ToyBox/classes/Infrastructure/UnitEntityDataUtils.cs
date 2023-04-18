@@ -18,6 +18,7 @@ using ModKit;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Items;
 using Kingmaker.Controllers.Combat;
+using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox {
     public enum UnitSelectType {

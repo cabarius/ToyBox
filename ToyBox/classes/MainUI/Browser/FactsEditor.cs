@@ -77,10 +77,10 @@ namespace ToyBox {
                 bool canIncrease = increase?.canPerform(blueprint, ch) ?? false;
                 if ((canDecrease || canIncrease) && feature is UnitFact rankFeature) {
                     var v = rankFeature.GetRank();
-                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease.action(blueprint, ch, repeatCount)), 60);
+                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease!.action(blueprint, ch, repeatCount)), 60);
                     Space(10f);
                     Label($"{v}".orange().bold(), Width(30));
-                    increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase.action(blueprint, ch, repeatCount)), 60);
+                    increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase!.action(blueprint, ch, repeatCount)), 60);
                     Space(17);
                     remainingWidth -= 190;
                 }
@@ -93,8 +93,8 @@ namespace ToyBox {
                 Space(190);
                 remainingWidth -= 190;
             }
-            bool canAdd = add?.canPerform(blueprint, ch) ?? false;
-            bool canRemove = remove?.canPerform(blueprint, ch) ?? false;
+            var canAdd = add?.canPerform(blueprint, ch) ?? false;
+            var canRemove = remove?.canPerform(blueprint, ch) ?? false;
             if (canRemove) {
                 remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { usedBrowser.needsReloadData = true; remove.action(blueprint, ch, repeatCount); }), 175);
             }
@@ -115,7 +115,7 @@ namespace ToyBox {
             }
         }
         public static string getName<Definition>(Definition feature) where Definition : BlueprintScriptableObject, IUIDataProvider {
-            bool isEmpty = feature.Name.IsNullOrEmpty();
+            var isEmpty = feature.Name.IsNullOrEmpty();
             string name;
             if (isEmpty) {
                 name = feature.name;
@@ -218,7 +218,7 @@ namespace ToyBox {
                             else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
                                 return (_, item) => ParameterizedFeatureBrowser.OnGUI(
                                     $"{item.Name}-parameterSelection",
-                                    ch.ParamterizedFeatureItems(parametrizedFeature),
+                                    ch.ParameterizedFeatureItems(parametrizedFeature),
                                     () => parametrizedFeature.Items.OrderBy(i => i.Name),
                                     i => i,
                                     i => i.Name,
@@ -226,7 +226,7 @@ namespace ToyBox {
                                     i => i.Name,
                                     null,
                                     (_, i) => {
-                                        if (ch.HasParamemterizedFeatureItem(parametrizedFeature, i))
+                                        if (ch.HasParameterizedFeatureItem(parametrizedFeature, i))
                                             ActionButton("Remove", () => {
                                                 ch.RemoveParameterizedFeatureItem(parametrizedFeature, i);
                                                 FeatureSelectionBrowser.needsReloadData = true;
