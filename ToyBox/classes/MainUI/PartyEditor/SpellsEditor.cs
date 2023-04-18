@@ -137,7 +137,7 @@ namespace ToyBox {
                                 20.space();
                                 Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 200.width());
                                 20.space();
-                                Toggle("Show Inspector", ref FactsEditor.showInspector, 150.width());
+                                Toggle("Show Inspector", ref FactsEditor.ShowInspector, 150.width());
                                 if (Toggle("Search Descriptions", ref settings.searchesDescriptions, 250.width())) {
                                     SpellBrowser.needsReloadData = true;
                                 }
@@ -185,7 +185,7 @@ namespace ToyBox {
                                 20.space();
                                 Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 200.width());
                                 20.space();
-                                Toggle("Show Inspector", ref FactsEditor.showInspector, 150.width());
+                                Toggle("Show Inspector", ref FactsEditor.ShowInspector, 150.width());
                                 if (Toggle("Search Descriptions", ref settings.searchesDescriptions, 250.width())) {
                                     SpellbookBrowser.needsReloadData = true;
                                 }

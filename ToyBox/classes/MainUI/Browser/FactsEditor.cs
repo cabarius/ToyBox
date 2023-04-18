@@ -17,6 +17,7 @@ using ModKit;
 using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
@@ -40,18 +41,18 @@ namespace ToyBox {
                 }
             }
         }
-        private static Settings settings => Main.settings;
-        private static bool showTree = false;
-        public static bool showInspector = false;
+        private static Settings Settings => Main.settings;
+        private static bool _showTree = false;
+        public static bool ShowInspector = false;
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
         private static readonly CollectionChangedSubscriber collectionChangedSubscriber = new();
 
-        private static Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
-        private static Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
-        private static Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
-        private static Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
-        private static Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new();
+        private static readonly Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
+        private static readonly Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
+        private static readonly Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
+        private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
+        private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new();
 
 
         public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
@@ -74,8 +75,7 @@ namespace ToyBox {
             if (feature != null) {
                 bool canDecrease = decrease?.canPerform(blueprint, ch) ?? false;
                 bool canIncrease = increase?.canPerform(blueprint, ch) ?? false;
-                var rankFeature = feature as UnitFact;
-                if ((canDecrease || canIncrease) && rankFeature != null) {
+                if ((canDecrease || canIncrease) && feature is UnitFact rankFeature) {
                     var v = rankFeature.GetRank();
                     decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease.action(blueprint, ch, repeatCount)), 60);
                     Space(10f);
@@ -104,9 +104,9 @@ namespace ToyBox {
             remainingWidth -= 178;
             Space(20); remainingWidth -= 20;
             using (VerticalScope(Width(remainingWidth - 100))) {
-                if (settings.showAssetIDs)
+                if (Settings.showAssetIDs)
                     GUILayout.TextField(blueprint.AssetGuid.ToString(), AutoWidth());
-                if (showInspector) {
+                if (ShowInspector) {
                     ReflectionTreeView.DetailToggle(getName(blueprint), blueprint, blueprint, 0);
                 }
                 if (blueprint.Description != null) {
@@ -125,7 +125,7 @@ namespace ToyBox {
                 if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                     name = feature.name;
                 }
-                else if (settings.showDisplayAndInternalNames) {
+                else if (Settings.showDisplayAndInternalNames) {
                     name += $" : {feature.name.color(RGBA.darkgrey)}";
                 }
             }
@@ -136,31 +136,31 @@ namespace ToyBox {
             where Definition : BlueprintUnitFact {
             bool updateTree = false;
             List<Action> todo = new();
-            if (showTree) {
+            if (_showTree) {
                 using (HorizontalScope()) {
                     Space(670);
-                    Toggle("Show Tree", ref showTree, Width(250));
+                    Toggle("Show Tree", ref _showTree, Width(250));
                 }
                 treeEditor.OnGUI(ch, updateTree);
             }
             else {
                 browser.OnGUI(name,
                     fact,
-                    () => GetBlueprints<Definition>(),
+                    GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
-                    (feature) => getName(feature),
-                    (feature) => $"{getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} " + (settings.searchesDescriptions ? feature.Description : ""),
-                    (feature) => getName(feature),
+                    getName,
+                    (feature) => $"{getName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} " + (Settings.searchesDescriptions ? feature.Description : ""),
+                    getName,
                     () => {
                         using (HorizontalScope()) {
                             Toggle("Show GUIDs", ref Main.settings.showAssetIDs, 150.width());
                             20.space();
-                            Toggle("Show Internal Names", ref settings.showDisplayAndInternalNames, 200.width());
+                            Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width());
                             20.space();
-                            updateTree |= Toggle("Show Tree", ref showTree, Width(130));
+                            updateTree |= Toggle("Show Tree", ref _showTree, Width(130));
                             20.space();
-                            Toggle("Show Inspector", ref showInspector, 150.width());
-                            if (Toggle("Search Descriptions", ref settings.searchesDescriptions, 250.width())) {
+                            Toggle("Show Inspector", ref ShowInspector, 150.width());
+                            if (Toggle("Search Descriptions", ref Settings.searchesDescriptions, 250.width())) {
                                 browser.needsReloadData = true;
                                 FeatureSelectionBrowser.needsReloadData = true;
                                 ParameterizedFeatureBrowser.needsReloadData = true;
@@ -170,7 +170,7 @@ namespace ToyBox {
                     (feature, blueprint) => RowGUI(feature, blueprint, ch, browser, todo),
                     (fact, blueprint) => {
                         bool shouldShowChildren = true;
-                        if (showInspector) {
+                        if (ShowInspector) {
                             shouldShowChildren = !ReflectionTreeView.DetailsOnGUI(blueprint);
                         }
                         if (shouldShowChildren) {
@@ -180,27 +180,28 @@ namespace ToyBox {
                                     ch.FeatureSelectionEntries(featureSelection),
                                     () => featureSelection.AllFeatures.OrderBy(f => f.Name),
                                     entry => entry.feature,
-                                    f => getName(f),
-                                    f => $"{getName(f)} {f.NameSafe()} {f.GetDisplayName()} " + (settings.searchesDescriptions ? f.Description : ""),
-                                    f => getName(f),
+                                    getName,
+                                    f => $"{getName(f)} {f.NameSafe()} {f.GetDisplayName()} " + (Settings.searchesDescriptions ? f.Description : ""),
+                                    getName,
                                     null,
-                                    (entry, f) => {
-                                        if (entry != null) {
-                                            var level = entry.level;
+                                    (selectionEntry, f) => {
+                                        if (selectionEntry != null) {
+                                            var level = selectionEntry.level;
                                             if (ValueAdjuster(ref level, 1, 0, 20, false)) {
-                                                ch.RemoveFeatureSelection(featureSelection, entry.data, f);
+                                                ch.RemoveFeatureSelection(featureSelection, selectionEntry.data, f);
                                                 ch.AddFeatureSelection(featureSelection, f, level);
                                                 FeatureSelectionBrowser.ReloadData();
                                                 browser.ReloadData();
                                             }
                                             10.space();
-                                            Label($"{entry.data.Source.Blueprint.GetDisplayName()}", 250.width());
+                                            Label($"{selectionEntry.data.Source.Blueprint.GetDisplayName()}", 250.width());
                                         }
                                         else
                                             354.space();
                                         if (ch.HasFeatureSelection(featureSelection, f))
                                             ActionButton("Remove", () => {
-                                                ch.RemoveFeatureSelection(featureSelection, entry.data, f);
+                                                if (selectionEntry == null) return;
+                                                ch.RemoveFeatureSelection(featureSelection, selectionEntry.data, f);
                                                 FeatureSelectionBrowser.needsReloadData = true;
                                                 browser.needsReloadData = true;
                                             }, 150.width());
@@ -221,7 +222,7 @@ namespace ToyBox {
                                     () => parametrizedFeature.Items.OrderBy(i => i.Name),
                                     i => i,
                                     i => i.Name,
-                                    i => $"{i.Name} " + (settings.searchesDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
+                                    i => $"{i.Name} " + (Settings.searchesDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
                                     i => i.Name,
                                     null,
                                     (_, i) => {
@@ -248,28 +249,28 @@ namespace ToyBox {
             return todo;
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
-            var FeatureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
-            if (FeatureBrowser == null) {
-                FeatureBrowser = new Browser<Feature, BlueprintFeature>();
-                FeatureBrowserDict[ch] = FeatureBrowser;
+            var featureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
+            if (featureBrowser == null) {
+                featureBrowser = new Browser<Feature, BlueprintFeature>();
+                FeatureBrowserDict[ch] = featureBrowser;
             }
-            return OnGUI(ch, FeatureBrowser, feature, "Features");
+            return OnGUI(ch, featureBrowser, feature, "Features");
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
-            var BuffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
-            if (BuffBrowser == null) {
-                BuffBrowser = new Browser<Buff, BlueprintBuff>();
-                BuffBrowserDict[ch] = BuffBrowser;
+            var buffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
+            if (buffBrowser == null) {
+                buffBrowser = new Browser<Buff, BlueprintBuff>();
+                BuffBrowserDict[ch] = buffBrowser;
             }
-            return OnGUI(ch, BuffBrowser, buff, "Buffs");
+            return OnGUI(ch, buffBrowser, buff, "Buffs");
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
-            var AbilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
-            if (AbilityBrowser == null) {
-                AbilityBrowser = new Browser<Ability, BlueprintAbility>();
-                AbilityBrowserDict[ch] = AbilityBrowser;
+            var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
+            if (abilityBrowser == null) {
+                abilityBrowser = new Browser<Ability, BlueprintAbility>();
+                AbilityBrowserDict[ch] = abilityBrowser;
             }
-            return OnGUI(ch, AbilityBrowser, ability, "Abilities");
+            return OnGUI(ch, abilityBrowser, ability, "Abilities");
         }
     }
 }
