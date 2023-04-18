@@ -2,6 +2,7 @@
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
@@ -50,8 +51,8 @@ namespace ToyBox {
         private static readonly Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
-        private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { SearchLimit = 12 };
-        private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { SearchLimit = 12 };
+        private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { IsDetailBrowser = true };
+        private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { IsDetailBrowser = true };
         private static SimpleBlueprint _selectedDetailsBlueprint = null;
 
 
@@ -111,12 +112,14 @@ namespace ToyBox {
             }
         }
         public static string GetName<Definition>(Definition feature) where Definition : BlueprintScriptableObject, IUIDataProvider {
-            var isEmpty = feature.Name.IsNullOrEmpty();
             string name;
+            var isEmpty = feature.Name.IsNullOrEmpty();
             if (isEmpty) {
                 name = feature.name;
             }
             else {
+                if (feature is BlueprintSpellbook spellbook)
+                    return $"{spellbook.Name} - {spellbook.name}";
                 name = feature.Name;
                 if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                     name = feature.name;
@@ -165,7 +168,7 @@ namespace ToyBox {
                         }
                     },
                     (feature, blueprint) => RowGUI(feature, blueprint, ch, browser, todo),
-                    (feature, blueprint) => ReflectionTreeView.DetailsOnGUI(blueprint),
+                    (feature, blueprint) => ReflectionTreeView.DetailsOnGUI(feature != null ? feature : blueprint),
                     (unitFact, blueprint) => {
                         if (blueprint is BlueprintFeatureSelection featureSelection) {
                             if (blueprint != _selectedDetailsBlueprint) FeatureSelectionBrowser.ReloadData();

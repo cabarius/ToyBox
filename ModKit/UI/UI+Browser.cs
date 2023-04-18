@@ -22,7 +22,16 @@ namespace ModKit {
             private string _searchText = "";
             public bool SearchAsYouType;
             public bool ShowAll;
-            public int SearchLimit;
+            public bool IsDetailBrowser;
+            public int SearchLimit {
+                get => IsDetailBrowser ? Settings.browserDetailSearchLimit : Settings.browserSearchLimit;
+                set {
+                    if (IsDetailBrowser)
+                        Settings.browserDetailSearchLimit = value;
+                    else
+                        Settings.browserSearchLimit = value;
+                }
+            }
             private int _pageCount;
             private int _matchCount;
             private int _currentPage = 1;
@@ -33,16 +42,13 @@ namespace ModKit {
             private bool _startedLoading = false;
             private readonly bool _availableIsStatic;
             private List<Definition> _availableCache;
-            string _prevCallerKey = String.Empty;
+            private string _prevCallerKey = string.Empty;
             public void OnShowGUI() => needsReloadData = true;
-            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, int searchLimit = -1) {
+            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false) {
                 SearchAsYouType = searchAsYouType;
                 _availableIsStatic = availableIsStatic;
+                IsDetailBrowser = isDetailBrowser;
                 Mod.NotifyOnShowGUI += OnShowGUI;
-                if (searchLimit > 0)
-                    SearchLimit = searchLimit;
-                else
-                    SearchLimit = Settings.searchLimit;
             }
 
             public void OnGUI(
@@ -84,8 +90,10 @@ namespace ModKit {
                             }, () => { needsReloadData = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
-                            ActionIntTextField(ref SearchLimit, "Search Limit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
-                            if (SearchLimit > 1000) { SearchLimit = 1000; }
+                            var searchLimit = SearchLimit;
+                            ActionIntTextField(ref searchLimit, "Search Limit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
+                            if (searchLimit > 1000) { searchLimit = 1000; }
+                            SearchLimit = searchLimit;
                             25.space();
                             _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref ShowAll, () => ReloadData());
                             25.space();

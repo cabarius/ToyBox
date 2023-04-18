@@ -346,7 +346,9 @@ namespace ToyBox {
         public int selectedPartyFilter = 0;
 
         // Blueprint Browser
-        public int searchLimit = 12;
+        public int searchLimit = 100;
+        public int browserSearchLimit = 20;
+        public int browserDetailSearchLimit = 10;
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
         public bool searchDescriptions = false; // keeping around for a bit to not break saves 

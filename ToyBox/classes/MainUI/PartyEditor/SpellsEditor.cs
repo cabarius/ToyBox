@@ -26,6 +26,8 @@ namespace ToyBox {
             var names = spellbooks.Select((sb) => sb.Blueprint.GetDisplayName()).ToArray();
             var titles = names.Select((name, i) => $"{name} ({spellbooks.ElementAt(i).CasterLevel})").ToArray();
             if (spellbooks.Any()) {
+                if (selectedSpellbook >= spellbooks.Count)
+                    selectedSpellbook = 0;
                 var spellbook = spellbooks.ElementAt(selectedSpellbook);
                 using (HorizontalScope()) {
                     SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
