@@ -5,7 +5,6 @@ using Kingmaker;
 using Kingmaker.GameModes;
 using Kingmaker.Utility;
 using ModKit;
-using static ModKit.UI;
 using Owlcat.Runtime.Core.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,7 @@ using ToyBox.classes.MainUI;
 using ToyBox.Multiclass;
 using UnityEngine;
 using UnityModManagerNet;
+using static ModKit.UI;
 
 namespace ToyBox {
 #if DEBUG
@@ -60,7 +60,7 @@ namespace ToyBox {
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
                 modEntry.OnToggle = OnToggle;
-                modEntry.OnShowGUI = OnShowGUI; 
+                modEntry.OnShowGUI = OnShowGUI;
                 modEntry.OnHideGUI = OnHideGUI;
                 modEntry.OnGUI = OnGUI;
                 modEntry.OnUpdate = OnUpdate;

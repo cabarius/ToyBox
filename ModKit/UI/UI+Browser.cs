@@ -3,9 +3,8 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using ToyBox;
+using ToyBox;
 using UnityEngine;
-//using static Kingmaker.Blueprints.Classes.StatsDistributionPreset;
 
 namespace ModKit {
 
@@ -15,13 +14,12 @@ namespace ModKit {
             // It provides a toggle to show the definitions mixed in with the items. 
             // By default it shows just the title but you can provide an optional RowUI to show more complex row UI including buttons to add and remove items and so forth. This will be layed out after the title
             // You an also provide UI that renders children below the row
-
+            public Settings settings => Main.settings;
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
-            private IEnumerable<Definition> _filteredOrderedDefinitions;
+            public IEnumerable<Definition> filteredOrderedDefinitions;
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> DisclosureStates = new();
             private string _searchText = "";
-            public int SearchLimit = 100;
             public bool SearchAsYouType = true;
             public bool ShowAll;
             private int _pageCount;
@@ -34,7 +32,6 @@ namespace ModKit {
             private bool _startedLoading = false;
             private bool _availableIsStatic;
             private IEnumerable<Definition> _availableCache;
-            IEnumerable<Item> previousCurrent = null;
             string prevCallerKey = String.Empty;
             public void OnShowGUI() {
                 needsReloadData = true;
@@ -46,25 +43,24 @@ namespace ModKit {
             }
 
             public void OnGUI(
-                    string callerKey,
-                    IEnumerable<Item> current,
-                    Func<IEnumerable<Definition>> available,    // Func because available may be slow
-                    Func<Item, Definition> definition,
-                    Func<Definition, string> identifier,
-                    Func<Definition, string> title,
-                    Func<Definition, string> searchKey = null,
-                    Func<Definition, string> sortKey = null,
-                    Action OnHeaderGUI = null,
-                    Action<Item, Definition> OnRowGUI = null,
-                    Func<Item, Definition, Action<Item, Definition>> OnChildrenGUI = null,
-                    int indent = 50,
-                    bool showDiv = true,
-                    bool search = true,
-                    float titleMinWidth = 100,
-                    float titleMaxWidth = 300,
-                    string searchTextPassedFromParent = "",
-                    bool showItemDiv = false
-                    ) {
+                string callerKey,
+                IEnumerable<Item> current,
+                Func<IEnumerable<Definition>> available,    // Func because available may be slow
+                Func<Item, Definition> definition,
+                Func<Definition, string> title,
+                Func<Definition, string> searchKey = null,
+                Func<Definition, string> sortKey = null,
+                Action OnHeaderGUI = null,
+                Action<Item, Definition> OnRowGUI = null,
+                Func<Item, Definition, Action<Item, Definition>> OnChildrenGUI = null,
+                int indent = 50,
+                bool showDiv = true,
+                bool search = true,
+                float titleMinWidth = 100,
+                float titleMaxWidth = 300,
+                string searchTextPassedFromParent = "",
+                bool showItemDiv = false
+                ) {
                 if (callerKey != prevCallerKey) {
                     prevCallerKey = callerKey;
                     DisclosureStates.Clear();
@@ -73,7 +69,7 @@ namespace ModKit {
                 if (sortKey == null) sortKey = title;
                 if (current == null) current = new List<Item>();
                 List<Definition> definitions = update(current, available, title, search, searchKey, sortKey, definition);
-                if (search || SearchLimit < _matchCount) {
+                if (search || settings.searchLimit < _matchCount) {
                     if (search) {
                         using (HorizontalScope()) {
                             indent.space();
@@ -85,8 +81,8 @@ namespace ModKit {
                             }, () => { needsReloadData = true; }, width(320));
                             25.space();
                             Label("Limit", ExpandWidth(false));
-                            ActionIntTextField(ref SearchLimit, "searchLimit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
-                            if (SearchLimit > 1000) { SearchLimit = 1000; }
+                            ActionIntTextField(ref settings.searchLimit, "Search Limit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
+                            if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                             25.space();
                             _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref ShowAll);
                             25.space();
@@ -108,23 +104,31 @@ namespace ModKit {
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
                             var matchesText = "Matches: ".Green().Bold() + $"{_matchCount}".Orange().Bold();
-                            if (_matchCount > SearchLimit) { matchesText += " => ".Cyan() + $"{SearchLimit}".Cyan().Bold(); }
+                            if (_matchCount > settings.searchLimit) { matchesText += " => ".Cyan() + $"{settings.searchLimit}".Cyan().Bold(); }
 
                             Label(matchesText, ExpandWidth(false));
                         }
-                        if (_matchCount > SearchLimit) {
+                        if (_matchCount > settings.searchLimit) {
                             string pageLabel = "Page: ".orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
                             25.space();
                             Label(pageLabel, ExpandWidth(false));
                             ActionButton("-", () => {
-                                if (_currentPage > 1) {
-                                    _currentPage -= 1;
+                                if (_currentPage >= 1) {
+                                    if (_currentPage == 1) {
+                                        _currentPage = _pageCount;
+                                    } else {
+                                        _currentPage -= 1;
+                                    }
                                     _updatePages = true;
                                 }
                             }, AutoWidth());
                             ActionButton("+", () => {
-                                if (_currentPage < _pageCount) {
-                                    _currentPage += 1;
+                                if (_currentPage <= _pageCount) {
+                                    if (_currentPage == _pageCount) {
+                                        _currentPage = 1;
+                                    } else {
+                                        _currentPage += 1;
+                                    }
                                     _updatePages = true;
                                 }
                             }, AutoWidth());
@@ -159,13 +163,12 @@ namespace ModKit {
                         }
                         if (OnChildrenGUI == null || OnChildrenGUI(item, def) == null) {
                             Label(text, width((int)titleWidth));
-                            // remwidth -= titlewidth;
                         } else {
                             DisclosureStates.TryGetValue(titleKey, out showChildren);
                             if (DisclosureToggle(text, ref showChildren, titleWidth)) {
                                 DisclosureStates.Clear();
                                 DisclosureStates[titleKey] = showChildren;
-                                ReloadData();
+                                needsReloadData = true;
                             }
                         }
                         var lastRect = GUILayoutUtility.GetLastRect();
@@ -196,7 +199,18 @@ namespace ModKit {
                     if (needsReloadData) {
                         if (DateTime.Now.CompareTo(lockedUntil) >= 0) {
                             _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
-                            var defs = (ShowAll) ? ((_availableIsStatic) ? _availableCache : available()) : _currentDict.Keys.ToList();
+                            IEnumerable<Definition> defs;
+                            if (ShowAll) {
+                                if (_startedLoading) {
+                                    defs = _currentDict.Keys.ToList();
+                                } else if (_availableIsStatic) {
+                                    defs = _availableCache;
+                                } else {
+                                    defs = available();
+                                }
+                            } else {
+                                defs = _currentDict.Keys.ToList();
+                            }
                             UpdateSearchResults(_searchText, defs, searchKey, sortKey, title, search);
                             needsReloadData = false;
                         }
@@ -245,14 +259,14 @@ namespace ModKit {
                     filtered = definitions.ToList();
                 }
                 _matchCount = filtered.Count;
-                _filteredOrderedDefinitions = filtered.OrderBy(sortKey);
+                filteredOrderedDefinitions = filtered.OrderBy(sortKey);
                 UpdatePageCount();
                 UpdatePaginatedResults();
                 _updatePages = false;
             }
             public void UpdatePageCount() {
-                if (SearchLimit > 0) {
-                    _pageCount = (int)Math.Ceiling((double)_matchCount / SearchLimit);
+                if (settings.searchLimit > 0) {
+                    _pageCount = (int)Math.Ceiling((double)_matchCount / settings.searchLimit);
                     _currentPage = Math.Min(_currentPage, _pageCount);
                     _currentPage = Math.Max(1, _currentPage);
                 } else {
@@ -261,12 +275,12 @@ namespace ModKit {
                 }
             }
             public void UpdatePaginatedResults() {
-                var limit = SearchLimit;
+                var limit = settings.searchLimit;
                 var count = _matchCount;
                 var offset = Math.Min(count, (_currentPage - 1) * limit);
                 limit = Math.Min(limit, Math.Max(count, count - limit));
                 Mod.Trace($"{_currentPage} / {_pageCount} count: {count} => offset: {offset} limit: {limit} ");
-                _pagedResults = _filteredOrderedDefinitions.Skip(offset).Take(limit).ToArray();
+                _pagedResults = filteredOrderedDefinitions.Skip(offset).Take(limit).ToArray();
             }
         }
     }

@@ -172,7 +172,6 @@ namespace ToyBox.classes.MainUI {
                                             return armyBlueprints;
                                         },
                                         (unit) => unit,
-                                        (unit) => unit.NameSafe(),
                                         (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
                                         (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
                                         (unit) => unit.GetDisplayName(),

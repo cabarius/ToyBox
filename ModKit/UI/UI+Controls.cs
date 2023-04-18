@@ -1,10 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using System;
-using GL = UnityEngine.GUILayout;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using UnityEngine;
+using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
@@ -220,9 +219,9 @@ namespace ModKit {
             else if (showMinMax) {
                 Space(-21);
                 ActionButton("min ".cyan(), () => { }, textBoxStyle, AutoWidth());
-            }
-            else
+            } else {
                 34.space();
+            }
             var temp = false;
             Button($"{v}".orange().bold(), ref temp, textBoxStyle, AutoWidth());
             if (v < max)
@@ -230,8 +229,7 @@ namespace ModKit {
             else if (showMinMax) {
                 ActionButton(" max".cyan(), () => { }, textBoxStyle, AutoWidth());
                 Space(-27);
-            }
-            else
+            } else
                 34.space();
             if (v != value) {
                 value = v;

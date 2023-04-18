@@ -1,15 +1,10 @@
-﻿using Kingmaker;
+﻿using Kingmaker.Utility;
 using ModKit.Utility;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static ModKit.Utility.StringExtensions;
-using ModKit;
 using static ModKit.UI;
-using System.Reflection.Emit;
-using ToyBox;
-using Kingmaker.Utility;
+using static ModKit.Utility.StringExtensions;
 
 namespace ModKit.DataViewer {
     public class ReflectionTreeView {
@@ -26,11 +21,14 @@ namespace ModKit.DataViewer {
                 }
             }
         }
-        public static void DetailsOnGUI(object key) {
+        public static bool DetailsOnGUI(object key) {
             ReflectionTreeView reflectionTreeView = null;
             ExpandedObjects.TryGetValue(key, out reflectionTreeView);
             if (reflectionTreeView != null) {
                 reflectionTreeView.OnGUI(false);
+                return true;
+            } else {
+                return false;
             }
 
         }
@@ -83,7 +81,7 @@ namespace ModKit.DataViewer {
                 _tree = new ReflectionTree(root);
             _searchResults.Node = null;
             _tree.RootNode.Expanded = ToggleState.On;
-//            ReflectionSearch.Shared.StartSearch(_tree.RootNode, searchText, updateCounts, _searchResults);
+            //            ReflectionSearch.Shared.StartSearch(_tree.RootNode, searchText, updateCounts, _searchResults);
         }
 
         public void OnGUI(bool drawRoot = true, bool collapse = false) {
@@ -110,8 +108,7 @@ namespace ModKit.DataViewer {
                     if (_startIndex > startIndexUBound) {
                         _startIndex = startIndexUBound;
                     }
-                }
-                else {
+                } else {
                     _startIndex = 0;
                 }
             }
@@ -127,8 +124,7 @@ namespace ModKit.DataViewer {
                     ActionButton(isSearching ? "Stop" : "Search", () => {
                         if (isSearching) {
                             ReflectionSearch.Shared.Stop();
-                        }
-                        else {
+                        } else {
                             searchText = searchText.Trim();
                             ReflectionSearch.Shared.StartSearch(_tree.RootNode, searchText, updateCounts, _searchResults);
                         }
@@ -210,8 +206,7 @@ namespace ModKit.DataViewer {
                                     if (node.Node.NodeType == NodeType.Root) {
                                         if (node.matches.Count == 0) return false;
                                         GUILayout.Label("Search Results".Cyan().Bold());
-                                    }
-                                    else
+                                    } else
                                         DrawNodePrivate(node.Node, depth, ref toggleState);
                                     if (node.ToggleState != toggleState) { Mod.Log(node.ToString()); }
                                     node.ToggleState = toggleState;
@@ -302,8 +297,7 @@ namespace ModKit.DataViewer {
                 if (expanded.IsOn()) {
                     DrawChildren(node, depth + 1, collapse);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
             }
         }
 

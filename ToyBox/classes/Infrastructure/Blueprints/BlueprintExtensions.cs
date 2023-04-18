@@ -1,29 +1,26 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using HarmonyLib;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Craft;
 using Kingmaker.Blueprints.Facts;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using System.Runtime.CompilerServices;
-using ModKit;
-using Kingmaker.Blueprints.Items.Weapons;
-using HarmonyLib;
-using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Utility;
+using Kingmaker.Craft;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem;
+using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker;
+using Kingmaker.Utility;
+using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ToyBox {
 
@@ -219,10 +216,10 @@ namespace ToyBox {
         public static List<BlueprintFeature> FeatureSelectionValues(this UnitEntityData ch, BlueprintFeatureSelection bp) => bp.AllFeatures.Where(f => ch.HasFeatureSelection(bp, f)).ToList();
         public static List<FeatureSelectionEntry> FeatureSelectionEntries(this UnitEntityData ch, BlueprintFeatureSelection bp)
             => (from pair in ch.Descriptor.Progression.Selections
-             where pair.Key == bp
-             from byLevelPair in pair.Value.SelectionsByLevel
-             from feature in byLevelPair.Value
-             select new FeatureSelectionEntry { feature = feature, level = byLevelPair.Key, data = pair.Value }).ToList();
+                where pair.Key == bp
+                from byLevelPair in pair.Value.SelectionsByLevel
+                from feature in byLevelPair.Value
+                select new FeatureSelectionEntry { feature = feature, level = byLevelPair.Key, data = pair.Value }).ToList();
         public static void AddFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature, int level = 1) {
             var source = new FeatureSource();
             ch?.Progression?.AddSelection(bp, source, level, feature);
@@ -230,7 +227,7 @@ namespace ToyBox {
             var fact = new Feature(feature, featureCollection.Owner, null);
             fact = featureCollection.Manager.Add<Feature>(fact);
             fact.SetSource(source, level);
-//            ch?.Progression?.Features.AddFeature(bp).SetSource(source, 1);
+            // ch?.Progression?.Features.AddFeature(bp).SetSource(source, 1);
         }
         public static void RemoveFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, FeatureSelectionData data, BlueprintFeature feature) {
             var progression = ch?.Descriptor?.Progression;
@@ -271,6 +268,5 @@ namespace ToyBox {
             var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
             ch?.Progression?.Features?.RemoveFact(fact);
         }
-
     }
 }

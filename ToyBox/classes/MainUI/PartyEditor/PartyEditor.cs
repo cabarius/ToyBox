@@ -1,6 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
-using Kingmaker.AreaLogic.QuestSystem;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
@@ -238,12 +237,10 @@ namespace ToyBox {
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     Space(10);
-                    if (spellbooks.Count() > 0) {
-                        var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
-                        if (DisclosureToggle($"{spellCount} Spells", ref showSpells)) {
-                            if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
-                            else { selectedToggle = ToggleChoice.None; }
-                        }
+                    var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
+                    if (DisclosureToggle($"{spellCount} Spells", ref showSpells)) {
+                        if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
+                        else { selectedToggle = ToggleChoice.None; }
                     }
                     else { Space(180); }
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
