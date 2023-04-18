@@ -50,8 +50,8 @@ namespace ToyBox {
         private static readonly Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
-        private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new();
-        private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new();
+        private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { SearchLimit = 12 };
+        private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { SearchLimit = 12 };
         private static SimpleBlueprint _selectedDetailsBlueprint = null;
 
 
@@ -218,6 +218,7 @@ namespace ToyBox {
                             }
                         else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
                             if (blueprint != _selectedDetailsBlueprint) ParameterizedFeatureBrowser.ReloadData();
+                            _selectedDetailsBlueprint = blueprint;
                             return (_, item) => ParameterizedFeatureBrowser.OnGUI(
                              $"{item.Name}-parameterSelection",
                              ch.ParameterizedFeatureItems(parametrizedFeature),
