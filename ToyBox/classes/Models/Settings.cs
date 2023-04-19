@@ -202,6 +202,8 @@ namespace ToyBox {
         // Loot 
         public bool toggleColorLootByRarity = false;
         public bool toggleShowRarityTags = false;
+        public bool toggleEnhanceItemSortingWithRarity = false;
+        public bool toggleSortByRarirtyFirst = true;
         public bool UsingLootRarity => toggleColorLootByRarity || toggleShowRarityTags;
         public RarityType minRarityToColor = 0;
         public RarityType lootFilterIgnore = RarityType.None;

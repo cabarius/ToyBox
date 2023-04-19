@@ -2,6 +2,7 @@
 using System;
 using GL = UnityEngine.GUILayout;
 using System.Linq;
+using UnityModManagerNet;
 
 namespace ModKit {
     public static partial class UI {
@@ -32,7 +33,10 @@ namespace ModKit {
                     keyBind = new KeyBind(identifier);
                     KeyBindings.SetBinding(identifier, keyBind);
                 }
+                var bind = keyBind;
                 if (conflicts.Count() > 0) {
+                    ActionButton("Replace", () => { bind.RemoveConflicts(); });
+                    ActionButton("Clear", () => { KeyBindings.ClearBinding(bind.ID); });
                     Label("conflicts".orange().bold() + "\n" + string.Join("\n", conflicts));
                 }
                 if (showHint) {
@@ -40,6 +44,12 @@ namespace ModKit {
                     if (keyBind.IsEmpty)
                         hint = oldValue == null ? "set key binding".green() : "press key".green();
                     Label(hint);
+                    if (oldValue != null)
+                        ActionButton("Clear",
+                                     () => {
+                                         KeyBindings.ClearBinding(oldValue.ID);
+                                         selectedIdentifier = null;
+                                     });
                 }
             }
             if (isEditing && keyBind.IsEmpty && Event.current != null) {

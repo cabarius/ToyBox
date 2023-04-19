@@ -15,7 +15,7 @@ namespace ToyBox {
         public static string searchText = "";
 
         //
-        private const string MassLootBox = "Open Area Exit Loot Window";
+        private const string MassLootBox = "Open Mass Loot Window";
 
         public static void ResetGUI() { }
 
@@ -42,49 +42,63 @@ namespace ToyBox {
             HStack("Loot", 1,
                 () => {
                     BindableActionButton(MassLootBox, Width(400));
-                    Space(95);
-                    Label("Area exit loot screen useful with the mod Cleaner to clear junk loot mid dungeon leaving less clutter on the map".green());
+                    Space(95 - 150);
+                    Label("Lets you open up the area's mass loot screen to grab goodies whenever you want. Normally shown only when you exit the area".green());
                 },
                 () => {
                     ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), Width(400));
-                    Space(300);
+                    Space(150);
                     Label("Shows all chests/bags/etc on the map excluding hidden".green());
                 },
                 () => {
                     ActionButton("Reveal Hidden Ground Loot", () => LootHelper.ShowAllChestsOnMap(true), Width(400));
-                    Space(300);
+                    Space(150);
                     Label("Shows all chests/bags/etc on the map including hidden".green());
                 },
                 () => {
                     ActionButton("Reveal Inevitable Loot", LootHelper.ShowAllInevitablePortalLoot, Width(400));
-                    Space(300);
+                    Space(150);
                     Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
-                },
-                () => {
-                    Toggle("Mass Loot Shows Everything When Leaving Map", ref Settings.toggleMassLootEverything, 600.width());
-                    102.space();
-                    Label("Some items might be invisible until looted".green());
-                },
-                () => {
-                    if (Settings.toggleMassLootEverything) {
-                        Toggle("Mass Loot steals from living NPCs", ref Settings.toggleLootAliveUnits, 600.width());
-                        102.space();
-                        Label("Previously always behaved this way".green());
-                    }
-                },
-                () => {
-                    Toggle("Allow Looting Of Locked Items", ref Settings.toggleOverrideLockedItems, 600.width());
-                    102.space();
-                    Label("This allows you to loot items that are locked such as items carried by certain NPCs and items locked on your characters".green() + "\nWARNING: ".yellow().bold() + "This may affect story progression (e.g. your purple knife)".yellow());
                 },
                 () => { }
             );
+            Div(0, 25);
+            HStack(("Mass Loot"), 1,
+                   () => {
+                       Toggle("Show Everything When Leaving Map", ref Settings.toggleMassLootEverything, 400.width());
+                       150.space();
+                       Label("Some items might be invisible until looted".green());
+                   },
+                   () => {
+                       Toggle("Steal from living NPCs", ref Settings.toggleLootAliveUnits, 400.width());
+                       150.space();
+                       Label("Allow Mass Loot to steal from living NPCs".green());
+                   },
+                   () => {
+                       Toggle("Allow Looting Of Locked Items", ref Settings.toggleOverrideLockedItems, 400.width());
+                       150.space();
+                       Label("This allows you to loot items that are locked such as items carried by certain NPCs and items locked on your characters"
+                                 .green()
+                             + "\nWARNING: ".yellow().bold()
+                             + "This may affect story progression (e.g. your purple knife)".yellow());
+                   },
+                   () => { }
+                  );
             Div(0, 25);
             HStack("Loot Rarity Coloring", 1,
                 () => {
                     using (VerticalScope()) {
                         Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags);
                         Toggle("Color Item Names", ref Settings.toggleColorLootByRarity);
+                        Toggle("Use Rarity When Sorting", ref Settings.toggleEnhanceItemSortingWithRarity);
+                        using (HorizontalScope()) {
+                            30.space();
+                            if (Settings.toggleEnhanceItemSortingWithRarity) {
+                                Toggle("Group By Rarity First", ref Settings.toggleSortByRarirtyFirst, 320.width());
+                            }
+                            else
+                                Label("", 320.width());
+                        }
                     }
                     Space(25);
                     using (VerticalScope()) {

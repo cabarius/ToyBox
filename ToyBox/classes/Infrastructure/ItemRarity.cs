@@ -90,6 +90,9 @@ namespace ToyBox {
         public static int Rating(this BlueprintItem bp, ItemEntity item = null) {
             var rating = 0;
             var itemRating = 0;
+            var cost = bp.Cost;
+            var logCost = cost > 1 ? Math.Log(cost) / Math.Log(5) : 0;
+            var costRating = (int)(2.5f * Math.Floor(logCost));
             try {
                 if (item != null) {
                     itemRating = item.Enchantments.Sum(e => e.Blueprint.Rating());
@@ -106,16 +109,15 @@ namespace ToyBox {
                 var bpRating = bp.Rating();
                 //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
                 rating = Math.Max(itemRating, bpRating);
+                rating = Math.Max(rating, costRating);
             }
             catch {
                 // ignored
             }
             //var rating = item.EnchantmentValue * rarityScaling;
-            var cost = bp.Cost;
-            var logCost = cost > 1 ? Math.Log(cost) / Math.Log(5) : 0;
             switch (rating) {
                 case 0 when bp is BlueprintItemEquipmentUsable usableBP:
-                case 0 when bp is BlueprintItemEquipment equipBP: rating = Math.Max(rating, (int)(2.5f * Math.Floor(logCost)));
+                case 0 when bp is BlueprintItemEquipment equipBP: rating = Math.Max(rating, costRating);
                     break;
             }
 #if false
@@ -139,7 +141,6 @@ namespace ToyBox {
             }
             return Rarity(bp.Rating());
         }
-
         public static RarityType Rarity(this ItemEntity item) {
             var bp = item.Blueprint;
             if (bp == null) return RarityType.None;
@@ -190,6 +191,31 @@ namespace ToyBox {
             }
             else {
                 localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        // Compare function for item rarity
+        public static float RaritySortScore(this ItemEntity item) {
+            var rarity = item.Rarity();
+            return rarity == RarityType.Notable ? (float)25f : 10f * (int)rarity;
+        }
+        public static int RarityCompare(
+                ItemEntity a,
+                ItemEntity b,
+                bool invert,
+                Comparison<ItemEntity> otherCompare
+            ) {
+            if (Settings.toggleSortByRarirtyFirst) {
+                var result = b.RaritySortScore().CompareTo(a.RaritySortScore());
+                if (invert) result *= -1;
+                if (result != 0) return result;
+                return otherCompare(a, b);
+            }
+            else {
+                var result = otherCompare(a, b);
+                if (result != 0) return result;
+                result = b.RaritySortScore().CompareTo(a.RaritySortScore());
+                if (invert) result *= -1;
+                return result;
             }
         }
     }
