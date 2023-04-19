@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToyBox.classes.Infrastructure;
+using UnityEngine;
 using static ModKit.UI;
 
 
@@ -39,8 +40,7 @@ namespace ToyBox {
                         Label($"Merge Mythic".cyan(), AutoWidth());
                         25.space();
                         Label("When you get standalone mythic spellbooks you can merge them here.".green());
-                    }
-                    else {
+                    } else {
                         Label($"Merge Mythic:".cyan(), 175.width());
                         25.space();
                         foreach (var cl in mergeableClasses) {
@@ -59,8 +59,7 @@ namespace ToyBox {
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
                     SpellBookBrowserOnGUI(ch, spellbooks, todo);
-                }
-                else {
+                } else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
                         spellBrowser = new Browser<AbilityData, BlueprintAbility>();
@@ -123,8 +122,7 @@ namespace ToyBox {
                                         _startedLoading = false;
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 availableSpells = new HashSet<BlueprintAbility>(spellbook.Blueprint.SpellList.GetSpells(selectedSpellbookLevel));
                             }
                             spells.ForEach((s) => availableSpells.Add(s.Blueprint));
@@ -140,8 +138,8 @@ namespace ToyBox {
                                 20.space();
                                 Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
                                 20.space();
-//                                Toggle("Show Inspector", ref Settings.factEditorShowInspector);
-//                                20.space();
+                                // Toggle("Show Inspector", ref Settings.factEditorShowInspector);
+                                // 20.space();
                                 if (Toggle("Search Descriptions", ref Settings.searchesDescriptions)) {
                                     spellBrowser.needsReloadData = true;
                                 }
@@ -150,18 +148,19 @@ namespace ToyBox {
                                     spellBrowser.needsReloadData = true;
                                     _startedLoading = true;
                                 }
+                                GUI.enabled = !spellBrowser.isSearching;
                                 Space(20);
-                                ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor, spellBrowser.filteredOrderedDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
+                                ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor, spellBrowser.filteredDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
                                 Space(20);
                                 ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor), AutoWidth());
+                                GUI.enabled = true;
                             }
                         },
                         (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, spellBrowser, todo), (feature, blueprint) => {
                             ReflectionTreeView.DetailsOnGUI(blueprint);
                         }, null, 50, false, true, 100, 300, "", true);
                 }
-            }
-            else {
+            } else {
                 SpellBookBrowserOnGUI(ch, spellbooks, todo, true);
             }
             return todo;
@@ -189,8 +188,8 @@ namespace ToyBox {
                                 20.space();
                                 Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width());
                                 20.space();
-//                                Toggle("Show Inspector", ref Settings.factEditorShowInspector, 150.width());
-//                                20.space();
+                                //                                Toggle("Show Inspector", ref Settings.factEditorShowInspector, 150.width());
+                                //                                20.space();
 
                                 if (Toggle("Search Descriptions", ref Settings.searchesDescriptions, 250.width())) {
                                     spellbookBrowser.needsReloadData = true;
