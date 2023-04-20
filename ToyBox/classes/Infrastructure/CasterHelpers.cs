@@ -98,7 +98,7 @@ namespace ToyBox.classes.Infrastructure {
             var newMaxSpellLevel = spellbook.MaxSpellLevel;
             if (newMaxSpellLevel < oldMaxSpellLevel) {
                 RemoveSpellsOfLevel(spellbook, oldMaxSpellLevel);
-        }
+            }
         }
 
         public static void AddCasterLevel(Spellbook spellbook) {
@@ -207,24 +207,36 @@ namespace ToyBox.classes.Infrastructure {
         }
         private static Dictionary<int, List<BlueprintAbility>> AllSpellsCache = new();
         public static List<BlueprintAbility> GetAllSpells(int level) {
-            if (AllSpellsCache.TryGetValue(level, out var spells))
+            if (AllSpellsCache.TryGetValue(level, out var spells)) {
                 return spells;
+            }
             else {
-                var spellbooks = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>();
-                if (spellbooks == null) return null;
-                Mod.Log($"spellbooks: {spellbooks.Count()}");
+                if (level == -1) {
+                    var abilites = BlueprintExtensions.GetBlueprints<BlueprintAbility>();
+                    spells = new List<BlueprintAbility>();
+                    foreach (var ability in abilites) {
+                        if (ability.IsSpell) {
+                            spells.Add(ability);
+                        }
+                    }
+                }
+                else {
+                    var spellbooks = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>();
+                    if (spellbooks == null) return null;
+                    Mod.Log($"spellbooks: {spellbooks.Count()}");
 
-                var normal = from spellbook in spellbooks
-                             where spellbook.SpellList != null
-                             from spell in spellbook.SpellList.GetSpells(level)
-                             select spell;
-                Mod.Log($"normal: {normal.Count()}");
-                var mythic = from spellbook in spellbooks
-                             where spellbook.MythicSpellList != null
-                             from spell in spellbook.MythicSpellList.GetSpells(level)
-                             select spell;
-                Mod.Log($"mythic: {mythic.Count()}");
-                spells = normal.Concat(mythic).Distinct().ToList();
+                    var normal = from spellbook in spellbooks
+                                 where spellbook.SpellList != null
+                                 from spell in spellbook.SpellList.GetSpells(level)
+                                 select spell;
+                    Mod.Log($"normal: {normal.Count()}");
+                    var mythic = from spellbook in spellbooks
+                                 where spellbook.MythicSpellList != null
+                                 from spell in spellbook.MythicSpellList.GetSpells(level)
+                                 select spell;
+                    Mod.Log($"mythic: {mythic.Count()}");
+                    spells = normal.Concat(mythic).Distinct().ToList();
+                }
                 if (spells.Count() > 0)
                     AllSpellsCache[level] = spells;
                 return spells;
