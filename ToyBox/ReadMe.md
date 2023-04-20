@@ -53,6 +53,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed various issues with feature selection and parameterized features which means you can now add and remove a lot more things like Racial Herritage, Weapon Focus and Oracle Mystery Selections
 * (***Narria***) New spiffy UI for editing parameterized feats and feature selections
 * (***Narria***) Improved UI for Keybindings by allowing you to Clear a Key Binding and Remove Conflicts 
+* (***Narria***) Added marking of search results in Party Editor blueprint views
 * (***Narria***) Added the ability to sort items in iventory and vendors by rarity
 * (***ADDB***) Port old Party Editor Browsers (Features, Buffs, Abilities, Spells) to the new Browser UI.
 * (***ADDB***) Made search run async.
