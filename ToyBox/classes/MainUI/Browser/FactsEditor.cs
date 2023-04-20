@@ -52,7 +52,6 @@ namespace ToyBox {
         private static readonly Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
         private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { IsDetailBrowser = true };
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { IsDetailBrowser = true };
-        private static SimpleBlueprint _selectedDetailsBlueprint = null;
 
 
         public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
