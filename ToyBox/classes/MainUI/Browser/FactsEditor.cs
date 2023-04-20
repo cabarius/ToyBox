@@ -18,7 +18,6 @@ using ModKit;
 using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
@@ -84,13 +83,11 @@ namespace ToyBox {
                     increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase!.action(blueprint, ch, repeatCount)), 60);
                     Space(17);
                     remainingWidth -= 190;
-                }
-                else {
+                } else {
                     Space(190);
                     remainingWidth -= 190;
                 }
-            }
-            else {
+            } else {
                 Space(190);
                 remainingWidth -= 190;
             }
@@ -116,15 +113,13 @@ namespace ToyBox {
             var isEmpty = feature.Name.IsNullOrEmpty();
             if (isEmpty) {
                 name = feature.name;
-            }
-            else {
+            } else {
                 if (feature is BlueprintSpellbook spellbook)
                     return $"{spellbook.Name} - {spellbook.name}";
                 name = feature.Name;
                 if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                     name = feature.name;
-                }
-                else if (Settings.showDisplayAndInternalNames) {
+                } else if (Settings.showDisplayAndInternalNames) {
                     name += $" : {feature.name.color(RGBA.darkgrey)}";
                 }
             }
@@ -141,8 +136,7 @@ namespace ToyBox {
                     Toggle("Show Tree", ref _showTree, Width(250));
                 }
                 treeEditor.OnGUI(ch, updateTree);
-            }
-            else {
+            } else {
                 browser.OnGUI(name,
                     fact,
                     GetBlueprints<Definition>,
@@ -171,7 +165,7 @@ namespace ToyBox {
                     (feature, blueprint) => ReflectionTreeView.DetailsOnGUI(feature != null ? feature : blueprint),
                     (unitFact, blueprint) => {
                         if (blueprint is BlueprintFeatureSelection featureSelection) {
-                            if (blueprint != _selectedDetailsBlueprint) FeatureSelectionBrowser.ReloadData();
+                            FeatureSelectionBrowser.needsReloadData |= browser.needsReloadData;
                             return (entry, f) => FeatureSelectionBrowser.OnGUI(
                                     $"{f.Name}-featureSelection",
                                     ch.FeatureSelectionEntries(featureSelection),
@@ -193,8 +187,7 @@ namespace ToyBox {
                                             10.space();
                                             Label($"{selectionEntry.data.Source.Blueprint.GetDisplayName()}",
                                                   250.width());
-                                        }
-                                        else
+                                        } else
                                             354.space();
                                         if (ch.HasFeatureSelection(featureSelection, f))
                                             ActionButton("Remove", () => {
@@ -206,7 +199,7 @@ namespace ToyBox {
                                                 browser.needsReloadData = true;
                                             }, 150.width());
                                         else
-                                            ActionButton("Add", () => { 
+                                            ActionButton("Add", () => {
                                                 ch.AddFeatureSelection(featureSelection, f);
                                                 FeatureSelectionBrowser.needsReloadData = true;
                                                 browser.needsReloadData = true;
@@ -214,10 +207,8 @@ namespace ToyBox {
                                         15.space();
                                         Label(f.GetDescription().StripHTML().green());
                                     }, null, null, 100);
-                        }
-                        else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
-                            if (blueprint != _selectedDetailsBlueprint) ParameterizedFeatureBrowser.ReloadData();
-                            _selectedDetailsBlueprint = blueprint;
+                        } else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
+                            ParameterizedFeatureBrowser.needsReloadData |= browser.needsReloadData;
                             return (_, item) => ParameterizedFeatureBrowser.OnGUI(
                              $"{item.Name}-parameterSelection",
                              ch.ParameterizedFeatureItems(parametrizedFeature),
