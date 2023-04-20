@@ -160,7 +160,7 @@ namespace ToyBox {
                     }
                     else {
                         if (isWide)
-                            Label(ch.CharacterName.orange().bold(), MinWidth(100), MaxWidth(600));
+                            Label(ch.CharacterName.orange().bold(), MinWidth(100), MaxWidth(400));
                         else
                             Label(ch.CharacterName.orange().bold(), Width(230));
                     }

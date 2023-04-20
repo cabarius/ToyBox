@@ -100,7 +100,7 @@ namespace ToyBox {
             }
             remainingWidth -= 178;
             Space(20); remainingWidth -= 20;
-            ReflectionTreeView.DetailToggle("", blueprint, blueprint, 0);
+            ReflectionTreeView.DetailToggle("", blueprint, feature != null ? feature : blueprint, 0);
             using (VerticalScope(Width(remainingWidth - 100))) {
                 if (Settings.showAssetIDs)
                     GUILayout.TextField(blueprint.AssetGuid.ToString(), AutoWidth());
@@ -141,19 +141,21 @@ namespace ToyBox {
                     GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
                     GetName,
-                    (feature) => $"{GetName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} " + (Settings.searchesDescriptions ? feature.Description : ""),
+                    (blueprint) => $"{GetName(blueprint)}" + (Settings.searchesDescriptions ? $"{blueprint.Description}" : ""),
                     GetName,
                     () => {
                         using (HorizontalScope()) {
+                            var reloadData = false;
                             Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
                             20.space();
-                            Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
+                            reloadData |= Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
                             20.space();
                             updateTree |= Toggle("Show Tree", ref _showTree);
                             20.space();
                             //Toggle("Show Inspector", ref Settings.factEditorShowInspector);
                             //20.space();
-                            if (Toggle("Search Descriptions", ref Settings.searchesDescriptions)) {
+                            reloadData |= Toggle("Search Descriptions", ref Settings.searchesDescriptions);
+                            if (reloadData) {
                                 browser.needsReloadData = true;
                                 FeatureSelectionBrowser.needsReloadData = true;
                                 ParameterizedFeatureBrowser.needsReloadData = true;
@@ -161,7 +163,7 @@ namespace ToyBox {
                         }
                     },
                     (feature, blueprint) => RowGUI(feature, blueprint, ch, browser, todo),
-                    (feature, blueprint) => ReflectionTreeView.DetailsOnGUI(feature != null ? feature : blueprint),
+                    (feature, blueprint) => ReflectionTreeView.DetailsOnGUI(blueprint),
                     (unitFact, blueprint) => {
                         if (blueprint is BlueprintFeatureSelection featureSelection) {
                             FeatureSelectionBrowser.needsReloadData |= browser.needsReloadData;

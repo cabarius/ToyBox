@@ -103,7 +103,7 @@ namespace ToyBox {
             PartyEditor.ResetGUI();
             CrusadeEditor.ResetGUI();
             CharacterPicker.ResetGUI();
-            BlueprintBrowser.ResetGUI();
+            SearchAndPick.ResetGUI();
             QuestEditor.ResetGUI();
             BlueprintExtensions.ResetCollationCache();
             _caughtException = null;
@@ -151,7 +151,7 @@ namespace ToyBox {
 #if false
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
-                    new NamedAction("Search 'n Pick", BlueprintBrowser.OnGUI),
+                    new NamedAction("Search 'n Pick", SearchAndPick.OnGUI),
                     new NamedAction("Crusade", CrusadeEditor.OnGUI),
                     new NamedAction("Armies", ArmiesEditor.OnGUI),
                     new NamedAction("Events/Decrees", EventEditor.OnGUI),

@@ -37,7 +37,7 @@ using ModKit.DataViewer;
 using Kingmaker.AreaLogic.QuestSystem;
 
 namespace ToyBox {
-    public static class BlueprintBrowser {
+    public static class SearchAndPick {
         public static Settings Settings => Main.settings;
 
         public static IEnumerable<SimpleBlueprint> unpagedBPs = null;

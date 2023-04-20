@@ -48,7 +48,7 @@ namespace ToyBox {
     // A place to play...
     public static class Playground {
         public static void OnGUI() {
-            var blueprints = BlueprintBrowser.filteredBPs;
+            var blueprints = SearchAndPick.filteredBPs;
             using var list = new ui.List<SimpleBlueprint> { items = blueprints, spacing = 5 }; using (new ui.VStack()) {
                 UI.Label("Blueprints");
                 list.ForEach((bp) => {
