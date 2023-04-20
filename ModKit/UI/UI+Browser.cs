@@ -93,7 +93,7 @@ namespace ModKit {
                                 if (!SearchAsYouType) return;
                                 needsReloadData = true;
                                 _searchQueryChanged = true;
-                            }, () => { needsReloadData = true; }, width(320));
+                            }, () => { needsReloadData = true; }, MinWidth(320), AutoWidth());
                             25.space();
                             Label("Limit", ExpandWidth(false));
                             var searchLimit = SearchLimit;
