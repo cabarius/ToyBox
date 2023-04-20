@@ -128,3 +128,4 @@ resharper_place_linq_into_on_new_line = false
 resharper_place_simple_case_statement_on_same_line = true
 resharper_wrap_chained_binary_expressions = chop_if_long
 resharper_wrap_chained_binary_patterns = chop_if_long
+csharp_new_line_before_else = true
