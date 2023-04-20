@@ -44,13 +44,16 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added Dice Roll overrides for Skill checks only (thanks AlterAsc) and cleaned up the options a bit to make them more clear
 * (***Marria***) Search 'n Pick: Added counts to the collation categories
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
-* (***Narria***) Added ability to Inspect units in Party Editor (Data Viewer style)
 * (***Narria***) Added tweak in Loot Tab to allow you to loot locked items
 * (***Narria***) Added search to inspectors (Data Viewer)
-* (***Narria***) Fixed various issues with feature selection and parameterized features which means you can now add and remove a lot more things like Racial Herritage, Weapon Focus and Oracle Mystery Selections
-* (***Narria***) New spiffy UI for editing parameterized feats and feature selections
-* (***Narria***) Cleaned up layout of Party Editor for narrow and medium widths
-* (***ADDB***) Changed Browser to improve performance.
+* (***Narria*** and ***ADDB***) Completely reworked the Browser UI class and Party Editor
+  * (***Narria***) Implemented FeatureSelection and ParameterizedFeature for the new Browser, which means you can now add and remove a lot more things like Racial Herritage, Weapon Focus and Oracle Mystery Selections.
+  * (***Narria***) Fixed some Helper functions.
+  * (***Narria***) Added ability to Inspect units in Party Editor (Data Viewer style).
+  * (***Narria***) Cleaned up layout of Party Editor for narrow and medium widths.
+  * (***ADDB***) Changed Browser to improve performance.
+  * (***ADDB***) Port old Party Editor Browsers (Features, Buffs, Abilities, Spells) to the new Browser UI.
+  * (***ADDB***) Made search run async.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fixed visual size scaling breaking when using any sort of polymorph.
 * (***ADDB***) Allow Achievements now no longer wrongly awards achievements (achievements locked behind difficulty or main campaign or platform).
