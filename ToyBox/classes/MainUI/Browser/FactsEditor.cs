@@ -162,7 +162,7 @@ namespace ToyBox {
                     name += $" : {feature.name}";
                 }
             }
-            return name;
+            return name.StripHTML(); // can we get rid of this?
         }
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Item, Definition> browser, List<Item> fact, string name)
             where Item : UnitFact

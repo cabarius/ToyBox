@@ -30,8 +30,9 @@ namespace ToyBox {
                 if (selectedSpellbook >= spellbooks.Count)
                     selectedSpellbook = 0;
                 var spellbook = spellbooks.ElementAt(selectedSpellbook);
+                bool selectedSpellBookChanged = false;
                 using (HorizontalScope()) {
-                    SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
+                    selectedSpellBookChanged = SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
                     if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                     DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
                     Space(-50);
@@ -82,8 +83,8 @@ namespace ToyBox {
                             },
                             AutoWidth()
                         );
-                        if (tempSelected != selectedSpellbookLevel) {
-                            spellBrowser.needsReloadData = true;
+                        if (tempSelected != selectedSpellbookLevel || selectedSpellBookChanged) {
+                            spellBrowser.ResetSearch();
                         }
                         Space(20);
                         if (casterLevel > 0) {
