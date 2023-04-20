@@ -130,24 +130,23 @@ namespace ToyBox {
                         },
                         (feature) => feature.Blueprint,
                         FactsEditor.GetName,
-                        (feature) => $"{FactsEditor.GetName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Comment}",
+                        (blueprint) => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                         FactsEditor.GetName,
                         () => {
                             using (HorizontalScope()) {
+                                bool needsReload = false;
                                 Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
                                 20.space();
-                                Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
+                                needsReload |= Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
                                 20.space();
                                 // Toggle("Show Inspector", ref Settings.factEditorShowInspector);
                                 // 20.space();
-                                if (Toggle("Search Descriptions", ref Settings.searchesDescriptions)) {
-                                    spellBrowser.needsReloadData = true;
-                                }
+                                needsReload |= Toggle("Search Descriptions", ref Settings.searchDescriptions);
                                 20.space();
                                 if (Toggle("Search All Spellbooks", ref Settings.showFromAllSpellbooks)) {
-                                    spellBrowser.needsReloadData = true;
                                     _startedLoading = true;
                                 }
+                                if (needsReload) spellBrowser.needsReloadData = true;
                                 GUI.enabled = !spellBrowser.isSearching;
                                 Space(20);
                                 ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor, spellBrowser.filteredDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
@@ -156,7 +155,7 @@ namespace ToyBox {
                                 GUI.enabled = true;
                             }
                         },
-                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, spellBrowser, todo), (feature, blueprint) => {
+                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellBrowser, feature, blueprint, ch, spellBrowser, todo), (feature, blueprint) => {
                             ReflectionTreeView.DetailsOnGUI(blueprint);
                         }, null, 50, false, true, 100, 300, "", true);
                 }
@@ -191,12 +190,12 @@ namespace ToyBox {
                                 //                                Toggle("Show Inspector", ref Settings.factEditorShowInspector, 150.width());
                                 //                                20.space();
 
-                                if (Toggle("Search Descriptions", ref Settings.searchesDescriptions, 250.width())) {
+                                if (Toggle("Search Descriptions", ref Settings.searchDescriptions, 250.width())) {
                                     spellbookBrowser.needsReloadData = true;
                                 }
                             }
                         },
-                        (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, spellbookBrowser, todo), (feature, blueprint) => {
+                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellbookBrowser, feature, blueprint, ch, spellbookBrowser, todo), (feature, blueprint) => {
                             ReflectionTreeView.DetailsOnGUI(blueprint);
                         }, null, 50, false, true, 100, 300, "", true);
         }

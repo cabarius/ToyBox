@@ -353,8 +353,7 @@ namespace ToyBox {
         public int browserDetailSearchLimit = 10;
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
-        public bool searchDescriptions = false; // keeping around for a bit to not break saves 
-        public bool searchesDescriptions = true;
+        public bool searchDescriptions = true;
         public bool showAttributes = false;
         public bool showAssetIDs = false;
         public bool showComponents = false;

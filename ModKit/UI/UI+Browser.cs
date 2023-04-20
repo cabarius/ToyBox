@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ToyBox;
 using UnityEngine;
+using static ModKit.UI;
 
 namespace ModKit {
 
@@ -24,6 +25,7 @@ namespace ModKit {
             private readonly Dictionary<string, bool> _disclosureStates = new();
             private CancellationTokenSource _cancellationTokenSource;
             private string _searchText = "";
+            public string SearchText => _searchText;
             public bool SearchAsYouType;
             public bool ShowAll;
             public bool IsDetailBrowser;
@@ -180,7 +182,7 @@ namespace ModKit {
                         space(indent);
                         remainingWidth -= indent;
                         var titleWidth = (remainingWidth / (IsWide ? 3.5f : 4.0f)) - 100;
-                        var text = title(def);
+                        var text = title(def).MarkedSubstring(SearchText);
                         var titleKey = $"{callerKey}-{text}";
                         if (item != null) {
                             text = text.Cyan().Bold();

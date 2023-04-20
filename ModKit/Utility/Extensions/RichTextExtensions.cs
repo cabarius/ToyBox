@@ -26,7 +26,7 @@ namespace ModKit.Utility {
             var index = source.IndexOf(other, StringComparison.InvariantCultureIgnoreCase);
             if (index != -1) {
                 var substr = source.Substring(index, other.Length);
-                source = source.Replace(substr, substr.Cyan()).Bold();
+                source = source.Replace(substr, substr.yellow().Bold());
             }
 #endif
             return source;

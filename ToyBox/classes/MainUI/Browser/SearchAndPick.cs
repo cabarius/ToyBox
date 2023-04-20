@@ -210,7 +210,7 @@ namespace ToyBox {
                     var description = blueprint.GetDescription() ?? "";
                     if (terms.All(term => name.Matches(term))
                         || terms.All(term => displayName.Matches(term))
-                        || Settings.searchesDescriptions && 
+                        || Settings.searchDescriptions && 
                             (  terms.All(term => description.Matches(term))
                             || blueprint is BlueprintItem itemBP 
                                 && terms.All(term => {
@@ -330,7 +330,7 @@ namespace ToyBox {
                             Width(75));
                         if (Settings.searchLimit > 1000) { Settings.searchLimit = 1000; }
                         25.space();
-                        if (Toggle("Search Descriptions", ref Settings.searchesDescriptions, AutoWidth())) UpdateSearchResults();
+                        if (Toggle("Search Descriptions", ref Settings.searchDescriptions, AutoWidth())) UpdateSearchResults();
                         25.space();
                         if (Toggle("Attributes", ref Settings.showAttributes, AutoWidth())) UpdateSearchResults();
                         25.space();

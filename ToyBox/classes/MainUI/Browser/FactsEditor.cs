@@ -16,6 +16,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
 using ModKit;
 using ModKit.DataViewer;
+using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace ToyBox {
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { IsDetailBrowser = true };
 
 
-        public static void RowGUI<Item, Definition>(Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
+        public  static void BlueprintRowGUI<Item, Definition>(Browser<Item, Definition> browser, Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
             where Definition : BlueprintScriptableObject, IUIDataProvider {
             var mutatorLookup = BlueprintAction.ActionsForType(typeof(Definition)).Distinct().ToDictionary(a => a.name, a => a);
             var add = mutatorLookup.GetValueOrDefault("Add", null);
@@ -104,7 +105,7 @@ namespace ToyBox {
             using (VerticalScope(Width(remainingWidth - 100))) {
                 if (Settings.showAssetIDs)
                     GUILayout.TextField(blueprint.AssetGuid.ToString(), AutoWidth());
-                Label(blueprint.Description.StripHTML().green(), Width(remainingWidth - 100));
+                Label(blueprint.Description.StripHTML().MarkedSubstring(browser.SearchText).green(), Width(remainingWidth - 100));
             }
         }
         public static string GetName<Definition>(Definition feature) where Definition : BlueprintScriptableObject, IUIDataProvider {
@@ -141,7 +142,7 @@ namespace ToyBox {
                     GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
                     GetName,
-                    (blueprint) => $"{GetName(blueprint)}" + (Settings.searchesDescriptions ? $"{blueprint.Description}" : ""),
+                    (blueprint) => $"{GetName(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                     GetName,
                     () => {
                         using (HorizontalScope()) {
@@ -154,7 +155,7 @@ namespace ToyBox {
                             20.space();
                             //Toggle("Show Inspector", ref Settings.factEditorShowInspector);
                             //20.space();
-                            reloadData |= Toggle("Search Descriptions", ref Settings.searchesDescriptions);
+                            reloadData |= Toggle("Search Descriptions", ref Settings.searchDescriptions);
                             if (reloadData) {
                                 browser.needsReloadData = true;
                                 FeatureSelectionBrowser.needsReloadData = true;
@@ -162,7 +163,7 @@ namespace ToyBox {
                             }
                         }
                     },
-                    (feature, blueprint) => RowGUI(feature, blueprint, ch, browser, todo),
+                    (feature, blueprint) => BlueprintRowGUI(browser,feature, blueprint, ch, browser, todo),
                     (feature, blueprint) => ReflectionTreeView.DetailsOnGUI(blueprint),
                     (unitFact, blueprint) => {
                         if (blueprint is BlueprintFeatureSelection featureSelection) {
@@ -173,7 +174,7 @@ namespace ToyBox {
                                     () => featureSelection.AllFeatures.OrderBy(f => f.Name),
                                     e => e.feature,
                                     GetName,
-                                    f => $"{GetName(f)} {f.NameSafe()} {f.GetDisplayName()} " + (Settings.searchesDescriptions ? f.Description : ""),
+                                    f => $"{GetName(f)} {f.NameSafe()} {f.GetDisplayName()} " + (Settings.searchDescriptions ? f.Description : ""),
                                     GetName,
                                     null,
                                     (selectionEntry, f) => {
@@ -217,7 +218,7 @@ namespace ToyBox {
                              i => i,
                              i => i.Name,
                              i => $"{i.Name} "
-                                  + (Settings.searchesDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
+                                  + (Settings.searchDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
                              i => i.Name,
                              null,
                              (_, i) => {
