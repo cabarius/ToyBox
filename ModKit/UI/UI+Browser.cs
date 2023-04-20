@@ -3,6 +3,8 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ToyBox;
 using UnityEngine;
 
@@ -16,9 +18,11 @@ namespace ModKit {
             // You an also provide UI that renders children below the row
             public Settings Settings => Main.settings; // FIXME - move these settings into ModKit. Can't have dependency on ToyBox
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
-            public IEnumerable<Definition> filteredOrderedDefinitions;
+            private Queue<Definition> cachedSearchResults;
+            public SortedSet<Definition> filteredDefinitions;
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> _disclosureStates = new();
+            private CancellationTokenSource _cancellationTokenSource;
             private string _searchText = "";
             public bool SearchAsYouType;
             public bool ShowAll;
@@ -35,11 +39,13 @@ namespace ModKit {
             private int _pageCount;
             private int _matchCount;
             private int _currentPage = 1;
-            private DateTime _lockedUntil;
+            private bool _searchQueryChanged = true;
             public bool needsReloadData = true;
             public void ReloadData() => needsReloadData = true;
             private bool _updatePages = false;
-            private bool _startedLoading = false;
+            private bool _finishedSearch = false;
+            public bool isSearching = false;
+            private bool _startedLoadingAvailable = false;
             private readonly bool _availableIsStatic;
             private List<Definition> _availableCache;
             private string _prevCallerKey = string.Empty;
@@ -85,9 +91,9 @@ namespace ModKit {
                             indent.space();
                             ActionTextField(ref _searchText, "searchText", (text) => {
                                 if (!SearchAsYouType) return;
-                                _lockedUntil = DateTime.Now.AddMilliseconds(250);
                                 needsReloadData = true;
-                            }, () => { needsReloadData = true; }, width(320));
+                                _searchQueryChanged = true;
+                            }, () => { needsReloadData = true; }, MinWidth(320), AutoWidth());
                             25.space();
                             Label("Limit", ExpandWidth(false));
                             var searchLimit = SearchLimit;
@@ -95,8 +101,15 @@ namespace ModKit {
                             if (searchLimit > 1000) { searchLimit = 1000; }
                             SearchLimit = searchLimit;
                             25.space();
-                            _startedLoading |= DisclosureToggle("Show All".Orange().Bold(), ref ShowAll, () => ReloadData());
+                            if (DisclosureToggle("Show All".Orange().Bold(), ref ShowAll)) {
+                                _startedLoadingAvailable |= ShowAll;
+                                ReloadData();
+                            }
                             25.space();
+                            if (isSearching) {
+                                Label("Searching...", AutoWidth());
+                                25.space();
+                            }
                         }
                     } else {
                         if (_searchText != searchTextPassedFromParent) {
@@ -197,22 +210,50 @@ namespace ModKit {
             private List<Definition> Update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, Func<Definition, string> title, bool search,
                 Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition) {
                 if (Event.current.type == EventType.Layout) {
-                    if (_startedLoading) {
+                    if (_startedLoadingAvailable) {
                         _availableCache = available()?.ToList();
                         if (_availableCache?.Count() > 0) {
-                            _startedLoading = false;
+                            _startedLoadingAvailable = false;
                             needsReloadData = true;
                             if (!_availableIsStatic) {
                                 _availableCache = null;
                             }
                         }
                     }
+                    if (_finishedSearch || isSearching) {
+                        // If the search has at least one result
+                        if (cachedSearchResults.Count > 0 && (_searchQueryChanged || _finishedSearch)) {
+                            if (_finishedSearch && !_searchQueryChanged) {
+                                filteredDefinitions = new SortedSet<Definition>(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
+                            }
+                            Queue<Definition> tmp;
+                            // Lock the search results
+                            lock (cachedSearchResults) {
+                                // Quickly create copy of current results
+                                tmp = new Queue<Definition>(cachedSearchResults);
+                            }
+                            // Go through every item in the queue
+                            while (tmp.Count > 0) {
+                                // Add the item into the OrderedSet filteredDefinitions
+                                filteredDefinitions.Add(tmp.Dequeue());
+                            }
+                        }
+                        _matchCount = filteredDefinitions.Count;
+                        UpdatePageCount();
+                        UpdatePaginatedResults();
+                        if (_finishedSearch) {
+                            isSearching = false;
+                            _updatePages = false;
+                            _finishedSearch = false;
+                            _searchQueryChanged = false;
+                            cachedSearchResults = null;
+                        }
+                    }
                     if (needsReloadData) {
-                        if (DateTime.Now.CompareTo(_lockedUntil) < 0) return _pagedResults?.ToList();
                         _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                         IEnumerable<Definition> definitions;
                         if (ShowAll) {
-                            if (_startedLoading) {
+                            if (_startedLoadingAvailable) {
                                 definitions = _currentDict.Keys.ToList();
                             } else if (_availableIsStatic) {
                                 definitions = _availableCache;
@@ -222,9 +263,19 @@ namespace ModKit {
                         } else {
                             definitions = _currentDict.Keys.ToList();
                         }
-                        UpdateSearchResults(_searchText, definitions, searchKey, sortKey, title, search);
-                        needsReloadData = false;
-                    } else if (_updatePages) {
+                        if (!isSearching) {
+                            _cancellationTokenSource = new();
+                            Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, title, search));
+                            if (_searchQueryChanged) {
+                                filteredDefinitions = new SortedSet<Definition>(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
+                            }
+                            isSearching = true;
+                            needsReloadData = false;
+                        } else {
+                            _cancellationTokenSource.Cancel();
+                        }
+                    }
+                    if (_updatePages) {
                         _updatePages = false;
                         UpdatePageCount();
                         UpdatePaginatedResults();
@@ -244,11 +295,14 @@ namespace ModKit {
                 if (definitions == null) {
                     return;
                 }
-                var filtered = new List<Definition>();
+                cachedSearchResults = new();
                 var terms = searchTextParam.Split(' ').Select(s => s.ToLower()).ToHashSet();
-
                 if (search) {
                     foreach (var def in definitions) {
+                        if (_cancellationTokenSource.IsCancellationRequested) {
+                            isSearching = false;
+                            return;
+                        }
                         var name = title(def);
                         var nameLower = name.ToLower();
                         // Should items without name still be supported?
@@ -257,22 +311,24 @@ namespace ModKit {
                         }
                         if (def.GetType().ToString().Contains(searchTextParam)
                            ) {
-                            filtered.Add(def);
+                            lock (cachedSearchResults) {
+                                cachedSearchResults.Enqueue(def);
+                            }
                         } else if (searchKey != null) {
                             var text = searchKey(def).ToLower();
                             if (terms.All(term => text.Matches(term))) {
-                                filtered.Add(def);
+                                lock (cachedSearchResults) {
+                                    cachedSearchResults.Enqueue(def);
+                                }
                             }
                         }
                     }
                 } else {
-                    filtered = definitions.ToList();
+                    lock (cachedSearchResults) {
+                        cachedSearchResults = new Queue<Definition>(definitions);
+                    }
                 }
-                _matchCount = filtered.Count;
-                filteredOrderedDefinitions = filtered.OrderBy(sortKey);
-                UpdatePageCount();
-                UpdatePaginatedResults();
-                _updatePages = false;
+                _finishedSearch = true;
             }
             public void UpdatePageCount() {
                 if (SearchLimit > 0) {
@@ -290,7 +346,7 @@ namespace ModKit {
                 var offset = Math.Min(count, (_currentPage - 1) * limit);
                 limit = Math.Min(limit, Math.Max(count, count - limit));
                 Mod.Trace($"{_currentPage} / {_pageCount} count: {count} => offset: {offset} limit: {limit} ");
-                _pagedResults = filteredOrderedDefinitions.Skip(offset).Take(limit).ToArray();
+                _pagedResults = filteredDefinitions.Skip(offset).Take(limit).ToArray();
             }
         }
     }
