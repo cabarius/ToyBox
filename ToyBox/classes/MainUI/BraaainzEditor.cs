@@ -63,7 +63,7 @@ namespace ToyBox.classes.MainUI {
                     if (GridPicker<BlueprintBrain>("Braaainzzz!", ref selectedBrain, AllBraaainz, null, br => br.GetDisplayName(), ref _brainSearchText, 1, 500.width())) {
                         ch.Brain.SetBrain(selectedBrain);
                         ch.Brain.RestoreAvailableActions();
-                        ActionBrowser.needsReloadData = true;
+                        ActionBrowser.ResetSearch();
                     }
                 }
                 else

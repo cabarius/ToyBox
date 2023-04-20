@@ -128,8 +128,8 @@ namespace ToyBox {
                             spells.ForEach((s) => availableSpells.Add(s.Blueprint));
                             return availableSpells;
                         },
-                        (feature) => feature.Blueprint,
-                        FactsEditor.GetName,
+                        feature => feature.Blueprint,
+                        blueprint => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ?  $" {blueprint.GetDescription()}" : ""),
                         FactsEditor.GetName,
                         () => {
                             using (HorizontalScope()) {
@@ -143,9 +143,10 @@ namespace ToyBox {
                                 needsReload |= Toggle("Search Descriptions", ref Settings.searchDescriptions);
                                 20.space();
                                 if (Toggle("Search All Spellbooks", ref Settings.showFromAllSpellbooks)) {
+                                    spellBrowser.ResetSearch();
                                     _startedLoading = true;
                                 }
-                                if (needsReload) spellBrowser.needsReloadData = true;
+                                if (needsReload) spellBrowser.ResetSearch();
                                 GUI.enabled = !spellBrowser.isSearching;
                                 Space(20);
                                 ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor, spellBrowser.filteredDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
@@ -177,19 +178,20 @@ namespace ToyBox {
                         spellbooks,
                         BlueprintExtensions.GetBlueprints<BlueprintSpellbook>,
                         (feature) => feature.Blueprint,
-                        FactsEditor.GetName,
+                        blueprint => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
                         FactsEditor.GetName,
                         () => {
                             using (HorizontalScope()) {
                                 Toggle("Show GUIDs", ref Main.settings.showAssetIDs, 150.width());
                                 20.space();
-                                Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width());
+                                if (Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width()))
+                                    spellbookBrowser.ResetSearch();
                                 20.space();
                                 //                                Toggle("Show Inspector", ref Settings.factEditorShowInspector, 150.width());
                                 //                                20.space();
 
                                 if (Toggle("Search Descriptions", ref Settings.searchDescriptions, 250.width())) {
-                                    spellbookBrowser.needsReloadData = true;
+                                    spellbookBrowser.ResetSearch();
                                 }
                             }
                         },

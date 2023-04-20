@@ -204,6 +204,12 @@ namespace ToyBox {
                 bool invert,
                 Comparison<ItemEntity> otherCompare
             ) {
+#if !DEBUG
+            var result = b.RaritySortScore().CompareTo(a.RaritySortScore());
+            if (invert) result *= -1;
+            if (result != 0) return result;
+            return otherCompare(a, b);
+#else
             if (Settings.toggleSortByRarirtyFirst) {
                 var result = b.RaritySortScore().CompareTo(a.RaritySortScore());
                 if (invert) result *= -1;
@@ -217,6 +223,7 @@ namespace ToyBox {
                 if (invert) result *= -1;
                 return result;
             }
+#endif
         }
     }
 }

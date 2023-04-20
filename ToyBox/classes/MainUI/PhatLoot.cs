@@ -91,6 +91,7 @@ namespace ToyBox {
                         Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags);
                         Toggle("Color Item Names", ref Settings.toggleColorLootByRarity);
                         Toggle("Use Rarity When Sorting", ref Settings.toggleEnhanceItemSortingWithRarity);
+#if DEBUG
                         using (HorizontalScope()) {
                             30.space();
                             if (Settings.toggleEnhanceItemSortingWithRarity) {
@@ -99,6 +100,7 @@ namespace ToyBox {
                             else
                                 Label("", 320.width());
                         }
+#endif
                     }
                     Space(25);
                     using (VerticalScope()) {

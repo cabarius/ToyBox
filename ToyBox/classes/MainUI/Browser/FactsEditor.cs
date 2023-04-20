@@ -176,9 +176,9 @@ namespace ToyBox {
                             //20.space();
                             reloadData |= Toggle("Search Descriptions", ref Settings.searchDescriptions);
                             if (reloadData) {
-                                browser.needsReloadData = true;
-                                FeatureSelectionBrowser.needsReloadData = true;
-                                ParameterizedFeatureBrowser.needsReloadData = true;
+                                browser.ResetSearch();
+                                FeatureSelectionBrowser.ResetSearch();
+                                ParameterizedFeatureBrowser.ResetSearch();
                             }
                         }
                     },
@@ -198,7 +198,7 @@ namespace ToyBox {
                                     GetName,
                                     null,
                                     (selectionEntry, f) => {
-                                        var title = GetName(f);
+                                        var title = GetName(f).MarkedSubstring(FeatureSelectionBrowser.SearchText);
                                         if (selectionEntry != null) title = title.Cyan().Bold();
                                         var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f)) - 200;
                                         Label(title, Width(titleWidth));
@@ -242,7 +242,7 @@ namespace ToyBox {
                                                          },
                                                          150.width());
                                         15.space();
-                                        Label(f.GetDescription().StripHTML().green());
+                                        Label(f.GetDescription().StripHTML().MarkedSubstring(FeatureSelectionBrowser.SearchText).green());
                                     },
                                     null,
                                     100);
@@ -259,7 +259,7 @@ namespace ToyBox {
                                       i => i.Name,
                                       null,
                                       (item, i) => {
-                                          var title = i.Name;
+                                          var title = i.Name.MarkedSubstring(ParameterizedFeatureBrowser.SearchText);
                                           if (item != null) title = title.Cyan().Bold();
 
                                           var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f));
@@ -278,7 +278,7 @@ namespace ToyBox {
                                                       browser.needsReloadData = true;
                                                   }, 150.width());
                                           15.space();
-                                          Label(i.Param?.Blueprint?.GetDescription().StripHTML().green());
+                                          Label(i.Param?.Blueprint?.GetDescription().StripHTML().MarkedSubstring(ParameterizedFeatureBrowser.SearchText).green());
                                       }, null, 100);
                                     });
                                     break;

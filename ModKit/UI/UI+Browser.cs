@@ -74,6 +74,10 @@ namespace ModKit {
             private int _matchCount;
             private int _currentPage = 1;
             private bool _searchQueryChanged = true;
+            public void ResetSearch() {
+                _searchQueryChanged = true;
+                ReloadData();
+            }
             public bool needsReloadData = true;
             public void ReloadData() => needsReloadData = true;
             private bool _updatePages = false;
@@ -127,13 +131,13 @@ namespace ModKit {
                             25.space();
                             if (DisclosureToggle("Show All".Orange().Bold(), ref ShowAll)) {
                                 _startedLoadingAvailable |= ShowAll;
-                                ReloadData();
+                                ResetSearch();
                             }
                             25.space();
-                            if (isSearching) {
-                                Label("Searching...", AutoWidth());
-                                25.space();
-                            }
+//                            if (isSearching && false) { // ADDB - Please add a delay timer before this appears because having it flash on very short searches is distracting or let's just get rid of it
+//                                Label("Searching...", AutoWidth());
+//                                25.space();
+//                            }
                         }
                     } else {
                         if (_searchText != searchTextPassedFromParent) {

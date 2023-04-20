@@ -17,18 +17,12 @@ namespace ModKit.Utility {
         public static string MarkedSubstring(this string source, string other) {
             if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(other))
                 return source;
-#if false
-            if (source.Contains(other)) {
-                return source.Replace(other, other.Cyan()).Bold();
-            }
-            //source = source.Replace(source, other.Cyan()).Bold();
-#else
+            var clean = source.StripHTML();
             var index = source.IndexOf(other, StringComparison.InvariantCultureIgnoreCase);
             if (index != -1) {
                 var substr = source.Substring(index, other.Length);
                 source = source.Replace(substr, substr.yellow().Bold());
             }
-#endif
             return source;
         }
         public static string Repeat(this string s, int n) {

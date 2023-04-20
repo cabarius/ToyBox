@@ -212,7 +212,7 @@ namespace ToyBox.BagOfPatches {
                                        ItemsFilter.FilterType filter) {
                 if (!settings.toggleEnhanceItemSortingWithRarity)
                     return true;
-                Mod.Log("Rarity Sorting");
+//                Mod.Log("Rarity Sorting");
                 switch (type) {
                     case ItemsFilter.SorterType.NotSorted:
                         __result =  items;
@@ -221,42 +221,42 @@ namespace ToyBox.BagOfPatches {
                         items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false,(a, b) => ItemsFilter.CompareByTypeAndName(a, b, filter))));
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.TypeDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByTypeAndName(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByTypeAndName(a, b, filter))));
                         items.Reverse();
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.PriceUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByPrice(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByPrice(a, b, filter))));
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.PriceDown:
                         items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true,(a, b) => ItemsFilter.CompareByPrice(a, b, filter))));
                         items.Reverse();
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.NameUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByName(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByName(a, b, filter))));
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.NameDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByName(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByName(a, b, filter))));
                         items.Reverse();
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.DateUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByDate(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByDate(a, b, filter))));
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.DateDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByDate(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByDate(a, b, filter))));
                         items.Reverse();
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.WeightUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByWeight(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByWeight(a, b, filter))));
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.WeightDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByWeight(a, b, filter)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByWeight(a, b, filter))));
                         items.Reverse();
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.WeightSingleUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByWeight(a, b, filter, true)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByWeight(a, b, filter, true))));
                         goto case ItemsFilter.SorterType.NotSorted;
                     case ItemsFilter.SorterType.WeightSingleDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => ItemsFilter.CompareByWeight(a, b, filter, true)));
+                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByWeight(a, b, filter, true))));
                         items.Reverse();
                         goto case ItemsFilter.SorterType.NotSorted;
                     default:
