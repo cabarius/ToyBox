@@ -145,6 +145,25 @@ namespace ToyBox {
             }
             return name;
         }
+        public static string GetSearchKey<Definition>(Definition feature) where Definition : BlueprintScriptableObject, IUIDataProvider {
+            string name;
+            var isEmpty = feature.Name.IsNullOrEmpty();
+            if (isEmpty) {
+                name = feature.name;
+            }
+            else {
+                if (feature is BlueprintSpellbook spellbook)
+                    return $"{spellbook.Name} {spellbook.name}";
+                name = feature.Name;
+                if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                    name = feature.name;
+                }
+                else if (Settings.showDisplayAndInternalNames) {
+                    name += $" : {feature.name}";
+                }
+            }
+            return name;
+        }
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Item, Definition> browser, List<Item> fact, string name)
             where Item : UnitFact
             where Definition : BlueprintUnitFact {
@@ -161,7 +180,7 @@ namespace ToyBox {
                     fact,
                     GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
-                    (blueprint) => $"{GetName(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
+                    (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                     GetName,
                     () => {
                         using (HorizontalScope()) {
@@ -194,7 +213,7 @@ namespace ToyBox {
                                     () =>
                                       featureSelection.AllFeatures.OrderBy(f => f.Name),
                                     e => e.feature,
-                                    f => $"{GetName(f)} {f.NameSafe()} {f.GetDisplayName()} " + (Settings.searchDescriptions ? f.Description : ""),
+                                    f => $"{GetSearchKey(f)} " + (Settings.searchDescriptions ? f.Description : ""),
                                     GetName,
                                     null,
                                     (selectionEntry, f) => {
