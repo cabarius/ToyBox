@@ -54,9 +54,34 @@ namespace ToyBox {
         private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { IsDetailBrowser = true };
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { IsDetailBrowser = true };
 
+        public static void BlueprintRowGUI<Item, Definition>(Browser<Item, Definition> browser,
+                                                             Item feature, 
+                                                             Definition blueprint, 
+                                                             UnitEntityData ch, 
+                                                             List<Action> todo
+                ) where Definition : BlueprintScriptableObject, IUIDataProvider {
+            var remainingWidth = ummWidth;
+            // Indent
+            remainingWidth -= 50;
+            var titleWidth = (remainingWidth / (IsWide ? 3.5f : 4.0f)) - 100;
+            remainingWidth -= titleWidth;
 
-        public  static void BlueprintRowGUI<Item, Definition>(Browser<Item, Definition> browser, Item feature, Definition blueprint, UnitEntityData ch, Browser<Item, Definition> usedBrowser, List<Action> todo)
-            where Definition : BlueprintScriptableObject, IUIDataProvider {
+            var text = GetName(blueprint).MarkedSubstring(browser.SearchText);
+            var titleKey = $"{blueprint.AssetGuid}";
+            if (feature != null) {
+                text = text.Cyan().Bold();
+            }
+            if (blueprint is BlueprintFeatureSelection featureSelection
+                || blueprint is BlueprintParametrizedFeature parametrizedFeature
+                ) {
+                if (Browser.DetailToggle(text, blueprint, blueprint, (int)titleWidth)) 
+                    browser.ReloadData();
+            }
+            else
+                Label(text, Width((int)titleWidth));
+
+            var lastRect = GUILayoutUtility.GetLastRect();
+
             var mutatorLookup = BlueprintAction.ActionsForType(typeof(Definition)).Distinct().ToDictionary(a => a.name, a => a);
             var add = mutatorLookup.GetValueOrDefault("Add", null);
             var remove = mutatorLookup.GetValueOrDefault("Remove", null);
@@ -67,11 +92,6 @@ namespace ToyBox {
             mutatorLookup.Remove("Remove");
             mutatorLookup.Remove("<");
             mutatorLookup.Remove(">");
-            var remainingWidth = ummWidth;
-            // Indent
-            remainingWidth -= 50;
-            var titleWidth = (remainingWidth / (IsWide ? 3.5f : 4.0f)) - 100;
-            remainingWidth -= titleWidth;
             if (feature != null) {
                 bool canDecrease = decrease?.canPerform(blueprint, ch) ?? false;
                 bool canIncrease = increase?.canPerform(blueprint, ch) ?? false;
@@ -94,10 +114,10 @@ namespace ToyBox {
             var canAdd = add?.canPerform(blueprint, ch) ?? false;
             var canRemove = remove?.canPerform(blueprint, ch) ?? false;
             if (canRemove) {
-                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { usedBrowser.needsReloadData = true; remove.action(blueprint, ch, repeatCount); }), 175);
+                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { browser.needsReloadData = true; remove.action(blueprint, ch, repeatCount); }), 150);
             }
             if (canAdd) {
-                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { usedBrowser.needsReloadData = true; add.action(blueprint, ch, repeatCount); }), 175);
+                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { browser.needsReloadData = true; add.action(blueprint, ch, repeatCount); }), 150);
             }
             remainingWidth -= 178;
             Space(20); remainingWidth -= 20;
@@ -137,11 +157,10 @@ namespace ToyBox {
                 }
                 treeEditor.OnGUI(ch, updateTree);
             } else {
-                browser.OnGUI(name,
+                browser.OnGUI(
                     fact,
                     GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
-                    GetName,
                     (blueprint) => $"{GetName(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                     GetName,
                     () => {
@@ -163,89 +182,107 @@ namespace ToyBox {
                             }
                         }
                     },
-                    (feature, blueprint) => BlueprintRowGUI(browser,feature, blueprint, ch, browser, todo),
-                    (feature, blueprint) => ReflectionTreeView.DetailsOnGUI(blueprint),
-                    (unitFact, blueprint) => {
-                        if (blueprint is BlueprintFeatureSelection featureSelection) {
-                            FeatureSelectionBrowser.needsReloadData |= browser.needsReloadData;
-                            return (entry, f) => FeatureSelectionBrowser.OnGUI(
-                                    $"{f.Name}-featureSelection",
+                    (feature, blueprint) => BlueprintRowGUI(browser,feature, blueprint, ch, todo),
+                    (feature, blueprint) => {
+                        ReflectionTreeView.OnDetailGUI(blueprint);
+                        switch (blueprint) {
+                            case BlueprintFeatureSelection featureSelection:
+                                Browser.OnDetailGUI(blueprint, bp => {
+                                    FeatureSelectionBrowser.needsReloadData |= browser.needsReloadData;
+                                    FeatureSelectionBrowser.OnGUI(
                                     ch.FeatureSelectionEntries(featureSelection),
-                                    () => featureSelection.AllFeatures.OrderBy(f => f.Name),
+                                    () =>
+                                      featureSelection.AllFeatures.OrderBy(f => f.Name),
                                     e => e.feature,
-                                    GetName,
                                     f => $"{GetName(f)} {f.NameSafe()} {f.GetDisplayName()} " + (Settings.searchDescriptions ? f.Description : ""),
                                     GetName,
                                     null,
                                     (selectionEntry, f) => {
+                                        var title = GetName(f);
+                                        if (selectionEntry != null) title = title.Cyan().Bold();
+                                        var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f)) - 200;
+                                        Label(title, Width(titleWidth));
+                                        78.space();
                                         if (selectionEntry != null) {
                                             var level = selectionEntry.level;
-                                            if (ValueAdjuster(ref level, 1, 0, 20, false)) {
-                                                ch.RemoveFeatureSelection(featureSelection, selectionEntry.data, f);
-                                                ch.AddFeatureSelection(featureSelection, f, level);
-                                                FeatureSelectionBrowser.ReloadData();
-                                                browser.ReloadData();
+                                            Space(-25);
+                                            using (VerticalScope(100)) {
+                                                using (HorizontalScope(100)) {
+                                                    if (ValueAdjuster(ref level, 1, 0, 20, false)) {
+                                                        ch.RemoveFeatureSelection(featureSelection,
+                                                            selectionEntry.data,
+                                                            f);
+                                                        ch.AddFeatureSelection(featureSelection, f, level);
+                                                        FeatureSelectionBrowser.ReloadData();
+                                                        browser.ReloadData();
+                                                    }
+                                                }
                                             }
-                                            10.space();
+                                            20.space();
                                             Label($"{selectionEntry.data.Source.Blueprint.GetDisplayName()}",
                                                   250.width());
-                                        } else
+                                        }
+                                        else
                                             354.space();
                                         if (ch.HasFeatureSelection(featureSelection, f))
-                                            ActionButton("Remove", () => {
-                                                if (selectionEntry == null) return;
-                                                ch.RemoveFeatureSelection(featureSelection,
-                                                                selectionEntry.data,
-                                                                 f);
-                                                FeatureSelectionBrowser.needsReloadData = true;
-                                                browser.needsReloadData = true;
-                                            }, 150.width());
+                                            ActionButton("Remove",
+                                                         () => {
+                                                             if (selectionEntry == null) return;
+                                                             ch.RemoveFeatureSelection(featureSelection, selectionEntry.data, f);
+                                                             FeatureSelectionBrowser.needsReloadData = true;
+                                                             browser.needsReloadData = true;
+                                                         },
+                                                         150.width());
                                         else
-                                            ActionButton("Add", () => {
-                                                ch.AddFeatureSelection(featureSelection, f);
-                                                FeatureSelectionBrowser.needsReloadData = true;
-                                                browser.needsReloadData = true;
-                                            }, 150.width());
+                                            ActionButton("Add",
+                                                         () => {
+                                                             ch.AddFeatureSelection(featureSelection, f);
+                                                             FeatureSelectionBrowser.needsReloadData = true;
+                                                             browser.needsReloadData = true;
+                                                         },
+                                                         150.width());
                                         15.space();
                                         Label(f.GetDescription().StripHTML().green());
-                                    }, null, null, 100);
-                        } else if (blueprint is BlueprintParametrizedFeature parametrizedFeature) {
-                            ParameterizedFeatureBrowser.needsReloadData |= browser.needsReloadData;
-                            return (_, item) => ParameterizedFeatureBrowser.OnGUI(
-                             $"{item.Name}-parameterSelection",
-                             ch.ParameterizedFeatureItems(parametrizedFeature),
-                             () => parametrizedFeature.Items.OrderBy(i => i.Name),
-                             i => i,
-                             i => i.Name,
-                             i => $"{i.Name} "
-                                  + (Settings.searchDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
-                             i => i.Name,
-                             null,
-                             (_, i) => {
-                                 if (ch.HasParameterizedFeatureItem(parametrizedFeature, i))
-                                     ActionButton("Remove",
-                                                  () => {
+                                    },
+                                    null,
+                                    100);
+                                });
+                                break;
+                            case BlueprintParametrizedFeature parametrizedFeature:
+                                Browser.OnDetailGUI(blueprint, bp => {
+                                    ParameterizedFeatureBrowser.needsReloadData |= browser.needsReloadData;
+                                    ParameterizedFeatureBrowser.OnGUI(
+                                      ch.ParameterizedFeatureItems(parametrizedFeature),
+                                      () => parametrizedFeature.Items.OrderBy(i => i.Name),
+                                      i => i,
+                                      i => $"{i.Name} " + (Settings.searchDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
+                                      i => i.Name,
+                                      null,
+                                      (item, i) => {
+                                          var title = i.Name;
+                                          if (item != null) title = title.Cyan().Bold();
+
+                                          var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f));
+                                          Label(title, Width(titleWidth));
+                                          25.space();
+                                          if (ch.HasParameterizedFeatureItem(parametrizedFeature, i))
+                                              ActionButton("Remove", () => {
                                                       ch.RemoveParameterizedFeatureItem(parametrizedFeature, i);
                                                       FeatureSelectionBrowser.needsReloadData = true;
                                                       browser.needsReloadData = true;
-                                                  },
-                                                  150.width());
-                                 else
-                                     ActionButton("Add",
-                                                  () => {
+                                                  }, 150.width());
+                                          else
+                                              ActionButton("Add", () => {
                                                       ch.AddParameterizedFeatureItem(parametrizedFeature, i);
                                                       FeatureSelectionBrowser.needsReloadData = true;
                                                       browser.needsReloadData = true;
-                                                  },
-                                                  150.width());
-                                 15.space();
-                                 Label(i.Param?.Blueprint?.GetDescription().StripHTML().green());
-                             },
-                             null,
-                             null,
-                             100);
-                        }
-                        return null;
+                                                  }, 150.width());
+                                          15.space();
+                                          Label(i.Param?.Blueprint?.GetDescription().StripHTML().green());
+                                      }, null, 100);
+                                    });
+                                    break;
+                            }
                     }, 50, false, true, 100, 300, "", true);
             }
             return todo;

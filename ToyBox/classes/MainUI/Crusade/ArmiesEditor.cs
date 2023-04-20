@@ -163,7 +163,6 @@ namespace ToyBox.classes.MainUI {
                         if (discloseMercenaryUnits) {
                             using (VerticalScope()) {
                                 browser.OnGUI(
-                                        "Army Units",
                                         mercenaryUnits,
                                         () => {
                                             if (armyBlueprints == null || armyBlueprints?.Count() == 0) {
@@ -174,7 +173,6 @@ namespace ToyBox.classes.MainUI {
                                         (unit) => unit,
                                         (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
                                         (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
-                                        (unit) => unit.GetDisplayName(),
                                         () => {
                                             var bluh = ummWidth - 50;
                                             var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
@@ -187,6 +185,9 @@ namespace ToyBox.classes.MainUI {
                                             Label("Recruitment Weight (Mercenary only)", AutoWidth());
                                         },
                                         (bpUnit, unit) => {
+                                            var bluh = ummWidth - 50;
+                                            var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
+                                            Label(unit.GetDisplayName(), Width((int)titleWidth));
                                             bool isInMercPool = IsInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
                                             bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
                                             ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
@@ -203,8 +204,7 @@ namespace ToyBox.classes.MainUI {
                                                             IsInMercenaryPool[unit.GetHashCode()] = isInMercPool;
                                                         }, 150.width());
                                             10.space();
-                                            ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
-                                                        () => {
+                                            ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit", () => {
                                                             browser.needsReloadData = true;
                                                             if (isInKingdomPool) {
                                                                 var count = recruitsManager.GetCountInPool(unit);
@@ -490,7 +490,7 @@ namespace ToyBox.classes.MainUI {
                                             }
                                         }
                                         if (title == "Player Armies") {
-                                            if (DisclosureToggle("Add Squads", ref showAddSquad, 125)) {
+                                            if (DisclosureToggle("Add Squads".Yellow(), ref showAddSquad, 125)) {
                                                 toggleShowSquadStates[squads] = showAddSquad;
                                             }
                                         }

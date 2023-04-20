@@ -110,7 +110,7 @@ namespace ToyBox {
 
                     var spells = spellbook.GetKnownSpells(selectedSpellbookLevel).OrderBy(d => d.Name).ToList();
                     SelectedSpellbook[ch.HashKey()] = spellbook;
-                    spellBrowser.OnGUI($"{FactsEditor.GetName(spellbook.Blueprint)} Spells",
+                    spellBrowser.OnGUI(
                         spells,
                         () => {
                             HashSet<BlueprintAbility> availableSpells;
@@ -130,7 +130,6 @@ namespace ToyBox {
                         },
                         (feature) => feature.Blueprint,
                         FactsEditor.GetName,
-                        (blueprint) => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                         FactsEditor.GetName,
                         () => {
                             using (HorizontalScope()) {
@@ -155,9 +154,9 @@ namespace ToyBox {
                                 GUI.enabled = true;
                             }
                         },
-                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellBrowser, feature, blueprint, ch, spellBrowser, todo), (feature, blueprint) => {
-                            ReflectionTreeView.DetailsOnGUI(blueprint);
-                        }, null, 50, false, true, 100, 300, "", true);
+                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellBrowser, feature, blueprint, ch, todo), (feature, blueprint) => {
+                            ReflectionTreeView.OnDetailGUI(blueprint);
+                        }, 50, false, true, 100, 300, "", true);
                 }
             } else {
                 SpellBookBrowserOnGUI(ch, spellbooks, todo, true);
@@ -174,12 +173,11 @@ namespace ToyBox {
                 spellbookBrowser.ShowAll = true;
                 spellbookBrowser.needsReloadData = true;
             }
-            spellbookBrowser.OnGUI("Spellbook Browser",
+            spellbookBrowser.OnGUI(
                         spellbooks,
                         BlueprintExtensions.GetBlueprints<BlueprintSpellbook>,
                         (feature) => feature.Blueprint,
                         FactsEditor.GetName,
-                        (feature) => $"{FactsEditor.GetName(feature)} {feature.NameSafe()} {feature.GetDisplayName()} {feature.Comment}",
                         FactsEditor.GetName,
                         () => {
                             using (HorizontalScope()) {
@@ -195,9 +193,9 @@ namespace ToyBox {
                                 }
                             }
                         },
-                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellbookBrowser, feature, blueprint, ch, spellbookBrowser, todo), (feature, blueprint) => {
-                            ReflectionTreeView.DetailsOnGUI(blueprint);
-                        }, null, 50, false, true, 100, 300, "", true);
+                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellbookBrowser, feature, blueprint, ch, todo), (feature, blueprint) => {
+                            ReflectionTreeView.OnDetailGUI(blueprint);
+                        }, 50, false, true, 100, 300, "", true);
         }
     }
 }

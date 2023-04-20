@@ -38,6 +38,8 @@ namespace ModKit {
 
         public static GL.VerticalScope VerticalScope(params GUILayoutOption[] options) => new(options);
         public static GL.VerticalScope VerticalScope(GUIStyle style, params GUILayoutOption[] options) => new(style, options);
+        public static GL.VerticalScope VerticalScope(float width) => new(Width(width));
+
         public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options) => new(scrollPosition, options);
         public static GL.ScrollViewScope ScrollViewScope(Vector2 scrollPosition, GUIStyle style, params GUILayoutOption[] options) => new(scrollPosition, style, options);
         public static void BeginVertical(params GUILayoutOption[] options) => GL.BeginVertical(options);

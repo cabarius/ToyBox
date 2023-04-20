@@ -250,7 +250,7 @@ namespace ToyBox {
                 }
                 if (!isWide) Div(00, 10);
                 5.space();
-                ReflectionTreeView.DetailsOnGUI(ch);
+                ReflectionTreeView.OnDetailGUI(ch);
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
                 //    UI.Div(20, 20);
                 //}
