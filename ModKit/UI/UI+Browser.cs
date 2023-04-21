@@ -19,7 +19,7 @@ namespace ModKit {
             public Settings Settings => Main.settings; // FIXME - move these settings into ModKit. Can't have dependency on ToyBox
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
             private Queue<Definition> cachedSearchResults;
-            public SortedSet<Definition> filteredDefinitions;
+            public List<Definition> filteredDefinitions;
             private Dictionary<Definition, Item> _currentDict;
             private readonly Dictionary<string, bool> _disclosureStates = new();
             private CancellationTokenSource _cancellationTokenSource;
@@ -229,19 +229,17 @@ namespace ModKit {
                         // If the search has at least one result
                         if ((cachedSearchResults.Count > 0 || nothingToSearch) && (_searchQueryChanged || _finishedSearch)) {
                             if (_finishedSearch && !_searchQueryChanged) {
-                                filteredDefinitions = new SortedSet<Definition>(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
+                                filteredDefinitions = new List<Definition>();
                             }
-                            Queue<Definition> tmp;
                             // Lock the search results
                             lock (cachedSearchResults) {
-                                // Quickly create copy of current results
-                                tmp = new Queue<Definition>(cachedSearchResults);
+                                // Go through every item in the queue
+                                while (cachedSearchResults.Count > 0) {
+                                    // Add the item into the List filteredDefinitions
+                                    filteredDefinitions.Add(cachedSearchResults.Dequeue());
+                                }
                             }
-                            // Go through every item in the queue
-                            while (tmp.Count > 0) {
-                                // Add the item into the OrderedSet filteredDefinitions
-                                filteredDefinitions.Add(tmp.Dequeue());
-                            }
+                            filteredDefinitions.Sort(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
                         }
                         _matchCount = filteredDefinitions.Count;
                         UpdatePageCount();
@@ -275,7 +273,7 @@ namespace ModKit {
                             _cancellationTokenSource = new();
                             Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, title, search));
                             if (_searchQueryChanged) {
-                                filteredDefinitions = new SortedSet<Definition>(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
+                                filteredDefinitions = new();
                             }
                             isSearching = true;
                             needsReloadData = false;
