@@ -14,22 +14,44 @@ namespace ModKit.Utility {
             return source.IndexOf(other, 0, StringComparison.InvariantCultureIgnoreCase) != -1;
 #endif
         }
-        public static string MarkedSubstring(this string source, string other) {
-            if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(other))
+        public static string MarkedSubstringNoHTML(this string source, string sub) {
+            if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(sub))
                 return source;
-#if false
-            if (source.Contains(other)) {
-                return source.Replace(other, other.Cyan()).Bold();
-            }
-            //source = source.Replace(source, other.Cyan()).Bold();
-#else
-            var index = source.IndexOf(other, StringComparison.InvariantCultureIgnoreCase);
+            var index = source.IndexOf(sub, StringComparison.InvariantCultureIgnoreCase);
             if (index != -1) {
-                var substr = source.Substring(index, other.Length);
-                source = source.Replace(substr, substr.Cyan()).Bold();
+                var substr = source.Substring(index, sub.Length);
+                source = source.Replace(substr, substr.yellow().Bold());
             }
-#endif
             return source;
+        }
+        public static string MarkedSubstring(this string source, string sub) {
+            if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(sub))
+                return source;
+            var htmlStart = source.IndexOf('<');
+            if (htmlStart == -1) 
+                return source.MarkedSubstringNoHTML(sub);
+            var result = new StringBuilder();
+            var len = source.Length;
+            var segment = source.Substring(0, htmlStart);
+            segment = segment.MarkedSubstringNoHTML(sub);
+            result.Append(segment);
+            var htmlEnd = source.IndexOf('>', htmlStart);
+            while (htmlStart != -1 && htmlEnd != -1) {
+                var tag = source.Substring(htmlStart, htmlEnd + 1 - htmlStart);
+                result.Append(tag);
+                htmlStart = source.IndexOf('<', htmlEnd);
+                if (htmlStart != -1) {
+                    segment = source.Substring(htmlEnd + 1, htmlStart - htmlEnd - 1);
+                    segment = segment.MarkedSubstringNoHTML(sub);
+                    result.Append(segment);
+                    htmlEnd = source.IndexOf('>', htmlStart);
+                }
+            }
+            if (htmlStart != -1) {
+                var malformedTag = source.Substring(htmlStart, len + 1 - htmlStart);
+                result.Append(malformedTag);
+            }
+            return result.ToString();
         }
         public static string Repeat(this string s, int n) {
             if (n < 0 || s == null || s.Length == 0)

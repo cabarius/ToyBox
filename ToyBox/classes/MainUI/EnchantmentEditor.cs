@@ -240,7 +240,7 @@ namespace ToyBox.classes.MainUI {
                             MinWidth(75), MaxWidth(175));
                         if (settings.searchLimit > 1000) { settings.searchLimit = 1000; }
                         Space(25);
-                        if (Toggle("Search Descriptions", ref settings.searchesDescriptions)) UpdateSearchResults();
+                        if (Toggle("Search Descriptions", ref settings.searchDescriptions)) UpdateSearchResults();
                         Space(25);
                         Toggle("Show GUIDs", ref settings.showAssetIDs);
                         Space(25);
@@ -419,7 +419,7 @@ namespace ToyBox.classes.MainUI {
                     description = description.StripHTML();
                     if (terms.All(term => name.Matches( term))
                         || terms.All(term => displayName.Matches(term))
-                        || settings.searchesDescriptions && terms.All(term => description.Matches(term))
+                        || settings.searchDescriptions && terms.All(term => description.Matches(term))
                         ) {
                         filteredEnchantments.Add(enchant);
                     }

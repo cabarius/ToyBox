@@ -180,7 +180,6 @@
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensions.cs" />
     <Compile Include="classes\MainUI\BraaainzEditor.cs" />
     <Compile Include="classes\MainUI\Browser\BuffExclusionEditor.cs" />
-    <Compile Include="classes\MainUI\Browser\EditorActions.cs" />
     <Compile Include="classes\MainUI\Browser\Editor.cs" />
     <Compile Include="classes\MainUI\Crusade\ArmiesEditor.cs" />
     <Compile Include="classes\MainUI\Crusade\CrusadeEditor.cs" />
@@ -209,7 +208,7 @@
     <Compile Include="classes\MainUI\ActionButtons.cs" />
     <Compile Include="classes\MainUI\Browser\FactsEditor.cs" />
     <Compile Include="classes\MainUI\Main.cs" />
-    <Compile Include="classes\MainUI\Browser\BlueprintBrowser.cs" />
+    <Compile Include="classes\MainUI\Browser\SearchAndPick.cs" />
     <Compile Include="classes\MainUI\BagOfTricks.cs" />
     <Compile Include="classes\MainUI\CharacterPicker.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />

@@ -74,7 +74,7 @@ namespace ToyBox {
                 ActionSelectionGrid(ref _selectedIndex,
                     characters.Select((ch) => ch.CharacterName).ToArray(),
                     8,
-                    (index) => { BlueprintBrowser.UpdateSearchResults(); },
+                    (index) => { SearchAndPick.UpdateSearchResults(); },
                     AutoWidth());
             }
             var selectedCharacter = GetSelectedCharacter();

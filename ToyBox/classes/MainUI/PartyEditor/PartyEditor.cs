@@ -160,7 +160,7 @@ namespace ToyBox {
                     }
                     else {
                         if (isWide)
-                            Label(ch.CharacterName.orange().bold(), MinWidth(100), MaxWidth(600));
+                            Label(ch.CharacterName.orange().bold(), MinWidth(100), MaxWidth(400));
                         else
                             Label(ch.CharacterName.orange().bold(), Width(230));
                     }
@@ -250,7 +250,7 @@ namespace ToyBox {
                 }
                 if (!isWide) Div(00, 10);
                 5.space();
-                ReflectionTreeView.DetailsOnGUI(ch);
+                ReflectionTreeView.OnDetailGUI(ch);
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
                 //    UI.Div(20, 20);
                 //}

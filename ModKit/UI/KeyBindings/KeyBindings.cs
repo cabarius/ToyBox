@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using ModKit.Utility;
+using static ModKit.UI;
 using static UnityModManagerNet.UnityModManager;
 using System.Linq;
 
 namespace ModKit {
     public static partial class UI {
-        public static IEnumerable<string> Conflicts(this KeyBind keyBind) => KeyBindings.conflicts.GetValueOrDefault(keyBind.bindCode, new List<string> { }).Where(id => id != keyBind.ID);
+        public static IEnumerable<string> Conflicts(this KeyBind keyBind) => KeyBindings.conflicts
+            .GetValueOrDefault(keyBind.bindCode, new List<string> { }).Where(id => id != keyBind.ID);
+        public static void RemoveConflicts(this KeyBind keyBind) => KeyBindings.RemoveConflicts(keyBind);
 
         public static class KeyBindings {
             private static ModEntry modEntry = null;
@@ -23,7 +26,13 @@ namespace ModKit {
             }
             internal static void SetBinding(string identifier, KeyBind binding) {
                 bindings[identifier] = binding;
-                ModSettings.SaveSettings(modEntry, "bindings.json", bindings);
+                modEntry.SaveSettings("bindings.json", bindings);
+                BindingsDidChange = true;
+            }
+            internal static void ClearBinding(string identifier) {
+                if (bindings.ContainsKey(identifier))
+                    bindings.Remove(identifier);
+                modEntry.SaveSettings("bindings.json", bindings);
                 BindingsDidChange = true;
             }
             public static void UpdateConflicts() {
@@ -40,6 +49,13 @@ namespace ModKit {
                 }
                 conflicts = conflicts.Filter(kvp => kvp.Value.Count > 1);
                 //Logger.Log($"conflicts: {String.Join(", ", conflicts.Select(kvp => $"{kvp.Key.orange()} : {kvp.Value.Count}".cyan())).yellow()}");
+            }
+            public static void RemoveConflicts(KeyBind keyBind) {
+                UpdateConflicts();
+                var doomed = keyBind.Conflicts();
+                foreach (var condemnedIdentifier in doomed) {
+                    ClearBinding(condemnedIdentifier);
+                }
             }
             public static void OnLoad(ModEntry modEntry) {
                 if (KeyBindings.modEntry == null)

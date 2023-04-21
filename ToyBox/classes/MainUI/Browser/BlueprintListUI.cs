@@ -290,7 +290,7 @@ namespace ToyBox {
                         }
                     }
                 }
-                ReflectionTreeView.DetailsOnGUI(blueprint);
+                ReflectionTreeView.OnDetailGUI(blueprint, 0);
                 Div(indent);
                 index++;
             }

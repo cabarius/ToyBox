@@ -86,7 +86,7 @@ namespace ToyBox {
                             Label(quest.Blueprint.Description.ToString().StripHTML().green());
                         }
                         if (settings.toggleQuestInspector) {
-                            ReflectionTreeView.DetailsOnGUI(quest);
+                            ReflectionTreeView.OnDetailGUI(quest);
                         }
                         if (selectedQuests[index]) {
                             var objectiveIndex = 0;
@@ -134,7 +134,7 @@ namespace ToyBox {
                                             Label("", AutoWidth());
                                         }
                                         if (settings.toggleQuestInspector) {
-                                            ReflectionTreeView.DetailsOnGUI(questObjective);
+                                            ReflectionTreeView.OnDetailGUI(questObjective);
                                         }
                                         if (questObjective.State == QuestObjectiveState.Started) {
                                             var childIndex = 0;
@@ -169,7 +169,7 @@ namespace ToyBox {
                                                             Label("", AutoWidth());
                                                         }
                                                         if (settings.toggleQuestInspector) {
-                                                            ReflectionTreeView.DetailsOnGUI(childObjective);
+                                                            ReflectionTreeView.OnDetailGUI(childObjective);
                                                         }
                                                     }
                                                 }

@@ -6,6 +6,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ModKit.DataViewer;
 using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
@@ -62,7 +63,7 @@ namespace ToyBox.classes.MainUI {
                     if (GridPicker<BlueprintBrain>("Braaainzzz!", ref selectedBrain, AllBraaainz, null, br => br.GetDisplayName(), ref _brainSearchText, 1, 500.width())) {
                         ch.Brain.SetBrain(selectedBrain);
                         ch.Brain.RestoreAvailableActions();
-                        ActionBrowser.needsReloadData = true;
+                        ActionBrowser.ResetSearch();
                     }
                 }
                 else
@@ -71,72 +72,73 @@ namespace ToyBox.classes.MainUI {
 
 
             ActionBrowser.OnGUI(
-                $"{ch.CharacterName}-Gambits",
                 ch.Brain.Actions,
                 BlueprintExtensions.GetBlueprints<BlueprintAiAction>,
                 a => (BlueprintAiAction)a.Blueprint,
                 bp => bp.GetDisplayName(),
                 bp => $"{bp.GetDisplayName()} {bp.GetDescription()}",
-                bp => bp.GetDisplayName(),
                 null,
                 (action, bp) => {
+                    Browser.DetailToggle(bp.GetDisplayName(), bp, bp);
+                    ReflectionTreeView.DetailToggle("Inspect", bp, action);
                     var attributes = bp.GetCustomAttributes();
                     var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
                     Label($"{text.green()}", AutoWidth());
                 },
-                null,
-                (action, bp) => (aiAction, bp) => {
-                    if (aiAction?.ActorConsiderations.Count > 0) {
+                (action, bp) => {
+                    ReflectionTreeView.OnDetailGUI((bp));
+                    Browser.OnDetailGUI(bp, _ => {
+                        if (action?.ActorConsiderations.Count > 0) {
+                            using (HorizontalScope()) {
+                                150.space();
+                                Label($"{"Actor Considerations".orange().bold()} - {ch.CharacterName.cyan()}");
+                            }    
+                            ConsiderationBrowser.OnGUI(
+                               action.ActorConsiderations,
+                               BlueprintExtensions.GetBlueprints<Consideration>,
+                               c => c,
+                               c => c.GetDisplayName(),
+                               c => c.GetDisplayName(),
+                               null,
+                               (c, bp) => {
+                                   Label(c.GetDisplayName());
+                                   ReflectionTreeView.DetailToggle("", c);
+
+                                   var attributes = bp.GetCustomAttributes();
+                                   var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
+                                   Label(text.green(), AutoWidth());
+                               },
+                               (_, c) => ReflectionTreeView.OnDetailGUI(c, 150),
+                               150, true, false
+                              );
+                        }
                         using (HorizontalScope()) {
                             150.space();
-                            Label($"{"Actor Considerations".orange().bold()} - {ch.CharacterName.cyan()}");
+                            Label($"Target Consideration".orange());
                         }
-                        ConsiderationBrowser.OnGUI(
-                            $"{ch.CharacterName}-{bp.AssetGuid}-ActorConsiderations",
-                            aiAction.ActorConsiderations,
+                        var targetConsiderationsBrowser = TargetConsiderationBrowser.GetValueOrDefault(bp, null);
+                        if (targetConsiderationsBrowser == null) {
+                            targetConsiderationsBrowser = new Browser<Consideration, Consideration>();
+                            TargetConsiderationBrowser[bp] = targetConsiderationsBrowser;
+                        }
+                        targetConsiderationsBrowser.OnGUI(
+                            action?.TargetConsiderations,
                             BlueprintExtensions.GetBlueprints<Consideration>,
                             c => c,
                             c => c.GetDisplayName(),
                             c => c.GetDisplayName(),
-                            c => c.GetDisplayName(),
                             null,
                             (c, bp) => {
+                                Label(c.GetDisplayName());
+                                ReflectionTreeView.DetailToggle("", c);
                                 var attributes = bp.GetCustomAttributes();
                                 var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                 Label(text.green(), AutoWidth());
                             },
-                            null,
-                            null,
+                            (_, c) => ReflectionTreeView.OnDetailGUI(c, 150),
                             150, true, false
                             );
-                    }
-                    using (HorizontalScope()) {
-                        150.space();
-                        Label($"Target Consideration".orange());
-                    }
-                    var targetConsiderationsBrowser = TargetConsiderationBrowser.GetValueOrDefault(bp, null);
-                    if (targetConsiderationsBrowser == null) {
-                        targetConsiderationsBrowser = new Browser<Consideration, Consideration>();
-                        TargetConsiderationBrowser[bp] = targetConsiderationsBrowser;
-                    }
-                    targetConsiderationsBrowser.OnGUI(
-                        $"{ch.CharacterName}-{bp.AssetGuid}-TargetConsiderations",
-                        aiAction?.TargetConsiderations,
-                        BlueprintExtensions.GetBlueprints<Consideration>,
-                        c => c,
-                        c => c.GetDisplayName(),
-                        c => c.GetDisplayName(),
-                        c => c.GetDisplayName(),
-                        null,
-                            (c, bp) => {
-                                var attributes = bp.GetCustomAttributes();
-                                var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
-                                Label(text.green(), AutoWidth());
-                            },
-                        null,
-                        null,
-                            150, true, false
-                            );
+                    });
                 }
                 );
         }
