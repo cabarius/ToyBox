@@ -1,6 +1,4 @@
 ﻿using JetBrains.Annotations;
-using Kingmaker.Blueprints;
-using ModKit.DataViewer;
 using ModKit.Utility;
 using System;
 using System.Collections.Generic;
@@ -9,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ToyBox;
 using UnityEngine;
-using static ModKit.UI;
 
 namespace ModKit {
 
@@ -51,7 +48,7 @@ namespace ModKit {
             public Settings Settings => Main.settings; // FIXME - move these settings into ModKit. Can't have dependency on ToyBox
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
             private Queue<Definition> cachedSearchResults;
-            public SortedSet<Definition> filteredDefinitions;
+            public List<Definition> filteredDefinitions;
             private Dictionary<Definition, Item> _currentDict;
 
             private CancellationTokenSource _cancellationTokenSource;
@@ -83,7 +80,7 @@ namespace ModKit {
             private bool _updatePages = false;
             private bool _finishedSearch = false;
             public bool isSearching = false;
-            private bool _startedLoadingAvailable = false;
+            public bool startedLoadingAvailable = false;
             private readonly bool _availableIsStatic;
             private List<Definition> _availableCache;
             public void OnShowGUI() => needsReloadData = true;
@@ -130,16 +127,17 @@ namespace ModKit {
                             SearchLimit = searchLimit;
                             25.space();
                             if (DisclosureToggle("Show All".Orange().Bold(), ref ShowAll)) {
-                                _startedLoadingAvailable |= ShowAll;
+                                startedLoadingAvailable |= ShowAll;
                                 ResetSearch();
                             }
                             25.space();
-//                            if (isSearching && false) { // ADDB - Please add a delay timer before this appears because having it flash on very short searches is distracting or let's just get rid of it
-//                                Label("Searching...", AutoWidth());
-//                                25.space();
-//                            }
+                            //                            if (isSearching && false) { // ADDB - Please add a delay timer before this appears because having it flash on very short searches is distracting or let's just get rid of it
+                            //                                Label("Searching...", AutoWidth());
+                            //                                25.space();
+                            //                            }
                         }
-                    } else {
+                    }
+                    else {
                         if (_searchText != searchTextPassedFromParent) {
                             needsReloadData = true;
                             _searchText = searchTextPassedFromParent;
@@ -168,7 +166,8 @@ namespace ModKit {
                                 if (_currentPage >= 1) {
                                     if (_currentPage == 1) {
                                         _currentPage = _pageCount;
-                                    } else {
+                                    }
+                                    else {
                                         _currentPage -= 1;
                                     }
                                     _updatePages = true;
@@ -178,7 +177,8 @@ namespace ModKit {
                                 if (_currentPage > _pageCount) return;
                                 if (_currentPage == _pageCount) {
                                     _currentPage = 1;
-                                } else {
+                                }
+                                else {
                                     _currentPage += 1;
                                 }
                                 _updatePages = true;
@@ -212,10 +212,10 @@ namespace ModKit {
             private List<Definition> Update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, bool search,
                 Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition) {
                 if (Event.current.type == EventType.Layout) {
-                    if (_startedLoadingAvailable) {
+                    if (startedLoadingAvailable) {
                         _availableCache = available()?.ToList();
                         if (_availableCache?.Count() > 0) {
-                            _startedLoadingAvailable = false;
+                            startedLoadingAvailable = false;
                             needsReloadData = true;
                             if (!_availableIsStatic) {
                                 _availableCache = null;
@@ -223,22 +223,21 @@ namespace ModKit {
                         }
                     }
                     if (_finishedSearch || isSearching) {
+                        bool nothingToSearch = (!ShowAll && current.Count() == 0) || (ShowAll && (_availableIsStatic ? _availableCache : available()).Count() == 0);
                         // If the search has at least one result
-                        if (cachedSearchResults.Count > 0 && (_searchQueryChanged || _finishedSearch)) {
+                        if ((cachedSearchResults.Count > 0 || nothingToSearch) && (_searchQueryChanged || _finishedSearch)) {
                             if (_finishedSearch && !_searchQueryChanged) {
-                                filteredDefinitions = new SortedSet<Definition>(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
+                                filteredDefinitions = new List<Definition>();
                             }
-                            Queue<Definition> tmp;
                             // Lock the search results
                             lock (cachedSearchResults) {
-                                // Quickly create copy of current results
-                                tmp = new Queue<Definition>(cachedSearchResults);
+                                // Go through every item in the queue
+                                while (cachedSearchResults.Count > 0) {
+                                    // Add the item into the OrderedSet filteredDefinitions
+                                    filteredDefinitions.Add(cachedSearchResults.Dequeue());
+                                }
                             }
-                            // Go through every item in the queue
-                            while (tmp.Count > 0) {
-                                // Add the item into the OrderedSet filteredDefinitions
-                                filteredDefinitions.Add(tmp.Dequeue());
-                            }
+                            filteredDefinitions.Sort(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
                         }
                         _matchCount = filteredDefinitions.Count;
                         UpdatePageCount();
@@ -255,25 +254,29 @@ namespace ModKit {
                         _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                         IEnumerable<Definition> definitions;
                         if (ShowAll) {
-                            if (_startedLoadingAvailable) {
+                            if (startedLoadingAvailable) {
                                 definitions = _currentDict.Keys.ToList();
-                            } else if (_availableIsStatic) {
+                            }
+                            else if (_availableIsStatic) {
                                 definitions = _availableCache;
-                            } else {
+                            }
+                            else {
                                 definitions = available();
                             }
-                        } else {
+                        }
+                        else {
                             definitions = _currentDict.Keys.ToList();
                         }
                         if (!isSearching) {
                             _cancellationTokenSource = new();
                             Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, search));
                             if (_searchQueryChanged) {
-                                filteredDefinitions = new SortedSet<Definition>(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
+                                filteredDefinitions = new List<Definition>();
                             }
                             isSearching = true;
                             needsReloadData = false;
-                        } else {
+                        }
+                        else {
                             _cancellationTokenSource.Cancel();
                         }
                     }
@@ -309,7 +312,8 @@ namespace ModKit {
                             lock (cachedSearchResults) {
                                 cachedSearchResults.Enqueue(def);
                             }
-                        } else if (searchKey != null) {
+                        }
+                        else if (searchKey != null) {
                             var text = searchKey(def).ToLower();
                             if (terms.All(term => text.Matches(term))) {
                                 lock (cachedSearchResults) {
@@ -318,7 +322,8 @@ namespace ModKit {
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     lock (cachedSearchResults) {
                         cachedSearchResults = new Queue<Definition>(definitions);
                     }
@@ -330,7 +335,8 @@ namespace ModKit {
                     _pageCount = (int)Math.Ceiling((double)_matchCount / SearchLimit);
                     _currentPage = Math.Min(_currentPage, _pageCount);
                     _currentPage = Math.Max(1, _currentPage);
-                } else {
+                }
+                else {
                     _pageCount = 1;
                     _currentPage = 1;
                 }
