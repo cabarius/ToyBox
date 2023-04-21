@@ -47,7 +47,7 @@ using static RootMotion.FinalIK.InteractionTrigger;
 using TurnBased.Controllers;
 
 namespace ToyBox.BagOfPatches {
-#if DEBUG
+#if false
     internal static class Braaainz {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;

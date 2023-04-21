@@ -212,7 +212,9 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
+                            var oldDuration = duration;
                             duration = GetNewBuffDuration((TimeSpan)duration);
+                            Mod.Warn($"BuffCollection_AddBuff2_patch - buff: {blueprint.name} duration: {oldDuration} => {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue}");
                         }
                     }
                 }
@@ -226,15 +228,15 @@ namespace ToyBox.BagOfPatches {
         }
 
         private static TimeSpan GetNewBuffDuration(TimeSpan originalDuration) {
+            // deal with large value edge cases, assume that any value over half of Max Ticks divided by our multiplier should be left alone
+            if (originalDuration == TimeSpan.MaxValue 
+                || (double)originalDuration.Ticks > (((double)TimeSpan.MaxValue.Ticks) / (2.0f * (double)settings.buffDurationMultiplierValue))
+                )
+                return originalDuration;
+            // Ok we have a duration we can actually modify without overflow
             var ticks = originalDuration.Ticks;
-            var checkValue = (double)(long.MaxValue / settings.buffDurationMultiplierValue);
-            long adjusted;
-            if (ticks > checkValue) { // ticks * multipler > max -> return max
-                adjusted = long.MaxValue;
-            }
-            else {
-                adjusted = (long)(ticks * settings.buffDurationMultiplierValue);
-            }
+            var adjusted = (long)(ticks * settings.buffDurationMultiplierValue);
+            Mod.Log($"originalDur: {originalDuration} ticks: {ticks} adjusted:{adjusted}");
             adjusted = Math.Max(0, adjusted);
             return TimeSpan.FromTicks(Convert.ToInt64(adjusted));
         }
