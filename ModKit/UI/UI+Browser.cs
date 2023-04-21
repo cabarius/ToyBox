@@ -111,7 +111,8 @@ namespace ModKit {
                                 25.space();
                             }
                         }
-                    } else {
+                    }
+                    else {
                         if (_searchText != searchTextPassedFromParent) {
                             needsReloadData = true;
                             _searchText = searchTextPassedFromParent;
@@ -140,7 +141,8 @@ namespace ModKit {
                                 if (_currentPage >= 1) {
                                     if (_currentPage == 1) {
                                         _currentPage = _pageCount;
-                                    } else {
+                                    }
+                                    else {
                                         _currentPage -= 1;
                                     }
                                     _updatePages = true;
@@ -150,7 +152,8 @@ namespace ModKit {
                                 if (_currentPage > _pageCount) return;
                                 if (_currentPage == _pageCount) {
                                     _currentPage = 1;
-                                } else {
+                                }
+                                else {
                                     _currentPage += 1;
                                 }
                                 _updatePages = true;
@@ -187,7 +190,8 @@ namespace ModKit {
                         }
                         if (childGUI == null) {
                             Label(text, width((int)titleWidth));
-                        } else {
+                        }
+                        else {
                             _disclosureStates.TryGetValue(titleKey, out showChildren);
                             if (DisclosureToggle(text, ref showChildren, titleWidth)) {
                                 _disclosureStates.Clear();
@@ -221,8 +225,9 @@ namespace ModKit {
                         }
                     }
                     if (_finishedSearch || isSearching) {
+                        bool nothingToSearch = (!ShowAll && current.Count() == 0) || (ShowAll && (_availableIsStatic ? _availableCache : available()).Count() == 0);
                         // If the search has at least one result
-                        if (cachedSearchResults.Count > 0 && (_searchQueryChanged || _finishedSearch)) {
+                        if ((cachedSearchResults.Count > 0 || nothingToSearch) && (_searchQueryChanged || _finishedSearch)) {
                             if (_finishedSearch && !_searchQueryChanged) {
                                 filteredDefinitions = new SortedSet<Definition>(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
                             }
@@ -255,12 +260,15 @@ namespace ModKit {
                         if (ShowAll) {
                             if (_startedLoadingAvailable) {
                                 definitions = _currentDict.Keys.ToList();
-                            } else if (_availableIsStatic) {
+                            }
+                            else if (_availableIsStatic) {
                                 definitions = _availableCache;
-                            } else {
+                            }
+                            else {
                                 definitions = available();
                             }
-                        } else {
+                        }
+                        else {
                             definitions = _currentDict.Keys.ToList();
                         }
                         if (!isSearching) {
@@ -271,7 +279,8 @@ namespace ModKit {
                             }
                             isSearching = true;
                             needsReloadData = false;
-                        } else {
+                        }
+                        else {
                             _cancellationTokenSource.Cancel();
                         }
                     }
@@ -314,7 +323,8 @@ namespace ModKit {
                             lock (cachedSearchResults) {
                                 cachedSearchResults.Enqueue(def);
                             }
-                        } else if (searchKey != null) {
+                        }
+                        else if (searchKey != null) {
                             var text = searchKey(def).ToLower();
                             if (terms.All(term => text.Matches(term))) {
                                 lock (cachedSearchResults) {
@@ -323,7 +333,8 @@ namespace ModKit {
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     lock (cachedSearchResults) {
                         cachedSearchResults = new Queue<Definition>(definitions);
                     }
@@ -335,7 +346,8 @@ namespace ModKit {
                     _pageCount = (int)Math.Ceiling((double)_matchCount / SearchLimit);
                     _currentPage = Math.Min(_currentPage, _pageCount);
                     _currentPage = Math.Max(1, _currentPage);
-                } else {
+                }
+                else {
                     _pageCount = 1;
                     _currentPage = 1;
                 }
