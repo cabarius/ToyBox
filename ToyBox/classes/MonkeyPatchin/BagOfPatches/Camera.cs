@@ -223,7 +223,7 @@ namespace ToyBox.BagOfPatches {
                         }
                         else if (usePitch) {
                             eulerAngles.x += yRotationSign * mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
-                            Mod.Debug($"eulerX: {eulerAngles.x} Y: {eulerAngles.y} Z: {eulerAngles.z}");
+                            //Mod.Debug($"eulerX: {eulerAngles.x} Y: {eulerAngles.y} Z: {eulerAngles.z}");
                         }
                     }
                     __instance.transform.DOKill();
