@@ -1,24 +1,14 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
 using Kingmaker.Controllers.Rest;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.Designers.EventConditionActionSystem.ContextData;
-using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
-using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
-using Kingmaker.Kingdom.Tasks;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Selection;
@@ -28,11 +18,14 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
 using Kingmaker.View;
 using Kingmaker.View.MapObjects;
-using UnityModManagerNet;
-using ToyBox.BagOfPatches;
 using ModKit;
 using Owlcat.Runtime.Core.Utils;
-using ToyBox;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToyBox.BagOfPatches;
+using UnityEngine;
+using UnityModManagerNet;
 
 namespace ToyBox {
     public static class Actions {
@@ -207,7 +200,7 @@ namespace ToyBox {
             if (ability.IsSpell) {
                 if (PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
                     return !selectedSpellbook.IsKnown(ability) &&
-                           (ability.IsInSpellList(selectedSpellbook.Blueprint.SpellList) || Main.settings.showFromAllSpellbooks);
+                           (ability.IsInSpellList(selectedSpellbook.Blueprint.SpellList) || Main.settings.showFromAllSpellbooks || PartyEditor.selectedSpellbookLevel == (selectedSpellbook.Blueprint.MaxSpellLevel + 1));
                 }
 
                 foreach (var spellbook in ch.Spellbooks) {
@@ -232,7 +225,10 @@ namespace ToyBox {
             if (ability.IsSpell) {
                 if (CanAddAbility(ch, ability)) {
                     if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
-                        selectedSpellbook.AddKnown(PartyEditor.selectedSpellbookLevel, ability);
+                        var level = PartyEditor.selectedSpellbookLevel;
+                        if (level == selectedSpellbook.Blueprint.MaxSpellLevel + 1)
+                            level = PartyEditor.newSpellLvl;
+                        selectedSpellbook.AddKnown(level, ability);
                         return;
                     }
                 }

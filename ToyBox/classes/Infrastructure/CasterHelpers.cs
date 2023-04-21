@@ -141,12 +141,14 @@ namespace ToyBox.classes.Infrastructure {
             if (!PartyEditor.SelectedSpellbook.TryGetValue(unit.HashKey(), out var selectedSpellbook)) {
                 return;
             }
-
+            var level = PartyEditor.selectedSpellbookLevel;
+            if (level == selectedSpellbook.Blueprint.MaxSpellLevel + 1)
+                level = PartyEditor.newSpellLvl;
             if (abilities != null) {
-                abilities.ForEach(x => selectedSpellbook.AddIfUnknown(PartyEditor.selectedSpellbookLevel, x));
+                abilities.ForEach(x => selectedSpellbook.AddIfUnknown(level, x));
             }
             else {
-                AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
+                AddAllSpellsOfSelectedLevel(selectedSpellbook, level);
             }
         }
 
@@ -154,7 +156,10 @@ namespace ToyBox.classes.Infrastructure {
             if (!PartyEditor.SelectedSpellbook.TryGetValue(unit.HashKey(), out var selectedSpellbook)) {
                 return;
             }
-            selectedSpellbook.RemoveSpellsOfLevel(PartyEditor.selectedSpellbookLevel);
+            var level = PartyEditor.selectedSpellbookLevel;
+            if (level == selectedSpellbook.Blueprint.MaxSpellLevel + 1)
+                level = PartyEditor.newSpellLvl;
+            selectedSpellbook.RemoveSpellsOfLevel(level);
         }
 
         public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {

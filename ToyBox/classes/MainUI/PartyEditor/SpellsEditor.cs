@@ -21,6 +21,7 @@ namespace ToyBox {
         public static Dictionary<UnitEntityData, Browser<Spellbook, BlueprintSpellbook>> SpellbookBrowserDict = new();
         public static Dictionary<UnitEntityData, Browser<AbilityData, BlueprintAbility>> SpellBrowserDict = new();
         private static bool _startedLoading = false;
+        public static int newSpellLvl = 0;
         public static List<Action> OnSpellsGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             List<Action> todo = new();
             Space(20);
@@ -40,7 +41,8 @@ namespace ToyBox {
                         Label($"Merge Mythic".cyan(), AutoWidth());
                         25.space();
                         Label("When you get standalone mythic spellbooks you can merge them here.".green());
-                    } else {
+                    }
+                    else {
                         Label($"Merge Mythic:".cyan(), 175.width());
                         25.space();
                         foreach (var cl in mergeableClasses) {
@@ -59,7 +61,8 @@ namespace ToyBox {
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
                     SpellBookBrowserOnGUI(ch, spellbooks, todo);
-                } else {
+                }
+                else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
                         spellBrowser = new Browser<AbilityData, BlueprintAbility>();
@@ -72,13 +75,18 @@ namespace ToyBox {
                         EnumerablePicker(
                             "Spells known",
                             ref selectedSpellbookLevel,
-                            Enumerable.Range(0, spellbook.Blueprint.MaxSpellLevel + 1),
+                            Enumerable.Range(0, spellbook.Blueprint.MaxSpellLevel + 2),
                             0,
                             (lvl) => {
-                                var levelText = spellbook.Blueprint?.SpellsPerDay?.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
-                                var knownCount = spellbook.GetKnownSpells(lvl).Count;
-                                var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
-                                return levelText + countText;
+                                if (lvl < spellbook.Blueprint.MaxSpellLevel + 1) {
+                                    var levelText = spellbook.Blueprint?.SpellsPerDay?.GetCount(casterLevel, lvl) != null ? $"L{lvl}".bold() : $"L{lvl}".grey();
+                                    var knownCount = spellbook.GetKnownSpells(lvl).Count;
+                                    var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
+                                    return levelText + countText;
+                                }
+                                else {
+                                    return "All Spells";
+                                }
                             },
                             AutoWidth()
                         );
@@ -107,25 +115,27 @@ namespace ToyBox {
                             }, AutoWidth());
                         }
                     }
-
-                    var spells = spellbook.GetKnownSpells(selectedSpellbookLevel).OrderBy(d => d.Name).ToList();
+                    var unorderedSpells = selectedSpellbookLevel <= spellbook.Blueprint.MaxSpellLevel ? spellbook.GetKnownSpells(selectedSpellbookLevel) : spellbook.GetAllKnownSpells();
+                    var spells = unorderedSpells.OrderBy(d => d.Name).ToList();
                     SelectedSpellbook[ch.HashKey()] = spellbook;
                     spellBrowser.OnGUI($"{FactsEditor.GetName(spellbook.Blueprint)} Spells",
                         spells,
                         () => {
-                            HashSet<BlueprintAbility> availableSpells;
-                            if (Settings.showFromAllSpellbooks) {
-                                availableSpells = new HashSet<BlueprintAbility>(CasterHelpers.GetAllSpells(selectedSpellbookLevel));
-                                if (_startedLoading) {
-                                    if (availableSpells?.Count > 0) {
-                                        spellBrowser.needsReloadData = true;
-                                        _startedLoading = false;
-                                    }
+                            List<BlueprintAbility> availableSpells;
+                            if (Settings.showFromAllSpellbooks || (spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
+                                if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
+                                    availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(-1));
                                 }
-                            } else {
-                                availableSpells = new HashSet<BlueprintAbility>(spellbook.Blueprint.SpellList.GetSpells(selectedSpellbookLevel));
+                                else {
+                                    availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(selectedSpellbookLevel));
+                                }
                             }
-                            spells.ForEach((s) => availableSpells.Add(s.Blueprint));
+                            else {
+                                availableSpells = new List<BlueprintAbility>(spellbook.Blueprint.SpellList.GetSpells(selectedSpellbookLevel));
+                            }
+                            if (!((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel)) {
+                                spells.ForEach((s) => availableSpells.Add(s.Blueprint));
+                            }
                             return availableSpells;
                         },
                         (feature) => feature.Blueprint,
@@ -154,13 +164,37 @@ namespace ToyBox {
                                 Space(20);
                                 ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor), AutoWidth());
                                 GUI.enabled = true;
+                                if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
+                                    10.space();
+                                    Label("Spells are added at Level: ".green() + newSpellLvl.ToString().orange(), AutoWidth());
+                                    10.space();
+                                    ActionButton("-", () => {
+                                        if (newSpellLvl >= 0) {
+                                            if (newSpellLvl == 0) {
+                                                newSpellLvl = spellbook.Blueprint.MaxSpellLevel;
+                                            }
+                                            else {
+                                                newSpellLvl -= 1;
+                                            }
+                                        }
+                                    }, AutoWidth());
+                                    ActionButton("+", () => {
+                                        if (newSpellLvl == spellbook.MaxSpellLevel) {
+                                            newSpellLvl = 1;
+                                        }
+                                        else {
+                                            newSpellLvl += 1;
+                                        }
+                                    }, AutoWidth());
+                                }
                             }
                         },
                         (feature, blueprint) => FactsEditor.RowGUI(feature, blueprint, ch, spellBrowser, todo), (feature, blueprint) => {
                             ReflectionTreeView.DetailsOnGUI(blueprint);
                         }, null, 50, false, true, 100, 300, "", true);
                 }
-            } else {
+            }
+            else {
                 SpellBookBrowserOnGUI(ch, spellbooks, todo, true);
             }
             return todo;
