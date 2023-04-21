@@ -93,6 +93,7 @@ namespace ToyBox {
                         );
                         if (tempSelected != selectedSpellbookLevel || selectedSpellBookChanged) {
                             spellBrowser.ResetSearch();
+                            spellBrowser.startedLoadingAvailable = true;
                         }
                         Space(20);
                         if (casterLevel > 0) {
@@ -140,7 +141,7 @@ namespace ToyBox {
                             return availableSpells;
                         },
                         feature => feature.Blueprint,
-                        blueprint => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ?  $" {blueprint.GetDescription()}" : ""),
+                        blueprint => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
                         FactsEditor.GetName,
                         () => {
                             using (HorizontalScope()) {

@@ -80,7 +80,7 @@ namespace ModKit {
             private bool _updatePages = false;
             private bool _finishedSearch = false;
             public bool isSearching = false;
-            private bool _startedLoadingAvailable = false;
+            public bool startedLoadingAvailable = false;
             private readonly bool _availableIsStatic;
             private List<Definition> _availableCache;
             public void OnShowGUI() => needsReloadData = true;
@@ -127,7 +127,7 @@ namespace ModKit {
                             SearchLimit = searchLimit;
                             25.space();
                             if (DisclosureToggle("Show All".Orange().Bold(), ref ShowAll)) {
-                                _startedLoadingAvailable |= ShowAll;
+                                startedLoadingAvailable |= ShowAll;
                                 ResetSearch();
                             }
                             25.space();
@@ -212,10 +212,10 @@ namespace ModKit {
             private List<Definition> Update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, bool search,
                 Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition) {
                 if (Event.current.type == EventType.Layout) {
-                    if (_startedLoadingAvailable) {
+                    if (startedLoadingAvailable) {
                         _availableCache = available()?.ToList();
                         if (_availableCache?.Count() > 0) {
-                            _startedLoadingAvailable = false;
+                            startedLoadingAvailable = false;
                             needsReloadData = true;
                             if (!_availableIsStatic) {
                                 _availableCache = null;
@@ -254,7 +254,7 @@ namespace ModKit {
                         _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                         IEnumerable<Definition> definitions;
                         if (ShowAll) {
-                            if (_startedLoadingAvailable) {
+                            if (startedLoadingAvailable) {
                                 definitions = _currentDict.Keys.ToList();
                             }
                             else if (_availableIsStatic) {
