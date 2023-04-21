@@ -11,7 +11,36 @@ using UnityEngine;
 namespace ModKit {
 
     public static partial class UI {
-        public class Browser<Item, Definition> {
+        public class Browser {
+
+            private static readonly Dictionary<object, object> ShowDetails = new();
+            public static void ClearDetails() => ShowDetails.Clear();
+            public static bool DetailToggle(string title, object key, object target = null, int width = 600) {
+                var changed = false;
+                if (target == null) target = key;
+                var expanded = ShowDetails.ContainsKey(key);
+                if (DisclosureToggle(title, ref expanded, width)) {
+                    changed = true;
+                    ShowDetails.Clear();
+                    if (expanded) {
+                        ShowDetails[key] = target;
+                    }
+                }
+                return changed;
+            }
+            public static bool OnDetailGUI(object key, Action<object> onDetailGUI) {
+
+                ShowDetails.TryGetValue(key, out var target);
+                if (target != null) {
+                    onDetailGUI(target);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        public class Browser<Item, Definition> : Browser {
             // Simple browser that displays a searchable collection of items along with a collection of available definitions.
             // It provides a toggle to show the definitions mixed in with the items. 
             // By default it shows just the title but you can provide an optional RowUI to show more complex row UI including buttons to add and remove items and so forth. This will be layed out after the title
@@ -21,12 +50,14 @@ namespace ModKit {
             private Queue<Definition> cachedSearchResults;
             public List<Definition> filteredDefinitions;
             private Dictionary<Definition, Item> _currentDict;
-            private readonly Dictionary<string, bool> _disclosureStates = new();
+
             private CancellationTokenSource _cancellationTokenSource;
             private string _searchText = "";
+            public string SearchText => _searchText;
             public bool SearchAsYouType;
             public bool ShowAll;
             public bool IsDetailBrowser;
+
             public int SearchLimit {
                 get => IsDetailBrowser ? Settings.browserDetailSearchLimit : Settings.browserSearchLimit;
                 set {
@@ -40,6 +71,10 @@ namespace ModKit {
             private int _matchCount;
             private int _currentPage = 1;
             private bool _searchQueryChanged = true;
+            public void ResetSearch() {
+                _searchQueryChanged = true;
+                ReloadData();
+            }
             public bool needsReloadData = true;
             public void ReloadData() => needsReloadData = true;
             private bool _updatePages = false;
@@ -48,7 +83,6 @@ namespace ModKit {
             private bool _startedLoadingAvailable = false;
             private readonly bool _availableIsStatic;
             private List<Definition> _availableCache;
-            private string _prevCallerKey = string.Empty;
             public void OnShowGUI() => needsReloadData = true;
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false) {
                 SearchAsYouType = searchAsYouType;
@@ -58,17 +92,14 @@ namespace ModKit {
             }
 
             public void OnGUI(
-                string callerKey,
                 IEnumerable<Item> current,
                 Func<IEnumerable<Definition>> available,    // Func because available may be slow
                 Func<Item, Definition> definition,
-                Func<Definition, string> title,
-                Func<Definition, string> searchKey = null,
-                Func<Definition, string> sortKey = null,
+                Func<Definition, string> searchKey,
+                Func<Definition, string> sortKey,
                 Action onHeaderGUI = null,
                 Action<Item, Definition> onRowGUI = null,
                 Action<Item, Definition> onDetailGUI = null,
-                Func<Item, Definition, Action<Item, Definition>> onChildrenGUI = null,
                 int indent = 50,
                 bool showDiv = true,
                 bool search = true,
@@ -77,14 +108,8 @@ namespace ModKit {
                 string searchTextPassedFromParent = "",
                 bool showItemDiv = false
                 ) {
-                if (callerKey != _prevCallerKey) {
-                    _prevCallerKey = callerKey;
-                    _disclosureStates.Clear();
-                }
-                searchKey ??= title;
-                sortKey ??= title;
                 current ??= new List<Item>();
-                List<Definition> definitions = Update(current, available, title, search, searchKey, sortKey, definition);
+                List<Definition> definitions = Update(current, available, search, searchKey, sortKey, definition);
                 if (search || SearchLimit < _matchCount) {
                     if (search) {
                         using (HorizontalScope()) {
@@ -103,13 +128,13 @@ namespace ModKit {
                             25.space();
                             if (DisclosureToggle("Show All".Orange().Bold(), ref ShowAll)) {
                                 _startedLoadingAvailable |= ShowAll;
-                                ReloadData();
+                                ResetSearch();
                             }
                             25.space();
-                            if (isSearching) {
-                                Label("Searching...", AutoWidth());
-                                25.space();
-                            }
+                            //                            if (isSearching && false) { // ADDB - Please add a delay timer before this appears because having it flash on very short searches is distracting or let's just get rid of it
+                            //                                Label("Searching...", AutoWidth());
+                            //                                25.space();
+                            //                            }
                         }
                     }
                     else {
@@ -173,45 +198,18 @@ namespace ModKit {
                     if (showItemDiv) {
                         Div(indent);
                     }
-                    var name = title(def);
-                    var nameLower = name.ToLower();
                     _currentDict.TryGetValue(def, out var item);
-                    var remainingWidth = ummWidth;
-                    var showChildren = false;
-                    var childGUI = onChildrenGUI?.Invoke(item, def);
-                    using (HorizontalScope(AutoWidth())) {
-                        space(indent);
-                        remainingWidth -= indent;
-                        var titleWidth = (remainingWidth / (IsWide ? 3.5f : 4.0f)) - 100;
-                        var text = title(def);
-                        var titleKey = $"{callerKey}-{text}";
-                        if (item != null) {
-                            text = text.Cyan().Bold();
+                    if (onRowGUI != null) {
+                        using (HorizontalScope(AutoWidth())) {
+                            space(indent);
+                            onRowGUI(item, def);
                         }
-                        if (childGUI == null) {
-                            Label(text, width((int)titleWidth));
-                        }
-                        else {
-                            _disclosureStates.TryGetValue(titleKey, out showChildren);
-                            if (DisclosureToggle(text, ref showChildren, titleWidth)) {
-                                _disclosureStates.Clear();
-                                _disclosureStates[titleKey] = showChildren;
-                                needsReloadData = true;
-                            }
-                        }
-                        var lastRect = GUILayoutUtility.GetLastRect();
-                        remainingWidth -= lastRect.width;
-                        10.space();
-                        onRowGUI?.Invoke(item, def);
                     }
                     onDetailGUI?.Invoke(item, def);
-                    if (showChildren) {
-                        childGUI(item, def);
-                    }
                 }
             }
 
-            private List<Definition> Update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, Func<Definition, string> title, bool search,
+            private List<Definition> Update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, bool search,
                 Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition) {
                 if (Event.current.type == EventType.Layout) {
                     if (_startedLoadingAvailable) {
@@ -235,7 +233,7 @@ namespace ModKit {
                             lock (cachedSearchResults) {
                                 // Go through every item in the queue
                                 while (cachedSearchResults.Count > 0) {
-                                    // Add the item into the List filteredDefinitions
+                                    // Add the item into the OrderedSet filteredDefinitions
                                     filteredDefinitions.Add(cachedSearchResults.Dequeue());
                                 }
                             }
@@ -271,9 +269,9 @@ namespace ModKit {
                         }
                         if (!isSearching) {
                             _cancellationTokenSource = new();
-                            Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, title, search));
+                            Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, search));
                             if (_searchQueryChanged) {
-                                filteredDefinitions = new();
+                                filteredDefinitions = new List<Definition>();
                             }
                             isSearching = true;
                             needsReloadData = false;
@@ -296,7 +294,6 @@ namespace ModKit {
                 IEnumerable<Definition> definitions,
                 Func<Definition, string> searchKey,
                 Func<Definition, string> sortKey,
-                Func<Definition, string> title,
                 bool search
                 ) {
                 if (definitions == null) {
@@ -309,12 +306,6 @@ namespace ModKit {
                         if (_cancellationTokenSource.IsCancellationRequested) {
                             isSearching = false;
                             return;
-                        }
-                        var name = title(def);
-                        var nameLower = name.ToLower();
-                        // Should items without name still be supported?
-                        if (name is not { Length: > 0 }) {
-                            continue;
                         }
                         if (def.GetType().ToString().Contains(searchTextParam)
                            ) {
