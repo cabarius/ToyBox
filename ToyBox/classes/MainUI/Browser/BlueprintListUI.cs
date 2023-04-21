@@ -14,11 +14,12 @@ using static ModKit.UI;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items;
 using ModKit.DataViewer;
+using ModKit.Utility;
 
 namespace ToyBox {
     public class BlueprintListUI {
         public delegate void NavigateTo(params string[] argv);
-        public static Settings settings => Main.settings;
+        public static Settings Settings => Main.settings;
 
         public static int repeatCount = 1;
         public static bool hasRepeatableAction = false;
@@ -68,9 +69,9 @@ namespace ToyBox {
             var count = 0;
             foreach (var blueprint in simpleBlueprints) {
                 var currentCount = count++;
-                var description = blueprint.GetDescription();
+                var description = blueprint.GetDescription().MarkedSubstring(Settings.searchText);
                 if (blueprint is BlueprintItem itemBlueprint && itemBlueprint.FlavorText?.Length > 0)
-                    description = $"{itemBlueprint.FlavorText.StripHTML().color(RGBA.notable)}\n{description}";
+                    description = $"{itemBlueprint.FlavorText.StripHTML().color(RGBA.notable).MarkedSubstring(Settings.searchText)}\n{description}";
                 float titleWidth = 0;
                 var remWidth = remainingWidth - indent;
                 using (HorizontalScope()) {
@@ -81,7 +82,7 @@ namespace ToyBox {
                     var name = blueprint.NameSafe();
                     var displayName = blueprint.GetDisplayName();
                     string title;
-                    if (settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
+                    if (Settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
                         if (titles.Contains("Remove") || titles.Contains("Lock")) {
                             title = displayName.cyan().bold();
                         }
@@ -99,7 +100,7 @@ namespace ToyBox {
                         }
                     }
                     titleWidth = (remainingWidth / (IsWide ? 3 : 4)) - indent;
-                    Label(title, Width(titleWidth));
+                    Label(title.MarkedSubstring(Settings.searchText), Width(titleWidth));
                     remWidth -= titleWidth;
                     var actionCount = actions != null ? actions.Count() : 0;
                     var lockIndex = titles.IndexOf("Lock");
@@ -172,7 +173,7 @@ namespace ToyBox {
                         }
                     }
                     var attributes = "";
-                    if (settings.showAttributes) {
+                    if (Settings.showAttributes) {
                         var attr = string.Join(" ", blueprint.Attributes());
                         if (!typeString.Contains(attr))
                             attributes = attr;
@@ -183,12 +184,12 @@ namespace ToyBox {
                     if (description != null && description.Length > 0) description = $"{description}";
                     else description = "";
                     if (blueprint is BlueprintScriptableObject bpso) {
-                        if (settings.showComponents && bpso.ComponentsArray?.Length > 0) {
+                        if (Settings.showComponents && bpso.ComponentsArray?.Length > 0) {
                             var componentStr = string.Join<object>(", ", bpso.ComponentsArray).color(RGBA.brown);
                             if (description.Length == 0) description = componentStr;
                             else description = description + "\n" + componentStr;
                         }
-                        if (settings.showElements && bpso.ElementsArray?.Count > 0) {
+                        if (Settings.showElements && bpso.ElementsArray?.Count > 0) {
                             var elementsStr = string.Join<object>("\n", bpso.ElementsArray.Select(e => $"{e.GetType().Name.cyan()} {e.GetCaption()}")).yellow();
                             if (description.Length == 0) description = elementsStr;
                             else description = description + "\n" + elementsStr;
@@ -198,7 +199,7 @@ namespace ToyBox {
                         using (HorizontalScope(Width(remWidth))) {
                             ReflectionTreeView.DetailToggle("", blueprint, blueprint, 0);
                             Space(-17);
-                            if (settings.showAssetIDs) { 
+                            if (Settings.showAssetIDs) { 
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
                                 GUILayout.TextField(blueprint.AssetGuid.ToString(), ExpandWidth(false));
                             }

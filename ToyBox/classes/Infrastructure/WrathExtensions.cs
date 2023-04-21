@@ -14,6 +14,9 @@ using Kingmaker.UnitLogic.Alignments;
 using System.Linq;
 using Kingmaker;
 using Kingmaker.UI.FullScreenUITypes;
+using Kingmaker.Utility;
+using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.Assets.UI;
 
 namespace ModKit {
     public partial class UI {
@@ -134,7 +137,7 @@ namespace ToyBox {
                 return associatedBlueprint?.Description?.StripHTML();
                 // Why did BoT do this instead of the above which is what MechanicsContext.SelectUIData() does for description
 #if false
-                var description = bp.Des
+                var description = associatedBlueprint.Description;
                 UnitReference mainChar = Game.Instance.Player.MainCharacter;
                 if (mainChar == null) { return ""; }
                 MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bp, (MechanicsContext)null, (TargetWrapper)null);

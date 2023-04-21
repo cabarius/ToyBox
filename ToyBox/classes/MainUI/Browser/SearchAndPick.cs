@@ -289,7 +289,7 @@ namespace ToyBox {
                 }
                 remainingWidth -= 350;
                 var collationChanged = false;
-                if (collatedBPs != null) {
+                if (collatedBPs != null && collationTitles != null) {
                     using (VerticalScope(GUI.skin.box)) {
                         var selectedKey = collationTitles.ElementAt(selectedCollationIndex);
                         if (VPicker("Categories", ref selectedKey, collationTitles, null, s => s, ref collationSearchText, Width(300))) {
