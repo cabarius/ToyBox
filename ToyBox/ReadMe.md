@@ -65,6 +65,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***ADDB***) Allow Achievements now no longer wrongly awards achievements (achievements locked behind difficulty or main campaign or platform).
 * (***ADDB***) Reroll Perception button now also rerolls perception on the global map.
 * (***ADDB***) Fixed belt consumable feature.
+* (***ADDB***) Added option to increase Swarm Power in Party Editor -> Stats.
 * (***ADDB***) Fix Murder Hobo for Leaper's Smile swarms.
 * (***ADDB*** & ***Narria***) Added a new feature to affect Crusade Mercenaries and Kingdom Recruits.
   * Added Button to add all units in your current armies to your Mercenary pool if they are not recruitable.

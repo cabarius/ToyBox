@@ -1,7 +1,9 @@
 ﻿using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.Enums;
 using Kingmaker.UnitLogic.Alignments;
+using Kingmaker.UnitLogic.Parts;
 using ModKit;
 using ModKit.Utility;
 using System;
@@ -10,7 +12,6 @@ using System.Linq;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
-using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -20,6 +21,7 @@ namespace ToyBox {
         public static IAlignmentShiftProvider ToyboxAlignmentProvider => new ToyBoxAlignmentProvider();
 
         public static Dictionary<string, float> lastScaleSize = new();
+        private static int _increase = 1;
         public static void OnStatsGUI(UnitEntityData ch) {
             Div(100, 20, 755);
             var alignment = ch.Descriptor.Alignment.ValueRaw;
@@ -55,7 +57,6 @@ namespace ToyBox {
                 //UI.Label($"{alignmentMask.ToString()}".color(alignmentMask.Color()).bold(), UI.Width(325));
                 Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
             }
-
             using (HorizontalScope()) {
                 528.space();
                 var maskIndex = Array.IndexOf(AlignmentMasks, alignmentMask);
@@ -96,6 +97,36 @@ namespace ToyBox {
                         ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                         lastScaleSize[ch.HashKey()] = lastScale;
                         Settings.SavePerSaveSettings();
+                    }
+                }
+            }
+            if (ch.Descriptor.Progression.GetCurrentMythicClass()?.CharacterClass.Name == "Swarm That Walks") {
+                UnitPartLocustSwarm SwarmPart = null;
+                bool found = false;
+                foreach (var part in ch.Parts.Parts) {
+                    SwarmPart = part as UnitPartLocustSwarm;
+                    if (SwarmPart != null) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    Div(100, 20, 755);
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Label("Swarm Power", Width(150));
+                        Label($"Currently: {SwarmPart.CurrentStrength}/{SwarmPart.CurrentScale}".green());
+                    }
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Label("Warning:".red().bold(), Width(150));
+                        Label("This is not reversible.".orange().bold(), Width(250));
+                        Space(25);
+                        ActionButton("Increase Swarm Power", () => SwarmPart.AddStrength(_increase));
+                        Space(10);
+                        IntTextField(ref _increase, "", MinWidth(50), AutoWidth());
+                        Space(25);
+                        Label("This increases your Swarm Power by the provided value.".green());
                     }
                 }
             }
