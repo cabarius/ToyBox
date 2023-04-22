@@ -222,25 +222,30 @@ namespace ToyBox {
                     Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
                 },
                 () => {
-                    Toggle("Disallow Companions Leaving Party", ref settings.toggleBlockUnrecruit);
-                    25.space();
+                    Toggle("Disallow Companions Leaving Party", ref settings.toggleBlockUnrecruit, 300.width());
+                    200.space();
                     Label("Warning: ".color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can  otherwise break your save".orange());
                 },
-                () => Toggle("Make Previously Chosen Answers More Clear", ref settings.toggleMakePreviousAnswersMoreClear),
                 () => {
-                    Toggle("Expand Dialog To Include Remote Companions".bold(), ref settings.toggleRemoteCompanionDialog);
-                    100.space();
+                    Toggle("Previously Chosen Dialog Is Smaller ", ref settings.toggleMakePreviousAnswersMoreClear, 300.width());
+                    200.space();
+                    Label("Draws dialog choices that you have previously selected in smaller type".green());
+                },
+                () => {
+                    Toggle("Expand Dialog To Include Remote Companions".bold(), ref settings.toggleRemoteCompanionDialog, 300.width());
+                    200.space();
                     Label("Experimental".orange() + " Allow remote companions to make comments on dialog you are having.".green());
                 },
                 () => {
                     if (settings.toggleRemoteCompanionDialog) {
                         50.space();
                         Toggle("Include Former Companions", ref settings.toggleExCompanionDialog);
-                        25.space();
+                        175.space();
+                        Label("This also includes companions who left the party such as Wenduag if you picked Lann".green());
                     }
                 },
                 () => {
-                    using (VerticalScope()) {
+                    using (VerticalScope(300.width())) {
                         Toggle("Expand Answers For Conditional Responses", ref settings.toggleShowAnswersForEachConditionalResponse);
                         if (settings.toggleShowAnswersForEachConditionalResponse) {
                             using (HorizontalScope()) {
@@ -249,13 +254,13 @@ namespace ToyBox {
                             }
                         }
                     }
-                    50.space();
+                    75.space();
                     Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".green());
                 },
 #if DEBUG
                 () => {
-                    Toggle("Randomize NPC Responses To Dialog Choices", ref settings.toggleRandomizeCueSelections);
-                    50.space();
+                    Toggle("Randomize NPC Responses To Dialog Choices", ref settings.toggleRandomizeCueSelections, 300.width());
+                    200.space();
                     Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
                 },
 #endif
