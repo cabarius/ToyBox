@@ -25,7 +25,7 @@ using System.Runtime.CompilerServices;
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
 
         private static ConditionalWeakTable<object, List<string>> _cachedCollationNames = new() { };
         private static readonly HashSet<BlueprintGuid> BadList = new();

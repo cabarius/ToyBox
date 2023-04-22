@@ -28,7 +28,7 @@ namespace ToyBox {
         public static string searchText = "";
         public static string searrchTextInput = "";
         private static bool showOnlyFlagLikes;
-        private static bool showComments => Main.settings.showEtudeComments;
+        private static bool showComments => Main.Settings.showEtudeComments;
 
         private static BlueprintEtude selectedEtude;
 
@@ -74,9 +74,9 @@ namespace ToyBox {
                 UI.Space(25);
                 if (UI.Toggle("Flags Only", ref showOnlyFlagLikes)) ApplyFilter();
                 25.space();
-                UI.Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
+                UI.Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
                 25.space();
-                UI.Toggle("Show Comments (some in Russian)", ref Main.settings.showEtudeComments);
+                UI.Toggle("Show Comments (some in Russian)", ref Main.Settings.showEtudeComments);
                 //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
                 //UI.Label($"H : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[selected].Name)}");
 
@@ -270,15 +270,15 @@ namespace ToyBox {
                             UI.Space(25);
                             UI.Label("Can Start", UI.AutoWidth());
                         }
-                        if (Main.settings.showAssetIDs) {
+                        if (Main.Settings.showAssetIDs) {
                             var guid = etudeID.ToString();
                             UI.TextField(ref guid);
                         }
-                        if (showComments && !Main.settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
+                        if (showComments && !Main.Settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
                             UI.Label(etude.Comment.green());
                         }
                     }
-                    if (showComments && Main.settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
+                    if (showComments && Main.Settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
                         UI.Space(-15);
                         using (UI.HorizontalScope(UI.Width(10000))) {
                             UI.Space(310);

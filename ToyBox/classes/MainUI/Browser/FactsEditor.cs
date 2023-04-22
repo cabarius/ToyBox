@@ -42,7 +42,7 @@ namespace ToyBox {
                 }
             }
         }
-        private static Settings Settings => Main.settings;
+        private static Settings Settings => Main.Settings;
         private static bool _showTree = false;
         private static readonly int repeatCount = 1;
         private static readonly FeaturesTreeEditor treeEditor = new();
@@ -185,7 +185,7 @@ namespace ToyBox {
                     () => {
                         using (HorizontalScope()) {
                             var reloadData = false;
-                            Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
+                            Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
                             20.space();
                             reloadData |= Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
                             20.space();

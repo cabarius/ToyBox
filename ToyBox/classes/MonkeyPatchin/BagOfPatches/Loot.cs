@@ -25,10 +25,11 @@ using Kingmaker.Items.Slots;
 using Kingmaker.UI.Common;
 using System.Collections.Generic;
 using ModKit;
+using Kingmaker.Blueprints.Root;
 
 namespace ToyBox.BagOfPatches {
     internal static class Loot {
-        public static Settings settings = Main.settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(LootSlotPCView), nameof(LootSlotPCView.BindViewImplementation))]
@@ -36,7 +37,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ViewBase<ItemSlotVM> __instance) {
                 if (__instance is LootSlotPCView itemSlotPCView) {
                     //                        modLogger.Log($"checking  {itemSlotPCView.ViewModel.Item}");
-                    if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll && settings.toggleHighlightCopyableScrolls) {
+                    if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll && Settings.toggleHighlightCopyableScrolls) {
                         //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
                         itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
                     }
@@ -57,7 +58,7 @@ namespace ToyBox.BagOfPatches {
                     __instance.m_Icon.color = new Color(0.5f, 1.0f, 0.5f, 1.0f);
                 }
                 var item = __instance.Item;
-                if (settings.UsingLootRarity && item != null) {
+                if (Settings.UsingLootRarity && item != null) {
                     _ = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
                     var cb = item.Get<ItemPartShowInfoCallback>();
                     if (cb != null && (!cb.m_Settings.Once || !cb.m_Triggered)) {
@@ -90,10 +91,10 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
         private static class ItemEntity_Name_Patch {
             public static void Postfix(ItemEntity __instance, ref string __result) {
-                if (settings.UsingLootRarity && __result != null && __result.Length > 0) {
+                if (Settings.UsingLootRarity && __result != null && __result.Length > 0) {
                     var bp = __instance.Blueprint;
                     var rarity = __instance.Rarity();
-                    if (rarity < settings.minRarityToColor) return;
+                    if (rarity < Settings.minRarityToColor) return;
                     if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic && rarity < RarityType.Uncommon) return;
                     if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic && rarity < RarityType.Uncommon) return;
                     var result = __result.RarityInGame(rarity);
@@ -110,7 +111,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(InventoryPCView), nameof(InventoryPCView.BindViewImplementation))]
         private static class InventoryPCView_BindViewImplementation_Patch {
             public static void Postfix(InventoryPCView __instance) {
-                if (!settings.UsingLootRarity) return;
+                if (!Settings.UsingLootRarity) return;
                 var decoration = __instance.gameObject?
                     .transform.Find("Inventory/Stash/StashContainer/StashScrollView/decoration");
                 var image = decoration?.GetComponent<UnityEngine.UI.Image>();
@@ -122,7 +123,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(InventoryEquipSlotPCView), nameof(InventoryEquipSlotPCView.BindViewImplementation))]
         private static class InventoryEquipSlotPCView_BindViewImplementation_Patch {
             public static void Postfix(InventoryEquipSlotPCView __instance) {
-                if (!settings.UsingLootRarity) return;
+                if (!Settings.UsingLootRarity) return;
                 var backfill = __instance.gameObject?
                     .transform.Find("Backfill");
                 var image = backfill?.GetComponent<UnityEngine.UI.Image>();
@@ -134,7 +135,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(WeaponSetPCView), nameof(WeaponSetPCView.BindViewImplementation))]
         private static class WeaponSetPCView_BindViewImplementation_Patch {
             public static void Postfix(WeaponSetPCView __instance) {
-                if (!settings.UsingLootRarity) return;
+                if (!Settings.UsingLootRarity) return;
                 var selected = __instance.gameObject?
                     .transform.Find("SelectedObject");
                 var image = selected?.GetComponent<UnityEngine.UI.Image>();
@@ -147,7 +148,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class LootCollectorPCView_BindViewImplementation_Patch {
             public static void Postfix(LootCollectorPCView __instance) {
-                if (!settings.UsingLootRarity) return;
+                if (!Settings.UsingLootRarity) return;
                 var image = __instance.gameObject?
                     .transform.Find("Collector/StashScrollView/Decoration")?
                     .GetComponent<UnityEngine.UI.Image>();
@@ -158,7 +159,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(VendorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class VendorPCView_BindViewImplementation_Patch {
             public static void Postfix(VendorPCView __instance) {
-                if (!settings.UsingLootRarity) return;
+                if (!Settings.UsingLootRarity) return;
                 var vendorImage = __instance.gameObject?
                     .transform.Find("MainContent/VendorBlock/VendorStashScrollView/decoration")?
                     .GetComponent<UnityEngine.UI.Image>();
@@ -172,7 +173,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
         private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
             public static void Postfix(TooltipBrickEntityHeaderView __instance) {
-                if (!settings.UsingLootRarity) return;
+                if (!Settings.UsingLootRarity) return;
                 var image = __instance.gameObject?
                     .transform.Find("TextBlock/Back/ItemBackContainer")?
                     .GetComponent<UnityEngine.UI.Image>();
@@ -201,16 +202,46 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ItemSlot), nameof(ItemSlot.CanRemoveItem))]
         private static class ItemSlot_CanRemoveItem_Patch {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleOverrideLockedItems)
+                if (Settings.toggleOverrideLockedItems)
                     __result = true;
             }
         }
+
+        [HarmonyPatch(typeof(ItemsFilterPCView))]
+        public static class ItemsFilterPCView_ {
+            // Enhanced Inventory and Friends
+            // Adds the sorters to the dropdown.
+            [HarmonyPostfix]
+            [HarmonyPatch(nameof(ItemsFilterPCView.Initialize), new Type[] { })]
+            public static void Initialize(ItemsFilterPCView __instance) {
+                __instance.m_Sorter.ClearOptions();
+
+                List<string> options = new List<string>();
+
+                foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
+                    if (Settings.InventoryItemSorterOptions.HasFlag(flag)) {
+                        (int idx, string text) = EnhancedInventory.SorterCategoryMap[flag];
+
+                        if (text == null) {
+                            Mod.Log($"adding {flag} : {text}");
+                            text = LocalizedTexts.Instance.ItemsFilter.GetText((ItemsFilter.SorterType)idx);
+                            EnhancedInventory.SorterCategoryMap[flag] = (idx, text);
+                        }
+                        Mod.Log($"flag: {flag} - text: {text}");
+                        options.Add(text);
+                    }
+                }
+
+                __instance.m_Sorter.AddOptions(options);
+            }
+        }
+
         [HarmonyPatch(typeof(ItemsFilter), nameof(ItemsFilter.ItemSorter))]
         private static class ItemsFilter_ItemSorter_Patch {
             public static bool Prefix(ref List<ItemEntity> __result, ItemsFilter.SorterType type,
                                        List<ItemEntity> items,
                                        ItemsFilter.FilterType filter) {
-                if (!settings.toggleEnhanceItemSortingWithRarity)
+                if (!Settings.toggleEnhanceItemSortingWithRarity)
                     return true;
 //                Mod.Log("Rarity Sorting");
                 switch (type) {

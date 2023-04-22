@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace ToyBox {
     public static class BagOfTricks {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         // cheats combat
         private const string RestAll = "Rest All";

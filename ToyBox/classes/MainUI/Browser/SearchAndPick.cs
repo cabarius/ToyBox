@@ -38,7 +38,7 @@ using Kingmaker.AreaLogic.QuestSystem;
 
 namespace ToyBox {
     public static class SearchAndPick {
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
 
         public static IEnumerable<SimpleBlueprint> unpagedBPs = null;
         public static IEnumerable<SimpleBlueprint> filteredBPs = null;

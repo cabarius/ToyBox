@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace ToyBox.BagOfPatches {
     internal static class Romance {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         // Any Gender Any Romance Overrides

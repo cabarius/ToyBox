@@ -25,7 +25,7 @@ using System.Linq;
 
 namespace ToyBox {
     public static class Teleport {
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
         //private static readonly HoverHandler _hover = new();
 
         public static void TeleportUnit(UnitEntityData unit, Vector3 position) {

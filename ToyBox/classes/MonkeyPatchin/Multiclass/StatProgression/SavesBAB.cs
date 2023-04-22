@@ -61,7 +61,7 @@ namespace ToyBox.Multiclass {
                 classes,
                 StatType.BaseAttackBonus,
                 classes.Select(a => a.BaseAttackBonus).ToArray(),
-                Main.settings.multiclassBABPolicy
+                Main.Settings.multiclassBABPolicy
                 );
             ApplySingleStat(
                 unit,
@@ -69,7 +69,7 @@ namespace ToyBox.Multiclass {
                 classes,
                 StatType.SaveFortitude,
                 classes.Select(a => a.FortitudeSave).ToArray(),
-                Main.settings.multiclassSavingThrowPolicy
+                Main.Settings.multiclassSavingThrowPolicy
                 );
             ApplySingleStat(
                 unit,
@@ -77,7 +77,7 @@ namespace ToyBox.Multiclass {
                 classes,
                 StatType.SaveReflex,
                 classes.Select(a => a.ReflexSave).ToArray(),
-                Main.settings.multiclassSavingThrowPolicy
+                Main.Settings.multiclassSavingThrowPolicy
                 );
             ApplySingleStat(
                 unit,
@@ -85,7 +85,7 @@ namespace ToyBox.Multiclass {
                 classes,
                 StatType.SaveWill,
                 classes.Select(a => a.WillSave).ToArray(),
-                Main.settings.multiclassSavingThrowPolicy
+                Main.Settings.multiclassSavingThrowPolicy
                 );
 
         }

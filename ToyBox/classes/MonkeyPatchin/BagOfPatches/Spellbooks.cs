@@ -3,7 +3,7 @@ using Kingmaker.UnitLogic;
 
 namespace ToyBox.BagOfPatches {
     internal static class Spellbooks {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
 
 #if false
         [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.GetMaxSpellLevel))]

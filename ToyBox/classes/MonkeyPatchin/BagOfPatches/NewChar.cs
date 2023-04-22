@@ -15,7 +15,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class NewChar {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         //     public LevelUpState([NotNull] UnitEntityData unit, LevelUpState.CharBuildMode mode, bool isPregen)

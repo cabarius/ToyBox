@@ -25,7 +25,7 @@ using UniRx;
 
 namespace ToyBox.Multiclass {
     public static class Archetypes {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         public static string ArchetypesName(this ClassData cd) => string.Join("/", cd.Archetypes.Select(a => a.Name));

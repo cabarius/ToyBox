@@ -11,7 +11,7 @@ using Kingmaker.View.MapObjects.InteractionRestrictions;
 
 namespace ToyBox {
     public class PhatLoot {
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
         public static string searchText = "";
 
         //
@@ -23,7 +23,7 @@ namespace ToyBox {
 
         public static void OnGUI() {
             if (Game.Instance?.Player?.Inventory == null) return;
-#if DEBUG
+#if false
             Div(0, 25);
             var inventory = Game.Instance.Player.Inventory;
             var items = inventory.ToList();
@@ -86,52 +86,52 @@ namespace ToyBox {
                   );
             Div(0, 25);
             HStack("Loot Rarity Coloring", 1,
-                () => {
-                    using (VerticalScope()) {
-                        Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags);
-                        Toggle("Color Item Names", ref Settings.toggleColorLootByRarity);
-                        Toggle("Use Rarity When Sorting", ref Settings.toggleEnhanceItemSortingWithRarity);
+                   () => {
+                       using (VerticalScope()) {
+                           Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags);
+                           Toggle("Color Item Names", ref Settings.toggleColorLootByRarity);
+                           Toggle("Use Rarity When Sorting", ref Settings.toggleEnhanceItemSortingWithRarity);
 #if DEBUG
-                        using (HorizontalScope()) {
-                            30.space();
-                            if (Settings.toggleEnhanceItemSortingWithRarity) {
-                                Toggle("Group By Rarity First", ref Settings.toggleSortByRarirtyFirst, 320.width());
-                            }
-                            else
-                                Label("", 320.width());
-                        }
+                           using (HorizontalScope()) {
+                               30.space();
+                               if (Settings.toggleEnhanceItemSortingWithRarity) {
+                                   Toggle("Group By Rarity First", ref Settings.toggleSortByRarirtyFirst, 320.width());
+                               }
+                               else
+                                   Label("", 320.width());
+                           }
 #endif
-                    }
-                    Space(25);
-                    using (VerticalScope()) {
-                        Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
-                        Label("The coloring of rarity goes as follows:".green());
-                        HStack("Rarity".orange(), 1,
-                            () => {
-                                Label("Trash".Rarity(RarityType.Trash).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Common".Rarity(RarityType.Common).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Uncommon".Rarity(RarityType.Uncommon).bold(), rarityStyle, Width(200));
-                            },
-                            () => {
-                                Space(3); Label("Rare".Rarity(RarityType.Rare).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Epic".Rarity(RarityType.Epic).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Legendary".Rarity(RarityType.Legendary).bold(), rarityStyle, Width(200));
-                            },
-                            () => {
-                                Space(5); Label("Mythic".Rarity(RarityType.Mythic).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Primal".Rarity(RarityType.Primal).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Godly".Rarity(RarityType.Godly).bold(), rarityStyle, Width(200));
-                            },
-                            () => {
-                                Space(5); Label("Notable".Rarity(RarityType.Notable).bold(), rarityStyle, Width(200));
-                                Space(5); Label("Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green());
-                            },
-                            () => { }
-                        );
-                        Label("Minimum Rarity to change colors for:".cyan(), AutoWidth());
-                        RarityGrid(ref Settings.minRarityToColor, 4, AutoWidth());
-                    }
-                });
+                       }
+                       Space(25);
+                       using (VerticalScope()) {
+                           Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
+                           Label("The coloring of rarity goes as follows:".green());
+                           HStack("Rarity".orange(), 1,
+                                  () => {
+                                      Label("Trash".Rarity(RarityType.Trash).bold(), rarityStyle, Width(200));
+                                      Space(5); Label("Common".Rarity(RarityType.Common).bold(), rarityStyle, Width(200));
+                                      Space(5); Label("Uncommon".Rarity(RarityType.Uncommon).bold(), rarityStyle, Width(200));
+                                  },
+                                  () => {
+                                      Space(3); Label("Rare".Rarity(RarityType.Rare).bold(), rarityStyle, Width(200));
+                                      Space(5); Label("Epic".Rarity(RarityType.Epic).bold(), rarityStyle, Width(200));
+                                      Space(5); Label("Legendary".Rarity(RarityType.Legendary).bold(), rarityStyle, Width(200));
+                                  },
+                                  () => {
+                                      Space(5); Label("Mythic".Rarity(RarityType.Mythic).bold(), rarityStyle, Width(200));
+                                      Space(5); Label("Primal".Rarity(RarityType.Primal).bold(), rarityStyle, Width(200));
+                                      Space(5); Label("Godly".Rarity(RarityType.Godly).bold(), rarityStyle, Width(200));
+                                  },
+                                  () => {
+                                      Space(5); Label("Notable".Rarity(RarityType.Notable).bold(), rarityStyle, Width(200));
+                                      Space(5); Label("Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green());
+                                  },
+                                  () => { }
+                                 );
+                           Label("Minimum Rarity to change colors for:".cyan(), AutoWidth());
+                           RarityGrid(ref Settings.minRarityToColor, 4, AutoWidth());
+                       }
+                   });
             Div(0, 25);
             HStack("Loot Rarity Filtering", 1,
                     () => {
@@ -146,9 +146,40 @@ namespace ToyBox {
                             }
                         }
                     },
-            // The following options let you configure loot filtering and auto sell levels:".green());
-            () => { }
+                    // The following options let you configure loot filtering and auto sell levels:".green());
+                    () => { }
                     );
+            Div(0, 25);
+            HStack("Enhanced Inventory",
+                   1,
+                   () => {
+                       Toggle("Enable Enhanced Inventory", ref Settings.toggleEnhancedInventory);
+                       25.space();
+                       Label("Selected features revived from Xenofell's excellent mod".green());
+                   },
+                   () => {
+                       if (Settings.toggleEnhancedInventory) {
+                           using (VerticalScope()) {
+                               Label("Enabled Sort Categories");
+                               ItemSortCategories new_options = ItemSortCategories.NotSorted;
+                               foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
+                                   if (flag == ItemSortCategories.NotSorted || flag == ItemSortCategories.Default)
+                                       continue;
+                                   bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
+                                   using (HorizontalScope()) {
+                                       30.space();
+                                       Toggle($" {EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet);
+                                   }
+                                   if (isSet) {
+                                       new_options |= flag;
+                                   }
+                               }
+                               ActionButton("Default", () => new_options = ItemSortCategories.Default);
+                               Settings.InventoryItemSorterOptions = new_options;
+                           }
+
+                       }
+                   });
             Div(0, 25);
             if (Game.Instance.CurrentlyLoadedArea == null) return;
             var isEmpty = true;

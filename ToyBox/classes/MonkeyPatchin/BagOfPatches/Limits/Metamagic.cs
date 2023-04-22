@@ -20,7 +20,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class MetamagicPatches {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(MetamagicHelper), nameof(MetamagicHelper.DefaultCost))]

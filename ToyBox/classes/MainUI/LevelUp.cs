@@ -8,7 +8,7 @@ using ToyBox.Multiclass;
 
 namespace ToyBox {
     public class LevelUp {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
         public static void ResetGUI() { }
         public static void OnGUI() {
             HStack("Character Creation", 1,

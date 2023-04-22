@@ -29,7 +29,7 @@ namespace ToyBox {
             (showRating ? $"{u.Rating()} ".orange().bold() : "")
             + (u.Owner != null ? $"({u.Owner.CharacterName}) ".orange() : "")
             + u.Name;
-        public static string NameAndOwner(this ItemEntity u) => u.NameAndOwner(Main.settings.showRatingForEnchantmentInventoryItems);
+        public static string NameAndOwner(this ItemEntity u) => u.NameAndOwner(Main.Settings.showRatingForEnchantmentInventoryItems);
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
             var rarity = item.Rarity();
             if ((int)rarity < (int)filter) return false;

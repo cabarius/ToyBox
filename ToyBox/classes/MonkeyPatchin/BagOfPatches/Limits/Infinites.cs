@@ -22,7 +22,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class Infinites {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(AbilityResourceLogic), nameof(AbilityResourceLogic.Spend))]

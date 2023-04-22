@@ -216,6 +216,9 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterDescription = false;
         public RarityType lootChecklistFilterRarity = RarityType.None;
         public RarityType maxRarityToHide = RarityType.None;
+        // Enhanced Inventory
+        public bool toggleEnhancedInventory = false;
+        public ItemSortCategories InventoryItemSorterOptions = ItemSortCategories.Default;
 
         // Crusade
         public bool toggleInfiniteArmyRerolls = false;

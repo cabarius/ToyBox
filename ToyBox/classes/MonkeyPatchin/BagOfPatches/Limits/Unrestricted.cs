@@ -18,7 +18,7 @@ using static Kingmaker.EntitySystem.Stats.ModifiableValue;
 
 namespace ToyBox.BagOfPatches {
     internal static class Unrestricted {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EquipmentRestrictionAlignment), nameof(EquipmentRestrictionAlignment.CanBeEquippedBy))]

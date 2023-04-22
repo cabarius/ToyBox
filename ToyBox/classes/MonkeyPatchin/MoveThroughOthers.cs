@@ -8,7 +8,7 @@ namespace ToyBox {
     // TODO - do we really need this?  Someone requested it but I don't observe any movement restrictions
     public static class MoveThroughOthers {
         // moving through ... feature
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
         [HarmonyPatch(typeof(UnitMovementAgent), nameof(UnitMovementAgent.AvoidanceDisabled), MethodType.Getter)]
         private static class UnitMovementAgent_AvoidanceDisabled_Patch {
             [HarmonyPostfix]

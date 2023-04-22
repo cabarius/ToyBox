@@ -34,7 +34,7 @@ using Kingmaker.Blueprints.Area;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static float CameraElevation = 0f;
 

@@ -40,7 +40,7 @@ namespace ToyBox {
         }
         public static List<UnitEntityData> GetCharacterList() {
             var partyFilterChoices = GetPartyFilterChoices();
-            return partyFilterChoices?[Main.settings.selectedPartyFilter].func();
+            return partyFilterChoices?[Main.Settings.selectedPartyFilter].func();
         }
 
         private static int _selectedIndex = 0;
@@ -60,7 +60,7 @@ namespace ToyBox {
 
             var characterListFunc = TypePicker(
                 null,
-                ref Main.settings.selectedPartyFilter,
+                ref Main.Settings.selectedPartyFilter,
                 filterChoices
                 );
             return characterListFunc;

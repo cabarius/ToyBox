@@ -18,7 +18,7 @@ using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
     public static class ArmiesEditor {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         public static IEnumerable<(GlobalMapArmyState, float)> armies;
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;

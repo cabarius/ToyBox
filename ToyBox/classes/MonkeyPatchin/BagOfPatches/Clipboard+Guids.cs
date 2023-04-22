@@ -17,7 +17,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
     [HarmonyPatch]
     public class Clipboard_Guids {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static void CopyToClipboard(string guid) {
             GUIUtility.systemCopyBuffer = guid;
             EventBus.RaiseEvent<IWarningNotificationUIHandler>(h => h.HandleWarning("Copied Guid to clipboard: " + guid, false));

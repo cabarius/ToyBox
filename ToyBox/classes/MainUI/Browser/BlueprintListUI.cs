@@ -19,7 +19,7 @@ using ModKit.Utility;
 namespace ToyBox {
     public class BlueprintListUI {
         public delegate void NavigateTo(params string[] argv);
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
 
         public static int repeatCount = 1;
         public static bool hasRepeatableAction = false;

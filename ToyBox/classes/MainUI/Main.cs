@@ -25,7 +25,7 @@ namespace ToyBox {
         internal static Harmony HarmonyInstance;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         private static string _modId;
-        public static Settings settings;
+        public static Settings Settings;
         public static MulticlassMod multiclassMod;
         public static bool Enabled;
         public static bool IsModGUIShown = false;
@@ -54,7 +54,7 @@ namespace ToyBox {
                 _modId = modEntry.Info.Id;
 
                 Mod.OnLoad(modEntry);
-                settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+                Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
@@ -69,7 +69,7 @@ namespace ToyBox {
                 KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendly.EnsureFriendlyTypesContainAll();
-                Mod.logLevel = settings.loggingLevel;
+                Mod.logLevel = Settings.loggingLevel;
             }
             catch (Exception e) {
                 Mod.Error(e);
@@ -84,6 +84,7 @@ namespace ToyBox {
             }
             BlueprintExtensions.ResetCollationCache();
             HarmonyInstance.UnpatchAll(_modId);
+            EnhancedInventory.OnUnLoad();
             NeedsActionInit = true;
             return true;
         }
@@ -94,10 +95,10 @@ namespace ToyBox {
         }
 
         private static void ResetGUI(UnityModManager.ModEntry modEntry) {
-            settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
-            settings.searchText = "";
-            settings.searchLimit = 100;
-            settings.browserSearchLimit = 25;
+            Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+            Settings.searchText = "";
+            Settings.searchLimit = 100;
+            Settings.browserSearchLimit = 25;
             BagOfTricks.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
@@ -136,7 +137,7 @@ namespace ToyBox {
                     UI.LinkButton("WoTR Discord", "https://discord.gg/wotr");
                 }
 #endif
-                TabBar(ref settings.selectedTab,
+                TabBar(ref Settings.selectedTab,
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
@@ -167,7 +168,7 @@ namespace ToyBox {
             }
         }
 
-        private static void OnSaveGUI(UnityModManager.ModEntry modEntry) => settings.Save(modEntry);
+        private static void OnSaveGUI(UnityModManager.ModEntry modEntry) => Settings.Save(modEntry);
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
@@ -182,18 +183,19 @@ namespace ToyBox {
             if (Game.Instance?.Player != null) {
                 var corruption = Game.Instance.Player.Corruption;
                 var corruptionDisabled = (bool)corruption.Disabled;
-                if (corruptionDisabled != settings.toggleDisableCorruption) {
-                    if (settings.toggleDisableCorruption)
+                if (corruptionDisabled != Settings.toggleDisableCorruption) {
+                    if (Settings.toggleDisableCorruption)
                         corruption.Disabled.Retain();
                     else
                         corruption.Disabled.ReleaseAll();
                 }
             }
-            Mod.logLevel = settings.loggingLevel;
+            Mod.logLevel = Settings.loggingLevel;
             if (NeedsActionInit) {
                 BagOfTricks.OnLoad();
                 PhatLoot.OnLoad();
                 ArmiesEditor.OnLoad();
+                EnhancedInventory.OnLoad();
                 NeedsActionInit = false;
             }
             //if (resetExtraCameraAngles) {
@@ -229,7 +231,7 @@ namespace ToyBox {
             if (IsModGUIShown || Event.current == null || !Event.current.isKey) return;
             KeyBindings.OnUpdate();
             if (IsInGame
-                && settings.toggleTeleportKeysEnabled
+                && Settings.toggleTeleportKeysEnabled
                 && (currentMode == GameModeType.Default
                     || currentMode == GameModeType.Pause
                     || currentMode == GameModeType.GlobalMap

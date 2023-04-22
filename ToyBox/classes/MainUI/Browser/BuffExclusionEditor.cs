@@ -10,7 +10,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 namespace ToyBox {
     public class BuffExclusionEditor {
         public delegate void NavigateTo(params string[] argv);
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         //We'll use this to add new buffs
         private static List<BlueprintBuff> _buffExceptions;

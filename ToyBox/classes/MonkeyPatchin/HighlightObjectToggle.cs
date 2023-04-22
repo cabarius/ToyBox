@@ -35,7 +35,7 @@ namespace ToyBox.classes.MonkeyPatchin {
             private static bool Prefix(InteractionHighlightController __instance, bool ___m_Inactive) {
                 try {
                     if (!Main.Enabled) return true;
-                    if (!Main.settings.highlightObjectsToggle) return true;
+                    if (!Main.Settings.highlightObjectsToggle) return true;
                     //var isInCutScene = Game.Instance.State.Cutscenes.ToList().Count() > 0;
                     //if (isInCutScene) return true;
                     if (m_IsHighlightingRef(__instance) & !___m_Inactive) {
@@ -63,7 +63,7 @@ namespace ToyBox.classes.MonkeyPatchin {
             private static bool Prefix(InteractionHighlightController __instance) {
                 try {
                     if (!Main.Enabled) return true;
-                    if (Main.settings.highlightObjectsToggle) {
+                    if (Main.Settings.highlightObjectsToggle) {
                         return false;
                     }
                 }
@@ -90,9 +90,9 @@ namespace ToyBox.classes.MonkeyPatchin {
 
             if (!data.IsPerceptionCheckPassed && pcc != null) {
                 var is_highlighting = Game.Instance?.InteractionHighlightController?.IsHighlighting;
-                var should_highlight = (is_highlighting ?? false) && Main.settings.highlightHiddenObjects;
+                var should_highlight = (is_highlighting ?? false) && Main.Settings.highlightHiddenObjects;
 
-                if (!Main.settings.highlightHiddenObjectsInFog && data.IsInFogOfWar) {
+                if (!Main.Settings.highlightHiddenObjectsInFog && data.IsInFogOfWar) {
                     should_highlight = false;
                 }
 

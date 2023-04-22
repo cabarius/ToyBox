@@ -14,7 +14,7 @@ using UnityEngine;
 namespace ToyBox.classes.MainUI {
     public static class CrusadeEditor {
         public static void ResetGUI() { }
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         public static void OnGUI() {
             if (Game.Instance?.Player == null) return;

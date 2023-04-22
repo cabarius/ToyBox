@@ -10,7 +10,7 @@ using System;
 
 namespace ToyBox.BagOfPatches {
     internal static class Pets {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
 
 
         [HarmonyPatch(typeof(AbilityTargetIsSuitableMountSize), nameof(AbilityTargetIsSuitableMountSize.CanMount))]

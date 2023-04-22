@@ -22,7 +22,7 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class Movement {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(UnitEntityData), nameof(UnitEntityData.ModifiedSpeedMps), MethodType.Getter)]
@@ -40,7 +40,7 @@ namespace ToyBox.BagOfPatches {
         public static class ClickGroundHandler_RunCommand_Patch {
             private static UnitMoveTo unitMoveTo = null;
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
-                var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
+                var moveAsOne = Main.Settings.toggleMoveSpeedAsOne;
                 //Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()} moveAsOne:{moveAsOne}");
                 if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return true;
 
@@ -53,7 +53,7 @@ namespace ToyBox.BagOfPatches {
 
                 var speedLimit = moveAsOne ? UnitEntityDataUtils.GetMaxSpeed(Game.Instance.UI.SelectionManager.SelectedUnits) : unit.ModifiedSpeedMps;
                 Mod.Trace($"RunCommand - moveAsOne: {moveAsOne} speedLimit: {speedLimit} selectedUnits: {string.Join(" ", Game.Instance.UI.SelectionManager.SelectedUnits.Select(u => $"{u.CharacterName} {u.ModifiedSpeedMps}"))}");
-                speedLimit *= Main.settings.partyMovementSpeedMultiplier;
+                speedLimit *= Main.Settings.partyMovementSpeedMultiplier;
 
                 unitMoveTo = new UnitMoveTo(settings.Destination, 0.3f) {
                     MovementDelay = settings.Delay,

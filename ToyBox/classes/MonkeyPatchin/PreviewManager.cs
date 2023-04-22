@@ -43,7 +43,7 @@ using UnityEngine.UI;
 
 namespace ToyBox {
     internal static class PreviewManager {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
 
@@ -221,10 +221,10 @@ namespace ToyBox {
             private static void Postfix(ref string __result, BlueprintAnswer answer, string bind, int index) {
                 try {
                     if (!Main.Enabled) return;
-                    if (Main.settings.previewAlignmentRestrictedDialog && !answer.IsAlignmentRequirementSatisfied) {
+                    if (Main.Settings.previewAlignmentRestrictedDialog && !answer.IsAlignmentRequirementSatisfied) {
                         __result = GetFixedAnswerString(answer, bind, index);
                     }
-                    if (!Main.settings.previewDialogResults) return;
+                    if (!Main.Settings.previewDialogResults) return;
                     var answerData = CollateAnswerData(answer, out var isRecursive);
                     if (isRecursive) {
                         __result += $" <size=75%>[Repeats]</size>";
@@ -261,7 +261,7 @@ namespace ToyBox {
             private static void Postfix(DialogCurrentPart __instance) {
                 try {
                     if (!Main.Enabled) return;
-                    if (!Main.settings.previewDialogResults) return;
+                    if (!Main.Settings.previewDialogResults) return;
                     var cue = Game.Instance.DialogController.CurrentCue;
                     var actions = cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray();
                     var alignment = cue.AlignmentShift;
@@ -287,7 +287,7 @@ namespace ToyBox {
             private static void Postfix(KingdomUIEventWindow __instance, KingdomEventUIView kingdomEventView) {
                 try {
                     if (!Main.Enabled) return;
-                    if (!Main.settings.previewEventResults) return;
+                    if (!Main.Settings.previewEventResults) return;
                     if (kingdomEventView.Task == null || kingdomEventView.Task.Event == null) {
                         return; //Task is null on event results;
                     }
@@ -370,7 +370,7 @@ namespace ToyBox {
             private static void Postfix(GlobalMapRandomEncounterController __instance, ref CombatRandomEncounterData encounter) {
                 try {
                     if (!Main.Enabled) return;
-                    if (Main.settings.previewRandomEncounters) {
+                    if (Main.Settings.previewRandomEncounters) {
                         var blueprint = encounter.Blueprint;
                         var text = $"\n<size=70%>Name: {blueprint.Name}\nType: {blueprint.Type}\nCR: {encounter.Blueprint.AvoidDC}</size>";
                         m_DescriptionRef(__instance).text += text;

@@ -11,7 +11,7 @@ using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
     public static class BraaainzEditor {
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
 
         private static List<BlueprintBrain> _allBraaainz = null;
         private static List<BlueprintBrain> AllBraaainz {

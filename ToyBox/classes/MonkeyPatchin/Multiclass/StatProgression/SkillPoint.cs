@@ -22,7 +22,7 @@ namespace ToyBox.Multiclass {
                     var gestaltClasses = group.ToList();
                     gestaltCount = gestaltClasses.Count;
                     if (gestaltCount > 0) {
-                        switch (Main.settings.multiclassSkillPointPolicy) {
+                        switch (Main.Settings.multiclassSkillPointPolicy) {
                             case ProgressionPolicy.Largest:
                                 gestaltSumOrMax += gestaltClasses.Max(cl => cl.CalcTotalSkillPointsNonMythic());
                                 break;
@@ -36,7 +36,7 @@ namespace ToyBox.Multiclass {
                     }
                 }
             }
-            total = Main.settings.multiclassSkillPointPolicy switch {
+            total = Main.Settings.multiclassSkillPointPolicy switch {
                 ProgressionPolicy.Largest => Mathf.Max(baseTotal, gestaltSumOrMax),
                 ProgressionPolicy.Average => (gestaltSumOrMax + baseTotal) / (gestaltCount + 1),
                 ProgressionPolicy.Sum => gestaltSumOrMax + baseTotal,

@@ -19,18 +19,18 @@ namespace ToyBox {
                     UI.Label("Tells the game to reset the in game UI.".green() + " Warning".yellow() + " Using this in dialog or the book will dismiss that dialog which may break progress so use with care".orange());
                 },
                 () => {
-                    UI.Toggle("Enable Game Development Mode", ref Main.settings.toggleDevopmentMode);
+                    UI.Toggle("Enable Game Development Mode", ref Main.Settings.toggleDevopmentMode);
                     UI.Space(25);
                     UI.Label("This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc".green());
                 },
                 () => UI.Label(""),
-                () => UI.EnumGrid("Log Level", ref Main.settings.loggingLevel, UI.AutoWidth()),
+                () => UI.EnumGrid("Log Level", ref Main.Settings.loggingLevel, UI.AutoWidth()),
                 () => UI.Label(""),
-                () => UI.Toggle("Strip HTML (colors) from Native Console", ref Main.settings.stripHtmlTagsFromNativeConsole),
+                () => UI.Toggle("Strip HTML (colors) from Native Console", ref Main.Settings.stripHtmlTagsFromNativeConsole),
 #if DEBUG
-                () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.settings.stripHtmlTagsFromUMMLogsTab),
+                () => UI.Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager", ref Main.Settings.stripHtmlTagsFromUMMLogsTab),
 #endif
-                () => UI.Toggle("Display guids in most tooltips, use shift + left click on items/abilities to copy guid to clipboard", ref Main.settings.toggleGuidsClipboard),
+                () => UI.Toggle("Display guids in most tooltips, use shift + left click on items/abilities to copy guid to clipboard", ref Main.Settings.toggleGuidsClipboard),
               () => { }
             );
 #if DEBUG

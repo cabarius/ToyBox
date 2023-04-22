@@ -4,7 +4,7 @@ using System;
 
 namespace ToyBox.BagOfPatches {
     public static class Settlement {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
 
         [HarmonyPatch(typeof(BlueprintSettlementBuilding), nameof(BlueprintSettlementBuilding.CheckRestrictions), new Type[] { typeof(SettlementState) })]
         public static class BlueprintSettlementBuilding_CheckRestrictions_Patch1 {

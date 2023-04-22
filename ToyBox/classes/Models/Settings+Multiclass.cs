@@ -29,12 +29,12 @@ namespace ToyBox {
             //Main.Log($"stack: {System.Environment.StackTrace}");
             MulticlassOptions options;
             if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") {
-                options = Main.settings.multiclassSettings.GetValueOrDefault(CharGenKey, new MulticlassOptions());
+                options = Main.Settings.multiclassSettings.GetValueOrDefault(CharGenKey, new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - chargen - options: {options}");
             }
             else {
                 if (ch.HashKey() == null) return null;
-                options = Main.settings.perSave.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
+                options = Main.Settings.perSave.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
             }
             return options;
@@ -67,12 +67,12 @@ namespace ToyBox {
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
             //modLogger.Log($"stack: {System.Environment.StackTrace}");
             if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") 
-                Main.settings.multiclassSettings[CharGenKey] = options;
+                Main.Settings.multiclassSettings[CharGenKey] = options;
             else {
                 if (ch.HashKey() == null) return;
                 Mod.Debug($"options: {options}");
-                Main.settings.perSave.multiclassSettings[ch.HashKey()] = options;
-                Mod.Trace($"multiclass options: {string.Join(" ", Main.settings.perSave.multiclassSettings)}");
+                Main.Settings.perSave.multiclassSettings[ch.HashKey()] = options;
+                Mod.Trace($"multiclass options: {string.Join(" ", Main.Settings.perSave.multiclassSettings)}");
                 Settings.SavePerSaveSettings();
             }
         }

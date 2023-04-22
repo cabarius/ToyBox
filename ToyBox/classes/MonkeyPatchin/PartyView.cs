@@ -22,7 +22,7 @@ using UnityEngine.UI;
 
 namespace ToyBox.BagOfPatches {
     internal static class PartyView {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
         public static Player player = Game.Instance.Player;
 
 #if false

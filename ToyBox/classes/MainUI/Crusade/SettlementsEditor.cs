@@ -11,7 +11,7 @@ using Kingmaker.Kingdom;
 
 namespace ToyBox.classes.MainUI {
     public static class SettlementsEditor {
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
         private static Dictionary<object, bool> toggleStates = new();
 
         public static void OnGUI() {

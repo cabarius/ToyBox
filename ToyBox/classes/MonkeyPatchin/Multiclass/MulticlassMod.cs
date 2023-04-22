@@ -75,7 +75,7 @@ namespace ToyBox.Multiclass {
     }
 
     public static class MulticlassUtils {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         public static bool IsCharGen(this LevelUpState state) {
@@ -90,25 +90,25 @@ namespace ToyBox.Multiclass {
         public static bool IsPreGen(this LevelUpState state) => state.IsPregen;
         public static bool IsClassGestalt(this UnitEntityData ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
-            if (Main.settings.perSave == null) return false;
-            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            if (Main.Settings.perSave == null) return false;
+            var excludeSet = Main.Settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             return excludeSet.Contains(cl.AssetGuid.ToString());
         }
 
         public static void SetClassIsGestalt(this UnitEntityData ch, BlueprintCharacterClass cl, bool isGestalt) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
-            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            var excludeSet = Main.Settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (isGestalt) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
             Mod.Trace($"Set - key: {classID} -> {isGestalt} excludeSet: ({string.Join(" ", excludeSet.ToArray())})");
-            Main.settings.perSave.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
+            Main.Settings.perSave.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
             Settings.SavePerSaveSettings();
         }
 
         public static bool IsClassGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl) {
             if (ch.HashKey() == null) return false;
-            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            var excludeSet = Main.Settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             var result = excludeSet.Contains(cl.AssetGuid.ToString());
             return result;
         }
@@ -116,11 +116,11 @@ namespace ToyBox.Multiclass {
         public static void SetClassIsGestalt(this UnitDescriptor ch, BlueprintCharacterClass cl, bool exclude) {
             if (ch.HashKey() == null) return;
             var classID = cl.AssetGuid.ToString();
-            var excludeSet = Main.settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
+            var excludeSet = Main.Settings.perSave.excludeClassesFromCharLevelSets.GetValueOrDefault(ch.HashKey(), new HashSet<string>());
             if (exclude) excludeSet.Add(classID);
             else excludeSet.Remove(classID);
             // Main.Log($"Set - key: {classID} -> {exclude} excludeSet: ({String.Join(" ", excludeSet.ToArray())})");
-            Main.settings.perSave.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
+            Main.Settings.perSave.excludeClassesFromCharLevelSets[ch.HashKey()] = excludeSet;
         }
         public static bool IsClassGestalt(this UnitProgressionData progression, BlueprintCharacterClass cl) {
             var chars = Game.Instance.Player.AllCharacters;
@@ -138,7 +138,7 @@ namespace ToyBox.Multiclass {
 
     public static partial class MultipleClasses {
 
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         public static LevelUpController levelUpController { get; internal set; }
 

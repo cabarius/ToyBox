@@ -32,7 +32,7 @@ using Kingmaker.QA.Statistics;
 
 namespace ToyBox.BagOfPatches {
     internal static class Multipliers {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(EncumbranceHelper), nameof(EncumbranceHelper.GetHeavy))]

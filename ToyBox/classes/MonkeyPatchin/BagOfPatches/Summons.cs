@@ -31,7 +31,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 
 namespace ToyBox.BagOfPatches {
     internal static class Summons {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static bool SummonedByPlayerFaction = false;
 

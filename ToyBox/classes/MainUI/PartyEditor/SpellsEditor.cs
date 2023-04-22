@@ -146,7 +146,7 @@ namespace ToyBox {
                         () => {
                             using (HorizontalScope()) {
                                 bool needsReload = false;
-                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs);
+                                Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
                                 20.space();
                                 needsReload |= Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
                                 20.space();
@@ -218,7 +218,7 @@ namespace ToyBox {
                         FactsEditor.GetName,
                         () => {
                             using (HorizontalScope()) {
-                                Toggle("Show GUIDs", ref Main.settings.showAssetIDs, 150.width());
+                                Toggle("Show GUIDs", ref Main.Settings.showAssetIDs, 150.width());
                                 20.space();
                                 if (Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width()))
                                     spellbookBrowser.ResetSearch();

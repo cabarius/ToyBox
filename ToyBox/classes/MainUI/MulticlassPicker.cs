@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace ToyBox {
     public class MulticlassPicker {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         public static void OnGUI(UnitEntityData ch, float indent = 100) {
             var targetString = ch == null

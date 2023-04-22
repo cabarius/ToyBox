@@ -48,7 +48,7 @@ using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(Player), nameof(Player.OnAreaLoaded))]
@@ -631,9 +631,9 @@ namespace ToyBox.BagOfPatches {
         public static class LogThreadService_OnGameLoaded_Patch {
             private static void Postfix() {
                 PartyEditor.lastScaleSize = new();
-                foreach (var ID in Main.settings.perSave.characterModelSizeMultiplier.Keys) {
+                foreach (var ID in Main.Settings.perSave.characterModelSizeMultiplier.Keys) {
                     foreach (UnitEntityData cha in Game.Instance.State.Units.Where((u) => u.CharacterName.Equals(ID))) {
-                        float scale = Main.settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
+                        float scale = Main.Settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
                         cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
                         PartyEditor.lastScaleSize[cha.HashKey()] = scale;
                     }

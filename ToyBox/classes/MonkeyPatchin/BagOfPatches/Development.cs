@@ -19,7 +19,7 @@ using Kingmaker.Items;
 
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     internal class Development {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
 
         [HarmonyPatch(typeof(BuildModeUtility), nameof(BuildModeUtility.IsDevelopment), MethodType.Getter)]
         private static class BuildModeUtility_IsDevelopment_Patch {

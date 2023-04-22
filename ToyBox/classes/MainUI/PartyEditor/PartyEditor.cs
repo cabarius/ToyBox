@@ -13,7 +13,7 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Settings Settings => Main.settings;
+        public static Settings Settings => Main.Settings;
 
         private enum ToggleChoice {
             Classes,
@@ -57,11 +57,11 @@ namespace ToyBox {
             selectedSpellbook = 0;
             selectedSpellbookLevel = 0;
             CharacterPicker.PartyFilterChoices = null;
-            Main.settings.selectedPartyFilter = 0;
+            Main.Settings.selectedPartyFilter = 0;
         }
 
         // This bit of kludge is added in order to tell whether our generic actions are being accessed from this screen or the Search n' Pick
-        public static bool IsOnPartyEditor() => Main.settings.selectedTab == 2;
+        public static bool IsOnPartyEditor() => Main.Settings.selectedTab == 2;
 
         public static void ActionsGUI(UnitEntityData ch) {
             var player = Game.Instance.Player;

@@ -28,7 +28,7 @@ namespace ToyBox {
         }
     }
     public static class ActionButtons {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
         public static void ResetGUI() { }
 
         // convenience extensions for constructing UI for special types

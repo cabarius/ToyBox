@@ -26,7 +26,7 @@ using Kingmaker.DialogSystem.State;
 
 namespace ToyBox.BagOfPatches {
     internal static class Dialog {
-        public static Settings settings = Main.settings;
+        public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         // These exclude certain secret companions

@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace ToyBox.classes.MainUI {
     public static class EnchantmentEditor {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         #region GUI
         public static BlueprintItemWeapon basicSpikeShield = ResourcesLibrary.TryGetBlueprint<BlueprintItemWeapon>("62c90581f9892e9468f0d8229c7321c4"); //StandardWeaponLightShield

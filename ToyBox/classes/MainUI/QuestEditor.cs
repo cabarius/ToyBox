@@ -48,7 +48,7 @@ namespace ToyBox {
         public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
     }
     public class QuestEditor {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
         public static Player player => Game.Instance.Player;
         private static bool[] selectedQuests = new bool[0];
         public static void ResetGUI() { }

@@ -93,7 +93,7 @@ namespace ToyBox {
                         ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                     }
                     if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".color(RGBA.none) + " (This setting is per-save)", ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
-                        Main.settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
+                        Main.Settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
                         ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                         lastScaleSize[ch.HashKey()] = lastScale;
                         Settings.SavePerSaveSettings();

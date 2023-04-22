@@ -18,7 +18,7 @@ namespace ToyBox.Multiclass {
 
             var currentHPIncrease = hitDies[mainClassIndex];
             var newIncrease = currentHPIncrease;
-            switch (Main.settings.multiclassHitPointPolicy) {
+            switch (Main.Settings.multiclassHitPointPolicy) {
                 case ProgressionPolicy.Average:
                     newIncrease = hitDies.Sum() / classCount;
                     break;

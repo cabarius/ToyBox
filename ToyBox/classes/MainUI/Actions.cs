@@ -29,7 +29,7 @@ using UnityModManagerNet;
 
 namespace ToyBox {
     public static class Actions {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         public static void UnlockAllBasicMythicPaths() {
             // TODO - do this right once I build the etude browser and understand this better
@@ -200,7 +200,7 @@ namespace ToyBox {
             if (ability.IsSpell) {
                 if (PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
                     return !selectedSpellbook.IsKnown(ability) &&
-                           (ability.IsInSpellList(selectedSpellbook.Blueprint.SpellList) || Main.settings.showFromAllSpellbooks || PartyEditor.selectedSpellbookLevel == (selectedSpellbook.Blueprint.MaxSpellLevel + 1));
+                           (ability.IsInSpellList(selectedSpellbook.Blueprint.SpellList) || Main.Settings.showFromAllSpellbooks || PartyEditor.selectedSpellbookLevel == (selectedSpellbook.Blueprint.MaxSpellLevel + 1));
                 }
 
                 foreach (var spellbook in ch.Spellbooks) {

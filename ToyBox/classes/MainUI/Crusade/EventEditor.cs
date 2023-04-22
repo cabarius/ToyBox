@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace ToyBox.classes.MainUI {
     public static class EventEditor {
-        public static Settings settings => Main.settings;
+        public static Settings settings => Main.Settings;
 
         public static void OnGUI() {
             if (Game.Instance?.Player == null) return;
