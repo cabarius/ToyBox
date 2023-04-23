@@ -48,7 +48,6 @@ namespace ToyBox {
             [FilterCategories.Recipe] = ((int)ItemsFilter.FilterType.Recipe, null),
             [FilterCategories.Unlearned] = ((int)ItemsFilter.FilterType.Unlearned, null),
             [FilterCategories.QuickslotUtils] = ((int)ExpandedFilterType.QuickslotUtilities, "Quickslot Utilities"),
-            [FilterCategories.UnlearnedScrolls] = ((int)ExpandedFilterType.UnlearnedScrolls, "Unleaned Scrolls"),
             [FilterCategories.UnlearnedRecipes] = ((int)ExpandedFilterType.UnlearnedRecipes, "Unleaned Recipes"),
             [FilterCategories.UnreadDocuments] = ((int)ExpandedFilterType.UnreadDocuments, "Unread Documents"),
             [FilterCategories.UsableWithoutUMD] = ((int)ExpandedFilterType.UsableWithoutUMD, "Usable without UMD check"),
@@ -132,12 +131,11 @@ namespace ToyBox {
         Recipe = 1 << 11,
         Unlearned = 1 << 12,
         QuickslotUtils = 1 << 13,
-        UnlearnedScrolls = 1 << 14,
-        UnlearnedRecipes = 1 << 15,
-        UnreadDocuments = 1 << 16,
-        UsableWithoutUMD = 1 << 17,
-        CurrentEquipped = 1 << 18,
-        NonZeroPW = 1 << 19,
+        UnlearnedRecipes = 1 << 14,
+        UnreadDocuments = 1 << 15,
+        UsableWithoutUMD = 1 << 16,
+        CurrentEquipped = 1 << 17,
+        NonZeroPW = 1 << 18,
 
         Default = Weapon |
             Armor |
@@ -153,7 +151,6 @@ namespace ToyBox {
             Recipe |
             Unlearned |
             QuickslotUtils |
-            UnlearnedScrolls |
             UnlearnedRecipes |
             UnreadDocuments |
             UsableWithoutUMD |
@@ -189,12 +186,11 @@ namespace ToyBox {
     public enum ExpandedFilterType
     {
         QuickslotUtilities = 14,
-        UnlearnedScrolls = 15,
-        UnlearnedRecipes = 16,
-        UnreadDocuments = 17,
-        UsableWithoutUMD = 18,
-        CurrentEquipped = 19,
-        NonZeroPW = 20,
+        UnlearnedRecipes = 15,
+        UnreadDocuments = 16,
+        UsableWithoutUMD = 17,
+        CurrentEquipped = 18,
+        NonZeroPW = 19,
     }
 
     public enum ExpandedSorterType

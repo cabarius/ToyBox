@@ -43,11 +43,6 @@ namespace ToyBox.Inventory {
             if (expanded_filter == ExpandedFilterType.QuickslotUtilities) {
                 __result = item.Blueprint is BlueprintItemEquipmentUsable blueprint && blueprint.Type != UsableItemType.Potion && blueprint.Type != UsableItemType.Scroll;
             }
-            else if (expanded_filter == ExpandedFilterType.UnlearnedScrolls) {
-                CopyScroll scroll = item.Blueprint.GetComponent<CopyScroll>();
-                UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
-                __result = scroll != null && unit != null && scroll.CanCopy(item, unit);
-            }
             else if (expanded_filter == ExpandedFilterType.UnlearnedRecipes) {
                 CopyRecipe recipe = item.Blueprint.GetComponent<CopyRecipe>();
                 __result = recipe != null && recipe.CanCopy(item, null);

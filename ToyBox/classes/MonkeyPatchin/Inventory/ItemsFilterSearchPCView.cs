@@ -16,14 +16,13 @@ using static ToyBox.BlueprintExtensions;
 namespace ToyBox.Inventory {
     [HarmonyPatch(typeof(ItemsFilterSearchPCView))]
     public static class ItemsFilterSearchPCView_Initialize_Patch {
-        private static readonly HashSet<ItemsFilterSearchPCView> KnownFilterViews = new();
+        public static readonly HashSet<ItemsFilterSearchPCView> KnownFilterViews = new();
         public static void ReloadFilterViews() {
             foreach (var filterView in KnownFilterViews) {
                 filterView.ReloadFilterOptions();
             }
         }
         private static void ReloadFilterOptions(this ItemsFilterSearchPCView filterView) {
-            Mod.Log("hi");
             filterView.m_DropdownValues.Clear();
             List<string> options = new List<string>();
 

@@ -190,7 +190,7 @@ namespace ToyBox {
                            var hscopeRect = DivLastRect();
                            Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
                            FilterCategories new_options = default;
-                           var selectableFilters = EnumHelper.ValidFilterCategories.ToList();
+                           var selectableFilters = EnumHelper.ValidFilterCategories.Where(i => i != FilterCategories.NoFilter).ToList();
                            var changed = false;
                            Table(selectableFilters,
                                  (flag) => {

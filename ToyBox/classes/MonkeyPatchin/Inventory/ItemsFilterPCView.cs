@@ -26,6 +26,8 @@ namespace ToyBox.Inventory {
         private static void SetDropdown(ItemsFilterPCView __instance, ItemsFilter.SorterType val) {
             if (!KnownFilterViews.Contains(__instance))
                 KnownFilterViews.Add(__instance);
+            if (!ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Contains(__instance.m_SearchView))
+                ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Add(__instance.m_SearchView);
             __instance.m_Sorter.value = EnhancedInventory.SorterMapper.From((int)val);
         }
 
