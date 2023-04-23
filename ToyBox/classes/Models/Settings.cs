@@ -202,7 +202,6 @@ namespace ToyBox {
         // Loot 
         public bool toggleColorLootByRarity = false;
         public bool toggleShowRarityTags = false;
-        public bool toggleEnhanceItemSortingWithRarity = false;
         public bool toggleSortByRarirtyFirst = true;
         public bool UsingLootRarity => toggleColorLootByRarity || toggleShowRarityTags;
         public RarityType minRarityToColor = 0;
@@ -216,9 +215,13 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterDescription = false;
         public RarityType lootChecklistFilterRarity = RarityType.None;
         public RarityType maxRarityToHide = RarityType.None;
+
         // Enhanced Inventory
         public bool toggleEnhancedInventory = false;
+        public FilterCategories FilterOptions = FilterCategories.Default;
         public ItemSortCategories InventoryItemSorterOptions = ItemSortCategories.Default;
+        public InventorySearchCriteria InventorySearchCriteria = InventorySearchCriteria.Default;
+        public SpellbookSearchCriteria SpellbookSearchCriteria = SpellbookSearchCriteria.Default;
 
         // Crusade
         public bool toggleInfiniteArmyRerolls = false;

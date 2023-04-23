@@ -8,22 +8,21 @@ using Kingmaker.UI.MVVM._PCView.Slots;
 using Kingmaker.UI.MVVM._PCView.Vendor;
 using System;
 using System.Collections.Generic;
+using ModKit;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using Owlcat.Runtime.UI.MVVM;
 
-namespace ToyBox
-{
-    public enum InventoryType
-    {
+namespace ToyBox {
+    public enum InventoryType {
         InventoryStash,
         Vendor,
         LootCollector,
         LootInventoryStash
     }
 
-    public class InventoryController : MonoBehaviour
-    {
+    public class InventoryController : MonoBehaviour {
         public InventoryType Type;
 
         private Transform m_filter_block;
@@ -34,14 +33,12 @@ namespace ToyBox
 
         private bool m_apply_handlers = true;
         private bool m_deferred_update = false;
-#if false
-        private void Awake()
-        {
+#if true
+        private void Awake() {
             m_filter_block = transform.Find(PathToFilterBlock(Type));
             m_search_bar = new SearchBar(m_filter_block, "Enter item name...");
 
-            m_search_bar.Dropdown.onValueChanged.AddListener(delegate
-            {
+            m_search_bar.Dropdown.onValueChanged.AddListener(delegate {
                 UpdateDropdownIcon();
                 m_deferred_update = true;
             });
@@ -58,7 +55,7 @@ namespace ToyBox
 #endif
 
             m_char_selection_changed_cb = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate { m_deferred_update = true; });
-
+#if false
             // Add options to the dropdown...
 
             List<string> options = new List<string>();
@@ -148,55 +145,54 @@ namespace ToyBox
                 search_transform.localPosition = new Vector3(0.0f, 2.0f, 0.0f);
                 Destroy(switch_bar);
             }
+#endif
         }
 
-        private void OnEnable()
-        {
+        private void OnEnable() {
             m_apply_handlers = true;
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             m_char_selection_changed_cb.Dispose();
         }
 
-        private void Update()
-        {
-            if (m_apply_handlers)
-            {
-                if (Type == InventoryType.InventoryStash)
-                {
-                    InventoryStashPCView stash_pc_view = GetComponentInParent<InventoryStashPCView>();
-                    m_active_filter = stash_pc_view.ViewModel.ItemsFilter.CurrentFilter;
-                    stash_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
-                    stash_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
-                }
-                else if (Type == InventoryType.Vendor)
-                {
-                    VendorPCView vendor_pc_view = GetComponentInParent<VendorPCView>();
-                    m_active_filter = vendor_pc_view.ViewModel.VendorItemsFilter.CurrentFilter;
-                    vendor_pc_view.ViewModel.VendorSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
-                    vendor_pc_view.ViewModel.VendorItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
-                }
-                else if (Type == InventoryType.LootCollector)
-                {
-                    LootCollectorPCView collector_pc_view = GetComponent<LootCollectorPCView>();
-                    m_active_filter = collector_pc_view.ViewModel.ItemsFilter?.CurrentFilter;
-                    collector_pc_view.ViewModel.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+        private void Update() {
+            if (m_apply_handlers) {
+                switch (Type) {
+                    case InventoryType.InventoryStash: {
+                        InventoryStashPCView stash_pc_view = GetComponentInParent<InventoryStashPCView>();
+                        m_active_filter = stash_pc_view.ViewModel.ItemsFilter.CurrentFilter;
+                        stash_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+                        stash_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                        break;
+                    }
+                    case InventoryType.Vendor: {
+                        VendorPCView vendor_pc_view = GetComponentInParent<VendorPCView>();
+                        m_active_filter = vendor_pc_view.ViewModel.VendorItemsFilter.CurrentFilter;
+                        vendor_pc_view.ViewModel.VendorSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+                        vendor_pc_view.ViewModel.VendorItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                        break;
+                    }
+                    case InventoryType.LootCollector: {
+                        LootCollectorPCView collector_pc_view = GetComponent<LootCollectorPCView>();
+                        m_active_filter = collector_pc_view.ViewModel.ItemsFilter?.CurrentFilter;
+                        collector_pc_view.ViewModel.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
 
-                    if (m_active_filter != null) // can be null if not on stash view
-                    {
-                        collector_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                        if (m_active_filter != null) // can be null if not on stash view
+                        {
+                            collector_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                        }
+                        break;
+                    }
+                    case InventoryType.LootInventoryStash: {
+                        LootInventoryStashPCView inventory_pc_view = GetComponentInParent<LootInventoryStashPCView>();
+                        m_active_filter = inventory_pc_view.ViewModel.ItemsFilter.CurrentFilter;
+                        inventory_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+                        inventory_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                        break;
                     }
                 }
-                else if (Type == InventoryType.LootInventoryStash)
-                {
-                    LootInventoryStashPCView inventory_pc_view = GetComponentInParent<LootInventoryStashPCView>();
-                    m_active_filter = inventory_pc_view.ViewModel.ItemsFilter.CurrentFilter;
-                    inventory_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
-                    inventory_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
-                }
-
+#if false
                 Transform switch_bar = m_filter_block.Find("SwitchBar");
 
                 if (switch_bar != null && Type != InventoryType.LootCollector)
@@ -231,33 +227,31 @@ namespace ToyBox
                         m_search_bar.FocusSearchBar();
                     }
                 }
-
+#endif
                 m_apply_handlers = false;
             }
 
-            if (m_deferred_update)
-            {
-                if (m_active_filter != null)
-                {
+            if (m_deferred_update) {
+                Mod.Log("hi deferred_update");
+                if (m_active_filter != null) {
+#if false
                     Hooks.ItemsFilter_ShouldShowItem_Blueprint.SearchContents = m_search_bar.InputField.text;
                     m_active_filter.SetValueAndForceNotify((ItemsFilter.FilterType)Main.FilterMapper.To(m_search_bar.Dropdown.value));
                     Hooks.ItemsFilter_ShouldShowItem_Blueprint.SearchContents = null;
+#endif
                 }
 
                 m_deferred_update = false;
             }
         }
 
-        private void UpdateDropdownIcon()
-        {
+        private void UpdateDropdownIcon() {
             m_search_bar.DropdownIconObject.GetComponent<Image>().sprite = m_search_icons[m_search_bar.Dropdown.value]?.sprite;
             m_search_bar.DropdownIconObject.gameObject.SetActive(m_search_bar.DropdownIconObject.GetComponent<Image>().sprite != null);
         }
 #endif
-        public static string PathToFilterBlock(InventoryType type)
-        {
-            switch (type)
-            {
+        public static string PathToFilterBlock(InventoryType type) {
+            switch (type) {
                 case InventoryType.LootCollector: return "Filters/PC_FilterBlock (1)/FilterPCView";
                 case InventoryType.LootInventoryStash: return "Filters/PC_FilterBlock/FilterPCView";
             }
@@ -265,16 +259,13 @@ namespace ToyBox
             return "PC_FilterBlock/FilterPCView";
         }
 
-        public static string PathToSorter(InventoryType type)
-        {
+        public static string PathToSorter(InventoryType type) {
             string filter = PathToFilterBlock(type);
             return filter.Substring(0, filter.LastIndexOf('/'));
         }
 
-        public static string PathToStashScroll(InventoryType type)
-        {
-            switch (type)
-            {
+        public static string PathToStashScroll(InventoryType type) {
+            switch (type) {
                 case InventoryType.InventoryStash: return "StashScrollView/Scrollbar Vertical";
                 case InventoryType.Vendor: return "VendorStashScrollView/Scrollbar Vertical";
                 case InventoryType.LootCollector: return "Collector/StashScrollView/Scrollbar Vertical";

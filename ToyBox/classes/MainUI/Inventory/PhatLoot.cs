@@ -2,12 +2,14 @@
 using System.Linq;
 using UnityEngine;
 using Kingmaker;
+using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using ToyBox.Multiclass;
 using static ModKit.UI;
 using Kingmaker.View.MapObjects;
 using Kingmaker.View.MapObjects.InteractionRestrictions;
+using ModKit.Utility;
 
 namespace ToyBox {
     public class PhatLoot {
@@ -87,11 +89,10 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Loot Rarity Coloring", 1,
                    () => {
-                       using (VerticalScope()) {
+                       using (VerticalScope(300.width())) {
                            Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags);
                            Toggle("Color Item Names", ref Settings.toggleColorLootByRarity);
-                           Toggle("Use Rarity When Sorting", ref Settings.toggleEnhanceItemSortingWithRarity);
-#if DEBUG
+#if false
                            using (HorizontalScope()) {
                                30.space();
                                if (Settings.toggleEnhanceItemSortingWithRarity) {
@@ -102,33 +103,14 @@ namespace ToyBox {
                            }
 #endif
                        }
-                       Space(25);
                        using (VerticalScope()) {
-                           Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}".green());
-                           Label("The coloring of rarity goes as follows:".green());
-                           HStack("Rarity".orange(), 1,
-                                  () => {
-                                      Label("Trash".Rarity(RarityType.Trash).bold(), rarityStyle, Width(200));
-                                      Space(5); Label("Common".Rarity(RarityType.Common).bold(), rarityStyle, Width(200));
-                                      Space(5); Label("Uncommon".Rarity(RarityType.Uncommon).bold(), rarityStyle, Width(200));
-                                  },
-                                  () => {
-                                      Space(3); Label("Rare".Rarity(RarityType.Rare).bold(), rarityStyle, Width(200));
-                                      Space(5); Label("Epic".Rarity(RarityType.Epic).bold(), rarityStyle, Width(200));
-                                      Space(5); Label("Legendary".Rarity(RarityType.Legendary).bold(), rarityStyle, Width(200));
-                                  },
-                                  () => {
-                                      Space(5); Label("Mythic".Rarity(RarityType.Mythic).bold(), rarityStyle, Width(200));
-                                      Space(5); Label("Primal".Rarity(RarityType.Primal).bold(), rarityStyle, Width(200));
-                                      Space(5); Label("Godly".Rarity(RarityType.Godly).bold(), rarityStyle, Width(200));
-                                  },
-                                  () => {
-                                      Space(5); Label("Notable".Rarity(RarityType.Notable).bold(), rarityStyle, Width(200));
-                                      Space(5); Label("Notable".Rarity(RarityType.Notable) + " denotes items that are deemed to be significant for plot reasons or have significant subtle properties".green());
-                                  },
-                                  () => { }
-                                 );
-                           Label("Minimum Rarity to change colors for:".cyan(), AutoWidth());
+                           Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}"
+                                     .green());
+                       }
+                   },
+                   () => {
+                       using (VerticalScope(400.width())) {
+                           Label("Minimum Rarity For Loot Rarity Tags/Colors".cyan(), AutoWidth());
                            RarityGrid(ref Settings.minRarityToColor, 4, AutoWidth());
                        }
                    });
@@ -153,31 +135,44 @@ namespace ToyBox {
             HStack("Enhanced Inventory",
                    1,
                    () => {
-                       Toggle("Enable Enhanced Inventory", ref Settings.toggleEnhancedInventory);
+                       if (Toggle("Enable Enhanced Inventory", ref Settings.toggleEnhancedInventory, 300.width()))
+                           EnhancedInventory.RefreshRemappers();
                        25.space();
                        Label("Selected features revived from Xenofell's excellent mod".green());
                    },
                    () => {
                        if (Settings.toggleEnhancedInventory) {
                            using (VerticalScope()) {
-                               Label("Enabled Sort Categories");
-                               ItemSortCategories new_options = ItemSortCategories.NotSorted;
-                               foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
-                                   if (flag == ItemSortCategories.NotSorted || flag == ItemSortCategories.Default)
-                                       continue;
-                                   bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
-                                   using (HorizontalScope()) {
-                                       30.space();
-                                       Toggle($" {EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet);
-                                   }
-                                   if (isSet) {
-                                       new_options |= flag;
-                                   }
+                               Rect divRect;
+                               using (HorizontalScope()) {
+                                   Label("Enabled Sort Categories".Cyan(), 300.width());
+                                   25.space();
+                                   HelpLabel("Here you can choose which Sort Options appear in the popup menu");
+                                   divRect = DivLastRect();
                                }
-                               ActionButton("Default", () => new_options = ItemSortCategories.Default);
+                               var hscopeRect = DivLastRect();
+                               Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
+                               ItemSortCategories new_options = ItemSortCategories.NotSorted;
+                               var selectableCategories = EnumHelper.ValidSorterCategories.Where(i => i != ItemSortCategories.NotSorted).ToList();
+                               var changed = false;
+                               Table(selectableCategories,
+                                     (flag) => {
+                                         //Mod.Log($"            {flag.ToString()}");
+                                         if (flag == ItemSortCategories.NotSorted || flag == ItemSortCategories.Default)
+                                             return; 
+                                         bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
+                                         using (HorizontalScope(250)) {
+                                             30.space();
+                                             if (Toggle($" {EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
+                                         }
+                                         if (isSet) {
+                                             new_options |= flag;
+                                         }
+                                     }, 2,null, 375.width());
+                               65.space(() => ActionButton("Use Default", () => new_options = ItemSortCategories.Default));
                                Settings.InventoryItemSorterOptions = new_options;
+                               if (changed) EnhancedInventory.RefreshRemappers();
                            }
-
                        }
                    });
             Div(0, 25);

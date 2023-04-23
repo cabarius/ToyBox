@@ -5,6 +5,7 @@ using HarmonyLib;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using ModKit;
+using ToyBox.Inventory;
 
 namespace ToyBox {
     public static class EnhancedInventory {
@@ -12,7 +13,7 @@ namespace ToyBox {
         private static Harmony m_harmony;
         private static OnAreaLoad m_area_load_handler;
 
-        public static readonly Dictionary<ItemSortCategories, (int, string)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int, string)> {
+        public static readonly Dictionary<ItemSortCategories, (int, string)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
             [ItemSortCategories.NotSorted] = ((int)ItemsFilter.SorterType.NotSorted, null),
             [ItemSortCategories.TypeUp] = ((int)ItemsFilter.SorterType.TypeUp, null),
             [ItemSortCategories.TypeDown] = ((int)ItemsFilter.SorterType.TypeDown, null),
@@ -26,13 +27,15 @@ namespace ToyBox {
             [ItemSortCategories.WeightDown] = ((int)ItemsFilter.SorterType.WeightDown, null),
             [ItemSortCategories.WeightValueUp] = ((int)ExpandedSorterType.WeightValueUp, "Price / Weight (in ascending order)"),
             [ItemSortCategories.WeightValueDown] = ((int)ExpandedSorterType.WeightValueDown, "Price / Weight (in descending order)"),
-            [ItemSortCategories.Rarity] = ((int)ExpandedSorterType.Rarity, "Rarity")
+            [ItemSortCategories.RarityUp] = ((int)ExpandedSorterType.RarityUp, "Rarity (ascending order)"),
+            [ItemSortCategories.RarityDown] = ((int)ExpandedSorterType.RarityDown, "Rarity (descending order)")
         };
         public static readonly RemappableInt FilterMapper = new RemappableInt();
         public static readonly RemappableInt SorterMapper = new RemappableInt();
         public static void OnLoad() {
             m_area_load_handler = new OnAreaLoad();
             EventBus.Subscribe(m_area_load_handler);
+            RefreshRemappers();
         }
         public static void OnUnLoad() {
             EventBus.Unsubscribe(m_area_load_handler);
@@ -50,9 +53,12 @@ namespace ToyBox {
 #endif
             foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
                 if (Settings.InventoryItemSorterOptions.HasFlag(flag)) {
-                    SorterMapper.Add(SorterCategoryMap[flag].Item1);
+                    //Mod.Log($"{flag} {SorterCategoryMap[flag]}");
+                    if (SorterCategoryMap.ContainsKey(flag))
+                        SorterMapper.Add(SorterCategoryMap[flag].Item1);
                 }
             }
+            ItemsFilterPCView_.ReloadFilterViews();
         }
     }
 
@@ -134,14 +140,15 @@ namespace ToyBox {
         WeightDown = 1 << 9,
         WeightValueUp = 1 << 10,
         WeightValueDown = 1 << 11,
-        Rarity = 1 << 12,
+        RarityUp = 1 << 12,
+        RarityDown = 1 << 13,
 
         Default = TypeUp |
             PriceDown |
             DateDown |
             WeightDown |
             WeightValueUp |
-            Rarity
+            RarityDown
     }
     public enum ExpandedFilterType
     {
@@ -158,7 +165,8 @@ namespace ToyBox {
     {
         WeightValueUp = 11,
         WeightValueDown = 12,
-        Rarity = 13
+        RarityUp = 13,
+        RarityDown = 14
     }
 
     public enum SpellbookFilter
@@ -182,8 +190,10 @@ namespace ToyBox {
 
         public static IEnumerable<FilterCategories> ValidFilterCategories
             = Enum.GetValues(typeof(FilterCategories)).Cast<FilterCategories>().Where(i => i != FilterCategories.Default);
+        public static bool IsRarityCategory(this ItemSortCategories category) => category == ItemSortCategories.RarityUp || category == ItemSortCategories.RarityDown;
+        public static bool IsValid(this ItemSortCategories category) => category != ItemSortCategories.Default && (Main.Settings.UsingLootRarity || !category.IsRarityCategory());
 
-        public static IEnumerable<ItemSortCategories> ValidSorterCategories
-            = Enum.GetValues(typeof(ItemSortCategories)).Cast<ItemSortCategories>().Where(i => i != ItemSortCategories.Default);
+        public static IEnumerable<ItemSortCategories> ValidSorterCategories 
+            = Enum.GetValues(typeof(ItemSortCategories)).Cast<ItemSortCategories>().Where(category => category.IsValid());
     }
 }

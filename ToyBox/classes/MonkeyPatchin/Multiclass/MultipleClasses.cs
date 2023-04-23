@@ -44,7 +44,7 @@ namespace ToyBox.Multiclass {
             private static void Prefix(LevelUpController __instance) {
                 if (IsAvailable()) {
                     // This is the critical place that gets called once before we go through all the level computations for setting up the level up screen
-                    Mod.Debug("LevelUpController_UpdatePreview_Patch");
+                    //Mod.Debug("LevelUpController_UpdatePreview_Patch");
                     //Main.multiclassMod.AppliedMulticlassSet.Clear();
                     //Main.multiclassMod.UpdatedProgressions.Clear();
                 }
@@ -146,8 +146,8 @@ namespace ToyBox.Multiclass {
                 if (!settings.toggleMulticlass) return;
 
                 if (unit == __instance.Preview) {
-                    Mod.Trace($"Unit Preview = {unit.CharacterName}");
-                    Mod.Trace("levelup action：");
+                    //Mod.Trace($"Unit Preview = {unit.CharacterName}");
+                    //Mod.Trace("levelup action：");
                     foreach (var action in __instance.LevelUpActions) {
                         Mod.Trace($"{action.GetType()}");
                     }
@@ -160,7 +160,7 @@ namespace ToyBox.Multiclass {
             private static void Postfix(ApplyClassMechanics __instance, LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (IsAvailable()) {
-                    Mod.Debug($"ApplyClassMechanics_Apply_Patch - unit: {unit} {unit.CharacterName} class:{state.SelectedClass}");
+                    //Mod.Debug($"ApplyClassMechanics_Apply_Patch - unit: {unit} {unit.CharacterName} class:{state.SelectedClass}");
                     if (state.SelectedClass != null) {
                         ForEachAppliedMulticlass(state, unit, () => {
                             unit.SetClassIsGestalt(state.SelectedClass, true);
@@ -170,7 +170,7 @@ namespace ToyBox.Multiclass {
                         });
                     }
                     var allAppliedClasses = Main.multiclassMod.AppliedMulticlassSet.ToList();
-                    Mod.Debug($"ApplyClassMechanics_Apply_Patch - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
+                    //Mod.Debug($"ApplyClassMechanics_Apply_Patch - {String.Join(" ", allAppliedClasses.Select(cl => cl.Name))}".orange());
                     allAppliedClasses.Add(state.SelectedClass);
                     SavesBAB.ApplySaveBAB(unit, state, allAppliedClasses.ToArray());
                     HPDice.ApplyHPDice(unit, state, allAppliedClasses.ToArray());
@@ -275,7 +275,7 @@ namespace ToyBox.Multiclass {
         private static class UnitProgressionData_LastMythicClass_Patch {
             static void Postfix(ref BlueprintCharacterClass __result, UnitProgressionData __instance) {
                 __result = __instance.m_ClassesOrder.LastItem<BlueprintCharacterClass>((Func<BlueprintCharacterClass, bool>)(cl => cl.IsMythic && !__instance.Owner.IsClassGestalt(cl)));
-                Mod.Trace($"LastMythic = {__result}");
+                //Mod.Trace($"LastMythic = {__result}");
             }
         }
 
@@ -285,7 +285,7 @@ namespace ToyBox.Multiclass {
         private static class MythicInfoProgressionVM_RefreshData_Patch {
             static void Postfix(MythicInfoProgressionVM __instance) {
                 var lastMythic = __instance.m_ClassDatas.LastOrDefault<ClassData>((cd) => !__instance.Unit.Value.IsClassGestalt(cd.CharacterClass));
-                Mod.Trace($"MythicInfoProgressionVM - LastMythic = {lastMythic?.CharacterClass.Name}");
+                //Mod.Trace($"MythicInfoProgressionVM - LastMythic = {lastMythic?.CharacterClass.Name}");
                 __instance.MythicName = lastMythic?.CharacterClass.Name;
 
             }
@@ -306,7 +306,7 @@ namespace ToyBox.Multiclass {
                     if (isCharGen
                             && __instance.Unit.IsCustomCompanion()
                             && options.Count > 0) {
-                        Mod.Trace($"LevelUpController_Commit_Patch - {ch} - {options}");
+                        //Mod.Trace($"LevelUpController_Commit_Patch - {ch} - {options}");
                         MulticlassOptions.Set(ch, options);
                     }
                 }

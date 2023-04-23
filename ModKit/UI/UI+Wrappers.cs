@@ -1,4 +1,6 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
+
+using System;
 using UnityEngine;
 
 using GL = UnityEngine.GUILayout;
@@ -24,6 +26,12 @@ namespace ModKit {
 
         public static void Space(float size = 150f) => GL.Space(size);
         public static void space(this int size) => GL.Space(size);
+        public static void space(this int indent, Action action, params GUILayoutOption[] options) {
+            using (HorizontalScope(options)) {
+                GL.Space(indent);
+                action();
+            }
+        }
         public static void Indent(int indent, float size = 75f) => GL.Space(indent * size);
         public static void BeginHorizontal(GUIStyle style, params GUILayoutOption[] options) => GL.BeginHorizontal(style, options);
         public static void BeginHorizontal(params GUILayoutOption[] options) => GL.BeginHorizontal(options);

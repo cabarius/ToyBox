@@ -24,16 +24,23 @@ namespace ModKit.Utility {
             }
             return source;
         }
-        public static string MarkedSubstring(this string source, string sub) {
-            if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(sub))
+        public static string MarkedSubstring(this string source, string query, bool markTerms = true) {
+            if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(query))
                 return source;
+            if (markTerms && query.Contains(" ")) {
+                var terms = query.Split(' ');
+                foreach (var term in terms) {
+                    source = source.MarkedSubstring(term, false);
+                }
+                return source;
+            }
             var htmlStart = source.IndexOf('<');
             if (htmlStart == -1) 
-                return source.MarkedSubstringNoHTML(sub);
+                return source.MarkedSubstringNoHTML(query);
             var result = new StringBuilder();
             var len = source.Length;
             var segment = source.Substring(0, htmlStart);
-            segment = segment.MarkedSubstringNoHTML(sub);
+            segment = segment.MarkedSubstringNoHTML(query);
             result.Append(segment);
             var htmlEnd = source.IndexOf('>', htmlStart);
             while (htmlStart != -1 && htmlEnd != -1) {
@@ -42,7 +49,7 @@ namespace ModKit.Utility {
                 htmlStart = source.IndexOf('<', htmlEnd);
                 if (htmlStart != -1) {
                     segment = source.Substring(htmlEnd + 1, htmlStart - htmlEnd - 1);
-                    segment = segment.MarkedSubstringNoHTML(sub);
+                    segment = segment.MarkedSubstringNoHTML(query);
                     result.Append(segment);
                     htmlEnd = source.IndexOf('>', htmlStart);
                 }

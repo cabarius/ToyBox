@@ -30,7 +30,7 @@ namespace ModKit {
                 result = GL.Button(title, linkStyle, options);
                 rect = GUILayoutUtility.GetLastRect();
             }
-            Div(linkStyle.normal.textColor, 0 , 0, rect.width + 4.point());
+            DrawDiv(linkStyle.normal.textColor, 0 , 0, rect.width + 4.point());
             if (result) {
                 Application.OpenURL(url);
                 action?.Invoke();

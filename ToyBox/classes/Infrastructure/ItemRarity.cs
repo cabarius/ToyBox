@@ -202,28 +202,13 @@ namespace ToyBox {
                 ItemEntity a,
                 ItemEntity b,
                 bool invert,
-                Comparison<ItemEntity> otherCompare
+                ItemsFilter.FilterType filterType,
+                Func<ItemEntity, ItemEntity, ItemsFilter.FilterType, int> otherCompare
             ) {
-#if !DEBUG
-            var result = b.RaritySortScore().CompareTo(a.RaritySortScore());
+            var result = a.RaritySortScore().CompareTo(b.RaritySortScore());
             if (invert) result *= -1;
             if (result != 0) return result;
-            return otherCompare(a, b);
-#else
-            if (Settings.toggleSortByRarirtyFirst) {
-                var result = b.RaritySortScore().CompareTo(a.RaritySortScore());
-                if (invert) result *= -1;
-                if (result != 0) return result;
-                return otherCompare(a, b);
-            }
-            else {
-                var result = otherCompare(a, b);
-                if (result != 0) return result;
-                result = b.RaritySortScore().CompareTo(a.RaritySortScore());
-                if (invert) result *= -1;
-                return result;
-            }
-#endif
+            return otherCompare(a, b, filterType);
         }
     }
 }

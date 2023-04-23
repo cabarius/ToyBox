@@ -36,7 +36,12 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-### Ver 1.4.26 (coming soon)
+### Ver 1.5.0 (coming soon)
+* (***Narria***) Inventory Enhancements
+  * Brought in some other bits of Xenfell's lovely Enhanced Inventory to give a unified experience with Loot Rarity and to revive the mod which needed some love
+    * Added the ability to sort items in iventory and vendors by rarity
+    * Ability to choose which sort categories
+    * You can expect more of this to get ported over time including Search Filtering and Spellbook enhancements
 * (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***Narria***) DataViewer views now filter out properties with empty collections
@@ -54,7 +59,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) New spiffy UI for editing parameterized feats and feature selections
 * (***Narria***) Improved UI for Keybindings by allowing you to Clear a Key Binding and Remove Conflicts 
 * (***Narria***) Added marking of search results in Party Editor blueprint views
-* (***Narria***) Added the ability to sort items in iventory and vendors by rarity
 * (***Narria***) Added more explainer text to dialog options
 * (***Narria***) **Fixed bug where certain buff durations like Smite Evil were getting set to zero duration**
 * (***ADDB***) Added All Spells tab to the Party -> Spells Menu.

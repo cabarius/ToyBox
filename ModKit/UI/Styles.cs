@@ -78,7 +78,7 @@ namespace ModKit {
             }
         }
         public static GUIStyle divStyle;
-        public static void Div(Color color, float indent = 0, float height = 0, float width = 0) {
+        public static void DrawDiv(Color color, float indent = 0, float height = 0, float width = 0) {
             if (fillTexture == null)
                 fillTexture = new Texture2D(1, 1);
             //if (divStyle == null) {

@@ -15,11 +15,19 @@ namespace ModKit {
 
         public static void GUIDrawRect(Rect position, Color color) => GUI.Box(position, GUIContent.none, FillStyle(color));
 
-        public static void Div(float indent = 0, float height = 0, float width = 0) => Div(fillColor, indent, height, width);
+        public static void Div(float indent = 0, float height = 0, float width = 0) => DrawDiv(fillColor, indent, height, width);
         public static void DivLast(float height = 0) {
             var rect = GUILayoutUtility.GetLastRect();
-            Div(fillColor, rect.x, height, rect.width + 3);
+            DrawDiv(fillColor, rect.x, height, rect.width + 3);
         }
+        public static void DivToLast(float indent = 0, float height = 0) {
+            var rect = GUILayoutUtility.GetLastRect();
+            DrawDiv(fillColor, indent, height, rect.x + rect.width + 3);
+        }
+        public static Rect DivLastRect() => GUILayoutUtility.GetLastRect();
+        public static void DivLast(Rect rect, float height = 0) => DrawDiv(fillColor, rect.x, height, rect.width + 3);
+        public static void DivToLast(Rect rect, float indent = 0, float height = 0) => DrawDiv(fillColor, indent, height, rect.x + rect.width + 3);
+
         public static void Wrap(bool condition, float indent = 0, float space = 10) {
             if (condition) {
                 EndHorizontal();

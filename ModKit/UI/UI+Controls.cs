@@ -38,6 +38,8 @@ namespace ModKit {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
+        public static void HelpLabel(string title, params GUILayoutOption[] options) => Label(title.green(), options);
+        public static void HelpLabel(string title, GUIStyle style, params GUILayoutOption[] options) => Label(title.green(), style, options);
         public static void DescriptiveLabel(string title, string description, params GUILayoutOption[] options) {
             options = options.AddDefaults(Width(300));
             using (HorizontalScope()) {

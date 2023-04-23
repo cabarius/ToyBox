@@ -1,8 +1,11 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Linq;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using GL = UnityEngine.GUILayout;
+using System.Collections.Generic;
 
 namespace ModKit {
     public static partial class UI {
@@ -62,26 +65,74 @@ namespace ModKit {
             if (stride < 1) { stride = length; }
             if (IsNarrow)
                 stride = Math.Min(3, stride);
-            for (var ii = 0; ii < actions.Length; ii += stride) {
-                var hasTitle = title != null;
-                BeginHorizontal();
-                if (hasTitle) {
-                    if (ii == 0) { Label(title.bold(), Width(150f)); }
-                    else { Space(153); }
+            for (var ii = 0; ii < length; ii += stride) {
+                using (HorizontalScope()) {
+                    if (title != null) {
+                        if (ii == 0) {
+                            Label(title.bold(), Width(150f));
+                        }
+                        else {
+                            Space(153);
+                        }
+                    }
+                    var filteredActions = actions.Skip(ii).Take(stride);
+                    foreach (var action in filteredActions) {
+                        action();
+                    }
                 }
-                var filteredActions = actions.Skip(ii).Take(stride);
-                foreach (var action in filteredActions) {
-                    action();
-                }
-                EndHorizontal();
             }
         }
         public static void VStack(string title = null, params Action[] actions) {
-            BeginVertical();
-            if (title != null) { Label(title); }
-            Group(actions);
-            EndVertical();
+            using (VerticalScope()) {
+                if (title != null)
+                    Label(title);
+                Group(actions);
+            }
         }
+        public static void Column<T>(List<T> items, Action<T> action, string title = null, params GUILayoutOption[] options) {
+            var length = items.Count();
+            using (VerticalScope(options)) {
+                if (title != null)
+                    Label(title);
+                var ii = 0;
+                foreach (var item in items) {
+                    //Mod.Log($"    row: {ii++} - {item.GetType().ToString()}");
+                    action(item);
+                }
+            }
+        }
+        public static void Row<T>(List<T> items, Action<T> action , string title = null, params GUILayoutOption[] options) {
+            var length = items.Count();
+            using (HorizontalScope()) {
+                if (title != null) {
+                    using (VerticalScope(options)) {
+                        Label(title);
+                    }
+                }
+                var ii = 0;
+                foreach (var item in items) {
+                    using (VerticalScope(options)) {
+                        //Mod.Log($"        col: {ii++} - {item.GetType().ToString()}");
+                        action(item);
+                    }
+                }
+            }
+        }
+
+        public static void Table<T>(List<T> items, Action<T> action, int numColumns = 2, string title = null, params GUILayoutOption[] options) {
+            var length = items.Count();
+            if (numColumns < 1) {
+                numColumns = length;
+            }
+            if (IsNarrow)
+                numColumns = Math.Min(3, numColumns);
+            var splitItems = items.ToList().Partition(numColumns);
+            Column(splitItems,
+                   rowItems => {
+                       Row(rowItems, rowItem => action(rowItem), title, options);
+                   });
+        }
+
         public static void Section(string title, params Action[] actions) {
             Space(25);
             Label($"====== {title} ======".bold(), GL.ExpandWidth(true));

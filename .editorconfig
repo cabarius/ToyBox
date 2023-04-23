@@ -84,6 +84,7 @@ dotnet_style_prefer_auto_properties = true:silent
 csharp_preserve_single_line_blocks = true
 
 # ReSharper properties
+resharper_align_first_arg_by_paren = false
 resharper_align_linq_query = true
 resharper_align_multiline_argument = true
 resharper_align_multiline_binary_patterns = true
@@ -98,7 +99,8 @@ resharper_align_tuple_components = true
 resharper_allow_comment_after_lbrace = true
 resharper_blank_lines_around_single_line_type = 0
 resharper_constructor_or_destructor_body = expression_body
-resharper_csharp_align_first_arg_by_paren = true
+resharper_csharp_align_first_arg_by_paren = false
+resharper_csharp_align_multiline_parameter = false
 resharper_csharp_blank_lines_around_invocable = 0
 resharper_csharp_empty_block_style = together
 resharper_csharp_indent_invocation_pars = outside_and_inside
@@ -107,6 +109,7 @@ resharper_csharp_indent_statement_pars = outside
 resharper_csharp_stick_comment = false
 resharper_csharp_wrap_arguments_style = chop_if_long
 resharper_csharp_wrap_before_binary_opsign = true
+resharper_csharp_wrap_lines = false
 resharper_csharp_wrap_parameters_style = chop_if_long
 resharper_indent_anonymous_method_block = false
 resharper_indent_nested_fixed_stmt = true
