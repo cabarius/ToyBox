@@ -218,7 +218,7 @@ namespace ToyBox {
 
         // Enhanced Inventory
         public bool toggleEnhancedInventory = false;
-        public FilterCategories FilterOptions = FilterCategories.Default;
+        public FilterCategories SearchFilterCategories = FilterCategories.Default;
         public ItemSortCategories InventoryItemSorterOptions = ItemSortCategories.Default;
         public InventorySearchCriteria InventorySearchCriteria = InventorySearchCriteria.Default;
         public SpellbookSearchCriteria SpellbookSearchCriteria = SpellbookSearchCriteria.Default;

@@ -55,16 +55,16 @@ namespace ToyBox {
 #endif
 
             m_char_selection_changed_cb = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate { m_deferred_update = true; });
-#if false
+#if true
             // Add options to the dropdown...
 
             List<string> options = new List<string>();
 
             foreach (FilterCategories flag in EnumHelper.ValidFilterCategories)
             {
-                if (Main.Settings.FilterOptions.HasFlag(flag))
+                if (Main.Settings.SearchFilterCategories.HasFlag(flag))
                 {
-                    (int idx, string text) = Main.FilterCategoryMap[flag];
+                    (int idx, string text) = EnhancedInventory.FilterCategoryMap[flag];
 
                     if (text == null)
                     {
@@ -81,7 +81,7 @@ namespace ToyBox {
                         }
 
                         text = LocalizedTexts.Instance.ItemsFilter.GetText(localization_enum);
-                        Main.FilterCategoryMap[flag] = (idx, text);
+                        EnhancedInventory.FilterCategoryMap[flag] = (idx, text);
                     }
 
                     options.Add(text);
@@ -114,7 +114,7 @@ namespace ToyBox {
 
             RectTransform search_transform = m_search_bar.GameObject.GetComponent<RectTransform>();
 
-            if (Main.Settings.InventorySearchBarEnableCategoryButtons)
+            if (Main.Settings.toggleEnhancedInventory)
             {
                 search_transform.localScale = new Vector3(0.6f, 0.6f, 1.0f);
                 search_transform.localPosition = new Vector3(0.0f, -8.0f, 0.0f);

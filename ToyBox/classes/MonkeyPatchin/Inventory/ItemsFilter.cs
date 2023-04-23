@@ -20,6 +20,11 @@ using System;
 using System.Collections.Generic;
 using ModKit;
 using static ToyBox.BlueprintExtensions;
+using Kingmaker.Blueprints.Root;
+using Kingmaker.Enums.Damage;
+using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
+using Kingmaker.UI.Tooltip;
+using System.Linq;
 
 namespace ToyBox.Inventory {
     // Hook #1 out of #2 for filtering - this hook handled the custom filter categories.
@@ -32,6 +37,7 @@ namespace ToyBox.Inventory {
             ItemEntity item,
             ref bool __result) {
             ExpandedFilterType expanded_filter = (ExpandedFilterType)filter;
+            Mod.Log($"ItemsFilter_ShouldShowItem_ItemEntity - filter: {filter} expandedFilter: {expanded_filter}");
 
             if (expanded_filter == ExpandedFilterType.QuickslotUtilities) {
                 __result = item.Blueprint is BlueprintItemEquipmentUsable blueprint && blueprint.Type != UsableItemType.Potion && blueprint.Type != UsableItemType.Scroll;
@@ -180,6 +186,73 @@ namespace ToyBox.Inventory {
 
             __result = items;
             return false;
+        }
+
+        [HarmonyPatch(typeof(ItemsFilter), nameof(ItemsFilter.IsMatchSearchRequest))]
+        private static class ItemsFilter_IsMatchSearchRequest_Patch {
+
+            public static bool Prefix(ref bool __result, ItemEntity item, string searchRequest) {
+                if (string.IsNullOrEmpty(searchRequest)) {
+                    __result = true;
+                    return false;
+                }
+                string[] separator = new string[1] { ", " };
+                string[] strArray = searchRequest.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                if (strArray.Length > 1) {
+                    __result = strArray.All<string>(searchWord => ItemsFilter.IsMatchSearchRequest(item, searchWord));
+                    return false;
+                }
+                if (item.Name.StringEntry(searchRequest, item)) {
+                    __result = true;
+                    return false;
+                }
+                foreach (ItemsFilter.FilterType filterType in Enum.GetValues(typeof(ItemsFilter.FilterType))) {
+                    var itemFilter = LocalizedTexts.Instance.ItemsFilter;
+                    if (itemFilter.GetText(filterType).Equals(searchRequest, StringComparison.InvariantCultureIgnoreCase)) {
+                        __result = ItemsFilter.ShouldShowItem(item, filterType);
+                        return false;
+                    }
+                }
+                foreach (ItemsFilter.FilterType filterType in Enum.GetValues(typeof(ExpandedFilterType))) {
+                    var itemFilter = LocalizedTexts.Instance.ItemsFilter;
+                    if (itemFilter.GetText(filterType).Equals(searchRequest, StringComparison.InvariantCultureIgnoreCase)) {
+                        __result = ItemsFilter.ShouldShowItem(item, filterType);
+                        return false;
+                    }
+                }
+                ItemTooltipData itemTooltipData;
+                if (!ItemsFilter.s_ItemTooltipDataSet.TryGetValue(item, out itemTooltipData)) {
+                    itemTooltipData = UIUtilityItem.GetItemTooltipData(item, true);
+                    ItemsFilter.s_ItemTooltipDataSet.Add(item, itemTooltipData);
+                }
+                foreach (KeyValuePair<TooltipElement, string> text in itemTooltipData.Texts) {
+                    switch (text.Key) {
+                        case TooltipElement.Name:
+                        case TooltipElement.Count:
+                        case TooltipElement.ItemType:
+                        case TooltipElement.Price:
+                        case TooltipElement.SellPrice:
+                        case TooltipElement.Wielder:
+                        case TooltipElement.WielderSlot:
+                        case TooltipElement.Damage:
+                        case TooltipElement.PhysicalDamage:
+                        case TooltipElement.EquipDamage:
+                        case TooltipElement.ArmorCheckPenaltyDetails:
+                        case TooltipElement.ArcaneSpellFailureDetails:
+                        case TooltipElement.Charges:
+                        case TooltipElement.CasterLevel:
+                            continue;
+                        default:
+                            if (text.Value.StringEntry(searchRequest, item)) {
+                                __result = true;
+                                return false;
+                            }
+                            continue;
+                    }
+                }
+                __result = itemTooltipData.Energy.Any(e => UIUtilityTexts.GetTextByKey(e.Key).StringEntry(searchRequest, item)) || itemTooltipData.PhysicalDamage.Any(d => UIUtilityTexts.GetDamageFormText(d.Key).StringEntry(searchRequest, item));
+                return false;
+            }
         }
 #if false
         [HarmonyPatch(typeof(ItemsFilter), nameof(ItemsFilter.ItemSorter))]

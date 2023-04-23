@@ -4,6 +4,7 @@ using System.Linq;
 using HarmonyLib;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
+using Kingmaker.UnitLogic.Abilities;
 using ModKit;
 using ToyBox.Inventory;
 
@@ -30,6 +31,31 @@ namespace ToyBox {
             [ItemSortCategories.RarityUp] = ((int)ExpandedSorterType.RarityUp, "Rarity (ascending order)"),
             [ItemSortCategories.RarityDown] = ((int)ExpandedSorterType.RarityDown, "Rarity (descending order)")
         };
+
+        public static readonly Dictionary<FilterCategories, (int, string)> FilterCategoryMap = new Dictionary<FilterCategories, (int, string)> {
+            [FilterCategories.NoFilter] = ((int)ItemsFilter.FilterType.NoFilter, null),
+            [FilterCategories.Weapon] = ((int)ItemsFilter.FilterType.Weapon, null),
+            [FilterCategories.Armor] = ((int)ItemsFilter.FilterType.Armor, null),
+            [FilterCategories.Accessories] = ((int)ItemsFilter.FilterType.Accessories, null),
+            [FilterCategories.Ingredients] = ((int)ItemsFilter.FilterType.Ingredients, null),
+            [FilterCategories.Usable] = ((int)ItemsFilter.FilterType.Usable, null),
+            [FilterCategories.Notable] = ((int)ItemsFilter.FilterType.Notable, null),
+            [FilterCategories.NonUsable] = ((int)ItemsFilter.FilterType.NonUsable, null),
+            [FilterCategories.Scroll] = ((int)ItemsFilter.FilterType.Scroll, null),
+            [FilterCategories.Wand] = ((int)ItemsFilter.FilterType.Wand, null),
+            [FilterCategories.Utility] = ((int)ItemsFilter.FilterType.Utility, null),
+            [FilterCategories.Potion] = ((int)ItemsFilter.FilterType.Potion, null),
+            [FilterCategories.Recipe] = ((int)ItemsFilter.FilterType.Recipe, null),
+            [FilterCategories.Unlearned] = ((int)ItemsFilter.FilterType.Unlearned, null),
+            [FilterCategories.QuickslotUtils] = ((int)ExpandedFilterType.QuickslotUtilities, "Quickslot Utilities"),
+            [FilterCategories.UnlearnedScrolls] = ((int)ExpandedFilterType.UnlearnedScrolls, "Unleaned Scrolls"),
+            [FilterCategories.UnlearnedRecipes] = ((int)ExpandedFilterType.UnlearnedRecipes, "Unleaned Recipes"),
+            [FilterCategories.UnreadDocuments] = ((int)ExpandedFilterType.UnreadDocuments, "Unread Documents"),
+            [FilterCategories.UsableWithoutUMD] = ((int)ExpandedFilterType.UsableWithoutUMD, "Usable without UMD check"),
+            [FilterCategories.CurrentEquipped] = ((int)ExpandedFilterType.CurrentEquipped, "Can Equip (Current Char)"),
+            [FilterCategories.NonZeroPW] = ((int)ExpandedFilterType.NonZeroPW, "Non-zero price and weight"),
+        };
+
         public static readonly RemappableInt FilterMapper = new RemappableInt();
         public static readonly RemappableInt SorterMapper = new RemappableInt();
         public static void OnLoad() {
@@ -44,13 +70,11 @@ namespace ToyBox {
             FilterMapper.Clear();
             SorterMapper.Clear();
 
-#if false
             foreach (FilterCategories flag in EnumHelper.ValidFilterCategories) {
-                if (Settings.FilterOptions.HasFlag(flag) || !Settings.EnableInventorySearchBar) {
+                if (Settings.SearchFilterCategories.HasFlag(flag)) {
                     FilterMapper.Add(FilterCategoryMap[flag].Item1);
                 }
             }
-#endif
             foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
                 if (Settings.InventoryItemSorterOptions.HasFlag(flag)) {
                     //Mod.Log($"{flag} {SorterCategoryMap[flag]}");
@@ -90,7 +114,6 @@ namespace ToyBox {
 
         Default = UnlearnedScrolls | UnlearnedRecipes | UnreadDocuments
     }
-
     [Flags]
     public enum FilterCategories {
         NoFilter = 0,
@@ -101,13 +124,19 @@ namespace ToyBox {
         Usable = 1 << 4,
         Notable = 1 << 5,
         NonUsable = 1 << 6,
-        QuickslotUtils = 1 << 7,
-        UnlearnedScrolls = 1 << 8,
-        UnlearnedRecipes = 1 << 9,
-        UnreadDocuments = 1 << 10,
-        UsableWithoutUMD = 1 << 11,
-        CurrentEquipped = 1 << 12,
-        NonZeroPW = 1 << 13,
+        Scroll = 1 << 7,
+        Wand = 1 << 8,
+        Utility = 1 << 9,
+        Potion = 1 << 10,
+        Recipe = 1 << 11,
+        Unlearned = 1 << 12,
+        QuickslotUtils = 1 << 13,
+        UnlearnedScrolls = 1 << 14,
+        UnlearnedRecipes = 1 << 15,
+        UnreadDocuments = 1 << 16,
+        UsableWithoutUMD = 1 << 17,
+        CurrentEquipped = 1 << 18,
+        NonZeroPW = 1 << 19,
 
         Default = Weapon |
             Armor |
@@ -116,6 +145,12 @@ namespace ToyBox {
             Usable |
             Notable |
             NonUsable |
+            Scroll |
+            Wand | 
+            Utility |
+            Potion |
+            Recipe |
+            Unlearned |
             QuickslotUtils |
             UnlearnedScrolls |
             UnlearnedRecipes |
@@ -152,13 +187,13 @@ namespace ToyBox {
     }
     public enum ExpandedFilterType
     {
-        QuickslotUtilities = 8,
-        UnlearnedScrolls = 9,
-        UnlearnedRecipes = 10,
-        UnreadDocuments = 11,
-        UsableWithoutUMD = 12,
-        CurrentEquipped = 13,
-        NonZeroPW = 14,
+        QuickslotUtilities = 14,
+        UnlearnedScrolls = 15,
+        UnlearnedRecipes = 16,
+        UnreadDocuments = 17,
+        UsableWithoutUMD = 18,
+        CurrentEquipped = 19,
+        NonZeroPW = 20,
     }
 
     public enum ExpandedSorterType

@@ -159,7 +159,7 @@ namespace ToyBox {
                                      (flag) => {
                                          //Mod.Log($"            {flag.ToString()}");
                                          if (flag == ItemSortCategories.NotSorted || flag == ItemSortCategories.Default)
-                                             return; 
+                                             return;
                                          bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
                                          using (HorizontalScope(250)) {
                                              30.space();
@@ -168,11 +168,48 @@ namespace ToyBox {
                                          if (isSet) {
                                              new_options |= flag;
                                          }
-                                     }, 2,null, 375.width());
+                                     },
+                                     2,
+                                     null,
+                                     375.width());
                                65.space(() => ActionButton("Use Default", () => new_options = ItemSortCategories.Default));
                                Settings.InventoryItemSorterOptions = new_options;
                                if (changed) EnhancedInventory.RefreshRemappers();
                            }
+                       }
+                   },
+                   () => {
+                       using (VerticalScope()) {
+                           Rect divRect;
+                           using (HorizontalScope()) {
+                               Label("Enabled Search Filters".Cyan(), 300.width());
+                               25.space();
+                               HelpLabel("Here you can choose which Search filters appear in the popup menu");
+                               divRect = DivLastRect();
+                           }
+                           var hscopeRect = DivLastRect();
+                           Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
+                           FilterCategories new_options = default;
+                           var selectableFilters = EnumHelper.ValidFilterCategories.ToList();
+                           var changed = false;
+                           Table(selectableFilters,
+                                 (flag) => {
+                                     //Mod.Log($"            {flag.ToString()}");
+                                     bool isSet = Settings.SearchFilterCategories.HasFlag(flag);
+                                     using (HorizontalScope(250)) {
+                                         30.space();
+                                         if (Toggle($" {EnhancedInventory.FilterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
+                                     }
+                                     if (isSet) {
+                                         new_options |= flag;
+                                     }
+                                 },
+                                 2,
+                                 null,
+                                 375.width());
+                           65.space(() => ActionButton("Use Default", () => new_options = FilterCategories.Default));
+                           Settings.SearchFilterCategories = new_options;
+                           if (changed) EnhancedInventory.RefreshRemappers();
                        }
                    });
             Div(0, 25);
