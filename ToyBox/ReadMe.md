@@ -41,7 +41,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in iventory and vendors by rarity
     * Ability to choose which sort categories
-    * You can expect more of this to get ported over time including Search Filtering and Spellbook enhancements
+    * Much more useful SearchFilter categories including ones from Enhanced Inventory
+    * Spellbook enhancements coming soon
 * (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***Narria***) DataViewer views now filter out properties with empty collections

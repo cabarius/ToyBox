@@ -36,6 +36,7 @@ namespace ToyBox.Inventory {
             ItemsFilter.FilterType filter,
             ItemEntity item,
             ref bool __result) {
+            if (item == null) return true;
             ExpandedFilterType expanded_filter = (ExpandedFilterType)filter;
             //Mod.Log($"ItemsFilter_ShouldShowItem_ItemEntity - filter: {filter} expandedFilter: {expanded_filter}");
 
@@ -192,7 +193,7 @@ namespace ToyBox.Inventory {
         private static class ItemsFilter_IsMatchSearchRequest_Patch {
 
             public static bool Prefix(ref bool __result, ItemEntity item, string searchRequest) {
-                if (string.IsNullOrEmpty(searchRequest)) {
+                if (string.IsNullOrEmpty(searchRequest) || item ==  null) {
                     __result = true;
                     return false;
                 }
@@ -214,8 +215,8 @@ namespace ToyBox.Inventory {
                     }
                 }
                 foreach (ItemsFilter.FilterType filterType in Enum.GetValues(typeof(ExpandedFilterType))) {
-                    var itemFilter = LocalizedTexts.Instance.ItemsFilter;
-                    if (itemFilter.GetText(filterType).Equals(searchRequest, StringComparison.InvariantCultureIgnoreCase)) {
+                    var entry = EnhancedInventory.FilterCategoryMap.Values.FirstOrDefault(e => e.index == (int)filterType);
+                    if (entry.title.Equals(searchRequest, StringComparison.InvariantCultureIgnoreCase)) {
                         __result = ItemsFilter.ShouldShowItem(item, filterType);
                         return false;
                     }

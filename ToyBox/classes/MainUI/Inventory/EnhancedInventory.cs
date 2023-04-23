@@ -14,7 +14,7 @@ namespace ToyBox {
         private static Harmony m_harmony;
         private static OnAreaLoad m_area_load_handler;
 
-        public static readonly Dictionary<ItemSortCategories, (int, string)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
+        public static readonly Dictionary<ItemSortCategories, (int index, string title)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
             [ItemSortCategories.NotSorted] = ((int)ItemsFilter.SorterType.NotSorted, null),
             [ItemSortCategories.TypeUp] = ((int)ItemsFilter.SorterType.TypeUp, null),
             [ItemSortCategories.TypeDown] = ((int)ItemsFilter.SorterType.TypeDown, null),
@@ -32,7 +32,7 @@ namespace ToyBox {
             [ItemSortCategories.RarityDown] = ((int)ExpandedSorterType.RarityDown, "Rarity (descending order)")
         };
 
-        public static readonly Dictionary<FilterCategories, (int, string)> FilterCategoryMap = new Dictionary<FilterCategories, (int, string)> {
+        public static readonly Dictionary<FilterCategories, (int index, string title)> FilterCategoryMap = new Dictionary<FilterCategories, (int index, string title)> {
             [FilterCategories.NoFilter] = ((int)ItemsFilter.FilterType.NoFilter, null),
             [FilterCategories.Weapon] = ((int)ItemsFilter.FilterType.Weapon, null),
             [FilterCategories.Armor] = ((int)ItemsFilter.FilterType.Armor, null),
@@ -72,14 +72,14 @@ namespace ToyBox {
 
             foreach (FilterCategories flag in EnumHelper.ValidFilterCategories) {
                 if (Settings.SearchFilterCategories.HasFlag(flag)) {
-                    FilterMapper.Add(FilterCategoryMap[flag].Item1);
+                    FilterMapper.Add(FilterCategoryMap[flag].index);
                 }
             }
             foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
                 if (Settings.InventoryItemSorterOptions.HasFlag(flag)) {
                     //Mod.Log($"{flag} {SorterCategoryMap[flag]}");
                     if (SorterCategoryMap.ContainsKey(flag))
-                        SorterMapper.Add(SorterCategoryMap[flag].Item1);
+                        SorterMapper.Add(SorterCategoryMap[flag].index);
                 }
             }
             ItemsFilterPCView_.ReloadFilterViews();
