@@ -38,7 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.0 (coming soon)
 * (***Narria***) Inventory Enhancements
-  * Brought in some other bits of Xenfell's lovely Enhanced Inventory to give a unified experience with Loot Rarity and to revive the mod which needed some love
+  * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in iventory and vendors by rarity
     * Ability to choose which sort categories
     * You can expect more of this to get ported over time including Search Filtering and Spellbook enhancements
