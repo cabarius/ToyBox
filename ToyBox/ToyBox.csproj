@@ -238,6 +238,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Localization.cs" />
     <Compile Include="classes\MonkeyPatchin\Inventory\ItemsFilter.cs" />
     <Compile Include="classes\MonkeyPatchin\Inventory\ItemsFilterPCView.cs" />
+    <Compile Include="classes\MonkeyPatchin\Inventory\ItemsFilterSearchPCView.cs" />
     <Compile Include="classes\MonkeyPatchin\Inventory\Loot.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Movement.cs" />
@@ -305,7 +306,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

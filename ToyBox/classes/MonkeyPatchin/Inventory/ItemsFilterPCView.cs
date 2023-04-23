@@ -68,7 +68,7 @@ namespace ToyBox.Inventory {
             filterView.m_Sorter.ClearOptions();
             List<string> options = new List<string>();
 
-            foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
+            foreach (var flag in EnumHelper.ValidSorterCategories) {
                 if (Settings.InventoryItemSorterOptions.HasFlag(flag) 
                     && EnhancedInventory.SorterCategoryMap.TryGetValue(flag, out var entry)
                     ) { 

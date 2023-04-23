@@ -206,7 +206,7 @@ namespace ToyBox.Inventory {
                     __result = true;
             }
         }
-
+#if false
         [HarmonyPatch(typeof(ItemsFilterPCView))]
         public static class ItemsFilterPCView_ {
             // Enhanced Inventory and Friends
@@ -236,6 +236,7 @@ namespace ToyBox.Inventory {
                 __instance.m_Sorter.AddOptions(options);
             }
         }
+#endif
     }
 }
 

@@ -83,6 +83,7 @@ namespace ToyBox {
                 }
             }
             ItemsFilterPCView_.ReloadFilterViews();
+            ItemsFilterSearchPCView_Initialize_Patch.ReloadFilterViews();
         }
     }
 

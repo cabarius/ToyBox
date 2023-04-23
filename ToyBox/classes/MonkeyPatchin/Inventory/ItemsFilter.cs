@@ -37,7 +37,7 @@ namespace ToyBox.Inventory {
             ItemEntity item,
             ref bool __result) {
             ExpandedFilterType expanded_filter = (ExpandedFilterType)filter;
-            Mod.Log($"ItemsFilter_ShouldShowItem_ItemEntity - filter: {filter} expandedFilter: {expanded_filter}");
+            //Mod.Log($"ItemsFilter_ShouldShowItem_ItemEntity - filter: {filter} expandedFilter: {expanded_filter}");
 
             if (expanded_filter == ExpandedFilterType.QuickslotUtilities) {
                 __result = item.Blueprint is BlueprintItemEquipmentUsable blueprint && blueprint.Type != UsableItemType.Potion && blueprint.Type != UsableItemType.Scroll;
