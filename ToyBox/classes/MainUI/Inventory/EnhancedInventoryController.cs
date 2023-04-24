@@ -22,7 +22,7 @@ namespace ToyBox {
         LootInventoryStash
     }
 
-    public class InventoryController : MonoBehaviour {
+    public class EnhancedInventoryController : MonoBehaviour {
         public InventoryType Type;
 
         private Transform m_filter_block;
@@ -34,7 +34,7 @@ namespace ToyBox {
         private bool m_apply_handlers = true;
         private bool m_deferred_update = false;
 #if true
-        private void Awake() {
+        public void Awake() {
             m_filter_block = transform.Find(PathToFilterBlock(Type));
             m_search_bar = new SearchBar(m_filter_block, "Enter item name...");
 

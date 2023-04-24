@@ -34,11 +34,11 @@ namespace ToyBox.Inventory {
                    ) {
                     (int index, string text) = entry;
                     if (text == null) {
-                        Mod.Log($"adding {flag} : {text}");
+                        //Mod.Log($"adding {flag} : {text}");
                         text = LocalizedTexts.Instance.ItemsFilter.GetText((ItemsFilter.FilterType)index);
                         EnhancedInventory.FilterCategoryMap[flag] = (index, text);
                     }
-                    Mod.Log($"flag: {flag} - text: {text}");
+                    //Mod.Log($"flag: {flag} - text: {text}");
                     options.Add(text);
                     filterView.m_DropdownValues.Add(text);
                 }

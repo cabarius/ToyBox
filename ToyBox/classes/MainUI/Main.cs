@@ -147,7 +147,7 @@ namespace ToyBox {
                     new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
                     new NamedAction("Level Up", LevelUp.OnGUI),
                     new NamedAction("Party", PartyEditor.OnGUI),
-                    new NamedAction("Loot", PhatLoot.OnGUI),
+                    new NamedAction("Loot & Spellbook", PhatLoot.OnGUI),
                     new NamedAction("Enchantment", EnchantmentEditor.OnGUI),
 #if false
                     new NamedAction("Playground", () => Playground.OnGUI()),

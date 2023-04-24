@@ -220,9 +220,14 @@ namespace ToyBox.Inventory {
                     __result = true;
             }
         }
-
+#if false
         [HarmonyPatch(typeof(UIUtilityTexts))]
         private static class UIUtilityTexts_ {
+            [HarmonyPatch(nameof(UIUtilityTexts.GetCanDoText), new Type[] { typeof(TooltipData)})]
+            [HarmonyPostfix]
+            public static void GetCanDoText(TooltipData data, ref string __result) {
+            }
+
             [HarmonyPatch(nameof(UIUtilityTexts.GetCanDoText), new Type[] { typeof(ItemEntity), typeof(bool) })]
             [HarmonyPostfix]
             public static void GetCanDoText(ItemEntity item, bool defaultColor, ref string __result) {
@@ -232,6 +237,7 @@ namespace ToyBox.Inventory {
                     __result += reasonText;
             }
         }
+#endif
     }
 }
 

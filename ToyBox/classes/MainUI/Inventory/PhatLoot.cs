@@ -166,7 +166,7 @@ namespace ToyBox {
                                      bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
                                      using (HorizontalScope(250)) {
                                          30.space();
-                                         if (Toggle($" {EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
+                                         if (Toggle($"{EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
                                      }
                                      if (isSet) {
                                          new_options |= flag;
@@ -201,7 +201,7 @@ namespace ToyBox {
                                      bool isSet = Settings.SearchFilterCategories.HasFlag(flag);
                                      using (HorizontalScope(250)) {
                                          30.space();
-                                         if (Toggle($" {EnhancedInventory.FilterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
+                                         if (Toggle($"{EnhancedInventory.FilterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
                                      }
                                      if (isSet) {
                                          new_options |= flag;
@@ -215,6 +215,59 @@ namespace ToyBox {
                            if (changed) EnhancedInventory.RefreshRemappers();
                        }
                    });
+            Div(0, 25);
+            HStack("Spellbook",
+                   1,
+                   () => {
+                       if (Toggle("Enable Enhanced Spellbook", ref Settings.toggleEnhancedSpellbook, 300.width()))
+                           EnhancedInventory.RefreshRemappers();
+                       25.space();
+                       Label("Various spellbook enhancements revived from Xenofell's excellent mod".green());
+                   },
+                   () => {
+                       if (Settings.toggleEnhancedSpellbook) {
+                           using (VerticalScope()) {
+                               Toggle("Give the search bar focus when opening the spellbook screen", ref Settings.toggleSpellbookSearchBarFocusWhenOpening);
+                               Toggle("Show all spell levels by default", ref Settings.toggleSpellbookShowAllSpellsByDefault);
+                               Toggle("Show metamagic by default", ref Settings.toggleSpellbookShowMetamagicByDefault);
+                               Toggle("Show the empty grey metamagic circles above spells", ref Settings.toggleSpellbookShowEmptyMetamagicCircles);
+                               Toggle("Show level of the spell when the spellbook is showing all spell levels", ref Settings.toggleSpellbookShowLevelWhenViewingAllSpells);
+                               Toggle("After creating a metamagic spell, switch to the metamagic tab", ref Settings.toggleSpellbookAutoSwitchToMetamagicTab);
+                               15.space();
+                               Rect divRect;
+                               using (HorizontalScope()) {
+                                   Label("Spellbook Search Criteria".Cyan(), 300.width());
+                                   25.space();
+                                   HelpLabel("Here you can choose which Search filters appear in the spellbook search popup menu");
+                                   divRect = DivLastRect();
+                               }
+                               var hscopeRect = DivLastRect();
+                               Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
+                               SpellbookSearchCriteria new_options = default;
+                               var changed = false;
+                               var spellbookFilterCategories = EnumHelper.ValidSpellbookSearchCriteria.ToList();
+                               Table(spellbookFilterCategories,
+                                     (flag) => {
+                                         //Mod.Log($"            {flag.ToString()}");
+                                         bool isSet = Settings.SpellbookSearchCriteria.HasFlag(flag);
+                                         using (HorizontalScope(250)) {
+                                             30.space();
+                                             if (Toggle($"{flag.ToString()}", ref isSet)) changed = true;
+                                         }
+                                         if (isSet) {
+                                             new_options |= flag;
+                                         }
+                                     },
+                                     2,
+                                     null,
+                                     375.width());
+                               65.space(() => ActionButton("Use Default", () => new_options = SpellbookSearchCriteria.Default));
+                               Settings.SpellbookSearchCriteria = new_options;
+                               if (changed) EnhancedInventory.RefreshRemappers();
+                           }
+                       }
+                   },
+                   () => {});
             Div(0, 25);
             if (Game.Instance.CurrentlyLoadedArea == null) return;
             var isEmpty = true;

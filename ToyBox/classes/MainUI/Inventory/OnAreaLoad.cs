@@ -7,24 +7,22 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ToyBox
-{
+namespace ToyBox {
     public class OnAreaLoad : IAreaHandler {
         public Settings Settings => Main.Settings;
 
         public void OnAreaDidLoad() {
             Mod.Log("OnAreaDidLoad");
             EnhancedInventory.RefreshRemappers();
+            if (Settings.toggleEnhancedSpellbook) {
+                LoadSpellbookSearchBar();
+            }
 #if false
             if (Settings.EnableInventorySearchBar)
             {
                 LoadInventorySearchBar();
             }
 
-            if (Settings.EnableSpellbookSearchBar)
-            {
-                LoadSpellbookSearchBar();
-            }
 
             if (Main.Settings.EnableHighlightableLoot)
             {
@@ -38,11 +36,9 @@ namespace ToyBox
 #endif
         }
 
-        public void OnAreaBeginUnloading()
-        { }
+        public void OnAreaBeginUnloading() { }
 
-        private readonly (string, InventoryType)[] m_inventory_paths = new (string, InventoryType)[]
-        {
+        private readonly (string, InventoryType)[] m_inventory_paths = new (string, InventoryType)[] {
             // Regular, in-game inventory.
             ("ServiceWindowsPCView/InventoryPCView/Inventory/Stash/StashContainer", InventoryType.InventoryStash),
 
@@ -62,41 +58,37 @@ namespace ToyBox
             ("LootPCView/Window/Collector", InventoryType.LootCollector),
         };
 
-        private void LoadInventorySearchBar()
-        {
-            foreach ((string path, InventoryType type) in m_inventory_paths)
-            {
+        private void LoadInventorySearchBar() {
+            foreach ((string path, InventoryType type) in m_inventory_paths) {
                 Transform filters_block_transform = Game.Instance.UI.MainCanvas.transform.Find(path);
-                if (filters_block_transform != null)
-                {
-                    filters_block_transform.gameObject.AddComponent<InventoryController>().Type = type;
+                if (filters_block_transform != null) {
+                    filters_block_transform.gameObject.AddComponent<EnhancedInventoryController>().Type = type;
                 }
             }
         }
 
-        private void LoadSpellbookSearchBar()
-        {
-            string[] paths = new string[]
-            {
-                "ServiceWindowsPCView/SpellbookPCView/SpellbookScreen", // game
-                "ServiceWindowsConfig/SpellbookPCView/SpellbookScreen", // world map
+        private void LoadSpellbookSearchBar() {
+            // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
+            // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
+            string[] paths = new string[] {
+                "ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen", // game
+                "ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen" // world map
+                //"ServiceWindowsPCView/SpellbookPCView/SpellbookScreen", // game
+                //"ServiceWindowsConfig/SpellbookPCView/SpellbookScreen", // world map
             };
 
-            foreach (string path in paths)
-            {
+            foreach (string path in paths) {
                 Transform spellbook = Game.Instance.UI.MainCanvas.transform.Find(path);
-                if (spellbook != null)
-                {
-                    spellbook.gameObject.AddComponent<SpellBookController>();
+                if (spellbook != null) {
+                    var controller = spellbook.gameObject.AddComponent<EnhancedSpellbookController>();
+                    controller.Awake(); // FIXME - why do I have to call this? What is the proper way to get this controller installed and get awake called by the framework and not by Marria
                 }
             }
         }
 
-        private void SetupSortingStyle()
-        {
-            foreach ((string path, InventoryType type) in m_inventory_paths)
-            {
-                string viewport_path = $"{path}/{InventoryController.PathToSorter(type)}/Sorting/Dropdown/Template/Viewport";
+        private void SetupSortingStyle() {
+            foreach ((string path, InventoryType type) in m_inventory_paths) {
+                string viewport_path = $"{path}/{EnhancedInventoryController.PathToSorter(type)}/Sorting/Dropdown/Template/Viewport";
                 Transform viewport = Game.Instance.UI.MainCanvas.transform.Find(viewport_path);
 
                 // This happens if we're on a screen that we don't have access to or screens that have different formatting.

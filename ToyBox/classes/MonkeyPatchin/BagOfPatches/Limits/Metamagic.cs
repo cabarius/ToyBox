@@ -27,7 +27,7 @@ namespace ToyBox.BagOfPatches {
         public static class MetamagicHelper_DefaultCost_Patch {
             public static void Postfix(ref int __result) {
                 if (settings.toggleMetamagicIsFree) {
-                    Mod.Debug($"MetamagicHelper_DefaultCost_Patch - {__result} -> 0");
+                    //Mod.Debug($"MetamagicHelper_DefaultCost_Patch - {__result} -> 0");
                     __result = Math.Min(0, __result);
                 }
             }
