@@ -261,7 +261,7 @@ note this code from Owlcat
                             ItemEntityUsable itemEntityUsable = item as ItemEntityUsable;
                             var blueprint = itemEntityUsable.Blueprint;
                             if (UIUtilityItem.IsItemAbilityInSpellListOfUnit(blueprint, unit.Descriptor))
-                                return $"${unit.CharacterName}: Already has ability {blueprint.GetDisplayName()}".color(RGBA.red).Bold().sizePercent(75); ;
+                                return $"{unit.CharacterName}: Already has ability {blueprint.GetDisplayName()}".color(RGBA.red).Bold().sizePercent(75); ;
                             if (itemEntityUsable.Blueprint.Ability == null)
                                 return $"blueprint {blueprint.GetDisplayName()} has no ability".color(RGBA.red).Bold().sizePercent(75); ;
                             if (itemEntityUsable.Blueprint.Type == UsableItemType.Potion 

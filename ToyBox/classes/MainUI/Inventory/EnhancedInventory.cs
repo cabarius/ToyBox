@@ -145,7 +145,6 @@ namespace ToyBox {
             NonUsable |
             Scroll |
             Wand | 
-            Utility |
             Potion |
             Recipe |
             Unlearned |
