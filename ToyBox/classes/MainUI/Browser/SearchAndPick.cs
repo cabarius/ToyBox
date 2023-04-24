@@ -35,6 +35,7 @@ using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
 using Kingmaker.AreaLogic.QuestSystem;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
     public static class SearchAndPick {
@@ -205,7 +206,7 @@ namespace ToyBox {
                     filtered.Add(blueprint);
                 }
                 else {
-                    var name = blueprint.NameSafe();
+                    var name = GetTitle(blueprint);
                     var displayName = blueprint.GetDisplayName();
                     var description = blueprint.GetDescription() ?? "";
                     if (terms.All(term => name.Matches(term))

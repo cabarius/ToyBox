@@ -14,6 +14,7 @@ using System.Linq;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
+using static ToyBox.BlueprintExtensions;
 
 
 namespace ToyBox {
@@ -141,8 +142,8 @@ namespace ToyBox {
                             return availableSpells;
                         },
                         feature => feature.Blueprint,
-                        blueprint => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
-                        FactsEditor.GetName,
+                        blueprint => $"{GetTitle(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
+                                        GetTitle,
                         () => {
                             using (HorizontalScope()) {
                                 bool needsReload = false;
@@ -214,8 +215,8 @@ namespace ToyBox {
                         spellbooks,
                         BlueprintExtensions.GetBlueprints<BlueprintSpellbook>,
                         (feature) => feature.Blueprint,
-                        blueprint => $"{FactsEditor.GetName(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
-                        FactsEditor.GetName,
+                        blueprint => $"{GetTitle(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
+                                        GetTitle,
                         () => {
                             using (HorizontalScope()) {
                                 Toggle("Show GUIDs", ref Main.Settings.showAssetIDs, 150.width());

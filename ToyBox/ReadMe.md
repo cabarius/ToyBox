@@ -48,6 +48,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) DataViewer views now filter out properties with empty collections
 * (***Narria***) Quest Editor option to inspect quests and quest objectives with DataViewer
 * (***Narria***) Added Dice Roll overrides for Skill checks only (thanks AlterAsc) and cleaned up the options a bit to make them more clear
+* (***Narria***) Search 'n Pick now displays localized names (if available) and allows you to search them
 * (***Marria***) Search 'n Pick: Added counts to the collation categories
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
 * (***Narria***) Added tweak in Loot Tab to allow you to loot locked items
