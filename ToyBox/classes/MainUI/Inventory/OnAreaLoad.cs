@@ -67,14 +67,12 @@ namespace ToyBox {
             }
         }
 
+        // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
+        // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
         private void LoadSpellbookSearchBar() {
-            // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
-            // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
             string[] paths = new string[] {
                 "ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen", // game
                 "ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen" // world map
-                //"ServiceWindowsPCView/SpellbookPCView/SpellbookScreen", // game
-                //"ServiceWindowsConfig/SpellbookPCView/SpellbookScreen", // world map
             };
 
             foreach (string path in paths) {
