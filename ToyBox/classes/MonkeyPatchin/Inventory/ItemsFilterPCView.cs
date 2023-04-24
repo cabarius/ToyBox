@@ -67,6 +67,7 @@ namespace ToyBox.Inventory {
             }
         }
         private static void ReloadSorterOptions(this ItemsFilterPCView filterView) {
+            if (!Settings.toggleEnhancedInventory) return;
             filterView.m_Sorter.ClearOptions();
             List<string> options = new List<string>();
 
@@ -92,6 +93,7 @@ namespace ToyBox.Inventory {
         [HarmonyPostfix]
         [HarmonyPatch(nameof(ItemsFilterPCView.Initialize), new Type[] { })]
         public static void Initialize(ItemsFilterPCView __instance) {
+            if (!Settings.toggleEnhancedInventory) return;
             if (!KnownFilterViews.Contains(__instance))
                 KnownFilterViews.Add(__instance);
             __instance.ReloadSorterOptions();

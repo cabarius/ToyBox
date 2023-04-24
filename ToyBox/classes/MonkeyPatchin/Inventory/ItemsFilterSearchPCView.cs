@@ -16,6 +16,7 @@ using static ToyBox.BlueprintExtensions;
 namespace ToyBox.Inventory {
     [HarmonyPatch(typeof(ItemsFilterSearchPCView))]
     public static class ItemsFilterSearchPCView_Initialize_Patch {
+        public static Settings Settings = Main.Settings;
         public static readonly HashSet<ItemsFilterSearchPCView> KnownFilterViews = new();
         public static void ReloadFilterViews() {
             foreach (var filterView in KnownFilterViews) {
@@ -23,6 +24,7 @@ namespace ToyBox.Inventory {
             }
         }
         private static void ReloadFilterOptions(this ItemsFilterSearchPCView filterView) {
+            if (!Settings.toggleEnhancedInventory) return;
             filterView.m_DropdownValues.Clear();
             List<string> options = new List<string>();
 
@@ -46,6 +48,7 @@ namespace ToyBox.Inventory {
         [HarmonyPostfix]
         [HarmonyPatch(nameof(ItemsFilterSearchPCView.Initialize), new Type[] { })]
         public static void Initialize(ItemsFilterSearchPCView __instance) {
+            if (!Settings.toggleEnhancedInventory) return;
             if (!KnownFilterViews.Contains(__instance))
                 KnownFilterViews.Add(__instance);
             __instance.ReloadFilterOptions();

@@ -50,7 +50,7 @@ namespace ToyBox {
             [FilterCategories.QuickslotUtils] = ((int)ExpandedFilterType.QuickslotUtilities, "Quickslot Utilities"),
             [FilterCategories.UnlearnedRecipes] = ((int)ExpandedFilterType.UnlearnedRecipes, "Unleaned Recipes"),
             [FilterCategories.UnreadDocuments] = ((int)ExpandedFilterType.UnreadDocuments, "Unread Documents"),
-            [FilterCategories.UsableWithoutUMD] = ((int)ExpandedFilterType.UsableWithoutUMD, "Usable without UMD check"),
+            [FilterCategories.UsableWithoutUMD] = ((int)ExpandedFilterType.UsableWithoutUMD, "Usable Without Magic Device Check"),
             [FilterCategories.CurrentEquipped] = ((int)ExpandedFilterType.CurrentEquipped, "Can Equip (Current Char)"),
             [FilterCategories.NonZeroPW] = ((int)ExpandedFilterType.NonZeroPW, "Non-zero price and weight"),
         };
@@ -140,7 +140,6 @@ namespace ToyBox {
         Default = Weapon |
             Armor |
             Accessories |
-            Ingredients |
             Usable |
             Notable |
             NonUsable |

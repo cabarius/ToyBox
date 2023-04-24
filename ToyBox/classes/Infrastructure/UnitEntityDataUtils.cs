@@ -19,6 +19,12 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Items;
 using Kingmaker.Controllers.Combat;
 using Utilities = Kingmaker.Cheats.Utilities;
+using Kingmaker.Blueprints.Items.Components;
+using Kingmaker.Blueprints;
+using ModKit.Utility;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Root.Strings;
+using Kingmaker.UI.Common;
 
 namespace ToyBox {
     public enum UnitSelectType {
@@ -54,8 +60,7 @@ namespace ToyBox {
                     return !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter());
                 case UnitSelectType.Enemies:
                     // TODO - should this be IsEnemy instead?
-                    if (!unitEntityData.IsPlayerFaction &&
-                        unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
+                    if (!unitEntityData.IsPlayerFaction && unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
                         return true;
                     }
                     return false;
@@ -64,15 +69,15 @@ namespace ToyBox {
             }
         }
 
-        public static void Kill(UnitEntityData unit) => unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue +
-                                     unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
+        public static void Kill(UnitEntityData unit) => unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue + unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
 
         public static void ForceKill(UnitEntityData unit) => unit.Descriptor.State.ForceKill = true;
 
         public static void ResurrectAndFullRestore(UnitEntityData unit) => unit.Descriptor.ResurrectAndFullRestore();
 
         public static void Buff(UnitEntityData unit, string buffGuid) => unit.Descriptor.AddFact((BlueprintUnitFact)Utilities.GetBlueprintByGuid<BlueprintBuff>(buffGuid),
-                (MechanicsContext)null, new FeatureParam());
+                                                                                                 (MechanicsContext)null,
+                                                                                                 new FeatureParam());
 
         public static void Charm(UnitEntityData unit) {
             if (unit != null)
@@ -199,8 +204,7 @@ note this code from Owlcat
             }
 
             return Game.Instance.Player.AllCharacters
-                .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null ||
-                    Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
+                       .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null || Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
         }
 
         public static bool TryGetPartyMemberForLevelUpVersion(this UnitDescriptor levelUpUnit, out UnitEntityData ch) {
@@ -211,6 +215,73 @@ note this code from Owlcat
         public static bool TryGetClass(this UnitEntityData unit, BlueprintCharacterClass cl, out ClassData cd) {
             cd = unit.Progression.Classes.Find(c => c.CharacterClass == cl);
             return cd != null;
+        }
+        public static string GetEquipmentRestrictionCaption(this EquipmentRestriction restriction) {
+            switch (restriction) {
+                case EquipmentRestrictionAlignment era: return $"Alignment must be {era.Alignment}";
+                case EquipmentRestrictionCannotEquip: return "Unequipable";
+                case EquipmentRestrictionClass erc: return $"Class must be {(erc.Not ? "not " : "")}{erc.Class}";
+                case EquipmentRestrictionHasAnyClassFromList erhacfl: 
+                    return $"Class must {(erhacfl.Not ? "not " : "")}be in {string.Join(", ", erhacfl.Classes.Select(c => c.GetDisplayName()))}";
+                case EquipmentRestrictionMainPlayer ermp: return "Must be Main Character";
+                case EquipmentRestrictionSpecialUnit ersu: return $"Must have blueprint {ersu.Blueprint.name}";
+                case EquipmentRestrictionStat ers: return $"Stat: {ers.Stat} > {ers.MinValue}";
+                default: return restriction.GetType().Name;
+            }
+        }
+
+        public static string GetCantEquipReasonText(this ItemEntity item) {
+            var unit = Game.Instance.SelectionCharacter.CurrentSelectedCharacter;
+            if (unit == null)
+                unit = Game.Instance.Player.MainCharacter;
+            switch (item) {
+                case ItemEntityWeapon _:
+                case ItemEntityArmor _:
+                case ItemEntityShield _:
+                    if (item.Owner == null) {
+                        if (!item.CanBeEquippedBy(unit.Descriptor)) {
+                            string restrictionText = "";
+                            var restrictions = item.Blueprint.GetComponents<EquipmentRestriction>();
+                            foreach (var restriction in restrictions) {
+                                var text = restriction.GetEquipmentRestrictionCaption();
+                                if (restriction.CanBeEquippedBy(unit))
+                                    continue;
+                                else {
+                                    text = text.color(RGBA.red).Bold().sizePercent(75);
+                                }
+                                restrictionText += $"{unit.CharacterName}: {text}\n";
+                            }
+                            return restrictionText;
+                        }
+                    }
+                    break;
+                default:
+                    if (!(item.Blueprint is BlueprintItemEquipment) || item is ItemEntityUsable) {
+                        if (item is ItemEntityUsable) {
+                            ItemEntityUsable itemEntityUsable = item as ItemEntityUsable;
+                            var blueprint = itemEntityUsable.Blueprint;
+                            if (UIUtilityItem.IsItemAbilityInSpellListOfUnit(blueprint, unit.Descriptor))
+                                return $"${unit.CharacterName}: Already has ability {blueprint.GetDisplayName()}".color(RGBA.red).Bold().sizePercent(75); ;
+                            if (itemEntityUsable.Blueprint.Ability == null)
+                                return $"blueprint {blueprint.GetDisplayName()} has no ability".color(RGBA.red).Bold().sizePercent(75); ;
+                            if (itemEntityUsable.Blueprint.Type == UsableItemType.Potion 
+                                    || itemEntityUsable.Blueprint.Type == UsableItemType.Other
+                                    )
+                                break;
+                            int? useMagicDeviceDc = itemEntityUsable.GetUseMagicDeviceDC(unit);
+                            if (useMagicDeviceDc.HasValue)
+                                return $"Needs Use Magic Device >= {useMagicDeviceDc.Value}".color(RGBA.red).Bold().sizePercent(75);
+                            if (!itemEntityUsable.Blueprint.IsUnitNeedUMDForUse(unit.Descriptor))
+                                return $"Bugged??? {blueprint.name} - IsUnitNeedUMDForUse - {blueprint.RequireUMDIfCasterHasNoSpellInSpellList}".color(RGBA.red).Bold().sizePercent(75);
+                            if (!unit.Descriptor.HasUMDSkill)
+                                return $"{unit.CharacterName}: Needs Use Magic Device".color(RGBA.red).Bold().sizePercent(75);
+                        }
+                        break;
+
+                    }
+                    break;
+            }
+            return null;
         }
     }
 }

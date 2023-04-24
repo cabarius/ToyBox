@@ -62,6 +62,9 @@ namespace ToyBox {
                     Space(150);
                     Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
                 },
+#if DEBUG
+                () => Toggle("Show reasons you can not equip an item in tooltips", ref Settings.toggleShowCantEquipReasons),
+#endif
                 () => { }
             );
             Div(0, 25);
@@ -141,44 +144,44 @@ namespace ToyBox {
                        Label("Selected features revived from Xenofell's excellent mod".green());
                    },
                    () => {
-                       if (Settings.toggleEnhancedInventory) {
-                           using (VerticalScope()) {
-                               Rect divRect;
-                               using (HorizontalScope()) {
-                                   Label("Enabled Sort Categories".Cyan(), 300.width());
-                                   25.space();
-                                   HelpLabel("Here you can choose which Sort Options appear in the popup menu");
-                                   divRect = DivLastRect();
-                               }
-                               var hscopeRect = DivLastRect();
-                               Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
-                               ItemSortCategories new_options = ItemSortCategories.NotSorted;
-                               var selectableCategories = EnumHelper.ValidSorterCategories.Where(i => i != ItemSortCategories.NotSorted).ToList();
-                               var changed = false;
-                               Table(selectableCategories,
-                                     (flag) => {
-                                         //Mod.Log($"            {flag.ToString()}");
-                                         if (flag == ItemSortCategories.NotSorted || flag == ItemSortCategories.Default)
-                                             return;
-                                         bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
-                                         using (HorizontalScope(250)) {
-                                             30.space();
-                                             if (Toggle($" {EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
-                                         }
-                                         if (isSet) {
-                                             new_options |= flag;
-                                         }
-                                     },
-                                     2,
-                                     null,
-                                     375.width());
-                               65.space(() => ActionButton("Use Default", () => new_options = ItemSortCategories.Default));
-                               Settings.InventoryItemSorterOptions = new_options;
-                               if (changed) EnhancedInventory.RefreshRemappers();
+                       if (!Settings.toggleEnhancedInventory) return;
+                       using (VerticalScope()) {
+                           Rect divRect;
+                           using (HorizontalScope()) {
+                               Label("Enabled Sort Categories".Cyan(), 300.width());
+                               25.space();
+                               HelpLabel("Here you can choose which Sort Options appear in the popup menu");
+                               divRect = DivLastRect();
                            }
+                           var hscopeRect = DivLastRect();
+                           Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
+                           ItemSortCategories new_options = ItemSortCategories.NotSorted;
+                           var selectableCategories = EnumHelper.ValidSorterCategories.Where(i => i != ItemSortCategories.NotSorted).ToList();
+                           var changed = false;
+                           Table(selectableCategories,
+                                 (flag) => {
+                                     //Mod.Log($"            {flag.ToString()}");
+                                     if (flag == ItemSortCategories.NotSorted || flag == ItemSortCategories.Default)
+                                         return;
+                                     bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
+                                     using (HorizontalScope(250)) {
+                                         30.space();
+                                         if (Toggle($" {EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
+                                     }
+                                     if (isSet) {
+                                         new_options |= flag;
+                                     }
+                                 },
+                                 2,
+                                 null,
+                                 375.width());
+                           65.space(() => ActionButton("Use Default", () => new_options = ItemSortCategories.Default));
+                           Settings.InventoryItemSorterOptions = new_options;
+                           if (changed) EnhancedInventory.RefreshRemappers();
                        }
                    },
                    () => {
+                       if (!Settings.toggleEnhancedInventory) return;
                        using (VerticalScope()) {
                            Rect divRect;
                            using (HorizontalScope()) {

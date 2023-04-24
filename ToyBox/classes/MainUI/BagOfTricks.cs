@@ -170,7 +170,11 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Common", 2,
                 () => BindableActionButton(GoToGlobalMap),
-                () => BindableActionButton(ChangeParty),
+                () => {
+                    BindableActionButton(ChangeParty);
+                    Space(-75);
+                    HelpLabel("Change the party without advancing time (good to bind)");
+                },   
                 () => BindableActionButton(RerollPerception),
                 () => {
                     BindableActionButton(RerollInteractionSkillChecks);

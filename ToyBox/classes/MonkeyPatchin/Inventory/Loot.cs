@@ -21,11 +21,20 @@ using Owlcat.Runtime.UI.MVVM;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Kingmaker.Items.Slots;
 using Kingmaker.UI.Common;
 using System.Collections.Generic;
 using ModKit;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.EntitySystem.Entities;
+using ModKit.Utility;
+using Kingmaker.UI.Tooltip;
+using Kingmaker.Blueprints.Root.Strings;
+using Kingmaker.UnitLogic;
+using System.Text;
+using Kingmaker.Utility;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
@@ -88,6 +97,7 @@ namespace ToyBox.Inventory {
                 }
             }
         }
+
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
         private static class ItemEntity_Name_Patch {
             public static void Postfix(ItemEntity __instance, ref string __result) {
@@ -120,6 +130,7 @@ namespace ToyBox.Inventory {
                 }
             }
         }
+
         [HarmonyPatch(typeof(InventoryEquipSlotPCView), nameof(InventoryEquipSlotPCView.BindViewImplementation))]
         private static class InventoryEquipSlotPCView_BindViewImplementation_Patch {
             public static void Postfix(InventoryEquipSlotPCView __instance) {
@@ -132,6 +143,7 @@ namespace ToyBox.Inventory {
                 }
             }
         }
+
         [HarmonyPatch(typeof(WeaponSetPCView), nameof(WeaponSetPCView.BindViewImplementation))]
         private static class WeaponSetPCView_BindViewImplementation_Patch {
             public static void Postfix(WeaponSetPCView __instance) {
@@ -156,6 +168,7 @@ namespace ToyBox.Inventory {
 
             }
         }
+
         [HarmonyPatch(typeof(VendorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class VendorPCView_BindViewImplementation_Patch {
             public static void Postfix(VendorPCView __instance) {
@@ -170,6 +183,7 @@ namespace ToyBox.Inventory {
                 playerImage.color = ColoredLootBackgroundColor;
             }
         }
+
         [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
         private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
             public static void Postfix(TooltipBrickEntityHeaderView __instance) {
@@ -187,6 +201,7 @@ namespace ToyBox.Inventory {
 #endif
             }
         }
+
         [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
             public static void Postfix(LocalMapMarkerPCView __instance) {
@@ -194,11 +209,10 @@ namespace ToyBox.Inventory {
                     return;
 
                 if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
-                    __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
-                        (__instance as LocalMapLootMarkerPCView)?.Hide();
-                    }));
+                    __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => { (__instance as LocalMapLootMarkerPCView)?.Hide(); }));
             }
         }
+
         [HarmonyPatch(typeof(ItemSlot), nameof(ItemSlot.CanRemoveItem))]
         private static class ItemSlot_CanRemoveItem_Patch {
             public static void Postfix(ref bool __result) {
@@ -206,37 +220,18 @@ namespace ToyBox.Inventory {
                     __result = true;
             }
         }
-#if false
-        [HarmonyPatch(typeof(ItemsFilterPCView))]
-        public static class ItemsFilterPCView_ {
-            // Enhanced Inventory and Friends
-            // Adds the sorters to the dropdown.
+
+        [HarmonyPatch(typeof(UIUtilityTexts))]
+        private static class UIUtilityTexts_ {
+            [HarmonyPatch(nameof(UIUtilityTexts.GetCanDoText), new Type[] { typeof(ItemEntity), typeof(bool) })]
             [HarmonyPostfix]
-            [HarmonyPatch(nameof(ItemsFilterPCView.Initialize), new Type[] { })]
-            public static void Initialize(ItemsFilterPCView __instance) {
-                __instance.m_Sorter.ClearOptions();
-
-                List<string> options = new List<string>();
-
-                foreach (ItemSortCategories flag in EnumHelper.ValidSorterCategories) {
-                    if (Settings.InventoryItemSorterOptions.HasFlag(flag) 
-                        && EnhancedInventory.SorterCategoryMap.TryGetValue(flag, out var entry)
-                        ) {
-                        (int index, string text) = entry;
-                        if (text == null) {
-                            Mod.Log($"adding {flag} : {text}");
-                            text = LocalizedTexts.Instance.ItemsFilter.GetText((ItemsFilter.SorterType)index);
-                            EnhancedInventory.SorterCategoryMap[flag] = (index, text);
-                        }
-                        Mod.Log($"flag: {flag} - text: {text}");
-                        options.Add(text);
-                    }
-                }
-
-                __instance.m_Sorter.AddOptions(options);
+            public static void GetCanDoText(ItemEntity item, bool defaultColor, ref string __result) {
+                if (!Settings.toggleShowCantEquipReasons) return;
+                var reasonText = item?.GetCantEquipReasonText();
+                if (reasonText != null)
+                    __result += reasonText;
             }
         }
-#endif
     }
 }
 

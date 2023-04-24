@@ -213,6 +213,7 @@ namespace ToyBox {
         public bool toggleLootChecklistFilterFriendlies = false;
         public bool toggleLootChecklistFilterBlueprint = false;
         public bool toggleLootChecklistFilterDescription = false;
+        public bool toggleShowCantEquipReasons = false;
         public RarityType lootChecklistFilterRarity = RarityType.None;
         public RarityType maxRarityToHide = RarityType.None;
 

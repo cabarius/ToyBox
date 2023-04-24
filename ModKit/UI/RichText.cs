@@ -41,7 +41,7 @@ namespace ModKit {
 
         public static string warningLargeRedFormat(this string s) => _ = s.red().size(16).bold();
 
-        public static string SizePercent(this string s, int percent) => _ = $"<size={percent}%>{s}</size>";
+        public static string sizePercent(this string s, int percent) => _ = $"<size={percent}%>{s}</size>";
     }
 }
 
