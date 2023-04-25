@@ -26,13 +26,20 @@ namespace ToyBox.Inventory {
         private static void SetDropdown(ItemsFilterPCView __instance, ItemsFilter.SorterType val) {
             if (!KnownFilterViews.Contains(__instance))
                 KnownFilterViews.Add(__instance);
-            if (!ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Contains(__instance.m_SearchView))
-                ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Add(__instance.m_SearchView);
-            __instance.m_Sorter.value = EnhancedInventory.SorterMapper.From((int)val);
+            if (Settings.toggleEnhancedInventory) {
+                if (!ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Contains(__instance.m_SearchView))
+                    ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Add(__instance.m_SearchView);
+                __instance.m_Sorter.value = EnhancedInventory.SorterMapper.From((int)val);
+            }
+            else
+                __instance.m_Sorter.value = (int)val;
         }
 
         private static void SetSorter(ItemsFilterPCView instance, int val) {
-            instance.ViewModel.SetCurrentSorter((ItemsFilter.SorterType)EnhancedInventory.SorterMapper.To(val));
+            if (Settings.toggleEnhancedInventory)
+                instance.ViewModel.SetCurrentSorter((ItemsFilter.SorterType)EnhancedInventory.SorterMapper.To(val));
+            else
+                instance.ViewModel.SetCurrentSorter((ItemsFilter.SorterType)val);
         }
 
         private static ItemsFilter.FilterType _last_filter;

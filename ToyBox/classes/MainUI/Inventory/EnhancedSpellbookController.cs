@@ -196,7 +196,7 @@ namespace ToyBox {
                 m_learn_scrolls_button.onClick.AddListener(delegate {
                     m_deferred_update = true;
 
-                    UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
+                    UnitEntityData unit = m_selected_unit;
                     foreach (ItemEntity item in GetLearnableScrolls()) {
                         CopyScroll copy = item.Blueprint.GetComponent<CopyScroll>();
                         copy.Copy(item, unit);
