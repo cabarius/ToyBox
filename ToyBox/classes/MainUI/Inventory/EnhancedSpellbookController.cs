@@ -67,11 +67,16 @@ namespace ToyBox {
         private IDisposable m_SelectedUnitUpdate;
         private UnitEntityData m_selected_unit = null;
 
+        public void OnDestroy() {
+            if (m_SelectedUnitUpdate != null) {
+                m_SelectedUnitUpdate.Dispose();
+            }
+        }
         public void Awake() {
             EventBus.Subscribe((object)this);
             m_SelectedUnitUpdate = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate (UnitReference u) {
                 m_selected_unit = u.Value;
-                Mod.Log($"EnhancedSpellbookController - selected character changed to {m_selected_unit?.CharacterName.orange() ?? "null"}");
+                //Mod.Log($"EnhancedSpellbookController - selected character changed to {m_selected_unit?.CharacterName.orange() ?? "null"}");
                 m_deferred_update = true;
             });
             var mainContainer = transform.Find("MainContainer");

@@ -3,20 +3,22 @@ using System.IO;
 using System.Reflection;
 using static UnityModManagerNet.UnityModManager;
 using System;
+using System.Xml.Serialization;
 
 namespace ModKit {
     public interface IUpdatableSettings {
         void AddMissingKeys(IUpdatableSettings from);
     }
 
-    internal static class ModSettings {
+    internal static class SettingsController {
         public static void SaveSettings<T>(this ModEntry modEntry, string fileName, T settings) {
             var userConfigFolder = modEntry.Path + "UserSettings";
             Directory.CreateDirectory(userConfigFolder);
             var userPath = $"{userConfigFolder}{Path.DirectorySeparatorChar}{fileName}";
             File.WriteAllText(userPath, JsonConvert.SerializeObject(settings, Formatting.Indented));
         }
-        public static void LoadSettings<T>(this ModEntry modEntry, string fileName, ref T settings) where T : IUpdatableSettings, new() {
+        public static void LoadSettings<T>(this ModEntry modEntry, string fileName, ref T settings) where T : new() {
+            settings = new T { };
             var assembly = Assembly.GetExecutingAssembly();
             var userConfigFolder = modEntry.Path + "UserSettings";
             Directory.CreateDirectory(userConfigFolder);
@@ -37,13 +39,14 @@ namespace ModKit {
             }
             catch (Exception e) {
                 Mod.Error($"{fileName} resource is not present or is malformed. exception: {e}");
-                settings = new T { };
             }
             if (File.Exists(userPath)) {
                 using var reader = File.OpenText(userPath);
                 try {
                     var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-                    userSettings.AddMissingKeys(settings);
+                    if (userSettings is IUpdatableSettings updatableSettings) {
+                        updatableSettings.AddMissingKeys((IUpdatableSettings)settings);
+                    }
                     settings = userSettings;
                 }
                 catch {

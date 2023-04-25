@@ -98,7 +98,8 @@ namespace ToyBox {
             Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
             Settings.searchText = "";
             Settings.searchLimit = 100;
-            Settings.browserSearchLimit = 25;
+            Mod.ModKitSettings.browserSearchLimit = 25;
+            ModKitSettings.Save();
             BagOfTricks.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();

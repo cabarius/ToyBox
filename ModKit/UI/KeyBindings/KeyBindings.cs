@@ -61,7 +61,7 @@ namespace ModKit {
                 if (KeyBindings.modEntry == null)
                     KeyBindings.modEntry = modEntry;
                 if (bindings == null) {
-                    ModSettings.LoadSettings(modEntry, "bindings.json", ref bindings);
+                    SettingsController.LoadSettings(modEntry, "bindings.json", ref bindings);
                     BindingsDidChange = true;
                 }
             }
