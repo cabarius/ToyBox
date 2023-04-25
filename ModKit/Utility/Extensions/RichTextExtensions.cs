@@ -33,7 +33,7 @@ namespace ModKit.Utility {
                 foreach (var term in terms) {
 //                    if (source.Contains("eapon") || source.Contains("inesse"))
 //                        Mod.Log($"{count.ToString().yellow().bold()} - MarkedSubstring {source}/{term}");
-                    source = source.StripHTML().MarkedSubstring(term, false);
+                    source = source.MarkedSubstring(term, false);
                     count++;
                 }
                 return source;
@@ -44,21 +44,21 @@ namespace ModKit.Utility {
             var result = new StringBuilder();
             var len = source.Length;
             var segment = source.Substring(0, htmlStart);
-            bool detail = query.Contains("inesse");
+ //           bool detail = query.Contains("inesse");
             var cnt = 0;
             segment = segment.MarkedSubstringNoHTML(query);
- //           if (detail) Mod.Log($"{(cnt++).ToString().Cyan()} - segment - (0, {htmlStart}) {segment} ");
+//            if (detail) Mod.Log($"{(cnt++)} - segment - (0, {htmlStart}) {segment} ");
             result.Append(segment);
             var htmlEnd = source.IndexOf('>', htmlStart);
             while (htmlStart != -1 && htmlEnd != -1) {
                 var tag = source.Substring(htmlStart, htmlEnd + 1 - htmlStart);
-//                if (detail) Mod.Log($"{(cnt++).ToString().Cyan()} - tag - ({htmlStart}, {htmlEnd}) {tag} ");
+//                if (detail) Mod.Log($"{(cnt++)} - tag - ({htmlStart}, {htmlEnd}) {tag} ");
                 result.Append(tag);
                 htmlStart = source.IndexOf('<', htmlEnd);
                 if (htmlStart != -1) {
                     segment = source.Substring(htmlEnd + 1, htmlStart - htmlEnd - 1);
                     segment = segment.MarkedSubstringNoHTML(query);
-//                    if (detail) Mod.Log($"{(cnt++).ToString().Cyan()} - segment - ({htmlEnd+1}, {htmlStart}) {segment} ");
+//                    if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd+1}, {htmlStart}) {segment} ");
                     result.Append(segment);
                     htmlEnd = source.IndexOf('>', htmlStart);
                 }
@@ -66,7 +66,12 @@ namespace ModKit.Utility {
             if (htmlStart != -1) {
                 var malformedTag = source.Substring(htmlStart, len + 1 - htmlStart);
                 result.Append(malformedTag);
-//                if (detail) Mod.Log($"{(cnt++).ToString().Cyan()} - badtag - ({htmlEnd + 1}, {htmlStart}) {malformedTag} ");
+//                if (detail) Mod.Log($"{(cnt++)} - badtag - ({htmlEnd + 1}, {htmlStart}) {malformedTag} ");
+            }
+            else if (htmlEnd < len) {
+                segment = source.Substring(htmlEnd + 1, len - htmlEnd - 1);
+//                if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd + 1}, {len}) {segment} ");
+                result.Append(segment);
             }
             return result.ToString();
         }
