@@ -5,16 +5,25 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
+using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Cheats;
+using Kingmaker.Controllers;
+using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Globalmap;
+using Kingmaker.Items;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
 using Kingmaker.PubSubSystem;
+using Kingmaker.RuleSystem.Rules;
+using Kingmaker.RuleSystem.Rules.Abilities;
+using Kingmaker.Tutorial;
 using Kingmaker.UI.FullScreenUITypes;
 using Kingmaker.UI.Group;
 using Kingmaker.UI.Kingdom;
@@ -22,35 +31,25 @@ using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.Utility;
-using System;
-using System.Collections.Generic;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.Tutorial;
-using Kingmaker.RuleSystem.Rules;
-using Kingmaker.UnitLogic.Mechanics.Actions;
-using Kingmaker.UnitLogic.Parts;
+using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
-using Kingmaker.UI.IngameMenu;
+using Kingmaker.UnitLogic.Mechanics.Actions;
+using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility;
+using Kingmaker.View.MapObjects;
+using Kingmaker.Visual.Sound;
+using ModKit;
+using Owlcat.Runtime.Core.Utils;
+using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Kingmaker.View.MapObjects;
-using Owlcat.Runtime.Core.Utils;
-using Kingmaker.Items;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
-using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
-using System.Linq;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.RuleSystem.Rules.Abilities;
 using UnityEngine;
-using Kingmaker.EntitySystem.Stats;
-using ModKit;
-using Kingmaker.Controllers.Combat;
-using Kingmaker.Visual.Sound;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -698,6 +697,27 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 }
                 return true;
+            }
+        }
+        [HarmonyPatch(typeof(FogOfWarController))]
+        public static class FogOfWarController_CollectRevealers_CompilerMethod_Patch {
+            [HarmonyTargetMethod]
+            static MethodBase CalculateMethod() {
+                // If it breaks just then the method name might have changed
+                return AccessTools.DeclaredMethod(typeof(FogOfWarController), "<CollectRevealers>g__CollectUnit|15_0");
+            }
+            public static void Prefix(UnitEntityData unit) {
+                var revealer = unit.View.SureFogOfWarRevealer();
+                if (settings.fowMultiplier != 1) {
+                    revealer.DefaultRadius = false;
+                    revealer.UseDefaultFowBorder = false;
+                    revealer.Radius = FogOfWarController.VisionRadius * settings.fowMultiplier;
+                }
+                else {
+                    revealer.DefaultRadius = true;
+                    revealer.UseDefaultFowBorder = true;
+                    revealer.Radius = 1.0f;
+                }
             }
         }
     }
