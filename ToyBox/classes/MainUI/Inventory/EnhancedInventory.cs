@@ -47,8 +47,8 @@ namespace ToyBox {
             [FilterCategories.Potion] = ((int)ItemsFilter.FilterType.Potion, null),
             [FilterCategories.Recipe] = ((int)ItemsFilter.FilterType.Recipe, null),
             [FilterCategories.Unlearned] = ((int)ItemsFilter.FilterType.Unlearned, null),
-            [FilterCategories.QuickslotUtils] = ((int)ExpandedFilterType.QuickslotUtilities, "Quickslot Utilities"),
-            [FilterCategories.UnlearnedRecipes] = ((int)ExpandedFilterType.UnlearnedRecipes, "Unleaned Recipes"),
+            [FilterCategories.QuickslotUtils] = ((int)ExpandedFilterType.QuickslotUtilities, "Quickslot Usable"),
+            [FilterCategories.UnlearnedRecipes] = ((int)ExpandedFilterType.UnlearnedRecipes, "Unlearned Recipes"),
             [FilterCategories.UnreadDocuments] = ((int)ExpandedFilterType.UnreadDocuments, "Unread Documents"),
             [FilterCategories.UsableWithoutUMD] = ((int)ExpandedFilterType.UsableWithoutUMD, "Usable Without Magic Device Check"),
             [FilterCategories.CurrentEquipped] = ((int)ExpandedFilterType.CurrentEquipped, "Can Equip (Current Char)"),
@@ -102,8 +102,7 @@ namespace ToyBox {
         SpellDescription = 1 << 1,
         SpellSaves = 1 << 2,
         SpellSchool = 1 << 3,
-
-        Default = SpellName | SpellSaves | SpellSchool,
+        Default = SpellName | SpellSaves | SpellSchool
     }
 
     [Flags]
@@ -204,7 +203,8 @@ namespace ToyBox {
         NoFilter,
         TargetsFortitude,
         TargetsReflex,
-        TargetsWill
+        TargetsWill,
+        SupportsMetamagic
     }
 
     public static class EnumHelper

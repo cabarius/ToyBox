@@ -31,6 +31,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.Crusade.GlobalMagic;
 
 namespace ToyBox {
     public abstract class BlueprintAction {
@@ -322,6 +323,14 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintAbility>("Remove",
                                                        (bp, ch, n, index) => ch.RemoveAbility(bp),
                                                        (bp, ch, index) => ch.HasAbility(bp));
+            // GlobalSpells
+            BlueprintAction.Register<BlueprintGlobalMagicSpell>("Add",
+                                                       (bp, ch, n, index) => Game.Instance.Player.GlobalMapSpellsManager.AddSpell(bp),
+                                                       (bp, ch, index) => !Game.Instance.Player.GlobalMapSpellsManager.m_SpellBook.HasItem(x => x.BlueprintGuid == bp.AssetGuid));
+
+            BlueprintAction.Register<BlueprintGlobalMagicSpell>("Remove",
+                                                                (bp, ch, n, index) => Game.Instance.Player.GlobalMapSpellsManager.RemoveSpell(bp),
+                                                                (bp, ch, index) => Game.Instance.Player.GlobalMapSpellsManager.m_SpellBook.HasItem(x => x.BlueprintGuid == bp.AssetGuid));
             // Ability Resources
 
             BlueprintAction.Register<BlueprintAbilityResource>("Add",

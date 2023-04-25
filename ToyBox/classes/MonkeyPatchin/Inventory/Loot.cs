@@ -35,6 +35,7 @@ using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.UnitLogic;
 using System.Text;
 using Kingmaker.Utility;
+using Kingmaker.UI.MVVM._VM.Party;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
@@ -221,6 +222,20 @@ namespace ToyBox.Inventory {
             }
         }
 #if false
+        [HarmonyPatch(typeof(PartyVM), nameof(PartyVM.SetGroup))]
+        public static class PartyVM_SetGroup_Patch {
+            public static void Postfix(ref PartyVM __instance) {
+                Mod.Log($"PartyVM_SetGroup_Patch - character changed {WrathExtensions.GetCurrentCharacter().CharacterName.orange()}");
+                if (Settings.toggleEnhancedInventory) {
+
+                }
+                if (Settings.toggleEnhancedSpellbook) {
+
+                }
+            }
+        }
+#endif
+#if false
         [HarmonyPatch(typeof(UIUtilityTexts))]
         private static class UIUtilityTexts_ {
             [HarmonyPatch(nameof(UIUtilityTexts.GetCanDoText), new Type[] { typeof(TooltipData)})]
@@ -238,6 +253,6 @@ namespace ToyBox.Inventory {
             }
         }
 #endif
-    }
-}
+            }
+        }
 

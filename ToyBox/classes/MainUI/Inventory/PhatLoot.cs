@@ -229,7 +229,7 @@ namespace ToyBox {
                            using (VerticalScope()) {
                                Toggle("Give the search bar focus when opening the spellbook screen", ref Settings.toggleSpellbookSearchBarFocusWhenOpening);
                                Toggle("Show all spell levels by default", ref Settings.toggleSpellbookShowAllSpellsByDefault);
-                               Toggle("Show metamagic by default", ref Settings.toggleSpellbookShowMetamagicByDefault);
+                               //Toggle("Show metamagic by default", ref Settings.toggleSpellbookShowMetamagicByDefault);
                                Toggle("Show the empty grey metamagic circles above spells", ref Settings.toggleSpellbookShowEmptyMetamagicCircles);
                                Toggle("Show level of the spell when the spellbook is showing all spell levels", ref Settings.toggleSpellbookShowLevelWhenViewingAllSpells);
                                Toggle("After creating a metamagic spell, switch to the metamagic tab", ref Settings.toggleSpellbookAutoSwitchToMetamagicTab);

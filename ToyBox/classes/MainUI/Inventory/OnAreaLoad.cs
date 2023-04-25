@@ -4,14 +4,19 @@ using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
 using Kingmaker.UI.ServiceWindow;
 using ModKit;
 using TMPro;
+using ToyBox.classes.MainUI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ToyBox {
     public class OnAreaLoad : IAreaHandler {
         public Settings Settings => Main.Settings;
+        public void SelectedCharacterDidChange() {
 
+        }
         public void OnAreaDidLoad() {
+            SelectedCharacterObserver.Shared.Notifiers -= SelectedCharacterDidChange;
+            SelectedCharacterObserver.Shared.Notifiers += SelectedCharacterDidChange;
             Mod.Log("OnAreaDidLoad");
             EnhancedInventory.RefreshRemappers();
             if (Settings.toggleEnhancedSpellbook) {
@@ -67,21 +72,19 @@ namespace ToyBox {
             }
         }
 
+        // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
+        // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
         private void LoadSpellbookSearchBar() {
-            // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
-            // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen/MainContainer/Information/MainTitle/
             string[] paths = new string[] {
                 "ServiceWindowsPCView/Background/Windows/SpellbookPCView/SpellbookScreen", // game
                 "ServiceWindowsConfig/Background/Windows/SpellbookPCView/SpellbookScreen" // world map
-                //"ServiceWindowsPCView/SpellbookPCView/SpellbookScreen", // game
-                //"ServiceWindowsConfig/SpellbookPCView/SpellbookScreen", // world map
             };
 
             foreach (string path in paths) {
                 Transform spellbook = Game.Instance.UI.MainCanvas.transform.Find(path);
                 if (spellbook != null) {
                     var controller = spellbook.gameObject.AddComponent<EnhancedSpellbookController>();
-                    controller.Awake(); // FIXME - why do I have to call this? What is the proper way to get this controller installed and get awake called by the framework and not by Marria
+//                    controller.Awake(); // FIXME - why do I have to call this? What is the proper way to get this controller installed and get awake called by the framework and not by Marria
                 }
             }
         }

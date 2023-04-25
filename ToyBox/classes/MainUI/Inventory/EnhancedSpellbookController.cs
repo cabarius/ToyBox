@@ -27,6 +27,9 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
 using ModKit;
+using Kingmaker.PubSubSystem;
+using Kingmaker.UI._ConsoleUI.InputLayers.InGameLayer;
+using Kingmaker;
 
 namespace ToyBox {
     public class DummyKnownSpellsView : SpellbookKnownSpellsPCView {
@@ -34,7 +37,9 @@ namespace ToyBox {
         public override void DestroyViewImplementation() { }
     }
 
-    public class EnhancedSpellbookController : MonoBehaviour {
+    public class EnhancedSpellbookController : MonoBehaviour, 
+                                               IGlobalSubscriber,
+                                               ISubscriber {
         private SearchBar m_search_bar;
 
         private IReactiveProperty<Spellbook> m_spellbook;
@@ -59,8 +64,16 @@ namespace ToyBox {
         private bool m_deferred_update = true;
 
         private int m_last_spell_level = -1;
+        private IDisposable m_SelectedUnitUpdate;
+        private UnitEntityData m_selected_unit = null;
 
         public void Awake() {
+            EventBus.Subscribe((object)this);
+            m_SelectedUnitUpdate = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate (UnitReference u) {
+                m_selected_unit = u.Value;
+                Mod.Log($"EnhancedSpellbookController - selected character changed to {m_selected_unit?.CharacterName.orange() ?? "null"}");
+                m_deferred_update = true;
+            });
             var mainContainer = transform.Find("MainContainer");
             Mod.Warn($"EnhancedSpellbookController - Awake - {mainContainer}");
             m_search_bar = new SearchBar(mainContainer, "Enter spell name...");
@@ -84,9 +97,11 @@ namespace ToyBox {
 
             List<string> options = Enum.GetValues(typeof(SpellbookFilter)).Cast<SpellbookFilter>().Select(i => i.ToString()).ToList();
             options[(int)SpellbookFilter.NoFilter] = "No Filter";
-            options[(int)SpellbookFilter.TargetsFortitude] = string.Format("Spell targets {0}", m_localized_fort);
-            options[(int)SpellbookFilter.TargetsReflex] = string.Format("Spell targets {0}", m_localized_reflex);
-            options[(int)SpellbookFilter.TargetsWill] = string.Format("Spell targets {0}", m_localized_will);
+            options[(int)SpellbookFilter.TargetsFortitude] = string.Format("Spell Targets {0}", m_localized_fort);
+            options[(int)SpellbookFilter.TargetsReflex] = string.Format("Spell Targets {0}", m_localized_reflex);
+            options[(int)SpellbookFilter.TargetsWill] = string.Format("Spell Targets {0}", m_localized_will);
+            options[(int)SpellbookFilter.SupportsMetamagic] = string.Format("Supports Metamagic");
+
             m_search_bar.Dropdown.AddOptions(options);
             m_search_bar.UpdatePlaceholder();
 
@@ -105,10 +120,13 @@ namespace ToyBox {
             DummyKnownSpellsView dummy = known_spells_transform.gameObject.AddComponent<DummyKnownSpellsView>();
             dummy.m_KnownSpellView = m_known_spell_prefab;
             dummy.m_PossibleSpellView = m_possible_spell_prefab;
-            GetComponentInParent<SpellbookPCView>().m_KnownSpellsView = dummy;
+            var spellbookPCView = GetComponentInParent<SpellbookPCView>();
+            if (spellbookPCView) 
+                spellbookPCView.m_KnownSpellsView = dummy;
 
             // Disable the current spell level indicator, it isn't used any more.
-            Destroy(transform.Find("MainContainer/Information/CurrentLevel").gameObject);
+            var spellLevelIndicator = transform.Find("MainContainer/Information/CurrentLevel")?.gameObject;
+            if (spellLevelIndicator != null) Destroy(spellLevelIndicator);
 
             // Create button to toggle metamagic.
             GameObject all_spells_button = Instantiate(transform.Find("MainContainer/KnownSpells/Toggle").gameObject, transform.Find("MainContainer/KnownSpells"));
@@ -122,6 +140,7 @@ namespace ToyBox {
             });
             m_all_spells_checkbox.isOn = Main.Settings.toggleSpellbookShowAllSpellsByDefault;
 
+#if false
             GameObject metamagic_button = Instantiate(transform.Find("MainContainer/KnownSpells/Toggle").gameObject, transform.Find("MainContainer/KnownSpells"));
             metamagic_button.name = "ToggleMetamagic";
             metamagic_button.transform.localPosition = new Vector2(501.0f, -480.0f);
@@ -132,7 +151,7 @@ namespace ToyBox {
                 m_scroll_bar.ScrollToTop();
             });
             m_metamagic_checkbox.isOn = Main.Settings.toggleSpellbookShowMetamagicByDefault;
-
+#endif
             GameObject possible_spells_button = Instantiate(transform.Find("MainContainer/KnownSpells/Toggle").gameObject, transform.Find("MainContainer/KnownSpells"));
             possible_spells_button.name = "TogglePossibleSpells";
             possible_spells_button.transform.localPosition = new Vector2(501.0f, -443.0f);
@@ -152,32 +171,33 @@ namespace ToyBox {
             levels.localPosition = new Vector2(739.0f, 385.0f);
 
             // Shamelessly steal a button from the inventory and repurpose it for our nefarious deeds.
-            GameObject learn_spells_object = Instantiate(transform.parent.parent.Find("CharacterInfoPCView/CharacterScreen/Menu/Button").gameObject, transform.Find("MainContainer"));
-            learn_spells_object.name = "LearnAllSpells";
-            learn_spells_object.transform.localPosition = new Vector2(800.0f, -430.0f);
+            if (m_learn_scrolls_button == null) {
+                GameObject learn_spells_object = Instantiate(transform.parent.parent.Find("CharacterInfoPCView/CharacterScreen/Menu/Button").gameObject, transform.Find("MainContainer"));
+                learn_spells_object.name = "LearnAllSpells";
+                learn_spells_object.transform.localPosition = new Vector2(800.0f, -430.0f);
 
-            Transform existing_bg = learn_spells_object.transform.Find("ButtonBackground");
-            learn_spells_object.AddComponent<Image>().sprite = existing_bg.GetComponent<Image>().sprite;
+                Transform existing_bg = learn_spells_object.transform.Find("ButtonBackground");
+                learn_spells_object.AddComponent<Image>().sprite = existing_bg.GetComponent<Image>().sprite;
 
-            RectTransform rect = learn_spells_object.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(150.0f, 60.0f);
+                RectTransform rect = learn_spells_object.GetComponent<RectTransform>();
+                rect.sizeDelta = new Vector2(150.0f, 60.0f);
 
-            Destroy(existing_bg.gameObject);
-            Destroy(learn_spells_object.transform.Find("Selected").gameObject);
-            Destroy(learn_spells_object.GetComponent<CharInfoMenuPCView>());
-            Destroy(learn_spells_object.GetComponent<OwlcatMultiButton>());
+                Destroy(existing_bg.gameObject);
+                Destroy(learn_spells_object.transform.Find("Selected").gameObject);
+                Destroy(learn_spells_object.GetComponent<CharInfoMenuPCView>());
+                Destroy(learn_spells_object.GetComponent<OwlcatMultiButton>());
 
-            m_learn_scrolls_button = learn_spells_object.AddComponent<Button>();
-            m_learn_scrolls_button.onClick.AddListener(delegate {
-                m_deferred_update = true;
+                m_learn_scrolls_button = learn_spells_object.AddComponent<Button>();
+                m_learn_scrolls_button.onClick.AddListener(delegate {
+                    m_deferred_update = true;
 
-                UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
-                foreach (ItemEntity item in GetLearnableScrolls()) {
-                    CopyScroll copy = item.Blueprint.GetComponent<CopyScroll>();
-                    copy.Copy(item, unit);
-                }
-            });
-
+                    UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
+                    foreach (ItemEntity item in GetLearnableScrolls()) {
+                        CopyScroll copy = item.Blueprint.GetComponent<CopyScroll>();
+                        copy.Copy(item, unit);
+                    }
+                });
+            }
             UpdateLearnScrollButton();
         }
 
@@ -236,7 +256,6 @@ namespace ToyBox {
                         }
                     }
                 }
-
                 m_deferred_update = false;
             }
         }
@@ -244,11 +263,17 @@ namespace ToyBox {
         private bool ShouldShowSpell(BlueprintAbility spell, SpellbookFilter filter) {
             string save = spell.LocalizedSavingThrow;
 
-            if (filter == SpellbookFilter.TargetsFortitude || filter == SpellbookFilter.TargetsReflex || filter == SpellbookFilter.TargetsWill) {
+            if (filter == SpellbookFilter.TargetsFortitude 
+                || filter == SpellbookFilter.TargetsReflex 
+                || filter == SpellbookFilter.TargetsWill
+                || filter == SpellbookFilter.SupportsMetamagic
+                ) {
                 if (string.IsNullOrWhiteSpace(save)) return false;
                 else if (filter == SpellbookFilter.TargetsFortitude && save.IndexOf(m_localized_fort, StringComparison.OrdinalIgnoreCase) == -1) return false;
                 else if (filter == SpellbookFilter.TargetsReflex && save.IndexOf(m_localized_reflex, StringComparison.OrdinalIgnoreCase) == -1) return false;
                 else if (filter == SpellbookFilter.TargetsWill && save.IndexOf(m_localized_will, StringComparison.OrdinalIgnoreCase) == -1) return false;
+                else if (filter == SpellbookFilter.SupportsMetamagic && spell.AvailableMetamagic == 0)
+                    return false;
             }
 
             string text = m_search_bar.InputField.text;
@@ -327,7 +352,7 @@ namespace ToyBox {
                 if (!m_all_spells_checkbox.isOn && spellbook_level != 11 && level != spellbook_level) continue;
 
                 foreach (AbilityData spell in UIUtilityUnit.GetKnownSpellsForLevel(level, m_spellbook.Value)) {
-                    if (!m_metamagic_checkbox.isOn && spell.MetamagicData != null) continue;
+//                    if (!m_metamagic_checkbox.isOn && spell.MetamagicData != null) continue;
                     if (spellbook_level == 11 && spell.MetamagicData == null) continue;
 
                     if (ShouldShowSpell(spell.Blueprint, (SpellbookFilter)m_search_bar.Dropdown.value)) {
@@ -365,16 +390,18 @@ namespace ToyBox {
         }
 
         private List<ItemEntity> GetLearnableScrolls() {
-            List<ItemEntity> ret = new List<ItemEntity>();
+            List<ItemEntity> result = new List<ItemEntity>();
 
-            UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
+            UnitEntityData unit = m_selected_unit;
+            if (unit == null) return result;
+            Mod.Log($"GetLearnableScrolls for {unit.CharacterName.orange()}");
             foreach (ItemEntity item in UIUtility.GetStashItems()) {
                 CopyScroll scroll = item.Blueprint.GetComponent<CopyScroll>();
                 if (scroll != null && scroll.CanCopy(item, unit)) {
-                    ret.Add(item);
+                    result.Add(item);
                 }
             }
-            return ret;
+            return result;
         }
 
         private void UpdateLearnScrollButton() {

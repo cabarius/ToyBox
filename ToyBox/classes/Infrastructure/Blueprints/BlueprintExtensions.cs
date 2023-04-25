@@ -12,6 +12,7 @@ using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Craft;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
@@ -54,6 +55,47 @@ namespace ToyBox {
             var name = bp.DisplayName;
             if (string.IsNullOrEmpty(name)) name = bp.name.Replace("Spellbook", "");
             return name;
+        }
+        public static string GetTitle(SimpleBlueprint blueprint) {
+            if (blueprint is IUIDataProvider uiDataProvider) {
+                string name;
+                var isEmpty = uiDataProvider.Name.IsNullOrEmpty();
+                if (isEmpty) {
+                    name = blueprint.name;
+                }
+                else {
+                    if (blueprint is BlueprintSpellbook spellbook)
+                        return $"{spellbook.Name} - {spellbook.name}";
+                    name = uiDataProvider.Name;
+                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                        name = blueprint.name;
+                    }
+                    else if (Settings.showDisplayAndInternalNames) {
+                        name += $" : {blueprint.name.color(RGBA.darkgrey)}";
+                    }
+                }
+                return name;
+            }
+            return blueprint.name;
+        }
+        public static string GetSearchKey<Definition>(Definition feature) where Definition : SimpleBlueprint, IUIDataProvider {
+            string name;
+            var isEmpty = feature.Name.IsNullOrEmpty();
+            if (isEmpty) {
+                name = feature.name;
+            }
+            else {
+                if (feature is BlueprintSpellbook spellbook)
+                    return $"{spellbook.Name} {spellbook.name}";
+                name = feature.Name;
+                if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                    name = feature.name;
+                }
+                else if (Settings.showDisplayAndInternalNames) {
+                    name += $" : {feature.name}";
+                }
+            }
+            return name.StripHTML(); // can we get rid of this?
         }
         public static IEnumerable<string> Attributes(this SimpleBlueprint bp) {
             List<string> modifiers = new();

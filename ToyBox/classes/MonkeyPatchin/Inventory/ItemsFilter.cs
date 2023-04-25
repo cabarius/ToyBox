@@ -25,6 +25,8 @@ using Kingmaker.Enums.Damage;
 using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
 using Kingmaker.UI.Tooltip;
 using System.Linq;
+using ModKit.Utility;
+using ToyBox.classes.MainUI.Inventory;
 
 namespace ToyBox.Inventory {
     // Hook #1 out of #2 for filtering - this hook handled the custom filter categories.
@@ -56,9 +58,13 @@ namespace ToyBox.Inventory {
                 __result = item.Blueprint is BlueprintItemEquipmentUsable blueprint && (blueprint.Type == UsableItemType.Scroll || blueprint.Type == UsableItemType.Wand) && unit != null && !blueprint.IsUnitNeedUMDForUse(unit);
             }
             else if (expanded_filter == ExpandedFilterType.CurrentEquipped) {
-                UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
+                UnitEntityData unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
+                if (unit != null) {
+                    if (item.Blueprint is BlueprintItemEquipment && !(item.Blueprint is BlueprintItemEquipmentUsable)) 
+                        __result = item.CanBeEquippedBy(unit);
+                }
+#if false
                 __result = unit != null;
-
                 if (__result) {
                     bool weapon_match = item is ItemEntityWeapon weapon && ((unit.Body.PrimaryHand.HasWeapon && unit.Body.PrimaryHand.Weapon.Blueprint.Type == weapon.Blueprint.Type) || (unit.Body.SecondaryHand.HasWeapon && unit.Body.SecondaryHand.Weapon.Blueprint.Type == weapon.Blueprint.Type));
 
@@ -68,6 +74,7 @@ namespace ToyBox.Inventory {
 
                     __result = weapon_match || shield_match || armour_match;
                 }
+#endif
             }
             else if (expanded_filter == ExpandedFilterType.NonZeroPW) {
                 __result = item.Blueprint.SellPrice > 0 && item.Blueprint.Weight > 0.0f;
@@ -211,7 +218,7 @@ namespace ToyBox.Inventory {
                 }
                 foreach (ItemsFilter.FilterType filterType in Enum.GetValues(typeof(ExpandedFilterType))) {
                     var entry = EnhancedInventory.FilterCategoryMap.Values.FirstOrDefault(e => e.index == (int)filterType);
-                    if (entry.title.Equals(searchRequest, StringComparison.InvariantCultureIgnoreCase)) {
+                    if (entry.title.Matches(searchRequest)) {
                         __result = ItemsFilter.ShouldShowItem(item, filterType);
                         return false;
                     }
@@ -250,67 +257,5 @@ namespace ToyBox.Inventory {
                 return false;
             }
         }
-#if false
-        [HarmonyPatch(typeof(ItemsFilter), nameof(ItemsFilter.ItemSorter))]
-        private static class ItemsFilter_ItemSorter_Patch {
-            public static bool Prefix(ref List<ItemEntity> __result, ItemsFilter.SorterType type,
-                                       List<ItemEntity> items,
-                                       ItemsFilter.FilterType filter) {
-                if (!Main.Settings.toggleEnhanceItemSortingWithRarity)
-                    return true;
-//                Mod.Log("Rarity Sorting");
-                switch (type) {
-                    case ItemsFilter.SorterType.NotSorted:
-                        __result =  items;
-                        return false;
-                    case ItemsFilter.SorterType.TypeUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, filter, ItemsFilter.CompareByTypeAndName)));
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.TypeDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByTypeAndName(a, b, filter))));
-                        items.Reverse();
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.PriceUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByPrice(a, b, filter))));
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.PriceDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true,(a, b) => ItemsFilter.CompareByPrice(a, b, filter))));
-                        items.Reverse();
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.NameUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByName(a, b, filter))));
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.NameDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByName(a, b, filter))));
-                        items.Reverse();
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.DateUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByDate(a, b, filter))));
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.DateDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByDate(a, b, filter))));
-                        items.Reverse();
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.WeightUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByWeight(a, b, filter))));
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.WeightDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByWeight(a, b, filter))));
-                        items.Reverse();
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.WeightSingleUp:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, false, (a, b) => ItemsFilter.CompareByWeight(a, b, filter, true))));
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    case ItemsFilter.SorterType.WeightSingleDown:
-                        items.Sort((Comparison<ItemEntity>)((a, b) => RarityCompare(a, b, true, (a, b) => ItemsFilter.CompareByWeight(a, b, filter, true))));
-                        items.Reverse();
-                        goto case ItemsFilter.SorterType.NotSorted;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), (object)type, (string)null);
-                }
-                return false;
-            }
-        }
-#endif
     }
 }

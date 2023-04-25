@@ -193,6 +193,7 @@
     <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
     <Compile Include="classes\MainUI\Inventory\EnhancedInventory.cs" />
     <Compile Include="classes\MainUI\Inventory\EnhancedInventoryController.cs" />
+    <Compile Include="classes\MainUI\Inventory\SelectedCharacterObserver.cs" />
     <Compile Include="classes\MainUI\Inventory\OnAreaLoad.cs" />
     <Compile Include="classes\MainUI\Inventory\RemappableInt.cs" />
     <Compile Include="classes\MainUI\Inventory\SearchBar.cs" />
@@ -307,7 +308,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

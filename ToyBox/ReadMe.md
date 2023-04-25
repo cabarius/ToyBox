@@ -41,15 +41,17 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in iventory and vendors by rarity
     * Ability to choose which sort categories
-    * Much more useful SearchFilter categories including ones from Enhanced Inventory
-    * Enhanced Spellbook - gives you search, filtering and more
+    * Much more useful **SearchFilter Categories** including ones from Enhanced Inventory
+    * **Enhanced Spellbook** - gives you search, filtering and more
 * (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***Narria***) DataViewer views now filter out properties with empty collections
 * (***Narria***) Quest Editor option to inspect quests and quest objectives with DataViewer
 * (***Narria***) Added Dice Roll overrides for Skill checks only (thanks AlterAsc) and cleaned up the options a bit to make them more clear
+* (***Narria***) Search 'n Pick now displays localized names (if available) and allows you to search them
 * (***Marria***) Search 'n Pick: Added counts to the collation categories
 * (***Narria***) Search 'n Pick: Fixed various duplicate value issues when using sub-categories
+* (***Narria***) Search 'n Pick: You can now add and remove Crusade Global Magic Spells
 * (***Narria***) Added tweak in Loot Tab to allow you to loot locked items
 * (***Narria***) Added search to inspectors (Data Viewer)
 * (***Narria***) Implemented FeatureSelection and ParameterizedFeature for the new Browser, which means you can now add and remove a lot more things like Racial Herritage, Weapon Focus and Oracle Mystery Selections.

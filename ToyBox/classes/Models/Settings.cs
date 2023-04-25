@@ -221,9 +221,9 @@ namespace ToyBox {
         public bool toggleEnhancedInventory = false;
         public bool toggleEnhancedSpellbook = false;
         public bool toggleSpellbookShowAllSpellsByDefault = false;
-        public bool toggleSpellbookShowMetamagicByDefault = false;
-        public bool toggleSpellbookShowLevelWhenViewingAllSpells = false;
-        public bool toggleSpellbookShowEmptyMetamagicCircles = false;
+        public bool toggleSpellbookShowMetamagicByDefault = true;
+        public bool toggleSpellbookShowLevelWhenViewingAllSpells = true;
+        public bool toggleSpellbookShowEmptyMetamagicCircles = true;
         public bool toggleSpellbookAutoSwitchToMetamagicTab = false;
         public bool toggleSpellbookSearchBarFocusWhenOpening = false;
         public FilterCategories SearchFilterCategories = FilterCategories.Default;

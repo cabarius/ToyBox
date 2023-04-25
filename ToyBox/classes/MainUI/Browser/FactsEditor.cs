@@ -66,7 +66,7 @@ namespace ToyBox {
             var titleWidth = (remainingWidth / (IsWide ? 3.5f : 4.0f)) - 100;
             remainingWidth -= titleWidth;
 
-            var text = GetName(blueprint).MarkedSubstring(browser.SearchText);
+            var text = GetTitle(blueprint).MarkedSubstring(browser.SearchText);
             var titleKey = $"{blueprint.AssetGuid}";
             if (feature != null) {
                 text = text.Cyan().Bold();
@@ -128,42 +128,7 @@ namespace ToyBox {
                 Label(blueprint.Description.StripHTML().MarkedSubstring(browser.SearchText).green(), Width(remainingWidth - 100));
             }
         }
-        public static string GetName<Definition>(Definition feature) where Definition : BlueprintScriptableObject, IUIDataProvider {
-            string name;
-            var isEmpty = feature.Name.IsNullOrEmpty();
-            if (isEmpty) {
-                name = feature.name;
-            } else {
-                if (feature is BlueprintSpellbook spellbook)
-                    return $"{spellbook.Name} - {spellbook.name}";
-                name = feature.Name;
-                if (name == "<null>" || name.StartsWith("[unknown key: ")) {
-                    name = feature.name;
-                } else if (Settings.showDisplayAndInternalNames) {
-                    name += $" : {feature.name.color(RGBA.darkgrey)}";
-                }
-            }
-            return name;
-        }
-        public static string GetSearchKey<Definition>(Definition feature) where Definition : BlueprintScriptableObject, IUIDataProvider {
-            string name;
-            var isEmpty = feature.Name.IsNullOrEmpty();
-            if (isEmpty) {
-                name = feature.name;
-            }
-            else {
-                if (feature is BlueprintSpellbook spellbook)
-                    return $"{spellbook.Name} {spellbook.name}";
-                name = feature.Name;
-                if (name == "<null>" || name.StartsWith("[unknown key: ")) {
-                    name = feature.name;
-                }
-                else if (Settings.showDisplayAndInternalNames) {
-                    name += $" : {feature.name}";
-                }
-            }
-            return name.StripHTML(); // can we get rid of this?
-        }
+
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Item, Definition> browser, List<Item> fact, string name)
             where Item : UnitFact
             where Definition : BlueprintUnitFact {
@@ -181,7 +146,7 @@ namespace ToyBox {
                     GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
                     (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
-                    GetName,
+                    GetTitle,
                     () => {
                         using (HorizontalScope()) {
                             var reloadData = false;
@@ -214,10 +179,10 @@ namespace ToyBox {
                                       featureSelection.AllFeatures.OrderBy(f => f.Name),
                                     e => e.feature,
                                     f => $"{GetSearchKey(f)} " + (Settings.searchDescriptions ? f.Description : ""),
-                                    GetName,
+                                    GetTitle,
                                     null,
                                     (selectionEntry, f) => {
-                                        var title = GetName(f).MarkedSubstring(FeatureSelectionBrowser.SearchText);
+                                        var title = GetTitle(f).MarkedSubstring(FeatureSelectionBrowser.SearchText);
                                         if (selectionEntry != null) title = title.Cyan().Bold();
                                         var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f)) - 200;
                                         Label(title, Width(titleWidth));

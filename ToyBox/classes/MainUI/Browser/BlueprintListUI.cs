@@ -15,6 +15,7 @@ using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items;
 using ModKit.DataViewer;
 using ModKit.Utility;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
     public class BlueprintListUI {
@@ -79,7 +80,7 @@ namespace ToyBox {
                     var actions = blueprint.GetActions()
                         .Where(action => action.canPerform(blueprint, unit));
                     var titles = actions.Select(a => a.name);
-                    var name = blueprint.NameSafe();
+                    var name = GetTitle(blueprint);
                     var displayName = blueprint.GetDisplayName();
                     string title;
                     if (Settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
