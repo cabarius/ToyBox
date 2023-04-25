@@ -214,12 +214,12 @@ namespace ToyBox.BagOfPatches {
                         if (duration != null) {
                             var oldDuration = duration;
                             duration = GetNewBuffDuration((TimeSpan)duration);
-                            Mod.Warn($"BuffCollection_AddBuff2_patch - buff: {blueprint.name} duration: {oldDuration} => {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue}");
+                            //Mod.Warn($"BuffCollection_AddBuff2_patch - buff: {blueprint.name} duration: {oldDuration} => {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue}");
                         }
                     }
                 }
                 catch (Exception e) {
-                    Mod.Error($"BuffCollection_AddBuff2_patch - duration: {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue} => {adjusted}");
+                    //Mod.Error($"BuffCollection_AddBuff2_patch - duration: {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue} => {adjusted}");
                     Mod.Error(e);
                 }
 

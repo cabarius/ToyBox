@@ -221,11 +221,11 @@ namespace ToyBox.Inventory {
                     __result = true;
             }
         }
-
+#if false
         [HarmonyPatch(typeof(PartyVM), nameof(PartyVM.SetGroup))]
         public static class PartyVM_SetGroup_Patch {
             public static void Postfix(ref PartyVM __instance) {
-                Mod.Log($"character changed {WrathExtensions.GetCurrentCharacter()}");
+                Mod.Log($"PartyVM_SetGroup_Patch - character changed {WrathExtensions.GetCurrentCharacter().CharacterName.orange()}");
                 if (Settings.toggleEnhancedInventory) {
 
                 }
@@ -234,6 +234,7 @@ namespace ToyBox.Inventory {
                 }
             }
         }
+#endif
 #if false
         [HarmonyPatch(typeof(UIUtilityTexts))]
         private static class UIUtilityTexts_ {

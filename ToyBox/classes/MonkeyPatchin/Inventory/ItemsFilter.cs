@@ -26,6 +26,7 @@ using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
 using Kingmaker.UI.Tooltip;
 using System.Linq;
 using ModKit.Utility;
+using ToyBox.classes.MainUI.Inventory;
 
 namespace ToyBox.Inventory {
     // Hook #1 out of #2 for filtering - this hook handled the custom filter categories.
@@ -57,7 +58,7 @@ namespace ToyBox.Inventory {
                 __result = item.Blueprint is BlueprintItemEquipmentUsable blueprint && (blueprint.Type == UsableItemType.Scroll || blueprint.Type == UsableItemType.Wand) && unit != null && !blueprint.IsUnitNeedUMDForUse(unit);
             }
             else if (expanded_filter == ExpandedFilterType.CurrentEquipped) {
-                UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
+                UnitEntityData unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
                 if (unit != null) {
                     if (item.Blueprint is BlueprintItemEquipment && !(item.Blueprint is BlueprintItemEquipmentUsable)) 
                         __result = item.CanBeEquippedBy(unit);

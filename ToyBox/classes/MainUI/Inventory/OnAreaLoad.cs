@@ -4,14 +4,19 @@ using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
 using Kingmaker.UI.ServiceWindow;
 using ModKit;
 using TMPro;
+using ToyBox.classes.MainUI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ToyBox {
     public class OnAreaLoad : IAreaHandler {
         public Settings Settings => Main.Settings;
+        public void SelectedCharacterDidChange() {
 
+        }
         public void OnAreaDidLoad() {
+            SelectedCharacterObserver.Shared.Notifiers -= SelectedCharacterDidChange;
+            SelectedCharacterObserver.Shared.Notifiers += SelectedCharacterDidChange;
             Mod.Log("OnAreaDidLoad");
             EnhancedInventory.RefreshRemappers();
             if (Settings.toggleEnhancedSpellbook) {
@@ -79,7 +84,7 @@ namespace ToyBox {
                 Transform spellbook = Game.Instance.UI.MainCanvas.transform.Find(path);
                 if (spellbook != null) {
                     var controller = spellbook.gameObject.AddComponent<EnhancedSpellbookController>();
-                    controller.Awake(); // FIXME - why do I have to call this? What is the proper way to get this controller installed and get awake called by the framework and not by Marria
+//                    controller.Awake(); // FIXME - why do I have to call this? What is the proper way to get this controller installed and get awake called by the framework and not by Marria
                 }
             }
         }
