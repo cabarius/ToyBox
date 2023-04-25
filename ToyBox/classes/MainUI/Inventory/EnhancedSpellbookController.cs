@@ -144,8 +144,7 @@ namespace ToyBox {
                 m_scroll_bar.ScrollToTop();
             });
             m_all_spells_checkbox.isOn = Main.Settings.toggleSpellbookShowAllSpellsByDefault;
-
-#if false
+#if true // FIXME - remove this once Bubblebuffs updates.  If I need to add a new button use this path name
             GameObject metamagic_button = Instantiate(transform.Find("MainContainer/KnownSpells/Toggle").gameObject, transform.Find("MainContainer/KnownSpells"));
             metamagic_button.name = "ToggleMetamagic";
             metamagic_button.transform.localPosition = new Vector2(501.0f, -480.0f);
@@ -156,6 +155,7 @@ namespace ToyBox {
                 m_scroll_bar.ScrollToTop();
             });
             m_metamagic_checkbox.isOn = Main.Settings.toggleSpellbookShowMetamagicByDefault;
+            m_metamagic_checkbox.gameObject.SetActive((false));
 #endif
             GameObject possible_spells_button = Instantiate(transform.Find("MainContainer/KnownSpells/Toggle").gameObject, transform.Find("MainContainer/KnownSpells"));
             possible_spells_button.name = "TogglePossibleSpells";

@@ -58,6 +58,7 @@ namespace ModKit {
 
             using ProcessLogger process = new(_logger);
             try {
+                Mod.modEntry = modEntry;
                 process.Log("Enabling.");
                 var dict = Harmony.VersionInfo(out var myVersion);
                 process.Log($"Harmony version: {myVersion}");
