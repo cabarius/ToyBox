@@ -102,7 +102,6 @@ namespace ToyBox {
         SpellDescription = 1 << 1,
         SpellSaves = 1 << 2,
         SpellSchool = 1 << 3,
-
         Default = SpellName | SpellSaves | SpellSchool,
     }
 

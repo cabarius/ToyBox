@@ -35,6 +35,7 @@ using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
 using Kingmaker.AreaLogic.QuestSystem;
+using Kingmaker.Crusade.GlobalMagic;
 using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
@@ -76,6 +77,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.CollationNames(bp.School.ToString())),
+            new NamedTypeFilter<BlueprintGlobalMagicSpell>("Global Spells", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintBrain>("Brains", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAiAction>("AIActions", null, bp => bp.CollationNames()),
             new NamedTypeFilter<Consideration>("Considerations", null, bp => bp.CollationNames()),
@@ -127,7 +129,6 @@ namespace ToyBox {
                 return new List<string> { "-" };
                 }),
             new NamedTypeFilter<BlueprintAnswer>("Answer", null, bp => bp.CaptionCollationNames()),
-            new NamedTypeFilter<BlueprintFeatureSelection>("Feature Select"),
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp =>  bp.CollationNames()),
 #if false
