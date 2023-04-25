@@ -97,9 +97,11 @@ namespace ToyBox {
 
             List<string> options = Enum.GetValues(typeof(SpellbookFilter)).Cast<SpellbookFilter>().Select(i => i.ToString()).ToList();
             options[(int)SpellbookFilter.NoFilter] = "No Filter";
-            options[(int)SpellbookFilter.TargetsFortitude] = string.Format("Spell targets {0}", m_localized_fort);
-            options[(int)SpellbookFilter.TargetsReflex] = string.Format("Spell targets {0}", m_localized_reflex);
-            options[(int)SpellbookFilter.TargetsWill] = string.Format("Spell targets {0}", m_localized_will);
+            options[(int)SpellbookFilter.TargetsFortitude] = string.Format("Spell Targets {0}", m_localized_fort);
+            options[(int)SpellbookFilter.TargetsReflex] = string.Format("Spell Targets {0}", m_localized_reflex);
+            options[(int)SpellbookFilter.TargetsWill] = string.Format("Spell Targets {0}", m_localized_will);
+            options[(int)SpellbookFilter.SupportsMetamagic] = string.Format("Supports Metamagic");
+
             m_search_bar.Dropdown.AddOptions(options);
             m_search_bar.UpdatePlaceholder();
 
@@ -138,6 +140,7 @@ namespace ToyBox {
             });
             m_all_spells_checkbox.isOn = Main.Settings.toggleSpellbookShowAllSpellsByDefault;
 
+#if false
             GameObject metamagic_button = Instantiate(transform.Find("MainContainer/KnownSpells/Toggle").gameObject, transform.Find("MainContainer/KnownSpells"));
             metamagic_button.name = "ToggleMetamagic";
             metamagic_button.transform.localPosition = new Vector2(501.0f, -480.0f);
@@ -148,7 +151,7 @@ namespace ToyBox {
                 m_scroll_bar.ScrollToTop();
             });
             m_metamagic_checkbox.isOn = Main.Settings.toggleSpellbookShowMetamagicByDefault;
-
+#endif
             GameObject possible_spells_button = Instantiate(transform.Find("MainContainer/KnownSpells/Toggle").gameObject, transform.Find("MainContainer/KnownSpells"));
             possible_spells_button.name = "TogglePossibleSpells";
             possible_spells_button.transform.localPosition = new Vector2(501.0f, -443.0f);
@@ -260,11 +263,17 @@ namespace ToyBox {
         private bool ShouldShowSpell(BlueprintAbility spell, SpellbookFilter filter) {
             string save = spell.LocalizedSavingThrow;
 
-            if (filter == SpellbookFilter.TargetsFortitude || filter == SpellbookFilter.TargetsReflex || filter == SpellbookFilter.TargetsWill) {
+            if (filter == SpellbookFilter.TargetsFortitude 
+                || filter == SpellbookFilter.TargetsReflex 
+                || filter == SpellbookFilter.TargetsWill
+                || filter == SpellbookFilter.SupportsMetamagic
+                ) {
                 if (string.IsNullOrWhiteSpace(save)) return false;
                 else if (filter == SpellbookFilter.TargetsFortitude && save.IndexOf(m_localized_fort, StringComparison.OrdinalIgnoreCase) == -1) return false;
                 else if (filter == SpellbookFilter.TargetsReflex && save.IndexOf(m_localized_reflex, StringComparison.OrdinalIgnoreCase) == -1) return false;
                 else if (filter == SpellbookFilter.TargetsWill && save.IndexOf(m_localized_will, StringComparison.OrdinalIgnoreCase) == -1) return false;
+                else if (filter == SpellbookFilter.SupportsMetamagic && spell.AvailableMetamagic == 0)
+                    return false;
             }
 
             string text = m_search_bar.InputField.text;
@@ -343,7 +352,7 @@ namespace ToyBox {
                 if (!m_all_spells_checkbox.isOn && spellbook_level != 11 && level != spellbook_level) continue;
 
                 foreach (AbilityData spell in UIUtilityUnit.GetKnownSpellsForLevel(level, m_spellbook.Value)) {
-                    if (!m_metamagic_checkbox.isOn && spell.MetamagicData != null) continue;
+//                    if (!m_metamagic_checkbox.isOn && spell.MetamagicData != null) continue;
                     if (spellbook_level == 11 && spell.MetamagicData == null) continue;
 
                     if (ShouldShowSpell(spell.Blueprint, (SpellbookFilter)m_search_bar.Dropdown.value)) {
