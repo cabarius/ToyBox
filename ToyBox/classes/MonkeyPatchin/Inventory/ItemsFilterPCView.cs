@@ -17,7 +17,7 @@ namespace ToyBox.Inventory {
     public static class ItemsFilterPCView_ {
         public static Settings Settings = Main.Settings;
 
-        private static readonly MethodInfo[] m_cbs = new MethodInfo[] {
+        private static readonly MethodInfo[] _methodInfosToTranspile = new MethodInfo[] {
             AccessTools.Method(typeof(ItemsFilterPCView_), nameof(SetDropdown)),
             AccessTools.Method(typeof(ItemsFilterPCView_), nameof(SetSorter)),
             AccessTools.Method(typeof(ItemsFilterPCView_), nameof(ObserveFilterChange)),
@@ -59,9 +59,9 @@ namespace ToyBox.Inventory {
 
             int ldftn_count = 0;
 
-            for (int i = 0; i < il.Count && ldftn_count < m_cbs.Length; ++i) {
+            for (int i = 0; i < il.Count && ldftn_count < _methodInfosToTranspile.Length; ++i) {
                 if (il[i].opcode == OpCodes.Ldftn) {
-                    il[i].operand = m_cbs[ldftn_count++];
+                    il[i].operand = _methodInfosToTranspile[ldftn_count++];
                 }
             }
 
