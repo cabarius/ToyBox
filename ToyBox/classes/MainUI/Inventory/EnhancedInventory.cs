@@ -201,6 +201,8 @@ namespace ToyBox {
     public enum SpellbookFilter
     {
         NoFilter,
+        AOE,
+        Touch,
         TargetsFortitude,
         TargetsReflex,
         TargetsWill,

@@ -58,6 +58,7 @@ namespace ModKit {
 
             using ProcessLogger process = new(_logger);
             try {
+                Mod.modEntry = modEntry;
                 process.Log("Enabling.");
                 var dict = Harmony.VersionInfo(out var myVersion);
                 process.Log($"Harmony version: {myVersion}");
@@ -69,6 +70,7 @@ namespace ModKit {
                 modEntry.OnSaveGUI += HandleSaveGUI;
                 Version = modEntry.Version;
                 Settings = UnityModManager.ModSettings.Load<TSettings>(modEntry);
+                ModKitSettings.Load();
                 Core = new TCore();
 
                 var types = assembly.GetTypes();
@@ -168,10 +170,14 @@ namespace ModKit {
         public void ResetSettings() {
             if (Enabled) {
                 Settings = new TSettings();
+                Mod.ModKitSettings = new ModKitSettings();
             }
         }
 
-        private void HandleSaveGUI(UnityModManager.ModEntry modEntry) => UnityModManager.ModSettings.Save(Settings, modEntry);
+        private void HandleSaveGUI(UnityModManager.ModEntry modEntry) {
+            UnityModManager.ModSettings.Save(Settings, modEntry);
+            ModKitSettings.Save();
+        }
 
         #endregion
 

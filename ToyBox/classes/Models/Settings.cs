@@ -219,6 +219,7 @@ namespace ToyBox {
 
         // Enhanced Inventory
         public bool toggleEnhancedInventory = false;
+        public bool toggleDontClearSearchWhenLoseFocus = true;
         public bool toggleEnhancedSpellbook = false;
         public bool toggleSpellbookShowAllSpellsByDefault = false;
         public bool toggleSpellbookShowMetamagicByDefault = true;
@@ -363,8 +364,6 @@ namespace ToyBox {
 
         // Blueprint Browser
         public int searchLimit = 100;
-        public int browserSearchLimit = 20;
-        public int browserDetailSearchLimit = 10;
         public int selectedBPTypeFilter = 1;
         public string searchText = "";
         public bool searchDescriptions = true;

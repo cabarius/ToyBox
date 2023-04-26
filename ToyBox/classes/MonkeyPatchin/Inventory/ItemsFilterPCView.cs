@@ -3,6 +3,7 @@ using Kingmaker.Blueprints.Root;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.MVVM._PCView.Slots;
 using ModKit;
+using Owlcat.Runtime.UI.Controls.Button;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace ToyBox.Inventory {
     public static class ItemsFilterPCView_ {
         public static Settings Settings = Main.Settings;
 
-        private static readonly MethodInfo[] m_cbs = new MethodInfo[] {
+        private static readonly MethodInfo[] _methodInfosToTranspile = new MethodInfo[] {
             AccessTools.Method(typeof(ItemsFilterPCView_), nameof(SetDropdown)),
             AccessTools.Method(typeof(ItemsFilterPCView_), nameof(SetSorter)),
             AccessTools.Method(typeof(ItemsFilterPCView_), nameof(ObserveFilterChange)),
@@ -26,13 +27,20 @@ namespace ToyBox.Inventory {
         private static void SetDropdown(ItemsFilterPCView __instance, ItemsFilter.SorterType val) {
             if (!KnownFilterViews.Contains(__instance))
                 KnownFilterViews.Add(__instance);
-            if (!ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Contains(__instance.m_SearchView))
-                ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Add(__instance.m_SearchView);
-            __instance.m_Sorter.value = EnhancedInventory.SorterMapper.From((int)val);
+            if (Settings.toggleEnhancedInventory) {
+                if (!ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Contains(__instance.m_SearchView))
+                    ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Add(__instance.m_SearchView);
+                __instance.m_Sorter.value = EnhancedInventory.SorterMapper.From((int)val);
+            }
+            else
+                __instance.m_Sorter.value = (int)val;
         }
 
         private static void SetSorter(ItemsFilterPCView instance, int val) {
-            instance.ViewModel.SetCurrentSorter((ItemsFilter.SorterType)EnhancedInventory.SorterMapper.To(val));
+            if (Settings.toggleEnhancedInventory)
+                instance.ViewModel.SetCurrentSorter((ItemsFilter.SorterType)EnhancedInventory.SorterMapper.To(val));
+            else
+                instance.ViewModel.SetCurrentSorter((ItemsFilter.SorterType)val);
         }
 
         private static ItemsFilter.FilterType _last_filter;
@@ -52,9 +60,9 @@ namespace ToyBox.Inventory {
 
             int ldftn_count = 0;
 
-            for (int i = 0; i < il.Count && ldftn_count < m_cbs.Length; ++i) {
+            for (int i = 0; i < il.Count && ldftn_count < _methodInfosToTranspile.Length; ++i) {
                 if (il[i].opcode == OpCodes.Ldftn) {
-                    il[i].operand = m_cbs[ldftn_count++];
+                    il[i].operand = _methodInfosToTranspile[ldftn_count++];
                 }
             }
 
@@ -72,10 +80,10 @@ namespace ToyBox.Inventory {
             List<string> options = new List<string>();
 
             foreach (var flag in EnumHelper.ValidSorterCategories) {
-                if (Settings.InventoryItemSorterOptions.HasFlag(flag) 
+                if (Settings.InventoryItemSorterOptions.HasFlag(flag)
                     && EnhancedInventory.SorterCategoryMap.TryGetValue(flag, out var entry)
-                    ) { 
-                    (int  index, string text) = entry;
+                   ) {
+                    (int index, string text) = entry;
                     if (text == null) {
                         //Mod.Log($"adding {flag} : {text}");
                         text = LocalizedTexts.Instance.ItemsFilter.GetText((ItemsFilter.SorterType)index);

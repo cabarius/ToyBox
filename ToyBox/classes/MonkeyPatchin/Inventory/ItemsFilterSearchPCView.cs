@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UniRx;
+using UnityEngine;
 using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox.Inventory {
@@ -45,13 +46,24 @@ namespace ToyBox.Inventory {
             }
             filterView.SetupDropdown();
         }
-        [HarmonyPostfix]
         [HarmonyPatch(nameof(ItemsFilterSearchPCView.Initialize), new Type[] { })]
+        [HarmonyPostfix]
         public static void Initialize(ItemsFilterSearchPCView __instance) {
             if (!Settings.toggleEnhancedInventory) return;
             if (!KnownFilterViews.Contains(__instance))
                 KnownFilterViews.Add(__instance);
             __instance.ReloadFilterOptions();
+        }
+        [HarmonyPatch(nameof(ItemsFilterSearchPCView.SetActive), new Type[] { typeof(bool)})]
+        [HarmonyPrefix]
+        public static bool SetActive(ItemsFilterSearchPCView __instance, bool value) {
+            if (!Settings.toggleEnhancedInventory || !Settings.toggleDontClearSearchWhenLoseFocus) return true;
+            __instance.gameObject.SetActive(value);
+            __instance.m_Dropdown.Hide();
+            if (!value)
+                return false;
+            __instance.m_InputField.Select();
+            return false;
         }
     }
 }

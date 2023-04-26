@@ -221,38 +221,6 @@ namespace ToyBox.Inventory {
                     __result = true;
             }
         }
-#if false
-        [HarmonyPatch(typeof(PartyVM), nameof(PartyVM.SetGroup))]
-        public static class PartyVM_SetGroup_Patch {
-            public static void Postfix(ref PartyVM __instance) {
-                Mod.Log($"PartyVM_SetGroup_Patch - character changed {WrathExtensions.GetCurrentCharacter().CharacterName.orange()}");
-                if (Settings.toggleEnhancedInventory) {
-
-                }
-                if (Settings.toggleEnhancedSpellbook) {
-
-                }
-            }
-        }
-#endif
-#if false
-        [HarmonyPatch(typeof(UIUtilityTexts))]
-        private static class UIUtilityTexts_ {
-            [HarmonyPatch(nameof(UIUtilityTexts.GetCanDoText), new Type[] { typeof(TooltipData)})]
-            [HarmonyPostfix]
-            public static void GetCanDoText(TooltipData data, ref string __result) {
-            }
-
-            [HarmonyPatch(nameof(UIUtilityTexts.GetCanDoText), new Type[] { typeof(ItemEntity), typeof(bool) })]
-            [HarmonyPostfix]
-            public static void GetCanDoText(ItemEntity item, bool defaultColor, ref string __result) {
-                if (!Settings.toggleShowCantEquipReasons) return;
-                var reasonText = item?.GetCantEquipReasonText();
-                if (reasonText != null)
-                    __result += reasonText;
-            }
-        }
-#endif
-            }
-        }
+    }
+}
 

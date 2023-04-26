@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ToyBox;
 using UnityEngine;
 
 namespace ModKit {
@@ -45,7 +44,7 @@ namespace ModKit {
             // It provides a toggle to show the definitions mixed in with the items. 
             // By default it shows just the title but you can provide an optional RowUI to show more complex row UI including buttons to add and remove items and so forth. This will be layed out after the title
             // You an also provide UI that renders children below the row
-            public Settings Settings => Main.Settings; // FIXME - move these settings into ModKit. Can't have dependency on ToyBox
+            public ModKitSettings Settings => Mod.ModKitSettings;
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
             private Queue<Definition> cachedSearchResults;
             public List<Definition> filteredDefinitions;
@@ -61,10 +60,12 @@ namespace ModKit {
             public int SearchLimit {
                 get => IsDetailBrowser ? Settings.browserDetailSearchLimit : Settings.browserSearchLimit;
                 set {
+                    var oldValue = SearchLimit;
                     if (IsDetailBrowser)
                         Settings.browserDetailSearchLimit = value;
                     else
                         Settings.browserSearchLimit = value;
+                    if (value != oldValue) ModKitSettings.Save();
                 }
             }
             private int _pageCount;
