@@ -46,6 +46,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * **Enhanced Spellbook** - gives you search, filtering and more
     * Fixed compatibility issue with BubbleBuffs
     * Fixed issue with broken sorters when Enhanced Inventory is turned off
+    * Added item counts it the inventory screen and spell counts to the spellbook when enhanced versions are turned on
 * (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***Narria***) DataViewer views now filter out properties with empty collections

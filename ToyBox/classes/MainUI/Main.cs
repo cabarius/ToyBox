@@ -54,6 +54,7 @@ namespace ToyBox {
                 _modId = modEntry.Info.Id;
 
                 Mod.OnLoad(modEntry);
+                UIHelpers.OnLoad();
                 Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);

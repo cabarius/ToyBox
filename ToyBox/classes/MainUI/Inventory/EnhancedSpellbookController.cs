@@ -47,7 +47,7 @@ namespace ToyBox {
         private IReactiveProperty<AbilityDataVM> m_selected_spell;
 
         private ScrollRectExtended m_scroll_bar;
-
+        private TextMeshProUGUI m_title_label;
         private SpellbookKnownSpellPCView m_known_spell_prefab;
         private SpellbookSpellPCView m_possible_spell_prefab;
 
@@ -80,7 +80,7 @@ namespace ToyBox {
                 m_deferred_update = true;
             });
             var mainContainer = transform.Find("MainContainer");
-            Mod.Warn($"EnhancedSpellbookController - Awake - {mainContainer}");
+            Mod.Debug($"EnhancedSpellbookController - Awake - {mainContainer}");
             m_search_bar = new SearchBar(mainContainer, "Enter spell name...");
             m_search_bar.GameObject.transform.localScale = new Vector3(0.85f, 0.85f, 1.0f);
             m_search_bar.GameObject.transform.localPosition = new Vector2(-61.0f, 386.0f);
@@ -109,6 +109,9 @@ namespace ToyBox {
 
             m_search_bar.Dropdown.AddOptions(options);
             m_search_bar.UpdatePlaceholder();
+
+            // Grab the title label so we can stick spell counts in it
+            m_title_label = transform.Find("MainContainer/Information/MainTitle/TitleLabel").GetComponent<TextMeshProUGUI>();
 
             // The scroll bar is used for resetting the scroll.
             m_scroll_bar = transform.Find("MainContainer/KnownSpells/StandardScrollView").GetComponent<ScrollRectExtended>();
@@ -232,12 +235,13 @@ namespace ToyBox {
                 widgets.Clear();
 
                 if (m_spellbook.Value != null && m_spellbook_level.Value != null) {
-                    DrawKnownSpells(widgets);
+                    var count = 0;
+                    count += DrawKnownSpells(widgets);
 
                     if (m_possible_spells_checkbox.isOn) {
-                        DrawPossibleSpells(widgets);
+                        count += DrawPossibleSpells(widgets);
                     }
-
+                    UpdateSpellCount(count);
                     foreach (SpellbookKnownSpellPCView spell in transform
                                                                 .Find("MainContainer/KnownSpells/StandardScrollView/Viewport/Content")
                                                                 .GetComponentsInChildren<SpellbookKnownSpellPCView>()) {
@@ -263,6 +267,13 @@ namespace ToyBox {
                 }
                 m_deferred_update = false;
             }
+        }
+
+        void UpdateSpellCount(int count) {
+            m_title_label?.AddSuffix($" ({count} spells)".size(25), '(');
+        }
+        void RemoveSpellCount() {
+            m_title_label?.AddSuffix(null, '(');
         }
 
         private bool ShouldShowSpell(BlueprintAbility spell, SpellbookFilter filter) {
@@ -348,11 +359,11 @@ namespace ToyBox {
             }
         }
 
-        private void DrawKnownSpells(WidgetListMVVM widgets) {
+        private int DrawKnownSpells(WidgetListMVVM widgets) {
             List<AbilityDataVM> known_spells = new List<AbilityDataVM>();
 
             int spellbook_level = m_spellbook_level.Value.Level;
-
+            var count = 0;
             for (int level = 0; level <= 10; ++level) {
                 if (!m_all_spells_checkbox.isOn && spellbook_level != 11 && level != spellbook_level) continue;
 
@@ -362,18 +373,19 @@ namespace ToyBox {
 
                     if (ShouldShowSpell(spell.Blueprint, (SpellbookFilter)m_search_bar.Dropdown.value)) {
                         known_spells.Add(new AbilityDataVM(spell, m_spellbook.Value, m_selected_spell));
+                        count++;
                     }
                 }
             }
-
             widgets.DrawEntries(known_spells.OrderBy(i => i.SpellLevel).ThenBy(i => i.DisplayName), m_known_spell_prefab);
+            return count;
         }
 
-        private void DrawPossibleSpells(WidgetListMVVM widgets) {
+        private int DrawPossibleSpells(WidgetListMVVM widgets) {
             List<BlueprintAbilityVM> possible_spells = new List<BlueprintAbilityVM>();
 
             int spellbook_level = m_spellbook_level.Value.Level;
-
+            var count = 0;
             if (spellbook_level != 11) {
                 for (int level = 0; level <= 9; ++level) {
                     if (!m_all_spells_checkbox.isOn && level != spellbook_level) continue;
@@ -381,12 +393,13 @@ namespace ToyBox {
                     foreach (BlueprintAbility spell in UIUtilityUnit.GetAllPossibleSpellsForLevel(level, m_spellbook.Value)) {
                         if (ShouldShowSpell(spell, (SpellbookFilter)m_search_bar.Dropdown.value)) {
                             possible_spells.Add(new BlueprintAbilityVM(spell, m_spellbook.Value, spellbook_level));
+                            count++;
                         }
                     }
                 }
             }
-
             widgets.DrawEntries(possible_spells.OrderBy(i => i.m_SpellLevel).ThenBy(i => i.DisplayName), m_possible_spell_prefab);
+            return count;
         }
 
         private void SelectMemorisationLevel(int level) {

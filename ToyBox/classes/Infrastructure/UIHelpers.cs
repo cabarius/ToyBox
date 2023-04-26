@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityModManagerNet;
 
 namespace ToyBox {
     public static class UIHelpers {
@@ -22,6 +24,7 @@ namespace ToyBox {
         public static Transform EncyclopediaView => ServiceWindow.Find(WidgetPaths.EncyclopediaView);
 
         public static Transform CharacterScreen => ServiceWindow.Find(WidgetPaths.CharacterScreen);
+        public static Transform InventoryScreen => ServiceWindow.Find(WidgetPaths.InventoryScreen);
 
         public static void SetAnchor(this RectTransform transform, double xMin, double xMax, double yMin, double yMax) {
             transform.anchorMin = new Vector2((float)xMin, (float)yMin);
@@ -154,6 +157,17 @@ namespace ToyBox {
             return obj.transform.Find(n).gameObject;
         }
 
+        public static void AddSuffix(this TextMeshProUGUI label, string suffix, char delimiter) {
+            if (suffix != null) {
+                var text = label.text.Split(delimiter).FirstOrDefault().Trim();
+                text += suffix;
+                label.text = text;
+            }
+            // Cleanup modified text if enhanced inventory gets turned off
+            else if (label.text.IndexOf(delimiter) != -1)
+                label.text = label.text.Split('(').FirstOrDefault().Trim();
+
+        }
         public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
         public static LocalizedString Localized(this string key) => new LocalizedString() { Key = key };
 
@@ -163,6 +177,7 @@ namespace ToyBox {
             public virtual string EncyclopediaView => "EncyclopediaView";
 
             public virtual string CharacterScreen => "CharacterInfoView/CharacterScreen";
+            public virtual string InventoryScreen => throw new NotImplementedException(); // If we ever need to support old stuff then put something here
         }
 
         class WidgetPaths_1_1 : WidgetPaths_1_0 {
@@ -180,10 +195,28 @@ namespace ToyBox {
             public override string MythicView => "Background/Windows/MythicInfoPCView";
             public override string EncyclopediaView => "Background/Windows/EncyclopediaPCView";
             public override string CharacterScreen => "Background/Windows/CharacterInfoPCView/CharacterScreen";
-
         }
         class WidgetPaths_2_0 : WidgetPaths_1_4 {
+            public override string InventoryScreen => "Background/Windows/InventoryPCView";
+        }
 
+        public static void OnLoad() {
+            if (UnityModManager.gameVersion.Major == 2) {
+                UIHelpers.WidgetPaths = new WidgetPaths_2_0();
+            }
+            else if (UnityModManager.gameVersion.Major == 1) {
+
+                if (UnityModManager.gameVersion.Minor == 4)
+                    UIHelpers.WidgetPaths = new WidgetPaths_1_4();
+                else if (UnityModManager.gameVersion.Minor == 3)
+                    UIHelpers.WidgetPaths = new WidgetPaths_1_2();
+                else if (UnityModManager.gameVersion.Minor == 2)
+                    UIHelpers.WidgetPaths = new WidgetPaths_1_2();
+                else if (UnityModManager.gameVersion.Minor == 1)
+                    UIHelpers.WidgetPaths = new WidgetPaths_1_1();
+                else
+                    UIHelpers.WidgetPaths = new WidgetPaths_1_0();
+            }
         }
     }
 }
