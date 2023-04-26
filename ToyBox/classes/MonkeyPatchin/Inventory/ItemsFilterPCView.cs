@@ -3,6 +3,7 @@ using Kingmaker.Blueprints.Root;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.MVVM._PCView.Slots;
 using ModKit;
+using Owlcat.Runtime.UI.Controls.Button;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,10 +80,10 @@ namespace ToyBox.Inventory {
             List<string> options = new List<string>();
 
             foreach (var flag in EnumHelper.ValidSorterCategories) {
-                if (Settings.InventoryItemSorterOptions.HasFlag(flag) 
+                if (Settings.InventoryItemSorterOptions.HasFlag(flag)
                     && EnhancedInventory.SorterCategoryMap.TryGetValue(flag, out var entry)
-                    ) { 
-                    (int  index, string text) = entry;
+                   ) {
+                    (int index, string text) = entry;
                     if (text == null) {
                         //Mod.Log($"adding {flag} : {text}");
                         text = LocalizedTexts.Instance.ItemsFilter.GetText((ItemsFilter.SorterType)index);

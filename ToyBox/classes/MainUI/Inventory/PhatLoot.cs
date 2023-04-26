@@ -138,10 +138,20 @@ namespace ToyBox {
             HStack("Enhanced Inventory",
                    1,
                    () => {
-                       if (Toggle("Enable Enhanced Inventory", ref Settings.toggleEnhancedInventory, 300.width()))
-                           EnhancedInventory.RefreshRemappers();
-                       25.space();
-                       Label("Selected features revived from Xenofell's excellent mod".green());
+                       using (VerticalScope()) {
+                           using (HorizontalScope()) {
+                               if (Toggle("Enable Enhanced Inventory", ref Settings.toggleEnhancedInventory, 300.width()))
+                                   EnhancedInventory.RefreshRemappers();
+                               25.space();
+                               Label("Selected features revived from Xenofell's excellent mod".green());
+                           }
+                           using (HorizontalScope()) {
+                               Toggle("Always Keep Search Filter Active", ref Settings.toggleDontClearSearchWhenLoseFocus, 300.width());
+                               25.space();
+                               HelpLabel("When ticked, this keeps your search active when you click to dismiss the Search Bar. This allows you to apply the search to different item categories.\n" + "Untick this if you wish for the standard game behavior where it clears your search".orange());
+                           }
+                           15.space();
+                       }
                    },
                    () => {
                        if (!Settings.toggleEnhancedInventory) return;

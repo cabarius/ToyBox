@@ -699,13 +699,8 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-        [HarmonyPatch(typeof(FogOfWarController))]
+        [HarmonyPatch(typeof(FogOfWarController), "<CollectRevealers>g__CollectUnit|15_0")]
         public static class FogOfWarController_CollectRevealers_CompilerMethod_Patch {
-            [HarmonyTargetMethod]
-            static MethodBase CalculateMethod() {
-                // If it breaks just then the method name might have changed
-                return AccessTools.DeclaredMethod(typeof(FogOfWarController), "<CollectRevealers>g__CollectUnit|15_0");
-            }
             public static void Prefix(UnitEntityData unit) {
                 var revealer = unit.View.SureFogOfWarRevealer();
                 if (settings.fowMultiplier != 1) {
