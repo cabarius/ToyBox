@@ -54,6 +54,7 @@ namespace ToyBox {
                 _modId = modEntry.Info.Id;
 
                 Mod.OnLoad(modEntry);
+                UIHelpers.OnLoad();
                 Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
@@ -98,7 +99,8 @@ namespace ToyBox {
             Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
             Settings.searchText = "";
             Settings.searchLimit = 100;
-            Settings.browserSearchLimit = 25;
+            Mod.ModKitSettings.browserSearchLimit = 25;
+            ModKitSettings.Save();
             BagOfTricks.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();

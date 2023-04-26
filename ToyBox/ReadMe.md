@@ -37,12 +37,16 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.0 (coming soon)
+**ToyBox 1.5.0** ***Experimental Preview***  ** (Build - April 25/2023f)**
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in iventory and vendors by rarity
     * Ability to choose which sort categories
     * Much more useful **SearchFilter Categories** including ones from Enhanced Inventory
     * **Enhanced Spellbook** - gives you search, filtering and more
+    * Fixed compatibility issue with BubbleBuffs
+    * Fixed issue with broken sorters when Enhanced Inventory is turned off
+    * Added item counts it the inventory screen and spell counts to the spellbook when enhanced versions are turned on
 * (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***Narria***) DataViewer views now filter out properties with empty collections
