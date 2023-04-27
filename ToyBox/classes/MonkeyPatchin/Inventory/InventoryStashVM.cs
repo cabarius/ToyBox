@@ -31,7 +31,7 @@ namespace ToyBox.Inventory {
                 var stashHeader = inventoryScreen.Find("Inventory/Stash/StashContainer/StashHeader");
                 var stashHeaderLabel = stashHeader.GetComponent<TextMeshProUGUI>();
                 if (Main.Settings.toggleEnhancedInventory) {
-                    var count = __instance.VisibleCollection.Sum(vm => vm.HasItem ? vm.GetItemsCount() : 0);
+                    var count = __instance.VisibleCollection.Sum(vm => vm.HasItem ? vm.ItemEntity.Count : 0);
                     stashHeaderLabel.AddSuffix($" ({count} items)".size(25), '(');
                 }
                 // Cleanup modified text if enhanced inventory gets turned off
