@@ -123,9 +123,7 @@ namespace ToyBox {
     }
 
     internal class MassLootWindowHandler {
-
         private LootPCView lootPCView;
-
         public MassLootWindowHandler() {
             var loot = MassLootHelper.GetMassLootFromCurrentArea();
             if (!loot.Any()) {
@@ -140,10 +138,8 @@ namespace ToyBox {
                     UnityEngine.Object.DestroyImmediate(buttons[i].gameObject);
                 }
             }
-
             lootPCView.Bind(lootVM);
         }
-
         private void Dispose() {
             lootPCView.Unbind();
             lootPCView.DestroyView();

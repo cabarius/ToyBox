@@ -156,6 +156,7 @@ namespace ToyBox {
                                25.space();
                                Label("Selected features revived from Xenofell's excellent mod".green());
                            }
+
                            using (HorizontalScope()) {
                                Toggle("Always Keep Search Filter Active", ref Settings.toggleDontClearSearchWhenLoseFocus, 300.width());
                                25.space();

@@ -12,6 +12,7 @@ using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
@@ -50,6 +51,8 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using static Kingmaker.Utility.MassLootHelper;
+using Object = UnityEngine.Object;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -456,6 +459,31 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(ref IEnumerable<LootWrapper> __result) {
                 if (!settings.toggleMassLootEverything) return true;
 
+#if true
+                var lootWrapperList = new List<LootWrapper>();
+                foreach (var unitEntityData in Game.Instance.State.Units.All.Where(u => u.IsInGame)
+                                                   .Where(u => u.IsRevealed && u.IsDeadAndHasLoot))
+                    lootWrapperList.Add(new LootWrapper {
+                        Unit = unitEntityData
+                    });
+                var interactionLootParts = Game.Instance.State.Entities.All.Where(e => e.IsInGame)
+                                               .Select(i => i.Get<InteractionLootPart>()).Where(i => i?.Loot != Game.Instance.Player.SharedStash)
+                                               .NotNull();
+                var source = TempList.Get<InteractionLootPart>();
+                foreach (var interactionLootPart in interactionLootParts)
+                    if (interactionLootPart.Owner.IsRevealed && interactionLootPart.Loot.HasLoot &&
+                        (interactionLootPart.LootViewed ||
+                         (interactionLootPart.View is DroppedLoot &&
+                          !(bool)(interactionLootPart.Owner.Get<DroppedLoot.EntityPartBreathOfMoney>() as EntityPart)) ||
+                         (bool)(interactionLootPart.View.GetComponent<SkinnedMeshRenderer>() as Object)))
+                        source.Add(interactionLootPart);
+                var collection = source.Distinct(new LootDuplicateCheck()).Select(i => new LootWrapper {
+                    InteractionLoot = i
+                });
+                lootWrapperList.AddRange(collection);
+                __result = lootWrapperList;
+                return false;
+#else
                 IEnumerable<UnitEntityData> all_units = Game.Instance.State.Units.All;
                 if (settings.toggleLootAliveUnits) {
                     all_units = all_units.Where(unit => unit.IsInGame && unit.HasLoot);
@@ -485,7 +513,7 @@ namespace ToyBox.BagOfPatches {
                 var result_chests = tmp.Distinct(new MassLootHelper.LootDuplicateCheck()).Select(i => new LootWrapper { InteractionLoot = i });
 
                 __result = result_units.Concat(result_chests);
-#if false   
+#if false
                 foreach (var loot in __result) // showing inventories from living enemies makes the items invisible (also they can still be looted with the Get All option)
                 {
                     if (loot.Unit != null)
@@ -495,6 +523,7 @@ namespace ToyBox.BagOfPatches {
                 }
 #endif
                 return false;
+#endif
             }
         }
 
