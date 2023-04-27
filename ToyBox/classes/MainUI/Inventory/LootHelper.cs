@@ -6,6 +6,7 @@ using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Items;
+using Kingmaker.PubSubSystem;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._VM.Loot;
 using Kingmaker.UnitLogic;
@@ -113,13 +114,9 @@ namespace ToyBox {
             }
         }
         public static void OpenMassLoot() {
-            var lootWindow = new MassLootWindowHandler();
+            EventBus.RaiseEvent((Action<ILootInterractionHandler>)(e => e.HandleZoneLootInterraction(null)));
+            //var lootWindow = new MassLootWindowHandler();
         }
-#if false
-        public static void OpenPlayerChest() {
-            var lootWindow = new PlayerChestWindowHandler();
-        }
-#endif
     }
 
     internal class MassLootWindowHandler {
