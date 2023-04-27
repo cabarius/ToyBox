@@ -41,10 +41,13 @@ using ModKit;
 using Owlcat.Runtime.UniRx;
 using System;
 using System.Linq;
+using Kingmaker.Settings.Graphics;
 using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
 using Utilities = Kingmaker.Cheats.Utilities;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
@@ -130,16 +133,18 @@ namespace ToyBox.BagOfPatches {
                     }
                     BlueprintCampaignReference specificCampaign = __instance.Data.SpecificCampaign;
                     BlueprintCampaign blueprintCampaign = ((specificCampaign != null) ? specificCampaign.Get() : null);
-                    __result = (!__instance.Data.OnlyMainCampaign && blueprintCampaign != null
-                        && Game.Instance.Player.Campaign != blueprintCampaign)
-                        || (__instance.Data.MinDifficulty != null
-                        && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0)
-                        || __instance.Data.MinCrusadeDifficulty > SettingsRoot.Difficulty.KingdomDifficulty
-                        || (__instance.Data.IronMan && !SettingsRoot.Difficulty.OnlyOneSave);
+                    __result = (!__instance.Data.OnlyMainCampaign
+                                && blueprintCampaign != null
+                                && Game.Instance.Player.Campaign != blueprintCampaign)
+                               || (__instance.Data.MinDifficulty != null
+                                   && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0)
+                               || __instance.Data.MinCrusadeDifficulty > SettingsRoot.Difficulty.KingdomDifficulty
+                               || (__instance.Data.IronMan && !SettingsRoot.Difficulty.OnlyOneSave);
                     return;
                 }
             }
         }
+
         // Removes the flag that taints the save file of a user who mods their game
         [HarmonyPatch(typeof(Player), nameof(Player.ModsUser), MethodType.Getter)]
         public static class Player_ModsUser_Patch {
@@ -365,14 +370,13 @@ namespace ToyBox.BagOfPatches {
             private const string blueprintTriceratopsStandarGUID = "429171c659daac44689a34d3b7771140";
             private const string blueprintMastodonStandarGUID = "028cc6f46e7998f46855a33ffde89567";
 
-            private static readonly string[] spiderSwarmGuids = new string[]
-            {
+            private static readonly string[] spiderSwarmGuids = new string[] {
                 "a28e944558ed5b64790c3701e8c89d75",
                 "da2f152d19ce4d54e8c17da91f01fabd",
                 "f2327e24765fb6342975b6216bfb307b"
             };
-            private static readonly string[] spiderGuids = new string[]
-            {
+
+            private static readonly string[] spiderGuids = new string[] {
                 "272f71e982166934182d51b4e03e400e",
                 "d95785c3853077a4599e0cbe8874703f",
                 "48f0c472e5cd4beda4afdb1b6c39c344",
@@ -404,30 +408,28 @@ namespace ToyBox.BagOfPatches {
                 "a027b1b189e95c64a9323da021bd7a9a",
             };
 
-            private static readonly string[] vescavorSwarmGuids = new string[]
-             {
-                 "c148c12cb7914a50b2fccc39fa880b73",
-                 "f03d262634c93a340b85c4a93cd0ffe4",
-                 "204a57cdfd30fdc4da930a05f87b5a0b",
-                 "d1add298a78c9744c89c9b4f87df5316",
-                 "39ea2dcdc362421f94643abe52de9aed",
-                 
-                 //Daeran's Other Swarm is considered a vescavor and has this ID - replace this as well?
-                 "0264a9119a0737447a226cdd4ba1f79b"
-             };
-            private static readonly string[] vescavorGuardGuids = new string[]
-            {
+            private static readonly string[] vescavorSwarmGuids = new string[] {
+                "c148c12cb7914a50b2fccc39fa880b73",
+                "f03d262634c93a340b85c4a93cd0ffe4",
+                "204a57cdfd30fdc4da930a05f87b5a0b",
+                "d1add298a78c9744c89c9b4f87df5316",
+                "39ea2dcdc362421f94643abe52de9aed",
+
+                //Daeran's Other Swarm is considered a vescavor and has this ID - replace this as well?
+                "0264a9119a0737447a226cdd4ba1f79b"
+            };
+
+            private static readonly string[] vescavorGuardGuids = new string[] {
                 "17a0d2b9a532ff641bc122778fa80e05",
                 "0413e0164ae24d9d9d78348a186ce375"
             };
-            private static readonly string[] vescavorQueenGuids = new string[]
-            {
+
+            private static readonly string[] vescavorQueenGuids = new string[] {
                 "3d59b2d00f92a244ea887bd74f96dd85",
                 "e3cbfef493c4a3f4fa2abb660ba6aad6"
             };
 
-            private static readonly string[] RetrieverGuids = new string[]
-            {
+            private static readonly string[] RetrieverGuids = new string[] {
                 // Standard Units
                 "5b6a2b0c6c8aa28438a4b65b3afb02c1",
                 "2f79139e8f8f3514d8f751975cca5a29",
@@ -443,8 +445,8 @@ namespace ToyBox.BagOfPatches {
                 // Army Units
                 "b4633d6d8ca7e95479cc156808b0da3e",
             };
-            private static readonly string[] RetrieverAreshkagelGuids = new string[]
-            {
+
+            private static readonly string[] RetrieverAreshkagelGuids = new string[] {
                 // Areshkagel Version
                 "9876513c09509954bb3330dc650fb9ae",
                 "1e4cafbd06b16cb4c9ba27538203a42d"
@@ -504,6 +506,7 @@ namespace ToyBox.BagOfPatches {
                 ModelReplacers.CheckAndReplace(ref unit);
             }
         }
+
         [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), nameof(Kingmaker.Items.Slots.ItemSlot.RemoveItem), new Type[] { typeof(bool), typeof(bool) })]
         private static class ItemSlot_RemoveItem_Patch {
             private static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
@@ -527,7 +530,9 @@ namespace ToyBox.BagOfPatches {
                                     Mod.Debug($"refill {item.m_Blueprint.Name.cyan()}");
                                     __instance.InsertItem(item);
                                 }
-                                catch (Exception e) { Mod.Error($"{e}"); }
+                                catch (Exception e) {
+                                    Mod.Error($"{e}");
+                                }
                             });
                         }
                         __state = null;
@@ -571,10 +576,13 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
+
         // Shift + Click Inventory Tweaks
-        [HarmonyPatch(typeof(CommonVM), nameof(CommonVM.HandleOpen), new Type[] {
-            typeof(CounterWindowType), typeof(ItemEntity), typeof(Action<int>)
-        })]
+        [HarmonyPatch(typeof(CommonVM),
+                      nameof(CommonVM.HandleOpen),
+                      new Type[] {
+                          typeof(CounterWindowType), typeof(ItemEntity), typeof(Action<int>)
+                      })]
         public static class CommonVM_HandleOpen_Patch {
             public static bool Prefix(CounterWindowType type, ItemEntity item, Action<int> command) {
                 if (settings.toggleShiftClickToFastTransfer && UI.KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
@@ -584,6 +592,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
+
         [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
         public static class ItemSlotPCView_OnClick_Patch {
             public static bool Prefix(ItemSlotPCView __instance) {
@@ -594,6 +603,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
+
         [HarmonyPatch(typeof(InventorySlotPCView), nameof(InventorySlotPCView.OnClick))]
         public static class InventorySlotPCView_OnClick_Patch {
             public static bool Prefix(InventorySlotPCView __instance) {
@@ -617,6 +627,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
+
         [HarmonyPatch(typeof(VendorSlotPCView), nameof(VendorSlotPCView.OnClick))]
         public static class VendorSlotPCView_OnClick_Patch {
             public static bool Prefix(VendorSlotPCView __instance) {
@@ -627,6 +638,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
+
         [HarmonyPatch(typeof(LogThreadService), nameof(LogThreadService.OnGameLoaded))]
         public static class LogThreadService_OnGameLoaded_Patch {
             private static void Postfix() {
@@ -640,6 +652,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+
         [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.TryReplaceView))]
         private static class Polymorph_TryReplaceView_Patch {
             private static void Postfix(Polymorph __instance) {
@@ -647,6 +660,7 @@ namespace ToyBox.BagOfPatches {
                 __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
             }
         }
+
         [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.RestoreView))]
         private static class Polymorph_RestoreView_Patch {
             private static void Postfix(Polymorph __instance) {
@@ -654,5 +668,15 @@ namespace ToyBox.BagOfPatches {
                 __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
             }
         }
+#if false
+        [HarmonyPatch(typeof(GraphicsSettingsController))]
+        private static class GraphicsSettingsController_Patch {
+            [HarmonyPatch(nameof(GraphicsSettingsController.SetResolution), new Type[] { typeof(int), typeof(int), typeof(FullScreenMode) })]
+            [HarmonyPostfix]
+            public static void SetResolution(int width, int height, FullScreenMode fullscreenMode, ref IEnumerator __result) {
+                Mod.Log($"SetResolution - width: {width} height: {height} mode: {fullscreenMode}");
+            }
+        }
+#endif
     }
 }

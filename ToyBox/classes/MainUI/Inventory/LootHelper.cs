@@ -6,6 +6,7 @@ using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Items;
+using Kingmaker.PubSubSystem;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._VM.Loot;
 using Kingmaker.UnitLogic;
@@ -88,11 +89,6 @@ namespace ToyBox {
             lootWrapperList.AddRange(collection);
             return (IEnumerable<LootWrapper>)lootWrapperList;
         }
-
-        public static void OpenMassLoot() {
-            var lootWindow = new MassLootWindowHandler();
-        }
-
         public static void ShowAllChestsOnMap(bool hidden = false) {
             var interactionLootParts = Game.Instance.State.MapObjects.All
                 .Where<EntityDataBase>(e => e.IsInGame)
@@ -117,12 +113,14 @@ namespace ToyBox {
                 revealer.RunAction();
             }
         }
+        public static void OpenMassLoot() {
+            EventBus.RaiseEvent((Action<ILootInterractionHandler>)(e => e.HandleZoneLootInterraction(null)));
+            //var lootWindow = new MassLootWindowHandler();
+        }
     }
 
     internal class MassLootWindowHandler {
-
         private LootPCView lootPCView;
-
         public MassLootWindowHandler() {
             var loot = MassLootHelper.GetMassLootFromCurrentArea();
             if (!loot.Any()) {
@@ -137,7 +135,23 @@ namespace ToyBox {
                     UnityEngine.Object.DestroyImmediate(buttons[i].gameObject);
                 }
             }
+            lootPCView.Bind(lootVM);
+        }
+        private void Dispose() {
+            lootPCView.Unbind();
+            lootPCView.DestroyView();
+        }
+    }
+#if false
+    internal class PlayerChestWindowHandler {
 
+        private LootPCView lootPCView;
+
+        public PlayerChestWindowHandler() {
+            var loot = Game.Instance.Player.SharedStash.Items.ToArray;
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, loot, null, new Action(Dispose));
+            lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
+            lootPCView.Initialize();
             lootPCView.Bind(lootVM);
         }
 
@@ -146,4 +160,5 @@ namespace ToyBox {
             lootPCView.DestroyView();
         }
     }
+#endif
 }
