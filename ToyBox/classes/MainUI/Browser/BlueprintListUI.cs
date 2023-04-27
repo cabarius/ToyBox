@@ -1,20 +1,20 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem;
 using Kingmaker.Utility;
 using ModKit;
-using static ModKit.UI;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Items;
 using ModKit.DataViewer;
 using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
@@ -200,7 +200,7 @@ namespace ToyBox {
                         using (HorizontalScope(Width(remWidth))) {
                             ReflectionTreeView.DetailToggle("", blueprint, blueprint, 0);
                             Space(-17);
-                            if (Settings.showAssetIDs) { 
+                            if (Settings.showAssetIDs) {
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
                                 GUILayout.TextField(blueprint.AssetGuid.ToString(), ExpandWidth(false));
                             }
@@ -269,7 +269,7 @@ namespace ToyBox {
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                             }
-                            if (unit.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
+                            if (unit?.Progression.Selections.TryGetValue(selectionBP, out var selectionData) ?? false) {
                                 foreach (var entry in selectionData.SelectionsByLevel) {
                                     foreach (var selection in entry.Value) {
                                         if (needsSelection) {

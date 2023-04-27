@@ -1,9 +1,8 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using Kingmaker.AI.Blueprints;
+using Kingmaker.AI.Blueprints.Considerations;
+using Kingmaker.AreaLogic.Cutscenes;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
@@ -12,30 +11,27 @@ using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Quests;
 using Kingmaker.Craft;
+using Kingmaker.Crusade.GlobalMagic;
+using Kingmaker.DialogSystem.Blueprints;
+using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.Utility;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
-using static ModKit.UI;
-using ModKit.Utility;
-using Kingmaker.DialogSystem.Blueprints;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.ElementsSystem;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.AI.Blueprints.Considerations;
-using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
-using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.Crusade.GlobalMagic;
+using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
@@ -50,6 +46,8 @@ namespace ToyBox {
         public static List<string> collationTitles = null;
         public static int selectedCollationIndex = 0;
         private static bool firstSearch = true;
+        private static bool registered = false;
+        public static bool needsReloadBlueprints = false;
         public static string[] filteredBPNames = null;
         public static int uncolatedMatchCount = 0;
         public static int matchCount = 0;
@@ -212,12 +210,12 @@ namespace ToyBox {
                     var description = blueprint.GetDescription() ?? "";
                     if (terms.All(term => name.Matches(term))
                         || terms.All(term => displayName.Matches(term))
-                        || Settings.searchDescriptions && 
-                            (  terms.All(term => description.Matches(term))
-                            || blueprint is BlueprintItem itemBP 
+                        || Settings.searchDescriptions &&
+                            (terms.All(term => description.Matches(term))
+                            || blueprint is BlueprintItem itemBP
                                 && terms.All(term => {
                                     try {
-                                        return itemBP.FlavorText.Matches(term);                                        
+                                        return itemBP.FlavorText.Matches(term);
                                     } catch (NullReferenceException e) {
                                         return false;
                                     }
@@ -237,11 +235,11 @@ namespace ToyBox {
             uncolatedMatchCount = matchCount;
             if (selectedTypeFilter.collator != null) {
                 collatedBPs = (from bp in filtered
-                    from key in selectedTypeFilter.collator(bp)
-                    //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
-                    group bp by key into g
-                    orderby g.Key.LongSortKey(), g.Key
-                    select g).ToDictionary(g => g.Key, g => g.ToList().Distinct().ToList());
+                               from key in selectedTypeFilter.collator(bp)
+                                   //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
+                               group bp by key into g
+                               orderby g.Key.LongSortKey(), g.Key
+                               select g).ToDictionary(g => g.Key, g => g.ToList().Distinct().ToList());
                 _ = collatedBPs.Count();
                 var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
                 collationKeys = new List<string> { "All" };
@@ -273,9 +271,16 @@ namespace ToyBox {
             BlueprintListUI.needsLayout = true;
         }
         public static void OnGUI() {
-            if (blueprints == null) {
-                blueprints = BlueprintLoader.Shared.GetBlueprints();
-                if (blueprints != null) UpdateSearchResults();
+            if (Event.current.type == EventType.Layout) {
+                if (!registered) {
+                    Mod.NotifyOnShowGUI += () => needsReloadBlueprints = true;
+                    registered = true;
+                }
+                else if (needsReloadBlueprints || blueprints == null) {
+                    needsReloadBlueprints = false;
+                    blueprints = BlueprintLoader.Shared.GetBlueprints();
+                    UpdateSearchResults();
+                }
             }
             // Stackable browser
             using (HorizontalScope(Width(350))) {
