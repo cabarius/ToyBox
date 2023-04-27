@@ -37,7 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.0 (coming soon)
-**ToyBox 1.5.0** ***Experimental Preview***  ** (Build - April 25/2023f)**
+**ToyBox 1.5.0** ***Experimental Preview***  ** (Build - April 27/2023h)**
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in iventory and vendors by rarity
@@ -49,6 +49,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
     * Added item counts it the inventory screen and spell counts to the spellbook when enhanced versions are turned on
     * Inventory - added toggle to let you keep the search active when you dismiss the search bar 
     * Fixed long standing bug where Showing the Mass Loot Window with ToyBox triggered a bug in the game that would cause item loss when interacting with the Player Chest
+    * Added bindable button to show the Shared Party Chest anywhere you want
 * (***Narria***) Added annoation in bio for ToyBox generated alignment shifts
 * (***Narria***) Fixed various crashes that would occur if you brought up the mod in different tabs while launching the game and loading into a save
 * (***Narria***) DataViewer views now filter out properties with empty collections

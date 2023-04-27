@@ -7,10 +7,12 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Items;
 using Kingmaker.PubSubSystem;
+using Kingmaker.UI.MVVM;
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._VM.Loot;
 using Kingmaker.UnitLogic;
 using Kingmaker.Utility;
+using Kingmaker.View;
 using Kingmaker.View.MapObjects;
 using ModKit;
 using Newtonsoft.Json;
@@ -114,51 +116,32 @@ namespace ToyBox {
             }
         }
         public static void OpenMassLoot() {
-            EventBus.RaiseEvent((Action<ILootInterractionHandler>)(e => e.HandleZoneLootInterraction(null)));
-            //var lootWindow = new MassLootWindowHandler();
-        }
-    }
-
-    internal class MassLootWindowHandler {
-        private LootPCView lootPCView;
-        public MassLootWindowHandler() {
+            // Access to LootContextVM
+            var contextVM = RootUIContext.Instance.InGameVM?.StaticPartVM?.LootContextVM;
+            if (contextVM == null) return;
+            // Add new loot...
             var loot = MassLootHelper.GetMassLootFromCurrentArea();
-            if (!loot.Any()) {
-                return;
-            }
-            var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, new Action(Dispose));
-            lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
-            lootPCView.Initialize();
-            var buttons = lootPCView.transform.Find("Window/Inventory/Button").GetComponentsInChildren<OwlcatButton>();
-            if(buttons.Length > 2) {
-                for(int i = 2; i < buttons.Length; i++) {
-                    UnityEngine.Object.DestroyImmediate(buttons[i].gameObject);
-                }
-            }
-            lootPCView.Bind(lootVM);
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, () => contextVM.DisposeAndRemove(contextVM.LootVM));
+
+            // Open window add lootVM int contextVM
+            contextVM.LootVM.Value = lootVM;
+
+            //EventBus.RaiseEvent((Action<ILootInterractionHandler>)(e => e.HandleZoneLootInterraction(null)));
         }
-        private void Dispose() {
-            lootPCView.Unbind();
-            lootPCView.DestroyView();
+        public static void OpenPlayerChest() {
+            // Access to LootContextVM
+            var contextVM = RootUIContext.Instance.InGameVM?.StaticPartVM?.LootContextVM;
+            if (contextVM == null) return;
+            // Add new loot...
+            var objects = new EntityViewBase[] { }; 
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, objects , () => contextVM.DisposeAndRemove(contextVM.LootVM));
+            var sharedStash = Game.Instance.Player.SharedStash;
+            var lootObjectVM = new LootObjectVM("Player Stash", "", sharedStash, LootContextVM.LootWindowMode.PlayerChest, 1);
+            lootVM.ContextLoot.Add(lootObjectVM);
+            lootVM.AddDisposable(lootObjectVM);
+
+            // Open window add lootVM int contextVM
+            contextVM.LootVM.Value = lootVM;
         }
     }
-#if false
-    internal class PlayerChestWindowHandler {
-
-        private LootPCView lootPCView;
-
-        public PlayerChestWindowHandler() {
-            var loot = Game.Instance.Player.SharedStash.Items.ToArray;
-            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, loot, null, new Action(Dispose));
-            lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
-            lootPCView.Initialize();
-            lootPCView.Bind(lootVM);
-        }
-
-        private void Dispose() {
-            lootPCView.Unbind();
-            lootPCView.DestroyView();
-        }
-    }
-#endif
 }
