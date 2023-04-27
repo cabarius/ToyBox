@@ -3,6 +3,7 @@
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.GameModes;
+using Kingmaker.UI.Common;
 using Kingmaker.Utility;
 using ModKit;
 using Owlcat.Runtime.Core.Logging;
@@ -241,7 +242,7 @@ namespace ToyBox {
                     || currentMode == GameModeType.GlobalMap
                     )
                 ) {
-                if (currentMode == GameModeType.GlobalMap) {
+                if (UIUtility.IsGlobalMap()) {
                     if (KeyBindings.IsActive("TeleportParty"))
                         Teleport.TeleportPartyOnGlobalMap();
                 }

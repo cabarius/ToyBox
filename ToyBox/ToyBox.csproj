@@ -171,7 +171,7 @@
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
     <Compile Include="classes\Infrastructure\ItemRarity.cs" />
-    <Compile Include="classes\Infrastructure\LootHelper.cs" />
+    <Compile Include="classes\MainUI\Inventory\LootHelper.cs" />
     <Compile Include="classes\Infrastructure\SettingsDefaults.cs" />
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\UIHelpers.cs" />
@@ -198,6 +198,7 @@
     <Compile Include="classes\MainUI\Inventory\RemappableInt.cs" />
     <Compile Include="classes\MainUI\Inventory\SearchBar.cs" />
     <Compile Include="classes\MainUI\Inventory\EnhancedSpellbookController.cs" />
+    <Compile Include="classes\MainUI\Inventory\WidgetHelpers.cs" />
     <Compile Include="classes\MainUI\PartyEditor\ClassesEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\FeaturesTreeEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\SpellsEditor.cs" />
@@ -309,7 +310,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -157,8 +157,15 @@ namespace ToyBox.classes.MainUI {
                         ValueAdjustorEditable("Mercenary Slots", () => mercenaryManager.MaxAllowedSlots,
                             v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots), 1, 0, 200);
                     },
-                    () => Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth()),
-                    () => DisclosureToggle("Recruitment Pools".Orange(), ref discloseMercenaryUnits),
+                    () => {
+                        using (VerticalScope()) {
+                            Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth());
+                            10.space();
+                            Div();
+                            15.space();
+                        }
+                    },
+                    () => DisclosureToggle("Show Recruitment Pools".Orange(), ref discloseMercenaryUnits),
                     () => {
                         if (discloseMercenaryUnits) {
                             using (VerticalScope()) {

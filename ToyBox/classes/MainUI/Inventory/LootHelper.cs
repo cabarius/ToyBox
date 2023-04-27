@@ -88,11 +88,6 @@ namespace ToyBox {
             lootWrapperList.AddRange(collection);
             return (IEnumerable<LootWrapper>)lootWrapperList;
         }
-
-        public static void OpenMassLoot() {
-            var lootWindow = new MassLootWindowHandler();
-        }
-
         public static void ShowAllChestsOnMap(bool hidden = false) {
             var interactionLootParts = Game.Instance.State.MapObjects.All
                 .Where<EntityDataBase>(e => e.IsInGame)
@@ -117,6 +112,12 @@ namespace ToyBox {
                 revealer.RunAction();
             }
         }
+        public static void OpenMassLoot() {
+            var lootWindow = new MassLootWindowHandler();
+        }
+        public static void OpenPlayerChest() {
+            var lootWindow = new PlayerChestWindowHandler();
+        }
     }
 
     internal class MassLootWindowHandler {
@@ -138,6 +139,23 @@ namespace ToyBox {
                 }
             }
 
+            lootPCView.Bind(lootVM);
+        }
+
+        private void Dispose() {
+            lootPCView.Unbind();
+            lootPCView.DestroyView();
+        }
+    }
+    internal class PlayerChestWindowHandler {
+
+        private LootPCView lootPCView;
+
+        public PlayerChestWindowHandler() {
+            var loot = new List<LootWrapper>();
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, loot, null, new Action(Dispose));
+            lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
+            lootPCView.Initialize();
             lootPCView.Bind(lootVM);
         }
 
