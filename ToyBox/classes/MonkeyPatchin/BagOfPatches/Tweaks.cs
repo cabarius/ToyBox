@@ -459,7 +459,7 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(ref IEnumerable<LootWrapper> __result) {
                 if (!settings.toggleMassLootEverything) return true;
 
-#if true
+#if false
                 var lootWrapperList = new List<LootWrapper>();
                 foreach (var unitEntityData in Game.Instance.State.Units.All.Where(u => u.IsInGame)
                                                    .Where(u => u.IsRevealed && u.IsDeadAndHasLoot))
