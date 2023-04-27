@@ -115,9 +115,11 @@ namespace ToyBox {
         public static void OpenMassLoot() {
             var lootWindow = new MassLootWindowHandler();
         }
+#if false
         public static void OpenPlayerChest() {
             var lootWindow = new PlayerChestWindowHandler();
         }
+#endif
     }
 
     internal class MassLootWindowHandler {
@@ -147,12 +149,13 @@ namespace ToyBox {
             lootPCView.DestroyView();
         }
     }
+#if false
     internal class PlayerChestWindowHandler {
 
         private LootPCView lootPCView;
 
         public PlayerChestWindowHandler() {
-            var loot = new List<LootWrapper>();
+            var loot = Game.Instance.Player.SharedStash.Items.ToArray;
             var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, loot, null, new Action(Dispose));
             lootPCView = Game.Instance.UI.Canvas.transform.Find("NestedCanvas1/LootPCView").GetComponent<LootPCView>();
             lootPCView.Initialize();
@@ -164,4 +167,5 @@ namespace ToyBox {
             lootPCView.DestroyView();
         }
     }
+#endif
 }

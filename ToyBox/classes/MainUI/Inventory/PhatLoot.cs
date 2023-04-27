@@ -18,13 +18,13 @@ namespace ToyBox {
 
         //
         private const string MassLootBox = "Open Mass Loot Window";
-        private const string OpenPlayerChest = "Open Player Chest";
+        //private const string OpenPlayerChest = "Open Player Chest";
 
         public static void ResetGUI() { }
 
         public static void OnLoad() {
             KeyBindings.RegisterAction(MassLootBox, LootHelper.OpenMassLoot);
-            KeyBindings.RegisterAction(OpenPlayerChest, LootHelper.OpenPlayerChest);
+            //KeyBindings.RegisterAction(OpenPlayerChest, LootHelper.OpenPlayerChest);
         }
 
         public static void OnGUI() {
@@ -51,11 +51,13 @@ namespace ToyBox {
                     Space(95 - 150);
                     Label("Lets you open up the area's mass loot screen to grab goodies whenever you want. Normally shown only when you exit the area".green());
                 },
+#if false
                 () => {
                     BindableActionButton(OpenPlayerChest, Width(400));
                     Space(95 - 150);
                     Label("Lets you open up your player storage chest that you find near your bed at the Inn and other places".green());
                 },
+#endif
                 () => {
                     ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), Width(400));
                     Space(150);

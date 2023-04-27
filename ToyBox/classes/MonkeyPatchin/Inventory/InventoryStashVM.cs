@@ -32,7 +32,9 @@ namespace ToyBox.Inventory {
                 var stashHeaderLabel = stashHeader.GetComponent<TextMeshProUGUI>();
                 if (Main.Settings.toggleEnhancedInventory) {
                     var count = __instance.VisibleCollection.Sum(vm => vm.HasItem ? vm.ItemEntity.Count : 0);
+//                    var distinctCount = __instance.VisibleCollection.Count(vm => vm.HasItem);
                     stashHeaderLabel.AddSuffix($" ({count} items)".size(25), '(');
+ //                  stashHeaderLabel.AddSuffix($" ({count}{(count != distinctCount ? $" ({distinctCount})" : "")} items)".size(25), '(');
                 }
                 // Cleanup modified text if enhanced inventory gets turned off
                 else if (stashHeaderLabel.text.IndexOf('(') != -1)
