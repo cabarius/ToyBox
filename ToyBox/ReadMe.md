@@ -62,19 +62,19 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added tweak in Loot Tab to allow you to loot locked items
 * (***Narria***) Added search to inspectors (Data Viewer)
 * (***Narria***) Implemented FeatureSelection and ParameterizedFeature for the new Browser, which means you can now add and remove a lot more things like Racial Herritage, Weapon Focus and Oracle Mystery Selections.
+* (***Narria***) New spiffy UI for editing parameterized feats and feature selections
 * (***Narria***) Fixed various issues with feature selection and parameterized features as well
 * (***Narria***) Fixed some Helper functions.
 * (***Narria***) Added ability to Inspect units in Party Editor (Data Viewer style).
 * (***Narria***) Cleaned up layout of Party Editor for narrow and medium widths.
-* (***Narria***) New spiffy UI for editing parameterized feats and feature selections
 * (***Narria***) Improved UI for Keybindings by allowing you to Clear a Key Binding and Remove Conflicts 
 * (***Narria***) Added marking of search results in Party Editor blueprint views
 * (***Narria***) Added more explainer text to dialog options
 * (***Narria***) **Fixed bug where certain buff durations like Smite Evil were getting set to zero duration**
 * (***Narria***) Added option to output ToyBox commands with keyoard shortcuts to the in game combat log
+* (***ADDB***) Made search run async in Party Editor lists which makes search UI much smoother
 * (***ADDB***) Added All Spells tab to the Party -> Spells Menu.
 * (***ADDB***) Port old Party Editor Browsers (Features, Buffs, Abilities, Spells) to the new Browser UI.
-* (***ADDB***) Made search run async in Party Editor lsits
 * (***ADDB***) Changed Browser to improve performance.
 * (***ADDB***) Fixed belt consumable feature.
 * (***ADDB***) Fixed visual size scaling breaking when using any sort of polymorph.
