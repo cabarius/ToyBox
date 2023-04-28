@@ -10,6 +10,8 @@ using Kingmaker.GameModes;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
 using Kingmaker.PubSubSystem;
+using Kingmaker.RuleSystem.Rules.Damage;
+using Kingmaker.RuleSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Selection;
 using Kingmaker.UnitLogic;
@@ -31,6 +33,21 @@ namespace ToyBox {
     public static class Actions {
         public static Settings settings => Main.Settings;
 
+        public static void RestSelected() {
+            foreach (var selectedUnit in Game.Instance.UI.SelectionManager.SelectedUnits) {
+                if (selectedUnit.Descriptor.State.IsFinallyDead) {
+                    selectedUnit.Descriptor.Resurrect();
+                    selectedUnit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                }
+
+                RestController.ApplyRest(selectedUnit.Descriptor);
+                Rulebook.Trigger(new RuleHealDamage(selectedUnit, selectedUnit, default, selectedUnit.Descriptor.Stats.HitPoints.ModifiedValue));
+                foreach (var attribute in selectedUnit.Stats.Attributes) {
+                    attribute.Damage = 0;
+                    attribute.Drain = 0;
+                }
+            }
+        }
         public static void UnlockAllBasicMythicPaths() {
             // TODO - do this right once I build the etude browser and understand this better
             UnlockAeon();

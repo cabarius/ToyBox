@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace ToyBox.classes.Infrastructure {
-    public static class HumanFriendly {
+    public static class HumanFriendlyStats {
         public static void EnsureFriendlyTypesContainAll() {
             if (Enum.GetValues(typeof(StatType)).Length != StatTypes.Count) {
                 HashSet<int> friendlyTypes = new(StatTypes.Cast<int>().ToList());

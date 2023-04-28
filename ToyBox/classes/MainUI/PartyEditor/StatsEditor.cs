@@ -149,7 +149,7 @@ namespace ToyBox {
             }
             Space(10);
             Div(100, 20, 755);
-            foreach (var obj in HumanFriendly.StatTypes) {
+            foreach (var obj in HumanFriendlyStats.StatTypes) {
                 var statType = (StatType)obj;
                 var modifiableValue = ch.Stats.GetStat(statType);
                 if (modifiableValue == null) {

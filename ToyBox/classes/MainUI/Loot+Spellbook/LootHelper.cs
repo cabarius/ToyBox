@@ -136,10 +136,9 @@ namespace ToyBox {
             var objects = new EntityViewBase[] { }; 
             var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, objects , () => contextVM.DisposeAndRemove(contextVM.LootVM));
             var sharedStash = Game.Instance.Player.SharedStash;
-            var lootObjectVM = new LootObjectVM("Player Stash", "", sharedStash, LootContextVM.LootWindowMode.PlayerChest, 1);
+            var lootObjectVM = new LootObjectVM("Player Chest", "", sharedStash, LootContextVM.LootWindowMode.PlayerChest, 1);
             lootVM.ContextLoot.Add(lootObjectVM);
             lootVM.AddDisposable(lootObjectVM);
-
             // Open window add lootVM int contextVM
             contextVM.LootVM.Value = lootVM;
         }

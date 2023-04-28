@@ -53,7 +53,7 @@ namespace ToyBox {
         public static void OnLoad() {
             // Combat
             KeyBindings.RegisterAction(RestAll, () => CheatsCombat.RestAll());
-            KeyBindings.RegisterAction(RestSelected, () => Cheats.RestSelected());
+            KeyBindings.RegisterAction(RestSelected, () => Actions.RestSelected());
             KeyBindings.RegisterAction(Empowered, () => CheatsCombat.Empowered(""));
             KeyBindings.RegisterAction(FullBuffPlease, () => CheatsCombat.FullBuffPlease(""));
             KeyBindings.RegisterAction(GoddesBuffs, () => CheatsCombat.Iddqd(""));

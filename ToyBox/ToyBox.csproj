@@ -166,13 +166,12 @@
     <Compile Include="classes\CustomEnchantmentStackingFix.cs" />
     <Compile Include="classes\Infrastructure\AssetLoader.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
-    <Compile Include="classes\Infrastructure\Cheats.cs" />
-    <Compile Include="classes\Infrastructure\HumanFriendly.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
-    <Compile Include="classes\Infrastructure\ItemRarity.cs" />
-    <Compile Include="classes\MainUI\Inventory\EnhancedInventory.cs" />
-    <Compile Include="classes\MainUI\Inventory\LootHelper.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\ItemRarity.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\EnhancedInventory.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\LootHelper.cs" />
     <Compile Include="classes\Infrastructure\SettingsDefaults.cs" />
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\Infrastructure\UIHelpers.cs" />
@@ -192,18 +191,18 @@
     <Compile Include="classes\MainUI\Etudes\EtudesEditor.cs" />
     <Compile Include="classes\MainUI\Etudes\EtudeTreeModel.cs" />
     <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
-    <Compile Include="classes\MainUI\Inventory\EnhancedInventoryController.cs" />
-    <Compile Include="classes\MainUI\Inventory\SelectedCharacterObserver.cs" />
-    <Compile Include="classes\MainUI\Inventory\OnAreaLoad.cs" />
-    <Compile Include="classes\MainUI\Inventory\RemappableInt.cs" />
-    <Compile Include="classes\MainUI\Inventory\SearchBar.cs" />
-    <Compile Include="classes\MainUI\Inventory\EnhancedSpellbookController.cs" />
-    <Compile Include="classes\MainUI\Inventory\WidgetHelpers.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\EnhancedInventoryController.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\SelectedCharacterObserver.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\OnAreaLoad.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\RemappableInt.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\SearchBar.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\EnhancedSpellbookController.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\WidgetHelpers.cs" />
     <Compile Include="classes\MainUI\PartyEditor\ClassesEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\FeaturesTreeEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\SpellsEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\StatsEditor.cs" />
-    <Compile Include="classes\MainUI\Inventory\PhatLoot.cs" />
+    <Compile Include="classes\MainUI\Loot+Spellbook\PhatLoot.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintAction.cs" />
@@ -218,7 +217,7 @@
     <Compile Include="classes\MainUI\Main.cs" />
     <Compile Include="classes\MainUI\Browser\SearchAndPick.cs" />
     <Compile Include="classes\MainUI\BagOfTricks.cs" />
-    <Compile Include="classes\MainUI\CharacterPicker.cs" />
+    <Compile Include="classes\Infrastructure\CharacterPicker.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
@@ -311,7 +310,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

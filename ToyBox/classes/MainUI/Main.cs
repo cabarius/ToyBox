@@ -70,7 +70,7 @@ namespace ToyBox {
                 Objects = new List<GameObject>();
                 KeyBindings.OnLoad(modEntry);
                 multiclassMod = new Multiclass.MulticlassMod();
-                HumanFriendly.EnsureFriendlyTypesContainAll();
+                HumanFriendlyStats.EnsureFriendlyTypesContainAll();
                 Mod.logLevel = Settings.loggingLevel;
             }
             catch (Exception e) {
