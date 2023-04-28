@@ -36,8 +36,8 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-### Ver 1.5.0 (coming soon)
-**ToyBox 1.5.0** ***Experimental Preview***  ** (Build - April 27/2023h)**
+### Ver 1.5.1 (coming soon)
+### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in iventory and vendors by rarity
