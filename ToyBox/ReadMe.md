@@ -41,7 +41,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in inventory and vendors by rarity
-    * Ability to choose which sort categories
+    * Ability to choose which sort categories appear in the dropdown
     * Much more useful **SearchFilter Categories** including ones from Enhanced Inventory
     * **Enhanced Spellbook** - gives you search, filtering and more
     * Fixed compatibility issue with BubbleBuffs
