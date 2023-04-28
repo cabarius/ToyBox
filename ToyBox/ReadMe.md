@@ -39,7 +39,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.5.1 (coming soon)
 ### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements
-  * Brought in some bits of ***Xenfell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
+  * Brought in some bits of ***Xenofell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
     * Added the ability to sort items in inventory and vendors by rarity
     * Ability to choose which sort categories appear in the dropdown
     * Much more useful **SearchFilter Categories** including ones from Enhanced Inventory
