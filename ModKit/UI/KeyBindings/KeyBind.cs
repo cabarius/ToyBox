@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace ModKit {
     public static partial class UI {
+        // Contains low level classes that describe a key binding as a KeyCode and modifiers that are associated with an identifier. These can be written out to a file.
         public enum ClickModifier {
             Disabled,
             Shift,

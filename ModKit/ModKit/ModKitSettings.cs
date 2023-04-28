@@ -13,5 +13,6 @@ namespace ModKit {
 
         public int browserSearchLimit = 20;
         public int browserDetailSearchLimit = 10;
+        public bool toggleKeyBindingsOutputToTranscript = true;
     }
 }

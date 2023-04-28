@@ -71,6 +71,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Added marking of search results in Party Editor blueprint views
 * (***Narria***) Added more explainer text to dialog options
 * (***Narria***) **Fixed bug where certain buff durations like Smite Evil were getting set to zero duration**
+* (***Narria***) Added option to output ToyBox commands with keyoard shortcuts to the in game combat log
 * (***ADDB***) Added All Spells tab to the Party -> Spells Menu.
 * (***ADDB***) Port old Party Editor Browsers (Features, Buffs, Abilities, Spells) to the new Browser UI.
 * (***ADDB***) Made search run async.

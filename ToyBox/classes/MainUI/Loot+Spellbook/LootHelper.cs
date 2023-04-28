@@ -116,11 +116,12 @@ namespace ToyBox {
             }
         }
         public static void OpenMassLoot() {
+            var loot = MassLootHelper.GetMassLootFromCurrentArea();
+            if (loot == null || !loot.Any()) return;
             // Access to LootContextVM
             var contextVM = RootUIContext.Instance.InGameVM?.StaticPartVM?.LootContextVM;
             if (contextVM == null) return;
             // Add new loot...
-            var loot = MassLootHelper.GetMassLootFromCurrentArea();
             var lootVM = new LootVM(LootContextVM.LootWindowMode.ZoneExit, loot, null, () => contextVM.DisposeAndRemove(contextVM.LootVM));
 
             // Open window add lootVM int contextVM

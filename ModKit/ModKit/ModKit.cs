@@ -16,8 +16,9 @@ namespace ModKit {
         public static ModEntry modEntry { get; set; } = null;
         public static string modEntryPath { get; set; } = null;
         private static UnityModManager.ModEntry.ModLogger modLogger;
-
         public static LogLevel logLevel = LogLevel.Info;
+        public delegate void UITranscriptLogger(string text);
+        public static UITranscriptLogger InGameTranscriptLogger;
 
         public static void OnLoad(UnityModManager.ModEntry modEntry) {
             modEntry.OnSaveGUI -= OnSaveGUI;

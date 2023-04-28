@@ -70,10 +70,13 @@ namespace ToyBox {
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
             KeyBindings.RegisterAction(ChangWeather, () => CheatsCommon.ChangeWeather(""));
             // Other
-            KeyBindings.RegisterAction(TimeScaleMultToggle, () => {
-                settings.useAlternateTimeScaleMultiplier = !settings.useAlternateTimeScaleMultiplier;
-                Actions.ApplyTimeScale();
-            });
+            KeyBindings.RegisterAction(TimeScaleMultToggle,
+                                       () => {
+                                           settings.useAlternateTimeScaleMultiplier = !settings.useAlternateTimeScaleMultiplier;
+                                           Actions.ApplyTimeScale();
+                                       },
+                                       title => ToggleTranscriptForState(title, settings.useAlternateTimeScaleMultiplier)
+                );
             KeyBindings.RegisterAction(PreviewDialogResults, () => {
                 settings.previewDialogResults = !settings.previewDialogResults;
                 var dialogController = Game.Instance.DialogController;
@@ -81,7 +84,10 @@ namespace ToyBox {
             KeyBindings.RegisterAction(ResetAdditionalCameraAngles, () => {
                 Main.resetExtraCameraAngles = true;
             });
-            KeyBindings.RegisterAction(ToggleMurderHobo, () => settings.togglekillOnEngage = !settings.togglekillOnEngage);
+            KeyBindings.RegisterAction(ToggleMurderHobo, 
+                                       () => settings.togglekillOnEngage = !settings.togglekillOnEngage,
+                                       title => ToggleTranscriptForState(title, settings.togglekillOnEngage)
+                                       );
         }
         public static void ResetGUI() { }
         public static void OnGUI() {
@@ -138,16 +144,25 @@ namespace ToyBox {
                 () => BindableActionButton(KillAllEnemies),
                 //() => UI.BindableActionButton(SummonZoo),
                 () => BindableActionButton(LobotomizeAllEnemies),
+                () => {},
                 () => {
-                    using (HorizontalScope()) {
-                        using (VerticalScope(220.width())) {
-                            using (HorizontalScope()) {
-                                Toggle($"Be a {"Murder".red().bold()} Hobo".orange(), ref settings.togglekillOnEngage,222.width());
-                                KeyBindPicker(ToggleMurderHobo, "", 50);
+                    using (VerticalScope()) {
+                        using (HorizontalScope()) {
+                            using (VerticalScope(220.width())) {
+                                using (HorizontalScope()) {
+                                    Toggle($"Be a {"Murder".red().bold()} Hobo".orange(), ref settings.togglekillOnEngage, 222.width());
+                                    KeyBindPicker(ToggleMurderHobo, "", 50);
+                                }
                             }
+                            153.space();
+                            Label($"If ticked, this will {"MURDER".red().bold()} all who dare to enage you!".green(), AutoWidth());
                         }
-                        50.space();
-                        Label($"If ticked, this will {"MURDER".red().bold()} all who dare to enage you!)".green(), AutoWidth());
+                        using (HorizontalScope()) {
+                            if (Toggle("Log ToyBox Keyboard Commands In Game", ref Mod.ModKitSettings.toggleKeyBindingsOutputToTranscript, 450.width()))
+                                ModKitSettings.Save();
+                            50.space();
+                            HelpLabel("When ticked this shows ToyBox commands in the combat log which is helpful for you to know when you used the shortcut");
+                        }
                     }
                 }
                 );

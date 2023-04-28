@@ -11,12 +11,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Kingmaker.UI.Models.Log;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using ToyBox.Multiclass;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
+using UnityEngine.UI.Extensions;
 
 namespace ToyBox {
 #if DEBUG
@@ -72,6 +76,13 @@ namespace ToyBox {
                 multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendlyStats.EnsureFriendlyTypesContainAll();
                 Mod.logLevel = Settings.loggingLevel;
+                Mod.InGameTranscriptLogger = text => {
+                    Mod.Log("CombatLog - " + text);
+                    var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, PrefixIcon.RightArrow);
+
+                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].First(x => x is MessageLogThread);
+                    messageLog.AddMessage(message);
+                };
             }
             catch (Exception e) {
                 Mod.Error(e);

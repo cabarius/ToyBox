@@ -10,16 +10,24 @@ namespace ModKit {
         public static IEnumerable<string> Conflicts(this KeyBind keyBind) => KeyBindings.conflicts
             .GetValueOrDefault(keyBind.bindCode, new List<string> { }).Where(id => id != keyBind.ID);
         public static void RemoveConflicts(this KeyBind keyBind) => KeyBindings.RemoveConflicts(keyBind);
-
+        public static string ToggleTranscriptForState(string identifier, bool state) 
+            => $"Toggle: {identifier.bold()} -> {(state ? "True".blue() : "False".red())}";
+        // This maintains the association of actions and KeyBinds associate with a specific identifier. Since we can not persist the action we persist the keybind and the client needs to register the action with the identifier each time the mod is initialized. This also contains logic to detect conflicts.  
+        // NOTE: This also provides an OnUpdate call and any client of this must manually call it during an OnUpdate block in their mod for KeyBindings to function correctly
         public static class KeyBindings {
             private static ModEntry modEntry = null;
             private static SerializableDictionary<string, KeyBind> bindings = null;
-            private static readonly Dictionary<string, Action> actions = new() { };
+            private static readonly Dictionary<string, (Action action, Func<string,string> description)> actions = new() { };
             internal static Dictionary<string, List<string>> conflicts = new() { };
             internal static bool BindingsDidChange = false;
             public static bool IsActive(string identifier) => GetBinding(identifier).IsActive;
-            public static Action GetAction(string identifier) => actions.GetValueOrDefault(identifier, null);
-            public static void RegisterAction(string identifier, Action action) => actions[identifier] = action;
+            public static (Action action, Func<string, string> description)? GetAction(string identifier) {
+                if (actions.ContainsKey(identifier))
+                    return actions[identifier];
+                return null;
+            }
+            public static void RegisterAction(string identifier, Action action, Func<string, string> description = null) 
+                => actions[identifier] = (action, description);
             internal static KeyBind GetBinding(string identifier) {
                 BindingsDidChange = true;
                 return bindings.GetValueOrDefault(identifier, new KeyBind(identifier));
@@ -98,9 +106,11 @@ namespace ModKit {
                         if (binding != lastTriggered) {
                             //if (debugKeyBind)
                             //    Logger.Log($"    firing action: {identifier}".cyan());
-                            actions.TryGetValue(identifier, out var action);
-                            action();
+                            actions.TryGetValue(identifier, out var entry);
+                            entry.action();
                             lastTriggered = binding;
+                            if (!Mod.ModKitSettings.toggleKeyBindingsOutputToTranscript) continue;
+                            Mod.InGameTranscriptLogger?.Invoke(entry.description != null ? entry.description(identifier) : $"Action " + identifier.blue());
                         }
                     }
                 }
