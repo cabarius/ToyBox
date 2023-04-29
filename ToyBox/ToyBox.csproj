@@ -252,11 +252,11 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs" />
     <Compile Include="classes\MonkeyPatchin\Braaainz.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
-    <Compile Include="classes\MonkeyPatchin\Inventory\InventoryStashVM.cs" />
-    <Compile Include="classes\MonkeyPatchin\Inventory\ItemsFilter.cs" />
-    <Compile Include="classes\MonkeyPatchin\Inventory\ItemsFilterPCView.cs" />
-    <Compile Include="classes\MonkeyPatchin\Inventory\ItemsFilterSearchPCView.cs" />
-    <Compile Include="classes\MonkeyPatchin\Inventory\Loot.cs" />
+    <Compile Include="classes\MonkeyPatchin\Loot+Spellbook\InventoryStashVM.cs" />
+    <Compile Include="classes\MonkeyPatchin\Loot+Spellbook\ItemsFilter.cs" />
+    <Compile Include="classes\MonkeyPatchin\Loot+Spellbook\ItemsFilterPCView.cs" />
+    <Compile Include="classes\MonkeyPatchin\Loot+Spellbook\ItemsFilterSearchPCView.cs" />
+    <Compile Include="classes\MonkeyPatchin\Loot+Spellbook\Loot.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\Archetypes.cs" />
@@ -310,7 +310,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
