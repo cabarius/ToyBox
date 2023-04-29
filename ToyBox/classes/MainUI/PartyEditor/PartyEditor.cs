@@ -146,6 +146,7 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)) {
+                        var oldEditState = nameEditState;
                         if (isWide) {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
                                 ch.Descriptor.CustomName = name;
@@ -156,6 +157,9 @@ namespace ToyBox {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
                             ch.Descriptor.CustomName = name;
                             Main.SetNeedsResetGameUI();
+                        }
+                        if (nameEditState != oldEditState) {
+                            Mod.Log($"EditState changed: {oldEditState} -> {nameEditState}");
                         }
                     }
                     else {

@@ -52,14 +52,16 @@ namespace ModKit {
             var changed = false;
             if (editState.Item1 != label) {
                 using (HorizontalScope(options.AddDefaults())) {
-                    label = formatter != null ? formatter(label) : label;
-                    Label(label, style, AutoWidth());
+                    var formattedLabel = formatter != null ? formatter(label) : label;
+                    Label(formattedLabel, style, AutoWidth());
                     Space(5);
                     if (GL.Button(Glyphs.Edit, GUI.skin.box, AutoWidth())) {
                         editState = (label, label);
+                        Mod.Log($"Edit: {editState}");
                     }
                 }
-            } else {
+            }
+            else {
                 GUI.SetNextControlName(label);
                 using (HorizontalScope(options)) {
                     TextField(ref editState.Item2, null, MinWidth(minWidth), AutoWidth());
