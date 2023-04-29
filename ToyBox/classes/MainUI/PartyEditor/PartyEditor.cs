@@ -84,8 +84,8 @@ namespace ToyBox {
                 Space(25);
 
             }
-//            else
-//                Space(178);
+            //            else
+            //                Space(178);
             if (RespecHelper.GetRespecableUnits().Contains(ch)) {
                 respecableCount++;
                 ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, Width(150));
@@ -133,7 +133,7 @@ namespace ToyBox {
                 }
             }
             List<Action> todo = new();
-            foreach (var ch in characterList) {
+            foreach (var ch in characterList.ToList()) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
                 var progression = ch.Descriptor.Progression;
@@ -214,7 +214,7 @@ namespace ToyBox {
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
-                    if (DisclosureToggle("Stats", ref showStats,95)) {
+                    if (DisclosureToggle("Stats", ref showStats, 95)) {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
@@ -240,13 +240,13 @@ namespace ToyBox {
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
-                    if (DisclosureToggle($"{spellCount} Spells", ref showSpells,150)) {
+                    if (DisclosureToggle($"{spellCount} Spells", ref showSpells, 150)) {
                         if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
                     ReflectionTreeView.DetailToggle("Ins", ch, ch, 75);
-                    Wrap(!isWide, NarrowIndent - 20); 
+                    Wrap(!isWide, NarrowIndent - 20);
                     ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {
                         selectedSpellbook = 0;
