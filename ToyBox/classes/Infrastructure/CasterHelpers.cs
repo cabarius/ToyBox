@@ -189,10 +189,14 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static IEnumerable<ClassData> MergableClasses(this UnitEntityData unit) {
-            var spellbookCandidates = unit.Spellbooks.Where(sb => sb.IsStandaloneMythic
-                                                                   && sb.Blueprint.CharacterClass != null
-                                                                   ).Select(sb => sb.Blueprint).ToHashSet();
-            return unit.Progression.Classes.Where(cl => cl.Spellbook != null && spellbookCandidates.Contains(cl.Spellbook));
+            var spellbookCandidates = unit.Spellbooks
+                                          .Where(sb => sb.IsStandaloneMythic && sb.Blueprint.CharacterClass != null)
+                                          .Select(sb => sb.Blueprint).ToHashSet();
+            Mod.Log($"{unit.CharacterName} - spellbookCandidates: {string.Join(", ", spellbookCandidates.Select(sb => sb.DisplayName))}");
+            var classCandidates = unit.Progression.Classes
+                                      .Where(cl => cl.Spellbook != null && spellbookCandidates.Contains(cl.Spellbook));
+            Mod.Log($"{unit.CharacterName} - classCandidates: {string.Join(", ", classCandidates.Select(cl => cl.CharacterClass.Name))}");
+            return classCandidates;
         }
         public static void MergeMythicSpellbook(this Spellbook targetSpellbook, ClassData fromClass) {
             var unit = targetSpellbook.Owner;
@@ -210,16 +214,16 @@ namespace ToyBox.classes.Infrastructure {
             }
             unit.DeleteSpellbook(oldMythicSpellbookBp);
         }
-        private static Dictionary<int, List<BlueprintAbility>> AllSpellsCache = new();
+        private static readonly Dictionary<int, List<BlueprintAbility>> AllSpellsCache = new();
         public static List<BlueprintAbility> GetAllSpells(int level) {
             if (AllSpellsCache.TryGetValue(level, out var spells)) {
                 return spells;
             }
             else {
                 if (level == -1) {
-                    var abilites = BlueprintExtensions.GetBlueprints<BlueprintAbility>();
+                    var abilities = BlueprintExtensions.GetBlueprints<BlueprintAbility>();
                     spells = new List<BlueprintAbility>();
-                    foreach (var ability in abilites) {
+                    foreach (var ability in abilities) {
                         if (ability.IsSpell) {
                             spells.Add(ability);
                         }

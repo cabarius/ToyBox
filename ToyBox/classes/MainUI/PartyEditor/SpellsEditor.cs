@@ -39,10 +39,10 @@ namespace ToyBox {
                     DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
                     Space(-50);
                     var mergeableClasses = ch.MergableClasses().ToList();
-                    if (spellbook.IsStandaloneMythic || mergeableClasses.Any()) {
-                        Label($"Merge Mythic".cyan(), AutoWidth());
+                    if (spellbook.IsStandaloneMythic || mergeableClasses.Count() == 0) {
+                        Label($"Mythic Merging".cyan(), AutoWidth());
                         25.space();
-                        Label("When you get standalone mythic spellbooks you can merge them here.".green());
+                        Label("When you get standalone mythic spellbooks you can merge them here by select.".green());
                     }
                     else {
                         Label($"Merge Mythic:".cyan(), 175.width());

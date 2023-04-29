@@ -37,6 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.1 (coming soon)
+* (***Narria***) Fixed regression that made it impossible to use the spellbook merge feature
 ### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenofell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
