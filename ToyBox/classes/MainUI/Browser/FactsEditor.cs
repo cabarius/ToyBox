@@ -190,8 +190,9 @@ namespace ToyBox {
                                         if (selectionEntry != null) {
                                             var level = selectionEntry.level;
                                             Space(-25);
-                                            using (VerticalScope(100)) {
-                                                using (HorizontalScope(100)) {
+                                            using (VerticalScope(125)) {
+                                                using (HorizontalScope(125)) {
+                                                    Label("sel lvl", 50.width());
                                                     if (ValueAdjuster(ref level, 1, 0, 20, false)) {
                                                         ch.RemoveFeatureSelection(featureSelection,
                                                             selectionEntry.data,
