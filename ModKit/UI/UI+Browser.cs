@@ -82,12 +82,12 @@ namespace ModKit {
             private bool _finishedSearch = false;
             public bool isSearching = false;
             public bool startedLoadingAvailable = false;
-            private readonly bool _availableIsStatic;
+            public bool availableIsStatic { get; private set; }
             private List<Definition> _availableCache;
             public void OnShowGUI() => needsReloadData = true;
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false) {
                 SearchAsYouType = searchAsYouType;
-                _availableIsStatic = availableIsStatic;
+                this.availableIsStatic = availableIsStatic;
                 IsDetailBrowser = isDetailBrowser;
                 Mod.NotifyOnShowGUI += OnShowGUI;
             }
@@ -218,13 +218,13 @@ namespace ModKit {
                         if (_availableCache?.Count() > 0) {
                             startedLoadingAvailable = false;
                             needsReloadData = true;
-                            if (!_availableIsStatic) {
+                            if (!availableIsStatic) {
                                 _availableCache = null;
                             }
                         }
                     }
                     if (_finishedSearch || isSearching) {
-                        bool nothingToSearch = (!ShowAll && current.Count() == 0) || (ShowAll && (_availableIsStatic ? _availableCache : available()).Count() == 0);
+                        bool nothingToSearch = (!ShowAll && current.Count() == 0) || (ShowAll && (availableIsStatic ? _availableCache : available()).Count() == 0);
                         // If the search has at least one result
                         if ((cachedSearchResults.Count > 0 || nothingToSearch) && (_searchQueryChanged || _finishedSearch)) {
                             if (_finishedSearch && !_searchQueryChanged) {
@@ -258,7 +258,7 @@ namespace ModKit {
                             if (startedLoadingAvailable) {
                                 definitions = _currentDict.Keys.ToList();
                             }
-                            else if (_availableIsStatic) {
+                            else if (availableIsStatic) {
                                 definitions = _availableCache;
                             }
                             else {

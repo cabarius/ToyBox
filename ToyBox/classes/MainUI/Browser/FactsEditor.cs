@@ -145,8 +145,8 @@ namespace ToyBox {
                     fact,
                     GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
-                    (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
-                    GetTitle,
+                    (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""), 
+                    GetSortKey,
                     () => {
                         using (HorizontalScope()) {
                             var reloadData = false;
@@ -275,7 +275,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
             var featureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
             if (featureBrowser == null) {
-                featureBrowser = new Browser<Feature, BlueprintFeature>();
+                featureBrowser = new Browser<Feature, BlueprintFeature>(true, true) {};
                 FeatureBrowserDict[ch] = featureBrowser;
             }
             return OnGUI(ch, featureBrowser, feature, "Features");
@@ -283,7 +283,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
             var buffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
             if (buffBrowser == null) {
-                buffBrowser = new Browser<Buff, BlueprintBuff>();
+                buffBrowser = new Browser<Buff, BlueprintBuff>(true, true);
                 BuffBrowserDict[ch] = buffBrowser;
             }
             return OnGUI(ch, buffBrowser, buff, "Buffs");
@@ -291,7 +291,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
             var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
             if (abilityBrowser == null) {
-                abilityBrowser = new Browser<Ability, BlueprintAbility>();
+                abilityBrowser = new Browser<Ability, BlueprintAbility>(true, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
             return OnGUI(ch, abilityBrowser, ability, "Abilities");

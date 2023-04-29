@@ -97,6 +97,28 @@ namespace ToyBox {
             }
             return name.StripHTML(); // can we get rid of this?
         }
+        public static string GetSortKey(SimpleBlueprint blueprint) {
+            if (blueprint is IUIDataProvider uiDataProvider) {
+                string name;
+                var isEmpty = uiDataProvider.Name.IsNullOrEmpty();
+                if (isEmpty) {
+                    name = blueprint.name;
+                }
+                else {
+                    if (blueprint is BlueprintSpellbook spellbook)
+                        return $"{spellbook.Name} - {spellbook.name}";
+                    name = uiDataProvider.Name;
+                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                        name = blueprint.name;
+                    }
+                    else if (Settings.showDisplayAndInternalNames) {
+                        name += blueprint.name;
+                    }
+                }
+                return name;
+            }
+            return blueprint.name;
+        }
         public static IEnumerable<string> Attributes(this SimpleBlueprint bp) {
             List<string> modifiers = new();
             if (BadList.Contains(bp.AssetGuid)) return modifiers;
