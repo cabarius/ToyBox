@@ -38,12 +38,14 @@ using Kingmaker.Utility;
 using Kingmaker.UI.MVVM._VM.Party;
 using Kingmaker.View.MapObjects;
 using Owlcat.Runtime.Core.Utils;
+using Kingmaker.Blueprints.Items;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
+        // Highlight copyable scolls
         [HarmonyPatch(typeof(LootSlotPCView), nameof(LootSlotPCView.BindViewImplementation))]
         private static class ItemSlot_IsUsable_Patch {
             public static void Postfix(ViewBase<ItemSlotVM> __instance) {
@@ -60,6 +62,7 @@ namespace ToyBox.Inventory {
             }
         }
 
+        // Adds Rarity color circles to items in inventory
         [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), nameof(ItemSlotView<EquipSlotVM>.RefreshItem))]
         private static class ItemSlotView_RefreshItem_Patch {
             public static void Postfix(InventoryEquipSlotView __instance) {
@@ -101,6 +104,7 @@ namespace ToyBox.Inventory {
             }
         }
 
+        // Adds Rarity tags/colors to item names
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
         private static class ItemEntity_Name_Patch {
             public static void Postfix(ItemEntity __instance, ref string __result) {
@@ -110,6 +114,13 @@ namespace ToyBox.Inventory {
                     if (rarity < Settings.minRarityToColor) return;
                     if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic && rarity < RarityType.Uncommon) return;
                     if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic && rarity < RarityType.Uncommon) return;
+                    if (bp is BlueprintItem bpItem && bpItem.NameForAcronym.Contains("Domino")) {
+                        if (Settings.toggleColorLootByRarity)
+                            __result = __result.Rarity(rarity);
+                        __result = __result + $"\n[Puzzle Piece: {bpItem.NameForAcronym.Replace("Domino", "")}]".bold().sizePercent(75);
+                        return;
+
+                    }
                     var result = __result.RarityInGame(rarity);
                     //Main.Log($"ItemEntity_Name_Patch - Name: {__result} type:{__instance.GetType().FullName} - {rarity.ToString()} -> {result}");
                     __result = result;
@@ -120,7 +131,7 @@ namespace ToyBox.Inventory {
         internal static Color ColoredLootBackgroundColor = new(1f, 1f, 1f, 0.25f);
         internal static Color ColoredEquipSlotBackgroundColor = new(1f, 1f, 1f, 0.45f);
 
-
+        // Modifies inventory slot background to work with rarity coloring
         [HarmonyPatch(typeof(InventoryPCView), nameof(InventoryPCView.BindViewImplementation))]
         private static class InventoryPCView_BindViewImplementation_Patch {
             public static void Postfix(InventoryPCView __instance) {
@@ -134,6 +145,7 @@ namespace ToyBox.Inventory {
             }
         }
 
+        // Modifies equipment slot background to work with rarity coloring
         [HarmonyPatch(typeof(InventoryEquipSlotPCView), nameof(InventoryEquipSlotPCView.BindViewImplementation))]
         private static class InventoryEquipSlotPCView_BindViewImplementation_Patch {
             public static void Postfix(InventoryEquipSlotPCView __instance) {
@@ -147,6 +159,7 @@ namespace ToyBox.Inventory {
             }
         }
 
+        // modifies weapon slot backgrounds to work with rarity coloring
         [HarmonyPatch(typeof(WeaponSetPCView), nameof(WeaponSetPCView.BindViewImplementation))]
         private static class WeaponSetPCView_BindViewImplementation_Patch {
             public static void Postfix(WeaponSetPCView __instance) {
@@ -160,6 +173,7 @@ namespace ToyBox.Inventory {
             }
         }
 
+        // modifies slot backgrounds in chests and such to work with rarity coloring
         [HarmonyPatch(typeof(LootCollectorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class LootCollectorPCView_BindViewImplementation_Patch {
             public static void Postfix(LootCollectorPCView __instance) {
@@ -172,6 +186,7 @@ namespace ToyBox.Inventory {
             }
         }
 
+        // modify vender slot backgrounds to work with rarity coloring
         [HarmonyPatch(typeof(VendorPCView), nameof(VendorPCView.BindViewImplementation))]
         private static class VendorPCView_BindViewImplementation_Patch {
             public static void Postfix(VendorPCView __instance) {
@@ -187,6 +202,7 @@ namespace ToyBox.Inventory {
             }
         }
 
+        // modifies tooltip title background color
         [HarmonyPatch(typeof(TooltipBrickEntityHeaderView), nameof(TooltipBrickEntityHeaderView.BindViewImplementation))]
         private static class TooltipBrickEntityHeaderView_BindViewImplementation_Patch {
             public static void Postfix(TooltipBrickEntityHeaderView __instance) {

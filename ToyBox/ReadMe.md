@@ -37,6 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.1 (coming soon)
+* (***Narria***) Added puzzle piece tags to the puzzle piece to identify the puzzle and the 2 symbols as a pair of numbers formated like this [Puzzle Piece: Purple2x3]. This should make it easier to identify and track the pieces in your inventory. I am looking into adding tool tips to the puzzle interactors to show the numbers too
 * (***Narria***) Fixed regression that made it impossible to use the spellbook merge feature
 * (***Narria***) Fixed regression in character name editing
 * (***Narria***) Made Selection Level a little more clear in FeatureSelection detail lists
