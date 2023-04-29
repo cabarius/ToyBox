@@ -192,10 +192,10 @@ namespace ToyBox.classes.Infrastructure {
             var spellbookCandidates = unit.Spellbooks
                                           .Where(sb => sb.IsStandaloneMythic && sb.Blueprint.CharacterClass != null)
                                           .Select(sb => sb.Blueprint).ToHashSet();
-            Mod.Log($"{unit.CharacterName} - spellbookCandidates: {string.Join(", ", spellbookCandidates.Select(sb => sb.DisplayName))}");
+            //Mod.Log($"{unit.CharacterName} - spellbookCandidates: {string.Join(", ", spellbookCandidates.Select(sb => sb.DisplayName))}");
             var classCandidates = unit.Progression.Classes
                                       .Where(cl => cl.Spellbook != null && spellbookCandidates.Contains(cl.Spellbook));
-            Mod.Log($"{unit.CharacterName} - classCandidates: {string.Join(", ", classCandidates.Select(cl => cl.CharacterClass.Name))}");
+            //Mod.Log($"{unit.CharacterName} - classCandidates: {string.Join(", ", classCandidates.Select(cl => cl.CharacterClass.Name))}");
             return classCandidates;
         }
         public static void MergeMythicSpellbook(this Spellbook targetSpellbook, ClassData fromClass) {
