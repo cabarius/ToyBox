@@ -46,6 +46,8 @@ namespace ToyBox {
                 foreach (var blueprint in simpleBlueprints) {
                     var actions = blueprint.GetActions();
                     if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
+                    
+                    // FIXME - perf bottleneck 
                     var actionCount = actions.Sum(action => action.canPerform(blueprint, unit) ? 1 : 0);
                     maxActions = Math.Max(actionCount, maxActions);
                 }
@@ -84,6 +86,7 @@ namespace ToyBox {
                     var displayName = blueprint.GetDisplayName();
                     string title;
                     if (Settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
+                        // FIXME - horrible perf bottleneck 
                         if (titles.Contains("Remove") || titles.Contains("Lock")) {
                             title = displayName.cyan().bold();
                         }
@@ -93,6 +96,7 @@ namespace ToyBox {
                         title = $"{title} : {name.color(RGBA.darkgrey)}";
                     }
                     else {
+                        // FIXME - horrible perf bottleneck 
                         if (titles.Contains("Remove") || titles.Contains("Lock")) {
                             title = name.cyan().bold();
                         }
@@ -103,7 +107,11 @@ namespace ToyBox {
                     titleWidth = (remainingWidth / (IsWide ? 3 : 4)) - indent;
                     Label(title.MarkedSubstring(Settings.searchText), Width(titleWidth));
                     remWidth -= titleWidth;
+
+                    // FIXME - perf bottleneck 
                     var actionCount = actions != null ? actions.Count() : 0;
+
+                    // FIXME - perf bottleneck 
                     var lockIndex = titles.IndexOf("Lock");
                     if (blueprint is BlueprintUnlockableFlag flagBP) {
                         // special case this for now
@@ -122,6 +130,7 @@ namespace ToyBox {
 #endif
                         }
                         else {
+                            // FIXME - perf bottleneck 
                             var unlockIndex = titles.IndexOf("Unlock");
                             if (unlockIndex >= 0) {
                                 var unlockAction = actions.ElementAt(unlockIndex);
