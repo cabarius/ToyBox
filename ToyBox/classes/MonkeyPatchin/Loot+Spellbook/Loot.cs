@@ -39,6 +39,8 @@ using Kingmaker.UI.MVVM._VM.Party;
 using Kingmaker.View.MapObjects;
 using Owlcat.Runtime.Core.Utils;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.BundlesLoading;
+using System.IO;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
@@ -283,6 +285,29 @@ namespace ToyBox.Inventory {
                 }
 #endif
                 return false;
+            }
+        }
+        [HarmonyPatch(typeof(BundlesLoadService), nameof(BundlesLoadService.RequestBundle))]
+        static class TexturePatchForNarria
+        {
+            const string BundleName = "dungeons_areshkagal.worldtex";
+            const string texture_purple = "areshkagal_puzzle_cian_d";
+            const string texture_purple_dark = "areshkagal_puzzle_cian_dark_d";
+            static void Postfix(ref AssetBundle __result)
+            {
+                if (!__result.name.Contains(BundleName)) return;
+                Mod.Log($"Found Asset Bundle named {BundleName}.");
+                Texture2D[] textures = __result.LoadAllAssets<Texture2D>();
+                Texture2D[] matches = textures.Where(t => t.name.Equals(texture_purple)).ToArray();
+                Mod.Log($"Found {matches.Length} textures of name {texture_purple}");
+                var pathBase = Mod.modEntryPath 
+                           + Path.DirectorySeparatorChar + "Art" 
+                           + Path.DirectorySeparatorChar + "Texture2D" 
+                           + Path.DirectorySeparatorChar;
+                matches.ForEach(t => t.LoadImage(File.ReadAllBytes(pathBase + texture_purple + ".png")));
+                Texture2D[] cians_dark = textures.Where(t => t.name.Equals(texture_purple_dark)).ToArray();
+                Mod.Log($"Found {cians_dark.Length} textures of name {texture_purple_dark}");
+                cians_dark.ForEach(t => t.LoadImage(File.ReadAllBytes(pathBase + texture_purple_dark + ".png")));
             }
         }
     }
