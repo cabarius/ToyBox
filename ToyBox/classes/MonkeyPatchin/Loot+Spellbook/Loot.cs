@@ -43,6 +43,9 @@ using Kingmaker.BundlesLoading;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
+using Kingmaker.EntitySystem.Persistence.Scenes;
+using Kingmaker.EntitySystem;
+using Kingmaker.Modding;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
@@ -296,6 +299,66 @@ namespace ToyBox.Inventory {
                 return false;
             }
         }
+        [HarmonyPatch(typeof(SceneLoader), nameof(SceneLoader.MatchStateWithScene))]
+        static class SceneLoader_MatchStateWithScene_Patch
+        {
+            const string BundleName = "dungeons_areshkagal.worldtex";
+            static readonly HashSet<string> areshKagalNames = new HashSet<string> {
+                "areshkagal_puzzle_cian_d", "areshkagal_puzzle_cian_dark_d",
+                "areshkagal_puzzle_green_d", "areshkagal_puzzle_green_dark_d",
+                "areshkagal_puzzle_purple_d", "areshkagal_puzzle_purple_dark_d",
+                "areshkagal_puzzle_red_d", "areshkagal_puzzle_red_dark_d",
+                "areshkagal_puzzle_yellow_d", "areshkagal_puzzle_yellow_dark_d"
+            };
+
+            static void Prefix(SceneEntitiesState state) {
+                Mod.Debug("SceneLoader_MatchStateWithScene_Patch");
+                string sceneName = state.SceneName;
+                Mod.Debug(sceneName);
+                string bundleName = BundledSceneLoader.GetBundleName(sceneName);
+                DependencyData dependency = OwlcatModificationsManager.Instance.GetDependenciesForBundle(bundleName) ?? BundlesLoadService.Instance.m_DependencyData;
+                dependency.BundleToDependencies.TryGetValue(bundleName, out var list);
+                Mod.Debug((list.Any(d => d.Equals(bundleName))).ToString());
+
+
+                if (!Settings.togglePuzzleRelief) return;
+                string[] s = state.SceneName.Split('_');
+                if (   !s.Any(p => p.Equals("GlobalPuzzle"))
+                       || !s.Any(p => p.Equals("Mechanics"))
+                       ||  s.Any(p => p.Equals("Cave"))
+                       ||  s.Any(p => p.Equals("Puzzle")))
+                    return;
+                var textures = BundlesLoadService.Instance.RequestBundle(BundleName)?.LoadAllAssets<Texture2D>();
+                if (textures is null) {
+                    Mod.Log($"Failed to load the {BundleName} bundle.");
+                    return;
+                }
+                Mod.Debug($"Found Asset Bundle named {BundleName}.");
+                Texture2D[] matches = textures.Where(t => areshKagalNames.Contains(t.name)).ToArray();
+                Mod.Debug($"Found {matches.Length} matches");
+                var assembly = Assembly.GetExecutingAssembly();
+                foreach (var t in matches) {
+                    var name = "ToyBox.Art.Texture2D." + t.name + ".png";
+                    try {
+                        var stream = assembly.GetManifestResourceStream(name);
+                        if (stream != null) {
+                            var buffer = new byte[stream.Length];
+                            stream.Read(buffer, 0, buffer.Length);
+                            t.LoadImage(buffer);
+                        }
+                        else {
+                            Mod.Error($"BundlesLoadService_RequestBundle_Patch - failed to load {name} from {assembly.FullName}");
+                            var resourceNames = assembly.GetManifestResourceNames();
+                            Mod.Log(string.Join("\n", resourceNames));
+                        }
+                    }
+                    catch (Exception e) {
+                        Mod.Error(e);
+                    }
+                }
+            }
+        }
+#if true
         [HarmonyPatch(typeof(BundlesLoadService), nameof(BundlesLoadService.RequestBundle))]
         static class BundlesLoadService_RequestBundle_Patch {
             const string BundleName = "dungeons_areshkagal.worldtex";
@@ -336,6 +399,7 @@ namespace ToyBox.Inventory {
                 }
             }
         }
+#endif
     }
 }
 
