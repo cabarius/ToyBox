@@ -41,6 +41,8 @@ using Owlcat.Runtime.Core.Utils;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.BundlesLoading;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
@@ -110,23 +112,30 @@ namespace ToyBox.Inventory {
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
         private static class ItemEntity_Name_Patch {
             public static void Postfix(ItemEntity __instance, ref string __result) {
-                if (Settings.UsingLootRarity && __result != null && __result.Length > 0) {
-                    var bp = __instance.Blueprint;
+                if (!Settings.UsingLootRarity && !Settings.togglePuzzleRelief && __result == null && __result.Length == 0) return;
+                var bp = __instance.Blueprint;
+                if (Settings.togglePuzzleRelief && bp is BlueprintItem bpItem && bpItem.NameForAcronym.Contains("Domino")) {
+                    var text = bpItem.NameForAcronym.Replace("Domino", "");
+                    var truncateIndex = text.IndexOf("_Slot");
+                    if (truncateIndex >= 0)
+                        text = text.Substring(0, truncateIndex);
+                    if (Settings.toggleColorLootByRarity) {
+                        var rarity = __instance.Rarity();
+                        __result = __result.Rarity(rarity);
+                    }
+                    __result = __result + $"\n[Puzzle Piece: {text}]";
+                    return;
+                }
+                if (Settings.UsingLootRarity) {
                     var rarity = __instance.Rarity();
                     if (rarity < Settings.minRarityToColor) return;
                     if (bp is BlueprintItemWeapon bpWeap && !bpWeap.IsMagic && rarity < RarityType.Uncommon) return;
                     if (bp is BlueprintItemArmor bpArmor && !bpArmor.IsMagic && rarity < RarityType.Uncommon) return;
-                    if (bp is BlueprintItem bpItem && bpItem.NameForAcronym.Contains("Domino")) {
-                        if (Settings.toggleColorLootByRarity)
-                            __result = __result.Rarity(rarity);
-                        __result = __result + $"\n[Puzzle Piece: {bpItem.NameForAcronym.Replace("Domino", "")}]".bold().sizePercent(75);
-                        return;
-
-                    }
                     var result = __result.RarityInGame(rarity);
                     //Main.Log($"ItemEntity_Name_Patch - Name: {__result} type:{__instance.GetType().FullName} - {rarity.ToString()} -> {result}");
                     __result = result;
                 }
+
             }
         }
 
@@ -288,26 +297,43 @@ namespace ToyBox.Inventory {
             }
         }
         [HarmonyPatch(typeof(BundlesLoadService), nameof(BundlesLoadService.RequestBundle))]
-        static class TexturePatchForNarria
-        {
+        static class BundlesLoadService_RequestBundle_Patch {
             const string BundleName = "dungeons_areshkagal.worldtex";
-            const string texture_purple = "areshkagal_puzzle_cian_d";
-            const string texture_purple_dark = "areshkagal_puzzle_cian_dark_d";
-            static void Postfix(ref AssetBundle __result)
-            {
+            static readonly HashSet<string> areshKagalNames = new HashSet<string> {
+                "areshkagal_puzzle_cian_d", "areshkagal_puzzle_cian_dark_d",
+                "areshkagal_puzzle_green_d", "areshkagal_puzzle_green_dark_d",
+                "areshkagal_puzzle_purple_d", "areshkagal_puzzle_purple_dark_d",
+                "areshkagal_puzzle_red_d", "areshkagal_puzzle_red_dark_d",
+                "areshkagal_puzzle_yellow_d", "areshkagal_puzzle_yellow_dark_d"
+            };
+
+            static void Postfix(ref AssetBundle __result) {
+                if (!Settings.togglePuzzleRelief) return;
                 if (!__result.name.Contains(BundleName)) return;
                 Mod.Log($"Found Asset Bundle named {BundleName}.");
                 Texture2D[] textures = __result.LoadAllAssets<Texture2D>();
-                Texture2D[] matches = textures.Where(t => t.name.Equals(texture_purple)).ToArray();
-                Mod.Log($"Found {matches.Length} textures of name {texture_purple}");
-                var pathBase = Mod.modEntryPath 
-                           + Path.DirectorySeparatorChar + "Art" 
-                           + Path.DirectorySeparatorChar + "Texture2D" 
-                           + Path.DirectorySeparatorChar;
-                matches.ForEach(t => t.LoadImage(File.ReadAllBytes(pathBase + texture_purple + ".png")));
-                Texture2D[] cians_dark = textures.Where(t => t.name.Equals(texture_purple_dark)).ToArray();
-                Mod.Log($"Found {cians_dark.Length} textures of name {texture_purple_dark}");
-                cians_dark.ForEach(t => t.LoadImage(File.ReadAllBytes(pathBase + texture_purple_dark + ".png")));
+                Texture2D[] matches = textures.Where(t => areshKagalNames.Contains(t.name)).ToArray();
+                Mod.Log($"Found {matches.Length} matches");
+                var assembly = Assembly.GetExecutingAssembly();
+                foreach (var t in matches) {
+                    var name = "ToyBox.Art.Texture2D." + t.name + ".png";
+                    try {
+                        var stream = assembly.GetManifestResourceStream(name);
+                        if (stream != null) {
+                            var buffer = new byte[stream.Length];
+                            stream.Read(buffer, 0, buffer.Length);
+                            t.LoadImage(buffer);
+                        }
+                        else {
+                            Mod.Error($"BundlesLoadService_RequestBundle_Patch - failed to load {name} from {assembly.FullName}");
+                            var resourceNames = assembly.GetManifestResourceNames();
+                            Mod.Log(string.Join("\n", resourceNames));
+                        }
+                    }
+                    catch (Exception e) {
+                        Mod.Error(e);
+                    }
+                }
             }
         }
     }

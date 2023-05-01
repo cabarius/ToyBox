@@ -347,6 +347,11 @@ namespace ToyBox {
                 },
                 () => Toggle("Respec Refund Scrolls", ref settings.toggleRespecRefundScrolls),
                 () => {
+                    Toggle("Make Puzzle Symbols More Clear", ref settings.togglePuzzleRelief);
+                    25.space();
+                    HelpLabel($"This option makes it easier to recognize puzzle pieces by adding a descriptive tag to its name like this {"[PuzzlePiece Green3x1]".yellow().bold()} and when the piece is placed into a puzzle it will show those numbers on the puzzle pieces on the ground" + " NOTE: ".orange().bold() + "Needs game restart to take efect".orange());
+                },
+                () => {
                     ActionButton("Clear Action Bar", () => Actions.ClearActionBar());
                     50.space();
                     Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".green());
