@@ -304,7 +304,7 @@ namespace ToyBox.Inventory {
         {
             const string BundleName = "dungeons_areshkagal.worldtex";
             static readonly HashSet<string> areshKagalNames = new HashSet<string> {
-                "areshkagal_puzzle_cian_d", "areshkagal_puzzle_cian_dark_d",
+                "areshkagal_puzzle_cian_d", "areshkagal_puzzle_cian_dark_d", // "areshkagal_puzzle_cian_n",
                 "areshkagal_puzzle_green_d", "areshkagal_puzzle_green_dark_d",
                 "areshkagal_puzzle_purple_d", "areshkagal_puzzle_purple_dark_d",
                 "areshkagal_puzzle_red_d", "areshkagal_puzzle_red_dark_d",
@@ -312,22 +312,23 @@ namespace ToyBox.Inventory {
             };
 
             static void Prefix(SceneEntitiesState state) {
+                if (!Settings.togglePuzzleRelief) return;
                 Mod.Debug("SceneLoader_MatchStateWithScene_Patch");
                 string sceneName = state.SceneName;
                 Mod.Debug(sceneName);
-                string bundleName = BundledSceneLoader.GetBundleName(sceneName);
-                DependencyData dependency = OwlcatModificationsManager.Instance.GetDependenciesForBundle(bundleName) ?? BundlesLoadService.Instance.m_DependencyData;
-                dependency.BundleToDependencies.TryGetValue(bundleName, out var list);
-                Mod.Debug((list.Any(d => d.Equals(bundleName))).ToString());
+                string sceneBundleName = BundledSceneLoader.GetBundleName(sceneName);
+                DependencyData dependency = OwlcatModificationsManager.Instance.GetDependenciesForBundle(sceneBundleName) ?? BundlesLoadService.Instance.m_DependencyData;
+                dependency.BundleToDependencies.TryGetValue(sceneBundleName, out var list);
+                Mod.Debug((list.Any(d => d.Equals(BundleName))).ToString());
 
-
-                if (!Settings.togglePuzzleRelief) return;
                 string[] s = state.SceneName.Split('_');
+#if false
                 if (   !s.Any(p => p.Equals("GlobalPuzzle"))
                        || !s.Any(p => p.Equals("Mechanics"))
                        ||  s.Any(p => p.Equals("Cave"))
                        ||  s.Any(p => p.Equals("Puzzle")))
                     return;
+#endif
                 var textures = BundlesLoadService.Instance.RequestBundle(BundleName)?.LoadAllAssets<Texture2D>();
                 if (textures is null) {
                     Mod.Log($"Failed to load the {BundleName} bundle.");
@@ -358,7 +359,7 @@ namespace ToyBox.Inventory {
                 }
             }
         }
-#if true
+#if false
         [HarmonyPatch(typeof(BundlesLoadService), nameof(BundlesLoadService.RequestBundle))]
         static class BundlesLoadService_RequestBundle_Patch {
             const string BundleName = "dungeons_areshkagal.worldtex";
