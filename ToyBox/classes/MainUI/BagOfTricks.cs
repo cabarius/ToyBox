@@ -349,7 +349,7 @@ namespace ToyBox {
                 () => {
                     Toggle("Make Puzzle Symbols More Clear", ref settings.togglePuzzleRelief);
                     25.space();
-                    HelpLabel($"This option makes it easier to recognize puzzle pieces by adding a descriptive tag to its name like this {"[PuzzlePiece Green3x1]".yellow().bold()} and when the piece is placed into a puzzle it will show those numbers on the puzzle pieces on the ground" + " NOTE: ".orange().bold() + "Needs game restart to take efect".orange());
+                    HelpLabel($"ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: {"[PuzzlePiece Green3x1]".yellow().bold()}" + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange());
                 },
                 () => {
                     ActionButton("Clear Action Bar", () => Actions.ClearActionBar());
