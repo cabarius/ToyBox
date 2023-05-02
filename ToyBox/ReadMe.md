@@ -45,6 +45,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Made Selection Level a little more clear in FeatureSelection detail lists
 * (***Narria***) Further performance improvements to Party Editor search while you type
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
+* (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.
 ### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenofell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
