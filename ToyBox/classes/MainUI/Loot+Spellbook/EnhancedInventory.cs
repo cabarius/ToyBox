@@ -53,6 +53,7 @@ namespace ToyBox {
             [FilterCategories.UsableWithoutUMD] = ((int)ExpandedFilterType.UsableWithoutUMD, "Usable Without Magic Device Check"),
             [FilterCategories.CurrentEquipped] = ((int)ExpandedFilterType.CurrentEquipped, "Can Equip (Current Char)"),
             [FilterCategories.NonZeroPW] = ((int)ExpandedFilterType.NonZeroPW, "Non-zero price and weight"),
+            [FilterCategories.UnlearnedScrolls] = ((int)ExpandedFilterType.UnlearnedScrolls, "Unlearned Scrolls")
         };
 
         public static readonly RemappableInt FilterMapper = new RemappableInt();
@@ -135,6 +136,7 @@ namespace ToyBox {
         UsableWithoutUMD = 1 << 16,
         CurrentEquipped = 1 << 17,
         NonZeroPW = 1 << 18,
+        UnlearnedScrolls = 1 << 19,
 
         Default = Weapon |
             Armor |
@@ -152,7 +154,8 @@ namespace ToyBox {
             UnreadDocuments |
             UsableWithoutUMD |
             CurrentEquipped |
-            NonZeroPW,
+            NonZeroPW | 
+            UnlearnedScrolls,
     }
 
     [Flags]
@@ -188,6 +191,7 @@ namespace ToyBox {
         UsableWithoutUMD = 17,
         CurrentEquipped = 18,
         NonZeroPW = 19,
+        UnlearnedScrolls = 20,
     }
 
     public enum ExpandedSorterType

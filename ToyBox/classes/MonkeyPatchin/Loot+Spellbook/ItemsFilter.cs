@@ -79,6 +79,13 @@ namespace ToyBox.Inventory {
             else if (expanded_filter == ExpandedFilterType.NonZeroPW) {
                 __result = item.Blueprint.SellPrice > 0 && item.Blueprint.Weight > 0.0f;
             }
+            else if (expanded_filter == ExpandedFilterType.UnlearnedScrolls)
+            {
+                var scroll = item.Blueprint.GetComponent<CopyScroll>();
+                var unit = Kingmaker.Game.Instance.SelectionCharacter.CurrentSelectedCharacter;
+                var canCopy = scroll?.CanCopy(item, unit) ?? false;
+                __result = unit != null && canCopy;
+            }
             else {
                 // Original call - proceed as normal.
                 return true;
