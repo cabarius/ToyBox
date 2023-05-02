@@ -304,7 +304,7 @@ namespace ToyBox.Inventory {
         {
             const string BundleName = "dungeons_areshkagal.worldtex";
             static readonly HashSet<string> areshKagalNames = new HashSet<string> {
-                "areshkagal_puzzle_cian_d", "areshkagal_puzzle_cian_dark_d", // "areshkagal_puzzle_cian_n",
+                "areshkagal_puzzle_cian_d", "areshkagal_puzzle_cian_dark_d",  "areshkagal_puzzle_cian_m",
                 "areshkagal_puzzle_green_d", "areshkagal_puzzle_green_dark_d",
                 "areshkagal_puzzle_purple_d", "areshkagal_puzzle_purple_dark_d",
                 "areshkagal_puzzle_red_d", "areshkagal_puzzle_red_dark_d",
