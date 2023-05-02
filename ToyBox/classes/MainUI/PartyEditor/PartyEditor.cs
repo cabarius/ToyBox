@@ -173,7 +173,7 @@ namespace ToyBox {
                     Label(distance < 1 ? "" : distance.ToString("0") + "m", Width(75));
                     Space(5);
                     int nextLevel;
-                    for (nextLevel = level; progression.Experience >= xpTable.GetBonus(nextLevel + 1) && xpTable.HasBonusForLevel(nextLevel + 1); nextLevel++) { }
+                    for (nextLevel = level; xpTable.HasBonusForLevel(nextLevel + 1) && progression.Experience >= xpTable.GetBonus(nextLevel + 1); nextLevel++) { }
                     if (nextLevel <= level || !isOnTeam)
                         Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", Width(90));
                     else

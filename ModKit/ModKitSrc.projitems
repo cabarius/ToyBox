@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModKitSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\SettingsController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Browser\BrowserModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ColorUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Glyphs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\KeyBindings\KeyBindings.cs" />
@@ -62,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)UI\KeyBindings\" />
-    <Folder Include="$(MSBuildThisFileDirectory)UI\Browser\" />
     <Folder Include="$(MSBuildThisFileDirectory)Utility\Extensions\" />
   </ItemGroup>
 </Project>

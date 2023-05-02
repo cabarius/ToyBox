@@ -339,6 +339,11 @@ namespace ToyBox.Inventory {
                 Mod.Debug($"Found {matches.Length} matches");
                 var assembly = Assembly.GetExecutingAssembly();
                 foreach (var t in matches) {
+#if false
+                    var name = "ToyBox.Art.Texture2D." + t.name + ".png";
+                    t.LoadImage(File.ReadAllBytes(Path.Combine(Main.modPath, "Icons", textureName + ".png")));
+
+#else
                     var name = "ToyBox.Art.Texture2D." + t.name + ".png";
                     try {
                         var stream = assembly.GetManifestResourceStream(name);
@@ -357,6 +362,7 @@ namespace ToyBox.Inventory {
                         Mod.Error(e);
                     }
                 }
+#endif
             }
         }
 #if false
