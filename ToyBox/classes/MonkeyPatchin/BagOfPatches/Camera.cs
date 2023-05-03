@@ -464,7 +464,7 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
-
+        
         // Modifies Local Map View to zoom the map for easier reading
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
@@ -480,9 +480,8 @@ namespace ToyBox.BagOfPatches {
                 var b = (dr.ScreenRect.w - dr.ScreenRect.y) * height;
                 var sizeDelta = new Vector2(Mathf.Max(a, b), Mathf.Min(a, b));
                 __instance.m_FrameBlock.sizeDelta = sizeDelta;
-                //__instance.m_FrameBlock.localPosition = new Vector2(dr.ScreenRect.x * width, dr.ScreenRect.y * height);
-                //__instance.SetupBPRVisible();
-                __instance?.m_BPRImage?.gameObject?.SetActive(false);
+                __instance.m_FrameBlock.localPosition = new Vector2(dr.ScreenRect.x * width, dr.ScreenRect.y * height);
+                __instance.SetupBPRVisible();
                 var contentGroup = UIHelpers.LocalMapScreen.Find("ContentGroup");
                 var mapBlock = UIHelpers.LocalMapScreen.Find("ContentGroup/MapBlock");
                 var map = mapBlock.Find("Map");
@@ -505,35 +504,49 @@ namespace ToyBox.BagOfPatches {
                         var zoomVector = new Vector3(LocalMapVM_Patch.zoom, LocalMapVM_Patch.zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
                         mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
-                        #if false
-                        frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
-                        mapRect.pivot = new Vector2(0.5f, 0.5f);
-                        #endif
-                        var cpos = contentGroup.localPosition;
-                        cpos.x = -frameBlockRect.localPosition.x / 2;
-                        //var frameQuat = frameRect.localRotation;
-                        //frameRect.localRotation= new Quaternion(0, 0, 0, 0);
+                        Mod.Log($"zoom: {zoomVector}");
                     }
                     else {
                         var zoomVector = new Vector3(1, 1, 1.0f);
                         LocalMapVM_Patch.zoom = 1.0f;
                         LocalMapVM_Patch.offset = new Vector2(0.0f, 0.0f);
                         mapBlock.localScale = new Vector3(1, 1, 1);
-                        //mapBlockRect.pivot = new Vector2(0.5f, 0.5f);
-                        mapBlockRect.anchoredPosition = new Vector2(0.5f, 0.5f);
-                        mapBlockRect.pivot = new Vector2(0, 0);
-                        var cpos = contentGroup.localPosition;
-                        cpos.x = -frameBlockRect.localPosition.x / 2;
                     }
                 }
-                return true;
+                return false;
             }
+            #if false
+                    ) {
+                    if (settings.toggleZoomableLocalMaps) {
+                        //Mod.Log($"width: {width} sizeDelta.x: {sizeDelta.x} a:{a} dr.ScreenRect: {dr.ScreenRect}");
+                        LocalMapVM_Patch.zoom = width / (2 * sizeDelta.x);
+                        LocalMapVM_Patch.offset = frameBlockRect.localPosition * LocalMapVM_Patch.zoom;
+                        var pos = mapBlock.localPosition;
+                        pos.x = -3 - frameBlockRect.localPosition.x * LocalMapVM_Patch.zoom - width / 4;
+                        pos.y = -22 - frameBlockRect.localPosition.y * LocalMapVM_Patch.zoom - width / 4;
+                        mapBlock.localPosition = pos;
+                        var zoomVector = new Vector3(LocalMapVM_Patch.zoom, LocalMapVM_Patch.zoom, 1.0f);
+                        mapBlock.localScale = zoomVector;
+                        mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
+                        #if false
+                        frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
+                        mapRect.pivot = new Vector2(0.5f, 0.5f);
+                        #endif
+                        //var frameQuat = frameRect.localRotation;
+                        //frameRect.localRotation= new Quaternion(0, 0, 0, 0);
+                    }
+
+            }
+            #endif
 
             [HarmonyPatch(nameof(SetupBPRVisible))]
             [HarmonyPrefix]
             public static bool SetupBPRVisible(LocalMapBaseView __instance) {
-                if (!settings.toggleZoomableLocalMaps) return false;
-                __instance.m_BPRImage?.gameObject?.SetActive(false);
+                if (!settings.toggleZoomableLocalMaps) return true;
+                __instance.m_BPRImage?.gameObject?.SetActive(
+                    //LocalMapVM_Patch.zoom  <= 1.0f &&
+                     __instance.m_Image.rectTransform.rect.width < 975.0
+                    );
                 return false;
             }
         }
