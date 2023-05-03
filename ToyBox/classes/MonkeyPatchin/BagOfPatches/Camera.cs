@@ -264,13 +264,11 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+#if false
         [HarmonyPatch(typeof(LocalMapRenderer))]
         private static class LocalMapRenderer_Patch {
-            public static float zoom = 1.0f;
             public static float prevZoom = 1.0f;
-            public static Vector2 offset = new Vector2();
             public static Vector2 prevOffset = new Vector2();
-            #if false
             [HarmonyPatch("Draw", new Type[] { typeof(Vector2) })]
             [HarmonyPrefix]
             public static bool Draw(LocalMapRenderer __instance, Vector2 size, ref DrawResult __result) {
@@ -400,11 +398,14 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_Camera.aspect = bounds.size.x / bounds.size.y;
                 return true;
             }
-            #endif
         }
+#endif
 
         [HarmonyPatch(typeof(LocalMapVM))]
         private static class LocalMapVM_Patch {
+            public static float zoom = 1.0f;
+            public static Vector2 offset = new Vector2();
+
             [HarmonyPatch("OnUpdateHandler", new Type[] {})]
             [HarmonyPrefix]
             public static bool OnUpdateHandler(LocalMapVM __instance) {
@@ -437,6 +438,8 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        // Modifies Local Map View to zoom the map for easier reading
+        // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
         private static class LocalMapBaseView_Patch {
             [HarmonyPatch(nameof(SetDrawResult), new Type[] {typeof(LocalMapRenderer.DrawResult)})]
@@ -455,27 +458,43 @@ namespace ToyBox.BagOfPatches {
                 var mapBlock = UIHelpers.LocalMapScreen.Find("ContentGroup/MapBlock");
                 var map = mapBlock.Find("Map");
                 var frameBlock = mapBlock.Find("Map/FrameBlock");
+                var bprImage = contentGroup.Find("BPRImage");
+                if (bprImage?.gameObject != null) {
+                    //UnityEngine.Object.Destroy(bprImage.gameObject);
+                    bprImage.gameObject.SetActive(!settings.toggleZoomableLocalMaps);
+                    //bprImage.hideFlags = HideFlags.HideInHierarchy;
+                }
                 if (contentGroup is RectTransform contentGroupRect 
                     && mapBlock is RectTransform mapBlockRect
                     && map is RectTransform mapRect
                     && frameBlock is RectTransform frameBlockRect
                     ) {
-                    LocalMapRenderer_Patch.zoom = width / sizeDelta.x;
-                    LocalMapRenderer_Patch.offset = frameBlockRect.localPosition * LocalMapRenderer_Patch.zoom;
-                    var pos = mapBlock.localPosition;
-                    pos.x = -3 - frameBlockRect.localPosition.x * LocalMapRenderer_Patch.zoom;
-                    mapBlock.localPosition = pos;
-                    var zoomVector = new Vector3(LocalMapRenderer_Patch.zoom, LocalMapRenderer_Patch.zoom, 1.0f);
-                    mapBlock.localScale = zoomVector;
-                    mapBlockRect.pivot = new Vector2(0, 0.5f);
-                    var cpos = contentGroup.localPosition;
-                    cpos.x = -frameBlockRect.localPosition.x / 2;
-//                    contentGroup.localPosition = cpos;
+                    if (settings.toggleZoomableLocalMaps) {
+                        //Mod.Log($"width: {width} sizeDelta.x: {sizeDelta.x} a:{a} dr.ScreenRect: {dr.ScreenRect}");
+                        LocalMapVM_Patch.zoom = width / (2 * sizeDelta.x);
+                        LocalMapVM_Patch.offset = frameBlockRect.localPosition * LocalMapVM_Patch.zoom;
+                        var pos = mapBlock.localPosition;
+                        pos.x = -3 - frameBlockRect.localPosition.x * LocalMapVM_Patch.zoom - width / 4;
+                        pos.y = -22 - frameBlockRect.localPosition.y * LocalMapVM_Patch.zoom - width / 4;
+                        mapBlock.localPosition = pos;
+                        var zoomVector = new Vector3(LocalMapVM_Patch.zoom, LocalMapVM_Patch.zoom, 1.0f);
+                        mapBlock.localScale = zoomVector;
+                        mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
+                        var cpos = contentGroup.localPosition;
+                        cpos.x = -frameBlockRect.localPosition.x / 2;
+                    }
+                    else {
+                        var zoomVector = new Vector3(1, 1, 1.0f);
+                        LocalMapVM_Patch.zoom = 1.0f;
+                        LocalMapVM_Patch.offset = new Vector2(0.0f, 0.0f);
+                        mapBlock.localScale = new Vector3(1, 1, 1);
+                        mapBlockRect.pivot = new Vector2(0.5f, 0.5f);
+                        var cpos = contentGroup.localPosition;
+                        cpos.x = -frameBlockRect.localPosition.x / 2;
+                    }
                 }
                 return true;
             }
         }
-
-        // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
     }
 }

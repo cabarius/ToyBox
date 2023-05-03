@@ -448,52 +448,60 @@ namespace ToyBox {
             () => { }
             );
             Div(0, 25);
-            HStack("Camera", 1,
-                () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
-                () => {
-                    Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
-                    153.space();
-                    Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
-                },
-                () => {
-                    Toggle("Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
-                },
-                () => {
-                    Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation", ref settings.toggleCameraElevation);
-                    25.space();
-                    Toggle("Free Camera", ref settings.toggleFreeCamera);
-                },
-                () => Label("Rotation".cyan()),
-                () => {
-                    50.space();
-                    if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) { Main.resetExtraCameraAngles = true; }
-                    100.space();
-                    Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange() + " Holding alt while Mouse3 dragging lets you move the camera location.".green());
-                },
-                () => {
-                    50.space();
-                    Label("Mouse:".cyan(), 125.width());
-                    25.space();
-                    Toggle("Invert X Axis", ref settings.toggleInvertXAxis);
-                    if (settings.toggleCameraPitch) {
-                        25.space();
-                        Toggle("Invert Y Axis", ref settings.toggleInvertYAxis);
-                    }
-                },
-                () => {
-                    50.space();
-                    Label("Keyboard:".cyan(), 125.width());
-                    25.space();
-                    Toggle("Invert X Axis", ref settings.toggleInvertKeyboardXAxis);
-                },
-                () => {
-                    50.space();
-                    BindableActionButton(ResetAdditionalCameraAngles);
-                },
-                () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                () => { }
-            );
+            HStack("Camera",
+                   1,
+                   () => {
+                       Toggle("Enable Zoom For Town And Other Local Maps", ref settings.toggleZoomableLocalMaps);
+                       110.space();
+                       HelpLabel("Special Zoom UI for the map for cities, dungeons and other encounter areas. Reload save or restart after you turn it off.");
+                   },
+                   () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
+                   () => {
+                       Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
+                       153.space();
+                       Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
+                   },
+                   () => {
+                       Toggle("Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
+                   },
+                   () => {
+                       Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation", ref settings.toggleCameraElevation);
+                       25.space();
+                       Toggle("Free Camera", ref settings.toggleFreeCamera);
+                   },
+                   () => Label("Rotation".cyan()),
+                   () => {
+                       50.space();
+                       if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) {
+                           Main.resetExtraCameraAngles = true;
+                       }
+                       100.space();
+                       Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange() + " Holding alt while Mouse3 dragging lets you move the camera location.".green());
+                   },
+                   () => {
+                       50.space();
+                       Label("Mouse:".cyan(), 125.width());
+                       25.space();
+                       Toggle("Invert X Axis", ref settings.toggleInvertXAxis);
+                       if (settings.toggleCameraPitch) {
+                           25.space();
+                           Toggle("Invert Y Axis", ref settings.toggleInvertYAxis);
+                       }
+                   },
+                   () => {
+                       50.space();
+                       Label("Keyboard:".cyan(), 125.width());
+                       25.space();
+                       Toggle("Invert X Axis", ref settings.toggleInvertKeyboardXAxis);
+                   },
+                   () => {
+                       50.space();
+                       BindableActionButton(ResetAdditionalCameraAngles);
+                   },
+                   () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                   () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                   () => { }
+                );
             Div(0, 25);
             HStack("Alignment", 1,
                 () => { Toggle("Fix Alignment Shifts", ref settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
