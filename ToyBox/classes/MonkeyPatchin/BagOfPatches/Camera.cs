@@ -414,38 +414,6 @@ namespace ToyBox.BagOfPatches {
             public static float width = 0.0f;
             public static Vector2 offset = new Vector2();
 
-            #if false
-            [HarmonyPatch("OnUpdateHandler", new Type[] {})]
-            [HarmonyPrefix]
-            public static bool OnUpdateHandler(LocalMapVM __instance) {
-                __instance.DrawResult.Value = LocalMapRenderer.Instance.Draw(__instance.m_MaxSize);
-                __instance.CompassAngle.Value = Game.Instance.UI.GetCameraRig().transform.eulerAngles.y -
-                                                Game.Instance.CurrentlyLoadedArea.LocalMapRotation;
-                LocalMapModel.Markers.RemoveWhere(m => m.GetMarkerType() == LocalMapMarkType.Invalid);
-                var unitsList = Game.Instance.Player.MainCharacter.Value.Memory.UnitsList;
-                var list = __instance.MarkersVm.OfType<LocalMapUnitMarkerVM>().ToList();
-                var unitInfoList = new List<UnitGroupMemory.UnitInfo>();
-                foreach (var unitInfo in unitsList) {
-                    var character = unitInfo;
-                    if (character.Unit.IsPlayerFaction || !character.Unit.IsVisibleForPlayer ||
-                        character.Unit.Descriptor.State.IsDead || !LocalMapModel.IsInCurrentArea(character.Unit.Position))
-                        unitInfoList.Add(character);
-                    else if (list.FirstOrDefault(vm => vm.UnitInfo == character) == null)
-                        __instance.MarkersVm.Add(new LocalMapUnitMarkerVM(character));
-                }
-
-                for (var index = 0; index < __instance.MarkersVm.Count; ++index)
-                    if (__instance.MarkersVm[index] is LocalMapUnitMarkerVM localMapUnitMarkerVm1 &&
-                        unitInfoList.Contains(localMapUnitMarkerVm1.UnitInfo)) {
-                        __instance.MarkersVm[index].Dispose();
-                        __instance.MarkersVm.RemoveAt(index);
-                    }
-
-                __instance.GameTime.Value = Game.Instance.Player.GameTime;
-                __instance.DateString.Value = BlueprintRoot.Instance.Calendar.GetCurrentDateText();
-                return false;
-            }
-            #endif
             [HarmonyPatch(nameof(OnClick), new Type[] {typeof(Vector2), typeof(bool)})]
             [HarmonyPrefix]
             public static bool OnClick(LocalMapVM __instance, Vector2 localPos, bool state) {
@@ -504,7 +472,9 @@ namespace ToyBox.BagOfPatches {
                         var zoomVector = new Vector3(LocalMapVM_Patch.zoom, LocalMapVM_Patch.zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
                         mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
-                        Mod.Log($"zoom: {zoomVector}");
+                        //Mod.Log($"zoom: {zoomVector}");
+                        //frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
+                        //mapRect.pivot = new Vector2(0.5f, 0.5f);
                     }
                     else {
                         var zoomVector = new Vector3(1, 1, 1.0f);
@@ -544,7 +514,7 @@ namespace ToyBox.BagOfPatches {
             public static bool SetupBPRVisible(LocalMapBaseView __instance) {
                 if (!settings.toggleZoomableLocalMaps) return true;
                 __instance.m_BPRImage?.gameObject?.SetActive(
-                    //LocalMapVM_Patch.zoom  <= 1.0f &&
+                    LocalMapVM_Patch.zoom  <= 1.0f &&
                      __instance.m_Image.rectTransform.rect.width < 975.0
                     );
                 return false;
