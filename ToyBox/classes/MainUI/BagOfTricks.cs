@@ -154,8 +154,8 @@ namespace ToyBox {
                                     KeyBindPicker(ToggleMurderHobo, "", 50);
                                 }
                             }
-                            153.space();
-                            Label($"If ticked, this will {"MURDER".red().bold()} all who dare to enage you!".green(), AutoWidth());
+                            158.space();
+                            Label($"If ticked, this will {"MURDER".red().bold()} all who dare to engage you!".green(), AutoWidth());
                         }
                         using (HorizontalScope()) {
                             if (Toggle("Log ToyBox Keyboard Commands In Game", ref Mod.ModKitSettings.toggleKeyBindingsOutputToTranscript, 450.width()))

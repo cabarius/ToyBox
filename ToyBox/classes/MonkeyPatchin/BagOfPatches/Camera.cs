@@ -42,6 +42,11 @@ using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using static Kingmaker.Visual.LocalMap.LocalMapRenderer;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
+using UnityEngine.EventSystems;
+using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
+
+using Kingmaker.Controllers.Clicks.Handlers;
+using static ModKit.UI;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
@@ -272,19 +277,21 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch("Draw", new Type[] { typeof(Vector2) })]
             [HarmonyPrefix]
             public static bool Draw(LocalMapRenderer __instance, Vector2 size, ref DrawResult __result) {
+                var zoom = LocalMapVM_Patch.zoom;
+                var offset = LocalMapVM_Patch.offset;
                 size *= zoom;
                 //Mod.Log($"LocalMapRenderer_Patch -  zoom: {zoom} size: {size}");
                 if (!Application.isPlaying || __instance.m_CurrentArea == null) {
                     __result = new DrawResult {
                         Canceled = true
                     };
-                    return true;
+                    return false;
                 }
                 if (Math.Abs(zoom - prevZoom) > 0.001 || Vector2.Distance(offset, prevOffset) > .001) 
                     __instance.IsAreaDirty = true;
                 if (!__instance.IsDirty()) {
                     __result = __instance.GenerateDrawResult();
-                    return true;
+                    return false;
                 }
                 prevZoom = zoom;
                 var localMapBounds = __instance.m_CurrentArea.Bounds.LocalMapBounds;
@@ -340,11 +347,11 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_CachedAngle = __instance.ViewAngle;
                 if (!(null != __instance.lightInst)) {
                     __result = drawResult;
-                    return true;
+                    return false;
                 }
                 UnityEngine.Object.Destroy(__instance.lightInst);
                 __result = drawResult;
-                return true;
+                return false;
             }
 
             [HarmonyPatch(nameof(UpdateCamera), new Type[] { })]
@@ -367,11 +374,11 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_AdditionalCameraData.AllowVfxPreparation = false;
                 __instance.m_AdditionalCameraData.DisableAllFeatures();
                 if (Game.GetCamera() == null)
-                    return true;
+                    return false;
                 if (Application.isPlaying)
                     __instance.m_CurrentArea = AreaService.Instance.CurrentAreaPart;
                 if (__instance.m_CurrentArea == null)
-                    return true;
+                    return false;
                 var localMapBounds = __instance.m_CurrentArea.Bounds.LocalMapBounds;
                 var num = Vector3.Distance(localMapBounds.min, localMapBounds.max);
                 __instance.m_Camera.transform.rotation = Quaternion.Euler(__instance.ViewAngle,
@@ -396,7 +403,7 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_Camera.farClipPlane = num * 2f;
                 __instance.m_Camera.orthographicSize = bounds.extents.y;
                 __instance.m_Camera.aspect = bounds.size.x / bounds.size.y;
-                return true;
+                return false;
             }
         }
 #endif
@@ -404,8 +411,10 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LocalMapVM))]
         private static class LocalMapVM_Patch {
             public static float zoom = 1.0f;
+            public static float width = 0.0f;
             public static Vector2 offset = new Vector2();
 
+            #if false
             [HarmonyPatch("OnUpdateHandler", new Type[] {})]
             [HarmonyPrefix]
             public static bool OnUpdateHandler(LocalMapVM __instance) {
@@ -434,7 +443,25 @@ namespace ToyBox.BagOfPatches {
 
                 __instance.GameTime.Value = Game.Instance.Player.GameTime;
                 __instance.DateString.Value = BlueprintRoot.Instance.Calendar.GetCurrentDateText();
-                return true;
+                return false;
+            }
+            #endif
+            [HarmonyPatch(nameof(OnClick), new Type[] {typeof(Vector2), typeof(bool)})]
+            [HarmonyPrefix]
+            public static bool OnClick(LocalMapVM __instance, Vector2 localPos, bool state) {
+                if (!settings.toggleZoomableLocalMaps) return true;
+                var vector3 = LocalMapRenderer.Instance.ViewportToWorldPoint(
+                    new Vector2(localPos.x / (__instance.DrawResult.Value.ColorRT.width), localPos.y / (__instance.DrawResult.Value.ColorRT.height)));
+                if (!LocalMapModel.IsInCurrentArea(vector3))
+                    vector3 = AreaService.Instance.CurrentAreaPart.Bounds.LocalMapBounds.ClosestPoint(vector3);
+                if (state) {
+                    Game.Instance.CameraController.Follower.Release();
+                    Game.Instance.UI.GetCameraRig().ScrollTo(vector3);
+                }
+                else {
+                    ClickGroundHandler.MoveSelectedUnitsToPoint(vector3);
+                }
+                return false;
             }
         }
 
@@ -446,6 +473,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPrefix]
             public static  bool SetDrawResult(LocalMapBaseView __instance, LocalMapRenderer.DrawResult dr) {
                 var width = dr.ColorRT.width;
+                LocalMapVM_Patch.width = width;
                 var height = dr.ColorRT.height;
                 __instance.m_Image.rectTransform.sizeDelta = new Vector2(width, height);
                 var a = (dr.ScreenRect.z - dr.ScreenRect.x) * width;
@@ -453,21 +481,18 @@ namespace ToyBox.BagOfPatches {
                 var sizeDelta = new Vector2(Mathf.Max(a, b), Mathf.Min(a, b));
                 __instance.m_FrameBlock.sizeDelta = sizeDelta;
                 //__instance.m_FrameBlock.localPosition = new Vector2(dr.ScreenRect.x * width, dr.ScreenRect.y * height);
-                __instance.SetupBPRVisible();
+                //__instance.SetupBPRVisible();
+                __instance?.m_BPRImage?.gameObject?.SetActive(false);
                 var contentGroup = UIHelpers.LocalMapScreen.Find("ContentGroup");
                 var mapBlock = UIHelpers.LocalMapScreen.Find("ContentGroup/MapBlock");
                 var map = mapBlock.Find("Map");
                 var frameBlock = mapBlock.Find("Map/FrameBlock");
-                var bprImage = contentGroup.Find("BPRImage");
-                if (bprImage?.gameObject != null) {
-                    //UnityEngine.Object.Destroy(bprImage.gameObject);
-                    bprImage.gameObject.SetActive(!settings.toggleZoomableLocalMaps);
-                    //bprImage.hideFlags = HideFlags.HideInHierarchy;
-                }
+                var frame = frameBlock.Find("Frame");
                 if (contentGroup is RectTransform contentGroupRect 
                     && mapBlock is RectTransform mapBlockRect
                     && map is RectTransform mapRect
                     && frameBlock is RectTransform frameBlockRect
+                    && frame is RectTransform frameRect
                     ) {
                     if (settings.toggleZoomableLocalMaps) {
                         //Mod.Log($"width: {width} sizeDelta.x: {sizeDelta.x} a:{a} dr.ScreenRect: {dr.ScreenRect}");
@@ -480,21 +505,60 @@ namespace ToyBox.BagOfPatches {
                         var zoomVector = new Vector3(LocalMapVM_Patch.zoom, LocalMapVM_Patch.zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
                         mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
+                        #if false
+                        frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
+                        mapRect.pivot = new Vector2(0.5f, 0.5f);
+                        #endif
                         var cpos = contentGroup.localPosition;
                         cpos.x = -frameBlockRect.localPosition.x / 2;
+                        //var frameQuat = frameRect.localRotation;
+                        //frameRect.localRotation= new Quaternion(0, 0, 0, 0);
                     }
                     else {
                         var zoomVector = new Vector3(1, 1, 1.0f);
                         LocalMapVM_Patch.zoom = 1.0f;
                         LocalMapVM_Patch.offset = new Vector2(0.0f, 0.0f);
                         mapBlock.localScale = new Vector3(1, 1, 1);
-                        mapBlockRect.pivot = new Vector2(0.5f, 0.5f);
+                        //mapBlockRect.pivot = new Vector2(0.5f, 0.5f);
+                        mapBlockRect.anchoredPosition = new Vector2(0.5f, 0.5f);
+                        mapBlockRect.pivot = new Vector2(0, 0);
                         var cpos = contentGroup.localPosition;
                         cpos.x = -frameBlockRect.localPosition.x / 2;
                     }
                 }
                 return true;
             }
+
+            [HarmonyPatch(nameof(SetupBPRVisible))]
+            [HarmonyPrefix]
+            public static bool SetupBPRVisible(LocalMapBaseView __instance) {
+                if (!settings.toggleZoomableLocalMaps) return false;
+                __instance.m_BPRImage?.gameObject?.SetActive(false);
+                return false;
+            }
         }
+        #if false
+        [HarmonyPatch(typeof(LocalMapPCView))]
+        public static class LocalMapPCView_Patch {
+            [HarmonyPatch(nameof(OnPointerClick))]
+            [HarmonyPrefix]
+            public static bool OnPointerClick(LocalMapPCView __instance, PointerEventData eventData) {
+                if (!settings.toggleZoomableLocalMaps) return true;
+                if (eventData.button == PointerEventData.InputButton.Middle)
+                    return false;
+                Vector2 localPoint;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(__instance.m_Image.rectTransform, eventData.position, Game.Instance.UI.UICamera, out localPoint);
+                var zoom = LocalMapVM_Patch.zoom;
+                var oldPoint = localPoint;
+                localPoint = localPoint;
+                var sizeDelta = __instance.m_Image.rectTransform.sizeDelta;
+                // zoom =  width / (2 * sizeDelta.x)
+                var adjustedPoint = localPoint + Vector2.Scale(sizeDelta, __instance.m_Image.rectTransform.pivot);
+                Mod.Log($"zoom: {LocalMapVM_Patch.zoom} - localPoint: {oldPoint} -> {localPoint} -> {adjustedPoint} ");
+                __instance.ViewModel.OnClick(adjustedPoint, eventData.button == PointerEventData.InputButton.Left);
+                return false;
+            }
+        }
+        #endif
     }
 }

@@ -64,20 +64,25 @@ namespace ModKit {
             public bool Cmd;
             [JsonProperty]
             public bool Shift;
-            public KeyBind(string identifer, KeyCode key = KeyCode.None, bool ctrl = false, bool alt = false, bool cmd = false, bool shift = false) {
+            [JsonProperty] 
+            public bool IsModifierOnly;
+            public KeyBind(string identifer, KeyCode key = KeyCode.None, bool ctrl = false, bool alt = false, bool cmd = false, bool shift = false, bool isModifierOnly = false) {
                 ID = identifer;
                 Key = key;
                 Ctrl = ctrl;
                 Alt = alt;
                 Cmd = cmd;
                 Shift = shift;
+                IsModifierOnly = isModifierOnly;
             }
             public bool Conflicts(KeyBind kb) {
+                Mod.Log($"kb: {this} {this.IsModifierOnly} vs {kb} {kb.IsModifierOnly}"); 
+                if (IsModifierOnly || kb.IsModifierOnly) return false;
                 return Key == kb.Key
-                    && Ctrl == kb.Ctrl
-                    && Alt == kb.Alt
-                    && Cmd == kb.Cmd
-                    && Shift == kb.Shift;
+                       && Ctrl == kb.Ctrl
+                       && Alt == kb.Alt
+                       && Cmd == kb.Cmd
+                       && Shift == kb.Shift;
 
             }
             public override bool Equals(object o) {

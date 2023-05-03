@@ -78,8 +78,8 @@ namespace ModKit {
 
                 // Allow raw modifier keys as keybinds
                 if (Event.current.isKey && keyCode.IsModifier() && allowModifierOnly) {
-                    keyBind = new KeyBind(identifier, keyCode, false, false, false, false);
-                    Mod.Trace($"    currentEvent isKey - bind: {keyBind}");
+                    keyBind = new KeyBind(identifier, keyCode, false, false, false, false, true);
+                    Mod.Trace($"    currentEvent isKey - bind: {keyBind} isModifierOnly:{keyBind.IsModifierOnly}");
                     KeyBindings.SetBinding(identifier, keyBind);
                     selectedIdentifier = null;
                     oldValue = null;

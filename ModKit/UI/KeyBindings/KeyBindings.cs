@@ -47,7 +47,7 @@ namespace ModKit {
                 conflicts.Clear();
                 foreach (var binding in bindings) {
                     var keyBind = binding.Value;
-                    if (!keyBind.IsEmpty) {
+                    if (!keyBind.IsEmpty && !keyBind.IsModifierOnly) {
                         var identifier = binding.Key;
                         var bindCode = keyBind.ToString();
                         var conflict = conflicts.GetValueOrDefault(bindCode, new List<string> { });
