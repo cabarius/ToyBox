@@ -35,6 +35,7 @@ namespace ToyBox {
         public static Transform CharacterScreen => ServiceWindow.Find(WidgetPaths.CharacterScreen);
 
         public static Transform InventoryScreen => ServiceWindow.Find(WidgetPaths.InventoryScreen);
+        public static Transform LocalMapScreen => ServiceWindow.Find(WidgetPaths.LocalMapScreen);
 
         public class WidgetPaths_1_0 {
             public virtual string SpellScreen => "SpellbookView/SpellbookScreen";
@@ -43,6 +44,7 @@ namespace ToyBox {
 
             public virtual string CharacterScreen => "CharacterInfoView/CharacterScreen";
             public virtual string InventoryScreen => throw new NotImplementedException(); // If we ever need to support old stuff then put something here
+            public virtual string LocalMapScreen => throw new NotImplementedException(); // If we ever need to support old stuff then put something here
         }
 
         class WidgetPaths_1_1 : WidgetPaths_1_0 {
@@ -63,6 +65,7 @@ namespace ToyBox {
 
         class WidgetPaths_2_0 : WidgetPaths_1_4 {
             public override string InventoryScreen => "Background/Windows/InventoryPCView";
+            public override string LocalMapScreen => "Background/Windows/LocalMapPCView";
         }
 
         public static void OnLoad() {

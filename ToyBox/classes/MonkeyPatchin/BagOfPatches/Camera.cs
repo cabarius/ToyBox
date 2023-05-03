@@ -31,6 +31,17 @@ using Kingmaker.Blueprints.Root;
 using Owlcat.Runtime.Visual.RenderPipeline;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.OccludedObjectHighlighting;
 using Kingmaker.Blueprints.Area;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
+using Kingmaker.Visual.LocalMap;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
+using Kingmaker.UI;
+using Kingmaker.Visual.Particles.ForcedCulling;
+using Kingmaker.Visual.LocalMap;
+
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
+using static Kingmaker.Visual.LocalMap.LocalMapRenderer;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
@@ -253,14 +264,218 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-#if false
-        [HarmonyPatch(typeof(BlueprintArea), nameof(BlueprintArea.CameraMode), MethodType.Getter)]
-        static class BlueprintArea_CameraMode_Patch {
-            public static void Postfix(BlueprintArea __instance, CameraMode __result) {
-                Main.Log("hi");
-                __result = CameraMode.Default;
+        [HarmonyPatch(typeof(LocalMapRenderer))]
+        private static class LocalMapRenderer_Patch {
+            public static float zoom = 1.0f;
+            public static float prevZoom = 1.0f;
+            public static Vector2 offset = new Vector2();
+            public static Vector2 prevOffset = new Vector2();
+            #if false
+            [HarmonyPatch("Draw", new Type[] { typeof(Vector2) })]
+            [HarmonyPrefix]
+            public static bool Draw(LocalMapRenderer __instance, Vector2 size, ref DrawResult __result) {
+                size *= zoom;
+                //Mod.Log($"LocalMapRenderer_Patch -  zoom: {zoom} size: {size}");
+                if (!Application.isPlaying || __instance.m_CurrentArea == null) {
+                    __result = new DrawResult {
+                        Canceled = true
+                    };
+                    return true;
+                }
+                if (Math.Abs(zoom - prevZoom) > 0.001 || Vector2.Distance(offset, prevOffset) > .001) 
+                    __instance.IsAreaDirty = true;
+                if (!__instance.IsDirty()) {
+                    __result = __instance.GenerateDrawResult();
+                    return true;
+                }
+                prevZoom = zoom;
+                var localMapBounds = __instance.m_CurrentArea.Bounds.LocalMapBounds;
+                var num = Vector3.Distance(localMapBounds.min, localMapBounds.max);
+                __instance.m_Camera.transform.rotation = Quaternion.Euler(__instance.ViewAngle,
+                                                                          (bool)(SimpleBlueprint)__instance.m_CurrentArea ? __instance.m_CurrentArea.LocalMapRotation - 180f : -180f,
+                                                                          0.0f);
+                var position = localMapBounds.center - __instance.m_Camera.transform.forward * num;
+                Mod.Log($"offset: {offset}");
+                //position.x -= offset.x;
+                //position.y -= offset.y;
+                __instance.m_Camera.transform.position = position;
+
+                prevOffset = offset;
+                if (__instance.lightInst == null)
+                    __instance.lightInst = __instance.InstantiatePPLight();
+                var vector2 = __instance.m_Camera.aspect > (double)(size.x / size.y)
+                                  ? new Vector2(size.x, size.x / __instance.m_Camera.aspect)
+                                  : new Vector2(size.y * __instance.m_Camera.aspect, size.y);
+                if (__instance.m_ColorRT == null || __instance.m_ColorRT.width != (int)vector2.x || __instance.m_ColorRT.height != (int)vector2.y) {
+                    if (__instance.m_ColorRT != null) {
+                        __instance.m_ColorRT.Release();
+                        UnityEngine.Object.Destroy(__instance.m_ColorRT);
+                    }
+
+                    if (__instance.m_DepthRT != null) {
+                        __instance.m_DepthRT.Release();
+                        UnityEngine.Object.Destroy(__instance.m_DepthRT);
+                    }
+
+                    __instance.m_ColorRT = new RenderTexture((int)vector2.x, (int)vector2.y, 0, RenderTextureFormat.ARGB32);
+                    __instance.m_ColorRT.name = "LocalMapColorTex";
+                    var active = RenderTexture.active;
+                    RenderTexture.active = __instance.m_ColorRT;
+                    GL.Clear(true, true, new Color(0.0f, 0.0f, 0.0f, 0.0f));
+                    RenderTexture.active = active;
+                    __instance.m_DepthRT = new RenderTexture((int)vector2.x, (int)vector2.y, 0, RenderTextureFormat.RFloat);
+                    __instance.m_DepthRT.name = "LocalMapDepthTex";
+                    __instance.m_DepthRT.filterMode = FilterMode.Point;
+                    RenderTexture.active = __instance.m_DepthRT;
+                    GL.Clear(true, true, new Color(0.0f, 0.0f, 0.0f, 0.0f));
+                    RenderTexture.active = active;
+                }
+                __instance.m_Camera.targetTexture = __instance.m_ColorRT;
+                __instance.m_AdditionalCameraData.DepthTexture = __instance.m_DepthRT;
+                __instance.m_Camera.cullingMatrix = CalculateProjMatrix(__instance.m_CurrentArea) * CalculateViewMatrix(__instance.m_CurrentArea);
+                using (ForcedCullingService.Instance.UncullEverything()) {
+                    __instance.m_Camera.Render();
+                }
+
+                var drawResult = __instance.GenerateDrawResult();
+                __instance.m_CachedArea = __instance.m_CurrentArea;
+                __instance.m_CachedAngle = __instance.ViewAngle;
+                if (!(null != __instance.lightInst)) {
+                    __result = drawResult;
+                    return true;
+                }
+                UnityEngine.Object.Destroy(__instance.lightInst);
+                __result = drawResult;
+                return true;
+            }
+
+            [HarmonyPatch(nameof(UpdateCamera), new Type[] { })]
+            [HarmonyPrefix]
+            public static bool UpdateCamera(LocalMapRenderer __instance) {
+                __instance.m_Camera.enabled = false;
+                __instance.m_Camera.orthographic = true;
+                __instance.m_Camera.backgroundColor = new Color(0.0f, 0.0f, 0.0f, 1f);
+                __instance.m_Camera.clearFlags = CameraClearFlags.Color;
+                __instance.m_Camera.targetTexture = __instance.m_ColorRT;
+                __instance.m_Camera.cullingMask = 102784273;
+                __instance.m_AdditionalCameraData.RenderPostProcessing = false;
+                __instance.m_AdditionalCameraData.AllowDistortion = true;
+                __instance.m_AdditionalCameraData.AllowDecals = false;
+                __instance.m_AdditionalCameraData.AllowIndirectRendering = false;
+                __instance.m_AdditionalCameraData.AllowFog = false;
+                __instance.m_AdditionalCameraData.AllowLighting = true;
+                __instance.m_AdditionalCameraData.Dithering = false;
+                __instance.m_AdditionalCameraData.DepthTexture = __instance.m_DepthRT;
+                __instance.m_AdditionalCameraData.AllowVfxPreparation = false;
+                __instance.m_AdditionalCameraData.DisableAllFeatures();
+                if (Game.GetCamera() == null)
+                    return true;
+                if (Application.isPlaying)
+                    __instance.m_CurrentArea = AreaService.Instance.CurrentAreaPart;
+                if (__instance.m_CurrentArea == null)
+                    return true;
+                var localMapBounds = __instance.m_CurrentArea.Bounds.LocalMapBounds;
+                var num = Vector3.Distance(localMapBounds.min, localMapBounds.max);
+                __instance.m_Camera.transform.rotation = Quaternion.Euler(__instance.ViewAngle,
+                                                                          (bool)(SimpleBlueprint)__instance.m_CurrentArea ? __instance.m_CurrentArea.LocalMapRotation - 180f : -180f,
+                                                                          0.0f);
+                __instance.m_Camera.transform.position = localMapBounds.center - __instance.m_Camera.transform.forward * num;
+                __instance.CreateAABBPoints(ref localMapBounds, __instance.m_SceneAABBPointsLightSpace);
+                var worldToLocalMatrix = __instance.m_Camera.transform.worldToLocalMatrix;
+                var rhs1 = Vector3.one * float.MaxValue;
+                var rhs2 = Vector3.one * float.MinValue;
+                for (var index = 0; index < __instance.m_SceneAABBPointsLightSpace.Length; ++index) {
+                    __instance.m_SceneAABBPointsLightSpace[index] =
+                        worldToLocalMatrix.MultiplyPoint(__instance.m_SceneAABBPointsLightSpace[index]);
+                    rhs1 = Vector3.Min(__instance.m_SceneAABBPointsLightSpace[index], rhs1);
+                    rhs2 = Vector3.Max(__instance.m_SceneAABBPointsLightSpace[index], rhs2);
+                }
+
+                var bounds = new Bounds();
+                bounds.min = rhs1;
+                bounds.max = rhs2;
+                __instance.m_Camera.transform.position = __instance.m_Camera.transform.TransformPoint(bounds.center - Vector3.forward * num);
+                __instance.m_Camera.farClipPlane = num * 2f;
+                __instance.m_Camera.orthographicSize = bounds.extents.y;
+                __instance.m_Camera.aspect = bounds.size.x / bounds.size.y;
+                return true;
+            }
+            #endif
+        }
+
+        [HarmonyPatch(typeof(LocalMapVM))]
+        private static class LocalMapVM_Patch {
+            [HarmonyPatch("OnUpdateHandler", new Type[] {})]
+            [HarmonyPrefix]
+            public static bool OnUpdateHandler(LocalMapVM __instance) {
+                __instance.DrawResult.Value = LocalMapRenderer.Instance.Draw(__instance.m_MaxSize);
+                __instance.CompassAngle.Value = Game.Instance.UI.GetCameraRig().transform.eulerAngles.y -
+                                                Game.Instance.CurrentlyLoadedArea.LocalMapRotation;
+                LocalMapModel.Markers.RemoveWhere(m => m.GetMarkerType() == LocalMapMarkType.Invalid);
+                var unitsList = Game.Instance.Player.MainCharacter.Value.Memory.UnitsList;
+                var list = __instance.MarkersVm.OfType<LocalMapUnitMarkerVM>().ToList();
+                var unitInfoList = new List<UnitGroupMemory.UnitInfo>();
+                foreach (var unitInfo in unitsList) {
+                    var character = unitInfo;
+                    if (character.Unit.IsPlayerFaction || !character.Unit.IsVisibleForPlayer ||
+                        character.Unit.Descriptor.State.IsDead || !LocalMapModel.IsInCurrentArea(character.Unit.Position))
+                        unitInfoList.Add(character);
+                    else if (list.FirstOrDefault(vm => vm.UnitInfo == character) == null)
+                        __instance.MarkersVm.Add(new LocalMapUnitMarkerVM(character));
+                }
+
+                for (var index = 0; index < __instance.MarkersVm.Count; ++index)
+                    if (__instance.MarkersVm[index] is LocalMapUnitMarkerVM localMapUnitMarkerVm1 &&
+                        unitInfoList.Contains(localMapUnitMarkerVm1.UnitInfo)) {
+                        __instance.MarkersVm[index].Dispose();
+                        __instance.MarkersVm.RemoveAt(index);
+                    }
+
+                __instance.GameTime.Value = Game.Instance.Player.GameTime;
+                __instance.DateString.Value = BlueprintRoot.Instance.Calendar.GetCurrentDateText();
+                return true;
             }
         }
-#endif
+
+        [HarmonyPatch(typeof(LocalMapBaseView))]
+        private static class LocalMapBaseView_Patch {
+            [HarmonyPatch(nameof(SetDrawResult), new Type[] {typeof(LocalMapRenderer.DrawResult)})]
+            [HarmonyPrefix]
+            public static  bool SetDrawResult(LocalMapBaseView __instance, LocalMapRenderer.DrawResult dr) {
+                var width = dr.ColorRT.width;
+                var height = dr.ColorRT.height;
+                __instance.m_Image.rectTransform.sizeDelta = new Vector2(width, height);
+                var a = (dr.ScreenRect.z - dr.ScreenRect.x) * width;
+                var b = (dr.ScreenRect.w - dr.ScreenRect.y) * height;
+                var sizeDelta = new Vector2(Mathf.Max(a, b), Mathf.Min(a, b));
+                __instance.m_FrameBlock.sizeDelta = sizeDelta;
+                //__instance.m_FrameBlock.localPosition = new Vector2(dr.ScreenRect.x * width, dr.ScreenRect.y * height);
+                __instance.SetupBPRVisible();
+                var contentGroup = UIHelpers.LocalMapScreen.Find("ContentGroup");
+                var mapBlock = UIHelpers.LocalMapScreen.Find("ContentGroup/MapBlock");
+                var map = mapBlock.Find("Map");
+                var frameBlock = mapBlock.Find("Map/FrameBlock");
+                if (contentGroup is RectTransform contentGroupRect 
+                    && mapBlock is RectTransform mapBlockRect
+                    && map is RectTransform mapRect
+                    && frameBlock is RectTransform frameBlockRect
+                    ) {
+                    LocalMapRenderer_Patch.zoom = width / sizeDelta.x;
+                    LocalMapRenderer_Patch.offset = frameBlockRect.localPosition * LocalMapRenderer_Patch.zoom;
+                    var pos = mapBlock.localPosition;
+                    pos.x = -3 - frameBlockRect.localPosition.x * LocalMapRenderer_Patch.zoom;
+                    mapBlock.localPosition = pos;
+                    var zoomVector = new Vector3(LocalMapRenderer_Patch.zoom, LocalMapRenderer_Patch.zoom, 1.0f);
+                    mapBlock.localScale = zoomVector;
+                    mapBlockRect.pivot = new Vector2(0, 0.5f);
+                    var cpos = contentGroup.localPosition;
+                    cpos.x = -frameBlockRect.localPosition.x / 2;
+//                    contentGroup.localPosition = cpos;
+                }
+                return true;
+            }
+        }
+
+        // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
     }
 }

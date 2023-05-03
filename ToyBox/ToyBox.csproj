@@ -197,7 +197,7 @@
     <Compile Include="classes\MainUI\Loot+Spellbook\RemappableInt.cs" />
     <Compile Include="classes\MainUI\Loot+Spellbook\SearchBar.cs" />
     <Compile Include="classes\MainUI\Loot+Spellbook\EnhancedSpellbookController.cs" />
-    <Compile Include="classes\MainUI\Loot+Spellbook\WidgetHelpers.cs" />
+    <Compile Include="classes\Infrastructure\UIWidgetHelpers.cs" />
     <Compile Include="classes\MainUI\PartyEditor\ClassesEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\FeaturesTreeEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\SpellsEditor.cs" />
@@ -295,7 +295,7 @@
     <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
   <ItemGroup>
-	  <EmbeddedResource Include="Art\**\*.png" />
+    <EmbeddedResource Include="Art\**\*.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
@@ -313,7 +313,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
