@@ -103,7 +103,7 @@ namespace ModKit.DataViewer {
             }
         }
         // Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, search));
-        public void StartSearch(Node node, String searchText, SearchProgress updater, ReflectionSearchResult resultRoot) {
+        public void StartSearch(Node node, string[] searchTerms, SearchProgress updater, ReflectionSearchResult resultRoot) {
             if (isSearching) {
                 _cancellationTokenSource.Cancel();
                 isSearching = false;
@@ -118,10 +118,10 @@ namespace ModKit.DataViewer {
             AddUpdate(() => updater(0, 0, 1));
             if (node == null) return;
             SequenceNumber++;
-            Mod.Log($"seq: {SequenceNumber} - search for: {searchText}");
-            if (searchText.Length != 0) {
+            Mod.Log($"seq: {SequenceNumber} - search for: {searchTerms}");
+            if (searchTerms.Length != 0) {
                 var todo = new List<Node> { node };
-                Task.Run(() => Search(searchText, todo , 0, 0, SequenceNumber, updater, resultRoot));
+                Task.Run(() => Search(searchTerms, todo , 0, 0, SequenceNumber, updater, resultRoot));
             }
         }
         public void Stop() {
@@ -130,7 +130,7 @@ namespace ModKit.DataViewer {
                 _cancellationTokenSource.Cancel();
             }
         }
-        private void Search(String searchText, List<Node> todo, int depth, int visitCount, int sequenceNumber, SearchProgress updater, ReflectionSearchResult resultRoot) {
+        private void Search(string[] searchTerms, List<Node> todo, int depth, int visitCount, int sequenceNumber, SearchProgress updater, ReflectionSearchResult resultRoot) {
             if (_cancellationTokenSource.IsCancellationRequested) {
                 isSearching = false;
                 return;
@@ -143,6 +143,7 @@ namespace ModKit.DataViewer {
             //Main.Log(depth, $"seq: {sequenceNumber} depth: {depth} - count: {todo.Count} - todo[0]: {todoText}");
             var newTodo = new List<Node> { };
             var breadth = todo.Count();
+            var termCount = searchTerms.Length;
             foreach (var node in todo) {
                 if (_cancellationTokenSource.IsCancellationRequested || isSearching == false) {
                     isSearching = false;
@@ -161,7 +162,20 @@ namespace ModKit.DataViewer {
                 visitCount++;
                 //Main.Log(depth, $"node: {node.Name} - {node.GetPath()}");
                 try {
-                    if (node.Name.Matches(searchText) || node.ValueText.Matches(searchText)) {
+                    var matchCount = 0;
+                    foreach (var term in searchTerms) {
+                        var nodeToCheck = node;
+                        bool found = false;
+                        while (nodeToCheck != null && !found) {
+                            if (nodeToCheck.Name.Matches(term) || nodeToCheck.ValueText.Matches(term)) {
+                                found = true;
+                                break;
+                            }
+                            nodeToCheck = nodeToCheck.GetParent();
+                        }
+                        if (found) matchCount++;
+                    }
+                    if (matchCount >= termCount) {
                         foundMatch = true;
                         AddUpdate(() => {
                             updater(visitCount, depth, breadth);
@@ -228,7 +242,7 @@ namespace ModKit.DataViewer {
                 }
             }
             if (newTodo.Count > 0 && depth < maxSearchDepth)
-                Search(searchText, newTodo, depth + 1, visitCount, sequenceNumber, updater, resultRoot);
+                Search(searchTerms, newTodo, depth + 1, visitCount, sequenceNumber, updater, resultRoot);
             else
                 Stop();
         }

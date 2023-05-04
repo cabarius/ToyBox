@@ -53,7 +53,11 @@ namespace ModKit.DataViewer {
         private int _nodesCount;
         private int _startIndex;
         private int _skipLevels;
-        private String searchText = "";
+        private string _searchText = "";
+
+        internal string[] SearchTerms => _searchText.Length == 0
+                                             ? Array.Empty<string>()
+                                             : _searchText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         private bool enableCopy = false;
         private int visitCount = 0;
         private int searchDepth = 0;
@@ -137,13 +141,13 @@ namespace ModKit.DataViewer {
                 // tool-bar
                 using (HorizontalScope()) {
                     Space(Indent);
-                    ActionTextField(ref searchText,
+                    ActionTextField(ref _searchText,
                                     "searhText",
                                     (text) => { },
                                     () => {
-                                        searchText = searchText.Trim();
+                                        _searchText = _searchText.Trim();
                                         ReflectionSearch.Shared.StartSearch(_tree.RootNode,
-                                                                            searchText,
+                                                                            SearchTerms,
                                                                             updateCounts,
                                                                             _searchResults);
                                     },
@@ -156,9 +160,9 @@ namespace ModKit.DataViewer {
                                          ReflectionSearch.Shared.Stop();
                                      }
                                      else {
-                                         searchText = searchText.Trim();
+                                         _searchText = _searchText.Trim();
                                          ReflectionSearch.Shared.StartSearch(_tree.RootNode,
-                                                                             searchText,
+                                                                             SearchTerms,
                                                                              updateCounts,
                                                                              _searchResults);
                                      }
@@ -166,7 +170,7 @@ namespace ModKit.DataViewer {
                                  AutoWidth());
                     10.space();
                     if (ValueAdjuster("Max Depth:", ref ReflectionSearch.maxSearchDepth)) {
-                        ReflectionSearch.Shared.StartSearch(_tree.RootNode, searchText, updateCounts, _searchResults);
+                        ReflectionSearch.Shared.StartSearch(_tree.RootNode, SearchTerms, updateCounts, _searchResults);
                     }
                     10.space();
                     if (visitCount > 0) {
@@ -235,7 +239,7 @@ namespace ModKit.DataViewer {
                                 // nodes
                                 using (new GUILayout.VerticalScope()) {
                                     _nodesCount = 0;
-                                    if (searchText.Length > 0) {
+                                    if (SearchTerms.Length > 0) {
                                         Div();
                                         lock (_searchResults) {
                                             _searchResults.Traverse((node, depth) => {
@@ -298,7 +302,7 @@ namespace ModKit.DataViewer {
                     Space(DepthDelta * (depth - _skipLevels));
                     var name = node.Name;
                     var instText = "";  // if (node.InstanceID is int instID) instText = "@" + instID.ToString();
-                    name = name.MarkedSubstring(searchText);
+                    name = name.MarkedSubstring(SearchTerms);
                     var enumerableCount = node.EnumerableCount;
                     if (enumerableCount == 0 || node.IsNull) return; // TODO - make this a config option
                     if (enumerableCount >= 0) name = name + $"[{enumerableCount}]".yellow();
@@ -316,10 +320,13 @@ namespace ModKit.DataViewer {
                     Color originalColor = GUI.contentColor;
                     GUI.contentColor = node.IsException ? Color.red : node.IsNull ? Color.grey : originalColor;
                     var valueText = node.ValueText;
-                    if (string.IsNullOrEmpty(searchText) || !valueText.Matches(searchText))
+                    if (SearchTerms.Length == 0 || !SearchTerms.Any(term => valueText.Matches(term)))
                         GUILayout.TextArea(valueText); // + " " + node.GetPath().green(), _valueStyle);
-                    else
-                        Label(valueText.MarkedSubstring(searchText));
+                    else {
+                        //if (valueText.Matches("mor"))
+                        //    Mod.Log($"{valueText}/[{string.Join(", ", SearchTerms)}]");
+                        Label(valueText.MarkedSubstring(SearchTerms), ExpandWidth(true));
+                    }
                     GUI.contentColor = originalColor;
 
                     // instance type
@@ -331,7 +338,7 @@ namespace ModKit.DataViewer {
                         Label(text, _buttonStyle, GUILayout.ExpandWidth(false));
                     }
                     else 
-                        Space();
+                        Label("", ExpandWidth(false));
                 }
             }
         }

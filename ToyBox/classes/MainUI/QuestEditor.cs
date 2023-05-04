@@ -57,18 +57,25 @@ namespace ToyBox {
             if (!Main.IsInGame) return;
             var quests = Game.Instance?.Player?.QuestBook.Quests.ToArray();
             if (quests == null) return;
+            GUILayout.Space(5f);
+            selectedQuests = (selectedQuests.Length != quests.Length) ? new bool[quests.Length] : selectedQuests;
+            var index = 0;
+            var contentColor = GUI.contentColor;
+            var split = quests.GroupBy(q => q.State == QuestState.Completed).OrderBy(g => g.Key);
             using (HorizontalScope()) {
                 Toggle("Hide Completed", ref settings.toggleQuestHideCompleted);
                 25.space();
                 Toggle("Show Unrevealed Steps", ref settings.toggleQuestsShowUnrevealedObjectives);
                 25.space();
                 Toggle("Inspect Quests and Objectives", ref settings.toggleQuestInspector);
+                if (settings.toggleQuestInspector) {
+                    25.space();
+                    ReflectionTreeView.DetailToggle("Inspect", selectedQuests, split, 0);
+                }
             }
-            GUILayout.Space(5f);
-            selectedQuests = (selectedQuests.Length != quests.Length) ? new bool[quests.Length] : selectedQuests;
-            var index = 0;
-            var contentColor = GUI.contentColor;
-            var split = quests.GroupBy(q => q.State == QuestState.Completed).OrderBy(g => g.Key);
+            if (settings.toggleQuestInspector) {
+                ReflectionTreeView.OnDetailGUI(selectedQuests);
+            }
             foreach (var group in split) {
                 foreach (var quest in group.ToList()) {
                     if (settings.toggleQuestHideCompleted && quest.State == QuestState.Completed && selectedQuests[index]) {

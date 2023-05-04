@@ -1,18 +1,27 @@
-﻿using System;
+﻿//#define MARK_DEBUG
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace ModKit.Utility {
     public static class StringExtensions {
-        public static bool Matches(this string source, string other) {
-            if (source == null || other == null)
+        public static bool Matches(this string source, string query) {
+            if (source == null || query == null)
                 return false;
 #if false
             return source.IndexOf(other, 0, StringComparison.InvariantCulture) != -1;
 #else
-            return source.IndexOf(other, 0, StringComparison.InvariantCultureIgnoreCase) != -1;
+            return source.IndexOf(query, 0, StringComparison.InvariantCultureIgnoreCase) != -1;
 #endif
+        }
+        public static bool Matches(this string source, string[] queryTerms) {
+            var matchCount = 0;
+            foreach (var term in queryTerms) {
+                if (source.IndexOf(term, 0, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    matchCount += 1;
+            }
+            return matchCount >= queryTerms.Length;
         }
         public static string MarkedSubstringNoHTML(this string source, string sub) {
             if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(sub))
@@ -24,41 +33,45 @@ namespace ModKit.Utility {
             }
             return source;
         }
-        public static string MarkedSubstring(this string source, string query, bool markTerms = true) {
+        public static string MarkedSubstring(this string source, string[] queryTerms) {
+            foreach (var term in queryTerms) {
+                source = source.MarkedSubstring(term);
+            }
+            return source;
+        }
+        public static string MarkedSubstring(this string source, string query) {
             if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(query))
                 return source;
-            if (markTerms && query.Contains(" ")) {
-                var terms = query.Split(' ');
-                int count = 0;
-                foreach (var term in terms) {
-//                    if (source.Contains("eapon") || source.Contains("inesse"))
-//                        Mod.Log($"{count.ToString().yellow().bold()} - MarkedSubstring {source}/{term}");
-                    source = source.MarkedSubstring(term, false);
-                    count++;
-                }
-                return source;
-            }
             var htmlStart = source.IndexOf('<');
             if (htmlStart == -1) 
                 return source.MarkedSubstringNoHTML(query);
             var result = new StringBuilder();
             var len = source.Length;
             var segment = source.Substring(0, htmlStart);
- //           bool detail = query.Contains("inesse");
+            #if MARK_DEBUG
+            bool detail = source.Contains("More");
+            if (detail) Mod.Debug($"{query} in {source}");
+            #endif
             var cnt = 0;
             segment = segment.MarkedSubstringNoHTML(query);
-//            if (detail) Mod.Log($"{(cnt++)} - segment - (0, {htmlStart}) {segment} ");
+            #if MARK_DEBUG
+            if (detail) Mod.Log($"{(cnt++)} - segment - (0, {htmlStart}) {segment} ");
+            #endif
             result.Append(segment);
             var htmlEnd = source.IndexOf('>', htmlStart);
             while (htmlStart != -1 && htmlEnd != -1) {
                 var tag = source.Substring(htmlStart, htmlEnd + 1 - htmlStart);
-//                if (detail) Mod.Log($"{(cnt++)} - tag - ({htmlStart}, {htmlEnd}) {tag} ");
+                #if MARK_DEBUG
+                if (detail) Mod.Log($"{(cnt++)} - tag - ({htmlStart}, {htmlEnd}) {tag} ");
+                #endif
                 result.Append(tag);
                 htmlStart = source.IndexOf('<', htmlEnd);
                 if (htmlStart != -1) {
                     segment = source.Substring(htmlEnd + 1, htmlStart - htmlEnd - 1);
                     segment = segment.MarkedSubstringNoHTML(query);
-//                    if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd+1}, {htmlStart}) {segment} ");
+                    #if MARK_DEBUG
+                    if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd+1}, {htmlStart}) {segment} ");
+                    #endif
                     result.Append(segment);
                     htmlEnd = source.IndexOf('>', htmlStart);
                 }
@@ -66,12 +79,16 @@ namespace ModKit.Utility {
             if (htmlStart != -1) {
                 var malformedTag = source.Substring(htmlStart, len + 1 - htmlStart);
                 result.Append(malformedTag);
-//                if (detail) Mod.Log($"{(cnt++)} - badtag - ({htmlEnd + 1}, {htmlStart}) {malformedTag} ");
+                #if MARK_DEBUG
+                if (detail) Mod.Log($"{(cnt++)} - badtag - ({htmlEnd + 1}, {htmlStart}) {malformedTag} ");
+                #endif
             }
             else if (htmlEnd < len) {
                 segment = source.Substring(htmlEnd + 1, len - htmlEnd - 1);
-//                if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd + 1}, {len}) {segment} ");
-                result.Append(segment);
+                #if MARK_DEBUG
+                if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd + 1}, {len}) {segment} ");
+                #endif
+                result.Append(segment.MarkedSubstringNoHTML(query));
             }
             return result.ToString();
         }
