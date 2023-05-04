@@ -187,10 +187,12 @@ namespace ToyBox {
                 }
             }
             if (highest <= Settings.maxRarityToHide) {
-                localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
+                localMapLootMarkerPCView.gameObject.SetActive(false);
+                //localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
             }
             else {
-                localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
+                localMapLootMarkerPCView.gameObject.SetActive(true);
+                //localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
             }
         }
         // Compare function for item rarity

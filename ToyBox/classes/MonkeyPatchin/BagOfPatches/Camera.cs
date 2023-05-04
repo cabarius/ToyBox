@@ -47,6 +47,7 @@ using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 
 using Kingmaker.Controllers.Clicks.Handlers;
 using static ModKit.UI;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
@@ -437,6 +438,8 @@ namespace ToyBox.BagOfPatches {
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
         private static class LocalMapBaseView_Patch {
+            private static float prevZoom = 0;
+            private static readonly string[] MarksPaths = { "MarksPC", "MarksUnits", "MarksLoot", "MarksPoi", "MarksVIT" };
             [HarmonyPatch(nameof(SetDrawResult), new Type[] {typeof(LocalMapRenderer.DrawResult)})]
             [HarmonyPrefix]
             public static  bool SetDrawResult(LocalMapBaseView __instance, LocalMapRenderer.DrawResult dr) {
@@ -464,17 +467,35 @@ namespace ToyBox.BagOfPatches {
                     if (settings.toggleZoomableLocalMaps) {
                         //Mod.Log($"width: {width} sizeDelta.x: {sizeDelta.x} a:{a} dr.ScreenRect: {dr.ScreenRect}");
                         LocalMapVM_Patch.zoom = width / (2 * sizeDelta.x);
+                        var zoom = LocalMapVM_Patch.zoom;
                         LocalMapVM_Patch.offset = frameBlockRect.localPosition * LocalMapVM_Patch.zoom;
                         var pos = mapBlock.localPosition;
-                        pos.x = -3 - frameBlockRect.localPosition.x * LocalMapVM_Patch.zoom - width / 4;
-                        pos.y = -22 - frameBlockRect.localPosition.y * LocalMapVM_Patch.zoom - width / 4;
+                        pos.x = -3 - frameBlockRect.localPosition.x * zoom - width / 4;
+                        pos.y = -22 - frameBlockRect.localPosition.y * zoom - width / 4;
                         mapBlock.localPosition = pos;
-                        var zoomVector = new Vector3(LocalMapVM_Patch.zoom, LocalMapVM_Patch.zoom, 1.0f);
+                        var zoomVector = new Vector3(zoom, zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
                         mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
                         //Mod.Log($"zoom: {zoomVector}");
                         //frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
                         //mapRect.pivot = new Vector2(0.5f, 0.5f);
+                        if (Math.Abs(zoom - prevZoom) > .001) {
+                            var shrinkVector = new Vector3(1.5f / zoom, 1.5f / zoom, 1);
+
+                            foreach (var markPath in MarksPaths) {
+                                var marks = map.Find(markPath).gameObject.getChildren();
+                                foreach (var mark in marks) {
+                                    mark.transform.localScale = shrinkVector;
+                                    var lootMarkerView = mark.GetComponent<LocalMapLootMarkerPCView>();
+                                    lootMarkerView?.Hide();
+                                }
+                            }
+                            if (frame.FindChild("Top")?.gameObject?.transform is Transform tt) tt.localScale = new Vector3(1, 1.5f / zoom, 1);
+                            if (frame.FindChild("Bottom")?.gameObject?.transform is Transform tb) tb.localScale = new Vector3(1, 1.5f / zoom, 1);
+                            if (frame.FindChild("Bottom/BottomEye")?.gameObject?.transform is Transform tbe) tbe.localScale = new Vector3(1.5f/zoom,  1f, 1);
+                            if (frame.FindChild("Left")?.gameObject?.transform is Transform tl) tl.localScale = new Vector3(1.5f / zoom, 1, 1);
+                            if (frame.FindChild("Right")?.gameObject?.transform is Transform tr) tr.localScale = new Vector3(1.5f / zoom, 1, 1);
+                        }
                     }
                     else {
                         var zoomVector = new Vector3(1, 1, 1.0f);
