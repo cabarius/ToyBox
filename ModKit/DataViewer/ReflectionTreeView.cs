@@ -330,7 +330,8 @@ namespace ModKit.DataViewer {
                         style = _buttonStyle;
                         Label(text, _buttonStyle, GUILayout.ExpandWidth(false));
                     }
-                    else Space();
+                    else 
+                        Space();
                 }
             }
         }
