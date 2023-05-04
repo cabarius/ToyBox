@@ -324,9 +324,13 @@ namespace ModKit.DataViewer {
 
                     // instance type
                     var text = "";
-                    if (node.InstType != null && node.InstType != node.Type)
+                    var style = GUI.skin.label;
+                    if (node.InstType != null && node.InstType != node.Type) {
                         text = node.InstType.Name.color(RGBA.yellow);
-                    Label(text, _buttonStyle, GUILayout.ExpandWidth(false));
+                        style = _buttonStyle;
+                        Label(text, _buttonStyle, GUILayout.ExpandWidth(false));
+                    }
+                    else Space();
                 }
             }
         }
