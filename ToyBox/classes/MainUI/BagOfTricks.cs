@@ -299,6 +299,11 @@ namespace ToyBox {
                     Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
                 // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
+                () => {
+                    Toggle("Enhanced Map View", ref settings.toggleZoomableLocalMaps);
+                    110.space();
+                    HelpLabel("Zoom now works for the local map (cities, dungeons, etc). Game restart required if you turn it off");
+                },
                 () => Toggle("Make game continue to play music on lost focus", ref settings.toggleContinueAudioOnLostFocus),
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
@@ -450,11 +455,6 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Camera",
                    1,
-                   () => {
-                       Toggle("Enable Zoom For Town And Other Local Maps", ref settings.toggleZoomableLocalMaps);
-                       110.space();
-                       HelpLabel("Special Zoom UI for the map for cities, dungeons and other encounter areas. Reload save or restart after you turn it off.");
-                   },
                    () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
                    () => {
                        Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
