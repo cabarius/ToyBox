@@ -49,7 +49,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed regression in character name editing
 * (***Narria***) Made Selection Level a little more clear in FeatureSelection detail lists
 * (***Narria***) Further performance improvements to Party Editor search while you type
-* (***Narria***) You can now inspect the quest list in Quest Editor
+* (***Narria***) You can now inspect the selected character list in Party Editor and the Quest list in Quest Editor
 * (***Narria***) Improved Inspector searching by using a background thread and made it a little prettier
 * (***Narria***) Inspecter searches now works with terms (across parents) so if you specify 'Foo Bar' it will find nodes that have foo and bar somewhere across the node and its parents in the outline. This is helpful for to pull out parts of nodes at different levels for example in Quest Editor if you inspect all quests and search for 'Cloud Objective' it will show the objective property for all quests that contain the name Cloud
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.

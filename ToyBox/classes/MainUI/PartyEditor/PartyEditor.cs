@@ -123,7 +123,8 @@ namespace ToyBox {
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
                     Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), AutoWidth());
-                    Space(25);
+                    Space(110);
+                    ReflectionTreeView.DetailToggle("Inspect Party "+ "(for modders)".orange(), "All" , characterList, 0);
 #if false   // disabled until we fix performance
                     var encounterCR = CheatsCombat.GetEncounterCr();
                     if (encounterCR > 0) {
@@ -132,8 +133,9 @@ namespace ToyBox {
 #endif
                 }
             }
+            ReflectionTreeView.OnDetailGUI("All");
             List<Action> todo = new();
-            foreach (var ch in characterList.ToList()) {
+            foreach (var ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
                 var progression = ch.Descriptor.Progression;
