@@ -45,6 +45,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed regression in character name editing
 * (***Narria***) Made Selection Level a little more clear in FeatureSelection detail lists
 * (***Narria***) Further performance improvements to Party Editor search while you type
+* (***Narria***) Improved Inspector searching by using a background thread and made it a little prettier
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
 * (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.
 ### Ver 1.5.0 

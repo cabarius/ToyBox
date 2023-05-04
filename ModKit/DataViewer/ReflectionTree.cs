@@ -269,7 +269,7 @@ namespace ModKit.DataViewer {
         public override int? InstanceID {
             get {
                 int? result = null;
-                if (Value is UnityEngine.Object unityObject) result = unityObject.GetInstanceID();
+                if (Value is UnityEngine.Object unityObject) result = unityObject?.GetInstanceID();
                 if (Value is object obj) return obj.GetHashCode();
                 return result;
             }

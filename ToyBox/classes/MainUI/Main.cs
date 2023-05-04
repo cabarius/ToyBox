@@ -20,6 +20,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
+using ModKit.DataViewer;
 using UnityEngine.UI.Extensions;
 
 namespace ToyBox {
@@ -181,6 +182,7 @@ namespace ToyBox {
             catch (Exception e) {
                 Console.Write($"{e}");
                 _caughtException = e;
+                ReflectionSearch.Shared.Stop();
             }
         }
 

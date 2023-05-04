@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HarmonyLib;
 using UnityEngine;
 using static ModKit.Utility.ReflectionCache;
 using static ModKit.Utility.StringExtensions;
@@ -65,61 +66,88 @@ namespace ModKit.DataViewer {
      *      foreach Node in Tree, this.matches.Clear()
      *      
      */
-    public partial class ReflectionSearch : MonoBehaviour {
+    public partial class ReflectionSearch {
         public delegate void SearchProgress(int visitCount, int depth, int breadth);
-        public bool isSearching { get { return searchCoroutine != null;  } }
+        private CancellationTokenSource _cancellationTokenSource;
+        public bool isSearching { get; private set; } = false;
         private static HashSet<int> VisitedInstanceIDs = new HashSet<int> { };
         public static int SequenceNumber = 0;
         private IEnumerator searchCoroutine;
         private static ReflectionSearch _shared;
         public static int maxSearchDepth = 1;
-
+        private static Queue<Action> _updates = new();
+        public static int ApplyUpdates() {
+            lock (_updates) {
+                int count = _updates.Count;
+                foreach (var update in _updates) update.Invoke();
+                _updates.Clear();
+                return count;
+            }
+        }
+        public static void AddUpdate(Action update) {
+            lock (_updates) {
+                _updates.Enqueue(update);
+            }
+        }
+        public static void ClearUpdates() {
+            lock (_updates) {
+                _updates.Clear();
+            }
+        }
         public static ReflectionSearch Shared {
             get {
                 if (_shared == null) {
-                    _shared = new GameObject().AddComponent<ReflectionSearch>();
-                    DontDestroyOnLoad(_shared.gameObject);
+                    _shared = new ReflectionSearch();
                 }
                 return _shared;
             }
         }
-
-        public void StartSearch(Node node, String searchText, SearchProgress updator, ReflectionSearchResult resultRoot) {
-            if (searchCoroutine != null) {
-                StopCoroutine(searchCoroutine);
-                searchCoroutine = null;
+        // Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, search));
+        public void StartSearch(Node node, String searchText, SearchProgress updater, ReflectionSearchResult resultRoot) {
+            if (isSearching) {
+                _cancellationTokenSource.Cancel();
+                isSearching = false;
             }
             VisitedInstanceIDs.Clear();
-            resultRoot.Clear();
-            resultRoot.Node = node;
-            StopAllCoroutines();
-            updator(0, 0, 1);
+            lock (resultRoot) {
+                resultRoot.Clear();
+                resultRoot.Node = node;
+            }
+            _cancellationTokenSource = new();
+            isSearching = true;
+            AddUpdate(() => updater(0, 0, 1));
             if (node == null) return;
             SequenceNumber++;
             Mod.Log($"seq: {SequenceNumber} - search for: {searchText}");
-            if (searchText.Length == 0) {
-            }
-            else {
+            if (searchText.Length != 0) {
                 var todo = new List<Node> { node };
-                searchCoroutine = Search(searchText, todo , 0, 0, SequenceNumber, updator, resultRoot);
-                StartCoroutine(searchCoroutine);                
+                Task.Run(() => Search(searchText, todo , 0, 0, SequenceNumber, updater, resultRoot));
             }
         }
         public void Stop() {
-            if (searchCoroutine != null) {
-                StopCoroutine(searchCoroutine);
-                searchCoroutine = null;
+            if (isSearching) {
+                isSearching = false;
+                _cancellationTokenSource.Cancel();
             }
-            StopAllCoroutines();
         }
-        private IEnumerator Search(String searchText, List<Node> todo, int depth, int visitCount, int sequenceNumber, SearchProgress updator, ReflectionSearchResult resultRoot) {
-            yield return null;
-            if (sequenceNumber != SequenceNumber) yield return null;
+        private void Search(String searchText, List<Node> todo, int depth, int visitCount, int sequenceNumber, SearchProgress updater, ReflectionSearchResult resultRoot) {
+            if (_cancellationTokenSource.IsCancellationRequested) {
+                isSearching = false;
+                return;
+            }
+            if (sequenceNumber != SequenceNumber) {
+                Stop();
+                return;
+            }
             var todoText = todo.Count > 0 ? todo.First().Name : "n/a";
             //Main.Log(depth, $"seq: {sequenceNumber} depth: {depth} - count: {todo.Count} - todo[0]: {todoText}");
             var newTodo = new List<Node> { };
             var breadth = todo.Count();
             foreach (var node in todo) {
+                if (_cancellationTokenSource.IsCancellationRequested || isSearching == false) {
+                    isSearching = false;
+                    return;
+                }
                 bool foundMatch = false;
                 var instanceID = node.InstanceID;
                 bool alreadyVisted = false;
@@ -135,10 +163,14 @@ namespace ModKit.DataViewer {
                 try {
                     if (node.Name.Matches(searchText) || node.ValueText.Matches(searchText)) {
                         foundMatch = true;
-                        updator(visitCount, depth, breadth);
-                        resultRoot.AddSearchResult(node);
-                        Mod.Log(depth, $"matched: {node.GetPath()} - {node.ValueText}");
-                        Mod.Log($"{resultRoot.ToString()}");
+                        AddUpdate(() => {
+                            updater(visitCount, depth, breadth);
+                            lock (resultRoot) {
+                                resultRoot.AddSearchResult(node);
+                                Mod.Log(depth, $"matched: {node.GetPath()} - {node.ValueText}");
+                                Mod.Log($"{resultRoot.ToString()}");
+                            }
+                        });
                     }
                 }
                 catch (Exception e) {
@@ -150,12 +182,10 @@ namespace ModKit.DataViewer {
                     //if (node.Expanded == ToggleState.On && node.GetParent() != null) {
                     //    node.Expanded = ToggleState.Off;
                     //}
-                    if (visitCount % 100 == 0) updator(visitCount, depth, breadth);
+                    if (visitCount % 100 == 0) AddUpdate(() => updater(visitCount, depth, breadth));
 
                 }
                 if (node.hasChildren && !alreadyVisted) {
-                    if (node.InstanceID is int instID2 && instID2 == this.GetInstanceID()) break;
-                    if (node.Name == "searchCoroutine") break;
                     //if (node.Name == "SyncRoot") break;
                     //if (node.Name == "normalized") break;
 
@@ -196,10 +226,9 @@ namespace ModKit.DataViewer {
                         Mod.Log(depth, $"caught - {e}");
                     }
                 }
-                if (visitCount % 1000 == 0) yield return null;
             }
             if (newTodo.Count > 0 && depth < maxSearchDepth)
-                yield return Search(searchText, newTodo, depth + 1, visitCount, sequenceNumber, updator, resultRoot);
+                Search(searchText, newTodo, depth + 1, visitCount, sequenceNumber, updater, resultRoot);
             else
                 Stop();
         }
