@@ -235,17 +235,6 @@ namespace ToyBox.Inventory {
             }
         }
 
-        [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
-        private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
-            public static void Postfix(LocalMapMarkerPCView __instance) {
-                if (__instance == null)
-                    return;
-
-                if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
-                    __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => { (__instance as LocalMapLootMarkerPCView)?.Hide(); }));
-            }
-        }
-
         [HarmonyPatch(typeof(ItemSlot), nameof(ItemSlot.CanRemoveItem))]
         private static class ItemSlot_CanRemoveItem_Patch {
             public static void Postfix(ref bool __result) {

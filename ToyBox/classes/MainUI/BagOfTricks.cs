@@ -304,6 +304,7 @@ namespace ToyBox {
                     110.space();
                     HelpLabel("Zoom now works for the local map (cities, dungeons, etc). Game restart required if you turn it off");
                 },
+                () => Toggle("Show Quest Markers On Local Map", ref settings.toggleShowQuestMarkersOnLocalMap),
                 () => Toggle("Make game continue to play music on lost focus", ref settings.toggleContinueAudioOnLostFocus),
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),

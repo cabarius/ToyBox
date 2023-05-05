@@ -22,6 +22,7 @@ namespace ToyBox {
             if (Settings.toggleEnhancedSpellbook) {
                 LoadSpellbookSearchBar();
             }
+            
 #if false
             if (Settings.EnableInventorySearchBar)
             {

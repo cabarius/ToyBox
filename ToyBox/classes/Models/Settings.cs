@@ -116,6 +116,7 @@ namespace ToyBox {
         public bool toggleExpandedPartyView = false;
         public bool togglePuzzleRelief = false;
         public bool toggleZoomableLocalMaps = false;
+        public bool toggleShowQuestMarkersOnLocalMap = false;
 
         // Camera
         public bool toggleZoomOnAllMaps = false;
