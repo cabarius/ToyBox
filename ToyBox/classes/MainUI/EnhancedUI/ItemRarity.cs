@@ -1,28 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Kingmaker.Blueprints.Items;
-using UnityEngine;
-using Kingmaker.Items;
+﻿using Kingmaker;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Items.Components;
-using ModKit;
-using ToyBox;
-using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.UI.Common;
-using Kingmaker;
-using Kingmaker.View.MapObjects;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
-using Kingmaker.View;
-using Kingmaker.EntitySystem.Entities;
-using UnityEngine.UI;
-using System.Reflection;
+using Kingmaker.Blueprints.Items.Components;
+using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Designers.Mechanics.EquipmentEnchants;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Items;
+using Kingmaker.UI.Common;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
+using Kingmaker.View;
+using Kingmaker.View.MapObjects;
+using ModKit;
+using System;
+using System.Linq;
+using ToyBox;
+using UnityEngine;
 
 namespace ToyBox {
     public enum RarityType {
@@ -117,7 +114,8 @@ namespace ToyBox {
             //var rating = item.EnchantmentValue * rarityScaling;
             switch (rating) {
                 case 0 when bp is BlueprintItemEquipmentUsable usableBP:
-                case 0 when bp is BlueprintItemEquipment equipBP: rating = Math.Max(rating, costRating);
+                case 0 when bp is BlueprintItemEquipment equipBP:
+                    rating = Math.Max(rating, costRating);
                     break;
             }
 #if false
@@ -187,12 +185,10 @@ namespace ToyBox {
                 }
             }
             if (highest <= Settings.maxRarityToHide) {
-                localMapLootMarkerPCView.gameObject.SetActive(false);
-                //localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
+                localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
             }
             else {
-                localMapLootMarkerPCView.gameObject.SetActive(true);
-                //localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
+                localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
             }
         }
         // Compare function for item rarity

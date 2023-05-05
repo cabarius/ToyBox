@@ -1,65 +1,31 @@
 ﻿using HarmonyLib;
-using JetBrains.Annotations;
 using Kingmaker;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.GameModes;
-using Kingmaker.Items;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities;
-using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Parts;
-using Kingmaker.View;
-using System;
-using System.Linq;
-using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.Settings;
-using Kingmaker.Settings.Difficulty;
-using ModKit;
-using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Utility;
-using System.Collections.Generic;
-using CameraMode = Kingmaker.View.CameraMode;
-using DG.Tweening;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Root;
-using Owlcat.Runtime.Visual.RenderPipeline;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.OccludedObjectHighlighting;
 using Kingmaker.Blueprints.Area;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
-using Kingmaker.Visual.LocalMap;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
-using Kingmaker.UI;
-using Kingmaker.Visual.Particles.ForcedCulling;
-using Kingmaker.Visual.LocalMap;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-using static Kingmaker.Visual.LocalMap.LocalMapRenderer;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-using UnityEngine.EventSystems;
-using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
-
 using Kingmaker.Controllers.Clicks.Handlers;
-using static ModKit.UI;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Interaction;
-using static Kingmaker.UnitLogic.FactLogic.AddLocalMapMarker;
-using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.Designers;
+using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility;
+using Kingmaker.Visual.LocalMap;
+using ModKit;
+using System;
+using System.Linq;
 using UniRx;
+using UnityEngine;
+using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 
 namespace ToyBox.BagOfPatches {
     internal static class LocalMapPatches {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
-        
+
 #if false
         [HarmonyPatch(typeof(LocalMapRenderer))]
         private static class LocalMapRenderer_Patch {
@@ -200,7 +166,7 @@ namespace ToyBox.BagOfPatches {
             public static float width = 0.0f;
             // public static Vector2 offset = new Vector2();
 
-            [HarmonyPatch(nameof(OnClick), new Type[] {typeof(Vector2), typeof(bool)})]
+            [HarmonyPatch(nameof(OnClick), new Type[] { typeof(Vector2), typeof(bool) })]
             [HarmonyPrefix]
             public static bool OnClick(LocalMapVM __instance, Vector2 localPos, bool state) {
                 if (!settings.toggleZoomableLocalMaps) return true;
@@ -218,7 +184,7 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
-        
+
         // Modifies Local Map View to zoom the map for easier reading
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
@@ -227,9 +193,9 @@ namespace ToyBox.BagOfPatches {
             // These are the transform paths for the different kinds of marks on the LocalMapView
             private static readonly string[] MarksPaths = { "MarksPC", "MarksUnits", "MarksLoot", "MarksPoi", "MarksVIT" };
 
-            [HarmonyPatch(nameof(SetDrawResult), new Type[] {typeof(LocalMapRenderer.DrawResult)})]
+            [HarmonyPatch(nameof(SetDrawResult), new Type[] { typeof(LocalMapRenderer.DrawResult) })]
             [HarmonyPrefix]
-            public static  bool SetDrawResult(LocalMapBaseView __instance, LocalMapRenderer.DrawResult dr) {
+            public static bool SetDrawResult(LocalMapBaseView __instance, LocalMapRenderer.DrawResult dr) {
                 // This is the original owlcat code.  This gets called when zoom changes to adjust the size of the FrameBlock, a widget that looks like a picture frame and depicts the users view into the world based on zoom and camera rotation
                 var width = dr.ColorRT.width;
                 LocalMapVM_Patch.width = width;
@@ -241,14 +207,14 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_FrameBlock.sizeDelta = sizeDelta;
                 __instance.m_FrameBlock.localPosition = new Vector2(dr.ScreenRect.x * width, dr.ScreenRect.y * height);
                 __instance.SetupBPRVisible();
-                
+
                 // Now ToyBox wants to rock your world. We grab various transforms 
                 var contentGroup = UIHelpers.LocalMapScreen.Find("ContentGroup"); // Overall map view including the compass
                 var mapBlock = UIHelpers.LocalMapScreen.Find("ContentGroup/MapBlock"); // Container for map, border, markers and the frame
                 var map = mapBlock.Find("Map"); // Just the map
                 var frameBlock = mapBlock.Find("Map/FrameBlock"); // Camera viewport projected onto the map
                 var frame = frameBlock.Find("Frame"); // intermediate container for the FrameBlock
-                if (contentGroup is RectTransform contentGroupRect 
+                if (contentGroup is RectTransform contentGroupRect
                     && mapBlock is RectTransform mapBlockRect
                     && map is RectTransform mapRect
                     && frameBlock is RectTransform frameBlockRect
@@ -282,7 +248,9 @@ namespace ToyBox.BagOfPatches {
                             foreach (var markPath in MarksPaths) {
                                 var marks = map.Find(markPath).gameObject.getChildren();
                                 foreach (var mark in marks) {
-                                    mark.transform.localScale = shrinkVector;
+                                    if (!mark.transform.localScale.Equals(new Vector3(0, 0, 0))) {
+                                        mark.transform.localScale = shrinkVector;
+                                    }
                                     var lootMarkerView = mark.GetComponent<LocalMapLootMarkerPCView>();
                                     lootMarkerView?.Hide();
                                 }
@@ -291,7 +259,7 @@ namespace ToyBox.BagOfPatches {
                             // Finally we tweak the thickness of the Frame Block so it doesn't grow really small and thick.
                             if (frame.FindChild("Top")?.gameObject?.transform is Transform tt) tt.localScale = new Vector3(1, 1.5f / zoom, 1);
                             if (frame.FindChild("Bottom")?.gameObject?.transform is Transform tb) tb.localScale = new Vector3(1, 1.5f / zoom, 1);
-                            if (frame.FindChild("Bottom/BottomEye")?.gameObject?.transform is Transform tbe) tbe.localScale = new Vector3(1.5f/zoom,  1f, 1);
+                            if (frame.FindChild("Bottom/BottomEye")?.gameObject?.transform is Transform tbe) tbe.localScale = new Vector3(1.5f / zoom, 1f, 1);
                             if (frame.FindChild("Left")?.gameObject?.transform is Transform tl) tl.localScale = new Vector3(1.5f / zoom, 1, 1);
                             if (frame.FindChild("Right")?.gameObject?.transform is Transform tr) tr.localScale = new Vector3(1.5f / zoom, 1, 1);
                         }
@@ -313,7 +281,7 @@ namespace ToyBox.BagOfPatches {
             public static bool SetupBPRVisible(LocalMapBaseView __instance) {
                 if (!settings.toggleZoomableLocalMaps) return true;
                 __instance.m_BPRImage?.gameObject?.SetActive(
-                    LocalMapVM_Patch.zoom  <= 1.0f &&
+                    LocalMapVM_Patch.zoom <= 1.0f &&
                      __instance.m_Image.rectTransform.rect.width < 975.0
                     );
                 return false;
@@ -394,17 +362,17 @@ namespace ToyBox.BagOfPatches {
                         var zoomVector = new Vector3(LocalMapVM_Patch.zoom, LocalMapVM_Patch.zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
                         mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
-                        #if false
+#if false
                         frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
                         mapRect.pivot = new Vector2(0.5f, 0.5f);
-                        #endif
+#endif
                         //var frameQuat = frameRect.localRotation;
                         //frameRect.localRotation= new Quaternion(0, 0, 0, 0);
                     }
 
             }
-            #endif
-        #if false
+#endif
+#if false
         [HarmonyPatch(typeof(LocalMapPCView))]
         public static class LocalMapPCView_Patch {
             [HarmonyPatch(nameof(OnPointerClick))]
@@ -426,6 +394,6 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
-        #endif
+#endif
     }
 }
