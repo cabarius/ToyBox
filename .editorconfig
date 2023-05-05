@@ -132,3 +132,7 @@ resharper_place_simple_case_statement_on_same_line = true
 resharper_wrap_chained_binary_expressions = chop_if_long
 resharper_wrap_chained_binary_patterns = chop_if_long
 csharp_new_line_before_else = true
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+csharp_new_line_before_catch = true
