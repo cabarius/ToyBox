@@ -283,10 +283,15 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPrefix]
             public static bool SetupBPRVisible(LocalMapBaseView __instance) {
                 if (!settings.toggleZoomableLocalMaps) return true;
+                #if true
+                bool show = LocalMapVM_Patch.zoom <= 1.0f && __instance.m_Image.rectTransform.rect.width < 975.0;
+                __instance.m_BPRImage.CrossFadeColor(show ? Color.white : Color.clear, 0.5f, true, true);
+                #else
                 __instance.m_BPRImage?.gameObject?.SetActive(
                     LocalMapVM_Patch.zoom <= 1.0f &&
                      __instance.m_Image.rectTransform.rect.width < 975.0
                     );
+                #endif
                 return false;
             }
         }
