@@ -152,7 +152,7 @@ namespace ToyBox {
 
         }
         public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
-        public static LocalizedString GetLocalizedString(string key) => new LocalizedString() { Key = key };
+        public static LocalizedString LocalizedStringInGame(this string key) => new LocalizedString() { Key = key };
 
     }
 }
