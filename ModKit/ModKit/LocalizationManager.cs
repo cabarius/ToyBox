@@ -77,7 +77,7 @@ namespace ModKit {
                 string localizedString = "";
                 if (!IsDefault) {
                     if (!(_local?.Strings.TryGetValue(key, out localizedString)) ?? true) {
-                        _local?.Strings.Add(key, key);
+                        _local?.Strings.Add(key, "");
                         Mod.Debug("Unknown Key in current locale: " + key);
                     }
                 }
@@ -120,7 +120,10 @@ namespace ModKit {
                 var toSerialize = IsDefault ? _localDefault : _local;
                 if (toSerialize == null) {
                     toSerialize = new();
-                    toSerialize.Strings = _localDefault.Strings;
+                    toSerialize.Strings = new();
+                    foreach (var k in _localDefault.Strings.Keys) {
+                        toSerialize.Strings.Add(k, "");
+                    }
                 }
                 toSerialize.LanguageCode = IsDefault ? "en" : toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
                 toSerialize.Version = Mod.modEntry.Version.ToString();
