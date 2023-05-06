@@ -44,8 +44,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Made picture frame get thinner so it doesn't block your view
   * Known issue: clicking on the map moves the frame too far.  Clicking on points of interest works correctly.
 * (***Narria***) Quality of Life: Option to mark NPCs with interesting dialog/quests on the map
+  * Also marks interesting NPCs on the main screen by coloring their name
 * (***Narria***) Added Interesting NPC list to the Quest Editor tab
-* (***Narria***) **Quality of Life**: ToyBox Archeology Corps has labeld your puzzle pieces for you to make identificaton easier. 
+* (***Narria***) **Quality of Life**: ToyBox Archeology Corps has labeled your puzzle pieces for you to make identification easier. 
   * Added puzzle piece tags to the puzzle piece to identify the puzzle and the 2 symbols as a pair of numbers formated like this **[Puzzle Piece: Purple2x3]**. This should make it easier to identify and track the pieces in your inventory. I am looking into adding tool tips to the puzzle interactors to show the numbers too.
 * (***Narria***) Fixed regression that made it impossible to use the spellbook merge feature
 * (***Narria***) Fixed regression in character name editing
@@ -55,8 +56,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Improved Inspector searching by using a background thread and made it a little prettier
 * (***Narria***) Inspecter searches now works with terms (across parents) so if you specify 'Foo Bar' it will find nodes that have foo and bar somewhere across the node and its parents in the outline. This is helpful for to pull out parts of nodes at different levels for example in Quest Editor if you inspect all quests and search for 'Cloud Objective' it will show the objective property for all quests that contain the name Cloud
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
-* (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.
-### Ver 1.5.0 
+* (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenofell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
    * Added the ability to sort items in inventory and vendors by rarity

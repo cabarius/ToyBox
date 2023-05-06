@@ -3,6 +3,7 @@ using Kingmaker;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UI._ConsoleUI.Overtips;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
@@ -16,6 +17,7 @@ using Kingmaker.Visual.LocalMap;
 using ModKit;
 using System;
 using System.Linq;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -319,8 +321,8 @@ namespace ToyBox.BagOfPatches {
                 if (count >= 1) {
                     Mod.Debug($"adding Mark to {unit.CharacterName.orange()}");
                     var mark = markerView.transform;
-                    var uiRoot = UIHelpers.UIRoot;
 #if false
+                    var uiRoot = UIHelpers.UIRoot;
                     if (attentionMark == null) {
                         var attentionPrototype = uiRoot.Find("TransitionViewPCView/Alushinyrra/LegendBlock/Nexus_Legend/Attention");
                         attentionMark = GameObject.Instantiate(attentionPrototype).gameObject;
@@ -334,6 +336,23 @@ namespace ToyBox.BagOfPatches {
                 else {
 //                    attentionMark?.SetActive(false);
                     markImage.color = new Color(1, 1, 1);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(UnitOvertipView))]
+        private static class UnitOvertipViewPatch {
+            [HarmonyPatch(nameof(UnitOvertipView.BindViewImplementation))]
+            [HarmonyPostfix]
+            public static void BindViewImplementation(UnitOvertipView __instance) {
+                if (!settings.toggleShowInterestingNPCsOnLocalMap) return;
+                if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
+                    var interestingness = entityOvertipVM.Unit.GetDialogAndActionCounts();
+                    var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
+                    if (interestingness >= 1)
+                        charName.color = new Color(0.6898f, 0.3771f, 0.0184f);
+                    else
+                        charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
             }
         }

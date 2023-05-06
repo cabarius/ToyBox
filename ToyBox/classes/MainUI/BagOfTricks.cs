@@ -302,12 +302,12 @@ namespace ToyBox {
                     Toggle("Enhanced Map View", ref settings.toggleZoomableLocalMaps, 500.width());
                     HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off");
                 },
+                () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => {
-                    Toggle("Mark Interesting NPCs On Local Map", ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
-                    HelpLabel("This will change the color of NPC map markers to indicate that they have interesting or conditional interactions");
+                    Toggle("Mark Interesting NPCs", ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
+                    HelpLabel("This will change the color of NPC names on the highlike makers and change the color map markers to indicate that they have interesting or conditional interactions");
                 },
                 () => Toggle("Make game continue to play music on lost focus", ref settings.toggleContinueAudioOnLostFocus),
-                () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
                 () => {
                     Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave, 500.width());
