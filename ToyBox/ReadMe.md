@@ -55,6 +55,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Improved Inspector searching by using a background thread and made it a little prettier
 * (***Narria***) Inspecter searches now works with terms (across parents) so if you specify 'Foo Bar' it will find nodes that have foo and bar somewhere across the node and its parents in the outline. This is helpful for to pull out parts of nodes at different levels for example in Quest Editor if you inspect all quests and search for 'Cloud Objective' it will show the objective property for all quests that contain the name Cloud
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
+* (***ADDB***) Fixed Bug introduced in a Preview that made every loot marker appear automatically.
+* (***ADDB***) Added Localization Framework.
 * (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.
 ### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements
