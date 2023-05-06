@@ -1,9 +1,4 @@
-﻿using System.IO;
-using UnityModManagerNet;
-using static ModKit.UI;
-using static UnityModManagerNet.UnityModManager;
-
-namespace ModKit {
+﻿namespace ModKit {
     public partial class Mod {
         public static ModKitSettings ModKitSettings;
     }
@@ -14,5 +9,8 @@ namespace ModKit {
         public int browserSearchLimit = 20;
         public int browserDetailSearchLimit = 10;
         public bool toggleKeyBindingsOutputToTranscript = true;
+
+        // Localization
+        public string uiCultureCode = "en";
     }
 }
