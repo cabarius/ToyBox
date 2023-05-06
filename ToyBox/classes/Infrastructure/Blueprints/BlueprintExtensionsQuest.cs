@@ -59,8 +59,8 @@ namespace ToyBox {
             count += dialogConditions.Count();
             var actions = spawnerInteractions.OfType<SpawnerInteractionActions>();
             var actionConditions = actions
-                                   .Where(a => a.Conditions?.Get() != null)
-                                   .SelectMany(a => a.Conditions.Get().ElementsArray.OfType<ObjectiveStatus>());
+                                   .Where(a => a.Actions?.Get() != null)
+                                   .SelectMany(a => a.Actions.Get().ElementsArray.OfType<ObjectiveStatus>());
             count += actionConditions.Count();
             // For now we assume any NPC 
             count += unit.Parts.Parts
@@ -90,11 +90,11 @@ namespace ToyBox {
             result = result.Union(dialogConditions);
             var actions = spawnInterations.OfType<SpawnerInteractionActions>();
             var actionConditions = actions
-                                   .Where(a => a.Conditions?.Get() != null)
-                                   .SelectMany(a => a.Conditions.Get()
-                                                            .ElementsArray.OfType<ObjectiveStatus>()
-                                                            .Select(o => new QuestObjectiveStatusEntry(unit, a.name, o))
-                                                            );
+                                   .Where(a => a.Actions?.Get() != null)
+                                   .SelectMany(a => a.Actions.Get().ElementsArray
+                                                     .OfType<ObjectiveStatus>()
+                                                     .Select(o => new QuestObjectiveStatusEntry(unit, a.name, o))
+                                       );
             result = result.Union(actionConditions);
             return result;
         }

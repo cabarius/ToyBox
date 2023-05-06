@@ -95,7 +95,7 @@ namespace ToyBox {
                                     foreach (var entry in entries) {
                                         using (HorizontalScope()) {
                                             150.space();
-                                            Label($"{entry.source} - {entry.objectiveStatus.GetCaption()} -> {(entry.objectiveStatus.CheckCondition() ? "True".green() : "False".yellow())}");
+                                            Label($"{entry.source.ToString().orange()} - {entry.objectiveStatus.GetCaption().grey()} -> {(entry.objectiveStatus.CheckCondition() ? "True".green() : "False".yellow())}");
                                         }
                                     }
                                 }
