@@ -10,9 +10,16 @@ using System;
 using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.QuestSystem;
+using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using static ModKit.UI;
 using ModKit.DataViewer;
+using System.Collections.Generic;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.UnitLogic.Parts;
+using ModKit.Utility;
+using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
     public static class QuestExensions {
@@ -30,8 +37,8 @@ namespace ToyBox {
         };
 
         public static bool IsRevealed(this QuestObjective objective) => objective.State == QuestObjectiveState.Started || objective.State == QuestObjectiveState.Completed;
-        public static string stateColored(this string text, Quest quest) => text.color(questColors[(int)quest.State]);
-        public static string stateColored(this string text, QuestObjective objective) => text.color(questColors[(int)objective.State]);
+        public static string stateColored(this string text, Quest quest) => RichText.color(text, questColors[(int)quest.State]);
+        public static string stateColored(this string text, QuestObjective objective) => RichText.color(text, questColors[(int)objective.State]);
         public static string titleColored(this Quest quest) => quest.Blueprint.Title.ToString().color(titleColors[(int)quest.State]);
         public static string titleColored(this QuestObjective objective) {
             var blueprint = objective.Blueprint;
@@ -51,6 +58,7 @@ namespace ToyBox {
         public static Settings settings => Main.Settings;
         public static Player player => Game.Instance.Player;
         private static bool[] selectedQuests = new bool[0];
+        private static Browser<UnitEntityData, UnitEntityData> objectiveBrowser = new();
         public static void ResetGUI() { }
 
         public static void OnGUI() {
@@ -61,6 +69,44 @@ namespace ToyBox {
             selectedQuests = (selectedQuests.Length != quests.Length) ? new bool[quests.Length] : selectedQuests;
             var index = 0;
             var contentColor = GUI.contentColor;
+            Div();
+            using (HorizontalScope()) {
+                Label("Interesting NPCs in the local area".cyan());
+            }
+            using (HorizontalScope()) {
+                50.space();
+                using (VerticalScope(GUI.skin.box)) {
+                    if (Game.Instance?.State?.Units.All is { } units) {
+                        objectiveBrowser.OnGUI(
+                                units.Where(u => u.GetDialogAndActionCounts() >= 1 ),
+                                () => units,
+                                i => i,
+                                u => u.CharacterName,
+                                u => u.CharacterName,
+                                null,
+                                (_, u) => {
+                                    ReflectionTreeView.DetailToggle(u.CharacterName.orange(), u.Parts.Parts);
+                                    25.space();
+                                    Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(u.GetDialogAndActionCounts().ToString()));
+                                },
+                                (_, u) => {
+                                    ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
+                                    var entries = u.GetQuestObjectives();
+                                    foreach (var entry in entries) {
+                                        using (HorizontalScope()) {
+                                            150.space();
+                                            Label($"{entry.source} - {entry.objectiveStatus.GetCaption()} -> {(entry.objectiveStatus.CheckCondition() ? "True".green() : "False".yellow())}");
+                                        }
+                                    }
+                                }
+                            );
+                    }
+                }
+            }
+            Div();
+            using (HorizontalScope()) {
+                Label("Quests".cyan());
+            }
             var split = quests.GroupBy(q => q.State == QuestState.Completed).OrderBy(g => g.Key);
             using (HorizontalScope()) {
                 Toggle("Hide Completed", ref settings.toggleQuestHideCompleted);

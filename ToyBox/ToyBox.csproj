@@ -165,6 +165,7 @@
   <ItemGroup>
     <Compile Include="classes\CustomEnchantmentStackingFix.cs" />
     <Compile Include="classes\Infrastructure\AssetLoader.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensionsQuest.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
@@ -314,7 +315,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
