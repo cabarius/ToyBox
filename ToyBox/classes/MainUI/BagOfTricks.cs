@@ -294,22 +294,30 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Quality of Life", 1,
                 () => {
-                    Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);
-                    Space(25);
+                    Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 500.width() );
                     Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
                 },
                 // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
                 () => {
-                    Toggle("Enhanced Map View", ref settings.toggleZoomableLocalMaps);
-                    110.space();
-                    HelpLabel("Zoom now works for the local map (cities, dungeons, etc). Game restart required if you turn it off");
+                    Toggle("Enhanced Map View", ref settings.toggleZoomableLocalMaps, 500.width());
+                    HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off");
                 },
-                () => Toggle("Show Quest Markers On Local Map", ref settings.toggleShowQuestMarkersOnLocalMap),
+                () => {
+                    Toggle("Mark Interesting NPCs On Local Map", ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
+                    HelpLabel("This will change the color of NPC map markers to indicate that they have interesting or conditional interactions");
+                },
                 () => Toggle("Make game continue to play music on lost focus", ref settings.toggleContinueAudioOnLostFocus),
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
-                () => { Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave); 25.space(); Label("Hold down shift during launch to bypass".green()); },
-                () => { Toggle($"Game Over Fix For {"LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon)} omg he just ran in!", ref settings.toggleGameOverFixLeeerrroooooyJenkins); 25.space(); Label("Prevents dumb companions (that's you Greybor) from wiping the party by running running into the dragon room and dying...".green()); },
+                () => {
+                    Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave, 500.width());
+                    HelpLabel("Hold down shift during launch to bypass");
+                },
+                () => Toggle($"Game Over Fix For {"LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon)} omg he just ran in!", ref settings.toggleGameOverFixLeeerrroooooyJenkins),
+                () => {
+                    503.space();
+                    HelpLabel("Prevents dumb companions (that's you Greybor) from wiping the party by running running into the dragon room and dying...");
+                },
                 () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ", ref settings.toggleWidenActionBarGroups),
                 () => {
                     if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
@@ -317,10 +325,9 @@ namespace ToyBox {
                     }
                 },
                 () => {
-                    Toggle("Icky Stuff Begone!!!", ref settings.toggleReplaceModelMenu, AutoWidth());
+                    Toggle("Icky Stuff Begone!!!", ref settings.toggleReplaceModelMenu, (settings.toggleReplaceModelMenu ? 248 :499).width());
                     if (settings.toggleReplaceModelMenu) {
-                        Space(25);
-                        using (VerticalScope(Width(250))) {
+                        using (VerticalScope(Width(247))) {
                             Toggle("Spiders Begone!", ref settings.toggleSpiderBegone);
                             Toggle("Vescavors Begone!", ref settings.toggleVescavorsBegone);
                             Toggle("Retrievers Begone!", ref settings.toggleRetrieversBegone);
@@ -328,26 +335,23 @@ namespace ToyBox {
                             Toggle("Deskari Begone!", ref settings.toggleDeskariBegone);
                         }
                     }
-                    Space(25);
-                    Label("Some players find spiders and other swarms icky. This replaces them with something more pleasent".green());
+                    Label("Some players find spiders and other swarms icky. This replaces them with something more pleasant".green());
                 },
                 () => Toggle("Make tutorials not appear if disabled in settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
                 () => {
                     var modifier = KeyBindings.GetBinding("InventoryUseModifier");
                     var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
-                    Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot);
+                    Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 470.width());
                     if (settings.toggleShiftClickToUseInventorySlot) {
-                        Space(25);
                         ModifierPicker("InventoryUseModifier", "", 0);
                     }
                 },
                 () => {
                     var modifier = KeyBindings.GetBinding("ClickToTransferModifier");
                     var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
-                    Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer);
+                    Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 470.width());
                     if (settings.toggleShiftClickToFastTransfer) {
-                        Space(25);
                         ModifierPicker("ClickToTransferModifier", "", 0);
                     }
                 },

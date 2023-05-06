@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 
 namespace ToyBox.BagOfPatches {
@@ -297,53 +298,42 @@ namespace ToyBox.BagOfPatches {
                 Mod.Debug($"LocalMapMarkerPCView.BindViewImplementation - {__instance.ViewModel.MarkerType} - {__instance.ViewModel.GetType().Name}");
                 if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
                     __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => { (__instance as LocalMapLootMarkerPCView)?.Hide(); }));
-                if (settings.toggleShowQuestMarkersOnLocalMap) {
+                if (settings.toggleShowInterestingNPCsOnLocalMap) {
                     if (__instance.ViewModel is LocalMapCommonMarkerVM markerVM
                         && markerVM.m_Marker is AddLocalMapMarker.Runtime marker) {
                         var unit = marker.Owner;
                         UpdateMarker(__instance, unit);
                     }
                     if (__instance.ViewModel is LocalMapUnitMarkerVM unitMarkerVM) {
-                        Mod.Debug("hi");
                         UpdateMarker(__instance, unitMarkerVM.m_Unit);
                     }
                 }
             }
 
             private static void UpdateMarker(LocalMapMarkerPCView markerView, UnitEntityData unit) {
-                var wrappers = unit.Parts.Parts
-                                           .OfType<UnitPartInteractions>()
-                                           .SelectMany(p => p.m_Interactions)
-                                           .OfType<Wrapper>()
-                                           .Select(w => w.Source);
-                var conditionHolders = wrappers
-                                       .OfType<SpawnerInteractionDialog>()
-                                       .Select(d => d.Conditions.Get());
-                var actionHolders = wrappers
-                                    .OfType<SpawnerInteractionActions>().Select(ia => ia.Actions.Get());
-                var hasActiveConditionalDialog = conditionHolders.Any(h => h.Check());
-                Mod.Debug($"{unit.CharacterName.orange()} - {conditionHolders.Count(h => h.Check())}");
-                if (hasActiveConditionalDialog || actionHolders.Any()) {
+                var count = unit.GetDialogAndActionCounts();
+                Mod.Debug($"{unit.CharacterName.orange()} -> dialogActionCounts: {count}");
+                //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
+                //Mod.Debug($"attentionMark: {attentionMark}");
+                var markImage = markerView.transform.FindChild("Mark").GetComponent<Image>();
+                if (count >= 1) {
+                    Mod.Debug($"adding Mark to {unit.CharacterName.orange()}");
                     var mark = markerView.transform;
                     var uiRoot = UIHelpers.UIRoot;
-                    var attentionPrototype = uiRoot.Find("TransitionViewPCView/Alushinyrra/LegendBlock/Nexus_Legend/Attention");
-                    var dialogIcon = GameObject.Instantiate(attentionPrototype).gameObject;
-                    dialogIcon.AddTo(mark);
-                    dialogIcon.SetActive(true);
-                    foreach (var holder in conditionHolders) {
-                        if (holder.Check()) {
-                            Mod.Debug($"    {holder.name} {(holder.Check() ? "True".green() : "False".yellow())}");
-                            foreach (var condition in holder.ElementsArray) {
-                                Mod.Debug($"        {condition.GetCaption()} type:{condition.GetType().Name}");
-                            }
-                        }
+#if false
+                    if (attentionMark == null) {
+                        var attentionPrototype = uiRoot.Find("TransitionViewPCView/Alushinyrra/LegendBlock/Nexus_Legend/Attention");
+                        attentionMark = GameObject.Instantiate(attentionPrototype).gameObject;
+                        attentionMark.name = "ToyBoxAttentionMark";
+                        attentionMark.AddTo(mark);
                     }
-                    foreach (var actionHolder in actionHolders) {
-                        Mod.Debug($"    {actionHolder.name}");
-                        foreach (var action in actionHolder.Actions.Actions) {
-                            Mod.Debug($"        {action.GetCaption()}");
-                        }
-                    }
+                    attentionMark.SetActive(true);
+#endif
+                    markImage.color = new Color(1, 1f, 0);
+                }
+                else {
+//                    attentionMark?.SetActive(false);
+                    markImage.color = new Color(1, 1, 1);
                 }
             }
         }

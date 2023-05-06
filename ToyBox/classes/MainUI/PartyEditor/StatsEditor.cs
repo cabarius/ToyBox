@@ -17,7 +17,7 @@ using static ModKit.UI;
 namespace ToyBox {
     public partial class PartyEditor {
         public class ToyBoxAlignmentProvider : IAlignmentShiftProvider {
-            AlignmentShift IAlignmentShiftProvider.AlignmentShift => new AlignmentShift() { Description = "ToyBox Party Editor".Localized() };
+            AlignmentShift IAlignmentShiftProvider.AlignmentShift => new() { Description = "ToyBox Party Editor".Localized() };
         }
         public static IAlignmentShiftProvider ToyboxAlignmentProvider => new ToyBoxAlignmentProvider();
 
