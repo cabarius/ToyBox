@@ -13,7 +13,7 @@ namespace ModKit {
 
         public string HomePage { get; set; }
 
-        public Dictionary<string, string> Strings { get; set; }
+        public SortedDictionary<string, string> Strings { get; set; }
 
         public static Language Deserialize(string pathToFile) {
             Language loadedLanguage;
