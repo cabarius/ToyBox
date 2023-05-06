@@ -44,6 +44,10 @@ namespace ModKit {
             _localFolderPath = Mod.modEntry.Path + "Localization" + separator;
             FilePath = _localFolderPath + "en";
             _localDefault = Import();
+            if (_localDefault == null) {
+                _localDefault = new();
+                _localDefault.Strings = new();
+            }
             var chosenLangauge = Mod.ModKitSettings.uiCultureCode;
             FilePath = _localFolderPath + chosenLangauge;
             if (chosenLangauge != "en") {
