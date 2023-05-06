@@ -34,35 +34,21 @@ namespace ModKit {
         private static Language _localDefault;
         private static Language _local;
         private static bool IsDefault;
-        private static bool buildLocale;
         public static string FilePath { get; private set; }
 
-        public static void Enable(bool buildLocale = false) {
+        public static void Enable() {
             IsDefault = true;
             _local = null;
             _localDefault = null;
             var separator = Path.DirectorySeparatorChar;
             _localFolderPath = Mod.modEntry.Path + "Localization" + separator;
             FilePath = _localFolderPath + "en";
-            LocalizationManager.buildLocale = buildLocale;
-            if (buildLocale) {
-                IsDefault = true;
-                _localDefault = new Language {
-                    LanguageCode = "en",
-                    Version = "1.0.0",
-                    Contributors = "ToyBox Team",
-                    HomePage = "https://github.com/cabarius/ToyBox/",
-                    Strings = new()
-                };
-            }
-            else {
-                _localDefault = Import();
-                var chosenLangauge = Mod.ModKitSettings.uiCultureCode;
-                FilePath = _localFolderPath + chosenLangauge;
-                if (chosenLangauge != "en") {
-                    _local = Import();
-                    IsDefault = _local != null;
-                }
+            _localDefault = Import();
+            var chosenLangauge = Mod.ModKitSettings.uiCultureCode;
+            FilePath = _localFolderPath + chosenLangauge;
+            if (chosenLangauge != "en") {
+                _local = Import();
+                IsDefault = _local != null;
             }
         }
         public static void Update() {
@@ -83,25 +69,21 @@ namespace ModKit {
 
         public static string localize(this string key) {
             if (key == null || key == "") return key;
-            if (buildLocale) {
-                if (!_localDefault.Strings.ContainsKey(key))
-                    _localDefault.Strings.Add(key, key);
-                return key;
-            }
             else {
                 string localizedString = "";
                 if (!IsDefault) {
-                    _local?.Strings.TryGetValue(key, out localizedString);
-                    Mod.Debug("Unknown Key in current locale: key");
-                }
-                if (IsDefault || localizedString == "") {
-                    _localDefault?.Strings.TryGetValue(key, out localizedString);
-                    if (localizedString == "") {
-                        Mod.Debug("Unknown Key in default and current locale: key");
-                        return key;
+                    if (!(_local?.Strings.TryGetValue(key, out localizedString)) ?? true) {
+                        _local?.Strings.Add(key, key);
+                        Mod.Debug("Unknown Key in current locale: " + key);
                     }
                 }
-                return localizedString;
+                if (IsDefault || localizedString == "") {
+                    if (!(_localDefault?.Strings.TryGetValue(key, out localizedString)) ?? true) {
+                        _localDefault?.Strings.Add(key, key);
+                        Mod.Debug("Unknown Key in default: key");
+                    }
+                }
+                return localizedString != "" ? localizedString : key;
             }
         }
         public static Language Import(Action<Exception> onError = null) {
@@ -131,7 +113,16 @@ namespace ModKit {
                 if (File.Exists(FilePath + _fileEnding)) {
                     File.Delete(FilePath + _fileEnding);
                 }
-                Language.Serialize(IsDefault ? _localDefault : _local, FilePath + _fileEnding);
+                var toSerialize = IsDefault ? _localDefault : _local;
+                if (toSerialize == null) {
+                    toSerialize = new();
+                    toSerialize.Strings = _localDefault.Strings;
+                }
+                toSerialize.LanguageCode = IsDefault ? "en" : toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
+                toSerialize.Version = Mod.modEntry.Version.ToString();
+                if (toSerialize.Contributors == "") toSerialize.Contributors = "The ToyBox Team";
+                toSerialize.HomePage = "https://github.com/cabarius/ToyBox/";
+                Language.Serialize(toSerialize, FilePath + _fileEnding);
                 return true;
             }
             catch (Exception e) {

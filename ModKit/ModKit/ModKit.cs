@@ -29,7 +29,10 @@ namespace ModKit {
             ModKitSettings.Load();
             Mod.Debug($"ModKitSettings.browserSearchLimit: {Mod.ModKitSettings.browserDetailSearchLimit}");
         }
-        public static void OnSaveGUI(ModEntry entry) => ModKitSettings.Save();
+        public static void OnSaveGUI(ModEntry entry) {
+            ModKitSettings.Save();
+            LocalizationManager.Export();
+        }
         private static void ResetGUI(UnityModManager.ModEntry modEntry) => ModKitSettings.Load();
         public static void Error(string str) {
             str = str.yellow().bold();
