@@ -117,7 +117,7 @@ namespace ModKit {
                 if (File.Exists(FilePath + _fileEnding)) {
                     File.Delete(FilePath + _fileEnding);
                 }
-                var toSerialize = IsDefault ? _localDefault : _local;
+                var toSerialize = Mod.ModKitSettings.uiCultureCode == "en" ? _localDefault : _local;
                 if (toSerialize == null) {
                     toSerialize = new();
                     toSerialize.Strings = new();
