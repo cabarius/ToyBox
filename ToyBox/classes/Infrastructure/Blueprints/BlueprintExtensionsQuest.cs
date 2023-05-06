@@ -43,7 +43,7 @@ namespace ToyBox {
             }
         }
 
-        public static int GetDialogAndActionCounts(this UnitEntityData unit) {
+        public static int GetUnitIterestingnessCoefficent(this UnitEntityData unit) {
             var spawnerInteractions = unit.Parts.Parts
                                .OfType<UnitPartInteractions>()
                                .SelectMany(p => p.m_Interactions)
@@ -62,6 +62,11 @@ namespace ToyBox {
                                    .Where(a => a.Conditions?.Get() != null)
                                    .SelectMany(a => a.Conditions.Get().ElementsArray.OfType<ObjectiveStatus>());
             count += actionConditions.Count();
+            // For now we assume any NPC 
+            count += unit.Parts.Parts
+                         .OfType<UnitPartInteractions>()
+                         .SelectMany(p => p.m_Interactions)
+                         .OfType<EtudeBracketOverrideUnitInteraction>().Count();
             return count;
         }
         public static IEnumerable<QuestObjectiveStatusEntry> GetQuestObjectives(this UnitEntityData unit) {

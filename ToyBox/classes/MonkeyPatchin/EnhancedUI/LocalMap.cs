@@ -313,7 +313,7 @@ namespace ToyBox.BagOfPatches {
             }
 
             private static void UpdateMarker(LocalMapMarkerPCView markerView, UnitEntityData unit) {
-                var count = unit.GetDialogAndActionCounts();
+                var count = unit.GetUnitIterestingnessCoefficent();
                 Mod.Debug($"{unit.CharacterName.orange()} -> dialogActionCounts: {count}");
                 //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
                 //Mod.Debug($"attentionMark: {attentionMark}");
@@ -347,7 +347,7 @@ namespace ToyBox.BagOfPatches {
             public static void BindViewImplementation(UnitOvertipView __instance) {
                 if (!settings.toggleShowInterestingNPCsOnLocalMap) return;
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
-                    var interestingness = entityOvertipVM.Unit.GetDialogAndActionCounts();
+                    var interestingness = entityOvertipVM.Unit.GetUnitIterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
                     if (interestingness >= 1)
                         charName.color = new Color(0.6898f, 0.3771f, 0.0184f);

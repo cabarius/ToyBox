@@ -78,7 +78,7 @@ namespace ToyBox {
                 using (VerticalScope(GUI.skin.box)) {
                     if (Game.Instance?.State?.Units.All is { } units) {
                         objectiveBrowser.OnGUI(
-                                units.Where(u => u.GetDialogAndActionCounts() >= 1 ),
+                                units.Where(u => u.GetUnitIterestingnessCoefficent() >= 1 ),
                                 () => units,
                                 i => i,
                                 u => u.CharacterName,
@@ -87,7 +87,7 @@ namespace ToyBox {
                                 (_, u) => {
                                     ReflectionTreeView.DetailToggle(u.CharacterName.orange(), u.Parts.Parts);
                                     25.space();
-                                    Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(u.GetDialogAndActionCounts().ToString()));
+                                    Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(u.GetUnitIterestingnessCoefficent().ToString()));
                                 },
                                 (_, u) => {
                                     ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
