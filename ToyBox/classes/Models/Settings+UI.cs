@@ -1,15 +1,9 @@
 ﻿using ModKit;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ToyBox {
     public partial class SettingsUI {
-        public static CultureInfo uiCulture = Thread.CurrentThread.CurrentUICulture;
         public static string cultureSearchText = "";
         public static void OnGUI() {
             UI.HStack("Settings", 1,
@@ -37,17 +31,19 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Localizaton", 1,
                 () => {
-                    var cultureInfo = Thread.CurrentThread.CurrentUICulture;
+                    var uiCulture = CultureInfo.GetCultureInfo(Mod.ModKitSettings.uiCultureCode);
                     var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(ci => ci.DisplayName).ToList();
                     using (UI.VerticalScope()) {
                         using (UI.HorizontalScope()) {
                             UI.Label("Current Cultrue".cyan(), UI.Width(275));
                             UI.Space(25);
-                            UI.Label($"{cultureInfo.DisplayName}({cultureInfo.Name})".orange());
-
+                            UI.Label($"{uiCulture.DisplayName}({uiCulture.Name})".orange());
+                            UI.Space(25);
+                            UI.ActionButton("Export current locale to file".cyan(), () => LocalizationManager.Export());
                         }
                         if (UI.GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 8, UI.rarityButtonStyle, UI.Width(UI.ummWidth - 350))) {
-                            // can we set it?
+                            Mod.ModKitSettings.uiCultureCode = uiCulture.Name;
+                            LocalizationManager.Update();
                         }
                     }
                 },

@@ -1,178 +1,147 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using UnityModManagerNet;
 
 namespace ModKit {
-    public interface ILanguage {
-        string Language { get; set; }
+    public class Language {
+        public string LanguageCode { get; set; }
 
-        Version Version { get; set; }
+        public string Version { get; set; }
 
-        string Contributors { get; set; }
+        public string Contributors { get; set; }
 
-        string HomePage { get; set; }
+        public string HomePage { get; set; }
 
-        Dictionary<string, string> Strings { get; set; }
+        public Dictionary<string, string> Strings { get; set; }
 
-        T Deserialize<T>(TextReader reader);
+        public static Language Deserialize(string pathToFile) {
+            Language loadedLanguage;
+            using (StreamReader file = File.OpenText(pathToFile)) {
+                loadedLanguage = JsonConvert.DeserializeObject<Language>(file.ReadToEnd());
+            }
+            return loadedLanguage;
+        }
 
-        void Serialize<T>(TextWriter writer, T obj);
+        public static void Serialize(Language lang, string pathToFile) {
+            File.WriteAllText(pathToFile, JsonConvert.SerializeObject(lang, Formatting.Indented));
+        }
     }
 
-    public class LocalizationManager<TDefaultLanguage>
-        where TDefaultLanguage : class, ILanguage, new() {
-        private string _localFolderPath;
-        private TDefaultLanguage _localDefault;
-        private TDefaultLanguage _local;
+    public static class LocalizationManager {
+        private static string _localFolderPath;
+        private static string _fileEnding = ".json";
+        private static Language _localDefault;
+        private static Language _local;
+        private static bool IsDefault;
+        private static bool buildLocale;
+        public static string FilePath { get; private set; }
 
-        public string Language {
-            get {
-                if (IsDefault)
-                    return _localDefault.Language;
-                else
-                    return _local.Language;
-            }
-        }
-
-        public Version Version {
-            get {
-                if (IsDefault)
-                    return _localDefault.Version;
-                else
-                    return _local.Version;
-            }
-        }
-
-        public string Contributors {
-            get {
-                if (IsDefault)
-                    return _localDefault.Contributors;
-                else
-                    return _local.Contributors;
-            }
-        }
-
-        public string HomePage {
-            get {
-                if (IsDefault)
-                    return _localDefault.HomePage;
-                else
-                    return _local.HomePage;
-            }
-        }
-
-        public bool IsDefault => _local == null;
-
-        public string FileName { get; private set; }
-
-        public string this[string key] {
-            get {
-                if (IsDefault ?
-                    _localDefault.Strings.TryGetValue(key, out var text) :
-                    _local.Strings.TryGetValue(key, out text))
-                    return text;
-                else
-                    return "$Missing$" + key;
-            }
-        }
-
-        public void Enable(UnityModManager.ModEntry modEntry) {
-            var separator = Path.DirectorySeparatorChar;
-            _localFolderPath = modEntry.Path + "Localization" + separator;
-            _localDefault = new TDefaultLanguage { Version = modEntry.Version };
-        }
-
-        public void Disable(UnityModManager.ModEntry modEntry) {
-            _localFolderPath = null;
+        public static void Enable(bool buildLocale = false) {
+            IsDefault = true;
+            _local = null;
             _localDefault = null;
-            _local = null;
-            FileName = null;
-        }
-
-        public string[] GetFileNames(string searchPattern) {
-            try {
-                if (Directory.Exists(_localFolderPath)) {
-                    var files = Directory.GetFiles(_localFolderPath, searchPattern);
-                    for (var i = 0; i < files.Length; i++) {
-                        files[i] = Path.GetFileName(files[i]);
-                    }
-                    return files;
+            var separator = Path.DirectorySeparatorChar;
+            _localFolderPath = Mod.modEntry.Path + "Localization" + separator;
+            FilePath = _localFolderPath + "en";
+            LocalizationManager.buildLocale = buildLocale;
+            if (buildLocale) {
+                IsDefault = true;
+                _localDefault = new Language {
+                    LanguageCode = "en",
+                    Version = "1.0.0",
+                    Contributors = "ToyBox Team",
+                    HomePage = "https://github.com/cabarius/ToyBox/",
+                    Strings = new()
+                };
+            }
+            else {
+                _localDefault = Import();
+                var chosenLangauge = Mod.ModKitSettings.uiCultureCode;
+                FilePath = _localFolderPath + chosenLangauge;
+                if (chosenLangauge != "en") {
+                    _local = Import();
+                    IsDefault = _local != null;
                 }
             }
-            catch {
+        }
+        public static void Update() {
+            var locale = Mod.ModKitSettings.uiCultureCode;
+            if (Mod.ModKitSettings.uiCultureCode == "en") {
+                FilePath = _localFolderPath + "en";
+                IsDefault = true;
+                _local = null;
             }
-            return new string[0];
-        }
-
-        public void Reset() {
-            _local = null;
-            FileName = null;
-        }
-
-        public void Sort() {
-            if (_local != null) {
-                Dictionary<string, string> temp = new();
-                foreach (var key in _localDefault.Strings.Keys) {
-                    if (_local.Strings.TryGetValue(key, out var text))
-                        temp[key] = text;
-                    else
-                        temp[key] = _localDefault.Strings[key];
+            else {
+                if (!(_local?.LanguageCode == locale)) {
+                    FilePath = _localFolderPath + Mod.ModKitSettings.uiCultureCode;
+                    _local = Import();
+                    IsDefault = _local == null;
                 }
-                _local.Strings = temp;
             }
         }
 
-        public bool Import(string fileName, Action<Exception> onError = null) {
+        public static string localize(this string key) {
+            if (key == null || key == "") return key;
+            if (buildLocale) {
+                if (!_localDefault.Strings.ContainsKey(key))
+                    _localDefault.Strings.Add(key, key);
+                return key;
+            }
+            else {
+                string localizedString = "";
+                if (!IsDefault) {
+                    _local?.Strings.TryGetValue(key, out localizedString);
+                    Mod.Debug("Unknown Key in current locale: key");
+                }
+                if (IsDefault || localizedString == "") {
+                    _localDefault?.Strings.TryGetValue(key, out localizedString);
+                    if (localizedString == "") {
+                        Mod.Debug("Unknown Key in default and current locale: key");
+                        return key;
+                    }
+                }
+                return localizedString;
+            }
+        }
+        public static Language Import(Action<Exception> onError = null) {
             try {
-                var path = _localFolderPath + fileName;
-
-                if (File.Exists(path)) {
-                    using (StreamReader reader = new(path)) {
-                        _local = _localDefault.Deserialize<TDefaultLanguage>(reader);
-                    }
-
-                    FileName = fileName;
-
-                    foreach (var key in _localDefault.Strings.Keys.Except(_local.Strings.Keys)) {
-                        _local.Strings[key] = _localDefault.Strings[key];
-                    }
-
-                    return true;
+                if (File.Exists(FilePath + _fileEnding)) {
+                    Language lang;
+                    lang = Language.Deserialize(FilePath + _fileEnding);
+                    return lang;
                 }
             }
             catch (Exception e) {
-                onError(e);
+                if (onError != null) {
+                    onError(e);
+                }
+                else {
+                    Mod.Error(e.ToString());
+                }
             }
-
-            return false;
+            return null;
         }
 
-        public bool Export(string fileName, Action<Exception> onError = null) {
+        public static bool Export(Action<Exception> onError = null) {
             try {
                 if (!Directory.Exists(_localFolderPath)) {
                     Directory.CreateDirectory(_localFolderPath);
                 }
-
-                var path = _localFolderPath + fileName;
-
-                if (File.Exists(path)) {
-                    File.Delete(path);
+                if (File.Exists(FilePath + _fileEnding)) {
+                    File.Delete(FilePath + _fileEnding);
                 }
-
-                if (!File.Exists(path)) {
-                    using (StreamWriter writer = new(path)) {
-                        _localDefault.Serialize(writer, IsDefault ? _localDefault : _local);
-                    }
-
-                    return true;
-                }
+                Language.Serialize(IsDefault ? _localDefault : _local, FilePath + _fileEnding);
+                return true;
             }
             catch (Exception e) {
-                onError(e);
+                if (onError != null) {
+                    onError(e);
+                }
+                else {
+                    Mod.Error(e.ToString());
+                }
             }
-
             return false;
         }
     }

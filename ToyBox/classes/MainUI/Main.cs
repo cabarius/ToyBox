@@ -4,24 +4,22 @@ using HarmonyLib;
 using Kingmaker;
 using Kingmaker.GameModes;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
 using Kingmaker.Utility;
 using ModKit;
+using ModKit.DataViewer;
 using Owlcat.Runtime.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Kingmaker.UI.Models.Log;
-using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using ToyBox.Multiclass;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
-using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
-using ModKit.DataViewer;
-using UnityEngine.UI.Extensions;
 
 namespace ToyBox {
 #if DEBUG
@@ -65,6 +63,8 @@ namespace ToyBox {
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+
+                LocalizationManager.Enable();
 
                 modEntry.OnToggle = OnToggle;
                 modEntry.OnShowGUI = OnShowGUI;
