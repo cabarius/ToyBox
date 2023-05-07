@@ -37,7 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.1 (coming soon)
-**ToyBox 1.5.1** ***Experimental Preview*** **5/06/2023l**
+**ToyBox 1.5.1** ***Experimental Preview*** **5/07/2023m**
 * (***Narria***) **Quality of Life: Enhanced Map**: 
   * You can enable zooming of the Local Map that you see in Cities, Dungeons and other Encounter spots. 
   * Zooming will resize various points of interest so you can separate ones that are stacked as you zoom more
@@ -57,6 +57,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) You can now inspect the selected character list in Party Editor and the Quest list in Quest Editor
 * (***Narria***) Improved Inspector searching by using a background thread and made it a little prettier
 * (***Narria***) Inspecter searches now works with terms (across parents) so if you specify 'Foo Bar' it will find nodes that have foo and bar somewhere across the node and its parents in the outline. This is helpful for to pull out parts of nodes at different levels for example in Quest Editor if you inspect all quests and search for 'Cloud Objective' it will show the objective property for all quests that contain the name Cloud
+* (***Narria***) Implemented workaround for Pet Naming bug that comes up if you set default gestalt options. This will prevent you from being able to gestalt the pet when you choose its name and first level. You can however take one additional level in the secondary class and then afterwards mark that class as gestalt and set the multiclass flag and from thereafter it will function just as if you created it as gestalt. 
 * (***Narria***) Inspector: brought back the Refresh Button
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
 * (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.

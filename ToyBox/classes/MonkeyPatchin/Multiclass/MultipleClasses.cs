@@ -34,6 +34,7 @@ using Kingmaker.DLC;
 using Kingmaker.UI.MVVM._VM.Other.NestedSelectionGroup;
 using Kingmaker.Utility;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.MythicInfo;
+using Kingmaker.EntitySystem.Entities;
 
 namespace ToyBox.Multiclass {
     public static partial class MultipleClasses {
@@ -70,9 +71,10 @@ namespace ToyBox.Multiclass {
                         return;
                     }
                     // get multi-class setting
-                    var useDefaultMulticlassOptions = state.IsCharGen();
+                    var isPet = unit.Unit?.IsPet ?? false;
+                    var useDefaultMulticlassOptions = state.IsCharGen() && !isPet;
                     var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
-                    Mod.Trace($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isPHChar: {unit.CharacterName == "Player Character"} level: {state.NextClassLevel.ToString().yellow()}".cyan().bold());
+                    Mod.Trace($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} useDefaultMulticlassOptions: {useDefaultMulticlassOptions} mode:{state.Mode} isCharGen: {state.IsCharGen()} is1stLvl: {state.IsFirstCharacterLevel} isPet: {isPet} isPlayerChar: {unit.CharacterName == "Player Character"} level: {state.NextClassLevel.ToString().yellow()}".cyan().bold());
 
                     if (options == null || options.Count == 0)
                         return;
