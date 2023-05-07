@@ -302,6 +302,14 @@ namespace ToyBox {
                     Toggle("Enhanced Map View", ref settings.toggleZoomableLocalMaps, 500.width());
                     HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off");
                 },
+                () => {
+                    if (settings.toggleZoomableLocalMaps) {
+                        32.space();
+                        Label("Map Scroll Speed", 300.width());
+                        Space(-392);
+                        LogSlider("", ref settings.zoomableLocalMapScrollSpeedMultiplier, 1f, 20, 4, 1, "", AutoWidth());
+                    }
+                },
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => {
                     Toggle("Mark Interesting NPCs", ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
@@ -694,8 +702,8 @@ namespace ToyBox {
             HStack("Dice Rolls", 1,
                 () => EnumGrid("All Attacks Hit", ref settings.allAttacksHit, AutoWidth()),
                 () => EnumGrid("All Hits Critical", ref settings.allHitsCritical, AutoWidth()),
-                () => EnumGrid("Roll With Avantage", ref settings.rollWithAdvantage, AutoWidth()),
-                () => EnumGrid("Roll With Disavantage", ref settings.rollWithDisadvantage, AutoWidth()),
+                () => EnumGrid("Roll With Advantage", ref settings.rollWithAdvantage, AutoWidth()),
+                () => EnumGrid("Roll With Disadvantage", ref settings.rollWithDisadvantage, AutoWidth()),
                 () => EnumGrid("Always Roll 20", ref settings.alwaysRoll20, AutoWidth()),
                 () => EnumGrid("Always Roll 1", ref settings.alwaysRoll1, AutoWidth()),
                 () => EnumGrid("Never Roll 20", ref settings.neverRoll20, AutoWidth()),

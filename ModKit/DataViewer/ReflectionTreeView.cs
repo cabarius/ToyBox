@@ -141,6 +141,8 @@ namespace ModKit.DataViewer {
                 // tool-bar
                 using (HorizontalScope()) {
                     Space(Indent);
+                    ActionButton("Refresh", () => _tree.RootNode.SetDirty());
+                    15.space();
                     ActionTextField(ref _searchText,
                                     "searhText",
                                     (text) => { },

@@ -54,6 +54,7 @@ using static Kingmaker.UnitLogic.FactLogic.AddLocalMapMarker;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Designers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows;
 using UniRx;
 
 namespace ToyBox.BagOfPatches {
@@ -129,6 +130,7 @@ namespace ToyBox.BagOfPatches {
         private static class CameraRig_TickScroll_Patch {
             public static bool Prefix(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
                 if (!settings.toggleCameraPitch && !settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !settings.toggleFreeCamera) return true;
+                var isInlocalMap = Game.Instance?.RootUiContext.CurrentServiceWindow == ServiceWindowsType.LocalMap;
                 var dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
                 if (__instance.m_ScrollRoutine != null && (double)Time.time > (double)__instance.m_ScrollRoutineEndsOn) {
                     __instance.StopCoroutine(__instance.m_ScrollRoutine);
@@ -139,6 +141,13 @@ namespace ToyBox.BagOfPatches {
                     var scrollOffset = __instance.m_ScrollOffset;
                     if (eulerAngles.x > 180)
                         scrollOffset.y = -scrollOffset.y;
+                    if (settings.toggleZoomableLocalMaps && isInlocalMap && scrollOffset.magnitude > 0) {
+                        var frameRotation = LocalMapPatches.FrameRotation;
+                        var zoom = LocalMapPatches.Zoom;
+                        var newScrollOffset = Quaternion.AngleAxis(-frameRotation.z, Vector3.forward) * scrollOffset;
+                        //Mod.Debug($"inMap: {scrollOffset} -> {newScrollOffset} angle: {frameRotation}");
+                        scrollOffset = newScrollOffset * settings.zoomableLocalMapScrollSpeedMultiplier / zoom;
+                    }
                     if ((bool)(SimpleBlueprint)BlueprintRoot.Instance && !Game.Instance.IsControllerGamepad && (bool)(SettingsEntity<bool>)SettingsRoot.Controls.ScreenEdgeScrolling && (Cursor.visible || (bool)(SettingsEntity<bool>)SettingsRoot.Controls.CameraScrollOutOfScreenEnabled) && Game.Instance.CurrentMode != GameModeType.FullScreenUi)
                         scrollOffset += __instance.GetCameraScrollShiftByMouse();
                     var scrollVector2 = scrollOffset + __instance.CameraDragToMove() + __instance.m_ScrollBy2D;

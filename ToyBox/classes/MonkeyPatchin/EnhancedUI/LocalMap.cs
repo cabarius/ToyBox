@@ -29,10 +29,13 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
+        public static float Zoom = 1.0f;
+        public static float Width = 0.0f;
+        public static Vector3 Position = Vector3.zero;
+        public static Vector3 FrameRotation = Vector3.zero;
+
         [HarmonyPatch(typeof(LocalMapVM))]
-        private static class LocalMapVM_Patch {
-            public static float zoom = 1.0f;
-            public static float width = 0.0f;
+        internal static class LocalMapVMPatch {
             public static Vector3 prevLocalPos = new Vector2();
 
             [HarmonyPatch(nameof(OnClick), new Type[] { typeof(Vector2), typeof(bool) })]
@@ -61,10 +64,9 @@ namespace ToyBox.BagOfPatches {
         // Modifies Local Map View to zoom the map for easier reading
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
-        private static class LocalMapBaseView_Patch {
+        internal static class LocalMapBaseViewPatch {
             private static float prevZoom = 0;
             private static float width = 0;
-            public static Vector3 pos = Vector3.zero;
             // These are the transform paths for the different kinds of marks on the LocalMapView
             private static readonly string[] MarksPaths = { "MarksPC", "MarksUnits", "MarksLoot", "MarksPoi", "MarksVIT" };
 
@@ -73,7 +75,7 @@ namespace ToyBox.BagOfPatches {
             public static bool SetDrawResult(LocalMapBaseView __instance, LocalMapRenderer.DrawResult dr) {
                 // This is the original owlcat code.  This gets called when zoom changes to adjust the size of the FrameBlock, a widget that looks like a picture frame and depicts the users view into the world based on zoom and camera rotation
                 width = dr.ColorRT.width;
-                LocalMapVM_Patch.width = width;
+                LocalMapPatches.Width = width;
                 var height = dr.ColorRT.height;
                 __instance.m_Image.rectTransform.sizeDelta = new Vector2(width, height);
                 var a = (dr.ScreenRect.z - dr.ScreenRect.x) * width;
@@ -97,29 +99,17 @@ namespace ToyBox.BagOfPatches {
                     ) {
                     if (settings.toggleZoomableLocalMaps) {
                         // Calculate a zoom factor based on info used previously to scale the Frame Block. In our new world we will center the Frame Block in middle of the ContentGroup and then pan the map behind it.  TODO - make it rotate so that it matches exactly the view of the camera (Frame Block will always point up)
-                        LocalMapVM_Patch.zoom = width / (2 * sizeDelta.x);
-                        var zoom = LocalMapVM_Patch.zoom;
+                        Zoom = width / (2 * sizeDelta.x);
+                        // save off the frame rotation so we can fix the camera movement when the map is open
+                        FrameRotation = frame.localEulerAngles;
+                        var zoom = Zoom;
                         // LocalMapVM_Patch.offset = frameBlockRect.localPosition * LocalMapVM_Patch.zoom;
 
                         // Now adjust the position of the mapBlock to  keep the FrameBlock in a fixed position
-                        #if false
-                        var mapBlockRotation = mapBlock.localEulerAngles;
-                        var frameRotation = frame.localEulerAngles;
-                        var frameBlockRotation = frameBlock.localEulerAngles;
-                        var mbPos = mapBlock.position;
-                        var center = new Vector3(width, width, 0);
-                        mapBlock.ResetRotation();
-                        mapBlock.localPosition += center;
-                        mapBlock.Rotate(mapBlock.forward, -frameRotation.z);
-                        mapBlock.localPosition -= center;
-                        //mapBlock.Rotate(new Vector3());
-//                        mapBlock.localEulerAngles = mapBlockRotation;
-                        Mod.Log($"frameRotation: {mapBlockRotation}");
-                        #endif
-                        pos = mapBlock.localPosition;
-                        pos.x = -3 - frameBlockRect.localPosition.x * zoom - width / 4; // ??? this is a weird correction (make better?)
-                        pos.y = -22 - frameBlockRect.localPosition.y * zoom - width / 4; // ??? this is a weird correction (make better?)
-                        mapBlock.localPosition = pos;
+                        Position = mapBlock.localPosition;
+                        Position.x = -3 - frameBlockRect.localPosition.x * zoom - width / 4; // ??? this is a weird correction (make better?)
+                        Position.y = -22 - frameBlockRect.localPosition.y * zoom - width / 4; // ??? this is a weird correction (make better?)
+                        mapBlock.localPosition = Position;
                         // Now apply the zoom to MapBlock
                         var zoomVector = new Vector3(zoom, zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
@@ -155,7 +145,7 @@ namespace ToyBox.BagOfPatches {
                     else {
                         // TODO: Factor the above into a helper function and take zoom as a paremeter so we can call it to reset everything back to normal when we turn off Enhanced Map
                         var zoomVector = new Vector3(1, 1, 1.0f);
-                        LocalMapVM_Patch.zoom = 1.0f;
+                        Zoom = 1.0f;
                         //LocalMapVM_Patch.offset = new Vector2(0.0f, 0.0f);
                         mapBlock.localScale = new Vector3(1, 1, 1);
                     }
@@ -174,7 +164,7 @@ namespace ToyBox.BagOfPatches {
             private static Vector3 eventStartPosition = Vector3.zero;
 
             [HarmonyPatch(typeof(LocalMapPCView))]
-            public static class LocalMapPCView_Patch {
+            public static class LocalMapPCViewPatch {
                 [HarmonyPatch(nameof(OnPointerClick))]
                 [HarmonyPrefix]
                 public static bool OnPointerClick(LocalMapPCView __instance, PointerEventData eventData) {
@@ -196,7 +186,7 @@ namespace ToyBox.BagOfPatches {
                                                 __instance.m_Image.rectTransform.pivot
                                             );
                     }
-                    Mod.Debug($"Click - localPoint: {adjustedPoint} vs pos: {pos } zoom:{LocalMapVM_Patch.zoom}");
+                    Mod.Debug($"Click - localPoint: {adjustedPoint} vs pos: {Position } zoom:{Zoom}");
                     __instance.ViewModel.OnClick(adjustedPoint, eventData.button == PointerEventData.InputButton.Left);
                     return false;
                 }
@@ -216,7 +206,7 @@ namespace ToyBox.BagOfPatches {
                         Game.Instance.UI.UICamera, out localPoint
                         );
                     var adjustedPoint = localPoint + Vector2.Scale(
-                                            __instance.m_Image.rectTransform.sizeDelta * LocalMapVM_Patch.zoom, 
+                                            __instance.m_Image.rectTransform.sizeDelta * Zoom, 
                                             __instance.m_Image.rectTransform.pivot
                                             );
                     var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -236,7 +226,7 @@ namespace ToyBox.BagOfPatches {
                         eventStartPosition = adjustedPoint; // update start position so that Click will have the right value after a long drag
                     }
                     if (forwardEvent) {
-                        Mod.Debug($"Update - localPoint: {localPoint} -> {adjustedPoint} vs pos: {pos} zoom:{LocalMapVM_Patch.zoom}");
+                        Mod.Debug($"Update - localPoint: {localPoint} -> {adjustedPoint} vs pos: {Position} zoom:{Zoom}");
                         __instance.ViewModel.OnClick(adjustedPoint, true);
                     }
                     return false;
@@ -250,7 +240,7 @@ namespace ToyBox.BagOfPatches {
             public static bool SetupBPRVisible(LocalMapBaseView __instance) {
                 if (!settings.toggleZoomableLocalMaps) return true;
                 #if true
-                bool show = LocalMapVM_Patch.zoom <= 1.0f && __instance.m_Image.rectTransform.rect.width < 975.0;
+                bool show = Zoom <= 1.0f && __instance.m_Image.rectTransform.rect.width < 975.0;
                 __instance.m_BPRImage.CrossFadeColor(show ? Color.white : Color.clear, 0.5f, true, true);
                 #else
                 __instance.m_BPRImage?.gameObject?.SetActive(
@@ -320,6 +310,21 @@ namespace ToyBox.BagOfPatches {
 
 
 #if false
+                        #if false
+                        var mapBlockRotation = mapBlock.localEulerAngles;
+                        var frameRotation = frame.localEulerAngles;
+                        var frameBlockRotation = frameBlock.localEulerAngles;
+                        var mbPos = mapBlock.position;
+                        var center = new Vector3(width, width, 0);
+                        mapBlock.ResetRotation();
+                        mapBlock.localPosition += center;
+                        mapBlock.Rotate(mapBlock.forward, -frameRotation.z);
+                        mapBlock.localPosition -= center;
+                        //mapBlock.Rotate(new Vector3());
+//                        mapBlock.localEulerAngles = mapBlockRotation;
+                        Mod.Log($"frameRotation: {mapBlockRotation}");
+                        #endif
+
             // some experimental code to implement map rotation
                     ) {
                     if (settings.toggleZoomableLocalMaps) {

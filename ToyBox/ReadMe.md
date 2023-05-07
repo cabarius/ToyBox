@@ -37,12 +37,14 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.1 (coming soon)
-**ToyBox 1.5.1** ***Experimental Preview*** **5/06/2023k**
+**ToyBox 1.5.1** ***Experimental Preview*** **5/06/2023l**
 * (***Narria***) **Quality of Life: Enhanced Map**: 
   * You can enable zooming of the Local Map that you see in Cities, Dungeons and other Encounter spots. 
   * Zooming will resize various points of interest so you can separate ones that are stacked as you zoom more
   * Made picture frame get thinner so it doesn't block your view
-  * Clicking and right clicking on the map also repositions the marker or places the movement marker correctly
+  * Clicking and right clicking on the map also repositions the frame or places the movement marker correctly
+  * Using direction keys on the map will move in map coordinates not world coordinates, which is what one would expect
+  * Added map scroll multiplier when zoomable map is enabled
 * (***Narria***) Quality of Life: Option to mark NPCs with interesting dialog/quests on the map
   * Also marks interesting NPCs on the main screen by coloring their name
 * (***Narria***) Added Interesting NPC list to the Quest Editor tab
@@ -55,8 +57,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) You can now inspect the selected character list in Party Editor and the Quest list in Quest Editor
 * (***Narria***) Improved Inspector searching by using a background thread and made it a little prettier
 * (***Narria***) Inspecter searches now works with terms (across parents) so if you specify 'Foo Bar' it will find nodes that have foo and bar somewhere across the node and its parents in the outline. This is helpful for to pull out parts of nodes at different levels for example in Quest Editor if you inspect all quests and search for 'Cloud Objective' it will show the objective property for all quests that contain the name Cloud
+* (***Narria***) Inspector: brought back the Refresh Button
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
-* (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.### Ver 1.5.0 
+* (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.
+### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements
   * Brought in some bits of ***Xenofell's*** lovely **Enhanced Inventory** to give a unified experience with Loot Rarity and to revive the mod which needed some love
    * Added the ability to sort items in inventory and vendors by rarity
