@@ -117,6 +117,7 @@ namespace ToyBox {
         public bool togglePuzzleRelief = false;
         public bool toggleZoomableLocalMaps = false;
         public float zoomableLocalMapScrollSpeedMultiplier = 4;
+        public bool toogleShowInterestingNPCsOnQuestTab = false;
         public bool toggleShowInterestingNPCsOnLocalMap = false;
         public bool toggleShowQuestMarkersOnLocalMap = false;
 

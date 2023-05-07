@@ -15,11 +15,13 @@ using ModKit;
 using static ModKit.UI;
 using ModKit.DataViewer;
 using System.Collections.Generic;
+using Kingmaker.Blueprints.Quests;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.UnitLogic.Parts;
 using ModKit.Utility;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ToyBox.BlueprintExtensions;
+using Kingmaker.Designers;
 
 namespace ToyBox {
     public static class QuestExensions {
@@ -40,16 +42,17 @@ namespace ToyBox {
         public static string stateColored(this string text, Quest quest) => RichText.color(text, questColors[(int)quest.State]);
         public static string stateColored(this string text, QuestObjective objective) => RichText.color(text, questColors[(int)objective.State]);
         public static string titleColored(this Quest quest) => quest.Blueprint.Title.ToString().color(titleColors[(int)quest.State]);
-        public static string titleColored(this QuestObjective objective) {
-            var blueprint = objective.Blueprint;
+        public static string titleColored(this QuestObjective objective, BlueprintQuestObjective bp = null) {
+            var blueprint = objective?.Blueprint ?? bp;
+            var state = objective?.State ?? QuestObjectiveState.None;
             var title = blueprint.Title.ToString();
             if (title.Length == 0) title = blueprint.ToString();
-            if (objective.Blueprint.IsAddendum)
+            if (blueprint.IsAddendum)
                 title = "Addendum: ".color(RGBA.white) + title;
             if (blueprint.name.Contains("_Fail"))
                 return title.red();
             else
-                return title.color(titleColors[(int)objective.State]);
+                return title.color(titleColors[(int)state]);
         }
         public static string stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest).bold();
         public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
@@ -65,45 +68,60 @@ namespace ToyBox {
             if (!Main.IsInGame) return;
             var quests = Game.Instance?.Player?.QuestBook.Quests.ToArray();
             if (quests == null) return;
-            GUILayout.Space(5f);
             selectedQuests = (selectedQuests.Length != quests.Length) ? new bool[quests.Length] : selectedQuests;
             var index = 0;
             var contentColor = GUI.contentColor;
             Div();
+            10.space();
             using (HorizontalScope()) {
-                Label("Interesting NPCs in the local area".cyan());
+                DisclosureToggle("Interesting NPCs in the local area".cyan(), ref settings.toogleShowInterestingNPCsOnQuestTab);
+                200.space();
+                HelpLabel("Show a list of NPCs that may have quest objectives or other interesting features " + "(Warning: Spoilers)".yellow());
             }
-            using (HorizontalScope()) {
-                50.space();
-                using (VerticalScope(GUI.skin.box)) {
-                    if (Game.Instance?.State?.Units.All is { } units) {
-                        objectiveBrowser.OnGUI(
-                                units.Where(u => u.GetUnitIterestingnessCoefficent() >= 1 ),
-                                () => units,
-                                i => i,
-                                u => u.CharacterName,
-                                u => u.CharacterName,
-                                null,
-                                (_, u) => {
-                                    ReflectionTreeView.DetailToggle(u.CharacterName.orange(), u.Parts.Parts);
-                                    25.space();
-                                    Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(u.GetUnitIterestingnessCoefficent().ToString()));
-                                },
-                                (_, u) => {
-                                    ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
-                                    var entries = u.GetQuestObjectives();
-                                    foreach (var entry in entries) {
-                                        using (HorizontalScope()) {
-                                            150.space();
-                                            Label($"{entry.source.ToString().orange()} - {entry.objectiveStatus.GetCaption().grey()} -> {(entry.objectiveStatus.CheckCondition() ? "True".green() : "False".yellow())}");
+            if (settings.toogleShowInterestingNPCsOnQuestTab) {
+                using (HorizontalScope()) {
+                    50.space();
+                    using (VerticalScope(GUI.skin.box)) {
+                        if (Game.Instance?.State?.Units.All is { } units) {
+                            objectiveBrowser.OnGUI(
+                                    units.Where(u => u.GetUnitIterestingnessCoefficent() >= 1),
+                                    () => units,
+                                    i => i,
+                                    u => u.CharacterName,
+                                    u => u.CharacterName,
+                                    null,
+                                    (_, u) => {
+                                        ReflectionTreeView.DetailToggle(u.CharacterName.orange(), u.Parts.Parts);
+                                        25.space();
+                                        Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(u.GetUnitIterestingnessCoefficent().ToString()));
+                                    },
+                                    (_, u) => {
+                                        ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
+                                        var entries = u.GetQuestObjectives();
+                                        foreach (var entry in entries) {
+                                            using (HorizontalScope()) {
+                                                150.space();
+                                                var objectiveBP = entry.objectiveStatus.QuestObjective;
+                                                var objective = Game.Instance.Player.QuestBook.GetObjective(objectiveBP);
+                                                var quest = objectiveBP.Quest;
+                                                var title = $"{quest.Title.ToString().orange().bold()} : {objective.titleColored(objectiveBP)}";
+                                                Label(title, 500.width());
+                                                22.space();
+                                                using (VerticalScope(GUI.skin.box)) {
+                                                    Label("condition ".cyan() + $"{entry.objectiveStatus.GetCaption().grey()} -> {(entry.objectiveStatus.CheckCondition() ? "True".green() : "False".yellow())}");
+                                                    HelpLabel(objectiveBP.Description);
+                                                    Label("source: ".cyan() + entry.source.ToString().yellow());
+
+                                                }
+                                            }
                                         }
                                     }
-                                }
-                            );
+                                );
+                        }
                     }
                 }
             }
-            Div();
+            Div(0,25);
             using (HorizontalScope()) {
                 Label("Quests".cyan());
             }
