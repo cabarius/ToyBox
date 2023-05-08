@@ -211,7 +211,7 @@ namespace ToyBox {
                             Space(-17);
                             if (Settings.showAssetIDs) { 
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
-                                GUILayout.TextField(blueprint.AssetGuid.ToString(), ExpandWidth(false));
+                                ClipboardLabel(blueprint.AssetGuid.ToString(), ExpandWidth(false));
                             }
                             else ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
                             Space(17);

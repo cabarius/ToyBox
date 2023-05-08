@@ -365,7 +365,7 @@ namespace ToyBox.classes.MainUI {
                         using (VerticalScope()) {
                             using (HorizontalScope()) {
                                 Label(enchant.CollationNames().First().cyan(), Width(300));
-                                GUILayout.TextField(enchant.AssetGuid.ToString(), AutoWidth());
+                                ClipboardLabel(enchant.AssetGuid.ToString(), AutoWidth());
                             }
                             Label(description);
                             

@@ -33,12 +33,12 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
-        public class UnitInteractionConditionsCheckerEntry {
+        public class IntrestingnessEntry {
             public UnitEntityData unit { get; set; }
             public object source { get; set; }
             public ConditionsChecker checker { get; set; }
             public List<Element> elements { get; set; }
-            public UnitInteractionConditionsCheckerEntry(UnitEntityData unit, object source, ConditionsChecker checker, List<Element> elements = null) {
+            public IntrestingnessEntry(UnitEntityData unit, object source, ConditionsChecker checker, List<Element> elements = null) {
                 this.unit = unit;
                 this.source = source;
                 this.checker = checker;
@@ -55,6 +55,8 @@ namespace ToyBox {
                                                                    || element is CompleteEtude
                                                                    // || element is StartDialog
                                                                    || element is ObjectiveStatus
+                                                                   || element is ItemsEnough
+                                                                   || element is Conditional
                                                                    ;
         public static int GetUnitIterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(c => {
             var hasConditions = c.checker?.Conditions.Any(c => c.CheckCondition()) ?? false;
@@ -62,45 +64,72 @@ namespace ToyBox {
             return hasConditions || hasElements;
         });
 
-        public static IEnumerable<UnitInteractionConditionsCheckerEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
+        public static IEnumerable<IntrestingnessEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
             var spawnInterations = unit.Parts.Parts
                                .OfType<UnitPartInteractions>()
                                .SelectMany(p => p.m_Interactions)
                                .OfType<Wrapper>()
                                .Select(w => w.Source);
-            var result = new HashSet<UnitInteractionConditionsCheckerEntry>();
+            var result = new HashSet<IntrestingnessEntry>();
+            var elements = new HashSet<IntrestingnessEntry>();
+            
+            // dialog
             var dialogInteractions = spawnInterations.OfType<SpawnerInteractionDialog>().ToList();
-            var interactionConditions = dialogInteractions
-                                   .Where(di => di.Conditions?.Get() != null)
-                                   .Select(di => new UnitInteractionConditionsCheckerEntry(unit, di, di.Conditions.Get().Conditions));
-            result.UnionWith(interactionConditions.ToHashSet());
+            // dialog interation conditions
+            var dialogInteractionConditions = dialogInteractions
+                                        .Where(di => di.Conditions?.Get() != null)
+                                        .Select(di => new IntrestingnessEntry(unit, di.Dialog, di.Conditions.Get().Conditions));
+            result.UnionWith(dialogInteractionConditions.ToHashSet());
+            // dialog conditions
             var dialogConditions = dialogInteractions
-                                   .Select(di => new UnitInteractionConditionsCheckerEntry(unit, di, di.Dialog.Conditions));
+                                   .Select(di => new IntrestingnessEntry(unit, di.Dialog, di.Dialog.Conditions));
             result.UnionWith(dialogConditions.ToHashSet());
+            // dialog elements
             var dialogElements = dialogInteractions
-                .Select(di => new UnitInteractionConditionsCheckerEntry(unit, di.Dialog, null, di.Dialog.ElementsArray.Where(e => e.IsQuestRelated()).ToList()));
-            result.UnionWith(dialogElements.ToHashSet());
+                .Select(di => new IntrestingnessEntry(unit, di.Dialog, null, di.Dialog.ElementsArray.Where(e => e.IsQuestRelated()).ToList()));
+            elements.UnionWith(dialogElements.ToHashSet());
+            // dialog cue conditions
             var dialogCueConditions = dialogInteractions
                                       .Where(di => di.Dialog.FirstCue != null)
                                       .SelectMany(di => di.Dialog.FirstCue.Cues
                                                           .Where(cueRef => cueRef.Get() != null)
-                                                          .Select(cueRef => new UnitInteractionConditionsCheckerEntry(unit, cueRef.Get(), cueRef.Get().Conditions)));
+                                                          .Select(cueRef => new IntrestingnessEntry(unit, cueRef.Get(), cueRef.Get().Conditions)));
             result.UnionWith(dialogCueConditions.ToHashSet());
+            
+            // actions
             var actionInteractions = spawnInterations.OfType<SpawnerInteractionActions>();
+            // action interaction conditions
             var actionInteractionConditions = actionInteractions
                                               .Where(ai => ai.Conditions?.Get() != null)
-                                              .Select(ai => new UnitInteractionConditionsCheckerEntry(unit, ai, ai.Conditions.Get().Conditions));
+                                              .Select(ai => new IntrestingnessEntry(unit, ai, ai.Conditions.Get().Conditions));
             result.UnionWith(actionInteractionConditions.ToHashSet());
+            // action conditions
             var actionConditions = actionInteractions
                                    .Where(ai => ai.Actions?.Get() != null)
                                    .SelectMany(ai => ai.Actions.Get().Actions.Actions
                                                    .Where(a => a is Conditional)
-                                                   .Select(a =>  new UnitInteractionConditionsCheckerEntry(unit, ai, (a as Conditional).ConditionsChecker)));
+                                                   .Select(a =>  new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
             result.Union(actionConditions.ToHashSet());
+            // action elements
             var actionElements = actionInteractions
                 .Where(ai => ai.Actions?.Get() != null)
-                .Select(ai => new UnitInteractionConditionsCheckerEntry(unit, ai, null, ai.Actions.Get().ElementsArray.Where(e => e.IsQuestRelated()).ToList()));
-            result.UnionWith(actionElements.ToHashSet());
+                .Select(ai => new IntrestingnessEntry(unit, ai.Actions.Get(), null, ai.Actions.Get().ElementsArray.Where(e => e.IsQuestRelated()).ToList()));
+            elements.UnionWith(actionElements.ToHashSet());
+            foreach (var entry in elements) {
+                //Mod.Debug($"checking {entry}");
+                var conditionals = entry.elements.OfType<Conditional>();
+                if (conditionals.Any()) {
+                    Mod.Debug($"found {conditionals.Count()} Conditionals");
+                    foreach (var conditional in conditionals) {
+                        var newEntry = new IntrestingnessEntry(entry.unit, conditional, conditional.ConditionsChecker);
+                        result.Add(newEntry);
+                        //Mod.Debug($"    Added {conditional}");
+                    }
+                    var nonConditionals = entry.elements.Where(element => !(element is Conditional));
+                    entry.elements = nonConditionals.ToList();
+                }
+            }
+            result.UnionWith(elements);
             return result;
         }
     }

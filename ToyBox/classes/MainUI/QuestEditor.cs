@@ -22,7 +22,9 @@ using ModKit.Utility;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ToyBox.BlueprintExtensions;
 using Kingmaker.Designers;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
+using System.Security.AccessControl;
 
 namespace ToyBox {
     public static class QuestExensions {
@@ -124,25 +126,7 @@ namespace ToyBox {
                                             }
                                         }
                                         foreach (var entry in checkerEntries) {
-                                            foreach (var condition in entry.checker.Conditions.OrderBy(c => c.GetType().Name)) {
-                                                if (!condition.CheckCondition()
-                                                    && !settings.toggleIntrestingNPCsShowFalseConditions
-                                                   ) continue;
-                                                using (HorizontalScope()) {
-                                                    150.space();
-                                                    switch (condition) {
-                                                        case ObjectiveStatus objectiveStatus:
-                                                            OnGUI(objectiveStatus, entry.source);
-                                                            break;
-                                                        case EtudeStatus etudeStatus:
-                                                            OnGUI(etudeStatus);
-                                                            break;
-                                                        default:
-                                                            OnGUI(condition);
-                                                            break;
-                                                    }
-                                                }
-                                            }
+                                            OnGUI(entry.checker, entry.source);
                                         }
                                         if (elementEntries.Any()) {
                                             using (HorizontalScope()) {
@@ -152,24 +136,7 @@ namespace ToyBox {
                                         }
                                         foreach (var entry in elementEntries) {
                                             foreach (var element in entry.elements.OrderBy(e => e.GetType().Name)) {
-                                                if (element is Condition condition
-                                                    && !condition.CheckCondition()
-                                                    && !settings.toggleIntrestingNPCsShowFalseConditions
-                                                    ) continue;
-                                                using (HorizontalScope()) {
-                                                    150.space();
-                                                    switch (element) {
-                                                        case ObjectiveStatus objectiveStatus:
-                                                            OnGUI(objectiveStatus, entry.source);
-                                                            break;
-                                                        case EtudeStatus etudeStatus:
-                                                            OnGUI(etudeStatus);
-                                                            break;
-                                                        default:
-                                                            OnGUI(element);
-                                                            break;
-                                                    }
-                                                }
+                                                OnGUI(element, entry.source);
                                             }
                                         }
                                     }, 50, false, true, 100, 300, "", true);
@@ -341,8 +308,67 @@ namespace ToyBox {
                 }
             }
         }
+        public static void OnGUI(Element element, object source, int indent = 150, bool forceShow = false) {
+            if (element is Condition c
+                && !c.CheckCondition()
+                && !settings.toggleIntrestingNPCsShowFalseConditions
+                && !forceShow
+               ) return;
+            using (HorizontalScope()) {
+                Space(indent);
+                switch (element) {
+                    case ObjectiveStatus objectiveStatus:
+                        OnGUI(objectiveStatus, source);
+                        break;
+                    case QuestStatus questStatus:
+                        OnGUI(questStatus, source);
+                        break;
+                    case EtudeStatus etudeStatus:
+                        OnGUI(etudeStatus, source);
+                        break;
+                    case Conditional conditional:
+                        OnGUI(conditional, source);
+                        break;
+                    case Condition condition:
+                        OnGUI(condition, source);
+                        break;
+                    default:
+                        OnOtherElementGUI(element, source);
+                        break;
+                }
+            }
+        }
+        public static void OnGUI(ConditionsChecker checker, object source, int indent = 150, bool forceShow = false) {
+            foreach (var condition in checker.Conditions.OrderBy(c => c.GetType().Name)) {
+                OnGUI(condition, source, indent, forceShow);
+            }
+        }
+        public static void OnGUI(Conditional conditional, object source) {
+            if (conditional.ConditionsChecker.Conditions.Any()) {
+                Label("Conditional:".cyan(), 150.width());
+                //Label(string.Join(", ", conditional.ConditionsChecker.Conditions.Select(c => c.GetCaption())));
+                Label(conditional.Comment, 375.width());
+                using (VerticalScope()) {
+                    OnGUI(conditional.ConditionsChecker, source, 0, true);
+                }
+            }
+        }
+        public static void OnGUI(QuestStatus questStatus, object source) {
+            Label("Quest Status: ".cyan(), 150.width());
+            var quest = questStatus.Quest;
+            var state = GameHelper.Quests.GetQuestState(quest);
+            var title = $"{quest.Title.ToString().orange().bold()}";
+            Label(title, 500.width());
+            22.space();
+            using (VerticalScope()) {
+                HelpLabel(quest.Description);
+                Label($"status: ".cyan() + state.ToString());
+                Label("condition: ".cyan() + questStatus.CaptionString());
+                Label("source: ".cyan() + source.ToString().yellow());
+            }
+        }
         public static void OnGUI(ObjectiveStatus objectiveStatus, object source) {
-            Label("Quest: ".cyan(), 150.width());
+            Label("Objective Status: ".cyan(), 150.width());
 
             var objectiveBP = objectiveStatus.QuestObjective;
             var objective = Game.Instance.Player.QuestBook.GetObjective(objectiveBP);
@@ -358,8 +384,8 @@ namespace ToyBox {
                 Label("source: ".cyan() + source.ToString().yellow());
             }
         }
-        public static void OnGUI(EtudeStatus etudeStatus) {
-            Label("Etude: ".cyan(), 150.width());
+        public static void OnGUI(EtudeStatus etudeStatus, object source) {
+            Label("Etude Status: ".cyan(), 150.width());
             var etudeBP = etudeStatus.Etude;
             Label(etudeBP.name.orange(), 500.width());
             var etudeState = Game.Instance.Player.EtudesSystem.GetSavedState(etudeBP);
@@ -369,19 +395,24 @@ namespace ToyBox {
                 HelpLabel(debugInfo);
                 Label($"status: ".cyan() + etudeState.ToString());
                 Label("condition: ".cyan() + etudeStatus.CaptionString());
+                Label("source: ".cyan() + source.ToString().yellow());
             }
         }
-        public static void OnGUI(Condition condition) {
+        public static void OnGUI(Condition condition, object source) {
             Label($"{condition.GetType().Name}:".cyan(), 150.width());
-            Label(condition.CaptionString(), 500.width());
+            Label(source.ToString().yellow(), 500.width());
             22.space();
             using (VerticalScope()) {
                 Label("condition: ".cyan() + condition.CaptionString());
             }
         }
-        public static void OnGUI(Element element) {
+        public static void OnOtherElementGUI(Element element, object source) {
             Label($"{element.GetType().Name}:".cyan(), 150.width());
-            Label(element.CaptionString(), 500.width());
+            Label(source.ToString().yellow(), 500.width());
+            22.space();
+            using (VerticalScope()) {
+                Label("condition: ".cyan() + element.CaptionString());
+            }
         }
     }
 }

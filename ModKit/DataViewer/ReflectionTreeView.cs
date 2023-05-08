@@ -323,7 +323,7 @@ namespace ModKit.DataViewer {
                     GUI.contentColor = node.IsException ? Color.red : node.IsNull ? Color.grey : originalColor;
                     var valueText = node.ValueText;
                     if (SearchTerms.Length == 0 || !SearchTerms.Any(term => valueText.Matches(term)))
-                        GUILayout.TextArea(valueText); // + " " + node.GetPath().green(), _valueStyle);
+                        ClipboardLabel(valueText); // + " " + node.GetPath().green(), _valueStyle);
                     else {
                         //if (valueText.Matches("mor"))
                         //    Mod.Log($"{valueText}/[{string.Join(", ", SearchTerms)}]");

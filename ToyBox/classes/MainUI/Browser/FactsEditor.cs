@@ -125,7 +125,7 @@ namespace ToyBox {
             using (VerticalScope(Width(remainingWidth - 100))) {
                 try {
                     if (Settings.showAssetIDs)
-                        GUILayout.TextField(blueprint.AssetGuid.ToString(), AutoWidth());
+                        ClipboardLabel(blueprint.AssetGuid.ToString(), AutoWidth());
                     Label(blueprint.Description.StripHTML().MarkedSubstring(browser.SearchText).green(), Width(remainingWidth - 100));
                 }
                 catch (Exception e) {
