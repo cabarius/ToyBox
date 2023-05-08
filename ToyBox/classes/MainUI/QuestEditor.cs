@@ -22,6 +22,7 @@ using ModKit.Utility;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ToyBox.BlueprintExtensions;
 using Kingmaker.Designers;
+using Kingmaker.ElementsSystem;
 
 namespace ToyBox {
     public static class QuestExensions {
@@ -54,6 +55,7 @@ namespace ToyBox {
             else
                 return title.color(titleColors[(int)state]);
         }
+        public static string titleColored(this string title, QuestObjectiveState state) => title.color(titleColors[(int)state]);
         public static string stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest).bold();
         public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
     }
@@ -61,7 +63,7 @@ namespace ToyBox {
         public static Settings settings => Main.Settings;
         public static Player player => Game.Instance.Player;
         private static bool[] selectedQuests = new bool[0];
-        private static Browser<UnitEntityData, UnitEntityData> objectiveBrowser = new();
+        private static Browser<UnitEntityData, UnitEntityData> conditionsBrowser = new();
         public static void ResetGUI() { }
 
         public static void OnGUI() {
@@ -83,40 +85,77 @@ namespace ToyBox {
                     50.space();
                     using (VerticalScope(GUI.skin.box)) {
                         if (Game.Instance?.State?.Units.All is { } units) {
-                            objectiveBrowser.OnGUI(
+                            conditionsBrowser.OnGUI(
                                     units.Where(u => u.GetUnitIterestingnessCoefficent() >= 1),
                                     () => units,
                                     i => i,
                                     u => u.CharacterName,
                                     u => u.CharacterName,
-                                    null,
+                                    () => {
+                                        Toggle("Show Inactive Conditions", ref settings.toggleIntrestingNPCsShowFalseConditions);
+                                    },
                                     (_, u) => {
-                                        ReflectionTreeView.DetailToggle(u.CharacterName.orange(), u.Parts.Parts);
-                                        25.space();
-                                        Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(u.GetUnitIterestingnessCoefficent().ToString()));
+                                        var name = u.CharacterName;
+                                        var coefficient = u.GetUnitIterestingnessCoefficent();
+                                        if (coefficient > 0)
+                                            name = name.orange();
+                                        else
+                                            name = name.grey();
+                                        ReflectionTreeView.DetailToggle(name, u.Parts.Parts);
+                                        175.space();
+                                        Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(coefficient.ToString()));
                                     },
                                     (_, u) => {
                                         ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
-                                        var entries = u.GetQuestObjectives();
+                                        var entries = u.GetUnitInteractionConditions();
                                         foreach (var entry in entries) {
-                                            using (HorizontalScope()) {
-                                                150.space();
-                                                var objectiveBP = entry.objectiveStatus.QuestObjective;
-                                                var objective = Game.Instance.Player.QuestBook.GetObjective(objectiveBP);
-                                                var quest = objectiveBP.Quest;
-                                                var title = $"{quest.Title.ToString().orange().bold()} : {objective.titleColored(objectiveBP)}";
-                                                Label(title, 500.width());
-                                                22.space();
-                                                using (VerticalScope(GUI.skin.box)) {
-                                                    Label("condition ".cyan() + $"{entry.objectiveStatus.GetCaption().grey()} -> {(entry.objectiveStatus.CheckCondition() ? "True".green() : "False".yellow())}");
-                                                    HelpLabel(objectiveBP.Description);
-                                                    Label("source: ".cyan() + entry.source.ToString().yellow());
+                                            foreach (var condition in entry.checker.Conditions.OrderBy(c => c.GetType().Name)) {
+                                                using (HorizontalScope()) {
+                                                    if (!condition.CheckCondition()
+                                                        && !settings.toggleIntrestingNPCsShowFalseConditions 
+                                                        && !conditionsBrowser.ShowAll
+                                                        ) continue;
+                                                    150.space();
+                                                    switch (condition) {
+                                                        case ObjectiveStatus objectiveStatus:
+                                                            Label("Quest: ".cyan(), 150.width());
 
+                                                            var objectiveBP = objectiveStatus.QuestObjective;
+                                                            var objective = Game.Instance.Player.QuestBook.GetObjective(objectiveBP);
+                                                            var quest = objectiveBP.Quest;
+                                                            var state = objective?.State ?? QuestObjectiveState.None;
+                                                            var title = $"{quest.Title.ToString().orange().bold()} : {objective.titleColored(objectiveBP)}";
+                                                            Label(title, 500.width());
+                                                            22.space();
+                                                            using (VerticalScope()) {
+                                                                HelpLabel(objectiveBP.Description);
+                                                                Label($"status: ".cyan() + state.ToString().titleColored(state));
+                                                                Label("condition: ".cyan() + objectiveStatus.CaptionString());
+                                                                Label("source: ".cyan() + entry.source.ToString().yellow());
+                                                            }
+                                                            break;
+                                                        case EtudeStatus etudeStatus:
+                                                            Label("Etude: ".cyan(), 150.width());
+                                                            var etudeBP = etudeStatus.Etude;
+                                                            Label(etudeBP.name.orange(), 500.width());
+                                                            var etudeState = Game.Instance.Player.EtudesSystem.GetSavedState(etudeBP);
+                                                            var debugInfo = Game.Instance.Player.EtudesSystem.GetDebugInfo(etudeBP);
+                                                            22.space();
+                                                            using (VerticalScope()) {
+                                                                HelpLabel(debugInfo);
+                                                                Label($"status: ".cyan() + etudeState.ToString());
+                                                                Label("condition: ".cyan() + condition.CaptionString());
+                                                            }
+                                                            break;
+                                                        default:
+                                                            Label($"{condition.GetType().Name}:".cyan(), 150.width());
+                                                            Label(condition.CaptionString(), 500.width());
+                                                            break;
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                );
+                                    }, 50, false, true, 100, 300, "", true);
                         }
                     }
                 }

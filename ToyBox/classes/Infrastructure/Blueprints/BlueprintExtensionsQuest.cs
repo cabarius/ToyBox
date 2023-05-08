@@ -27,77 +27,56 @@ using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.UnitLogic.Parts;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using Kingmaker.UnitLogic.Interaction;
+using static ToyBox.BlueprintExtensions;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
-        public class QuestObjectiveStatusEntry {
+        public class UnitInteractionConditionsCheckerEntry {
             public UnitEntityData unit { get; set; }
             public object source { get; set; }
-            public ObjectiveStatus objectiveStatus { get; set; }
+            public ConditionsChecker checker { get; set; }
 
-            public QuestObjectiveStatusEntry(UnitEntityData unit, object source, ObjectiveStatus objectiveStatus) {
+            public UnitInteractionConditionsCheckerEntry(UnitEntityData unit, object source, ConditionsChecker checker) {
                 this.unit = unit;
                 this.source = source;
-                this.objectiveStatus = objectiveStatus;
+                this.checker = checker;
             }
         }
+        public static string CaptionString(this Condition condition) =>
+            $"{condition.GetCaption().orange()} -> {(condition.CheckCondition() ? "True".green() : "False".yellow())}";
+        
 
-        public static int GetUnitIterestingnessCoefficent(this UnitEntityData unit) {
-            var spawnerInteractions = unit.Parts.Parts
-                               .OfType<UnitPartInteractions>()
-                               .SelectMany(p => p.m_Interactions)
-                               .OfType<Wrapper>()
-                               .Select(w => w.Source);
-            var count = 0;
-            var dialogs = spawnerInteractions.OfType<SpawnerInteractionDialog>().ToList();
-            var dialogElements = dialogs.SelectMany(d => d.Dialog.ElementsArray);
-            count += dialogElements.Count();
-            var dialogConditions = dialogs
-                                   .Where(d => d.Conditions?.Get() != null)
-                                   .SelectMany(d => d.Conditions.Get().ElementsArray);
-            count += dialogConditions.Count();
-            var actions = spawnerInteractions.OfType<SpawnerInteractionActions>();
-            var actionConditions = actions
-                                   .Where(a => a.Actions?.Get() != null)
-                                   .SelectMany(a => a.Actions.Get().ElementsArray.OfType<ObjectiveStatus>());
-            count += actionConditions.Count();
-            // For now we assume any NPC 
-            count += unit.Parts.Parts
-                         .OfType<UnitPartInteractions>()
-                         .SelectMany(p => p.m_Interactions)
-                         .OfType<EtudeBracketOverrideUnitInteraction>().Count();
-            return count;
-        }
-        public static IEnumerable<QuestObjectiveStatusEntry> GetQuestObjectives(this UnitEntityData unit) {
+        public static int GetUnitIterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(c => c.checker.Conditions.Any(c => c.CheckCondition()));
+    
+        public static IEnumerable<UnitInteractionConditionsCheckerEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
             var spawnInterations = unit.Parts.Parts
                                .OfType<UnitPartInteractions>()
                                .SelectMany(p => p.m_Interactions)
                                .OfType<Wrapper>()
                                .Select(w => w.Source);
-            IEnumerable<QuestObjectiveStatusEntry> result = new List<QuestObjectiveStatusEntry>();
-            var dialogs = spawnInterations.OfType<SpawnerInteractionDialog>().ToList();
-            var dialogObjectives = dialogs
-                .SelectMany(d => d.Dialog.ElementsArray
-                .OfType<ObjectiveStatus>()
-                .Select(o => new QuestObjectiveStatusEntry(unit, d.Dialog, o)));
-            result = result.Union(dialogObjectives);
-            var dialogConditions = dialogs
-                                   .Where(d => d.Conditions?.Get() != null)
-                                   .SelectMany(d => d.Conditions.Get().ElementsArray
-                                   .OfType<ObjectiveStatus>()
-                                   .Select(o => new QuestObjectiveStatusEntry(unit, d, o)));
+            IEnumerable<UnitInteractionConditionsCheckerEntry> result = new List<UnitInteractionConditionsCheckerEntry>();
+            var dialogInteractions = spawnInterations.OfType<SpawnerInteractionDialog>().ToList();
+            var interactionConditions = dialogInteractions
+                                   .Where(di => di.Conditions?.Get() != null)
+                                   .Select(di => new UnitInteractionConditionsCheckerEntry(unit, di, di.Conditions.Get().Conditions));
+            result = result.Union(interactionConditions);
+            var dialogConditions = dialogInteractions
+                                   .Select(di => new UnitInteractionConditionsCheckerEntry(unit, di, di.Dialog.Conditions));
             result = result.Union(dialogConditions);
-            var actions = spawnInterations.OfType<SpawnerInteractionActions>();
-            var actionConditions = actions
-                                   .Where(a => a.Actions?.Get() != null)
-                                   .SelectMany(a => a.Actions.Get().ElementsArray
-                                                     .OfType<ObjectiveStatus>()
-                                                     .Select(o => new QuestObjectiveStatusEntry(unit, a.name, o))
-                                       );
+            var actionInteractions = spawnInterations.OfType<SpawnerInteractionActions>();
+            var actionInteractionConditions = actionInteractions
+                                              .Where(ai => ai.Conditions?.Get() != null)
+                                              .Select(ai => new UnitInteractionConditionsCheckerEntry(unit, ai, ai.Conditions.Get().Conditions));
+            result = result.Union(actionInteractionConditions);
+            var actionConditions = actionInteractions
+                                   .Where(ai => ai.Actions?.Get() != null)
+                                   .SelectMany(ai => ai.Actions.Get().Actions.Actions
+                                                   .Where(a => a is Conditional)
+                                                   .Select(a =>  new UnitInteractionConditionsCheckerEntry(unit, ai, (a as Conditional).ConditionsChecker)));
             result = result.Union(actionConditions);
             return result;
         }
-
     }
 }
