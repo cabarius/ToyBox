@@ -123,9 +123,16 @@ namespace ToyBox {
             Space(20); remainingWidth -= 20;
             ReflectionTreeView.DetailToggle("", blueprint, feature != null ? feature : blueprint, 0);
             using (VerticalScope(Width(remainingWidth - 100))) {
-                if (Settings.showAssetIDs)
-                    GUILayout.TextField(blueprint.AssetGuid.ToString(), AutoWidth());
-                Label(blueprint.Description.StripHTML().MarkedSubstring(browser.SearchText).green(), Width(remainingWidth - 100));
+                try {
+                    if (Settings.showAssetIDs)
+                        GUILayout.TextField(blueprint.AssetGuid.ToString(), AutoWidth());
+                    Label(blueprint.Description.StripHTML().MarkedSubstring(browser.SearchText).green(), Width(remainingWidth - 100));
+                }
+                catch (Exception e) {
+                    Mod.Warn($"Error in blueprint: {blueprint.AssetGuid}");
+                    Mod.Warn($"         name: {blueprint.name}");
+                    Mod.Error(e);
+                }
             }
         }
 

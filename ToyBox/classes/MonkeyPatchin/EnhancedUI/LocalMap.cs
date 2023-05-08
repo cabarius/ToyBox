@@ -267,15 +267,18 @@ namespace ToyBox.BagOfPatches {
                         var unit = marker.Owner;
                         UpdateMarker(__instance, unit);
                     }
-                    if (__instance.ViewModel is LocalMapUnitMarkerVM unitMarkerVM) {
+                    else if (__instance.ViewModel is LocalMapUnitMarkerVM unitMarkerVM) {
                         UpdateMarker(__instance, unitMarkerVM.m_Unit);
+                    }
+                    else if (__instance.ViewModel is LocalMapCharacterMarkerVM characterMarkerVM) {
+                        UpdateMarker(__instance, characterMarkerVM.m_Unit);
                     }
                 }
             }
 
             private static void UpdateMarker(LocalMapMarkerPCView markerView, UnitEntityData unit) {
                 var count = unit.GetUnitIterestingnessCoefficent();
-                Mod.Debug($"{unit.CharacterName.orange()} -> dialogActionCounts: {count}");
+                Mod.Debug($"{unit.CharacterName.orange()} -> unit intrestingness: {count}");
                 //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
                 //Mod.Debug($"attentionMark: {attentionMark}");
                 var markImage = markerView.transform.FindChild("Mark").GetComponent<Image>();

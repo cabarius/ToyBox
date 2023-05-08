@@ -313,7 +313,7 @@ namespace ToyBox {
                 () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
                 () => {
                     Toggle("Mark Interesting NPCs", ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
-                    HelpLabel("This will change the color of NPC names on the highlike makers and change the color map markers to indicate that they have interesting or conditional interactions");
+                    HelpLabel("This will change the color of NPC names on the highlight makers and change the color map markers to indicate that they have interesting or conditional interactions");
                 },
                 () => Toggle("Make game continue to play music on lost focus", ref settings.toggleContinueAudioOnLostFocus),
                 () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
