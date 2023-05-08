@@ -27,5 +27,13 @@ namespace ToyBox.BagOfPatches {
                 //unit2.LocalizedName.String = localizedString;
             }
         }
+
+        [HarmonyPatch(typeof(LocalizedString), nameof(LocalizedString.GetActualKey))]
+        public class Patch_ActualKeyBug
+        {
+            [HarmonyPatch]
+            [HarmonyPostfix]
+            public static string Postfix(string original) => original ?? "";
+        }
     }
 }

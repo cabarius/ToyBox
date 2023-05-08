@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.2 (Comming Soon)
  * (***ADDB***) Initial support for localization
+ * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
 **ToyBox 1.5.2** ***Experimental Preview*** ****
 ### Ver 1.5.1
 * (***Narria***) **Quality of Life: Enhanced Map**: 
