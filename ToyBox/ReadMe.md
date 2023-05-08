@@ -51,7 +51,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
   * Also marks interesting NPCs on the main screen by coloring their name
 * (***Narria***) Added Interesting NPC list to the Quest Editor tab
 * (***Narria***) **Quality of Life**: ToyBox Archeology Corps has labeled your puzzle pieces for you to make identification easier. 
-  * Added puzzle piece tags to the puzzle piece to identify the puzzle and the 2 symbols as a pair of numbers formated like this **[Puzzle Piece: Purple2x3]**. This should make it easier to identify and track the pieces in your inventory. I am looking into adding tool tips to the puzzle interactors to show the numbers too.
+  * Added puzzle piece tags to the puzzle piece to identify the puzzle and the 2 symbols as a pair of numbers formated like this **[Puzzle Piece: Purple2x3]**. This should make it easier to identify and track the pieces in your inventory.
 * (***Narria***) Fixed regression that made it impossible to use the spellbook merge feature
 * (***Narria***) Fixed regression in character name editing
 * (***Narria***) Made Selection Level a little more clear in FeatureSelection detail lists
