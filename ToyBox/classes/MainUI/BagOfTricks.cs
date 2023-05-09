@@ -1,21 +1,20 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using System;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Cheats;
+using Kingmaker.Controllers;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Kingdom;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
+using Kingmaker.View;
 using ModKit;
-using ToyBox;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
-using Kingmaker.Controllers;
-using Kingmaker.View;
-using Kingmaker.EntitySystem.Entities;
-using System.Collections.Generic;
 
 namespace ToyBox {
     public static class BagOfTricks {
@@ -84,7 +83,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(ResetAdditionalCameraAngles, () => {
                 Main.resetExtraCameraAngles = true;
             });
-            KeyBindings.RegisterAction(ToggleMurderHobo, 
+            KeyBindings.RegisterAction(ToggleMurderHobo,
                                        () => settings.togglekillOnEngage = !settings.togglekillOnEngage,
                                        title => ToggleTranscriptForState(title, settings.togglekillOnEngage)
                                        );
@@ -97,184 +96,184 @@ namespace ToyBox {
             if (Main.IsInGame) {
                 BeginHorizontal();
                 Space(25);
-                Label("increment".cyan(), AutoWidth());
+                Label("increment".localize().cyan(), AutoWidth());
                 var increment = IntTextField(ref settings.increment, null, Width(150));
                 EndHorizontal();
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 var kingdom = KingdomState.Instance;
-                HStack("Resources", 1,
+                HStack("Resources".localize(), 1,
                     () => {
                         var money = Game.Instance.Player.Money;
-                        Label("Gold".cyan(), Width(150));
+                        Label("Gold".localize().cyan(), Width(150));
                         Label(money.ToString().orange().bold(), Width(200));
-                        ActionButton($"Gain {increment}", () => Game.Instance.Player.GainMoney(increment), AutoWidth());
-                        ActionButton($"Lose {increment}", () => {
+                        ActionButton("Gain ".localize() + $"{increment}", () => Game.Instance.Player.GainMoney(increment), AutoWidth());
+                        ActionButton("Lose ".localize() + $"{increment}", () => {
                             var loss = Math.Min(money, increment);
                             Game.Instance.Player.GainMoney(-loss);
                         }, AutoWidth());
                     },
                     () => {
                         var exp = mainChar.Progression.Experience;
-                        Label("Experience".cyan(), Width(150));
+                        Label("Experience".localize().cyan(), Width(150));
                         Label(exp.ToString().orange().bold(), Width(200));
-                        ActionButton($"Gain {increment}", () => {
+                        ActionButton("Gain ".localize() + $"{increment}", () => {
                             Game.Instance.Player.GainPartyExperience(increment);
                         }, AutoWidth());
                     },
                     () => {
                         var corruption = Game.Instance.Player.Corruption;
-                        Label("Corruption".cyan(), Width(150));
+                        Label("Corruption".localize().cyan(), Width(150));
                         Label(corruption.CurrentValue.ToString().orange().bold(), Width(200));
-                        ActionButton($"Clear", () => corruption.Clear(), AutoWidth());
+                        ActionButton($"Clear".localize(), () => corruption.Clear(), AutoWidth());
                         25.space();
-                        Toggle("Disable Corruption", ref settings.toggleDisableCorruption);
+                        Toggle("Disable Corruption".localize(), ref settings.toggleDisableCorruption);
                     },
                     () => { }
                 );
             }
             Div(0, 25);
-            HStack("Combat", 2,
-                () => BindableActionButton(RestAll),
-                () => BindableActionButton(RestSelected),
-                () => BindableActionButton(FullBuffPlease),
-                () => BindableActionButton(Empowered),
-                () => BindableActionButton(GoddesBuffs),
-                () => BindableActionButton(RemoveBuffs),
-                () => BindableActionButton(RemoveDeathsDoor),
-                () => BindableActionButton(KillAllEnemies),
+            HStack("Combat".localize(), 2,
+                () => BindableActionButton(RestAll, true),
+                () => BindableActionButton(RestSelected, true),
+                () => BindableActionButton(FullBuffPlease, true),
+                () => BindableActionButton(Empowered, true),
+                () => BindableActionButton(GoddesBuffs, true),
+                () => BindableActionButton(RemoveBuffs, true),
+                () => BindableActionButton(RemoveDeathsDoor, true),
+                () => BindableActionButton(KillAllEnemies, true),
                 //() => UI.BindableActionButton(SummonZoo),
-                () => BindableActionButton(LobotomizeAllEnemies),
-                () => {},
+                () => BindableActionButton(LobotomizeAllEnemies, true),
+                () => { },
                 () => {
                     using (VerticalScope()) {
                         using (HorizontalScope()) {
                             using (VerticalScope(220.width())) {
                                 using (HorizontalScope()) {
-                                    Toggle($"Be a {"Murder".red().bold()} Hobo".orange(), ref settings.togglekillOnEngage, 222.width());
+                                    Toggle(("Be a " + "Murder".red().bold() + " Hobo".orange()).localize(), ref settings.togglekillOnEngage, 222.width());
                                     KeyBindPicker(ToggleMurderHobo, "", 50);
                                 }
                             }
                             158.space();
-                            Label($"If ticked, this will {"MURDER".red().bold()} all who dare to engage you!".green(), AutoWidth());
+                            Label(("If ticked, this will " + "MURDER".red().bold() + " all who dare to engage you!".green()).localize(), AutoWidth());
                         }
                         using (HorizontalScope()) {
-                            if (Toggle("Log ToyBox Keyboard Commands In Game", ref Mod.ModKitSettings.toggleKeyBindingsOutputToTranscript, 450.width()))
+                            if (Toggle("Log ToyBox Keyboard Commands In Game".localize(), ref Mod.ModKitSettings.toggleKeyBindingsOutputToTranscript, 450.width()))
                                 ModKitSettings.Save();
                             50.space();
-                            HelpLabel("When ticked this shows ToyBox commands in the combat log which is helpful for you to know when you used the shortcut");
+                            HelpLabel("When ticked this shows ToyBox commands in the combat log which is helpful for you to know when you used the shortcut".localize());
                         }
                     }
                 }
                 );
             Div(0, 25);
-            HStack("Teleport", 2,
-                () => BindableActionButton(TeleportPartyToYou),
+            HStack("Teleport".localize(), 2,
+                () => BindableActionButton(TeleportPartyToYou, true),
                 () => {
-                    Toggle("Enable Teleport Keys", ref settings.toggleTeleportKeysEnabled);
+                    Toggle("Enable Teleport Keys".localize(), ref settings.toggleTeleportKeysEnabled);
                     Space(100);
                     if (settings.toggleTeleportKeysEnabled) {
                         using (VerticalScope()) {
-                            KeyBindPicker("TeleportMain", "Main Character", 0, 200);
-                            KeyBindPicker("TeleportSelected", "Selected Chars", 0, 200);
-                            KeyBindPicker("TeleportParty", "Whole Party", 0, 200);
+                            KeyBindPicker("TeleportMain", "Main Character".localize(), 0, 200);
+                            KeyBindPicker("TeleportSelected", "Selected Chars".localize(), 0, 200);
+                            KeyBindPicker("TeleportParty", "Whole Party".localize(), 0, 200);
                         }
                     }
                     Space(25);
-                    Label("You can enable hot keys to teleport members of your party to your mouse cursor on Area or the Global Map".green());
+                    Label("You can enable hot keys to teleport members of your party to your mouse cursor on Area or the Global Map".localize().green());
                 });
             Div(0, 25);
-            HStack("Common", 2,
-                () => BindableActionButton(GoToGlobalMap),
+            HStack("Common".localize(), 2,
+                () => BindableActionButton(GoToGlobalMap, true),
                 () => {
-                    BindableActionButton(ChangeParty);
+                    BindableActionButton(ChangeParty, true);
                     Space(-75);
-                    HelpLabel("Change the party without advancing time (good to bind)");
-                },   
-                () => BindableActionButton(RerollPerception),
+                    HelpLabel("Change the party without advancing time (good to bind)".localize());
+                },
+                () => BindableActionButton(RerollPerception, true),
                 () => {
-                    BindableActionButton(RerollInteractionSkillChecks);
+                    BindableActionButton(RerollInteractionSkillChecks, true);
                     Space(-75);
-                    Label("This resets all the skill check rolls for all interactable objects in the area".green());
+                    Label("This resets all the skill check rolls for all interactable objects in the area".localize().green());
                 },
             () => {
-                NonBindableActionButton("Set Perception to 40", () => {
+                NonBindableActionButton("Set Perception to 40".localize(), () => {
                     CheatsCommon.StatPerception();
                     Actions.RunPerceptionTriggers();
                 });
             },
-            () => BindableActionButton(ChangWeather),
-            () => NonBindableActionButton("Give All Items", () => CheatsUnlock.CreateAllItems("")),
-            () => NonBindableActionButton("Identify All", () => Actions.IdentifyAll()),
+            () => BindableActionButton(ChangWeather, true),
+            () => NonBindableActionButton("Give All Items".localize(), () => CheatsUnlock.CreateAllItems("")),
+            () => NonBindableActionButton("Identify All".localize(), () => Actions.IdentifyAll()),
             () => { }
             );
             Div(0, 25);
-            HStack("Preview", 0, () => {
-                Toggle("Dialog Results", ref settings.previewDialogResults);
+            HStack("Preview".localize(), 0, () => {
+                Toggle("Dialog Results".localize(), ref settings.previewDialogResults);
                 Space(25);
-                Toggle("Dialog Alignment", ref settings.previewAlignmentRestrictedDialog);
+                Toggle("Dialog Alignment".localize(), ref settings.previewAlignmentRestrictedDialog);
                 Space(25);
-                Toggle("Random Encounters", ref settings.previewRandomEncounters);
+                Toggle("Random Encounters".localize(), ref settings.previewRandomEncounters);
                 Space(25);
-                Toggle("Events", ref settings.previewEventResults);
+                Toggle("Events".localize(), ref settings.previewEventResults);
                 Space(25);
-                Toggle("Decrees", ref settings.previewDecreeResults);
+                Toggle("Decrees".localize(), ref settings.previewDecreeResults);
                 Space(25);
-                Toggle("Relic Info", ref settings.previewRelicResults);
+                Toggle("Relic Info".localize(), ref settings.previewRelicResults);
                 Space(25);
-                BindableActionButton(PreviewDialogResults);
+                BindableActionButton(PreviewDialogResults, true);
             });
             Div(0, 25);
-            HStack("Dialog", 1,
+            HStack("Dialog".localize(), 1,
                 () => {
-                    Toggle("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red(), ref settings.toggleAllowAnyGenderRomance, 300.width());
+                    Toggle(("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref settings.toggleAllowAnyGenderRomance, 300.width());
                     25.space();
-                    Label("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple));
+                    Label(("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple)).localize());
                 },
                 () => {
-                    Toggle("Jealousy Begone!".bold(), ref settings.toggleMultipleRomance, 300.width());
+                    Toggle("Jealousy Begone!".localize().bold(), ref settings.toggleMultipleRomance, 300.width());
                     25.space();
-                    Label("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green());
+                    Label(("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green()).localize());
                 },
                 () => {
-                    Toggle("Friendship is Magic".bold(), ref settings.toggleFriendshipIsMagic, 300.width());
+                    Toggle("Friendship is Magic".localize().bold(), ref settings.toggleFriendshipIsMagic, 300.width());
                     25.space();
-                    Label("Experimental ".orange() + " your friends forgive even your most vile choices.".green());
+                    Label("Experimental ".localize().orange() + " your friends forgive even your most vile choices.".localize().green());
                 },
                 () => {
-                    Toggle("Disallow Companions Leaving Party", ref settings.toggleBlockUnrecruit, 300.width());
+                    Toggle("Disallow Companions Leaving Party".localize(), ref settings.toggleBlockUnrecruit, 300.width());
                     200.space();
-                    Label("Warning: ".color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can  otherwise break your save".orange());
+                    Label("Warning: ".localize().color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can  otherwise break your save".localize().orange());
                 },
                 () => {
-                    Toggle("Previously Chosen Dialog Is Smaller ", ref settings.toggleMakePreviousAnswersMoreClear, 300.width());
+                    Toggle("Previously Chosen Dialog Is Smaller ".localize(), ref settings.toggleMakePreviousAnswersMoreClear, 300.width());
                     200.space();
-                    Label("Draws dialog choices that you have previously selected in smaller type".green());
+                    Label("Draws dialog choices that you have previously selected in smaller type".localize().green());
                 },
                 () => {
-                    Toggle("Expand Dialog To Include Remote Companions".bold(), ref settings.toggleRemoteCompanionDialog, 300.width());
+                    Toggle("Expand Dialog To Include Remote Companions".localize().bold(), ref settings.toggleRemoteCompanionDialog, 300.width());
                     200.space();
-                    Label("Experimental".orange() + " Allow remote companions to make comments on dialog you are having.".green());
+                    Label("Experimental".localize().orange() + " Allow remote companions to make comments on dialog you are having.".localize().green());
                 },
                 () => {
                     if (settings.toggleRemoteCompanionDialog) {
                         50.space();
-                        Toggle("Include Former Companions", ref settings.toggleExCompanionDialog);
+                        Toggle("Include Former Companions".localize(), ref settings.toggleExCompanionDialog);
                         175.space();
-                        Label("This also includes companions who left the party such as Wenduag if you picked Lann".green());
+                        Label("This also includes companions who left the party such as Wenduag if you picked Lann".localize().green());
                     }
                 },
                 () => {
                     using (VerticalScope(300.width())) {
-                        Toggle("Expand Answers For Conditional Responses", ref settings.toggleShowAnswersForEachConditionalResponse);
+                        Toggle("Expand Answers For Conditional Responses".localize(), ref settings.toggleShowAnswersForEachConditionalResponse);
                         if (settings.toggleShowAnswersForEachConditionalResponse) {
                             using (HorizontalScope()) {
                                 50.space();
-                                Toggle("Show Unavailable Responses", ref settings.toggleShowAllAnswersForEachConditionalResponse);
+                                Toggle("Show Unavailable Responses".localize(), ref settings.toggleShowAllAnswersForEachConditionalResponse);
                             }
                         }
                     }
                     75.space();
-                    Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".green());
+                    Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".localize().green());
                 },
 #if DEBUG
                 () => {
@@ -283,74 +282,66 @@ namespace ToyBox {
                     Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
                 },
 #endif
-                () => Toggle("Disable Dialog Restrictions (Alignment)", ref settings.toggleDialogRestrictions),
-                () => Toggle("Disable Dialog Restrictions (Mythic Path)", ref settings.toggleDialogRestrictionsMythic),
-                () => Toggle("Ignore Event Solution Restrictions", ref settings.toggleIgnoreEventSolutionRestrictions),
+                () => Toggle("Disable Dialog Restrictions (Alignment)".localize(), ref settings.toggleDialogRestrictions),
+                () => Toggle("Disable Dialog Restrictions (Mythic Path)".localize(), ref settings.toggleDialogRestrictionsMythic),
+                () => Toggle("Ignore Event Solution Restrictions".localize(), ref settings.toggleIgnoreEventSolutionRestrictions),
 #if DEBUG
                 () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref settings.toggleDialogRestrictionsEverything),
 #endif
                 () => { }
             );
             Div(0, 25);
-            HStack("Quality of Life", 1,
+            HStack("Quality of Life".localize(), 1,
                 () => {
-                    Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame, 500.width() );
-                    Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".orange());
+                    Toggle("Allow Achievements While Using Mods".localize(), ref settings.toggleAllowAchievementsDuringModdedGame, 500.width());
+                    Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".localize().orange());
                 },
                 // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
                 () => {
-                    Toggle("Enhanced Map View", ref settings.toggleZoomableLocalMaps, 500.width());
-                    HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off");
+                    Toggle("Enhanced Map View".localize(), ref settings.toggleZoomableLocalMaps, 500.width());
+                    HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off".localize());
                 },
+                () => Toggle("Object Highlight Toggle Mode".localize(), ref settings.highlightObjectsToggle),
                 () => {
-                    if (settings.toggleZoomableLocalMaps) {
-                        32.space();
-                        Label("Map Scroll Speed", 300.width());
-                        Space(-392);
-                        LogSlider("", ref settings.zoomableLocalMapScrollSpeedMultiplier, 1f, 20, 4, 1, "", AutoWidth());
-                    }
+                    Toggle("Mark Interesting NPCs".localize(), ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
+                    HelpLabel("This will change the color of NPC names on the highlike makers and change the color map markers to indicate that they have interesting or conditional interactions".localize());
                 },
-                () => Toggle("Object Highlight Toggle Mode", ref settings.highlightObjectsToggle),
+                () => Toggle("Make game continue to play music on lost focus".localize(), ref settings.toggleContinueAudioOnLostFocus),
+                () => Toggle("Highlight Copyable Scrolls".localize(), ref settings.toggleHighlightCopyableScrolls),
                 () => {
-                    Toggle("Mark Interesting NPCs", ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
-                    HelpLabel("This will change the color of NPC names on the highlight makers and change the color map markers to indicate that they have interesting or conditional interactions");
+                    Toggle("Auto load Last Save on launch".localize(), ref settings.toggleAutomaticallyLoadLastSave, 500.width());
+                    HelpLabel("Hold down shift during launch to bypass".localize());
                 },
-                () => Toggle("Make game continue to play music on lost focus", ref settings.toggleContinueAudioOnLostFocus),
-                () => Toggle("Highlight Copyable Scrolls", ref settings.toggleHighlightCopyableScrolls),
-                () => {
-                    Toggle("Auto load Last Save on launch", ref settings.toggleAutomaticallyLoadLastSave, 500.width());
-                    HelpLabel("Hold down shift during launch to bypass");
-                },
-                () => Toggle($"Game Over Fix For {"LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon)} omg he just ran in!", ref settings.toggleGameOverFixLeeerrroooooyJenkins),
+                () => Toggle(("Game Over Fix For " + "LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon) + " omg he just ran in!").localize(), ref settings.toggleGameOverFixLeeerrroooooyJenkins),
                 () => {
                     503.space();
-                    HelpLabel("Prevents dumb companions (that's you Greybor) from wiping the party by running running into the dragon room and dying...");
+                    HelpLabel("Prevents dumb companions (that's you Greybor) from wiping the party by running running into the dragon room and dying...".localize());
                 },
-                () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ", ref settings.toggleWidenActionBarGroups),
+                () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ".localize(), ref settings.toggleWidenActionBarGroups),
                 () => {
-                    if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups", ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
+                    if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups".localize(), ref settings.toggleShowAcronymsInSpellAndActionSlots)) {
                         Main.SetNeedsResetGameUI();
                     }
                 },
                 () => {
-                    Toggle("Icky Stuff Begone!!!", ref settings.toggleReplaceModelMenu, (settings.toggleReplaceModelMenu ? 248 :499).width());
+                    Toggle("Icky Stuff Begone!!!".localize(), ref settings.toggleReplaceModelMenu, (settings.toggleReplaceModelMenu ? 248 : 499).width());
                     if (settings.toggleReplaceModelMenu) {
                         using (VerticalScope(Width(247))) {
-                            Toggle("Spiders Begone!", ref settings.toggleSpiderBegone);
-                            Toggle("Vescavors Begone!", ref settings.toggleVescavorsBegone);
-                            Toggle("Retrievers Begone!", ref settings.toggleRetrieversBegone);
-                            Toggle("Deraknis Begone!", ref settings.toggleDeraknisBegone);
-                            Toggle("Deskari Begone!", ref settings.toggleDeskariBegone);
+                            Toggle("Spiders Begone!".localize(), ref settings.toggleSpiderBegone);
+                            Toggle("Vescavors Begone!".localize(), ref settings.toggleVescavorsBegone);
+                            Toggle("Retrievers Begone!".localize(), ref settings.toggleRetrieversBegone);
+                            Toggle("Deraknis Begone!".localize(), ref settings.toggleDeraknisBegone);
+                            Toggle("Deskari Begone!".localize(), ref settings.toggleDeskariBegone);
                         }
                     }
-                    Label("Some players find spiders and other swarms icky. This replaces them with something more pleasant".green());
+                    Label("Some players find spiders and other swarms icky. This replaces them with something more pleasant".localize().green());
                 },
-                () => Toggle("Make tutorials not appear if disabled in settings", ref settings.toggleForceTutorialsToHonorSettings),
-                () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
+                () => Toggle("Make tutorials not appear if disabled in settings".localize(), ref settings.toggleForceTutorialsToHonorSettings),
+                () => Toggle("Refill consumables in belt slots if in inventory".localize(), ref settings.togglAutoEquipConsumables),
                 () => {
                     var modifier = KeyBindings.GetBinding("InventoryUseModifier");
                     var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
-                    Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot, 470.width());
+                    Toggle("Allow ".localize() + $"{modifierText}".cyan() + (" + Click".cyan() + " To Use Items In Inventory").localize(), ref settings.toggleShiftClickToUseInventorySlot, 470.width());
                     if (settings.toggleShiftClickToUseInventorySlot) {
                         ModifierPicker("InventoryUseModifier", "", 0);
                     }
@@ -358,80 +349,81 @@ namespace ToyBox {
                 () => {
                     var modifier = KeyBindings.GetBinding("ClickToTransferModifier");
                     var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
-                    Toggle("Allow " + $"{modifierText} + Click".cyan() + " To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer, 470.width());
+                    Toggle("Allow ".localize() + $"{modifierText}".cyan() + (" + Click".cyan() + " To Transfer Entire Stack").localize(), ref settings.toggleShiftClickToFastTransfer, 470.width());
                     if (settings.toggleShiftClickToFastTransfer) {
                         ModifierPicker("ClickToTransferModifier", "", 0);
                     }
                 },
-                () => Toggle("Respec Refund Scrolls", ref settings.toggleRespecRefundScrolls),
+                () => Toggle("Respec Refund Scrolls".localize(), ref settings.toggleRespecRefundScrolls),
                 () => {
-                    Toggle("Make Puzzle Symbols More Clear", ref settings.togglePuzzleRelief);
+                    Toggle("Make Puzzle Symbols More Clear".localize(), ref settings.togglePuzzleRelief);
                     25.space();
-                    HelpLabel($"ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: {"[PuzzlePiece Green3x1]".yellow().bold()}" + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange());
+                    HelpLabel(("ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: " + "[PuzzlePiece Green3x1]".yellow().bold() + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange()).localize());
                 },
                 () => {
-                    ActionButton("Clear Action Bar", () => Actions.ClearActionBar());
+                    ActionButton("Clear Action Bar".localize(), () => Actions.ClearActionBar());
                     50.space();
-                    Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".green());
+                    Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".localize().green());
                 },
-                () => ActionButton("Fix Incorrect Main Character", () => {
+                () => ActionButton("Fix Incorrect Main Character".localize(), () => {
                     var probablyPlayer = Game.Instance.Player?.Party?
                         .Where(x => !x.IsCustomCompanion())
                         .Where(x => !x.IsStoryCompanion()).ToList();
                     if (probablyPlayer is { Count: 1 }) {
                         var newMainCharacter = probablyPlayer.First();
-                        Mod.Warn($"Promoting {newMainCharacter.CharacterName} to main character!");
+                        var text = "Promoting % to main character!".localize().Split('%');
+                        Mod.Warn($"{text[0]}{newMainCharacter.CharacterName}{text[1]}");
                         if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
                     }
                 }, AutoWidth()),
-                () => { Toggle("Enable Loading with Blueprint Errors".color(RGBA.maroon), ref settings.enableLoadWithMissingBlueprints); 25.space(); Label($"This {"incredibly dangerous".bold()} setting overrides the default behavior of failing to load saves depending on missing blueprint mods. This desperate action can potentially enable you to recover your saved game, though you'll have to respec at minimum.".orange()); },
+                () => { Toggle("Enable Loading with Blueprint Errors".localize().color(RGBA.maroon), ref settings.enableLoadWithMissingBlueprints); 25.space(); Label($"This {"incredibly dangerous".bold()} setting overrides the default behavior of failing to load saves depending on missing blueprint mods. This desperate action can potentially enable you to recover your saved game, though you'll have to respec at minimum.".localize().orange()); },
                 () => {
                     if (settings.enableLoadWithMissingBlueprints) {
-                        Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".orange());
+                        Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".localize().orange());
                     }
                 },
                 () => {
                     using (VerticalScope()) {
                         Div(0, 25, 1280);
                         var useAlt = settings.useAlternateTimeScaleMultiplier;
-                        var mainTimeScaleTitle = "Game Time Scale";
+                        var mainTimeScaleTitle = "Game Time Scale".localize();
                         if (useAlt) mainTimeScaleTitle = mainTimeScaleTitle.grey();
-                        var altTimeScaleTitle = "Alternate Time Scale";
+                        var altTimeScaleTitle = "Alternate Time Scale".localize();
                         if (!useAlt) altTimeScaleTitle = altTimeScaleTitle.grey();
                         using (HorizontalScope()) {
                             LogSlider(mainTimeScaleTitle, ref settings.timeScaleMultiplier, 0f, 20, 1, 1, "", Width(450));
                             Space(25);
-                            Label("Speeds up or slows down the entire game (movement, animation, everything)".green());
+                            Label("Speeds up or slows down the entire game (movement, animation, everything)".localize().green());
                         }
                         using (HorizontalScope()) {
                             LogSlider(altTimeScaleTitle, ref settings.alternateTimeScaleMultiplier, 0f, 20, 5, 1, "", Width(450));
                         }
                         using (HorizontalScope()) {
-                            BindableActionButton(TimeScaleMultToggle);
+                            BindableActionButton(TimeScaleMultToggle, true);
                             Space(-95);
-                            Label("Bindable hot key to swap between main and alternate time scale multipliers".green());
+                            Label("Bindable hot key to swap between main and alternate time scale multipliers".localize().green());
                         }
                         Div(0, 25, 1280);
                     }
                 },
-                () => Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width(450)),
+                () => Slider("Turn Based Combat Delay".localize(), ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width(450)),
                 () => {
                     using (VerticalScope()) {
 
                         using (HorizontalScope()) {
                             using (VerticalScope()) {
                                 Div(0, 25, 1280);
-                                if (Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair)) {
+                                if (Toggle("Enable Brutal Unfair Difficulty".localize(), ref settings.toggleBrutalUnfair)) {
                                     EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
                                         h.HandleDifficultyChanged();
                                         Main.SetNeedsResetGameUI();
                                     }));
                                 }
                                 Space(15);
-                                Label("This allows you to play with the originally released Unfair difficulty. ".green() + "Note:".orange().bold() + "This Unfair difficulty was bugged and applied the intended difficulty modifers twice. ToyBox allows you to keep playing at this Brutal difficulty level and beyond.  Use the slider below to select your desired Brutality Level".green(), Width(1200));
+                                Label("This allows you to play with the originally released Unfair difficulty. ".localize().green() + ("Note:".orange().bold() + "This Unfair difficulty was bugged and applied the intended difficulty modifers twice. ToyBox allows you to keep playing at this Brutal difficulty level and beyond.  Use the slider below to select your desired Brutality Level".green()).localize(), Width(1200));
                                 Space(15);
                                 using (HorizontalScope()) {
-                                    if (Slider("Brutality Level", ref settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", Width(450))) {
+                                    if (Slider("Brutality Level".localize(), ref settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", Width(450))) {
                                         EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
                                             h.HandleDifficultyChanged();
                                             Main.SetNeedsResetGameUI();
@@ -455,7 +447,7 @@ namespace ToyBox {
                                     }
                                     using (VerticalScope(AutoWidth())) {
                                         Space(UnityModManager.UI.Scale(3));
-                                        Label(label.bold(), largeStyle, AutoWidth());
+                                        Label(label.localize().bold(), largeStyle, AutoWidth());
                                     }
                                 }
                                 Space(-10);
@@ -466,144 +458,144 @@ namespace ToyBox {
             () => { }
             );
             Div(0, 25);
-            HStack("Camera",
+            HStack("Camera".localize(),
                    1,
-                   () => Toggle("Enable Zoom on all maps and cutscenes", ref settings.toggleZoomOnAllMaps),
+                   () => Toggle("Enable Zoom on all maps and cutscenes".localize(), ref settings.toggleZoomOnAllMaps),
                    () => {
-                       Toggle("Enable Rotate on all maps and cutscenes", ref settings.toggleRotateOnAllMaps);
+                       Toggle("Enable Rotate on all maps and cutscenes".localize(), ref settings.toggleRotateOnAllMaps);
                        153.space();
-                       Label("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green());
+                       Label(("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green()).localize());
                    },
                    () => {
-                       Toggle("Alt + Mouse Wheel To Adjust Clip Plane", ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
+                       Toggle("Alt + Mouse Wheel To Adjust Clip Plane".localize(), ref settings.toggleUseAltMouseWheelToAdjustClipPlane);
                    },
                    () => {
-                       Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation", ref settings.toggleCameraElevation);
+                       Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation".localize(), ref settings.toggleCameraElevation);
                        25.space();
-                       Toggle("Free Camera", ref settings.toggleFreeCamera);
+                       Toggle("Free Camera".localize(), ref settings.toggleFreeCamera);
                    },
-                   () => Label("Rotation".cyan()),
+                   () => Label("Rotation".localize().cyan()),
                    () => {
                        50.space();
-                       if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt", ref settings.toggleCameraPitch)) {
+                       if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt".localize(), ref settings.toggleCameraPitch)) {
                            Main.resetExtraCameraAngles = true;
                        }
                        100.space();
-                       Label("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange() + " Holding alt while Mouse3 dragging lets you move the camera location.".green());
+                       Label(("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange() + " Holding alt while Mouse3 dragging lets you move the camera location.".green()).localize());
                    },
                    () => {
                        50.space();
-                       Label("Mouse:".cyan(), 125.width());
+                       Label("Mouse:".localize().cyan(), 125.width());
                        25.space();
-                       Toggle("Invert X Axis", ref settings.toggleInvertXAxis);
+                       Toggle("Invert X Axis".localize(), ref settings.toggleInvertXAxis);
                        if (settings.toggleCameraPitch) {
                            25.space();
-                           Toggle("Invert Y Axis", ref settings.toggleInvertYAxis);
+                           Toggle("Invert Y Axis".localize(), ref settings.toggleInvertYAxis);
                        }
                    },
                    () => {
                        50.space();
-                       Label("Keyboard:".cyan(), 125.width());
+                       Label("Keyboard:".localize().cyan(), 125.width());
                        25.space();
-                       Toggle("Invert X Axis", ref settings.toggleInvertKeyboardXAxis);
+                       Toggle("Invert X Axis".localize(), ref settings.toggleInvertKeyboardXAxis);
                    },
                    () => {
                        50.space();
-                       BindableActionButton(ResetAdditionalCameraAngles);
+                       BindableActionButton(ResetAdditionalCameraAngles, true);
                    },
-                   () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                   () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                   () => LogSlider("Field Of View".localize(), ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
+                   () => LogSlider("FoV (Cut Scenes)".localize(), ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                    () => { }
                 );
             Div(0, 25);
-            HStack("Alignment", 1,
-                () => { Toggle("Fix Alignment Shifts", ref settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".green()); },
-                () => { Toggle("Prevent Alignment Changes", ref settings.togglePreventAlignmentChanges); Space(25); Label("See Party Editor for more fine grained alignment locking per character".green()); },
+            HStack("Alignment".localize(), 1,
+                () => { Toggle("Fix Alignment Shifts".localize(), ref settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".localize().green()); },
+                () => { Toggle("Prevent Alignment Changes".localize(), ref settings.togglePreventAlignmentChanges); Space(25); Label("See Party Editor for more fine grained alignment locking per character".localize().green()); },
                 () => { }
                 );
             Div(0, 25);
-            HStack("Cheats", 1,
-                () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)", ref settings.toggleUnlimitedStatModifierStacking),
+            HStack("Cheats".localize(), 1,
+                () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)".localize(), ref settings.toggleUnlimitedStatModifierStacking),
                 () => {
                     using (HorizontalScope()) {
-                        ToggleCallback("Highlight Hidden Objects", ref settings.highlightHiddenObjects, Actions.UpdateHighlights);
+                        ToggleCallback("Highlight Hidden Objects".localize(), ref settings.highlightHiddenObjects, Actions.UpdateHighlights);
                         if (settings.highlightHiddenObjects) {
                             Space(100);
-                            ToggleCallback("In Fog Of War ", ref settings.highlightHiddenObjectsInFog, Actions.UpdateHighlights);
+                            ToggleCallback("In Fog Of War ".localize(), ref settings.highlightHiddenObjectsInFog, Actions.UpdateHighlights);
                         }
                     }
                 },
-                () => Toggle("Infinite Abilities", ref settings.toggleInfiniteAbilities),
-                () => Toggle("Infinite Spell Casts", ref settings.toggleInfiniteSpellCasts),
-                () => Toggle("No Material Components", ref settings.toggleMaterialComponent),
-                () => Toggle("Disable Party Negative Levels", ref settings.togglePartyNegativeLevelImmunity),
-                () => Toggle("Disable Party Ability Damage", ref settings.togglePartyAbilityDamageImmunity),
-                () => Toggle("Disable Attacks of Opportunity", ref settings.toggleAttacksofOpportunity),
-                () => Toggle("Unlimited Actions During Turn", ref settings.toggleUnlimitedActionsPerTurn),
-                () => Toggle("Infinite Charges On Items", ref settings.toggleInfiniteItems),
+                () => Toggle("Infinite Abilities".localize(), ref settings.toggleInfiniteAbilities),
+                () => Toggle("Infinite Spell Casts".localize(), ref settings.toggleInfiniteSpellCasts),
+                () => Toggle("No Material Components".localize(), ref settings.toggleMaterialComponent),
+                () => Toggle("Disable Party Negative Levels".localize(), ref settings.togglePartyNegativeLevelImmunity),
+                () => Toggle("Disable Party Ability Damage".localize(), ref settings.togglePartyAbilityDamageImmunity),
+                () => Toggle("Disable Attacks of Opportunity".localize(), ref settings.toggleAttacksofOpportunity),
+                () => Toggle("Unlimited Actions During Turn".localize(), ref settings.toggleUnlimitedActionsPerTurn),
+                () => Toggle("Infinite Charges On Items".localize(), ref settings.toggleInfiniteItems),
 
-                () => Toggle("Instant Cooldown", ref settings.toggleInstantCooldown),
+                () => Toggle("Instant Cooldown".localize(), ref settings.toggleInstantCooldown),
 
-                () => Toggle("Spontaneous Caster Scroll Copy", ref settings.toggleSpontaneousCopyScrolls),
+                () => Toggle("Spontaneous Caster Scroll Copy".localize(), ref settings.toggleSpontaneousCopyScrolls),
 
-                () => Toggle("Disable Equipment Restrictions", ref settings.toggleEquipmentRestrictions),
-                () => Toggle("Disable Armor Max Dexterity", ref settings.toggleIgnoreMaxDexterity),
-                () => Toggle("Disable Armor Speed Reduction", ref settings.toggleIgnoreSpeedReduction),
-                () => Toggle("Disable Armor & Shield Arcane Spell Failure", ref settings.toggleIgnoreSpellFailure),
-                () => Toggle("Disable Armor & Shield Checks Penalty", ref settings.toggleIgnoreArmorChecksPenalty),
+                () => Toggle("Disable Equipment Restrictions".localize(), ref settings.toggleEquipmentRestrictions),
+                () => Toggle("Disable Armor Max Dexterity".localize(), ref settings.toggleIgnoreMaxDexterity),
+                () => Toggle("Disable Armor Speed Reduction".localize(), ref settings.toggleIgnoreSpeedReduction),
+                () => Toggle("Disable Armor & Shield Arcane Spell Failure".localize(), ref settings.toggleIgnoreSpellFailure),
+                () => Toggle("Disable Armor & Shield Checks Penalty".localize(), ref settings.toggleIgnoreArmorChecksPenalty),
 
-                () => Toggle("No Friendly Fire On AOEs", ref settings.toggleNoFriendlyFireForAOE),
-                () => Toggle("Free Meta-Magic", ref settings.toggleMetamagicIsFree),
+                () => Toggle("No Friendly Fire On AOEs".localize(), ref settings.toggleNoFriendlyFireForAOE),
+                () => Toggle("Free Meta-Magic".localize(), ref settings.toggleMetamagicIsFree),
 
-                () => Toggle("No Fog Of War", ref settings.toggleNoFogOfWar),
-                () => Toggle("Restore Spells & Skills After Combat", ref settings.toggleRestoreSpellsAbilitiesAfterCombat),
+                () => Toggle("No Fog Of War".localize(), ref settings.toggleNoFogOfWar),
+                () => Toggle("Restore Spells & Skills After Combat".localize(), ref settings.toggleRestoreSpellsAbilitiesAfterCombat),
                 //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat),
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
-                () => Toggle("Instant Rest After Combat", ref settings.toggleInstantRestAfterCombat),
-                () => Toggle("Instant change party members", ref settings.toggleInstantChangeParty),
-                () => ToggleCallback("Equipment No Weight", ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
-                () => Toggle("Allow Item Use From Inventory During Combat", ref settings.toggleUseItemsDuringCombat),
-                () => Toggle("Ignore Alignment Requirements for Abilities", ref settings.toggleIgnoreAbilityAlignmentRestriction),
-                () => Toggle("Ignore all Requirements for Abilities", ref settings.toggleIgnoreAbilityAnyRestriction),
-                () => Toggle("Ignore Pet Sizes For Mounting", ref settings.toggleMakePetsRidable),
-                () => Toggle("Ride Any Unit As Your Mount", ref settings.toggleRideAnything),
+                () => Toggle("Instant Rest After Combat".localize(), ref settings.toggleInstantRestAfterCombat),
+                () => Toggle("Instant change party members".localize(), ref settings.toggleInstantChangeParty),
+                () => ToggleCallback("Equipment No Weight".localize(), ref settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
+                () => Toggle("Allow Item Use From Inventory During Combat".localize(), ref settings.toggleUseItemsDuringCombat),
+                () => Toggle("Ignore Alignment Requirements for Abilities".localize(), ref settings.toggleIgnoreAbilityAlignmentRestriction),
+                () => Toggle("Ignore all Requirements for Abilities".localize(), ref settings.toggleIgnoreAbilityAnyRestriction),
+                () => Toggle("Ignore Pet Sizes For Mounting".localize(), ref settings.toggleMakePetsRidable),
+                () => Toggle("Ride Any Unit As Your Mount".localize(), ref settings.toggleRideAnything),
                 () => { }
                 );
             Div(153, 25);
             HStack("", 1,
-                () => EnumGrid("Disable Attacks Of Opportunity", ref settings.noAttacksOfOpportunitySelection, AutoWidth()),
-                    () => EnumGrid("Can Move Through", ref settings.allowMovementThroughSelection, AutoWidth()),
+                () => EnumGrid("Disable Attacks Of Opportunity".localize(), ref settings.noAttacksOfOpportunitySelection, true, AutoWidth()),
+                    () => EnumGrid("Can Move Through".localize(), ref settings.allowMovementThroughSelection, true, AutoWidth()),
                     () => {
-                        Space(328); Label("This allows characters you control to move through the selected category of units during combat".green(), AutoWidth());
+                        Space(328); Label("This allows characters you control to move through the selected category of units during combat".localize().green(), AutoWidth());
                     }
 #if false
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
 #endif
                 );
             Div(0, 25);
-            HStack("Class Specific", 1,
-                () => Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
-                        () => Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f,
+            HStack("Class Specific".localize(), 1,
+                () => Slider("Kineticist: Burn Reduction".localize(), ref settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
+                        () => Slider("Arcanist: Spell Slot Multiplier".localize(), ref settings.arcanistSpellslotMultiplier, 0.5f, 10f,
                                 1f, 1, "", AutoWidth()),
                         () => {
                             Space(25);
-                            Label("Please rest after adjusting to recalculate your spell slots.".green());
+                            Label("Please rest after adjusting to recalculate your spell slots.".localize().green());
                         },
-                        () => Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)", ref settings.toggleExtendHexes),
-                        () => Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)", ref settings.toggleAllowAllActivatable),
-                        () => Toggle("Kineticist: Allow Gather Power Without Hands", ref settings.toggleKineticistGatherPower),
-                        () => Toggle("Barbarian: Auto Start Rage When Entering Combat", ref settings.toggleEnterCombatAutoRage),
-                        () => Toggle("Demon: Auto Start Rage When Entering Combat", ref settings.toggleEnterCombatAutoRageDemon),
-                        () => Toggle("Magus: Always Allow Spell Combat", ref settings.toggleAlwaysAllowSpellCombat),
+                        () => Toggle("Witch/Shaman: Cackling/Shanting Extends Hexes By 10 Min (Out Of Combat)".localize(), ref settings.toggleExtendHexes),
+                        () => Toggle("Allow Simultaneous Activatable Abilities (Like Judgements)".localize(), ref settings.toggleAllowAllActivatable),
+                        () => Toggle("Kineticist: Allow Gather Power Without Hands".localize(), ref settings.toggleKineticistGatherPower),
+                        () => Toggle("Barbarian: Auto Start Rage When Entering Combat".localize(), ref settings.toggleEnterCombatAutoRage),
+                        () => Toggle("Demon: Auto Start Rage When Entering Combat".localize(), ref settings.toggleEnterCombatAutoRageDemon),
+                        () => Toggle("Magus: Always Allow Spell Combat".localize(), ref settings.toggleAlwaysAllowSpellCombat),
                         () => { }
                         );
             Div(0, 25);
-            HStack("Experience Multipliers", 1,
-                () => LogSlider("All Experience", ref settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
+            HStack("Experience Multipliers".localize(), 1,
+                () => LogSlider("All Experience".localize(), ref settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override for Combat", ref settings.useCombatExpSlider, Width(275));
+                        Toggle("Override for Combat".localize(), ref settings.useCombatExpSlider, Width(275));
                         if (settings.useCombatExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierCombat, 0f, 100f, 1, 1, "", 12, AutoWidth());
@@ -612,7 +604,7 @@ namespace ToyBox {
                 },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override for Quests", ref settings.useQuestsExpSlider, Width(275));
+                        Toggle("Override for Quests".localize(), ref settings.useQuestsExpSlider, Width(275));
                         if (settings.useQuestsExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierQuests, 0f, 100f, 1, 1, "", 12, AutoWidth());
@@ -621,7 +613,7 @@ namespace ToyBox {
                 },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override for Skill Checks", ref settings.useSkillChecksExpSlider, Width(275));
+                        Toggle("Override for Skill Checks".localize(), ref settings.useSkillChecksExpSlider, Width(275));
                         if (settings.useSkillChecksExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierSkillChecks, 0f, 100f, 1, 1, "", 12, AutoWidth());
@@ -630,7 +622,7 @@ namespace ToyBox {
                 },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override for Traps", ref settings.useTrapsExpSlider, Width(275));
+                        Toggle("Override for Traps".localize(), ref settings.useTrapsExpSlider, Width(275));
                         if (settings.useTrapsExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref settings.experienceMultiplierTraps, 0f, 100f, 1, 1, "", 12, AutoWidth());
@@ -639,9 +631,9 @@ namespace ToyBox {
                 }
                 );
             Div(0, 25);
-            HStack("Other Multipliers", 1,
+            HStack("Other Multipliers".localize(), 1,
                 () => {
-                    LogSlider("Fog of War Range", ref settings.fowMultiplier, 0f, 100f, 1, 1, "", AutoWidth());
+                    LogSlider("Fog of War Range".localize(), ref settings.fowMultiplier, 0f, 100f, 1, 1, "", AutoWidth());
                     List<UnitEntityData> units = Game.Instance?.Player?.m_PartyAndPets;
                     if (units != null) {
                         foreach (var unit in units) {
@@ -662,34 +654,34 @@ namespace ToyBox {
                         }
                     }
                 },
-                () => LogSlider("Money Earned", ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => Slider("Increase Carry Capacity", ref settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
-                () => Slider("Increase Carry Capacity (Party Only)", ref settings.encumberanceMultiplierPartyOnly, 1, 100, 1, "", AutoWidth()),
-                () => LogSlider("Spontaneous Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Prepared Spellslots", ref settings.memorizedSpellsMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Money Earned".localize(), ref settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Vendor Sell Price".localize(), ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Vendor Buy Price".localize(), ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => Slider("Increase Carry Capacity".localize(), ref settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
+                () => Slider("Increase Carry Capacity (Party Only)".localize(), ref settings.encumberanceMultiplierPartyOnly, 1, 100, 1, "", AutoWidth()),
+                () => LogSlider("Spontaneous Spells Per Day".localize(), ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Prepared Spellslots".localize(), ref settings.memorizedSpellsMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => {
-                    LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
+                    LogSlider("Movement Speed".localize(), ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
                     Space(25);
-                    Toggle("Whole Team Moves Same Speed", ref settings.toggleMoveSpeedAsOne);
+                    Toggle("Whole Team Moves Same Speed".localize(), ref settings.toggleMoveSpeedAsOne);
                     Space(25);
-                    Label("Adjusts the movement speed of your party in area maps".green());
+                    Label("Adjusts the movement speed of your party in area maps".localize().green());
                 },
                 () => {
-                    LogSlider("Travel Speed", ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
+                    LogSlider("Travel Speed".localize(), ref settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
                     Space(25);
-                    Label("Adjusts the movement speed of your party on world maps".green());
+                    Label("Adjusts the movement speed of your party on world maps".localize().green());
                 },
                 () => {
-                    LogSlider("Companion Cost", ref settings.companionCostMultiplier, 0, 20, 1, 1, "", Width(600));
+                    LogSlider("Companion Cost".localize(), ref settings.companionCostMultiplier, 0, 20, 1, 1, "", Width(600));
                     Space(25);
-                    Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".green());
+                    Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".localize().green());
 
                 },
-                () => LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
-                () => DisclosureToggle("Exceptions to Buff Duration Multiplier (Advanced; will cause blueprints to load)", ref showBuffDurationExceptions),
+                () => LogSlider("Enemy HP Multiplier".localize(), ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Buff Duration".localize(), ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
+                () => DisclosureToggle("Exceptions to Buff Duration Multiplier (Advanced; will cause blueprints to load)".localize(), ref showBuffDurationExceptions),
                 () => {
                     if (!showBuffDurationExceptions) return;
 
@@ -699,46 +691,46 @@ namespace ToyBox {
                 );
             Actions.ApplyTimeScale();
             Div(0, 25);
-            HStack("Dice Rolls", 1,
-                () => EnumGrid("All Attacks Hit", ref settings.allAttacksHit, AutoWidth()),
-                () => EnumGrid("All Hits Critical", ref settings.allHitsCritical, AutoWidth()),
-                () => EnumGrid("Roll With Advantage", ref settings.rollWithAdvantage, AutoWidth()),
-                () => EnumGrid("Roll With Disadvantage", ref settings.rollWithDisadvantage, AutoWidth()),
-                () => EnumGrid("Always Roll 20", ref settings.alwaysRoll20, AutoWidth()),
-                () => EnumGrid("Always Roll 1", ref settings.alwaysRoll1, AutoWidth()),
-                () => EnumGrid("Never Roll 20", ref settings.neverRoll20, AutoWidth()),
-                () => EnumGrid("Never Roll 1", ref settings.neverRoll1, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 20", ref settings.roll20Initiative, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 1", ref settings.roll1Initiative, AutoWidth()),
-                () => EnumGrid("Non Combat: Take 10", ref settings.take10always, AutoWidth()),
-//                () => EnumGrid("Non Combat: Take 10 (Min)", ref settings.take10minimum, AutoWidth()),
-                () => EnumGrid("Non Combat: Take 20", ref settings.alwaysRoll20OutOfCombat, AutoWidth()),
-                () => { 330.space(); Label("The following skill check adjustments apply only out of combat".green()); },
-                () => EnumGrid("Skill Checks: Take 10", ref settings.skillsTake10, AutoWidth()),
-                () => EnumGrid("Skill Checks: Take 20", ref settings.skillsTake20, AutoWidth()),
+            HStack("Dice Rolls".localize(), 1,
+                () => EnumGrid("All Attacks Hit".localize(), ref settings.allAttacksHit, true, AutoWidth()),
+                () => EnumGrid("All Hits Critical".localize(), ref settings.allHitsCritical, true, AutoWidth()),
+                () => EnumGrid("Roll With Avantage".localize(), ref settings.rollWithAdvantage, true, AutoWidth()),
+                () => EnumGrid("Roll With Disavantage".localize(), ref settings.rollWithDisadvantage, true, AutoWidth()),
+                () => EnumGrid("Always Roll 20".localize(), ref settings.alwaysRoll20, true, AutoWidth()),
+                () => EnumGrid("Always Roll 1".localize(), ref settings.alwaysRoll1, true, AutoWidth()),
+                () => EnumGrid("Never Roll 20".localize(), ref settings.neverRoll20, true, AutoWidth()),
+                () => EnumGrid("Never Roll 1".localize(), ref settings.neverRoll1, true, AutoWidth()),
+                () => EnumGrid("Initiative: Always Roll 20".localize(), ref settings.roll20Initiative, true, AutoWidth()),
+                () => EnumGrid("Initiative: Always Roll 1".localize(), ref settings.roll1Initiative, true, AutoWidth()),
+                () => EnumGrid("Non Combat: Take 10".localize(), ref settings.take10always, true, AutoWidth()),
+                //                () => EnumGrid("Non Combat: Take 10 (Min)", ref settings.take10minimum, AutoWidth()),
+                () => EnumGrid("Non Combat: Take 20".localize(), ref settings.alwaysRoll20OutOfCombat, true, AutoWidth()),
+                () => { 330.space(); Label("The following skill check adjustments apply only out of combat".localize().green()); },
+                () => EnumGrid("Skill Checks: Take 10".localize(), ref settings.skillsTake10, true, AutoWidth()),
+                () => EnumGrid("Skill Checks: Take 20".localize(), ref settings.skillsTake20, true, AutoWidth()),
                 () => { }
                 );
             Div(0, 25);
-            HStack("Summons", 1,
-                () => Toggle("Make Controllable", ref settings.toggleMakeSummmonsControllable),
+            HStack("Summons".localize(), 1,
+                () => Toggle("Make Controllable".localize(), ref settings.toggleMakeSummmonsControllable),
                 () => {
                     using (VerticalScope()) {
                         Div(0, 25);
                         using (HorizontalScope()) {
-                            Label("Primary".orange(), AutoWidth()); Space(215); Label("good for party".green());
+                            Label("Primary".localize().orange(), AutoWidth()); Space(215); Label("good for party".localize().green());
                         }
                         Space(25);
-                        EnumGrid("Modify Summons For", ref settings.summonTweakTarget1, AutoWidth());
-                        LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease", ref settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", AutoWidth());
+                        EnumGrid("Modify Summons For".localize(), ref settings.summonTweakTarget1, true, AutoWidth());
+                        LogSlider("Duration Multiplier".localize(), ref settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", AutoWidth());
+                        Slider("Level Increase/Decrease".localize(), ref settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", AutoWidth());
                         Div(0, 25);
                         using (HorizontalScope()) {
-                            Label("Secondary".orange(), AutoWidth()); Space(215); Label("good for larger group or to reduce enemies".green());
+                            Label("Secondary".localize().orange(), AutoWidth()); Space(215); Label("good for larger group or to reduce enemies".localize().green());
                         }
                         Space(25);
-                        EnumGrid("Modify Summons For", ref settings.summonTweakTarget2, AutoWidth());
-                        LogSlider("Duration Multiplier", ref settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease", ref settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", AutoWidth());
+                        EnumGrid("Modify Summons For".localize(), ref settings.summonTweakTarget2, true, AutoWidth());
+                        LogSlider("Duration Multiplier".localize(), ref settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", AutoWidth());
+                        Slider("Level Increase/Decrease".localize(), ref settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", AutoWidth());
                     }
                 },
                 () => { }

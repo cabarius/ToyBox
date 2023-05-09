@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using System;
-using GL = UnityEngine.GUILayout;
+﻿using System;
 using System.Linq;
-using UnityModManagerNet;
+using UnityEngine;
+using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
@@ -123,9 +122,12 @@ namespace ModKit {
 
         // Basic Action Button with HotKey
         public static void BindableActionButton(string title, params GUILayoutOption[] options) {
+            BindableActionButton(title, false, options);
+        }
+        public static void BindableActionButton(string title, bool shouldLocalize = false, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300) }; }
             var actionEntry = KeyBindings.GetAction(title);
-            if (GL.Button(title, options)) {
+            if (GL.Button(shouldLocalize ? title.localize() : title, options)) {
                 actionEntry?.action();
             }
             EditKeyBind(title, true, false, Width(200));

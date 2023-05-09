@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using Kingmaker.Blueprints;
+using Kingmaker.UnitLogic.Buffs.Blueprints;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.Blueprints;
-using ModKit;
+using UnityEngine;
 using static ModKit.UI;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
 
 namespace ToyBox {
     public class BuffExclusionEditor {
@@ -44,7 +44,7 @@ namespace ToyBox {
 
                 () => {
                     if (BlueprintLoader.Shared.IsLoading) {
-                        Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
+                        Label(("Blueprints".orange().bold() + " loading: ").localize() + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
                     }
                     else Space(25);
                 },
@@ -52,17 +52,17 @@ namespace ToyBox {
                     if (BlueprintLoader.Shared.IsLoading || _searchResults == null) return;
 
                     using (VerticalScope()) {
-                        Func<bool, string> hideOrShowString = (bool isShown) => isShown ? "Hide" : "Show";
+                        Func<bool, string> hideOrShowString = (bool isShown) => isShown ? "Hide".localize() : "Show".localize();
 
-                        DisclosureToggle($"{hideOrShowString(_showCurrentExceptions)} current list", ref _showCurrentExceptions);
+                        DisclosureToggle($"{hideOrShowString(_showCurrentExceptions)} " + "current list".localize(), ref _showCurrentExceptions);
                         if (_showCurrentExceptions) {
                             BuffList(_buffExceptions);
                         }
 
-                        DisclosureToggle($"{hideOrShowString(_showBuffsToAdd)} buffs to add to list", ref _showBuffsToAdd, 175, () => FilterBuffList(_searchString));
+                        DisclosureToggle($"{hideOrShowString(_showBuffsToAdd)} " + "buffs to add to list".localize(), ref _showBuffsToAdd, 175, () => FilterBuffList(_searchString));
                         if (_showBuffsToAdd) {
                             using (HorizontalScope()) {
-                                Label("Search");
+                                Label("Search".localize());
                                 Space(25);
                                 ActionTextField(ref _searchString, search => FilterBuffList(search), 300.width());
                             }
@@ -85,9 +85,9 @@ namespace ToyBox {
                 Space(25);
                 ActionButton(">", () => SetCurrentPage(_currentPage + 1));
                 Space(25);
-                Label("Go to page: ");
+                Label("Go to page: ".localize());
                 TextField(ref _goToPage, "goToPage", 40.width());
-                ActionButton("Go!", () => {
+                ActionButton("Go!".localize(), () => {
                     if (int.TryParse(_goToPage, out int result)) {
                         SetCurrentPage(result - 1);
                     }
@@ -100,8 +100,8 @@ namespace ToyBox {
             var buffList = GetValidBuffsToAdd();
             _searchResults = string.IsNullOrEmpty(_searchString)
                 ? buffList
-                : buffList.Where(b => 
-                    b.AssetGuidThreadSafe.ToLowerInvariant() == searchLower || 
+                : buffList.Where(b =>
+                    b.AssetGuidThreadSafe.ToLowerInvariant() == searchLower ||
                     b.GetDisplayName().ToLowerInvariant().Contains(searchLower) ||
                     b.NameSafe().ToLowerInvariant().Contains(searchLower));
             _displayedBuffs = GetPaginatedBuffs();
@@ -115,7 +115,8 @@ namespace ToyBox {
 
         private static void SetPaginationString() {
             if (_searchResults == null) _paginationString = string.Empty;
-            _paginationString = $"Page {_currentPage + 1} of {GetMaxPages()}";
+            var text = "Page % of %".localize().Split('%');
+            _paginationString = $"{text?[0]}{_currentPage + 1}{text?[1]}{GetMaxPages()}";
         }
 
         private static void SetCurrentPage(int newPageNumber) {
@@ -143,18 +144,18 @@ namespace ToyBox {
                     Label(bp.GetDisplayName().cyan().bold(), Width(titleWidth));
                     Label(bp.NameSafe().orange().bold(), Width(complexNameWidth));
                     if (settings.showAssetIDs) {
-                        ClipboardLabel(bp.AssetGuidThreadSafe, ExpandWidth(false), Width(guidWidth));
+                        GUILayout.TextField(bp.AssetGuidThreadSafe, ExpandWidth(false), Width(guidWidth));
                     }
                     //It seems that if you specify defaults, saving settings without the defaults won't actually
                     //remove the items from the list. This just prevents confusion by removing the button altogether.
                     if (!settings.buffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)) {
-                        ActionButton("Add", () => {
+                        ActionButton("Add".localize(), () => {
                             AddBuff(bp.AssetGuidThreadSafe);
                         });
                     }
                     if (settings.buffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)
                         && !SettingsDefaults.DefaultBuffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)) {
-                        ActionButton("Remove", () => {
+                        ActionButton("Remove".localize(), () => {
                             RemoveBuff(bp.AssetGuidThreadSafe);
                         });
                     }
@@ -164,12 +165,12 @@ namespace ToyBox {
             })
             .Prepend(() => {
                 using (HorizontalScope()) {
-                    Label("In-Game Name".red().bold(), Width(titleWidth));
-                    Label("Internal Name".red().bold(), Width(complexNameWidth));
+                    Label("In-Game Name".localize().red().bold(), Width(titleWidth));
+                    Label("Internal Name".localize().red().bold(), Width(complexNameWidth));
                     if (settings.showAssetIDs) {
-                        Label("Guid".red().bold(), Width(guidWidth));
+                        Label("Guid".localize().red().bold(), Width(guidWidth));
                     }
-                    Label("Description".red().bold());
+                    Label("Description".localize().red().bold());
                 }
             })
             .Append(() => { })
