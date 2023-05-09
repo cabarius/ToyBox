@@ -40,6 +40,8 @@ namespace ToyBox {
                             UI.Label($"{uiCulture.DisplayName}({uiCulture.Name})".orange());
                             UI.Space(25);
                             UI.ActionButton("Export current locale to file".cyan(), () => LocalizationManager.Export());
+                            UI.Space(25);
+                            UI.LinkButton("Open the Localization Guide", "https://github.com/cabarius/ToyBox/wiki/Localization-Guide");
                         }
                         if (UI.GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 8, UI.rarityButtonStyle, UI.Width(UI.ummWidth - 350))) {
                             Mod.ModKitSettings.uiCultureCode = uiCulture.Name;
