@@ -62,7 +62,8 @@ namespace ToyBox {
         public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
     }
     public class QuestEditor {
-        public static Settings settings => Main.Settings;
+        public static Settings Settings => Main.Settings;
+        public static bool ShowInactive => Settings.toggleIntrestingNPCsShowFalseConditions;
         public static Player player => Game.Instance.Player;
         private static bool[] selectedQuests = new bool[0];
         private static Browser<UnitEntityData, UnitEntityData> conditionsBrowser = new();
@@ -79,15 +80,15 @@ namespace ToyBox {
             Div();
             10.space();
             using (HorizontalScope()) {
-                Toggle("Mark Interesting NPCs on Map", ref settings.toggleShowInterestingNPCsOnLocalMap, 375.width());
+                Toggle("Mark Interesting NPCs on Map", ref Settings.toggleShowInterestingNPCsOnLocalMap, 375.width());
                 HelpLabel("This will change the color of NPC names on the highlight makers and change the color map markers to indicate that they have interesting or conditional interactions");
             }
             using (HorizontalScope()) {
-                DisclosureToggle("Interesting NPCs in the local area".cyan(), ref settings.toogleShowInterestingNPCsOnQuestTab);
+                DisclosureToggle("Interesting NPCs in the local area".cyan(), ref Settings.toogleShowInterestingNPCsOnQuestTab);
                 200.space();
                 HelpLabel("Show a list of NPCs that may have quest objectives or other interesting features " + "(Warning: Spoilers)".yellow());
             }
-            if (settings.toogleShowInterestingNPCsOnQuestTab) {
+            if (Settings.toogleShowInterestingNPCsOnQuestTab) {
                 using (HorizontalScope()) {
                     50.space();
                     using (VerticalScope(GUI.skin.box)) {
@@ -99,7 +100,7 @@ namespace ToyBox {
                                     u => u.CharacterName,
                                     u => u.CharacterName,
                                     () => {
-                                        Toggle("Show Inactive Conditions", ref settings.toggleIntrestingNPCsShowFalseConditions);
+                                        Toggle("Show Inactive Conditions", ref Settings.toggleIntrestingNPCsShowFalseConditions);
                                     },
                                     (_, u) => {
                                         var name = u.CharacterName;
@@ -117,8 +118,8 @@ namespace ToyBox {
                                     (_, u) => {
                                         ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
                                         var entries = u.GetUnitInteractionConditions();
-                                        var checkerEntries = entries.Where(e => e.checker?.Conditions.Length > 0);
-                                        var elementEntries = entries.Where(e => e.elements?.Count > 0);
+                                        var checkerEntries = entries.Where(e => e.HasConditins && (ShowInactive || e.IsActive()));
+                                        var elementEntries = entries.Where(e => e.HasElements && (ShowInactive || e.IsActive()));
                                         if (checkerEntries.Any()) {
                                             using (HorizontalScope()) {
                                                 115.space();
@@ -150,42 +151,42 @@ namespace ToyBox {
             }
             var split = quests.GroupBy(q => q.State == QuestState.Completed).OrderBy(g => g.Key);
             using (HorizontalScope()) {
-                Toggle("Hide Completed", ref settings.toggleQuestHideCompleted);
+                Toggle("Hide Completed", ref Settings.toggleQuestHideCompleted);
                 25.space();
-                Toggle("Show Unrevealed Steps", ref settings.toggleQuestsShowUnrevealedObjectives);
+                Toggle("Show Unrevealed Steps", ref Settings.toggleQuestsShowUnrevealedObjectives);
                 25.space();
-                Toggle("Inspect Quests and Objectives", ref settings.toggleQuestInspector);
-                if (settings.toggleQuestInspector) {
+                Toggle("Inspect Quests and Objectives", ref Settings.toggleQuestInspector);
+                if (Settings.toggleQuestInspector) {
                     25.space();
                     ReflectionTreeView.DetailToggle("Inspect", selectedQuests, split, 0);
                 }
             }
-            if (settings.toggleQuestInspector) {
+            if (Settings.toggleQuestInspector) {
                 ReflectionTreeView.OnDetailGUI(selectedQuests);
             }
             foreach (var group in split) {
                 foreach (var quest in group.ToList()) {
-                    if (settings.toggleQuestHideCompleted && quest.State == QuestState.Completed && selectedQuests[index]) {
+                    if (Settings.toggleQuestHideCompleted && quest.State == QuestState.Completed && selectedQuests[index]) {
                         selectedQuests[index] = false;
                     }
-                    if (!settings.toggleQuestHideCompleted || quest.State != QuestState.Completed || selectedQuests[index]) {
+                    if (!Settings.toggleQuestHideCompleted || quest.State != QuestState.Completed || selectedQuests[index]) {
                         using (HorizontalScope()) {
                             50.space();
                             Label(quest.Blueprint.Title.ToString().orange().bold(), Width(600));
                             50.space();
                             DisclosureToggle(quest.stateString(), ref selectedQuests[index]); 
-                            if (settings.toggleQuestInspector)
+                            if (Settings.toggleQuestInspector)
                                 ReflectionTreeView.DetailToggle("Inspect", quest, quest, 0);
                             50.space();
                             Label(quest.Blueprint.Description.ToString().StripHTML().green());
                         }
-                        if (settings.toggleQuestInspector) {
+                        if (Settings.toggleQuestInspector) {
                             ReflectionTreeView.OnDetailGUI(quest);
                         }
                         if (selectedQuests[index]) {
                             var objectiveIndex = 0;
                             foreach (var questObjective in quest.Objectives) {
-                                if (settings.toggleQuestsShowUnrevealedObjectives || questObjective.IsRevealed()) {
+                                if (Settings.toggleQuestsShowUnrevealedObjectives || questObjective.IsRevealed()) {
                                     if (questObjective.ParentObjective == null) {
                                         Div(100, 25);
                                         using (HorizontalScope(AutoWidth())) {
@@ -195,7 +196,7 @@ namespace ToyBox {
                                             Label(questObjective.titleColored(), Width(600));
                                             25.space();
                                             Label(questObjective.stateString(), Width(150));
-                                            if (settings.toggleQuestInspector)
+                                            if (Settings.toggleQuestInspector)
                                                 ReflectionTreeView.DetailToggle("Inspect", questObjective, questObjective, 0);
                                             Space(25);
                                             using (HorizontalScope(300)) {
@@ -227,13 +228,13 @@ namespace ToyBox {
                                             Label(questObjective.Blueprint.Description.ToString().StripHTML().green(), 1000.width());
                                             Label("", AutoWidth());
                                         }
-                                        if (settings.toggleQuestInspector) {
+                                        if (Settings.toggleQuestInspector) {
                                             ReflectionTreeView.OnDetailGUI(questObjective);
                                         }
                                         if (questObjective.State == QuestObjectiveState.Started) {
                                             var childIndex = 0;
                                             foreach (var childObjective in quest.Objectives) {
-                                                if (settings.toggleQuestsShowUnrevealedObjectives || childObjective.IsRevealed()) {
+                                                if (Settings.toggleQuestsShowUnrevealedObjectives || childObjective.IsRevealed()) {
                                                     if (childObjective.ParentObjective == questObjective) {
                                                         Div(100, 25);
                                                         using (HorizontalScope(AutoWidth())) {
@@ -244,7 +245,7 @@ namespace ToyBox {
                                                             Label(childObjective.titleColored(), Width(600));
                                                             25.space();
                                                             Label(childObjective.stateString(), Width(150));
-                                                            if (settings.toggleQuestInspector)
+                                                            if (Settings.toggleQuestInspector)
                                                                 ReflectionTreeView.DetailToggle("Inspect", questObjective, questObjective, 0);
                                                             Space(25);
                                                             using (HorizontalScope(300)) {
@@ -262,7 +263,7 @@ namespace ToyBox {
                                                             Label(childObjective.Blueprint.Description.ToString().StripHTML().green(), 1000.width());
                                                             Label("", AutoWidth());
                                                         }
-                                                        if (settings.toggleQuestInspector) {
+                                                        if (Settings.toggleQuestInspector) {
                                                             ReflectionTreeView.OnDetailGUI(childObjective);
                                                         }
                                                     }
@@ -309,9 +310,9 @@ namespace ToyBox {
             }
         }
         public static void OnGUI(Element element, object source, int indent = 150, bool forceShow = false) {
-            if (element is Condition c
-                && !c.CheckCondition()
-                && !settings.toggleIntrestingNPCsShowFalseConditions
+            if (!element.IsActive()
+                && source is not ActionsHolder // kludge again for Actions holder for Lathimas
+                && !Settings.toggleIntrestingNPCsShowFalseConditions
                 && !forceShow
                ) return;
             using (HorizontalScope()) {
@@ -411,7 +412,7 @@ namespace ToyBox {
             Label(source.ToString().yellow(), 500.width());
             22.space();
             using (VerticalScope()) {
-                Label("condition: ".cyan() + element.CaptionString());
+                Label("caption: ".cyan() + element.CaptionString());
             }
         }
     }

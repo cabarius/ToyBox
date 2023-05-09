@@ -38,6 +38,8 @@ namespace ToyBox {
             public object source { get; set; }
             public ConditionsChecker checker { get; set; }
             public List<Element> elements { get; set; }
+            public bool HasConditins => checker?.Conditions.Length > 0;
+            public bool HasElements => elements?.Count > 0;
             public IntrestingnessEntry(UnitEntityData unit, object source, ConditionsChecker checker, List<Element> elements = null) {
                 this.unit = unit;
                 this.source = source;
@@ -45,6 +47,17 @@ namespace ToyBox {
                 this.elements = elements;
             }
         }
+        public static bool IsActive(this IntrestingnessEntry entry) => 
+            (entry.checker?.IsActive() ?? false)
+            || (entry?.elements.Any(element => element.IsActive()) ?? false)
+            || (entry.elements?.Count > 0 && entry.source is ActionsHolder) // Kludge until we get more clever about analyzing dialog state.  This lets Lathimas show up as active
+            ;
+        public static bool IsActive(this Element element) => element switch {
+            Conditional conditional => conditional.ConditionsChecker.Check(),
+            Condition condition => condition.CheckCondition(),
+            _ => false,
+        };
+        public static bool IsActive(this ConditionsChecker checker) => checker.Conditions.Any(c => c.CheckCondition());
         public static string CaptionString(this Condition condition) =>
             $"{condition.GetCaption().orange()} -> {(condition.CheckCondition() ? "True".green() : "False".yellow())}";
         public static string CaptionString(this Element element) => $"{element.GetCaption().orange()}";
@@ -58,11 +71,7 @@ namespace ToyBox {
                                                                    || element is ItemsEnough
                                                                    || element is Conditional
                                                                    ;
-        public static int GetUnitIterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(c => {
-            var hasConditions = c.checker?.Conditions.Any(c => c.CheckCondition()) ?? false;
-            var hasElements = c.elements?.Any() ?? false;
-            return hasConditions || hasElements;
-        });
+        public static int GetUnitIterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
 
         public static IEnumerable<IntrestingnessEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
             var spawnInterations = unit.Parts.Parts
