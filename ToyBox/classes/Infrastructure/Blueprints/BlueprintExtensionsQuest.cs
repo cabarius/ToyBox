@@ -66,6 +66,7 @@ namespace ToyBox {
                                                                    || element is SetObjectiveStatus
                                                                    || element is StartEtude
                                                                    || element is CompleteEtude
+                                                                   || element is UnlockFlag
                                                                    // || element is StartDialog
                                                                    || element is ObjectiveStatus
                                                                    || element is ItemsEnough
