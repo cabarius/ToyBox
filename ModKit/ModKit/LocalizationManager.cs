@@ -126,7 +126,7 @@ namespace ModKit {
                         toSerialize.Strings.Add(k, "");
                     }
                 }
-                toSerialize.LanguageCode = IsDefault ? "en" : toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
+                toSerialize.LanguageCode = toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
                 toSerialize.Version = Mod.modEntry.Version.ToString();
                 if (toSerialize.Contributors.IsNullOrEmpty()) toSerialize.Contributors = "The ToyBox Team";
                 toSerialize.HomePage = "https://github.com/cabarius/ToyBox/";
