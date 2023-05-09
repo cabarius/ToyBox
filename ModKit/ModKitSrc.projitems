@@ -27,7 +27,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\ModKitSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModKit\SettingsController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\Browser\BrowserModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ColorUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Glyphs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\KeyBindings\KeyBindings.cs" />

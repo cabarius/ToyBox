@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Kingmaker.Localization;
+using Kingmaker.Utility;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityModManagerNet;
-using Kingmaker;
-using Kingmaker.GameModes;
-using Kingmaker.Localization;
-using Kingmaker.Utility;
-using Kingmaker.UI;
-using Kingmaker.UI.Common;
-using Kingmaker.UI.GlobalMap;
-using Kingmaker.Globalmap;
 
 namespace ToyBox {
     public static partial class UIHelpers {
@@ -163,7 +152,7 @@ namespace ToyBox {
 
         }
         public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
-        public static LocalizedString Localized(this string key) => new LocalizedString() { Key = key };
+        public static LocalizedString LocalizedStringInGame(this string key) => new LocalizedString() { Key = key };
 
     }
 }

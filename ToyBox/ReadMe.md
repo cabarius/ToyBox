@@ -66,6 +66,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Implemented workaround for Pet Naming bug that comes up if you set default gestalt options. This will prevent you from being able to gestalt the pet when you choose its name and first level. You can however take one additional level in the secondary class and then afterwards mark that class as gestalt and set the multiclass flag and from thereafter it will function just as if you created it as gestalt. 
 * (***Narria***) Inspector: brought back the Refresh Button
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
+* (***ADDB***) Fixed Bug introduced in a Preview that made every loot marker appear automatically.
 * (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.
 ### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements

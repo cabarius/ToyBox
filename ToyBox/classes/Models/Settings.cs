@@ -485,9 +485,6 @@ namespace ToyBox {
         public bool toggleUberLoggerForwardPrefix = false;
         public bool toggleGuidsClipboard = true;
 
-        // Localization
-        public string uiCultureCode = "en";
-
         // Deprecated
         private bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
