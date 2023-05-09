@@ -1,8 +1,8 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
@@ -121,7 +121,7 @@ namespace ModKit {
         }
         public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, titleFormater, null, options);
         public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, null, options);
-        public static bool EnumGrid<TEnum>(ref TEnum value, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value,0, null, options);
+        public static bool EnumGrid<TEnum>(ref TEnum value, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, 0, null, options);
         public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
@@ -132,11 +132,15 @@ namespace ModKit {
             return changed;
         }
         public static bool EnumGrid<TEnum>(string title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
+            return EnumGrid(title, ref value, false, options);
+        }
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, bool shouldLocalize = false, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
+            Func<string, TEnum, string> titleFormatter = shouldLocalize ? (name, en) => name.localize() : null;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
                 Space(25);
-                changed = EnumGrid(ref value, 0, null, options);
+                changed = EnumGrid(ref value, 0, titleFormatter, options);
             }
             return changed;
         }
@@ -168,7 +172,7 @@ namespace ModKit {
                 changed = EnumGrid(ref value, xCols, titleFormater, style, options);
             }
             return changed;
-         }
+        }
         public static bool EnumGrid<TEnum>(string title, Func<TEnum> get, Action<TEnum> set, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
@@ -218,7 +222,7 @@ namespace ModKit {
 
         public static bool GridPicker<T>(
                 string title,
-                ref T selected, 
+                ref T selected,
                 List<T> items,
                 string unselectedTitle,
                 Func<T, string> titler,
@@ -282,7 +286,7 @@ namespace ModKit {
                 ref string searchText,
                 int xCols,
                 params GUILayoutOption[] options
-                ) where T : class 
+                ) where T : class
             => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, xCols, buttonStyle, options);
         public static bool GridPicker<T>(
                 string title,
@@ -291,7 +295,7 @@ namespace ModKit {
                 Func<T, string> titler,
                 ref string searchText,
                 params GUILayoutOption[] options
-                ) where T : class 
+                ) where T : class
             => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 6, buttonStyle, options);
 
         // VPicker
@@ -323,7 +327,7 @@ namespace ModKit {
                 ref string searchText,
                 Action extras,
                 params GUILayoutOption[] options
-                ) where T : class 
+                ) where T : class
             => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, buttonStyle, options);
         public static bool VPicker<T>(
                 string title,
