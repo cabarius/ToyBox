@@ -1,10 +1,14 @@
 ﻿using ModKit;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public partial class SettingsUI {
         public static string cultureSearchText = "";
+        public static CultureInfo uiCulture;
+        public static List<CultureInfo> cultures = new();
         public static void OnGUI() {
             UI.HStack("Settings", 1,
                 () => {
@@ -31,8 +35,15 @@ namespace ToyBox {
             UI.Div(0, 25);
             UI.HStack("Localizaton", 1,
                 () => {
-                    var uiCulture = CultureInfo.GetCultureInfo(Mod.ModKitSettings.uiCultureCode);
-                    var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(ci => ci.DisplayName).ToList();
+                    if (Event.current.type != EventType.Repaint) {
+                        uiCulture = CultureInfo.GetCultureInfo(Mod.ModKitSettings.uiCultureCode);
+                        if (Main.Settings.onlyShowLanguagesWithFiles) {
+                            cultures = LocalizationManager.getLanguagesWithFile().Select((code, index) => CultureInfo.GetCultureInfo(code)).OrderBy(ci => ci.DisplayName).ToList();
+                        }
+                        else {
+                            cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(ci => ci.DisplayName).ToList();
+                        }
+                    }
                     using (UI.VerticalScope()) {
                         using (UI.HorizontalScope()) {
                             UI.Label("Current Cultrue".cyan(), UI.Width(275));
@@ -40,6 +51,10 @@ namespace ToyBox {
                             UI.Label($"{uiCulture.DisplayName}({uiCulture.Name})".orange());
                             UI.Space(25);
                             UI.ActionButton("Export current locale to file".cyan(), () => LocalizationManager.Export());
+                            UI.Space(25);
+                            UI.Toggle("Only show languages with existing localization files", ref Main.Settings.onlyShowLanguagesWithFiles);
+                            UI.Space(25);
+                            UI.LinkButton("Open the Localization Guide", "https://github.com/cabarius/ToyBox/wiki/Localization-Guide");
                         }
                         if (UI.GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 8, UI.rarityButtonStyle, UI.Width(UI.ummWidth - 350))) {
                             Mod.ModKitSettings.uiCultureCode = uiCulture.Name;

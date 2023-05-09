@@ -109,6 +109,22 @@ namespace ModKit {
             }
             return null;
         }
+        private static bool _cacheFiles = false;
+        private static HashSet<string> _LanguageCache = new();
+        public static HashSet<string> getLanguagesWithFile() {
+            if (!_cacheFiles) {
+                if (Directory.Exists(_localFolderPath)) {
+                    foreach (var file in Directory.GetFiles(_localFolderPath)) {
+                        var parts = file.Split(Path.DirectorySeparatorChar).LastItem().Split('.');
+                        if (parts[1] == "json") {
+                            _LanguageCache.Add(parts[0]);
+                        }
+                    }
+                }
+                _cacheFiles = true;
+            }
+            return _LanguageCache;
+        }
 
         public static bool Export(Action<Exception> onError = null) {
             try {
@@ -118,6 +134,9 @@ namespace ModKit {
                 if (File.Exists(FilePath + _fileEnding)) {
                     File.Delete(FilePath + _fileEnding);
                 }
+                else {
+                    _LanguageCache.Add(Mod.ModKitSettings.uiCultureCode);
+                }
                 var toSerialize = Mod.ModKitSettings.uiCultureCode == "en" ? _localDefault : _local;
                 if (toSerialize == null) {
                     toSerialize = new();
@@ -126,7 +145,7 @@ namespace ModKit {
                         toSerialize.Strings.Add(k, "");
                     }
                 }
-                toSerialize.LanguageCode = IsDefault ? "en" : toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
+                toSerialize.LanguageCode = toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
                 toSerialize.Version = Mod.modEntry.Version.ToString();
                 if (toSerialize.Contributors.IsNullOrEmpty()) toSerialize.Contributors = "The ToyBox Team";
                 toSerialize.HomePage = "https://github.com/cabarius/ToyBox/";
