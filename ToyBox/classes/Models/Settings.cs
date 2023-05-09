@@ -409,6 +409,7 @@ namespace ToyBox {
         public bool toggleQuestsShowUnrevealedObjectives = false;
         public bool toggleQuestInspector = false;
         public bool toggleIntrestingNPCsShowFalseConditions = false;
+        public bool toggleInterestingNPCsShowHidden = false;
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?

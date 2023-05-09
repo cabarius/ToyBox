@@ -61,6 +61,7 @@ namespace ToyBox {
         public static string stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest).bold();
         public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
     }
+
     public class QuestEditor {
         public static Settings Settings => Main.Settings;
         public static bool ShowInactive => Settings.toggleIntrestingNPCsShowFalseConditions;
@@ -92,67 +93,81 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     50.space();
                     using (VerticalScope(GUI.skin.box)) {
-                        if (Game.Instance?.State?.Units.All is { } units) {
+                        //if (Game.Instance?.State?.Units.All is { } units) {
+                        if (Game.Instance?.State?.Units is { } unitsPool) {
+                            var units = Settings.toggleInterestingNPCsShowHidden ? unitsPool.All : unitsPool.ToList();
                             conditionsBrowser.OnGUI(
-                                    units.Where(u => u.GetUnitIterestingnessCoefficent() >= 1),
-                                    () => units,
-                                    i => i,
-                                    u => u.CharacterName,
-                                    u => u.CharacterName,
-                                    () => {
-                                        Toggle("Show Inactive Conditions", ref Settings.toggleIntrestingNPCsShowFalseConditions);
-                                    },
-                                    (_, u) => {
-                                        var name = u.CharacterName;
-                                        var coefficient = u.GetUnitIterestingnessCoefficent();
-                                        if (coefficient > 0)
-                                            name = name.orange();
-                                        else
-                                            name = name.grey();
-                                        Label(name, 600.width());
-                                        175.space();
-                                        Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(coefficient.ToString()));
-                                        50.space();
-                                        ReflectionTreeView.DetailToggle("", u.Parts.Parts);
-                                    },
-                                    (_, u) => {
-                                        ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
-                                        var entries = u.GetUnitInteractionConditions();
-                                        var checkerEntries = entries.Where(e => e.HasConditins && (ShowInactive || e.IsActive()));
-                                        var conditions =
-                                            from entry in checkerEntries
-                                            from condition in entry.checker.Conditions
-                                            group (condition, entry) by condition.GetCaption()
-                                            into g
-                                            select g.Select(p => (p.condition, new object[] { p.entry.source } as IEnumerable<object>))
-                                                    .Aggregate((p, q)
-                                                                   => (p.condition, p.Item2.Concat(q.Item2))
-                                                        );
-                                        var elementEntries = entries.Where(e => e.HasElements && (ShowInactive || e.IsActive()));
-                                        if (conditions.Any()) {
-                                            using (HorizontalScope()) {
-                                                115.space();
-                                                Label("Conditions".yellow());
-                                            }
+                                units.Where(u => u.GetUnitIterestingnessCoefficent() >= 1),
+                                () => units,
+                                i => i,
+                                u => u.CharacterName,
+                                u => u.CharacterName,
+                                () => {
+                                    Toggle("Show Inactive Conditions", ref Settings.toggleIntrestingNPCsShowFalseConditions);
+                                    if (conditionsBrowser.ShowAll) {
+                                        25.space();
+                                        if (Toggle("Show other versions of NPCs", ref Settings.toggleInterestingNPCsShowHidden))
+                                            conditionsBrowser.ReloadData();
+                                    }
+                                },
+                                (_, u) => {
+                                    var name = u.CharacterName;
+                                    var coefficient = u.GetUnitIterestingnessCoefficent();
+                                    if (coefficient > 0)
+                                        name = name.orange();
+                                    else
+                                        name = name.grey();
+                                    Label(name, 600.width());
+                                    175.space();
+                                    Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(coefficient.ToString()));
+                                    50.space();
+                                    ReflectionTreeView.DetailToggle("", u.Parts.Parts);
+                                },
+                                (_, u) => {
+                                    ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
+                                    var entries = u.GetUnitInteractionConditions();
+                                    var checkerEntries = entries.Where(e => e.HasConditins && (ShowInactive || e.IsActive()));
+                                    var conditions =
+                                        from entry in checkerEntries
+                                        from condition in entry.checker.Conditions
+                                        group (condition, entry) by condition.GetCaption()
+                                        into g
+                                        select g.Select(p => (p.condition, new object[] { p.entry.source } as IEnumerable<object>))
+                                                .Aggregate((p, q)
+                                                               => (p.condition, p.Item2.Concat(q.Item2))
+                                                    );
+                                    var elementEntries = entries.Where(e => e.HasElements && (ShowInactive || e.IsActive()));
+                                    if (conditions.Any()) {
+                                        using (HorizontalScope()) {
+                                            115.space();
+                                            Label("Conditions".yellow());
                                         }
-                                        foreach (var entry in conditions) {
-                                            OnGUI(entry.condition, 
-                                                  string.Join(", ", entry.Item2.Select(source => source.ToString())),
-                                                    150
-                                                );
+                                    }
+                                    foreach (var entry in conditions) {
+                                        OnGUI(entry.condition,
+                                              string.Join(", ", entry.Item2.Select(source => source.ToString())),
+                                              150
+                                            );
+                                    }
+                                    if (elementEntries.Any()) {
+                                        using (HorizontalScope()) {
+                                            115.space();
+                                            Label("Elements".yellow());
                                         }
-                                        if (elementEntries.Any()) {
-                                            using (HorizontalScope()) {
-                                                115.space();
-                                                Label("Elements".yellow());
-                                            }
+                                    }
+                                    foreach (var entry in elementEntries) {
+                                        foreach (var element in entry.elements.OrderBy(e => e.GetType().Name)) {
+                                            OnGUI(element, entry.source);
                                         }
-                                        foreach (var entry in elementEntries) {
-                                            foreach (var element in entry.elements.OrderBy(e => e.GetType().Name)) {
-                                                OnGUI(element, entry.source);
-                                            }
-                                        }
-                                    }, 50, false, true, 100, 300, "", true);
+                                    }
+                                },
+                                50,
+                                false,
+                                true,
+                                100,
+                                300,
+                                "",
+                                true);
                         }
                     }
                 }

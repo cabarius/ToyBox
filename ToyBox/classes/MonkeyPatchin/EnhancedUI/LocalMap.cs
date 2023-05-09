@@ -312,7 +312,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(UnitOvertipView.UpdateInternal))]
             [HarmonyPostfix]
             public static void UpdateInternal(UnitOvertipView __instance, Vector3 canvasPosition) {
-                if (!settings.toggleShowInterestingNPCsOnLocalMap) return;
+                if (!settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.GetUnitIterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
