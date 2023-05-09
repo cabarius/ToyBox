@@ -39,7 +39,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 ### Ver 1.5.2 (Comming Soon)
 **ToyBox 1.5.2** ***Experimental Preview*** **May 9, 2023b**
  * (***Narria***) Improved Intersting NPC calaculations
- * (***Narria***) Improved the UI for showing data about interesting NPCS
+ * (***Narria***) Improved the UI for showing data about interesting NPCS so now the highlight will disappear when conditions are not met (this is not perfect but will improve over time)
    * Entries for the same condition are merged when they occur for multiple sources
  * (***ADDB***) Initial support for localization
  * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
