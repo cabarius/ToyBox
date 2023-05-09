@@ -309,6 +309,19 @@ namespace ToyBox.BagOfPatches {
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
             }
+            [HarmonyPatch(nameof(UnitOvertipView.UpdateInternal))]
+            [HarmonyPostfix]
+            public static void UpdateInternal(UnitOvertipView __instance, Vector3 canvasPosition) {
+                if (!settings.toggleShowInterestingNPCsOnLocalMap) return;
+                if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
+                    var interestingness = entityOvertipVM.Unit.GetUnitIterestingnessCoefficent();
+                    var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
+                    if (interestingness >= 1)
+                        charName.color = new Color(0.6898f, 0.3771f, 0.0184f);
+                    else
+                        charName.color = new Color(0.1098f, 0.098f, 0.0784f);
+                }
+            }
         }
 
 

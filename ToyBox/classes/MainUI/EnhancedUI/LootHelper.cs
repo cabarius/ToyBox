@@ -117,10 +117,10 @@ namespace ToyBox {
         }
         public static void OpenMassLoot() {
             var loot = MassLootHelper.GetMassLootFromCurrentArea();
+            Mod.Debug($"MassLoot: Count = {loot.Count()}");
             if (loot == null) return;
             var count = loot.Count(present => present.InteractionLoot != null);
             if (count == 0) return;
-            Mod.Debug($"MassLoot: Count = {loot.Count()}");
             // Access to LootContextVM
             var contextVM = RootUIContext.Instance.InGameVM?.StaticPartVM?.LootContextVM;
             if (contextVM == null) return;

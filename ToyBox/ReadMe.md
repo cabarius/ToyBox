@@ -41,6 +41,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) Improved Intersting NPC calaculations
  * (***Narria***) Improved the UI for showing data about interesting NPCS so now the highlight will disappear when conditions are not met (this is not perfect but will improve over time)
    * Entries for the same condition are merged when they occur for multiple sources
+ * (***Narria***) Overtips showing interesting NPCs now update immediately when their state changes (like after giving all your elven pages to the storyteller)
  * (***ADDB***) Initial support for localization
  * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
 ### Ver 1.5.1
