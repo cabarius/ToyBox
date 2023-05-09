@@ -484,6 +484,7 @@ namespace ToyBox {
         public bool toggleDevopmentMode = false;
         public bool toggleUberLoggerForwardPrefix = false;
         public bool toggleGuidsClipboard = true;
+        public bool onlyShowLanguagesWithFiles = true;
 
         // Deprecated
         private bool toggleNoLevelUpRestirctions = false;    // deprecated
