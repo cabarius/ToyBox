@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Kingmaker.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -127,7 +128,7 @@ namespace ModKit {
                 }
                 toSerialize.LanguageCode = IsDefault ? "en" : toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
                 toSerialize.Version = Mod.modEntry.Version.ToString();
-                if (toSerialize.Contributors == "") toSerialize.Contributors = "The ToyBox Team";
+                if (toSerialize.Contributors.IsNullOrEmpty()) toSerialize.Contributors = "The ToyBox Team";
                 toSerialize.HomePage = "https://github.com/cabarius/ToyBox/";
                 Language.Serialize(toSerialize, FilePath + _fileEnding);
                 return true;
