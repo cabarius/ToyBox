@@ -119,15 +119,27 @@ namespace ToyBox {
                                         ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
                                         var entries = u.GetUnitInteractionConditions();
                                         var checkerEntries = entries.Where(e => e.HasConditins && (ShowInactive || e.IsActive()));
+                                        var conditions =
+                                            from entry in checkerEntries
+                                            from condition in entry.checker.Conditions
+                                            group (condition, entry) by condition.GetCaption()
+                                            into g
+                                            select g.Select(p => (p.condition, new object[] { p.entry.source } as IEnumerable<object>))
+                                                    .Aggregate((p, q)
+                                                                   => (p.condition, p.Item2.Concat(q.Item2))
+                                                        );
                                         var elementEntries = entries.Where(e => e.HasElements && (ShowInactive || e.IsActive()));
-                                        if (checkerEntries.Any()) {
+                                        if (conditions.Any()) {
                                             using (HorizontalScope()) {
                                                 115.space();
                                                 Label("Conditions".yellow());
                                             }
                                         }
-                                        foreach (var entry in checkerEntries) {
-                                            OnGUI(entry.checker, entry.source);
+                                        foreach (var entry in conditions) {
+                                            OnGUI(entry.condition, 
+                                                  string.Join(", ", entry.Item2.Select(source => source.ToString())),
+                                                    150
+                                                );
                                         }
                                         if (elementEntries.Any()) {
                                             using (HorizontalScope()) {
