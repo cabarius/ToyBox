@@ -143,7 +143,7 @@ namespace ToyBox {
                     Label(bp.GetDisplayName().cyan().bold(), Width(titleWidth));
                     Label(bp.NameSafe().orange().bold(), Width(complexNameWidth));
                     if (settings.showAssetIDs) {
-                        GUILayout.TextField(bp.AssetGuidThreadSafe, ExpandWidth(false), Width(guidWidth));
+                        ClipboardLabel(bp.AssetGuidThreadSafe, ExpandWidth(false), Width(guidWidth));
                     }
                     //It seems that if you specify defaults, saving settings without the defaults won't actually
                     //remove the items from the list. This just prevents confusion by removing the button altogether.

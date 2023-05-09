@@ -24,6 +24,9 @@ using UnityEngine;
 using ModKit;
 using System.Reflection;
 using System.Reflection.Emit;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Name;
+using ToyBox;
+using ToyBox.Multiclass;
 
 namespace ToyBox.BagOfPatches {
     internal static class LevelUp {
@@ -515,6 +518,31 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+        #if false
+        [HarmonyPatch(typeof(CharGenNamePhaseVM))]
+        private static class CharGenNamePhaseVMPatch {
+            [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
+            [HarmonyPostfix]
+            // This is a hack work around for https://github.com/cabarius/ToyBox/issues/868
+            // We basically check to see if the character has gestalt which when you set the name adds more options to select which confuses this VM leaving it thinking this is still true, IsInDetailedView, when it really is not.  In this case we see if the character has gestalt options and if it does we just say we are done.
+            public static void CheckIsCompleted(CharGenNamePhaseVM __instance, ref bool __result) {
+                if (!settings.toggleMulticlass) return;
+                Mod.Debug("multiclass is on");
+                if (string.IsNullOrEmpty(__instance.InputText)) return;
+                Mod.Debug($"Has InputText: {__instance.InputText}");
+                var unit = __instance.LevelUpController.Unit;
+                if (!unit.Descriptor?.IsPartyOrPet() ?? false) return;
+                Mod.Debug($"unit: {unit.CharacterName}");
+                var state = __instance.LevelUpController.State;
+                var useDefaultMulticlassOptions = state.IsCharGen();
+                var options = MulticlassOptions.Get(useDefaultMulticlassOptions ? null : unit);
+                Mod.Debug($"state: {state} - charGen: {useDefaultMulticlassOptions} - {options}");
+                if (options == null || options.Count == 0) return;
+                __instance.m_IsInDetailedView.Value = false;
+                __result = true;
+            }
+        }
+        #endif
 
 #if false
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]

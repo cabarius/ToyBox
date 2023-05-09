@@ -36,18 +36,26 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-### Ver 1.5.1 (coming soon)
-**ToyBox 1.5.1** ***Experimental Preview*** **5/06/2023j**
+### Ver 1.5.2 (Comming Soon)
+**ToyBox 1.5.2** ***Experimental Preview*** **May 9, 2023b**
+ * (***Narria***) Improved Intersting NPC calaculations
+ * (***Narria***) Improved the UI for showing data about interesting NPCS so now the highlight will disappear when conditions are not met (this is not perfect but will improve over time)
+   * Entries for the same condition are merged when they occur for multiple sources
+ * (***ADDB***) Initial support for localization
+ * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
+### Ver 1.5.1
 * (***Narria***) **Quality of Life: Enhanced Map**: 
   * You can enable zooming of the Local Map that you see in Cities, Dungeons and other Encounter spots. 
   * Zooming will resize various points of interest so you can separate ones that are stacked as you zoom more
   * Made picture frame get thinner so it doesn't block your view
-  * Known issue: clicking on the map moves the frame too far.  Clicking on points of interest works correctly.
+  * Clicking and right clicking on the map also repositions the frame or places the movement marker correctly
+  * Using direction keys on the map will move in map coordinates not world coordinates, which is what one would expect
+  * Added map scroll multiplier when zoomable map is enabled
 * (***Narria***) Quality of Life: Option to mark NPCs with interesting dialog/quests on the map
   * Also marks interesting NPCs on the main screen by coloring their name
 * (***Narria***) Added Interesting NPC list to the Quest Editor tab
 * (***Narria***) **Quality of Life**: ToyBox Archeology Corps has labeled your puzzle pieces for you to make identification easier. 
-  * Added puzzle piece tags to the puzzle piece to identify the puzzle and the 2 symbols as a pair of numbers formated like this **[Puzzle Piece: Purple2x3]**. This should make it easier to identify and track the pieces in your inventory. I am looking into adding tool tips to the puzzle interactors to show the numbers too.
+  * Added puzzle piece tags to the puzzle piece to identify the puzzle and the 2 symbols as a pair of numbers formated like this **[Puzzle Piece: Purple2x3]**. This should make it easier to identify and track the pieces in your inventory.
 * (***Narria***) Fixed regression that made it impossible to use the spellbook merge feature
 * (***Narria***) Fixed regression in character name editing
 * (***Narria***) Made Selection Level a little more clear in FeatureSelection detail lists
@@ -55,9 +63,10 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) You can now inspect the selected character list in Party Editor and the Quest list in Quest Editor
 * (***Narria***) Improved Inspector searching by using a background thread and made it a little prettier
 * (***Narria***) Inspecter searches now works with terms (across parents) so if you specify 'Foo Bar' it will find nodes that have foo and bar somewhere across the node and its parents in the outline. This is helpful for to pull out parts of nodes at different levels for example in Quest Editor if you inspect all quests and search for 'Cloud Objective' it will show the objective property for all quests that contain the name Cloud
+* (***Narria***) Implemented workaround for Pet Naming bug that comes up if you set default gestalt options. This will prevent you from being able to gestalt the pet when you choose its name and first level. You can however take one additional level in the secondary class and then afterwards mark that class as gestalt and set the multiclass flag and from thereafter it will function just as if you created it as gestalt. 
+* (***Narria***) Inspector: brought back the Refresh Button
 * (***ADDB***) Added Button to remove all existing Swarm That Walks clones.
 * (***ADDB***) Fixed Bug introduced in a Preview that made every loot marker appear automatically.
-* (***ADDB***) Added Localization Framework.
 * (***BuckAMayzing***) Added an "Unlearned Scrolls" category in Enhanced Inventory.
 ### Ver 1.5.0 
 * (***Narria***) Inventory Enhancements

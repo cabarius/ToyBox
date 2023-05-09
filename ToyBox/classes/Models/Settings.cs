@@ -116,6 +116,8 @@ namespace ToyBox {
         public bool toggleExpandedPartyView = false;
         public bool togglePuzzleRelief = false;
         public bool toggleZoomableLocalMaps = false;
+        public float zoomableLocalMapScrollSpeedMultiplier = 4;
+        public bool toogleShowInterestingNPCsOnQuestTab = false;
         public bool toggleShowInterestingNPCsOnLocalMap = false;
         public bool toggleShowQuestMarkersOnLocalMap = false;
 
@@ -406,6 +408,7 @@ namespace ToyBox {
         public bool toggleQuestHideCompleted = true;
         public bool toggleQuestsShowUnrevealedObjectives = false;
         public bool toggleQuestInspector = false;
+        public bool toggleIntrestingNPCsShowFalseConditions = false;
 
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
