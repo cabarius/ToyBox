@@ -133,6 +133,22 @@ namespace ToyBox {
                     () => { }
                     );
             Div(0, 25);
+            HStack("Bulk Sell", 1,
+               () => {
+                   Toggle("Enable custom bulk selling settings", ref Settings.toggleCustomBulkSell, 400.width());
+               },
+               () =>
+               {
+                   if (!Settings.toggleCustomBulkSell) return;
+                   using (VerticalScope())
+                   {
+                        Div(0, 25);
+                        BulkSell.OnGUI();
+
+                   }
+
+               });
+            Div(0, 25);
             HStack("Enhanced Inventory",
                    1,
                    () => {

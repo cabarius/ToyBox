@@ -60,6 +60,8 @@ namespace ToyBox {
                 Mod.OnLoad(modEntry);
                 UIHelpers.OnLoad();
                 Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+                SettingsDefaults.InitializeDefaultDamageTypes();
+
 
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());

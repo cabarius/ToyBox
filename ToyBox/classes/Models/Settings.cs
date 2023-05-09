@@ -7,6 +7,7 @@ using ModKit.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using ToyBox.classes.Models;
 using UnityEngine;
 using UnityModManagerNet;
 
@@ -222,6 +223,8 @@ namespace ToyBox {
         public bool toggleShowCantEquipReasons = false;
         public RarityType lootChecklistFilterRarity = RarityType.None;
         public RarityType maxRarityToHide = RarityType.None;
+        public bool toggleCustomBulkSell = false;
+        public BulkSellSettings bulkSellSettings = new();
 
         // Enhanced Inventory
         public bool toggleEnhancedInventory = false;
