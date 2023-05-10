@@ -121,7 +121,7 @@ namespace ToyBox {
             var enhancementBonusIsSellable = enhancementBonus <= args.settings.weaponEnchantLevel;
             var stackSizeIsBiggerThanMinimum = args.itemInventoryCount > args.settings.weaponStackSize;
 
-            if (enhancementBonusIsSellable && stackSizeIsBiggerThanMinimum && allTypesMatch) {
+            if (allTypesMatch && enhancementBonusIsSellable && stackSizeIsBiggerThanMinimum) {
                 return Mathf.Min(args.itemInventoryCount - args.settings.weaponStackSize, args.itemStackCount);
             }
 
