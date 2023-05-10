@@ -137,13 +137,11 @@ namespace ToyBox {
                () => {
                    Toggle("Enable custom bulk selling settings", ref Settings.toggleCustomBulkSell, 400.width());
                },
-               () =>
-               {
+               () => {
                    if (!Settings.toggleCustomBulkSell) return;
-                   using (VerticalScope())
-                   {
-                        Div(0, 25);
-                        BulkSell.OnGUI();
+                   using (VerticalScope()) {
+                       Div(0, 25);
+                       BulkSell.OnGUI();
 
                    }
 
@@ -292,7 +290,7 @@ namespace ToyBox {
                            }
                        }
                    },
-                   () => {});
+                   () => { });
             Div(0, 25);
             if (Game.Instance.CurrentlyLoadedArea == null) return;
             var isEmpty = true;
@@ -340,8 +338,8 @@ namespace ToyBox {
                             foreach (var present in presents) {
                                 var phatLewtz = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity()).ToList();
                                 var unit = present.Unit;
-                                if (phatLewtz.Any() 
-                                    && (unit == null 
+                                if (phatLewtz.Any()
+                                    && (unit == null
                                         || (Settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy)
                                         || (!Settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy)
                                         )
