@@ -1,12 +1,11 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Utility;
 using ModKit;
+using System.Linq;
 using ToyBox.Multiclass;
-using UnityEngine;
 
 namespace ToyBox {
     public class MulticlassPicker {
@@ -14,15 +13,15 @@ namespace ToyBox {
 
         public static void OnGUI(UnitEntityData ch, float indent = 100) {
             var targetString = ch == null
-                    ? "creation of ".green() + "new characters" + "\nNote:".yellow().bold()
-                        + " This value applies to ".orange() + "all saves".yellow().bold() + " and in the main menu".orange()
-                   : $"when leveling up ".green() + ch.CharacterName.orange().bold() + "\nNote:".yellow().bold()
-                        + " This applies only to the ".orange() + "current save.".yellow().bold();
+                    ? ("creation of ".green() + "new characters" + "\nNote:".yellow().bold()
+                        + " This value applies to ".orange() + "all saves".yellow().bold() + " and in the main menu".orange()).localize()
+                   : "when leveling up ".localize().green() + ch.CharacterName.orange().bold() + ("\nNote:".yellow().bold()
+                        + " This applies only to the ".orange() + "current save.".yellow().bold()).localize();
             using (UI.HorizontalScope()) {
                 UI.Space(indent);
-                UI.Label($"Configure multiclass classes and gestalt flags to use during {targetString}".green());
+                UI.Label("Configure multiclass classes and gestalt flags to use during ".localize() + $"{targetString}".green());
                 UI.Space(25);
-                UI.Toggle("Show Class Descriptions", ref settings.toggleMulticlassShowClassDescriptions);
+                UI.Toggle("Show Class Descriptions".localize(), ref settings.toggleMulticlassShowClassDescriptions);
             }
             UI.Space(15);
             MigrationOptions(indent);
@@ -34,7 +33,7 @@ namespace ToyBox {
             if (ch != null) {
                 using (UI.HorizontalScope()) {
                     UI.Space(indent);
-                    UI.Label($"Character Level".cyan().bold(), UI.Width(300));
+                    UI.Label($"Character Level".localize().cyan().bold(), UI.Width(300));
                     UI.Space(25);
                     UI.Label(ch.Progression.CharacterLevel.ToString().orange().bold());
                 }
@@ -51,7 +50,7 @@ namespace ToyBox {
             UI.Space(-3);
             if (showDesc) {
                 using (UI.HorizontalScope()) {
-                    UI.Space(indent); UI.Label("Mythic".cyan());
+                    UI.Space(indent); UI.Label("Mythic".localize().cyan());
                 }
             }
             foreach (var mycl in mythicClasses) {
@@ -99,7 +98,7 @@ namespace ToyBox {
                             }
                         }
                         else options.Remove(cl);
-                        var action = v ? "Add".green() : "Del".yellow();
+                        var action = v ? "Add".localize().green() : "Del".localize().yellow();
                         Mod.Trace($"PickerRow - {action} class: {cl.HashKey()} - {options} -> {options.Contains(cl)}");
                         changed = true;
                     },
@@ -108,21 +107,21 @@ namespace ToyBox {
                 UI.Space(247);
                 using (UI.VerticalScope()) {
                     if (!canSelectClass)
-                        UI.Label("to select this class you must unselect at least one of your other existing classes".orange());
+                        UI.Label("to select this class you must unselect at least one of your other existing classes".localize().orange());
                     if (optionsHasClass && chArchetype != null && archetypeOptions.Empty()) {
-                        UI.Label($"due to existing archetype, {chArchetype.Name.yellow()},  this multiclass option will only be applied during respec.".orange());
+                        UI.Label("due to existing archetype, ".localize() + $"{chArchetype.Name.yellow()}" + ",  this multiclass option will only be applied during respec.".localize().orange());
                     }
                     if (showGestaltToggle && chArchetype == null) {
                         using (UI.HorizontalScope()) {
                             UI.Space(-150);
-                            UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
+                            UI.ActionToggle("gestalt".localize().grey(), () => ch.IsClassGestalt(cd.CharacterClass),
                                 (v) => {
                                     ch.SetClassIsGestalt(cd.CharacterClass, v);
                                     ch.Progression.UpdateLevelsForGestalt();
                                     changed = true;
                                 }, 125);
                             UI.Space(25);
-                            UI.Label("this flag lets you not count this class in computing character level".green());
+                            UI.Label("this flag lets you not count this class in computing character level".localize().green());
                         }
                     }
                     if (showDesc) {
@@ -151,7 +150,7 @@ namespace ToyBox {
                                         if (v) archetypeOptions.AddExclusive(archetype);
                                         else archetypeOptions.Remove(archetype);
                                         options.SetArchetypeOptions(cl, archetypeOptions);
-                                        var action = v ? "Add".green() : "Del".yellow();
+                                        var action = v ? "Add".localize().green() : "Del".localize().yellow();
                                         Mod.Trace($"PickerRow -  {action}  - arch: {archetype.HashKey()} - {archetypeOptions}");
                                         changed = true;
                                     },
@@ -162,28 +161,28 @@ namespace ToyBox {
 
                                     if (hasArch && archetype != chArchetype && (chArchetype != null || charHasClass)) {
                                         if (chArchetype != null)
-                                            UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass archetype will only be applied during respec.".orange());
+                                            UI.Label($"due to existing archetype, ".localize() + $"{chArchetype.Name.yellow()}" + ", this multiclass archetype will only be applied during respec.".localize().orange());
                                         else
-                                            UI.Label($"due to existing class, {cd.CharacterClass.Name.yellow()}, this multiclass archetype will only be applied during respec.".orange());
+                                            UI.Label($"due to existing class, ".localize() + $"{cd.CharacterClass.Name.yellow()}" + ", this multiclass archetype will only be applied during respec.".localize().orange());
                                     }
                                     else if (showGestaltToggle && archetype == chArchetype) {
                                         using (UI.HorizontalScope()) {
                                             UI.Space(-155);
-                                            UI.ActionToggle("gestalt".grey(), () => ch.IsClassGestalt(cd.CharacterClass),
+                                            UI.ActionToggle("gestalt".localize().grey(), () => ch.IsClassGestalt(cd.CharacterClass),
                                                 (v) => {
                                                     ch.SetClassIsGestalt(cd.CharacterClass, v);
                                                     ch.Progression.UpdateLevelsForGestalt();
                                                     changed = true;
                                                 }, 125);
                                             UI.Space(25);
-                                            UI.Label("this flag lets you not count this class in computing character level".green());
+                                            UI.Label("this flag lets you not count this class in computing character level".localize().green());
                                             showedGestalt = true;
                                         }
                                     }
                                     if (showDesc) {
                                         using (UI.VerticalScope()) {
                                             if (showedGestalt) {
-                                                UI.Label("this flag lets you not count this class in computing character level".green());
+                                                UI.Label("this flag lets you not count this class in computing character level".localize().green());
                                                 UI.DivLast();
                                             }
                                             UI.Label(archetype.Description.StripHTML().green());
@@ -213,9 +212,9 @@ namespace ToyBox {
             if (migrationCount > 0) {
                 using (UI.HorizontalScope()) {
                     UI.Space(indent);
-                    UI.Toggle("Show Migrations", ref settings.toggleAlwaysShowMigration);
+                    UI.Toggle("Show Migrations".localize(), ref settings.toggleAlwaysShowMigration);
                     UI.Space(25);
-                    UI.Label("toggle this if you want show older ToyBox settings for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan());
+                    UI.Label(("toggle this if you want show older ToyBox settings for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan()).localize());
                 }
             }
             if (migrationCount > 0) {
@@ -224,39 +223,39 @@ namespace ToyBox {
                     using (UI.HorizontalScope()) {
                         UI.Space(indent);
                         using (UI.VerticalScope()) {
-                            UI.Label("the following options allow you to migrate previous settings that were stored in toybox to the new per setting save mechanism for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan() + "\nNote:".orange() + "you may have configured this for a different save so use care in doing this migration".green());
+                            UI.Label(("the following options allow you to migrate previous settings that were stored in toybox to the new per setting save mechanism for ".green() + "Multi-class selections, Gestalt Flags and Allow Levels Past 20 ".cyan() + "\nNote:".orange() + "you may have configured this for a different save so use care in doing this migration".green()).localize());
                             if (hasMulticlassMigration)
                                 using (UI.HorizontalScope()) {
-                                    UI.Label("Multi-class settings", UI.Width(300));
+                                    UI.Label("Multi-class settings".localize(), UI.Width(300));
                                     UI.Space(25);
                                     UI.Label($"{settings.multiclassSettings.Count}".cyan());
                                     UI.Space(25);
-                                    UI.ActionButton("Migrate", () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
+                                    UI.ActionButton("Migrate".localize(), () => { settings.perSave.multiclassSettings = settings.multiclassSettings; Settings.SavePerSaveSettings(); });
                                     UI.Space(25);
-                                    UI.DangerousActionButton("Remove", "this will remove your old multiclass settings from ToyBox settings but does not affect any other saves that have already migrated them", ref areYouSure1, () => settings.multiclassSettings.Clear());
+                                    UI.DangerousActionButton("Remove".localize(), "this will remove your old multiclass settings from ToyBox settings but does not affect any other saves that have already migrated them".localize(), ref areYouSure1, () => settings.multiclassSettings.Clear());
                                 }
                             if (hasGestaltMigration)
                                 using (UI.HorizontalScope()) {
-                                    UI.Label("Gestalt Flags", UI.Width(300));
+                                    UI.Label("Gestalt Flags".localize(), UI.Width(300));
                                     UI.Space(25);
                                     UI.Label($"{settings.excludeClassesFromCharLevelSets.Count}".cyan());
                                     UI.Space(25);
-                                    UI.ActionButton("Migrate", () => {
+                                    UI.ActionButton("Migrate".localize(), () => {
                                         settings.perSave.excludeClassesFromCharLevelSets = settings.excludeClassesFromCharLevelSets; Settings.SavePerSaveSettings();
                                         MultipleClasses.SyncAllGestaltState();
                                     });
                                     UI.Space(25);
-                                    UI.DangerousActionButton("Remove", "this will remove your old gestalt flags from ToyBox settings but does not affect any other saves that have already migrated them", ref areYouSure2, () => settings.excludeClassesFromCharLevelSets.Clear());
+                                    UI.DangerousActionButton("Remove".localize(), "this will remove your old gestalt flags from ToyBox settings but does not affect any other saves that have already migrated them".localize(), ref areYouSure2, () => settings.excludeClassesFromCharLevelSets.Clear());
                                 }
                             if (hasLevelAsLegendMigration)
                                 using (UI.HorizontalScope()) {
-                                    UI.Label("Chars Able To Exceed Level 20", UI.Width(300));
+                                    UI.Label("Chars Able To Exceed Level 20".localize(), UI.Width(300));
                                     UI.Space(25);
                                     UI.Label($"{settings.charIsLegendaryHero.Count}".cyan());
                                     UI.Space(25);
-                                    UI.ActionButton("Migrate", () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
+                                    UI.ActionButton("Migrate".localize(), () => { settings.perSave.charIsLegendaryHero = settings.charIsLegendaryHero; Settings.SavePerSaveSettings(); });
                                     UI.Space(25);
-                                    UI.DangerousActionButton("Remove", "this will remove your old Allow Level Past 20 flags from ToyBox settings but does not affect any other saves that have already migrated them", ref areYouSure3, () => settings.charIsLegendaryHero.Clear());
+                                    UI.DangerousActionButton("Remove".localize(), "this will remove your old Allow Level Past 20 flags from ToyBox settings but does not affect any other saves that have already migrated them".localize(), ref areYouSure3, () => settings.charIsLegendaryHero.Clear());
                                 }
                         }
                     }
