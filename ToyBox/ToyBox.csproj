@@ -167,6 +167,7 @@
     <Compile Include="classes\Infrastructure\AssetLoader.cs" />
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensionsQuest.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
+    <Compile Include="classes\Models\Settings+BulkSell.cs" />
     <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\Models\Settings.cs" />
@@ -273,6 +275,7 @@
     <Compile Include="classes\MonkeyPatchin\PartyView.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
+    <Compile Include="classes\MonkeyPatchin\Vendor\BulkSellLogic.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
