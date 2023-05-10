@@ -6,22 +6,18 @@ using System.Xml.Serialization;
 
 namespace ModKit.Utility {
     [XmlRoot("SerializableDictionary")]
-    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable, IUpdatableSettings
-    {
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable, IUpdatableSettings {
         public SerializableDictionary() : base() { }
 
         public SerializableDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
 
         public XmlSchema GetSchema() => null;
-        public void AddMissingKeys(IUpdatableSettings from)
-        {
-            if (from is SerializableDictionary<TKey, TValue> fromDict)
-            {
+        public void AddMissingKeys(IUpdatableSettings from) {
+            if (from is SerializableDictionary<TKey, TValue> fromDict) {
                 this.Union(fromDict.Where(k => !ContainsKey(k.Key))).ToDictionary(k => k.Key, v => v.Value);
             }
         }
-        public void ReadXml(XmlReader reader)
-        {
+        public void ReadXml(XmlReader reader) {
             XmlSerializer keySerializer = new(typeof(TKey));
             XmlSerializer valueSerializer = new(typeof(TValue));
 
@@ -31,8 +27,7 @@ namespace ModKit.Utility {
             if (wasEmpty)
                 return;
 
-            while (reader.NodeType != XmlNodeType.EndElement)
-            {
+            while (reader.NodeType != XmlNodeType.EndElement) {
                 reader.ReadStartElement("item");
 
                 reader.ReadStartElement("key");
@@ -51,13 +46,11 @@ namespace ModKit.Utility {
             reader.ReadEndElement();
         }
 
-        public void WriteXml(XmlWriter writer)
-        {
+        public void WriteXml(XmlWriter writer) {
             XmlSerializer keySerializer = new(typeof(TKey));
             XmlSerializer valueSerializer = new(typeof(TValue));
 
-            foreach (var key in Keys)
-            {
+            foreach (var key in Keys) {
                 writer.WriteStartElement("item");
 
                 writer.WriteStartElement("key");
