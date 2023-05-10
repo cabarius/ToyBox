@@ -6,11 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToyBox.classes.Models
-{
+namespace ToyBox.classes.Models {
     [Serializable]
-    public class BulkSellSettings
-    {
+    public class BulkSellSettings {
         public int weaponEnchantLevel = 1;
         public int weaponStackSize = 0;
         public int armorEnchantLevel = 1;
