@@ -138,3 +138,4 @@ dotnet_style_object_initializer = true:suggestion
 dotnet_style_collection_initializer = true:suggestion
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 csharp_new_line_before_catch = true
+csharp_new_line_before_open_brace = none
