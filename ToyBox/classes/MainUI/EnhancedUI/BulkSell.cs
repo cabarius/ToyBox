@@ -1,6 +1,7 @@
 ﻿using ModKit.Utility;
 using System;
 using System.Linq;
+using ModKit;
 using ToyBox.classes.Models;
 using UnityEngine;
 using static ModKit.UI;
@@ -11,76 +12,96 @@ namespace ToyBox {
 
         public static void OnGUI() {
             void BonusItemOptions(string itemTypeName, string bonusType, ref int enchantLevel, ref int stackSize) {
-                using (VerticalScope()) {
-                    Label($"{itemTypeName}:");
-                    Slider($"Highest {bonusType} bonus for bulk selling", ref enchantLevel, 0, 20, 0, "", AutoWidth());
-                    Slider("Minimum amount (per type) to leave in inventory", ref stackSize, 0, 20, 1, "", AutoWidth());
-                }
+                    Label($"{itemTypeName.Cyan()}:", 150.width());
+                    Label($"{bonusType.orange()}", 150.width() );
+                    Space(-250);
+                    Slider("", ref enchantLevel, 0, 20, 0, "", 300.width());
+                    Space(-270);
+                    Slider("", ref stackSize, 0, 20, 1, "", 300.width());
             }
 
             void ConsumableOptions(string itemTypeName, ref bool sellToggle, ref int stackSize) {
-                using (VerticalScope()) {
                     Toggle($"Sell {itemTypeName}", ref sellToggle, AutoWidth());
+                    Space(0);
                     Slider("Minimum amount (per type) to leave in inventory", ref stackSize, 0, 200, 1, "", AutoWidth());
-                }
             }
 
-            void DamageTypeOptions<T>(SerializableDictionary<T, bool> settings) where T : Enum {
-                settings.Keys
-                    .Select((type, index) => new { type, index })
-                    .GroupBy(g => g.index / 4)
-                    .ToList()
-                    .ForEach(group => {
-                        using (HorizontalScope()) {
-                            group.ToList().ForEach(type => {
-                                ActionToggle(type.type.ToString(), () => settings[type.type], b => settings[type.type] = b, 150);
-                                Space(10);
-                            });
-                        }
-                    });
-                Space(20);
+            void DamageTypeOptions<T>(string title, SerializableDictionary<T, bool> settings) where T : Enum {
+                using (HorizontalScope()) {
+                    Label(title.orange(), 220.width());
+                    using (VerticalScope()) {
+                        settings.Keys
+                                .Select((type, index) => new { type, index })
+                                .GroupBy(g => g.index / 5)
+                                .ToList()
+                                .ForEach(group => {
+                                    using (HorizontalScope()) {
+                                        group.ToList().ForEach(type => {
+                                            ActionToggle(type.type.ToString(), () => settings[type.type], b => settings[type.type] = b, 150);
+                                            Space(10);
+                                        });
+                                    }
+                                });
+                    }
+                }
             }
 
             using (VerticalScope()) {
                 // create GUI sections
-                BonusItemOptions("Weapons", "enchantment", ref _settings.weaponEnchantLevel, ref _settings.weaponStackSize);
-                Toggle("Sell unique weapons", ref _settings.sellUniqueWeapons, AutoWidth());
-                DisclosureToggle("Show additional damage types to sell", ref _settings.showWeaponEnergyTypes);
+                using (HorizontalScope()) {
+                    Label("Category".Cyan(),150.width());
+                    Label("Type".Cyan(), 150.width());
+                    80.space();
+                    Label("Max Modifier".Cyan(), 300.width());
+                    165.space();
+                    Label("Amount to Keep Around".Cyan(), 300.width());
+                }
 
-                if (_settings.showWeaponEnergyTypes) {
-                    Div(0, 25);
-                    using (VerticalScope()) {
-                        Label("Elemental Damage:");
-                        DamageTypeOptions(_settings.damageEnergy);
-                        Label("Reality Damage:");
-                        DamageTypeOptions(_settings.damageReality);
-                        Label("Alignment Damage:");
-                        DamageTypeOptions(_settings.damageAlignment);
-                        Label("Materials:");
-                        DamageTypeOptions(_settings.damageMaterial);
+                using (HorizontalScope()) {
+                    BonusItemOptions("Armors", "enchantment", ref _settings.armorEnchantLevel, ref _settings.armorStackSize);
+                    25.space();
+                    Toggle("Sell unique armors", ref _settings.sellUniqueArmors, AutoWidth());
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Shields", "enchantment", ref _settings.shieldEnchantLevel, ref _settings.shieldStackSize);
+                    25.space();
+                    Toggle("Sell unique shields", ref _settings.sellUniqueShields, AutoWidth());
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Belts", "attribute", ref _settings.maxAttributeBonusForBelt, ref _settings.beltStackSize);
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Head items", "attribute", ref _settings.maxAttributeBonusForHead, ref _settings.headStackSize);
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Cloaks", "save", ref _settings.maxSaveBonusForCloaks, ref _settings.cloakStackSize);
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Bracers", "AC", ref _settings.maxACBonusForBracers, ref _settings.bracerStackSize);
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Amulets", "AC", ref _settings.maxACBonusForNeck, ref _settings.neckStackSize);
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Rings", "AC", ref _settings.maxACBonusForRings, ref _settings.ringStackSize);
+                }
+                using (HorizontalScope()) {
+                    BonusItemOptions("Weapons", "enchantment", ref _settings.weaponEnchantLevel, ref _settings.weaponStackSize);
+                    25.space();
+                    Toggle("Sell unique weapons", ref _settings.sellUniqueWeapons, AutoWidth());
+                }
+                using (HorizontalScope()) {
+                    150.space();
+                    DisclosureToggle("Damage Types".Cyan(), ref _settings.showWeaponEnergyTypes, 240f);
+                    if (_settings.showWeaponEnergyTypes) {
+                        using (VerticalScope()) {
+                            DamageTypeOptions("Elemental:", _settings.damageEnergy);
+                            DamageTypeOptions("Alignment:", _settings.damageAlignment);
+                            DamageTypeOptions("Materials:", _settings.damageMaterial);
+                            DamageTypeOptions("Other:", _settings.damageReality);
+                        }
                     }
                 }
-                Div(0, 25);
-
-                BonusItemOptions("Armors", "enchantment", ref _settings.armorEnchantLevel, ref _settings.armorStackSize);
-                Toggle("Sell unique armors", ref _settings.sellUniqueArmors, AutoWidth());
-                Div(0, 25);
-                BonusItemOptions("Shields", "enchantment", ref _settings.shieldEnchantLevel, ref _settings.shieldStackSize);
-                Toggle("Sell unique shields", ref _settings.sellUniqueShields, AutoWidth());
-                Div(0, 25);
-                BonusItemOptions("Belts", "attribute", ref _settings.maxAttributeBonusForBelt, ref _settings.beltStackSize);
-                Div(0, 25);
-                BonusItemOptions("Head items", "attribute", ref _settings.maxAttributeBonusForHead, ref _settings.headStackSize);
-                Div(0, 25);
-                BonusItemOptions("Cloaks", "save", ref _settings.maxSaveBonusForCloaks, ref _settings.cloakStackSize);
-                Div(0, 25);
-                BonusItemOptions("Bracers", "AC", ref _settings.maxACBonusForBracers, ref _settings.bracerStackSize);
-                Div(0, 25);
-                BonusItemOptions("Amulets", "AC", ref _settings.maxACBonusForNeck, ref _settings.neckStackSize);
-                Div(0, 25);
-                BonusItemOptions("Rings", "AC", ref _settings.maxACBonusForRings, ref _settings.ringStackSize);
-                Div(0, 25);
-
                 Label("Consumables:", AutoWidth());
                 Space(10);
                 ConsumableOptions("Potions", ref _settings.sellPotions, ref _settings.potionStackSize);
