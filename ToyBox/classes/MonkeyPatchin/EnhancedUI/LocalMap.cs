@@ -148,12 +148,12 @@ namespace ToyBox.BagOfPatches {
                         // Now adjust the position of the mapBlock to  keep the FrameBlock in a fixed position
                         Position = mapBlock.localPosition;
                         Position.x = -3 - frameBlockRect.localPosition.x * zoom - width / (2 * worldZoom); // ??? this is a weird correction (make better?)
-                        Position.y = -22 - frameBlockRect.localPosition.y * zoom - width / (2 * worldZoom); // ??? this is a weird correction (make better?)
+                        Position.y = -22 - frameBlockRect.localPosition.y * zoom - width / (4 * worldZoom); // ??? this is a weird correction (make better?)
                         mapBlock.localPosition = Position;
                         // Now apply the zoom to MapBlock
                         var zoomVector = new Vector3(zoom, zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
-                        frameBlockRect.localScale = new Vector3(1f,1f, 1.0f);
+                        //frameBlockRect.localScale = new Vector3(1f,1f, 1.0f);
 
                         // Fix the pivot to ensure we stay centered when we zoom
                         mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
