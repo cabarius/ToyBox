@@ -29,6 +29,9 @@ using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using Kingmaker.UnitLogic.Interaction;
 using static ToyBox.BlueprintExtensions;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker;
+using Kingmaker.EntitySystem;
+using Kingmaker.View.MapObjects;
 
 namespace ToyBox {
 
@@ -72,7 +75,7 @@ namespace ToyBox {
                                                                    || element is ItemsEnough
                                                                    || element is Conditional
                                                                    ;
-        public static int GetUnitIterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
+        public static int InterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
 
         public static IEnumerable<IntrestingnessEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
             var spawnInterations = unit.Parts.Parts
@@ -129,7 +132,7 @@ namespace ToyBox {
                 //Mod.Debug($"checking {entry}");
                 var conditionals = entry.elements.OfType<Conditional>();
                 if (conditionals.Any()) {
-                    Mod.Debug($"found {conditionals.Count()} Conditionals");
+                    //Mod.Debug($"found {conditionals.Count()} Conditionals");
                     foreach (var conditional in conditionals) {
                         var newEntry = new IntrestingnessEntry(entry.unit, conditional, conditional.ConditionsChecker);
                         result.Add(newEntry);
@@ -141,6 +144,15 @@ namespace ToyBox {
             }
             result.UnionWith(elements);
             return result;
+        }
+        public static void RevealInterestingNPCs() {
+            if (Game.Instance?.State?.Units is { } unitsPool) {
+                var inerestingUnits = unitsPool.Where(u => u.InterestingnessCoefficent() > 0);
+                foreach (var unit in inerestingUnits) {
+                    Mod.Debug($"Revealing {unit.CharacterName}");
+                    unit.SetIsRevealedSilent(true);
+                }
+            }
         }
     }
 }

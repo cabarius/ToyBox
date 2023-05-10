@@ -97,7 +97,7 @@ namespace ToyBox {
                         if (Game.Instance?.State?.Units is { } unitsPool) {
                             var units = Settings.toggleInterestingNPCsShowHidden ? unitsPool.All : unitsPool.ToList();
                             conditionsBrowser.OnGUI(
-                                units.Where(u => u.GetUnitIterestingnessCoefficent() >= 1),
+                                units.Where(u => u.InterestingnessCoefficent() >= 1),
                                 () => units,
                                 i => i,
                                 u => u.CharacterName,
@@ -109,10 +109,12 @@ namespace ToyBox {
                                         if (Toggle("Show other versions of NPCs", ref Settings.toggleInterestingNPCsShowHidden))
                                             conditionsBrowser.ReloadData();
                                     }
+                                    25.space();
+                                    ActionButton("Reveal All On Map", RevealInterestingNPCs);
                                 },
                                 (_, u) => {
                                     var name = u.CharacterName;
-                                    var coefficient = u.GetUnitIterestingnessCoefficent();
+                                    var coefficient = u.InterestingnessCoefficent();
                                     if (coefficient > 0)
                                         name = name.orange();
                                     else

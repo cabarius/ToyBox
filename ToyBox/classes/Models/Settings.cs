@@ -133,6 +133,7 @@ namespace ToyBox {
         public bool toggleInvertYAxis = false;
         public bool toggleUseAltMouseWheelToAdjustClipPlane = false;
         public float fovMultiplier = 1;
+        public float AdjustedFovMultiplier => Math.Max(fovMultiplier, toggleZoomableLocalMaps ? 1.25f : 0.4f);
         public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;
 

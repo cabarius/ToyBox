@@ -81,10 +81,10 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(CameraZoom), nameof(CameraZoom.TickZoom))]
         private static class CameraZoom_TickZoom_Patch {
             private static bool firstCall = true;
-            private static float BaseFovMin => settings.toggleZoomOnAllMaps ? 12 : 17.5f;
+            private static float BaseFovMin => (settings.toggleZoomOnAllMaps || settings.toggleZoomableLocalMaps) ? 12 : 17.5f;
             private static readonly float BaseFovMax = 30;
             private static float FovMin => BaseFovMin / settings.fovMultiplier;
-            private static float FovMax => BaseFovMax * settings.fovMultiplier;
+            private static float FovMax => BaseFovMax * settings.AdjustedFovMultiplier;
             private static bool Prefix(CameraZoom __instance,
                         Coroutine ___m_ZoomRoutine,
                         float ___m_Smooth,
@@ -93,7 +93,7 @@ namespace ToyBox.BagOfPatches {
                         ref float ___m_SmoothScrollPosition,
                         Camera ___m_Camera,
                         float ___m_ZoomLenght) {
-                if (settings.fovMultiplier == 1) return true;
+                if (settings.fovMultiplier == 1 && !settings.toggleZoomableLocalMaps) return true;
                 if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse && (double)Input.GetAxis("Mouse ScrollWheel") != 0.0 && ((double)___m_Camera.fieldOfView > (double)FovMin || (double)Input.GetAxis("Mouse ScrollWheel") < 0.0)) {
                     if (settings.toggleUseAltMouseWheelToAdjustClipPlane && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.LeftShift))) {
                         var cameraRig = Game.Instance.UI.GetCameraRig();

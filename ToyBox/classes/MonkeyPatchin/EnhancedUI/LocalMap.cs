@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Area;
+using Kingmaker.Controllers;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI._ConsoleUI.Overtips;
@@ -9,14 +10,18 @@ using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Interaction;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
+using Kingmaker.View.MapObjects;
 using Kingmaker.Visual.LocalMap;
 using ModKit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.View;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -60,6 +65,37 @@ namespace ToyBox.BagOfPatches {
                 }
                 return false;
             }
+            [HarmonyPatch(nameof(LocalMapVM.SetMarkers))]
+            [HarmonyPrefix]
+            private static bool SetMarkers(LocalMapVM __instance) {
+                Mod.Debug($"LocalMapVM.SetMarkers");
+                LocalMapModel.Markers.RemoveWhere(m => m.GetMarkerType() == LocalMapMarkType.Invalid);
+                foreach (var marker in LocalMapModel.Markers)
+                    if (LocalMapModel.IsInCurrentArea(marker.GetPosition()))
+                        __instance.MarkersVm.Add(new LocalMapCommonMarkerVM(marker));
+                IEnumerable<UnitEntityData> first = Game.Instance.Player.PartyAndPets;
+                if (Game.Instance.Player.CapitalPartyMode)
+                    first = first.Concat(Game.Instance.Player.RemoteCompanions.Where(u => !u.IsCustomCompanion()));
+                foreach (var unit in first)
+                    if (unit.View != null && unit.View.enabled && !unit.IsHiddenBecauseDead &&
+                        LocalMapModel.IsInCurrentArea(unit.Position)) {
+                        __instance.MarkersVm.Add(new LocalMapCharacterMarkerVM(unit));
+                        __instance.MarkersVm.Add(new LocalMapDestinationMarkerVM(unit));
+                    }
+
+                foreach (var units in Game.Instance.Player.MainCharacter.Value.Memory.UnitsList) {
+                    Mod.Debug($"Checking {units.Unit.CharacterName}");
+                    if (!units.Unit.IsPlayerFaction
+                        && (units.Unit.IsVisibleForPlayer || units.Unit.InterestingnessCoefficent() > 0)
+                        && !units.Unit.Descriptor.State.IsDead
+                        && !units.Unit.State.Features.IsUntargetable.Value
+                        && LocalMapModel.IsInCurrentArea(units.Unit.Position)
+                       ) {
+                        __instance.MarkersVm.Add(new LocalMapUnitMarkerVM(units));
+                    }
+                }
+                return false;
+            }
         }
         // Modifies Local Map View to zoom the map for easier reading
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
@@ -99,7 +135,11 @@ namespace ToyBox.BagOfPatches {
                     ) {
                     if (settings.toggleZoomableLocalMaps) {
                         // Calculate a zoom factor based on info used previously to scale the Frame Block. In our new world we will center the Frame Block in middle of the ContentGroup and then pan the map behind it.  TODO - make it rotate so that it matches exactly the view of the camera (Frame Block will always point up)
-                        Zoom = width / (2 * sizeDelta.x);
+                        var worldWidth = (dr.WorldRect.z - dr.WorldRect.x);
+                        var fovMultiplier = settings.AdjustedFovMultiplier;
+                        var worldZoom = worldWidth /(fovMultiplier * 47f);
+                        Zoom = width / (worldZoom * sizeDelta.x);
+                        Mod.Log($"zoom: {Zoom} worldZoom: {worldZoom} sizeDelta: {sizeDelta} - screenRect:{dr.ScreenRect.z - dr.ScreenRect.x} worldRec:{dr.WorldRect.z - dr.WorldRect.x} proj:\n{dr.InverseViewProj}");
                         // save off the frame rotation so we can fix the camera movement when the map is open
                         FrameRotation = frame.localEulerAngles;
                         var zoom = Zoom;
@@ -107,12 +147,13 @@ namespace ToyBox.BagOfPatches {
 
                         // Now adjust the position of the mapBlock to  keep the FrameBlock in a fixed position
                         Position = mapBlock.localPosition;
-                        Position.x = -3 - frameBlockRect.localPosition.x * zoom - width / 4; // ??? this is a weird correction (make better?)
-                        Position.y = -22 - frameBlockRect.localPosition.y * zoom - width / 4; // ??? this is a weird correction (make better?)
+                        Position.x = -3 - frameBlockRect.localPosition.x * zoom - width / (2 * worldZoom); // ??? this is a weird correction (make better?)
+                        Position.y = -22 - frameBlockRect.localPosition.y * zoom - width / (2 * worldZoom); // ??? this is a weird correction (make better?)
                         mapBlock.localPosition = Position;
                         // Now apply the zoom to MapBlock
                         var zoomVector = new Vector3(zoom, zoom, 1.0f);
                         mapBlock.localScale = zoomVector;
+                        frameBlockRect.localScale = new Vector3(1f,1f, 1.0f);
 
                         // Fix the pivot to ensure we stay centered when we zoom
                         mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
@@ -277,8 +318,8 @@ namespace ToyBox.BagOfPatches {
             }
 
             private static void UpdateMarker(LocalMapMarkerPCView markerView, UnitEntityData unit) {
-                var count = unit.GetUnitIterestingnessCoefficent();
-                Mod.Debug($"{unit.CharacterName.orange()} -> unit intrestingness: {count}");
+                var count = unit.InterestingnessCoefficent();
+                //Mod.Debug($"{unit.CharacterName.orange()} -> unit interestingness: {count}");
                 //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
                 //Mod.Debug($"attentionMark: {attentionMark}");
                 var markImage = markerView.transform.FindChild("Mark").GetComponent<Image>();
@@ -301,7 +342,7 @@ namespace ToyBox.BagOfPatches {
             public static void BindViewImplementation(UnitOvertipView __instance) {
                 if (!settings.toggleShowInterestingNPCsOnLocalMap) return;
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
-                    var interestingness = entityOvertipVM.Unit.GetUnitIterestingnessCoefficent();
+                    var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
                     if (interestingness >= 1)
                         charName.color = new Color(0.6898f, 0.3771f, 0.0184f);
@@ -314,7 +355,7 @@ namespace ToyBox.BagOfPatches {
             public static void UpdateInternal(UnitOvertipView __instance, Vector3 canvasPosition) {
                 if (!settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
-                    var interestingness = entityOvertipVM.Unit.GetUnitIterestingnessCoefficent();
+                    var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
                     if (interestingness >= 1)
                         charName.color = new Color(0.6898f, 0.3771f, 0.0184f);
@@ -323,6 +364,54 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+        #if DEBUG
+        [HarmonyPatch(typeof(LocalMapMarkerPart))]
+        public static class LocalMapMarkerPartPatch {
+            [HarmonyPatch(nameof(LocalMapMarkerPart.OnTurnOn))]
+            [HarmonyPostfix]
+            public static void Markers() {
+                Mod.Error($"Marker Add");
+            }
+        }
+        [HarmonyPatch(typeof(AddLocalMapMarker.Runtime))]
+        public static class AddLocalMapMarkerPatch {
+            [HarmonyPatch(nameof(AddLocalMapMarker.Runtime.OnTurnOn))]
+            [HarmonyPostfix]
+            public static void Markers() {
+                Mod.Error($"Marker Add");
+            }
+        }
+        [HarmonyPatch(typeof(UnitEntityView))]
+        public static class UnitEntityViewPatch {
+            [HarmonyPatch(nameof(UnitEntityView.UpdateLootLocalMapMark))]
+            [HarmonyPostfix]
+            public static void Markers() {
+                //Mod.Error($"Marker Add");
+            }
+        }
+        #endif
+        #if false
+        [HarmonyPatch(typeof(EntityVisibilityForPlayerController))]
+        public static class AddLocalMapMarkerRuntimePatch {
+            [HarmonyPatch(nameof(EntityVisibilityForPlayerController.IsVisible), new Type[] { typeof(UnitEntityData)})]
+            [HarmonyPrefix]
+            private static bool IsUnitVisible(UnitEntityData unit, ref bool __result) {
+                if (unit.GetUnitIterestingnessCoefficent() > 0) {
+                    //__result = true;
+                    return false;
+                }
+                return true;
+            }
+            [HarmonyPatch(nameof(EntityVisibilityForPlayerController.IsVisible), new Type[] { typeof(MapObjectEntityData)})]
+            [HarmonyPrefix]
+            private static bool IsMapObjectVisible(MapObjectEntityData mapObject, ref bool __result) {
+                //__result = true;
+                return false;
+                //Mod.Debug($"MapObject: {mapObject}");
+                return true;
+            }
+        }
+        #endif
 
 
 #if false
