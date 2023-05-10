@@ -275,7 +275,7 @@
     <Compile Include="classes\MonkeyPatchin\PartyView.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
-    <Compile Include="classes\MonkeyPatchin\Vendor\TrashLoot.cs" />
+    <Compile Include="classes\MonkeyPatchin\Vendor\BulkSellLogic.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
