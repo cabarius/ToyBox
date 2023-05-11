@@ -28,11 +28,11 @@ using UnityEngine;
 
 namespace ToyBox {
     public static class LootHelper {
-        public static string NameAndOwner(this ItemEntity u, bool showRating) =>
+        public static string NameAndOwner(this ItemEntity u, bool showRating, bool darkmode = false) =>
             (showRating ? $"{u.Rating()} ".orange().bold() : "")
             + (u.Owner != null ? $"({u.Owner.CharacterName}) ".orange() : "")
-            + u.Name;
-        public static string NameAndOwner(this ItemEntity u) => u.NameAndOwner(Main.Settings.showRatingForEnchantmentInventoryItems);
+            + (darkmode ? u.Name.StripHTML().DarkModeRarity(u.Rarity()) : u.Name);
+        public static string NameAndOwner(this ItemEntity u, bool darkmode = false) => u.NameAndOwner(Main.Settings.showRatingForEnchantmentInventoryItems, darkmode);
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
             var rarity = item.Rarity();
             if ((int)rarity < (int)filter) return false;

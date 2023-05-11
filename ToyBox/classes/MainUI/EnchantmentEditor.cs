@@ -122,7 +122,7 @@ namespace ToyBox.classes.MainUI {
                     if (inventory.Count > 0) {
                         ActionSelectionGrid(
                             ref selectedItemIndex,
-                            inventory.Select(item => item.NameAndOwner()).ToArray(),
+                            inventory.Select(item => item.NameAndOwner(true)).ToArray(),
                             1,
                             index => selectedItem = inventory[selectedItemIndex],
                             rarityButtonStyle,
@@ -211,10 +211,10 @@ namespace ToyBox.classes.MainUI {
                             ActionButton("Sandal".cyan() + ", yer a Trickster!", () => {
                                 AddTricksterEnchantmentsTier1(item);
                             }, AutoWidth());
-                            ActionButton("Gimmie More!".Rarity(RarityType.Epic), () => {
+                            ActionButton("Gimmie More!".DarkModeRarity(RarityType.Epic), () => {
                                 AddTricksterEnchantmentsTier2or3(item, false);
                             }, rarityButtonStyle, AutoWidth());
-                            ActionButton("En-chaannt-ment".Rarity(RarityType.Legendary), () => {
+                            ActionButton("En-chaannt-ment".DarkModeRarity(RarityType.Legendary), () => {
                                 AddTricksterEnchantmentsTier2or3(item, true);
                             }, rarityButtonStyle, AutoWidth());
                             Label("Sandal".cyan() + " has discovered the mythic path of Trickster and can reveal hidden secrets in your items".green());
@@ -286,7 +286,7 @@ namespace ToyBox.classes.MainUI {
                         var enchantBP = enchant.Blueprint;
                         var name = enchantBP.name;
                         if (name != null && name.Length > 0) {
-                            name = name.Rarity(enchantBP.Rarity());
+                            name = name.DarkModeRarity(enchantBP.Rarity());
                             using (HorizontalScope()) {
                                 Label(name, Width(450));
                                 Space(25);
@@ -315,7 +315,7 @@ namespace ToyBox.classes.MainUI {
             
             for (var i = 0; i < enchantements.Count; i++) {
                 var enchant = enchantements[i];
-                var title = enchant.name.Rarity(enchant.Rarity());
+                var title = enchant.name.DarkModeRarity(enchant.Rarity());
                
                 using (HorizontalScope()) {
                     Space(5);

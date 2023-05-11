@@ -49,6 +49,19 @@ namespace ToyBox {
             RGBA.godly,
             RGBA.notable,
         };
+        public static RGBA[] DarkModeRarityColors = {
+            RGBA.none,
+            RGBA.trash,
+            RGBA.common,
+            RGBA.uncommon_dark,
+            RGBA.rare_dark,
+            RGBA.epic_dark,
+            RGBA.legendary_dark,
+            RGBA.mythic_dark,
+            RGBA.primal_dark,
+            RGBA.godly_dark,
+            RGBA.notable_dark,
+        };
         public const int RarityScaling = 10;
         public static RarityType Rarity(this int rating) {
             var rarity = rating switch {
@@ -150,6 +163,8 @@ namespace ToyBox {
         public static RarityType Rarity(this BlueprintItemEnchantment bp) => bp.Rating().Rarity();
         public static Color Color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
         public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
+        public static string DarkModeRarity(this string s, RarityType rarity, float adjust = 0) => s.color(DarkModeRarityColors[(int)rarity]);
+
         public static string RarityInGame(this string s, RarityType rarity, float adjust = 0) {
             var name = Settings.toggleColorLootByRarity ? s.color(RarityColors[(int)rarity]) : s;
             if (!Settings.toggleShowRarityTags) return name;
@@ -212,7 +227,7 @@ namespace ToyBox {
 }
 namespace ModKit {
     public static partial class UI {
-        public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(ref rarity, xCols, (n, rarity) => n.Rarity(rarity), rarityStyle, options);
-        public static void RarityGrid(string title, ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(title, ref rarity, xCols, (n, rarity) => n.Rarity(rarity), rarityStyle, options);
+        public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(ref rarity, xCols, (n, rarity) => n.DarkModeRarity(rarity), rarityStyle, options);
+        public static void RarityGrid(string title, ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(title, ref rarity, xCols, (n, rarity) => n.DarkModeRarity(rarity), rarityStyle, options);
     }
 }

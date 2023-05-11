@@ -9,6 +9,7 @@ namespace ModKit {
         crimson = 0x7b0340ff,
         cyan = 0x00ffffff,
         darkblue = 0x0000a0ff,
+        charcoal = 0x202020ff,
         darkgrey = 0x808080ff,
         darkred = 0xa0333bff,
         fuchsia = 0xff40ffff,
@@ -45,6 +46,14 @@ namespace ModKit {
         primal = 0x2cb8b4ff, //pink, red
         godly = 0x990033ff, // darkred,
         notable = 0x98761fff, //0xb1821fff, 0xffe000ff, // 0xC08020ff //0xffd840ff, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
+        uncommon_dark = 0x00a000ff, // 0x00882bff,  //0x00802bff, //0x68b020ff, // 0x60B020ff,
+        rare_dark = 0x1030e0ff, // 0x2060ffff,
+        epic_dark = 0x6030F0ff, //0x5020c0ff, 0x6030F0ff, 0xc260f1ff, // 0x79297bff, //0x9f608cff, // 0x885278ff, // 0xc260f1ff,      //0xc860fff,
+        legendary_dark = 0xe67821e0, // 0xad5537ff, 0xb8603dff, 0xaa623dff, 0x9a5a3dff,0x9a4a2dff, (1.4.23 and older) 0xe67821e0, // 0x9a4a2dff, // 0x984c31ff, //0xe67821ff, //* 0xe67821e0,  // 0xe67821ff, // 0xe68019ff // 0xEDCB1Aff,
+        mythic_dark = 0xA000A0ff, //0xc02369ff, 0xf03399ff, 0xc260f1ff, 0x8080ffff, //0x60ffffff, // 0x84e2d4ff, // 0x2cd8d4ff, // * 0x60ffffff,
+        primal_dark = 0x60ffffff, //pink, red
+        godly_dark = 0xa00000ff, // darkred,
+        notable_dark = 0x98761fff, //0xb1821fff, 0xffe000ff, // 0xC08020ff //0xffd840ff, // 0x40ff40c0, // 0xf03399ff, // 0xff3399ff,
     }
     public static class ColorUtils {
         public static Color color(this RGBA rga, float adjust = 0) {

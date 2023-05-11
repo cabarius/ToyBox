@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Kingmaker.UI.ServiceWindow;
+using UnityEngine;
 using UnityModManagerNet;
 
 namespace ModKit {
