@@ -311,7 +311,7 @@ namespace ToyBox {
                     vanillaMassSell = VendorHelper.IsAppropriateForMassSelling(item),
                     numberToSell = BulkSellLogic.canBulkSellCount(item)
                 })
-                .Where(item => item.item?.Owner != null && (item.vanillaMassSell || item.numberToSell > 0))
+                .Where(item =>item.vanillaMassSell || item.numberToSell > 0)
                 .Select(item => (new { item.item, quantity = item.vanillaMassSell ? -1 : item.numberToSell }))
                 .ToList();
 
@@ -323,6 +323,7 @@ namespace ToyBox {
                 Game.Instance.Vendor.AddForSell(item.item, item.quantity);
             });
 
+            __result = true;
 
             return false;
         }
