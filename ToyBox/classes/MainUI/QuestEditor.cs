@@ -67,7 +67,7 @@ namespace ToyBox {
         public static bool ShowInactive => Settings.toggleIntrestingNPCsShowFalseConditions;
         public static Player player => Game.Instance.Player;
         private static bool[] selectedQuests = new bool[0];
-        private static Browser<UnitEntityData, UnitEntityData> conditionsBrowser = new();
+        private static readonly Browser<UnitEntityData, UnitEntityData> ConditionsBrowser = new();
 
         public static void ResetGUI() { }
 
@@ -96,7 +96,7 @@ namespace ToyBox {
                         //if (Game.Instance?.State?.Units.All is { } units) {
                         if (Game.Instance?.State?.Units is { } unitsPool) {
                             var units = Settings.toggleInterestingNPCsShowHidden ? unitsPool.All : unitsPool.ToList();
-                            conditionsBrowser.OnGUI(
+                            ConditionsBrowser.OnGUI(
                                 units.Where(u => u.InterestingnessCoefficent() >= 1),
                                 () => units,
                                 i => i,
@@ -104,15 +104,15 @@ namespace ToyBox {
                                 u => u.CharacterName,
                                 () => {
                                     Toggle("Show Inactive Conditions", ref Settings.toggleIntrestingNPCsShowFalseConditions);
-                                    if (conditionsBrowser.ShowAll) {
+                                    if (ConditionsBrowser.ShowAll) {
                                         25.space();
                                         if (Toggle("Show other versions of NPCs", ref Settings.toggleInterestingNPCsShowHidden))
-                                            conditionsBrowser.ReloadData();
+                                            ConditionsBrowser.ReloadData();
                                     }
                                     25.space();
                                     ActionButton("Reveal All On Map", RevealInterestingNPCs);
                                 },
-                                (_, u) => {
+                                (u, _) => {
                                     var name = u.CharacterName;
                                     var coefficient = u.InterestingnessCoefficent();
                                     if (coefficient > 0)
@@ -125,7 +125,7 @@ namespace ToyBox {
                                     50.space();
                                     ReflectionTreeView.DetailToggle("", u.Parts.Parts);
                                 },
-                                (_, u) => {
+                                (u, _) => {
                                     ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
                                     var entries = u.GetUnitInteractionConditions();
                                     var checkerEntries = entries.Where(e => e.HasConditins && (ShowInactive || e.IsActive()));

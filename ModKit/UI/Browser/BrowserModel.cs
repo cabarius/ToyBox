@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using ModKit.Utility;
 
 namespace ModKit {
@@ -24,12 +26,34 @@ namespace ModKit {
         public Tagger GetTags;
     }
     
-    public class DataSource {
-        delegate void Updater(List<Entry> entries, int total);
-        public bool IsLoading { get; private set; }
-        public bool IsLoaded { get; private set; }
-        public void Start() { }
-        public void Cancel() { }
+    public abstract class DataSource<Data> {
+        public delegate void Updater(List<Entry> entries, int total, bool done = false);
+        public delegate Entry DataTransformer(Data data);
+        public Updater UpdateProgress;
+        public DataTransformer Transformer;
+        public bool IsLoading { get; private set; } = false;
+        public bool IsLoaded { get; private set; } = false;
+
+        private CancellationTokenSource _cancelToken;
+
+        public void Start() {
+            if (IsLoading) {
+                _cancelToken.Cancel();
+                IsLoading = false;
+            }
+            _cancelToken = new();
+            IsLoading = true;
+            Task.Run(() => LoadData());
+        }
+
+        public void Stop() {
+            if (IsLoading) {
+                IsLoading = false;
+                _cancelToken.Cancel();
+            }
+        }
+
+        protected abstract void LoadData();
 
     }
 

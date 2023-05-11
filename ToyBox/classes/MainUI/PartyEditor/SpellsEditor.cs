@@ -19,8 +19,8 @@ using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static Dictionary<UnitEntityData, Browser<Spellbook, BlueprintSpellbook>> SpellbookBrowserDict = new();
-        public static Dictionary<UnitEntityData, Browser<AbilityData, BlueprintAbility>> SpellBrowserDict = new();
+        public static Dictionary<UnitEntityData, Browser<BlueprintSpellbook, Spellbook>> SpellbookBrowserDict = new();
+        public static Dictionary<UnitEntityData, Browser<BlueprintAbility, AbilityData>> SpellBrowserDict = new();
         private static bool _startedLoading = false;
         public static int newSpellLvl = 0;
         public static List<Action> OnSpellsGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
@@ -67,7 +67,7 @@ namespace ToyBox {
                 else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
-                        spellBrowser = new Browser<AbilityData, BlueprintAbility>();
+                        spellBrowser = new Browser<BlueprintAbility, AbilityData>();
                         SpellBrowserDict[ch] = spellBrowser;
                     }
                     var maxLevel = spellbook.Blueprint.MaxSpellLevel;
@@ -139,7 +139,7 @@ namespace ToyBox {
                             if (!((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel)) {
                                 spells.ForEach((s) => availableSpells.Add(s.Blueprint));
                             }
-                            return availableSpells;
+                            return availableSpells.ToHashSet().ToList(); // todo: why are there duplicates here?
                         },
                         feature => feature.Blueprint,
                         blueprint => $"{GetTitle(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
@@ -191,7 +191,9 @@ namespace ToyBox {
                                 }
                             }
                         },
-                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellBrowser, feature, blueprint, ch, todo), (feature, blueprint) => {
+                        (blueprint, feature) => FactsEditor.BlueprintRowGUI(spellBrowser, feature,
+                        blueprint, ch, todo), 
+                        (blueprint, feature) => {
                             ReflectionTreeView.OnDetailGUI(blueprint);
                         }, 50, false, true, 100, 300, "", true);
                 }
@@ -204,7 +206,7 @@ namespace ToyBox {
         private static void SpellBookBrowserOnGUI(UnitEntityData ch, IEnumerable<Spellbook> spellbooks, List<Action> todo, bool forceShowAll = false) {
             var spellbookBrowser = SpellbookBrowserDict.GetValueOrDefault(ch, null);
             if (spellbookBrowser == null) {
-                spellbookBrowser = new Browser<Spellbook, BlueprintSpellbook>();
+                spellbookBrowser = new Browser<BlueprintSpellbook, Spellbook>();
                 SpellbookBrowserDict[ch] = spellbookBrowser;
             }
             if (forceShowAll) {
@@ -212,29 +214,35 @@ namespace ToyBox {
                 spellbookBrowser.needsReloadData = true;
             }
             spellbookBrowser.OnGUI(
-                        spellbooks,
-                        BlueprintExtensions.GetBlueprints<BlueprintSpellbook>,
-                        (feature) => feature.Blueprint,
-                        blueprint => $"{GetTitle(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
-                                        GetTitle,
-                        () => {
-                            using (HorizontalScope()) {
-                                Toggle("Show GUIDs", ref Main.Settings.showAssetIDs, 150.width());
-                                20.space();
-                                if (Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width()))
-                                    spellbookBrowser.ResetSearch();
-                                20.space();
-                                //                                Toggle("Show Inspector", ref Settings.factEditorShowInspector, 150.width());
-                                //                                20.space();
+                spellbooks,
+                BlueprintExtensions.GetBlueprints<BlueprintSpellbook>,
+                (feature) => feature.Blueprint,
+                blueprint => $"{GetTitle(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
+                GetTitle,
+                () => {
+                    using (HorizontalScope()) {
+                        Toggle("Show GUIDs", ref Main.Settings.showAssetIDs, 150.width());
+                        20.space();
+                        if (Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width()))
+                            spellbookBrowser.ResetSearch();
+                        20.space();
+                        //                                Toggle("Show Inspector", ref Settings.factEditorShowInspector, 150.width());
+                        //                                20.space();
 
-                                if (Toggle("Search Descriptions", ref Settings.searchDescriptions, 250.width())) {
-                                    spellbookBrowser.ResetSearch();
-                                }
-                            }
-                        },
-                        (feature, blueprint) => FactsEditor.BlueprintRowGUI(spellbookBrowser, feature, blueprint, ch, todo), (feature, blueprint) => {
-                            ReflectionTreeView.OnDetailGUI(blueprint);
-                        }, 50, false, true, 100, 300, "", true);
+                        if (Toggle("Search Descriptions", ref Settings.searchDescriptions, 250.width())) {
+                            spellbookBrowser.ResetSearch();
+                        }
+                    }
+                },
+                (blueprint, feature) => FactsEditor.BlueprintRowGUI(spellbookBrowser, feature, blueprint, ch, todo),
+                (blueprint, feature) => { ReflectionTreeView.OnDetailGUI(blueprint); },
+                50,
+                false,
+                true,
+                100,
+                300,
+                "",
+                true);
         }
     }
 }

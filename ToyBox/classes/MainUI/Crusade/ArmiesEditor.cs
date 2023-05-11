@@ -24,7 +24,7 @@ namespace ToyBox.classes.MainUI {
         public static IEnumerable<(GlobalMapArmyState, float)> playerArmies;
         public static IEnumerable<(GlobalMapArmyState, float)> demonArmies;
         public static string skillsSearchText = "";
-        public static Browser<BlueprintUnit, BlueprintUnit> browser = new(true, true);
+        public static Browser<BlueprintUnit, BlueprintUnit> mercenaryBrowser = new(true, true);
 
         public static void OnShowGUI() => UpdateArmies();
         public static void UpdateArmies() {
@@ -169,7 +169,7 @@ namespace ToyBox.classes.MainUI {
                     () => {
                         if (discloseMercenaryUnits) {
                             using (VerticalScope()) {
-                                browser.OnGUI(
+                                mercenaryBrowser.OnGUI(
                                         mercenaryUnits,
                                         () => {
                                             if (armyBlueprints == null || armyBlueprints?.Count() == 0) {
@@ -191,7 +191,7 @@ namespace ToyBox.classes.MainUI {
                                             25.space();
                                             Label("Recruitment Weight (Mercenary only)", AutoWidth());
                                         },
-                                        (bpUnit, unit) => {
+                                        (unit, _) => {
                                             var bluh = ummWidth - 50;
                                             var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
                                             Label(unit.GetDisplayName(), Width((int)titleWidth));
@@ -199,7 +199,7 @@ namespace ToyBox.classes.MainUI {
                                             bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
                                             ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
                                                         () => {
-                                                            browser.needsReloadData = true;
+                                                            mercenaryBrowser.needsReloadData = true;
                                                             if (isInMercPool) {
                                                                 mercenaryManager.RemoveMercenary(unit);
                                                                 isInMercPool = false;
@@ -212,7 +212,7 @@ namespace ToyBox.classes.MainUI {
                                                         }, 150.width());
                                             10.space();
                                             ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit", () => {
-                                                            browser.needsReloadData = true;
+                                                            mercenaryBrowser.needsReloadData = true;
                                                             if (isInKingdomPool) {
                                                                 var count = recruitsManager.GetCountInPool(unit);
                                                                 recruitsManager.DecreasePool(unit, count);

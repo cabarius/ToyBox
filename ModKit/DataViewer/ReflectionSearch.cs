@@ -72,7 +72,6 @@ namespace ModKit.DataViewer {
         public bool isSearching { get; private set; } = false;
         private static HashSet<int> VisitedInstanceIDs = new HashSet<int> { };
         public static int SequenceNumber = 0;
-        private IEnumerator searchCoroutine;
         private static ReflectionSearch _shared;
         public static int maxSearchDepth = 1;
         private static Queue<Action> _updates = new();

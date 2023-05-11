@@ -51,8 +51,7 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
+    </Reference>    <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -167,6 +166,7 @@
     <Compile Include="classes\Infrastructure\AssetLoader.cs" />
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensionsQuest.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintDataSource.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />

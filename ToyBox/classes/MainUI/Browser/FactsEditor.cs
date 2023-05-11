@@ -48,13 +48,13 @@ namespace ToyBox {
         private static readonly FeaturesTreeEditor treeEditor = new();
         private static readonly CollectionChangedSubscriber collectionChangedSubscriber = new();
 
-        private static readonly Dictionary<UnitEntityData, Browser<Feature, BlueprintFeature>> FeatureBrowserDict = new();
-        private static readonly Dictionary<UnitEntityData, Browser<Buff, BlueprintBuff>> BuffBrowserDict = new();
-        private static readonly Dictionary<UnitEntityData, Browser<Ability, BlueprintAbility>> AbilityBrowserDict = new();
-        private static readonly Browser<FeatureSelectionEntry, BlueprintFeature> FeatureSelectionBrowser = new() { IsDetailBrowser = true };
+        private static readonly Dictionary<UnitEntityData, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
+        private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
+        private static readonly Dictionary<UnitEntityData, Browser<BlueprintAbility, Ability>> AbilityBrowserDict = new();
+        private static readonly Browser<BlueprintFeature, FeatureSelectionEntry> FeatureSelectionBrowser = new() { IsDetailBrowser = true };
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { IsDetailBrowser = true };
 
-        public static void BlueprintRowGUI<Item, Definition>(Browser<Item, Definition> browser,
+        public static void BlueprintRowGUI<Item, Definition>(Browser<Definition, Item> browser,
                                                              Item feature, 
                                                              Definition blueprint, 
                                                              UnitEntityData ch, 
@@ -74,7 +74,7 @@ namespace ToyBox {
             if (blueprint is BlueprintFeatureSelection featureSelection
                 || blueprint is BlueprintParametrizedFeature parametrizedFeature
                 ) {
-                if (Browser.DetailToggle(text, blueprint, blueprint, (int)titleWidth)) 
+                if (Browser.DetailToggle(text, blueprint, feature != null ? feature : blueprint, (int)titleWidth)) 
                     browser.ReloadData();
             }
             else
@@ -136,7 +136,7 @@ namespace ToyBox {
             }
         }
 
-        public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Item, Definition> browser, List<Item> fact, string name)
+        public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Definition, Item> browser, List<Item> fact, string name)
             where Item : UnitFact
             where Definition : BlueprintUnitFact {
             bool updateTree = false;
@@ -173,8 +173,8 @@ namespace ToyBox {
                             }
                         }
                     },
-                    (feature, blueprint) => BlueprintRowGUI(browser,feature, blueprint, ch, todo),
-                    (feature, blueprint) => {
+                    (blueprint, feature) => BlueprintRowGUI(browser,feature, blueprint, ch, todo),
+                    (blueprint, feature) => {
                         ReflectionTreeView.OnDetailGUI(blueprint);
                         switch (blueprint) {
                             case BlueprintFeatureSelection featureSelection:
@@ -188,7 +188,7 @@ namespace ToyBox {
                                     f => $"{GetSearchKey(f)} " + (Settings.searchDescriptions ? f.Description : ""),
                                     GetTitle,
                                     null,
-                                    (selectionEntry, f) => {
+                                    (f, selectionEntry) => {
                                         var title = GetTitle(f).MarkedSubstring(FeatureSelectionBrowser.SearchText);
                                         if (selectionEntry != null) title = title.Cyan().Bold();
                                         var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f)) - 200;
@@ -250,27 +250,28 @@ namespace ToyBox {
                                       i => $"{i.Name} " + (Settings.searchDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
                                       i => i.Name,
                                       null,
-                                      (item, i) => {
-                                          var title = i.Name.MarkedSubstring(ParameterizedFeatureBrowser.SearchText);
+                                      (def , item) => {
+                                          var title = def.Name.MarkedSubstring(ParameterizedFeatureBrowser.SearchText);
+                                          // make the title cyan if we have the item
                                           if (item != null) title = title.Cyan().Bold();
 
                                           var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f));
                                           Label(title, Width(titleWidth));
                                           25.space();
-                                          if (ch.HasParameterizedFeatureItem(parametrizedFeature, i))
+                                          if (ch.HasParameterizedFeatureItem(parametrizedFeature, def))
                                               ActionButton("Remove", () => {
-                                                      ch.RemoveParameterizedFeatureItem(parametrizedFeature, i);
-                                                      FeatureSelectionBrowser.needsReloadData = true;
+                                                      ch.RemoveParameterizedFeatureItem(parametrizedFeature, def);
+                                                      ParameterizedFeatureBrowser.needsReloadData = true;
                                                       browser.needsReloadData = true;
                                                   }, 150.width());
                                           else
                                               ActionButton("Add", () => {
-                                                      ch.AddParameterizedFeatureItem(parametrizedFeature, i);
-                                                      FeatureSelectionBrowser.needsReloadData = true;
+                                                      ch.AddParameterizedFeatureItem(parametrizedFeature, def);
+                                                      ParameterizedFeatureBrowser.needsReloadData = true;
                                                       browser.needsReloadData = true;
                                                   }, 150.width());
                                           15.space();
-                                          Label(i.Param?.Blueprint?.GetDescription().StripHTML().MarkedSubstring(ParameterizedFeatureBrowser.SearchText).green());
+                                          Label(def.Param?.Blueprint?.GetDescription().StripHTML().MarkedSubstring(ParameterizedFeatureBrowser.SearchText).green());
                                       }, null, 100);
                                     });
                                     break;
@@ -282,7 +283,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
             var featureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
             if (featureBrowser == null) {
-                featureBrowser = new Browser<Feature, BlueprintFeature>(true, true) {};
+                featureBrowser = new Browser<BlueprintFeature, Feature>(true, true) {};
                 FeatureBrowserDict[ch] = featureBrowser;
             }
             return OnGUI(ch, featureBrowser, feature, "Features");
@@ -290,7 +291,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
             var buffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
             if (buffBrowser == null) {
-                buffBrowser = new Browser<Buff, BlueprintBuff>(true, true);
+                buffBrowser = new Browser<BlueprintBuff, Buff>(true, true);
                 BuffBrowserDict[ch] = buffBrowser;
             }
             return OnGUI(ch, buffBrowser, buff, "Buffs");
@@ -298,7 +299,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
             var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
             if (abilityBrowser == null) {
-                abilityBrowser = new Browser<Ability, BlueprintAbility>(true, true);
+                abilityBrowser = new Browser<BlueprintAbility, Ability>(true, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
             return OnGUI(ch, abilityBrowser, ability, "Abilities");

@@ -39,7 +39,7 @@ namespace ModKit {
                 }
             }
         }
-        public class Browser<Item, Definition> : Browser {
+        public class Browser<Definition, Item> : Browser {
             // Simple browser that displays a searchable collection of items along with a collection of available definitions.
             // It provides a toggle to show the definitions mixed in with the items. 
             // By default it shows just the title but you can provide an optional RowUI to show more complex row UI including buttons to add and remove items and so forth. This will be layed out after the title
@@ -99,8 +99,8 @@ namespace ModKit {
                 Func<Definition, string> searchKey,
                 Func<Definition, string> sortKey,
                 Action onHeaderGUI = null,
-                Action<Item, Definition> onRowGUI = null,
-                Action<Item, Definition> onDetailGUI = null,
+                Action<Definition, Item> onRowGUI = null,
+                Action<Definition, Item> onDetailGUI = null,
                 int indent = 50,
                 bool showDiv = true,
                 bool search = true,
@@ -203,10 +203,10 @@ namespace ModKit {
                     if (onRowGUI != null) {
                         using (HorizontalScope(AutoWidth())) {
                             space(indent);
-                            onRowGUI(item, def);
+                            onRowGUI(def, item);
                         }
                     }
-                    onDetailGUI?.Invoke(item, def);
+                    onDetailGUI?.Invoke(def, item);
                 }
             }
 

@@ -26,7 +26,7 @@ namespace ToyBox.classes.MainUI {
         private static bool _customBrain = false;
         private static string _brainSearchText = "";
 
-        public static Browser<AiAction, BlueprintAiAction> ActionBrowser = new(true, true);
+        public static Browser<BlueprintAiAction, AiAction> ActionBrowser = new(true, true);
         public static Browser<Consideration, Consideration> ConsiderationBrowser = new(true, true);
         public static Dictionary<BlueprintAiAction, Browser<Consideration, Consideration>> TargetConsiderationBrowser = new();
 
@@ -78,14 +78,14 @@ namespace ToyBox.classes.MainUI {
                 bp => bp.GetDisplayName(),
                 bp => $"{bp.GetDisplayName()} {bp.GetDescription()}",
                 null,
-                (action, bp) => {
+                (bp, action) => {
                     Browser.DetailToggle(bp.GetDisplayName(), bp, bp);
-                    ReflectionTreeView.DetailToggle("Inspect", bp, action);
+                    ReflectionTreeView.DetailToggle("Inspect", bp, action != null ? action : bp);
                     var attributes = bp.GetCustomAttributes();
                     var text = String.Join("\n", attributes.Select((name, value) => $"{name}: {value}"));
                     Label($"{text.green()}", AutoWidth());
                 },
-                (action, bp) => {
+                (bp, action) => {
                     ReflectionTreeView.OnDetailGUI((bp));
                     Browser.OnDetailGUI(bp, _ => {
                         if (action?.ActorConsiderations.Count > 0) {
@@ -100,15 +100,15 @@ namespace ToyBox.classes.MainUI {
                                c => c.GetDisplayName(),
                                c => c.GetDisplayName(),
                                null,
-                               (c, bp) => {
+                               (bp, c) => {
                                    Label(c.GetDisplayName());
-                                   ReflectionTreeView.DetailToggle("", c);
+                                   ReflectionTreeView.DetailToggle("", bp, c ?? bp);
 
                                    var attributes = bp.GetCustomAttributes();
                                    var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                    Label(text.green(), AutoWidth());
                                },
-                               (_, c) => ReflectionTreeView.OnDetailGUI(c, 150),
+                               (bp, _) => ReflectionTreeView.OnDetailGUI(bp, 150),
                                150, true, false
                               );
                         }
@@ -128,14 +128,14 @@ namespace ToyBox.classes.MainUI {
                             c => c.GetDisplayName(),
                             c => c.GetDisplayName(),
                             null,
-                            (c, bp) => {
+                            (bp, c) => {
                                 Label(c.GetDisplayName());
-                                ReflectionTreeView.DetailToggle("", c);
+                                ReflectionTreeView.DetailToggle("", bp);
                                 var attributes = bp.GetCustomAttributes();
                                 var text = string.Join("\n", attributes.Select((name, value) => $"{name} : {value}"));
                                 Label(text.green(), AutoWidth());
                             },
-                            (_, c) => ReflectionTreeView.OnDetailGUI(c, 150),
+                            (bp, _) => ReflectionTreeView.OnDetailGUI(bp, 150),
                             150, true, false
                             );
                     });

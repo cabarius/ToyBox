@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using static ModKit.UI;
 using static ModKit.Utility.StringExtensions;
+using Object = System.Object;
 
 namespace ModKit.DataViewer {
     public class ReflectionTreeView {
@@ -35,6 +36,10 @@ namespace ModKit.DataViewer {
             ExpandedObjects.TryGetValue(key, out var reflectionTreeView);
             if (reflectionTreeView != null) {
                 reflectionTreeView.Indent = indent;
+                using (HorizontalScope()) {
+                    Space(indent);
+                    Label("Inspecting: ".grey() + reflectionTreeView.Root.ToString().orange().bold());
+                }
                 reflectionTreeView.OnGUI(false);
                 return true;
             } else {
