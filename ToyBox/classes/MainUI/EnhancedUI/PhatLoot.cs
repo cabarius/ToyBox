@@ -285,9 +285,7 @@ namespace ToyBox {
                    () => {
                        if (!Settings.toggleCustomBulkSell) return;
                        using (VerticalScope()) {
-                           Div(0, 25);
                            BulkSell.OnGUI();
-
                        }
 
                    });

@@ -38,6 +38,16 @@ namespace ModKit {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
+        public static void TitleLabel(string title, params GUILayoutOption[] options) {
+            using (VerticalScope(options.AddDefaults())) {
+                Rect lastRect;
+                using (HorizontalScope(options.AddDefaults())) {
+                    GL.Label(title,AutoWidth());
+                    lastRect = GUILayoutUtility.GetLastRect();
+                }
+                DivLast(lastRect);
+            }
+        }
         public static void ClipboardLabel(string title, params GUILayoutOption[] options) => GUILayout.TextArea(title, options);
         public static void HelpLabel(string title, params GUILayoutOption[] options) => Label(title.green(), options);
         public static void HelpLabel(string title, GUIStyle style, params GUILayoutOption[] options) => Label(title.green(), style, options);

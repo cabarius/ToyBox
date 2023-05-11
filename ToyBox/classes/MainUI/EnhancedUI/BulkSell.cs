@@ -11,19 +11,23 @@ namespace ToyBox {
         private static readonly BulkSellSettings _settings = Main.Settings.bulkSellSettings;
 
         public static void OnGUI() {
-            void BonusItemOptions(string itemTypeName, string bonusType, ref int enchantLevel, ref int stackSize) {
-                    Label($"{itemTypeName.Cyan()}:", 150.width());
-                    Label($"{bonusType.orange()}", 150.width() );
-                    Space(-250);
-                    Slider("", ref enchantLevel, 0, 20, 0, "", 300.width());
-                    Space(-270);
-                    Slider("", ref stackSize, 0, 20, 1, "", 300.width());
+            void BonusItemOptions(string itemTypeName, string bonusType, ref int enchantLevel, ref int stackSize, Action accessory = null) {
+                using (HorizontalScope()) {
+                    Label($"{itemTypeName.Cyan()}:", 180.width());
+                    Label($"{bonusType.orange()}", 150.width());
+                    Slider(ref enchantLevel, 0, 20, 0, "", 300.width());
+                    Slider(ref stackSize, 0, 20, 1, "", 300.width());
+                    accessory?.Invoke();
+                }
             }
 
             void ConsumableOptions(string itemTypeName, ref bool sellToggle, ref int stackSize) {
-                    Toggle($"Sell {itemTypeName}", ref sellToggle, AutoWidth());
-                    Space(0);
-                    Slider("Minimum amount (per type) to leave in inventory", ref stackSize, 0, 200, 1, "", AutoWidth());
+                using (HorizontalScope()) {
+                    Toggle($"Sell {itemTypeName}", ref sellToggle, 150.width());
+                    Space(25);
+                    Label("Amount To Keep".Cyan(), 150.width());
+                    Slider(ref stackSize, 0, 200, 1, "", AutoWidth());
+                }
             }
 
             void DamageTypeOptions<T>(string title, SerializableDictionary<T, bool> settings) where T : Enum {
@@ -49,49 +53,39 @@ namespace ToyBox {
             using (VerticalScope()) {
                 // create GUI sections
                 using (HorizontalScope()) {
-                    Label("Category".Cyan(),150.width());
-                    Label("Type".Cyan(), 150.width());
-                    80.space();
-                    Label("Max Modifier".Cyan(), 300.width());
-                    165.space();
-                    Label("Amount to Keep Around".Cyan(), 300.width());
+                    TitleLabel("Category".Cyan(),178.width());
+                    TitleLabel("Type".Cyan(), 150.width());
+                    5.space();
+                    TitleLabel("Max Modifier".Cyan(), 300.width());
+                    190.space();
+                    TitleLabel("Amount To Keep".Cyan(), 300.width());
                 }
-
+                BonusItemOptions("Armors",
+                                 "enchantment",
+                                 ref _settings.armorEnchantLevel,
+                                 ref _settings.armorStackSize,
+                                 () => Toggle("Sell unique armors", ref _settings.sellUniqueArmors)
+                                 );
+                BonusItemOptions("Shields",
+                                 "enchantment",
+                                 ref
+                                 _settings.shieldEnchantLevel,
+                                 ref _settings.shieldStackSize,
+                                 () => Toggle("Sell unique shields", ref _settings.sellUniqueShields));
+                BonusItemOptions("Belts", "attribute", ref _settings.maxAttributeBonusForBelt, ref _settings.beltStackSize);
+                BonusItemOptions("Head items", "attribute", ref _settings.maxAttributeBonusForHead, ref _settings.headStackSize);
+                BonusItemOptions("Cloaks", "save", ref _settings.maxSaveBonusForCloaks, ref _settings.cloakStackSize);
+                BonusItemOptions("Bracers", "AC", ref _settings.maxACBonusForBracers, ref _settings.bracerStackSize);
+                BonusItemOptions("Amulets", "AC", ref _settings.maxACBonusForNeck, ref _settings.neckStackSize);
+                BonusItemOptions("Rings", "AC", ref _settings.maxACBonusForRings, ref _settings.ringStackSize);
+                BonusItemOptions("Weapons",
+                                 "enchantment",
+                                 ref _settings.weaponEnchantLevel,
+                                 ref _settings.weaponStackSize,
+                                 () => Toggle("Sell unique weapons", ref _settings.sellUniqueWeapons)
+                                 );
                 using (HorizontalScope()) {
-                    BonusItemOptions("Armors", "enchantment", ref _settings.armorEnchantLevel, ref _settings.armorStackSize);
-                    25.space();
-                    Toggle("Sell unique armors", ref _settings.sellUniqueArmors, AutoWidth());
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Shields", "enchantment", ref _settings.shieldEnchantLevel, ref _settings.shieldStackSize);
-                    25.space();
-                    Toggle("Sell unique shields", ref _settings.sellUniqueShields, AutoWidth());
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Belts", "attribute", ref _settings.maxAttributeBonusForBelt, ref _settings.beltStackSize);
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Head items", "attribute", ref _settings.maxAttributeBonusForHead, ref _settings.headStackSize);
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Cloaks", "save", ref _settings.maxSaveBonusForCloaks, ref _settings.cloakStackSize);
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Bracers", "AC", ref _settings.maxACBonusForBracers, ref _settings.bracerStackSize);
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Amulets", "AC", ref _settings.maxACBonusForNeck, ref _settings.neckStackSize);
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Rings", "AC", ref _settings.maxACBonusForRings, ref _settings.ringStackSize);
-                }
-                using (HorizontalScope()) {
-                    BonusItemOptions("Weapons", "enchantment", ref _settings.weaponEnchantLevel, ref _settings.weaponStackSize);
-                    25.space();
-                    Toggle("Sell unique weapons", ref _settings.sellUniqueWeapons, AutoWidth());
-                }
-                using (HorizontalScope()) {
-                    150.space();
+                    180.space();
                     DisclosureToggle("Damage Types".Cyan(), ref _settings.showWeaponEnergyTypes, 240f);
                     if (_settings.showWeaponEnergyTypes) {
                         using (VerticalScope()) {
@@ -102,15 +96,12 @@ namespace ToyBox {
                         }
                     }
                 }
-                Label("Consumables:", AutoWidth());
-                Space(10);
-                ConsumableOptions("Potions", ref _settings.sellPotions, ref _settings.potionStackSize);
-                Space(10);
-                ConsumableOptions("Scrolls", ref _settings.sellScrolls, ref _settings.scrollStackSize);
-                Space(10);
-                ConsumableOptions("Ingredients", ref _settings.sellIngredients, ref _settings.ingredientStackSize);
-                Space(10);
-
+                Label("Consumables", AutoWidth());
+                DivLast();
+                 ConsumableOptions("Potions", ref _settings.sellPotions, ref _settings.potionStackSize);
+                 ConsumableOptions("Scrolls", ref _settings.sellScrolls, ref _settings.scrollStackSize);
+                 ConsumableOptions("Ingredients", ref _settings.sellIngredients, ref _settings.ingredientStackSize);
+ 
                 Div(0, 25);
                 Slider("Change all enhancement modifiers", ref _settings.globalModifier, 0, 10, 0, "", AutoWidth());
                 ActionButton("Apply", () => {
