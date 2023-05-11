@@ -36,10 +36,10 @@ namespace ToyBox {
                 return 0;
             }
 
-            var args = new CountArgs { 
+            var args = new CountArgs {
                 itemInventoryCount = Game.Instance.Player.Inventory.Count(item.Blueprint),
                 itemStackCount = item.Count,
-                settings = Main.Settings.bulkSellSettings 
+                settings = Main.Settings.bulkSellSettings
             };
 
             var entityToSell = item switch {
@@ -50,10 +50,10 @@ namespace ToyBox {
                 _ => 0
             };
 
-            if (entityToSell > 0 ) {
+            if (entityToSell > 0) {
                 return entityToSell;
             }
-            
+
             var blueprintToSell = item.Blueprint switch {
                 BlueprintIngredient _ => ShouldSellHowManyOfThisIngredient(args),
                 BlueprintItemEquipmentBelt belt => ShouldSellHowManyOfThisBelt(belt, args),
@@ -69,7 +69,7 @@ namespace ToyBox {
         }
 
         private static int ShouldSellHowManyOfThisWeapon(ItemEntityWeapon weapon, CountArgs args) {
-            
+
             bool shouldSellMasterwork =
                     Game.Instance.Player.UISettings.OptionsDictionary[VendorHelper.SaleOptions.MasterWork];
 
@@ -80,8 +80,8 @@ namespace ToyBox {
             string defName = weapon.Blueprint.DefaultNonIdentifiedName ?? "";
             string preEncNames = weapon.Blueprint.GetEnchantmentPrefixes() ?? "";
             string postEncNames = weapon.Blueprint.GetEnchantmentSuffixes() ?? "";
-            string materialName = weapon.Blueprint.DamageType.Physical.Material == 0 
-                ? "" 
+            string materialName = weapon.Blueprint.DamageType.Physical.Material == 0
+                ? ""
                 : LocalizedTexts.Instance.DamageMaterial.GetText(weapon.Blueprint.DamageType.Physical.Material) ?? "";
 
             var hasUniqueName = !weapon.Name.Contains(defName) || !weapon.Name.Contains(preEncNames) ||
@@ -92,14 +92,15 @@ namespace ToyBox {
             }
 
 
-            var nonPhysicalDamageMatchesSettings = weapon.Blueprint.Enchantments.All(e => {
+            var nonPhysicalDamageMatchesSettings = weapon.Blueprint?.Enchantments?.All(e => {
                 var energy = e.GetComponent<WeaponEnergyDamageDice>();
                 var reality = e.GetComponent<WeaponReality>();
                 var alignment = e.GetComponent<WeaponAlignment>();
-                return args.settings.damageEnergy[energy.Element] &&
-                        args.settings.damageReality[reality.Reality] &&
-                        args.settings.damageAlignment[alignment.Alignment];
-            });
+                var matchesEnergy = energy == null || args.settings.damageEnergy[energy.Element];
+                var matchesReality = reality == null || args.settings.damageReality[reality.Reality];
+                var matchesAlignment = alignment == null || args.settings.damageAlignment[alignment.Alignment];
+                return matchesEnergy && matchesReality && matchesAlignment;
+            }) ?? true;
 
             var physicalDamage = Enum.GetValues(typeof(PhysicalDamageMaterial)) as IEnumerable<PhysicalDamageMaterial>;
 
@@ -236,7 +237,7 @@ namespace ToyBox {
         private static int ShouldSellHowManyOfThisNecklace(BlueprintItemEquipmentNeck necklace, CountArgs args) {
             if ((necklace.Enchantments.Count == 1 &&
                     necklace.Enchantments.TrueForAll(e =>
-                        isNaturalArmorEnc(e, args.settings.maxACBonusForNeck) || 
+                        isNaturalArmorEnc(e, args.settings.maxACBonusForNeck) ||
                         isMightyFistsEnc(e, args.settings.maxACBonusForNeck))) ||
                         isAgileFistsEnc(necklace, args.settings.maxACBonusForNeck)) {
                 return Mathf.Min(args.itemInventoryCount - args.settings.neckStackSize, args.itemStackCount);
