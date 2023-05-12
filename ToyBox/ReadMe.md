@@ -48,7 +48,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed bug where mass loot would not come up in situations with no ground loot
 * (***Narria***) Fixed bug where NPC portraits were missing if you had **Expand Dialog To Include Remote Companions ** but not **Include Former Companions**
 * (***Narria***) Fixed bug with missing NPC dialog
-* (***Narria***) Fixed crasher with add all units in armies editor
+* (***Narria***) Fixed crasher with add all Mercenaries in Mercenaries editor
 * (***Narria***) Cleaned up UI of Mercenaries Editor
  * (***ADDB***) Initial support for localization
  * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
