@@ -13,9 +13,16 @@ namespace ToyBox {
             HStack("Character Creation".localize(), 1,
                 () => {
                     using (VerticalScope()) {
-                        Slider("Build Points (Main)".localize(), ref settings.characterCreationAbilityPointsPlayer, 1, 600, 25, "", AutoWidth());
                         using (HorizontalScope()) {
-                            Slider("Build Points (Mercenary)".localize(), ref settings.characterCreationAbilityPointsMerc, 1, 600, 20, "", AutoWidth());
+                            Slider("Build Points (Main)".localize(), ref settings.characterCreationAbilityPointsPlayer, 1, 600, 25, "", 300.width());
+                            25.space();
+                            Toggle("Ignore Game Minimum".localize(), ref settings.characterCreationAbilityPointsOverrideGameMinimums);
+                            25.space();
+                            HelpLabel("Tick this if you want these sliders to let you go below game specified minimum point value".localize());
+                            Space();
+                        }
+                        using (HorizontalScope()) {
+                            Slider("Build Points (Mercenary)".localize(), ref settings.characterCreationAbilityPointsMerc, 1, 600, 25, "", AutoWidth());
                         }
                     }
                 },
