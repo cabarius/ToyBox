@@ -74,6 +74,7 @@ namespace ToyBox.classes.MainUI {
                 IsInRecruitPool[entry.GetHashCode()] = recruitPool.Contains(entry);
                 IsInMercenaryPool[entry.GetHashCode()] = KingdomState.Instance.MercenariesManager.HasUnitInPool(entry);
             }
+            mercenaryBrowser?.ReloadData();
         }
         public static void AddAllCurrentUnits() {
             var playerArmies = from army in ArmiesByDistanceFromPlayer()
@@ -82,10 +83,13 @@ namespace ToyBox.classes.MainUI {
             foreach (var army in playerArmies) {
                 foreach (var squad in army.Item1.Data.Squads) {
                     var unit = squad.Unit.GetHashCode();
-                    if (!IsInMercenaryPool[unit] && !IsInRecruitPool[unit]) {
+                    bool hasMercenary = IsInMercenaryPool.ContainsKey(unit) && IsInMercenaryPool[unit];
+                    bool hasRecruit = IsInRecruitPool.ContainsKey(unit) && IsInRecruitPool[unit];
+                    if (!hasMercenary && !hasRecruit) {
                         KingdomState.Instance.MercenariesManager.AddMercenary(squad.Unit, 1);
                     }
                 }
+                LoadMercenaryData();
             }
         }
         public static bool discloseMercenaryUnits = false;
@@ -183,20 +187,25 @@ namespace ToyBox.classes.MainUI {
                                         () => {
                                             var bluh = ummWidth - 50;
                                             var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
-                                            Label("Unit", Width((int)titleWidth));
-                                            35.space();
-                                            Label("Action", Width(310));
-                                            28.space();
-                                            Label("Pool", Width(200));
-                                            25.space();
-                                            Label("Recruitment Weight (Mercenary only)", AutoWidth());
+                                            TitleLabel("Unit", Width((int)titleWidth));
+                                            125.space();
+                                            TitleLabel("Action", Width(210));
+                                            20.space();
+                                            TitleLabel("Pool", Width(200));
+                                            20.space();
+                                            TitleLabel("Recruitment Weight (Mercenary only)", AutoWidth());
                                         },
                                         (unit, _) => {
                                             var bluh = ummWidth - 50;
                                             var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
-                                            Label(unit.GetDisplayName(), Width((int)titleWidth));
                                             bool isInMercPool = IsInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
                                             bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
+                                            var title = unit.GetDisplayName();
+                                            if (isInKingdomPool) 
+                                                title = title.orange().bold();
+                                            else if (isInMercPool) 
+                                                title = title.cyan().bold();
+                                            Label(title, Width((int)titleWidth));
                                             ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
                                                         () => {
                                                             mercenaryBrowser.needsReloadData = true;
