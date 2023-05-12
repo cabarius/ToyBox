@@ -77,7 +77,9 @@ namespace ToyBox.classes.MainUI {
             mercenaryBrowser?.ReloadData();
         }
         public static void AddAllCurrentUnits() {
-            var playerArmies = from army in ArmiesByDistanceFromPlayer()
+            var armies = ArmiesByDistanceFromPlayer();
+            if (armies is null) return;
+            var playerArmies = from army in armies
                                where army.Item1.Data.Faction == ArmyFaction.Crusaders
                                select army;
             foreach (var army in playerArmies) {
@@ -146,115 +148,130 @@ namespace ToyBox.classes.MainUI {
                 recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
                 mercenaryUnits.AddRange(recruitPool);
             }
-            HStack("Mercenaries", 1,
-                    () => {
-                        ActionButton("Add All Units", () => AddAllCurrentUnits(), 200.width());
-                        110.space();
-                        Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units.".green());
-                    },
-                    () => {
-                        BindableActionButton(RerollAll, 200.width());
-                        Space(-93);
-                        Label("Rerolls Mercenary Units for free.".green());
-                    },
-                    () => {
-                        ValueAdjustorEditable("Mercenary Slots", () => mercenaryManager.MaxAllowedSlots,
-                            v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots), 1, 0, 200);
-                    },
-                    () => {
-                        using (VerticalScope()) {
-                            Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth());
-                            10.space();
-                            Div();
-                            15.space();
-                        }
-                    },
-                    () => DisclosureToggle("Show Recruitment Pools".Orange(), ref discloseMercenaryUnits),
-                    () => {
-                        if (discloseMercenaryUnits) {
-                            using (VerticalScope()) {
-                                mercenaryBrowser.OnGUI(
-                                        mercenaryUnits,
-                                        () => {
-                                            if (armyBlueprints == null || armyBlueprints?.Count() == 0) {
-                                                LoadMercenaryData();
-                                            }
-                                            return armyBlueprints;
-                                        },
-                                        (unit) => unit,
-                                        (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
-                                        (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
-                                        () => {
-                                            var bluh = ummWidth - 50;
-                                            var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
-                                            TitleLabel("Unit", Width((int)titleWidth));
-                                            125.space();
-                                            TitleLabel("Action", Width(210));
-                                            20.space();
-                                            TitleLabel("Pool", Width(200));
-                                            20.space();
-                                            TitleLabel("Recruitment Weight (Mercenary only)", AutoWidth());
-                                        },
-                                        (unit, _) => {
-                                            var bluh = ummWidth - 50;
-                                            var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
-                                            bool isInMercPool = IsInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
-                                            bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
-                                            var title = unit.GetDisplayName();
-                                            if (isInKingdomPool) 
-                                                title = title.orange().bold();
-                                            else if (isInMercPool) 
-                                                title = title.cyan().bold();
-                                            Label(title, Width((int)titleWidth));
-                                            ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
-                                                        () => {
-                                                            mercenaryBrowser.needsReloadData = true;
-                                                            if (isInMercPool) {
-                                                                mercenaryManager.RemoveMercenary(unit);
-                                                                isInMercPool = false;
-                                                            }
-                                                            else {
-                                                                mercenaryManager.AddMercenary(unit, 1);
-                                                                isInMercPool = true;
-                                                            }
-                                                            IsInMercenaryPool[unit.GetHashCode()] = isInMercPool;
-                                                        }, 150.width());
-                                            10.space();
-                                            ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit", () => {
-                                                            mercenaryBrowser.needsReloadData = true;
-                                                            if (isInKingdomPool) {
-                                                                var count = recruitsManager.GetCountInPool(unit);
-                                                                recruitsManager.DecreasePool(unit, count);
-                                                                isInKingdomPool = false;
-                                                            }
-                                                            else {
-                                                                var pool = recruitsManager.Pool;
-                                                                var count = pool.Sum(r => r.Count) / pool.Count;
-                                                                recruitsManager.IncreasePool(unit, count);
-                                                                isInKingdomPool = true;
-                                                            }
-                                                            IsInRecruitPool[unit.GetHashCode()] = isInKingdomPool;
-                                                        }, 150.width());
-                                            var poolText = $"{(isInMercPool ? $"Merc".cyan() : "")} {(isInKingdomPool ? $"Recruit ({recruitsManager.GetCountInPool(unit)})".orange() : "")}".Trim();
-                                            50.space();
-                                            Label(poolText, Width(200));
-                                            25.space();
-                                            if (isInMercPool) {
-                                                var poolInfo = mercenaryManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
-                                                if (poolInfo != null) {
-                                                    var weight = poolInfo.Weight;
-                                                    if (LogSliderCustomLabelWidth("Weight", ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
-                                                        poolInfo.UpdateWeight(weight);
-                                                    }
-                                                }
-                                                else {
-                                                    Label("Weird", AutoWidth());
-                                                }
-                                            }
-                                        });
-                            }
-                        }
-                    });
+            HStack("Mercenaries",
+                   1,
+                   () => {
+                       if (playerArmies != null) {
+                           ActionButton("Add All Current Units", () => AddAllCurrentUnits(), 200.width());
+                           110.space();
+                           Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units.".green());
+                       }
+                       else {
+                           Label("Need Armies To Add All Current Units".yellow());
+                           25.space();
+                           HelpLabel("You should be on the global map and have the Crusade active");
+                       }
+                   },
+                   () => {
+                       BindableActionButton(RerollAll, 200.width());
+                       Space(-93);
+                       Label("Rerolls Mercenary Units for free.".green());
+                   },
+                   () => {
+                       ValueAdjustorEditable("Mercenary Slots",
+                                             () => mercenaryManager.MaxAllowedSlots,
+                                             v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots),
+                                             1,
+                                             0,
+                                             200);
+                   },
+                   () => {
+                       using (VerticalScope()) {
+                           Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth());
+                           10.space();
+                           Div();
+                           15.space();
+                       }
+                   },
+                   () => DisclosureToggle("Show Recruitment Pools".Orange(), ref discloseMercenaryUnits),
+                   () => {
+                       if (discloseMercenaryUnits) {
+                           using (VerticalScope()) {
+                               mercenaryBrowser.OnGUI(
+                                   mercenaryUnits,
+                                   () => {
+                                       if (armyBlueprints == null || armyBlueprints?.Count() == 0) {
+                                           LoadMercenaryData();
+                                       }
+                                       return armyBlueprints;
+                                   },
+                                   (unit) => unit,
+                                   (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
+                                   (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
+                                   () => {
+                                       var bluh = ummWidth - 50;
+                                       var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
+                                       TitleLabel("Unit", Width((int)titleWidth));
+                                       125.space();
+                                       TitleLabel("Action", Width(210));
+                                       20.space();
+                                       TitleLabel("Pool", Width(200));
+                                       20.space();
+                                       TitleLabel("Recruitment Weight (Mercenary only)", AutoWidth());
+                                   },
+                                   (unit, _) => {
+                                       var bluh = ummWidth - 50;
+                                       var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
+                                       bool isInMercPool = IsInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
+                                       bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
+                                       var title = unit.GetDisplayName();
+                                       if (isInKingdomPool)
+                                           title = title.orange().bold();
+                                       else if (isInMercPool)
+                                           title = title.cyan().bold();
+                                       Label(title, Width((int)titleWidth));
+                                       ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
+                                                    () => {
+                                                        mercenaryBrowser.needsReloadData = true;
+                                                        if (isInMercPool) {
+                                                            mercenaryManager.RemoveMercenary(unit);
+                                                            isInMercPool = false;
+                                                        }
+                                                        else {
+                                                            mercenaryManager.AddMercenary(unit, 1);
+                                                            isInMercPool = true;
+                                                        }
+                                                        IsInMercenaryPool[unit.GetHashCode()] = isInMercPool;
+                                                    },
+                                                    150.width());
+                                       10.space();
+                                       ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
+                                                    () => {
+                                                        mercenaryBrowser.needsReloadData = true;
+                                                        if (isInKingdomPool) {
+                                                            var count = recruitsManager.GetCountInPool(unit);
+                                                            recruitsManager.DecreasePool(unit, count);
+                                                            isInKingdomPool = false;
+                                                        }
+                                                        else {
+                                                            var pool = recruitsManager.Pool;
+                                                            var count = pool.Sum(r => r.Count) / pool.Count;
+                                                            recruitsManager.IncreasePool(unit, count);
+                                                            isInKingdomPool = true;
+                                                        }
+                                                        IsInRecruitPool[unit.GetHashCode()] = isInKingdomPool;
+                                                    },
+                                                    150.width());
+                                       var poolText = $"{(isInMercPool ? $"Merc".cyan() : "")} {(isInKingdomPool ? $"Recruit ({recruitsManager.GetCountInPool(unit)})".orange() : "")}".Trim();
+                                       50.space();
+                                       Label(poolText, Width(200));
+                                       25.space();
+                                       if (isInMercPool) {
+                                           var poolInfo = mercenaryManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
+                                           if (poolInfo != null) {
+                                               var weight = poolInfo.Weight;
+                                               if (LogSliderCustomLabelWidth("Weight", ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
+                                                   poolInfo.UpdateWeight(weight);
+                                               }
+                                           }
+                                           else {
+                                               Label("Weird", AutoWidth());
+                                           }
+                                       }
+                                   });
+                           }
+                       }
+                   });
 
             Div(0, 25);
 
