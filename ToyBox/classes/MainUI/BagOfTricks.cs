@@ -58,7 +58,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(GoddesBuffs, () => CheatsCombat.Iddqd(""));
             KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
             KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
-            KeyBindings.RegisterAction(KillAllEnemies, () => CheatsCombat.KillAll());
+            KeyBindings.RegisterAction(KillAllEnemies, () => Actions.KillAll());
             //KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
             KeyBindings.RegisterAction(LobotomizeAllEnemies, () => Actions.LobotomizeAllEnemies());
             // Common

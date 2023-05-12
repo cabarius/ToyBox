@@ -50,9 +50,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Kingmaker.Armies.TacticalCombat.Controllers;
 using UnityEngine;
 using static Kingmaker.Utility.MassLootHelper;
 using Object = UnityEngine.Object;
+using Kingmaker.Blueprints.Area;
+using Kingmaker.Globalmap.State;
+using ToyBox;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -632,6 +636,18 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(UnitCombatState __instance) {
                 UnitEntityDataUtils.maybeKill(__instance);
             }
+        }
+
+        [HarmonyPatch(typeof(TacticalCombatUnitEngagementController))]
+        public static class TacticalCombatUnitEngagementControllerPatch {
+            [HarmonyPatch(nameof(TacticalCombatUnitEngagementController.Tick))]
+            [HarmonyPostfix]
+            public static void Tick(TacticalCombatUnitEngagementController __instance) {
+                if (settings.togglekillOnEngage) {
+                    Actions.KillAllTacticalUnits();
+                }
+            }
+
         }
 
         [HarmonyPatch(typeof(AkSoundEngineController), nameof(AkSoundEngineController.OnApplicationFocus))]

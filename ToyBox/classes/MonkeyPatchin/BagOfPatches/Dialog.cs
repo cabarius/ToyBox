@@ -193,6 +193,7 @@ namespace ToyBox.BagOfPatches {
         public static class DialogSpeaker_GetEntity_Patch {
             public static bool Prefix(DialogSpeaker __instance, BlueprintCueBase cue, ref UnitEntityData __result) {
                 if (!settings.toggleRemoteCompanionDialog) return true;
+                if (!settings.toggleRemoteCompanionDialog) return true;
                 if (__instance.Blueprint == null) {
                     __result = null;
                     return false;
@@ -200,16 +201,19 @@ namespace ToyBox.BagOfPatches {
                 Mod.Trace($"getting unit for speaker {__instance.Blueprint.name}");
                 var dialogPosition = Game.Instance.DialogController.DialogPosition;
                 Mod.Trace($"dialogPos: {dialogPosition}");
+                // Danger Danger! If you try to evaluate the following enumeration it can cause dialog to disappear so don't log it!
                 var second = Game.Instance.EntityCreator.CreationQueue.Select(ce => ce.Entity).OfType<UnitEntityData>();
                 __instance.MakeEssentialCharactersConscious();
-                Mod.Trace($"second: {second?.ToString()} matching: {second.Select(u => __instance.SelectMatchingUnit(u))}");
+                //Mod.Trace($"second: {second?.CollectionToString()} matching: {second.Select(__instance.SelectMatchingUnit).CollectionToString()}");
                 var overrides = DialogSpeaker_GetEntityOverrides;
                 var GUID = cue?.AssetGuid.ToString();
                 var hasOverride = GUID != null ? DialogSpeaker_GetEntityOverrides.ContainsKey(GUID) : false;
                 var overrideValue = hasOverride && DialogSpeaker_GetEntityOverrides[GUID];
                 var unit = Game.Instance.State.Units.Concat(Game.Instance.Player.AllCrossSceneUnits)
                         //.Where(u => u.IsInGame && !u.Suppressed)
-                        .Where(u => hasOverride ? overrideValue : settings.toggleExCompanionDialog || !u.IsExCompanion())
+                        .Where(u => u.IsInGame && !u.Suppressed
+                                    //|| (hasOverride ? overrideValue : settings.toggleExCompanionDialog || !u.IsExCompanion())
+                                    )
                         .Concat(second)
                         .Select(new Func<UnitEntityData, UnitEntityData>(__instance.SelectMatchingUnit))
                         .NotNull()

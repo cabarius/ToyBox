@@ -28,6 +28,8 @@ using System.Linq;
 using ToyBox.BagOfPatches;
 using UnityEngine;
 using UnityModManagerNet;
+using Kingmaker.Designers;
+using Kingmaker.Armies.TacticalCombat.Parts;
 
 namespace ToyBox {
     public static class Actions {
@@ -145,6 +147,24 @@ namespace ToyBox {
 
                     target.Descriptor.RemoveFact(buff);
                 }
+            }
+        }
+        public static void KillAllTacticalUnits() {
+            foreach (var unitRef in Game.Instance.TacticalCombat?.Data?.UnitRefs) {
+                if (unitRef.Entity.Get<UnitPartTacticalCombat>().Faction != ArmyFaction.Crusaders) {
+                    GameHelper.KillUnit(unitRef.Entity);
+                }
+            }
+        }
+        public static void KillAll() {
+            foreach (UnitEntityData unit in Game.Instance.State.Units) {
+                if (unit.CombatState.IsInCombat && unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter()) {
+                    GameHelper.KillUnit(unit);
+                }
+            }
+            KillAllTacticalUnits();
+            if (Game.Instance.IsPaused) {
+                Game.Instance.StopMode(GameModeType.Pause);
             }
         }
         public static void SpawnUnit(BlueprintUnit unit, int count) {

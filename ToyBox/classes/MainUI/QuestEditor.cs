@@ -109,8 +109,10 @@ namespace ToyBox {
                                         if (Toggle("Show other versions of NPCs", ref Settings.toggleInterestingNPCsShowHidden))
                                             ConditionsBrowser.ReloadData();
                                     }
+#if DEBUG
                                     25.space();
                                     ActionButton("Reveal All On Map", RevealInterestingNPCs);
+#endif
                                 },
                                 (u, _) => {
                                     var name = u.CharacterName;

@@ -138,7 +138,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
         [HarmonyPatch(typeof(EntityFact), nameof(EntityFact.ComponentsDictionary), MethodType.Setter)]
         private static class ForceSuccessfulLoad_OfFacts_Patch {
             private static void Prefix(ref EntityFact __instance) {
-                if (__instance.Blueprint == null) Mod.Debug($"Fact type '{__instance}' failed to load. UniqueID: {__instance.UniqueId}");
+                if (__instance.Blueprint == null) Mod.Warn($"Fact type '{__instance}' failed to load. UniqueID: {__instance.UniqueId}");
             }
         }
         #if false

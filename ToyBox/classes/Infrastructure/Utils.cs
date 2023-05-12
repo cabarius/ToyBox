@@ -146,6 +146,7 @@ namespace ToyBox {
             }
             return v;
         }
+        public static string CollectionToString(this IEnumerable<object> col) => $"{{{string.Join(", ", col.Select(i => i.ToString()))}}}";
         // Object to Dictionary
         public static IDictionary<string, object> ToDictionary(this object source) => source.ToDictionary<object>();
         
