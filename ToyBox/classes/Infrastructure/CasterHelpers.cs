@@ -9,6 +9,7 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -169,10 +170,34 @@ namespace ToyBox.classes.Infrastructure {
                 .Where(x => x.CharacterClass == spellbook.Blueprint.CharacterClass && (x.Archetype == null || unit.Progression.IsArchetype(x.Archetype))).Select(y => y.Spell)
                 .ToList();
 
-            return GetActualSpellsLearned(spellbook, level, spellsToIgnore);
+            Spellbook real = null;
+            if (unit.TryGetPartyMemberForLevelUpVersion(out var ch))
+            {
+                real = ch.Spellbooks.First(s => s.Blueprint == spellbook.Blueprint);
+            }
+
+            return GetActualSpellsLearned(spellbook, level, spellsToIgnore, real);
         }
 
-        public static int GetActualSpellsLearned(Spellbook spellbook, int level, List<BlueprintAbility> spellsToIgnore) {
+        public static int GetActualSpellsLearned(Spellbook spellbook, int level, List<BlueprintAbility> spellsToIgnore, Spellbook real = null) {
+            Func<AbilityData, bool> cond = x => true;
+            if (real != null)
+            {
+                var r = real.SureKnownSpells(level);
+                cond = x =>
+                {
+                    var sp = r.First(a => a.Blueprint == x.Blueprint);
+                    if (sp == null)
+                        return true;
+                    return !sp.IsTemporary
+                        && !sp.CopiedFromScroll
+                        && !sp.IsFromMythicSpellList
+                        && sp.SourceItem == null
+                        && sp.SourceItemEquipmentBlueprint == null
+                        && sp.SourceItemUsableBlueprint == null
+                        && !sp.IsMysticTheurgeCombinedSpell;
+                };
+            }
             var known = spellbook.SureKnownSpells(level)
                 .Where(x => !x.IsTemporary
                 && !x.CopiedFromScroll
@@ -181,7 +206,8 @@ namespace ToyBox.classes.Infrastructure {
                 && x.SourceItemEquipmentBlueprint == null
                 && x.SourceItemUsableBlueprint == null
                 && !x.IsMysticTheurgeCombinedSpell
-                && !spellsToIgnore.Contains(x.Blueprint))
+                && !spellsToIgnore.Contains(x.Blueprint)
+                && cond(x))
                 .Distinct()
                 .ToList();
 
