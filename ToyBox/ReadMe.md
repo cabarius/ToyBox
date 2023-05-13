@@ -53,6 +53,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Cleaned up UI of Mercenaries Editor
  * (***ADDB***) Initial support for localization
  * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
+ * (***mcb***) Fix: Spells copied from scrolls were counting as spells learned on levelup for spontaneous casters.
 ### Ver 1.5.1
 * (***Narria***) **Quality of Life: Enhanced Map**: 
   * You can enable zooming of the Local Map that you see in Cities, Dungeons and other Encounter spots. 
