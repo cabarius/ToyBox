@@ -16,7 +16,7 @@ using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox.Inventory {
     [HarmonyPatch(typeof(ItemsFilterSearchPCView))]
-    public static class ItemsFilterSearchPCView_Initialize_Patch {
+    public static class ItemsFilterSearchPCViewPatch {
         public static Settings Settings = Main.Settings;
         public static readonly HashSet<ItemsFilterSearchPCView> KnownFilterViews = new();
         public static void ReloadFilterViews() {

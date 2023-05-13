@@ -15,21 +15,21 @@ using static ToyBox.BlueprintExtensions;
 namespace ToyBox.Inventory {
     // Handles both adding selected sorters to the sorter dropdowns and making sure that the dropdown is properly updates to match the selected sorter.
     [HarmonyPatch(typeof(ItemsFilterPCView))]
-    public static class ItemsFilterPCView_ {
+    public static class ItemsFilterPCViewPatch {
         public static Settings Settings = Main.Settings;
 
         private static readonly MethodInfo[] _methodInfosToTranspile = new MethodInfo[] {
-            AccessTools.Method(typeof(ItemsFilterPCView_), nameof(SetDropdown)),
-            AccessTools.Method(typeof(ItemsFilterPCView_), nameof(SetSorter)),
-            AccessTools.Method(typeof(ItemsFilterPCView_), nameof(ObserveFilterChange)),
+            AccessTools.Method(typeof(ItemsFilterPCViewPatch), nameof(SetDropdown)),
+            AccessTools.Method(typeof(ItemsFilterPCViewPatch), nameof(SetSorter)),
+            AccessTools.Method(typeof(ItemsFilterPCViewPatch), nameof(ObserveFilterChange)),
         };
 
         private static void SetDropdown(ItemsFilterPCView __instance, ItemsFilter.SorterType val) {
             if (!KnownFilterViews.Contains(__instance))
                 KnownFilterViews.Add(__instance);
             if (Settings.toggleEnhancedInventory) {
-                if (!ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Contains(__instance.m_SearchView))
-                    ItemsFilterSearchPCView_Initialize_Patch.KnownFilterViews.Add(__instance.m_SearchView);
+                if (!ItemsFilterSearchPCViewPatch.KnownFilterViews.Contains(__instance.m_SearchView))
+                    ItemsFilterSearchPCViewPatch.KnownFilterViews.Add(__instance.m_SearchView);
                 __instance.m_Sorter.value = EnhancedInventory.SorterMapper.From((int)val);
             }
             else

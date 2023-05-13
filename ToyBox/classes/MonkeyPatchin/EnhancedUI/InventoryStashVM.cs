@@ -19,7 +19,7 @@ using static ToyBox.BlueprintExtensions;
 namespace ToyBox.Inventory {
     // Handles both adding selected sorters to the sorter dropdowns and making sure that the dropdown is properly updates to match the selected sorter.
     [HarmonyPatch(typeof(SlotsGroupVM<ItemSlotVM>))]
-    public static class SlotsGroupVM_ {
+    public static class SlotsGroupVMPatch {
         [HarmonyPatch(nameof(SlotsGroupVM<ItemSlotVM>.UpdateVisibleCollection), new Type[] {typeof(bool), typeof(bool)})]
         [HarmonyPostfix]
         public static void UpdateVisibleCollection(SlotsGroupVM<ItemSlotVM> __instance, bool force = false, bool forceSetIndex = false) {

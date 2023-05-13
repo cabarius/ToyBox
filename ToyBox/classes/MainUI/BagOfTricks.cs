@@ -301,6 +301,10 @@ namespace ToyBox {
                     Toggle("Enhanced Map View".localize(), ref settings.toggleZoomableLocalMaps, 500.width());
                     HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off".localize());
                 },
+                () => {
+                    Toggle("Enhanced Load/Save".localize(), ref settings.toggleEnhancedLoadSave, 500.width());
+                    HelpLabel("Adds a search field to Load/Save screen (in game only)".localize());
+                },
                 () => Toggle("Object Highlight Toggle Mode".localize(), ref settings.highlightObjectsToggle),
                 () => {
                     Toggle("Mark Interesting NPCs".localize(), ref settings.toggleShowInterestingNPCsOnLocalMap, 500.width());

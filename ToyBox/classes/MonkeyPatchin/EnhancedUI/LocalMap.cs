@@ -102,7 +102,9 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(LocalMapBaseView))]
         internal static class LocalMapBaseViewPatch {
             private static float prevZoom = 0;
+
             private static float width = 0;
+
             // These are the transform paths for the different kinds of marks on the LocalMapView
             private static readonly string[] MarksPaths = { "MarksPC", "MarksUnits", "MarksLoot", "MarksPoi", "MarksVIT" };
 
@@ -132,12 +134,12 @@ namespace ToyBox.BagOfPatches {
                     && map is RectTransform mapRect
                     && frameBlock is RectTransform frameBlockRect
                     && frame is RectTransform frameRect
-                    ) {
+                   ) {
                     if (settings.toggleZoomableLocalMaps) {
                         // Calculate a zoom factor based on info used previously to scale the Frame Block. In our new world we will center the Frame Block in middle of the ContentGroup and then pan the map behind it.  TODO - make it rotate so that it matches exactly the view of the camera (Frame Block will always point up)
                         var worldWidth = (dr.WorldRect.z - dr.WorldRect.x);
                         var fovMultiplier = settings.AdjustedFovMultiplier;
-                        var worldZoom = worldWidth /(fovMultiplier * 47f);
+                        var worldZoom = worldWidth / (fovMultiplier * 47f);
                         Zoom = width / (worldZoom * sizeDelta.x);
                         Mod.Log($"zoom: {Zoom} worldZoom: {worldZoom} sizeDelta: {sizeDelta} - screenRect:{dr.ScreenRect.z - dr.ScreenRect.x} worldRec:{dr.WorldRect.z - dr.WorldRect.x} proj:\n{dr.InverseViewProj}");
                         // save off the frame rotation so we can fix the camera movement when the map is open
@@ -193,7 +195,24 @@ namespace ToyBox.BagOfPatches {
                 }
                 return false;
             }
-            #if true
+            // The compass (kind for drawing circles) is pretty but we want to hide it when the map zooms
+            [HarmonyPatch(nameof(SetupBPRVisible))]
+            [HarmonyPrefix]
+            public static bool SetupBPRVisible(LocalMapBaseView __instance) {
+                if (!settings.toggleZoomableLocalMaps) return true;
+#if true
+                bool show = Zoom <= 1.0f && __instance.m_Image.rectTransform.rect.width < 975.0;
+                __instance.m_BPRImage.CrossFadeColor(show ? Color.white : Color.clear, 0.5f, true, true);
+#else
+                __instance.m_BPRImage?.gameObject?.SetActive(
+                    LocalMapVM_Patch.zoom <= 1.0f &&
+                     __instance.m_Image.rectTransform.rect.width < 975.0
+                    );
+#endif
+                return false;
+            }
+        }
+#if true
             enum MouseEventState {
                 Off,
                 Short,
@@ -275,24 +294,6 @@ namespace ToyBox.BagOfPatches {
             }
             #endif
 
-            // The compass (kind for drawing circles) is pretty but we want to hide it when the map zooms
-            [HarmonyPatch(nameof(SetupBPRVisible))]
-            [HarmonyPrefix]
-            public static bool SetupBPRVisible(LocalMapBaseView __instance) {
-                if (!settings.toggleZoomableLocalMaps) return true;
-                #if true
-                bool show = Zoom <= 1.0f && __instance.m_Image.rectTransform.rect.width < 975.0;
-                __instance.m_BPRImage.CrossFadeColor(show ? Color.white : Color.clear, 0.5f, true, true);
-                #else
-                __instance.m_BPRImage?.gameObject?.SetActive(
-                    LocalMapVM_Patch.zoom <= 1.0f &&
-                     __instance.m_Image.rectTransform.rect.width < 975.0
-                    );
-                #endif
-                return false;
-            }
-        }
-
         [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
             [HarmonyPostfix]
@@ -317,6 +318,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
 
+            // Helper Function - Not a Patch
             private static void UpdateMarker(LocalMapMarkerPCView markerView, UnitEntityData unit) {
                 var count = unit.InterestingnessCoefficent();
                 //Mod.Debug($"{unit.CharacterName.orange()} -> unit interestingness: {count}");

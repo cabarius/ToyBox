@@ -22,6 +22,7 @@ namespace ToyBox {
     public static partial class UIHelpers {
         public static WidgetPaths_1_0 WidgetPaths;
         public static Transform Settings => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(x => x.name.StartsWith("CommonPCView")).ChildTransform("Canvas/SettingsView");
+        public static Transform SaveLoadScreen => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(x => x.name.StartsWith("CommonPCView")).ChildTransform("FadeCanvas/SaveLoadView");
         public static Transform UIRoot => UIUtility.IsGlobalMap() ? GlobalMapUI.Instance.transform : StaticCanvas.Instance.transform;
         public static Transform ServiceWindow => UIUtility.IsGlobalMap() ? UIRoot.Find("ServiceWindowsConfig").transform : UIRoot.Find("ServiceWindowsPCView");
         // We deal with two different cases for finding our UI bits (thanks Owlcat!)
