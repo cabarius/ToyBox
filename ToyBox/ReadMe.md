@@ -37,7 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.2 (Comming Soon)
-**ToyBox 1.5.2** ***Preview*** **May 12, 2023i**
+**ToyBox 1.5.2** ***Preview*** **May 13, 2023j**
  * (***Narria***) Improved Intersting NPC calaculations
  * (***Narria***) Improved the UI for showing data about interesting NPCS so now the highlight will disappear when conditions are not met (this is not perfect but will improve over time)
    * Entries for the same condition are merged when they occur for multiple sources
@@ -51,6 +51,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed bug with missing NPC dialog
 * (***Narria***) Fixed crasher with add all Mercenaries in Mercenaries editor
 * (***Narria***) Cleaned up UI of Mercenaries Editor
+* (***Narria***) When you use **Expanded Answers For Conditional Responses** it will properly check to see if the answer has been seen before 
  * (***ADDB***) Initial support for localization
  * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
  * (***mcb***) Fix: Spells copied from scrolls were counting as spells learned on levelup for spontaneous casters.
