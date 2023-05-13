@@ -121,6 +121,7 @@ namespace ToyBox {
         public bool toogleShowInterestingNPCsOnQuestTab = false;
         public bool toggleShowInterestingNPCsOnLocalMap = false;
         public bool toggleShowQuestMarkersOnLocalMap = false;
+        public bool toggleEnhancedLoadSave = false;
 
         // Camera
         public bool toggleZoomOnAllMaps = false;

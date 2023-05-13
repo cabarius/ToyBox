@@ -37,12 +37,13 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.2 (Comming Soon)
-**ToyBox 1.5.2** ***Preview*** **May 13, 2023j**
+**ToyBox 1.5.2** ***Preview*** **May 13, 2023l**
  * (***Narria***) Improved Intersting NPC calaculations
  * (***Narria***) Improved the UI for showing data about interesting NPCS so now the highlight will disappear when conditions are not met (this is not perfect but will improve over time)
    * Entries for the same condition are merged when they occur for multiple sources
    * Fixed issue for Intersting NPCs show all where it was showing other copies of the NPCs that were not really in the area at the current time.
    * Added toggle under Show All to show the other versions of NPCs
+ * (**Narria***) Added Enhanced Load/Save Window that lets you search for your saves
  * (***Narria***) Overtips showing interesting NPCs now update immediately when their state changes (like after giving all your elven pages to the storyteller)
 * (***Narria***) **Murder Hobo** and **Kill All** now work in Tactical Combat cuz why not?
 * (***Narria***) Changed logic for creation points to enforce game point minimums and added a toggle to let you ignore this

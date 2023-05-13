@@ -79,13 +79,13 @@ namespace ModKit {
                 if (!IsDefault) {
                     if (!(_local?.Strings.TryGetValue(key, out localizedString)) ?? true) {
                         _local?.Strings.Add(key, "");
-                        Mod.Debug("Unknown Key in current locale: " + key);
+                        Mod.Warn($"Unlocalized Key: '{key.orange().bold()}' in current locale: " + key);
                     }
                 }
                 if (IsDefault || localizedString == "") {
                     if (!(_localDefault?.Strings.TryGetValue(key, out localizedString)) ?? true) {
                         _localDefault?.Strings.Add(key, key);
-                        Mod.Debug("Unknown Key in default: key");
+                        Mod.Warn($"Unlocalized Key: '{key.orange().bold()}' in default locale");
                     }
                 }
                 return localizedString != "" ? localizedString : key;

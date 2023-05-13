@@ -51,7 +51,8 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
       <Private>False</Private>
-    </Reference>    <Reference Include="Assembly-CSharp-firstpass">
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -255,6 +256,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs" />
     <Compile Include="classes\MonkeyPatchin\Braaainz.cs" />
+    <Compile Include="classes\MonkeyPatchin\EnhancedUI\SaveLoadViews.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\InventoryStashVM.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\ItemsFilter.cs" />
@@ -318,7 +320,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

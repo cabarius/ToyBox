@@ -82,8 +82,8 @@ namespace ToyBox {
                         SorterMapper.Add(SorterCategoryMap[flag].index);
                 }
             }
-            ItemsFilterPCView_.ReloadFilterViews();
-            ItemsFilterSearchPCView_Initialize_Patch.ReloadFilterViews();
+            ItemsFilterPCViewPatch.ReloadFilterViews();
+            ItemsFilterSearchPCViewPatch.ReloadFilterViews();
         }
     }
 

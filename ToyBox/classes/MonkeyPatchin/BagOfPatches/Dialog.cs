@@ -212,7 +212,7 @@ namespace ToyBox.BagOfPatches {
                 var unit = Game.Instance.State.Units.Concat(Game.Instance.Player.AllCrossSceneUnits)
                         //.Where(u => u.IsInGame && !u.Suppressed)
                         .Where(u => u.IsInGame && !u.Suppressed
-                                    //|| (hasOverride ? overrideValue : settings.toggleExCompanionDialog || !u.IsExCompanion())
+                                    || (hasOverride ? overrideValue : settings.toggleExCompanionDialog || !u.IsExCompanion())
                                     )
                         .Concat(second)
                         .Select(new Func<UnitEntityData, UnitEntityData>(__instance.SelectMatchingUnit))
