@@ -309,6 +309,16 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(BlueprintAnswer), nameof(BlueprintAnswer.IsAlreadySelected))]
+        public static class BlueprintAnswer_IsAlreadySelected_Patch {
+            [HarmonyPrefix]
+            public static bool IsAlreadySelected(BlueprintAnswer __instance, ref bool __result) {
+                if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
+                __result = Game.Instance.Player.Dialog.SelectedAnswers.Any(a => a.AssetGuid == __instance.AssetGuid);
+                return false;
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(BlueprintAnswer), nameof(BlueprintAnswer.CanShow))]
         public static class BlueprintAnswer_CanShow_Patch {
