@@ -27,6 +27,7 @@ using System.Reflection.Emit;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Name;
 using ToyBox;
 using ToyBox.Multiclass;
+using Kingmaker.UI.MVVM._VM.Other.NestedSelectionGroup;
 
 namespace ToyBox.BagOfPatches {
     internal static class LevelUp {
@@ -345,6 +346,40 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(CharGenClassSelectorItemVM))]
+        public static class BlueprintArchetypePatch {
+            [HarmonyPatch(nameof(GetArchetypesList))]
+            [HarmonyPrefix]
+            public static bool GetArchetypesList(CharGenClassSelectorItemVM __instance, BlueprintCharacterClass selectedClass, ref List<NestedSelectionGroupEntityVM> __result) {
+                if (!settings.toggleIgnoreForbiddenArchetype) return true;
+                Mod.Debug("CharGenClassSelectorItemVMGetArchetypesList");
+                var selectionGroupEntityVmList = new List<NestedSelectionGroupEntityVM>();
+                if (selectedClass == null) {
+                    __result = selectionGroupEntityVmList;
+                    return false;
+                }
+                selectionGroupEntityVmList.AddRange(
+                    selectedClass.Archetypes
+                                 //.Where(a => !a.HiddenInUI) -- patched
+                                 .Select(archetype => {
+                                     var levelupController = __instance.LevelUpController;
+                                     var classSelectorItemVm = new CharGenClassSelectorItemVM(selectedClass,
+                                                                                              archetype,
+                                                                                              levelupController,
+                                                                                              __instance,
+                                                                                              __instance.SelectedArchetype,
+                                                                                              __instance.m_TooltipTemplate,
+                                                                                              __instance.IsArchetypeAvailable(__instance.LevelUpController, archetype),
+                                                                                              levelupController.State.IsFirstCharacterLevel || __instance.IsArchetypeAvailable(levelupController, archetype),
+                                                                                              true);
+                                     __instance.AddDisposable(classSelectorItemVm);
+                                     return classSelectorItemVm;
+                                 }).ToList());
+                __result = selectionGroupEntityVmList;
+                return false;
+            }
+        }
+
         [HarmonyPatch(typeof(PrerequisiteStatValue), nameof(PrerequisiteStatValue.CheckInternal))]
         public static class PrerequisiteStatValue_Check_Patch {
             public static void Postfix(
@@ -449,6 +484,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+
 #if false
         [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.AddCasterLevel))]
         public static class Spellbook_AddCasterLevel_Patch {

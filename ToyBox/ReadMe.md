@@ -37,9 +37,10 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.2 (Comming Soon)
-**ToyBox 1.5.2** ***Preview*** **May 14, 2023l**
+**ToyBox 1.5.2** ***Preview*** **May 14, 2023m**
  * (**Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equiped by the slot you click on.
- * (***Narria***) Improved Intersting NPC calaculations
+ * (***Narria***) Ignore Forbidden Archetypes now also lets you choose ones such as Griffonheart in the creation and level up screen
+ * (***Narria***) Improved Interesting NPC calaculations
  * (***Narria***) Improved the UI for showing data about interesting NPCS so now the highlight will disappear when conditions are not met (this is not perfect but will improve over time)
    * Entries for the same condition are merged when they occur for multiple sources
    * Fixed issue for Intersting NPCs show all where it was showing other copies of the NPCs that were not really in the area at the current time.
