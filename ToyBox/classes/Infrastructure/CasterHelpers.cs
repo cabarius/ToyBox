@@ -9,6 +9,7 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -162,7 +163,9 @@ namespace ToyBox.classes.Infrastructure {
             selectedSpellbook.RemoveSpellsOfLevel(level);
         }
 
+#if true // TODO: the else case if a patch that fixes the level for spontaneous spell casters learning scrolls
         public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
+            Mod.Trace($"GetActualSpellsLearnedForClass - unit: {unit?.CharacterName} spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
             // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
             var spellsToIgnore = unit.Facts.List.SelectMany(x =>
                 x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell)
@@ -187,7 +190,67 @@ namespace ToyBox.classes.Infrastructure {
 
             return known.Count;
         }
+#else
+       public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
+            Mod.Trace($"GetActualSpellsLearnedForClass - unit: {unit?.CharacterName} spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
+            // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
+            var spellsToIgnore = unit.Facts.List.SelectMany(x =>
+                x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell)
+                .Where(x => x.CharacterClass == spellbook.Blueprint.CharacterClass && (x.Archetype == null || unit.Progression.IsArchetype(x.Archetype))).Select(y => y.Spell)
+                .ToList();
+            Spellbook spellbookOfNormalUnit = null;
+            if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)) { // get the real units spellbook, the levelup version does not contain flags like CopiedFromScroll
+                if (ch?.Spellbooks?.Count() > 0)
+                    spellbookOfNormalUnit = ch.Spellbooks.First(s => s.Blueprint == spellbook.Blueprint);
+            }
+            return GetActualSpellsLearned(spellbook, level, spellsToIgnore, spellbookOfNormalUnit);
+        }
 
+        /// <summary>
+        /// Calculates the number of spells selected via levelup, excluding spells from items, learned from scrolls and similar.
+        /// If the spellbook comes from a UnitDescriptor thats part of a levelup, you need to specify spellbookOfNormalUnit as the base units spellbook.
+        /// (Because levelup logic does not copy any AbilityData flags.) (see GetActualSpellsLearnedForClass as example.)
+        /// </summary>
+        /// <param name="spellbook"></param>
+        /// <param name="level"></param>
+        /// <param name="spellsToIgnore"></param>
+        /// <param name="spellbookOfNormalUnit"></param>
+        /// <returns></returns>
+        public static int GetActualSpellsLearned(Spellbook spellbook, int level, List<BlueprintAbility> spellsToIgnore, Spellbook spellbookOfNormalUnit = null) {
+            Mod.Trace($"GetActualSpellsLearned - spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
+
+            Func<AbilityData, bool> normalSpellbookCondition = x => true;
+            if (spellbookOfNormalUnit != null) {
+                var normalSpellsOfLevel = spellbookOfNormalUnit.SureKnownSpells(level);
+                normalSpellbookCondition = x => {
+                    var sp = normalSpellsOfLevel.First(a => a.Blueprint == x.Blueprint);
+                    if (sp == null)
+                        return true;
+                    return !sp.IsTemporary
+                        && !sp.CopiedFromScroll
+                        && !sp.IsFromMythicSpellList
+                        && sp.SourceItem == null
+                        && sp.SourceItemEquipmentBlueprint == null
+                        && sp.SourceItemUsableBlueprint == null
+                        && !sp.IsMysticTheurgeCombinedSpell;
+                };
+            }
+            var known = spellbook.SureKnownSpells(level)
+                .Where(x => !x.IsTemporary
+                && !x.CopiedFromScroll
+                && !x.IsFromMythicSpellList
+                && x.SourceItem == null
+                && x.SourceItemEquipmentBlueprint == null
+                && x.SourceItemUsableBlueprint == null
+                && !x.IsMysticTheurgeCombinedSpell
+                && !spellsToIgnore.Contains(x.Blueprint)
+                && normalSpellbookCondition(x))
+                .Distinct()
+                .ToList();
+
+            return known.Count;
+        }
+#endif
         public static IEnumerable<ClassData> MergableClasses(this UnitEntityData unit) {
             var spellbookCandidates = unit.Spellbooks
                                           .Where(sb => sb.IsStandaloneMythic && sb.Blueprint.CharacterClass != null)

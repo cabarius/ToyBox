@@ -352,29 +352,32 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPrefix]
             public static bool GetArchetypesList(CharGenClassSelectorItemVM __instance, BlueprintCharacterClass selectedClass, ref List<NestedSelectionGroupEntityVM> __result) {
                 if (!settings.toggleIgnoreForbiddenArchetype) return true;
-                Mod.Debug("CharGenClassSelectorItemVMGetArchetypesList");
+                Mod.Debug("CharGenClassSelectorItemVM.GetArchetypesList");
                 var selectionGroupEntityVmList = new List<NestedSelectionGroupEntityVM>();
                 if (selectedClass == null) {
                     __result = selectionGroupEntityVmList;
                     return false;
                 }
-                selectionGroupEntityVmList.AddRange(
-                    selectedClass.Archetypes
-                                 //.Where(a => !a.HiddenInUI) -- patched
-                                 .Select(archetype => {
-                                     var levelupController = __instance.LevelUpController;
-                                     var classSelectorItemVm = new CharGenClassSelectorItemVM(selectedClass,
-                                                                                              archetype,
-                                                                                              levelupController,
-                                                                                              __instance,
-                                                                                              __instance.SelectedArchetype,
-                                                                                              __instance.m_TooltipTemplate,
-                                                                                              __instance.IsArchetypeAvailable(__instance.LevelUpController, archetype),
-                                                                                              levelupController.State.IsFirstCharacterLevel || __instance.IsArchetypeAvailable(levelupController, archetype),
-                                                                                              true);
-                                     __instance.AddDisposable(classSelectorItemVm);
-                                     return classSelectorItemVm;
-                                 }).ToList());
+                Mod.Debug($"archetypes: {selectedClass.Archetypes.Select(a => a.LocalizedName).CollectionToString()}");
+                var levelUpController = __instance.LevelUpController;
+                var archetypes = selectedClass.Archetypes
+                                              //.Where(a => !a.HiddenInUI) -- patched
+                                              .Select(archetype => {
+                                                  var classSelectorItemVm = new CharGenClassSelectorItemVM(
+                                                      selectedClass,
+                                                      archetype,
+                                                      levelUpController,
+                                                      __instance,
+                                                      __instance.SelectedArchetype,
+                                                      __instance.m_TooltipTemplate,
+                                                      __instance.IsArchetypeAvailable(levelUpController, archetype),
+                                                      levelUpController.State.IsFirstCharacterLevel || __instance.IsArchetypeAvailable(levelUpController, archetype),
+                                                      true);
+                                                  __instance.AddDisposable(classSelectorItemVm);
+                                                  return classSelectorItemVm;
+                                              }).ToList();
+                Mod.Debug($"adding archetypes: {archetypes.Select(a => a.DisplayName).CollectionToString()}");
+                selectionGroupEntityVmList.AddRange(archetypes);
                 __result = selectionGroupEntityVmList;
                 return false;
             }
