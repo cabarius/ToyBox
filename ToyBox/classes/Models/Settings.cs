@@ -230,6 +230,7 @@ namespace ToyBox {
 
         // Enhanced Inventory
         public bool toggleEnhancedInventory = false;
+        public bool togglEquipSlotInventoryFiltering = false;
         public bool toggleDontClearSearchWhenLoseFocus = true;
         public bool toggleEnhancedSpellbook = false;
         public bool toggleSpellbookShowAllSpellsByDefault = false;

@@ -143,11 +143,13 @@ namespace ToyBox {
                                25.space();
                                Label("Selected features revived from Xenofell's excellent mod".green());
                            }
-
                            using (HorizontalScope()) {
                                Toggle("Always Keep Search Filter Active", ref Settings.toggleDontClearSearchWhenLoseFocus, 300.width());
                                25.space();
                                HelpLabel("When ticked, this keeps your search active when you click to dismiss the Search Bar. This allows you to apply the search to different item categories.\n" + "Untick this if you wish for the standard game behavior where it clears your search".orange());
+                           }
+                           using (HorizontalScope()) {
+                               Toggle("Click On Equip Slots To Filter Inventory".localize(), ref Settings.togglEquipSlotInventoryFiltering, 500.width());
                            }
                            15.space();
                        }

@@ -23,7 +23,7 @@ namespace ToyBox.classes.MainUI.Inventory {
             EventBus.Subscribe((object)this);
             m_SelectedUnitUpdate = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate(UnitReference u) {
                 SelectedUnit = u.Value;
-                Mod.Log($"SelectedCharacterObserver - selected character changed to {SelectedUnit?.CharacterName.orange() ?? "null"}");
+                Mod.Debug($"SelectedCharacterObserver - selected character changed to {SelectedUnit?.CharacterName.orange() ?? "null"} notifierCount: {Notifiers?.GetInvocationList()?.Length}");
                 Notifiers?.Invoke();
             });
         }

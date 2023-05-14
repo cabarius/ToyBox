@@ -40,6 +40,25 @@ namespace ToyBox.Inventory {
             ref bool __result) {
             if (item == null) return true;
             ExpandedFilterType expanded_filter = (ExpandedFilterType)filter;
+            if (Loot.SelectedLootSlotFilters.Any()) {
+                var filterTypes = Loot.SelectedLootSlotFilters
+                                      .SelectMany(slotType => UIUtilityItem.GetItemTypesBySlotType(slotType))
+                                      .ToHashSet();
+                //Mod.Debug($"slotTypes: {string.Join(", ", Loot.SelectedLootSlotFilters.Select(f => f.ToString()))} filterTypes: {string.Join(", ", filterTypes.Select(ft => ft.ToString()))}");
+                if (!filterTypes.Contains(item.Blueprint.ItemType)) {
+                    __result = false;
+                    return false;
+                }
+                if (expanded_filter == ExpandedFilterType.CurrentEquipped) {
+                    UnitEntityData unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
+                    if (unit != null) {
+                        if (item.Blueprint is BlueprintItemEquipment && !(item.Blueprint is BlueprintItemEquipmentUsable)) {
+                            __result = item.CanBeEquippedBy(unit);
+                        }
+                    }
+                    return false;
+                }
+            }
             //Mod.Log($"ItemsFilter_ShouldShowItem_ItemEntity - filter: {filter} expandedFilter: {expanded_filter}");
 
             if (expanded_filter == ExpandedFilterType.QuickslotUtilities) {

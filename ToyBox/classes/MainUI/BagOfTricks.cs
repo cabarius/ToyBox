@@ -12,6 +12,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
@@ -300,6 +301,10 @@ namespace ToyBox {
                 () => {
                     Toggle("Enhanced Map View".localize(), ref settings.toggleZoomableLocalMaps, 500.width());
                     HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off".localize());
+                },
+                () => {
+                    Toggle("Click On Equip Slots To Filter Inventory".localize(), ref settings.togglEquipSlotInventoryFiltering, 500.width());
+                    HelpLabel($"If you tick this you can click on equipment slots to filter the inventory for items that fit in it.\nFor more {"Enhanced Inventory".orange()} and {"Spellbook".orange()} check out the {"Loot & Spellbook Tab".orange().bold()}".localize());
                 },
                 () => {
                     Toggle("Enhanced Load/Save".localize(), ref settings.toggleEnhancedLoadSave, 500.width());
