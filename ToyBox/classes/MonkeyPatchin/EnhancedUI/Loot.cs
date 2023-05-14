@@ -23,7 +23,6 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Kingmaker.Items.Slots;
 using Kingmaker.UI.Common;
 using System.Collections.Generic;
 using ModKit;
@@ -46,11 +45,98 @@ using System.Runtime.InteropServices.ComTypes;
 using Kingmaker.EntitySystem.Persistence.Scenes;
 using Kingmaker.EntitySystem;
 using Kingmaker.Modding;
+using Kingmaker.PubSubSystem;
+using Kingmaker.UI.ServiceWindow;
+using ToyBox.classes.MainUI.Inventory;
+using ItemSlot = Kingmaker.Items.Slots.ItemSlot;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
+        public static HashSet<EquipSlotType> SelectedLootSlotFilters = new();
+        public static bool ToggleSelectedLootFilter(EquipSlotType slotType, bool? forceState = null) {
+            var becomeActive = forceState ?? !SelectedLootSlotFilters.Contains(slotType);
+            if (becomeActive && !SelectedLootSlotFilters.Contains(slotType)) {
+                SelectedLootSlotFilters.Add(slotType);
+            }
+            else if (SelectedLootSlotFilters.Contains(slotType))
+                SelectedLootSlotFilters.Remove(slotType);
+            return becomeActive;
+        }
+        public static void ShowLootFilterFeedback(this InventoryEquipSlotPCView equipSlotView, bool active) {
+            if (equipSlotView.gameObject?.transform is { } slotView
+                && slotView.Find("CanInsert") is { } canInsert
+                && slotView.Find("ChangeVisual") is { } changeVisual) {
+                canInsert.gameObject.SetActive(active);
+                changeVisual.gameObject.SetActive(active);
+            }
+        }
+        public static void SyncLootFilterFeedback(this InventoryEquipSlotView equipSlotView) {
+            if (equipSlotView is InventoryEquipSlotPCView slotPCView) {
+                var viewModel = equipSlotView.ViewModel;
+                var isActive = SelectedLootSlotFilters.Contains(viewModel.SlotType);
+                slotPCView.ShowLootFilterFeedback(isActive);
+            }
+        }
+        public static void ClearSelectedLootSlotFilters() {
+            SelectedLootSlotFilters.Clear();
+        }
+        public static void SyncSelectedLootSlotFilters() {
+            var inventoryView = UIHelpers.InventoryScreen;
+            if (inventoryView?.Find("Inventory/Doll")?.GetComponent<InventoryDollPCView>() is InventoryDollPCView dollView) {
+                dollView.m_Armor.SyncLootFilterFeedback();
+                dollView.m_Belt.SyncLootFilterFeedback();
+                dollView.m_Feet.SyncLootFilterFeedback();
+                dollView.m_Glasses.SyncLootFilterFeedback();
+                dollView.m_Gloves.SyncLootFilterFeedback();
+                dollView.m_Head.SyncLootFilterFeedback();
+                dollView.m_Neck.SyncLootFilterFeedback();
+                dollView.m_Ring1.SyncLootFilterFeedback();
+                dollView.m_Ring2.SyncLootFilterFeedback();
+                dollView.m_Shirt.SyncLootFilterFeedback();
+                dollView.m_Shoulders.SyncLootFilterFeedback();
+                dollView.m_Wrist.SyncLootFilterFeedback();
+                dollView.m_QuickSlots.ForEach(slot => slot.SyncLootFilterFeedback());
+            }
+        }
+        internal static void SelectedCharacterDidChange() {
+            //SyncSelectedLootSlotFilters();
+        }
+        [HarmonyPatch(typeof(InventoryEquipSlotPCView))]
+        private static class InventoryEquipSlotPCViewPatch {
+            // Modifies equipment slot background to work with rarity coloring
+            [HarmonyPatch(nameof(InventoryEquipSlotPCView.BindViewImplementation))]
+            [HarmonyPostfix]
+            public static void BindViewImplementation(InventoryEquipSlotPCView __instance) {
+                if (Settings.togglEquipSlotInventoryFiltering)
+                    __instance.SyncLootFilterFeedback();
+                if (!Settings.UsingLootRarity) return;
+                var backfill = __instance.gameObject?
+                    .transform.Find("Backfill");
+                var image = backfill?.GetComponent<UnityEngine.UI.Image>();
+                if (image != null) {
+                    image.color = ColoredEquipSlotBackgroundColor;
+                }
+            }
+            // Handles Clicks for Equipment Slot -> Inventory Filtering
+            [HarmonyPatch(nameof(InventoryEquipSlotPCView.OnClick))]
+            [HarmonyPostfix]
+            public static void OnClick(InventoryEquipSlotPCView __instance) {
+                if (!Settings.togglEquipSlotInventoryFiltering) return;
+                var equipSlotVM = __instance.ViewModel;
+                var slotType = equipSlotVM.SlotType;
+                var isSelected = SelectedLootSlotFilters.Contains(slotType);
+                SelectedLootSlotFilters.Clear();
+                if (!isSelected) {
+                    SelectedLootSlotFilters.Add(slotType);
+                }
+                SyncSelectedLootSlotFilters();
+                EventBus.RaiseEvent((Action<IInventoryHandler>)(h => h.Refresh()));
+                //__instance.ShowLootFilterFeedback(show);
+                InventoryPCViewPatch.SavedInventoryVM?.StashVM.CollectionChanged();
+            }
+        }
 
         // Highlight copyable scolls
         [HarmonyPatch(typeof(LootSlotPCView), nameof(LootSlotPCView.BindViewImplementation))]
@@ -146,9 +232,19 @@ namespace ToyBox.Inventory {
         internal static Color ColoredEquipSlotBackgroundColor = new(1f, 1f, 1f, 0.45f);
 
         // Modifies inventory slot background to work with rarity coloring
-        [HarmonyPatch(typeof(InventoryPCView), nameof(InventoryPCView.BindViewImplementation))]
-        private static class InventoryPCView_BindViewImplementation_Patch {
-            public static void Postfix(InventoryPCView __instance) {
+        [HarmonyPatch(typeof(InventoryPCView))]
+        private static class InventoryPCViewPatch {
+            public static InventoryVM SavedInventoryVM = null;
+            [HarmonyPatch(nameof(InventoryPCView.BindViewImplementation))]
+            [HarmonyPostfix]
+            public static void BindViewImplementation(InventoryPCView __instance) {
+                SavedInventoryVM = __instance.ViewModel;
+                if (Settings.togglEquipSlotInventoryFiltering) {
+                    ClearSelectedLootSlotFilters();
+                    SavedInventoryVM.StashVM.CollectionChanged();
+                    SelectedCharacterObserver.Shared.Notifiers -= SelectedCharacterDidChange;
+                    SelectedCharacterObserver.Shared.Notifiers += SelectedCharacterDidChange;
+                }
                 if (!Settings.UsingLootRarity) return;
                 var decoration = __instance.gameObject?
                     .transform.Find("Inventory/Stash/StashContainer/StashScrollView/decoration");
@@ -158,21 +254,6 @@ namespace ToyBox.Inventory {
                 }
             }
         }
-
-        // Modifies equipment slot background to work with rarity coloring
-        [HarmonyPatch(typeof(InventoryEquipSlotPCView), nameof(InventoryEquipSlotPCView.BindViewImplementation))]
-        private static class InventoryEquipSlotPCView_BindViewImplementation_Patch {
-            public static void Postfix(InventoryEquipSlotPCView __instance) {
-                if (!Settings.UsingLootRarity) return;
-                var backfill = __instance.gameObject?
-                    .transform.Find("Backfill");
-                var image = backfill?.GetComponent<UnityEngine.UI.Image>();
-                if (image != null) {
-                    image.color = ColoredEquipSlotBackgroundColor;
-                }
-            }
-        }
-
         // modifies weapon slot backgrounds to work with rarity coloring
         [HarmonyPatch(typeof(WeaponSetPCView), nameof(WeaponSetPCView.BindViewImplementation))]
         private static class WeaponSetPCView_BindViewImplementation_Patch {
