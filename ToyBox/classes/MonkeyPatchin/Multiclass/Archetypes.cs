@@ -111,6 +111,7 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
+        #if false
         [HarmonyPatch(typeof(CharGenClassSelectorItemVM), nameof(CharGenClassSelectorItemVM.GetArchetypesList), new Type[] { typeof(BlueprintCharacterClass) })]
         private static class CharGenClassSelectorItemVM_GetArchetypesList_Patch {
             public static List<NestedSelectionGroupEntityVM> archetypes;
@@ -118,6 +119,7 @@ namespace ToyBox.Multiclass {
                 archetypes = __result;
             }
         }
+        #endif
         [HarmonyPatch(typeof(NestedSelectionGroupEntityVM), nameof(NestedSelectionGroupEntityVM.SetSelected), new Type[] { typeof(bool) })]
         private static class NestedSelectionGroupEntityVM_SetSelected_Patch {
             private static bool Prefix(NestedSelectionGroupEntityVM __instance, ref bool state) {

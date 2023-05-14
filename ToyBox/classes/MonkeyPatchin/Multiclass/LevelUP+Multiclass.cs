@@ -85,9 +85,11 @@ namespace ToyBox.Multiclass {
 #endif
 
         // Do not proceed the spell selection if the caster level was not changed
-        [HarmonyPatch(typeof(ApplySpellbook), nameof(ApplySpellbook.Apply))]
-        [HarmonyPatch(new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        private static class ApplySpellbook_Apply_Patch {
+        [HarmonyPatch(typeof(ApplySpellbook))]
+        private static class ApplySpellbookPatch {
+            [HarmonyPatch(nameof(ApplySpellbook.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
+            [HarmonyPrefix]
+#if false
             public static bool Prefix(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return true;
 
@@ -115,6 +117,7 @@ namespace ToyBox.Multiclass {
                         unit.DeleteSpellbook(state.SelectedClass.Spellbook);
                     }
                 }
+
                 var casterLevelAfter = CasterHelpers.GetRealCasterLevel(unit, spellbook1.Blueprint); // Calculates based on progression which includes class selected in level up screen
                 spellbook1.AddLevelFromClass(classData.CharacterClass); // This only adds one class at a time and will only ever increase by 1 or 2
                 var isNewSpellCaster = (spellbook1.IsStandaloneMythic && casterLevelAfter == 2) || casterLevelAfter == 1;
@@ -147,6 +150,78 @@ namespace ToyBox.Multiclass {
                     ApplySpellbook.TryApplyCustomSpells(spellbook1, component2, state, unit);
                 }
 
+                return false;
+            }
+#endif
+            public static bool Apply(LevelUpState state, UnitDescriptor unit) {
+                if (!settings.toggleMulticlass) return true;
+
+                if (state.SelectedClass == null)
+                    return false;
+                var component1 = state.SelectedClass.GetComponent<SkipLevelsForSpellProgression>();
+                if (component1 != null && component1.Levels.Contains(state.NextClassLevel))
+                    return false;
+                var classData = unit.Progression.GetClassData(state.SelectedClass);
+                if (classData == null || classData.Spellbook == null)
+                    return false;
+                Mod.Debug($"ApplySpellbook.Apply".orange());
+                var spellbook1 = unit.DemandSpellbook(classData.Spellbook);
+                if ((bool)(SimpleBlueprint)state.SelectedClass.Spellbook && state.SelectedClass.Spellbook != classData.Spellbook) {
+                    var spellbook2 = unit.Spellbooks.FirstOrDefault(s => s.Blueprint == state.SelectedClass.Spellbook);
+                    if (spellbook2 != null) {
+                        foreach (var allKnownSpell in spellbook2.GetAllKnownSpells())
+                            spellbook1.AddKnown(allKnownSpell.SpellLevel, allKnownSpell.Blueprint);
+                        unit.DeleteSpellbook(state.SelectedClass.Spellbook);
+                    }
+                }
+                var casterLevelAfter = CasterHelpers.GetRealCasterLevel(unit, spellbook1.Blueprint); // Calculates based on progression which includes class selected in level up screen
+                spellbook1.AddLevelFromClass(classData.CharacterClass); // This only adds one class at a time and will only ever increase by 1 or 2
+                var isNewSpellCaster = (spellbook1.IsStandaloneMythic && casterLevelAfter == 2) || casterLevelAfter == 1;
+                var classLevel1 = classData.CharacterClass.IsMythic ? spellbook1.CasterLevel : spellbook1.BaseLevel;
+                var classLevel2 = classData.CharacterClass.IsMythic ? spellbook1.CasterLevel : spellbook1.BaseLevel;
+                Mod.Debug($"classLevel1: {classLevel1} classLevel2: {classLevel2} casterLevelAfter:{casterLevelAfter}");
+                var spellSelectionData = state.DemandSpellSelection(spellbook1.Blueprint, spellbook1.Blueprint.SpellList);
+                if (spellbook1.Blueprint.SpellsKnown != null) {
+                    var blueprintSpellsTable = spellbook1.Blueprint.SpellsKnown;
+                    if (classData.CharacterClass.IsMythic
+                        && unit.Facts.Get((Func<UnitFact, bool>)(x => x.Blueprint is BlueprintFeatureSelectMythicSpellbook))
+                               ?.Blueprint is BlueprintFeatureSelectMythicSpellbook blueprint2) {
+                        blueprintSpellsTable = blueprint2.SpellKnownForSpontaneous;
+                        if (blueprintSpellsTable != null) {
+                            classLevel1 = spellbook1.MythicLevel - 1;
+                            classLevel2 = spellbook1.MythicLevel;
+                        }
+                        else {
+                            PFLog.Default.Error("Mythic Spellbook {0} doesn't contains SpellKnownForSpontaneous table!",
+                                                blueprint2);
+                        }
+                    }
+                    for (var index = 0; index <= 10; ++index) {
+                        var spellsKnown = spellbook1.Blueprint.SpellsKnown;
+                        var expectedCount = spellsKnown.GetCount(casterLevelAfter, index);
+                        var actual = CasterHelpers.GetActualSpellsLearnedForClass(unit, spellbook1, index);
+                        int learnabl = spellbook1.GetSpellsLearnableOfLevel(index).Count();
+                        int spelladd = Math.Max(0, Math.Min(expectedCount - actual, learnabl));
+#if DEBUG
+                        Mod.Trace($"Spellbook {spellbook1.Blueprint.Name}: Granting {spelladd} spells of spell level:{index} based on expected={expectedCount}, actual={actual}, learnable={learnabl}");
+#endif
+                        spellSelectionData.SetLevelSpells(index, spelladd);
+                    }
+                }
+                var maxSpellLevel = spellbook1.MaxSpellLevel;
+                if (spellbook1.Blueprint.SpellsPerLevel > 0) {
+                    if (isNewSpellCaster) {
+                        spellSelectionData.SetExtraSpells(0, maxSpellLevel);
+                        spellSelectionData.ExtraByStat = true;
+                        spellSelectionData.UpdateMaxLevelSpells(unit);
+                    }
+                    else {
+                        spellSelectionData.SetExtraSpells(spellbook1.Blueprint.SpellsPerLevel, maxSpellLevel);
+                    }
+                }
+
+                foreach (var component2 in spellbook1.Blueprint.GetComponents<AddCustomSpells>())
+                    ApplySpellbook.TryApplyCustomSpells(spellbook1, component2, state, unit);
                 return false;
             }
         }
