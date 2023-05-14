@@ -66,7 +66,7 @@ namespace ToyBox {
             public static bool BindViewImplementationPrefix(SaveLoadPCView __instance) {
                 Mod.Debug($"SaveLoadPCView.BindViewImplementation");
                 // if (_searchBar?.InputField is TMP_InputField inputField) inputField.text = SaveFileSearchText;
-                if (!Settings.toggleEnhancedLoadSave) {
+                if (!Settings.toggleEnhancedLoadSave || !Main.IsInGame) {
                     if (_searchBar != null) {
                         Destroy(UIHelpers.SaveLoadScreen.Find("ToyBoxLoadSaveSearchBar")?.gameObject);
                         _searchBar = null;
@@ -99,6 +99,8 @@ namespace ToyBox {
             [HarmonyPatch(nameof(SaveLoadPCView.BindViewImplementation))]
             [HarmonyPostfix]
             public static void BindViewImplementation(SaveLoadPCView __instance) {
+                if (!Settings.toggleEnhancedLoadSave) return;
+                if (_searchBar == null) return;
                 _searchBar.FocusSearchBar();
                 _collectionVirtualView.m_VirtualList.ScrollController.ForceScrollToTop();
                 //FixupSaveSlotCollectionVM(__instance.ViewModel.SaveSlotCollectionVm);
@@ -123,8 +125,8 @@ namespace ToyBox {
             [HarmonyPatch(nameof(SaveLoadVM.UpdateSavesCollection))]
             [HarmonyPrefix]
             public static bool UpdateSavesCollection(SaveLoadVM __instance) {
+                if (!Settings.toggleEnhancedLoadSave || !Main.IsInGame) return true;
                 Mod.Debug($"UpdateSavesCollection");
-                if (!Settings.toggleEnhancedLoadSave) return true;
                 Game.Instance.SaveManager.UpdateSaveListIfNeeded(BuildModeUtility.IsDevelopment);
                 var referenceCollection = new List<SaveInfo>(Game.Instance.SaveManager);
                 var searchText = SaveLoadPCViewPatch.SaveFileSearchText;

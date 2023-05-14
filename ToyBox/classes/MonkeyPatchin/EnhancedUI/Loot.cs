@@ -241,6 +241,7 @@ namespace ToyBox.Inventory {
                 SavedInventoryVM = __instance.ViewModel;
                 if (Settings.togglEquipSlotInventoryFiltering) {
                     ClearSelectedLootSlotFilters();
+                    SyncSelectedLootSlotFilters();
                     SavedInventoryVM.StashVM.CollectionChanged();
                     SelectedCharacterObserver.Shared.Notifiers -= SelectedCharacterDidChange;
                     SelectedCharacterObserver.Shared.Notifiers += SelectedCharacterDidChange;
