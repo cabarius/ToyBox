@@ -171,12 +171,11 @@ namespace ToyBox.classes.Infrastructure {
                 x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell)
                 .Where(x => x.CharacterClass == spellbook.Blueprint.CharacterClass && (x.Archetype == null || unit.Progression.IsArchetype(x.Archetype))).Select(y => y.Spell)
                 .ToList();
-
             Spellbook spellbookOfNormalUnit = null;
             if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)) { // get the real units spellbook, the levelup version does not contain flags like CopiedFromScroll
-                spellbookOfNormalUnit = ch.Spellbooks.First(s => s.Blueprint == spellbook.Blueprint);
+                if (ch?.Spellbooks?.Count() > 0)
+                    spellbookOfNormalUnit = ch.Spellbooks.First(s => s.Blueprint == spellbook.Blueprint);
             }
-
             return GetActualSpellsLearned(spellbook, level, spellsToIgnore, spellbookOfNormalUnit);
         }
 
@@ -191,6 +190,8 @@ namespace ToyBox.classes.Infrastructure {
         /// <param name="spellbookOfNormalUnit"></param>
         /// <returns></returns>
         public static int GetActualSpellsLearned(Spellbook spellbook, int level, List<BlueprintAbility> spellsToIgnore, Spellbook spellbookOfNormalUnit = null) {
+            Mod.Trace($"GetActualSpellsLearned - spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
+
             Func<AbilityData, bool> normalSpellbookCondition = x => true;
             if (spellbookOfNormalUnit != null) {
                 var normalSpellsOfLevel = spellbookOfNormalUnit.SureKnownSpells(level);
