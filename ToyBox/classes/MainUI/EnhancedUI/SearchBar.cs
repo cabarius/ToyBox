@@ -17,7 +17,8 @@ namespace ToyBox {
         public GameObject GameObject;
 
         public SearchBar(Transform parent, string placeholder, bool withDropdown = true, string name = "EnhancedInventory_SearchBar") {
-            var prefab_transform = Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
+            var prefab_transform = UIHelpers.SearchViewPrototype;
+                //Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
 
             if (prefab_transform == null) {
                 var err = "Error: Unable to locate search bar prefab, it's likely a patch has changed the UI setup, or you are in an unexpected situation. Please report this bug!";

@@ -21,13 +21,21 @@ using static ToyBox.UIHelpers;
 namespace ToyBox {
     public static partial class UIHelpers {
         public static WidgetPaths_1_0 WidgetPaths;
-        public static Transform Settings => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(x => x.name.StartsWith("CommonPCView")).ChildTransform("Canvas/SettingsView");
-        public static Transform SaveLoadScreen => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(x => x.name.StartsWith("CommonPCView")).ChildTransform("FadeCanvas/SaveLoadView");
+        public static Transform Settings => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("Canvas/SettingsView");
+        public static Transform SaveLoadScreen => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("FadeCanvas/SaveLoadView");
         public static Transform UIRoot => UIUtility.IsGlobalMap() ? GlobalMapUI.Instance.transform : StaticCanvas.Instance.transform;
         public static Transform ServiceWindow => UIUtility.IsGlobalMap() ? UIRoot.Find("ServiceWindowsConfig").transform : UIRoot.Find("ServiceWindowsPCView");
         // We deal with two different cases for finding our UI bits (thanks Owlcat!)
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView
         // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig
+
+        public static Transform SearchViewPrototype
+            => Main.IsInGame
+                   ? Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView")
+                   : Game.Instance.UI.MainMenu.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
+        // MainMenuPCView/Canvas/ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView/ FieldPlace/SearchField
+        // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/ParentThing/Equipment/RightBlock/FeatureSelectorView(Clone)/FeatureSearchView/ FieldPlace/SearchField
+
 
         public static Transform SpellbookScreen => ServiceWindow.Find(WidgetPaths.SpellScreen);
         public static Transform MythicInfoView => ServiceWindow.Find(WidgetPaths.MythicView);
@@ -44,8 +52,9 @@ namespace ToyBox {
             public virtual string EncyclopediaView => "EncyclopediaView";
 
             public virtual string CharacterScreen => "CharacterInfoView/CharacterScreen";
-            public virtual string InventoryScreen => throw new NotImplementedException(); // If we ever need to support old stuff then put something here
-            public virtual string LocalMapScreen => throw new NotImplementedException(); // If we ever need to support old stuff then put something here
+            // If we ever need to support old stuff then put something for the following
+            public virtual string InventoryScreen => throw new NotImplementedException(); 
+            public virtual string LocalMapScreen => throw new NotImplementedException(); 
         }
 
         class WidgetPaths_1_1 : WidgetPaths_1_0 {

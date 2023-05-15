@@ -66,7 +66,7 @@ namespace ToyBox {
             public static bool BindViewImplementationPrefix(SaveLoadPCView __instance) {
                 Mod.Debug($"SaveLoadPCView.BindViewImplementation");
                 // if (_searchBar?.InputField is TMP_InputField inputField) inputField.text = SaveFileSearchText;
-                if (!Settings.toggleEnhancedLoadSave || !Main.IsInGame) {
+                if (!Settings.toggleEnhancedLoadSave) {
                     if (_searchBar != null) {
                         Destroy(UIHelpers.SaveLoadScreen.Find("ToyBoxLoadSaveSearchBar")?.gameObject);
                         _searchBar = null;
@@ -125,7 +125,7 @@ namespace ToyBox {
             [HarmonyPatch(nameof(SaveLoadVM.UpdateSavesCollection))]
             [HarmonyPrefix]
             public static bool UpdateSavesCollection(SaveLoadVM __instance) {
-                if (!Settings.toggleEnhancedLoadSave || !Main.IsInGame) return true;
+                if (!Settings.toggleEnhancedLoadSave) return true;
                 Mod.Debug($"UpdateSavesCollection");
                 Game.Instance.SaveManager.UpdateSaveListIfNeeded(BuildModeUtility.IsDevelopment);
                 var referenceCollection = new List<SaveInfo>(Game.Instance.SaveManager);
