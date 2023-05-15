@@ -37,12 +37,13 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.2 (Comming Soon)
-**ToyBox 1.5.2** ***Preview*** **May 15, 2023p**
+**ToyBox 1.5.2** ***Preview*** **May 15, 2023q**
  * (**Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equiped by the slot you click on.
    * **Click On Equip Slots** will mark items that have modifier conficts with a yellow background
  * (***Narria***) **Ignore Forbidden Archetypes now also lets you choose ones such as Griffonheart in the creation and level up screen**
 * (***Narria***) **Fixed crasher when multiclass is turned in and doing class selection during char creation**
  * (***Narria***) Improved Interesting NPC calaculations
+ * (***Narria***) Added Dialog Inspection to InterestingNPCs list so now you can inspect both the Unit and its Dialog
  * (***Narria***) Improved the UI for showing data about interesting NPCS so now the highlight will disappear when conditions are not met (this is not perfect but will improve over time)
    * Entries for the same condition are merged when they occur for multiple sources
    * Fixed issue for Interesting NPCs show all where it was showing other copies of the NPCs that were not really in the area at the current time.
@@ -54,6 +55,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed bug where mass loot would not come up in situations with no ground loot
 * (***Narria***) Fixed bug where NPC portraits were missing if you had **Expand Dialog To Include Remote Companions ** but not **Include Former Companions**
 * (***Narria***) Fixed bug with missing NPC dialog
+* (***Narria***) **Fixed bug with Expanded Dialog where it didn't allow you to finish some dialogs**
 * (***Narria***) Fixed crasher with add all Mercenaries in Mercenaries editor
 * (***Narria***) Cleaned up UI of Mercenaries Editor
 * (***Narria***) When you use **Expanded Answers For Conditional Responses** it will properly check to see if the answer has been seen before 

@@ -245,16 +245,18 @@ namespace ToyBox.BagOfPatches {
         //    }
         //}
 
-        [HarmonyPatch(typeof(DialogController), nameof(DialogController.AddAnswers))]
-        public static class DialogController_AddAnswers_Patch {
-            public static bool Prefix(DialogController __instance, [NotNull] ref IEnumerable<BlueprintAnswerBase> answers, [CanBeNull] BlueprintCueBase continueCue) {
+        [HarmonyPatch(typeof(DialogController))]
+        public static class DialogControllerPatch {
+            [HarmonyPatch(nameof(DialogController.AddAnswers))]
+            [HarmonyPrefix]
+            public static bool AddAnswers(DialogController __instance, [NotNull] ref IEnumerable<BlueprintAnswerBase> answers, [CanBeNull] BlueprintCueBase continueCue) {
                 if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
-                List<BlueprintAnswerBase> expandedAnswers = new();
+                var  expandedAnswers = new List<BlueprintAnswerBase>();
                 foreach (var answerBase in answers) {
                     if (answerBase is BlueprintAnswer answer) {
                         if (answer.NextCue is CueSelection cueSelection) {
-                            Mod.Debug($"checking: {answer.name} - {cueSelection.Cues.Count} {answer.Text}");
                             var cueCount = cueSelection.Cues.Count;
+                            Mod.Debug($"checking: {answer.name} - cueCount:{cueCount} - {cueSelection.Cues.Count} {answer.Text}");
                             if (cueCount <= 1)
                                 expandedAnswers.Add(answer);
                             else {
@@ -269,14 +271,13 @@ namespace ToyBox.BagOfPatches {
                                             if (dialog.SelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
                                                 continue;
                                         }
-                                        if (settings.toggleShowAllAnswersForEachConditionalResponse || cueBase.CanShow()) {
-                                            var multiAnswer = answer.ShallowClone();
-                                            var cueSel = cueSelection.ShallowClone();
-                                            cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
-                                            cueSel.Strategy = Strategy.First;
-                                            multiAnswer.NextCue = cueSel;
-                                            expandedAnswers.Add(multiAnswer);
-                                        }
+                                        var multiAnswer = answer.ShallowClone();
+                                        multiAnswer.name = multiAnswer.name + "-ToyBox";
+                                        var cueSel = cueSelection.ShallowClone();
+                                        cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
+                                        cueSel.Strategy = Strategy.First;
+                                        multiAnswer.NextCue = cueSel;
+                                        expandedAnswers.Add(multiAnswer);
                                     }
                                 }
                                 else

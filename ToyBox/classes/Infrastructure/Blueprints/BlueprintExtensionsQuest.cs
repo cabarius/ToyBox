@@ -32,6 +32,7 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker;
 using Kingmaker.EntitySystem;
 using Kingmaker.View.MapObjects;
+using Kingmaker.DialogSystem.Blueprints;
 
 namespace ToyBox {
 
@@ -76,7 +77,16 @@ namespace ToyBox {
                                                                    || element is Conditional
                                                                    ;
         public static int InterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
-
+        public static List<BlueprintDialog> GetDialog(this UnitEntityData unit) {
+            var dialogs = unit.Parts.Parts
+                                         .OfType<UnitPartInteractions>()
+                                         .SelectMany(p => p.m_Interactions)
+                                         .OfType<Wrapper>()
+                                         .Select(w => w.Source)
+                                         .OfType<SpawnerInteractionDialog>()
+                                         .Select(sid => sid.Dialog).ToList();
+            return dialogs;
+        }
         public static IEnumerable<IntrestingnessEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
             var spawnInterations = unit.Parts.Parts
                                .OfType<UnitPartInteractions>()

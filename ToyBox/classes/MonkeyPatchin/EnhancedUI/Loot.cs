@@ -207,7 +207,6 @@ namespace ToyBox.Inventory {
                     }
                 }
                 if (Settings.UsingLootRarity && item != null) {
-                    Mod.Debug("HI");
                     _ = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
                     var cb = item.Get<ItemPartShowInfoCallback>();
                     if (cb != null && (!cb.m_Settings.Once || !cb.m_Triggered)) {
