@@ -258,22 +258,22 @@ namespace ToyBox {
                 () => {
                     if (settings.toggleRemoteCompanionDialog) {
                         50.space();
-                        Toggle("Include Former Companions".localize(), ref settings.toggleExCompanionDialog);
-                        175.space();
+                        Toggle("Include Former Companions".localize(), ref settings.toggleExCompanionDialog, 300.width());
+                        150.space();
                         Label("This also includes companions who left the party such as Wenduag if you picked Lann".localize().green());
                     }
                 },
                 () => {
                     using (VerticalScope(300.width())) {
-                        Toggle("Expand Answers For Conditional Responses".localize(), ref settings.toggleShowAnswersForEachConditionalResponse);
+                        Toggle("Expand Answers For Conditional Responses".localize(), ref settings.toggleShowAnswersForEachConditionalResponse, 300.width());
                         if (settings.toggleShowAnswersForEachConditionalResponse) {
                             using (HorizontalScope()) {
                                 50.space();
-                                Toggle("Show Unavailable Responses".localize(), ref settings.toggleShowAllAnswersForEachConditionalResponse);
+                                Toggle("Show Unavailable Responses".localize(), ref settings.toggleShowAllAnswersForEachConditionalResponse, 250.width());
                             }
                         }
                     }
-                    75.space();
+                    200.space();
                     Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".localize().green());
                 },
 #if DEBUG

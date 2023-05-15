@@ -366,7 +366,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        #if DEBUG
+        #if false
         [HarmonyPatch(typeof(LocalMapMarkerPart))]
         public static class LocalMapMarkerPartPatch {
             [HarmonyPatch(nameof(LocalMapMarkerPart.OnTurnOn))]
