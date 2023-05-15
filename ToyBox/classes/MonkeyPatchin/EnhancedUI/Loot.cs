@@ -49,12 +49,15 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.UI.ServiceWindow;
 using ToyBox.classes.MainUI.Inventory;
 using ItemSlot = Kingmaker.Items.Slots.ItemSlot;
+using Kingmaker.UnitLogic.Parts;
+using System.Net.NetworkInformation;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         public static HashSet<EquipSlotType> SelectedLootSlotFilters = new();
+        public static InventoryEquipSlotPCView selectedSlot = null;
         public static bool ToggleSelectedLootFilter(EquipSlotType slotType, bool? forceState = null) {
             var becomeActive = forceState ?? !SelectedLootSlotFilters.Contains(slotType);
             if (becomeActive && !SelectedLootSlotFilters.Contains(slotType)) {
@@ -70,6 +73,8 @@ namespace ToyBox.Inventory {
                 && slotView.Find("ChangeVisual") is { } changeVisual) {
                 canInsert.gameObject.SetActive(active);
                 changeVisual.gameObject.SetActive(active);
+                if (active)
+                    selectedSlot = equipSlotView;
             }
         }
         public static void SyncLootFilterFeedback(this InventoryEquipSlotView equipSlotView) {
@@ -77,10 +82,14 @@ namespace ToyBox.Inventory {
                 var viewModel = equipSlotView.ViewModel;
                 var isActive = SelectedLootSlotFilters.Contains(viewModel.SlotType);
                 slotPCView.ShowLootFilterFeedback(isActive);
+                if (isActive)
+                    selectedSlot = slotPCView;
             }
         }
         public static void ClearSelectedLootSlotFilters() {
             SelectedLootSlotFilters.Clear();
+            selectedSlot = null;
+            SyncSelectedLootSlotFilters();
         }
         public static void SyncSelectedLootSlotFilters() {
             var inventoryView = UIHelpers.InventoryScreen;
@@ -124,6 +133,16 @@ namespace ToyBox.Inventory {
             [HarmonyPostfix]
             public static void OnClick(InventoryEquipSlotPCView __instance) {
                 if (!Settings.togglEquipSlotInventoryFiltering) return;
+                TogglEquipSlotInventoryFiltering(__instance);
+            }
+            [HarmonyPatch(nameof(InventoryEquipSlotPCView.OnDoubleClick))]
+            [HarmonyPostfix]
+            // This sounds weird but we want double click to reselect it so when you double click to remove something the slot filter stays selected
+            public static void OnDoubleClick(InventoryEquipSlotPCView __instance) {
+                if (!Settings.togglEquipSlotInventoryFiltering) return;
+                TogglEquipSlotInventoryFiltering(__instance);
+            }
+            internal static void TogglEquipSlotInventoryFiltering(InventoryEquipSlotPCView __instance) {
                 var equipSlotVM = __instance.ViewModel;
                 var slotType = equipSlotVM.SlotType;
                 var isSelected = SelectedLootSlotFilters.Contains(slotType);
@@ -166,7 +185,29 @@ namespace ToyBox.Inventory {
                     __instance.m_Icon.color = new Color(0.5f, 1.0f, 0.5f, 1.0f);
                 }
                 var item = __instance.Item;
+                if (Settings.togglEquipSlotInventoryFiltering) {
+                    try {
+                        if (__instance.gameObject?.transform is { } inventorySlotView
+                            && inventorySlotView.Find("Item/NeedCheckLayer") is { } conflictFeedback) {
+                            var unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
+                            if (unit != null && item != null && SelectedLootSlotFilters.Any()) {
+                                Mod.Debug($"Unit: {unit.CharacterName}");
+                                Mod.Debug($"Item: {item.Blueprint.GetDisplayName()}");
+                                var hasConflicts = unit.HasModifierConflicts(item);
+                                conflictFeedback.gameObject.SetActive(hasConflicts);
+                                var icon = conflictFeedback.GetComponent<Image>();
+                                icon.color = new Color(1.0f, 0.8f, 0.3f, 0.75f);
+                            }
+                            else 
+                                conflictFeedback.gameObject.SetActive(false);
+                        }
+                    }
+                    catch (Exception e) {
+                        Mod.Error(e);
+                    }
+                }
                 if (Settings.UsingLootRarity && item != null) {
+                    Mod.Debug("HI");
                     _ = item.Blueprint.GetComponent<AddItemShowInfoCallback>();
                     var cb = item.Get<ItemPartShowInfoCallback>();
                     if (cb != null && (!cb.m_Settings.Once || !cb.m_Triggered)) {
@@ -241,7 +282,6 @@ namespace ToyBox.Inventory {
                 SavedInventoryVM = __instance.ViewModel;
                 if (Settings.togglEquipSlotInventoryFiltering) {
                     ClearSelectedLootSlotFilters();
-                    SyncSelectedLootSlotFilters();
                     SavedInventoryVM.StashVM.CollectionChanged();
                     SelectedCharacterObserver.Shared.Notifiers -= SelectedCharacterDidChange;
                     SelectedCharacterObserver.Shared.Notifiers += SelectedCharacterDidChange;

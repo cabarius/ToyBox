@@ -80,7 +80,7 @@ namespace ToyBox {
         public static int Rating(this BlueprintItemEnchantment bp) {
             int rating;
             var modifierRating = RarityScaling * bp.Components?.Sum(
-                c => c is AddStatBonusEquipment sbe ? sbe.Value
+                c => c is AddStatBonusEquipment sbe ? sbe.Value 
                     : c is AllSavesBonusEquipment asbe ? asbe.Value
                     : 0
                     ) ?? 0;

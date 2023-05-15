@@ -50,7 +50,7 @@ namespace ToyBox.Inventory {
                     return false;
                 }
                 if (expanded_filter == ExpandedFilterType.CurrentEquipped) {
-                    UnitEntityData unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
+                    var unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
                     if (unit != null) {
                         if (item.Blueprint is BlueprintItemEquipment && !(item.Blueprint is BlueprintItemEquipmentUsable)) {
                             __result = item.CanBeEquippedBy(unit);
