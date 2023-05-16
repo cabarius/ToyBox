@@ -78,7 +78,7 @@ namespace ToyBox {
             var source = TempList.Get<InteractionLootPart>();
             foreach (var interactionLootPart in interactionLootParts) {
                 if (// interactionLootPart.Owner.IsRevealed && 
-                    interactionLootPart.Loot.HasLoot
+                    interactionLootPart.Loot?.HasLoot ?? true
                     //&& (
                     //    interactionLootPart.LootViewed || interactionLootPart.View is DroppedLoot && !(bool)(EntityPart)interactionLootPart.Owner.Get<DroppedLoot.EntityPartBreathOfMoney>() || (bool)(UnityEngine.Object)interactionLootPart.View.GetComponent<SkinnedMeshRenderer>()
                     //    )
