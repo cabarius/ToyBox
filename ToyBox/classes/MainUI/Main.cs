@@ -164,23 +164,24 @@ namespace ToyBox {
                         else Space(25);
                     },
                     new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
-                    new NamedAction("Level Up", LevelUp.OnGUI),
-                    new NamedAction("Party", PartyEditor.OnGUI),
-                    new NamedAction("Loot & Spellbook", PhatLoot.OnGUI),
-                    new NamedAction("Enchantment", EnchantmentEditor.OnGUI),
+                    new NamedAction("Enhanced UI".localize(), EnhancedUI.OnGUI),
+                    new NamedAction("Level Up".localize(), LevelUp.OnGUI),
+                    new NamedAction("Party".localize(), PartyEditor.OnGUI),
+                    new NamedAction("Loot".localize(), PhatLoot.OnGUI),
+                    new NamedAction("Enchantment".localize(), EnchantmentEditor.OnGUI),
 #if false
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
-                    new NamedAction("Search 'n Pick", SearchAndPick.OnGUI),
-                    new NamedAction("Crusade", CrusadeEditor.OnGUI),
-                    new NamedAction("Armies", ArmiesEditor.OnGUI),
-                    new NamedAction("Events/Decrees", EventEditor.OnGUI),
+                    new NamedAction("Search 'n Pick".localize(), SearchAndPick.OnGUI),
+                    new NamedAction("Crusade".localize(), CrusadeEditor.OnGUI),
+                    new NamedAction("Armies".localize(), ArmiesEditor.OnGUI),
+                    new NamedAction("Events/Decrees".localize(), EventEditor.OnGUI),
 #if DEBUG
-                    new NamedAction("Gambits (AI)", BraaainzEditor.OnGUI),
+                    new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
 #endif
-                    new NamedAction("Etudes", EtudesEditor.OnGUI),
-                    new NamedAction("Quests", QuestEditor.OnGUI),
-                    new NamedAction("Settings", SettingsUI.OnGUI)
+                    new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
+                    new NamedAction("Quests".localize(), QuestEditor.OnGUI),
+                    new NamedAction("Settings".localize(), SettingsUI.OnGUI)
                     );
             }
             catch (Exception e) {

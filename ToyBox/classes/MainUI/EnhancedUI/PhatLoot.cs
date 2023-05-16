@@ -101,8 +101,8 @@ namespace ToyBox {
             HStack("Loot Rarity Coloring", 1,
                    () => {
                        using (VerticalScope(300.width())) {
-                           Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags);
-                           Toggle("Color Item Names", ref Settings.toggleColorLootByRarity);
+                           Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags, 300.width());
+                           Toggle("Color Item Names", ref Settings.toggleColorLootByRarity, 300.width());
                        }
                        using (VerticalScope()) {
                            Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}"
@@ -118,167 +118,23 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Loot Rarity Filtering", 1,
                     () => {
-                        using (VerticalScope()) {
-                            Label("Warning: ".orange().bold() + "The following is experimental and might behave unexpectedly.".green());
-                            using (HorizontalScope()) {
+                        using (VerticalScope(300)) {
+                            using (HorizontalScope(300)) {
                                 using (VerticalScope()) {
-                                    Label($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}".green());
                                     Label("Maximum Rarity To Hide:".cyan(), AutoWidth());
                                     RarityGrid(ref Settings.maxRarityToHide, 4, AutoWidth());
                                 }
                             }
                         }
+                        50.space();
+                        using (VerticalScope()) {
+                            Label("");
+                            HelpLabel($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}");
+                        }
                     },
                     // The following options let you configure loot filtering and auto sell levels:".green());
                     () => { }
                     );
-            Div(0, 25);
-            HStack("Enhanced Inventory",
-                   1,
-                   () => {
-                       using (VerticalScope()) {
-                           using (HorizontalScope()) {
-                               if (Toggle("Enable Enhanced Inventory", ref Settings.toggleEnhancedInventory, 300.width()))
-                                   EnhancedInventory.RefreshRemappers();
-                               25.space();
-                               Label("Selected features revived from Xenofell's excellent mod".green());
-                           }
-                           using (HorizontalScope()) {
-                               Toggle("Always Keep Search Filter Active", ref Settings.toggleDontClearSearchWhenLoseFocus, 300.width());
-                               25.space();
-                               HelpLabel("When ticked, this keeps your search active when you click to dismiss the Search Bar. This allows you to apply the search to different item categories.\n" + "Untick this if you wish for the standard game behavior where it clears your search".orange());
-                           }
-                           using (HorizontalScope()) {
-                               Toggle("Click On Equip Slots To Filter Inventory".localize(), ref Settings.togglEquipSlotInventoryFiltering, 500.width());
-                           }
-                           15.space();
-                       }
-                   },
-                   () => {
-                       if (!Settings.toggleEnhancedInventory) return;
-                       using (VerticalScope()) {
-                           Rect divRect;
-                           using (HorizontalScope()) {
-                               Label("Enabled Sort Categories".Cyan(), 300.width());
-                               25.space();
-                               HelpLabel("Here you can choose which Sort Options appear in the popup menu");
-                               divRect = DivLastRect();
-                           }
-                           var hscopeRect = DivLastRect();
-                           Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
-                           ItemSortCategories new_options = ItemSortCategories.NotSorted;
-                           var selectableCategories = EnumHelper.ValidSorterCategories.Where(i => i != ItemSortCategories.NotSorted).ToList();
-                           var changed = false;
-                           Table(selectableCategories,
-                                 (flag) => {
-                                     //Mod.Log($"            {flag.ToString()}");
-                                     if (flag == ItemSortCategories.NotSorted || flag == ItemSortCategories.Default)
-                                         return;
-                                     bool isSet = Settings.InventoryItemSorterOptions.HasFlag(flag);
-                                     using (HorizontalScope(250)) {
-                                         30.space();
-                                         if (Toggle($"{EnhancedInventory.SorterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
-                                     }
-                                     if (isSet) {
-                                         new_options |= flag;
-                                     }
-                                 },
-                                 2,
-                                 null,
-                                 375.width());
-                           65.space(() => ActionButton("Use Default", () => new_options = ItemSortCategories.Default));
-                           Settings.InventoryItemSorterOptions = new_options;
-                           if (changed) EnhancedInventory.RefreshRemappers();
-                       }
-                   },
-                   () => {
-                       if (!Settings.toggleEnhancedInventory) return;
-                       using (VerticalScope()) {
-                           Rect divRect;
-                           using (HorizontalScope()) {
-                               Label("Enabled Search Filters".Cyan(), 300.width());
-                               25.space();
-                               HelpLabel("Here you can choose which Search filters appear in the popup menu");
-                               divRect = DivLastRect();
-                           }
-                           var hscopeRect = DivLastRect();
-                           Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
-                           FilterCategories new_options = default;
-                           var selectableFilters = EnumHelper.ValidFilterCategories.Where(i => i != FilterCategories.NoFilter).ToList();
-                           var changed = false;
-                           Table(selectableFilters,
-                                 (flag) => {
-                                     //Mod.Log($"            {flag.ToString()}");
-                                     bool isSet = Settings.SearchFilterCategories.HasFlag(flag);
-                                     using (HorizontalScope(250)) {
-                                         30.space();
-                                         if (Toggle($"{EnhancedInventory.FilterCategoryMap[flag].Item2 ?? flag.ToString()}", ref isSet)) changed = true;
-                                     }
-                                     if (isSet) {
-                                         new_options |= flag;
-                                     }
-                                 },
-                                 2,
-                                 null,
-                                 375.width());
-                           65.space(() => ActionButton("Use Default", () => new_options = FilterCategories.Default));
-                           Settings.SearchFilterCategories = new_options;
-                           if (changed) EnhancedInventory.RefreshRemappers();
-                       }
-                   });
-            Div(0, 25);
-            HStack("Spellbook",
-                   1,
-                   () => {
-                       if (Toggle("Enable Enhanced Spellbook", ref Settings.toggleEnhancedSpellbook, 300.width()))
-                           EnhancedInventory.RefreshRemappers();
-                       25.space();
-                       Label("Various spellbook enhancements revived from Xenofell's excellent mod".green());
-                   },
-                   () => {
-                       if (Settings.toggleEnhancedSpellbook) {
-                           using (VerticalScope()) {
-                               Toggle("Give the search bar focus when opening the spellbook screen", ref Settings.toggleSpellbookSearchBarFocusWhenOpening);
-                               Toggle("Show all spell levels by default", ref Settings.toggleSpellbookShowAllSpellsByDefault);
-                               //Toggle("Show metamagic by default", ref Settings.toggleSpellbookShowMetamagicByDefault);
-                               Toggle("Show the empty grey metamagic circles above spells", ref Settings.toggleSpellbookShowEmptyMetamagicCircles);
-                               Toggle("Show level of the spell when the spellbook is showing all spell levels", ref Settings.toggleSpellbookShowLevelWhenViewingAllSpells);
-                               Toggle("After creating a metamagic spell, switch to the metamagic tab", ref Settings.toggleSpellbookAutoSwitchToMetamagicTab);
-                               15.space();
-                               Rect divRect;
-                               using (HorizontalScope()) {
-                                   Label("Spellbook Search Criteria".Cyan(), 300.width());
-                                   25.space();
-                                   HelpLabel("Here you can choose which Search filters appear in the spellbook search popup menu");
-                                   divRect = DivLastRect();
-                               }
-                               var hscopeRect = DivLastRect();
-                               Div(hscopeRect.x, 0, divRect.x + divRect.width - hscopeRect.x);
-                               SpellbookSearchCriteria new_options = default;
-                               var changed = false;
-                               var spellbookFilterCategories = EnumHelper.ValidSpellbookSearchCriteria.ToList();
-                               Table(spellbookFilterCategories,
-                                     (flag) => {
-                                         //Mod.Log($"            {flag.ToString()}");
-                                         bool isSet = Settings.SpellbookSearchCriteria.HasFlag(flag);
-                                         using (HorizontalScope(250)) {
-                                             30.space();
-                                             if (Toggle($"{flag.ToString()}", ref isSet)) changed = true;
-                                         }
-                                         if (isSet) {
-                                             new_options |= flag;
-                                         }
-                                     },
-                                     2,
-                                     null,
-                                     375.width());
-                               65.space(() => ActionButton("Use Default", () => new_options = SpellbookSearchCriteria.Default));
-                               Settings.SpellbookSearchCriteria = new_options;
-                               if (changed) EnhancedInventory.RefreshRemappers();
-                           }
-                       }
-                   },
-                   () => { });
             Div(0, 25);
             HStack("Bulk Sell", 1,
                    () => {
