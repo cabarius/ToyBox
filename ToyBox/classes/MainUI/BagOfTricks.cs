@@ -228,7 +228,7 @@ namespace ToyBox {
                 () => {
                     Toggle(("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
                     25.space();
-                    Label(("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.rare) + "e".color(RGBA.purple)).localize());
+                    Label(("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.blue) + "e".color(RGBA.purple)).localize());
                 },
                 () => {
                     Toggle("Jealousy Begone!".localize().bold(), ref Settings.toggleMultipleRomance, 300.width());

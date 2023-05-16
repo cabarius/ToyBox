@@ -141,7 +141,7 @@ namespace ToyBox.BagOfPatches {
                         var fovMultiplier = settings.AdjustedFovMultiplier;
                         var worldZoom = worldWidth / (fovMultiplier * 47f);
                         Zoom = width / (worldZoom * sizeDelta.x);
-                        Mod.Log($"zoom: {Zoom} worldZoom: {worldZoom} sizeDelta: {sizeDelta} - screenRect:{dr.ScreenRect.z - dr.ScreenRect.x} worldRec:{dr.WorldRect.z - dr.WorldRect.x} proj:\n{dr.InverseViewProj}");
+                        //Mod.Log($"zoom: {Zoom} worldZoom: {worldZoom} sizeDelta: {sizeDelta} - screenRect:{dr.ScreenRect.z - dr.ScreenRect.x} worldRec:{dr.WorldRect.z - dr.WorldRect.x} proj:\n{dr.InverseViewProj}");
                         // save off the frame rotation so we can fix the camera movement when the map is open
                         FrameRotation = frame.localEulerAngles;
                         var zoom = Zoom;
