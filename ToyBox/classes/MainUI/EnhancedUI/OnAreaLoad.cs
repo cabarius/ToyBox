@@ -22,7 +22,7 @@ namespace ToyBox {
             if (Settings.toggleEnhancedSpellbook) {
                 LoadSpellbookSearchBar();
             }
-            
+            BagOfPatches.CameraPatches.CameraRigPatch.OnAreaLoad();
 #if false
             if (Settings.EnableInventorySearchBar)
             {

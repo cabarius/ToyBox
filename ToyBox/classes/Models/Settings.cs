@@ -124,6 +124,7 @@ namespace ToyBox {
         public bool toggleEnhancedLoadSave = false;
 
         // Camera
+        public bool toggleAutoFollowHold = true;
         public bool toggleZoomOnAllMaps = false;
         public bool toggleRotateOnAllMaps = false;
         public bool toggleScrollOnAllMaps = false;

@@ -36,8 +36,9 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-### Ver 1.5.2 (Comming Soon)
-**ToyBox 1.5.2** ***Preview*** **May 15, 2023s**
+### Ver 1.5.3 (Coming Soon)
+**ToyBox 1.5.3** ***Preview*** **May 16, 2023a**
+### Ver 1.5.2
  * (***Narria***) **UI Reorg** Moved UI Enhancements into new top level **Enhanced UI** tab and the Loot tab is now just for loot related stuff
  * (***Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equiped by the slot you click on.
    * **Click On Equip Slots** will mark items that have modifier conficts with a yellow background
@@ -64,6 +65,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) **Level Up & Multiclass** 
     * Reorganzed tab to move the settings closer to the top
     * Added shortcut button to **Maximize Mythic Flexibility**
+* (***Narria***) **Option to Keep Following with the camera when you hold down the Camera Follow Key**
  * (***ADDB***) Initial support for localization
  * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
  * (***mcb***) Fix: Spells copied from scrolls were counting as spells learned on levelup for spontaneous casters.

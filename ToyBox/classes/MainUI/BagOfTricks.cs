@@ -471,9 +471,14 @@ namespace ToyBox {
                    1,
                    () => Toggle("Enable Zoom on all maps and cutscenes".localize(), ref Settings.toggleZoomOnAllMaps),
                    () => {
-                       Toggle("Enable Rotate on all maps and cutscenes".localize(), ref Settings.toggleRotateOnAllMaps);
+                       Toggle("Enable Rotate on all maps and cutscenes".localize(), ref Settings.toggleRotateOnAllMaps, 400.width());
                        153.space();
                        Label(("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green()).localize());
+                   },
+                   () => {
+                       Toggle("Auto Follow While Holding Camera Follow Key", ref Settings.toggleAutoFollowHold, 400.width());
+                       153.space();
+                       HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it");
                    },
                    () => {
                        Toggle("Alt + Mouse Wheel To Adjust Clip Plane".localize(), ref Settings.toggleUseAltMouseWheelToAdjustClipPlane);
@@ -486,7 +491,7 @@ namespace ToyBox {
                    () => Label("Rotation".localize().cyan()),
                    () => {
                        50.space();
-                       if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt".localize(), ref Settings.toggleCameraPitch)) {
+                       if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt".localize(), ref Settings.toggleCameraPitch,400.width())) {
                            Main.resetExtraCameraAngles = true;
                        }
                        100.space();
