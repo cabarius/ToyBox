@@ -55,37 +55,28 @@ using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Designers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows;
+using Kingmaker.UI.SettingsUI;
+using Newtonsoft.Json;
 using UniRx;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
-        public static Settings settings = Main.Settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static float CameraElevation = 0f;
 
-        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.Update))]
-        static class CameraRig_Update_Patch {
-            static void Postfix(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
-                if (settings.toggleRotateOnAllMaps || Main.resetExtraCameraAngles)
-                    __instance.TickRotate();
-                if (settings.toggleZoomOnAllMaps)
-                    __instance.CameraZoom.TickZoom();
-                if (settings.toggleScrollOnAllMaps) {
-                    __instance.TickScroll();
-                    //__instance.TickCameraDrag();
-                    //__instance.CameraDragToMove();
-                }
-            }
-        }
 
-        [HarmonyPatch(typeof(CameraZoom), nameof(CameraZoom.TickZoom))]
-        private static class CameraZoom_TickZoom_Patch {
+        [HarmonyPatch(typeof(CameraZoom))]
+        private static class CameraZoomPatch {
             private static bool firstCall = true;
-            private static float BaseFovMin => (settings.toggleZoomOnAllMaps || settings.toggleZoomableLocalMaps) ? 12 : 17.5f;
+            private static float BaseFovMin => (Settings.toggleZoomOnAllMaps || Settings.toggleZoomableLocalMaps) ? 12 : 17.5f;
             private static readonly float BaseFovMax = 30;
-            private static float FovMin => BaseFovMin / settings.fovMultiplier;
-            private static float FovMax => BaseFovMax * settings.AdjustedFovMultiplier;
-            private static bool Prefix(CameraZoom __instance,
+            private static float FovMin => BaseFovMin / Settings.fovMultiplier;
+            private static float FovMax => BaseFovMax * Settings.AdjustedFovMultiplier;
+
+            [HarmonyPatch(nameof(CameraZoom.TickZoom))]
+            [HarmonyPrefix]
+            private static bool TickZoom(CameraZoom __instance,
                         Coroutine ___m_ZoomRoutine,
                         float ___m_Smooth,
                         ref float ___m_PlayerScrollPosition,
@@ -93,9 +84,9 @@ namespace ToyBox.BagOfPatches {
                         ref float ___m_SmoothScrollPosition,
                         Camera ___m_Camera,
                         float ___m_ZoomLenght) {
-                if (settings.fovMultiplier == 1 && !settings.toggleZoomableLocalMaps) return true;
+                if (Settings.fovMultiplier == 1 && !Settings.toggleZoomableLocalMaps) return true;
                 if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse && (double)Input.GetAxis("Mouse ScrollWheel") != 0.0 && ((double)___m_Camera.fieldOfView > (double)FovMin || (double)Input.GetAxis("Mouse ScrollWheel") < 0.0)) {
-                    if (settings.toggleUseAltMouseWheelToAdjustClipPlane && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.LeftShift))) {
+                    if (Settings.toggleUseAltMouseWheelToAdjustClipPlane && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.LeftShift))) {
                         var cameraRig = Game.Instance.UI.GetCameraRig();
                         var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
                         if (Input.GetKey(KeyCode.LeftAlt)) {
@@ -126,10 +117,60 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickScroll))]
-        private static class CameraRig_TickScroll_Patch {
-            public static bool Prefix(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
-                if (!settings.toggleCameraPitch && !settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !settings.toggleFreeCamera) return true;
+        // Camera Rig Helper
+        private static Vector2 CameraDragToRotate2D(this CameraRig __instance) {
+            if (!__instance.m_BaseMousePoint.HasValue)
+                return new Vector2(0.0f, 0.0f);
+            var basePoint = __instance.m_BaseMousePoint.Value;
+            var dx = basePoint.x - __instance.GetLocalPointerPosition().x;
+            var dy = basePoint.y - __instance.GetLocalPointerPosition().y;
+            var dist = Math.Sqrt(dx * dx + dy * dy);
+            var rotateDistance = ((double)__instance.m_RotateDistance - (double)dist) * ((bool)(SimpleBlueprint)BlueprintRoot.Instance ? (double)SettingsRoot.Controls.CameraRotationSpeedEdge.GetValue() : 2.0);
+            __instance.m_RotateDistance = (float)rotateDistance;
+            basePoint.x -= 0.25f * dx;
+            basePoint.y -= 0.25f * dy;
+            __instance.m_BaseMousePoint = basePoint;
+            return new Vector2(dx, dy);
+        }
+
+        [HarmonyPatch(typeof(CameraRig))]
+        public static class CameraRigPatch {
+            private static UISettingsEntityKeyBinding _followKeyBinding = null;
+            public static void OnAreaLoad() {
+                _followKeyBinding = null;
+            }
+
+            [HarmonyPatch(nameof(CameraRig.Update))]
+            [HarmonyPostfix]
+            static void Update(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
+                if (Settings.toggleRotateOnAllMaps || Main.resetExtraCameraAngles)
+                    __instance.TickRotate();
+                if (Settings.toggleZoomOnAllMaps)
+                    __instance.CameraZoom.TickZoom();
+                if (Settings.toggleScrollOnAllMaps) {
+                    __instance.TickScroll();
+                    //__instance.TickCameraDrag();
+                    //__instance.CameraDragToMove();
+                }
+                if (Settings.toggleAutoFollowHold) {
+                    if (_followKeyBinding == null) {
+                        var controlSettingsGroup = Game.Instance.UISettingsManager.m_ControlSettingsList.First(g => g.name == "KeybindingsGeneral");
+                        _followKeyBinding = controlSettingsGroup.SettingsList
+                                                                .OfType<UISettingsEntityKeyBinding>()
+                                                                .First(item => item.name == "FollowUnit");
+                    }
+                    if (_followKeyBinding?.IsDown ?? false) {
+                        var selectedUnit = WrathExtensions.GetCurrentCharacter();
+                        if (selectedUnit != null)
+                            Game.Instance.CameraController?.Follower.Follow(selectedUnit);
+                    }
+                }
+            }
+
+            [HarmonyPatch(nameof(CameraRig.TickScroll))]
+            [HarmonyPrefix]
+            public static bool TickScroll(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
+                if (!Settings.toggleCameraPitch && !Settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !Settings.toggleFreeCamera) return true;
                 var isInlocalMap = Game.Instance?.RootUiContext.CurrentServiceWindow == ServiceWindowsType.LocalMap;
                 var dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
                 if (__instance.m_ScrollRoutine != null && (double)Time.time > (double)__instance.m_ScrollRoutineEndsOn) {
@@ -141,12 +182,12 @@ namespace ToyBox.BagOfPatches {
                     var scrollOffset = __instance.m_ScrollOffset;
                     if (eulerAngles.x > 180)
                         scrollOffset.y = -scrollOffset.y;
-                    if (settings.toggleZoomableLocalMaps && isInlocalMap && scrollOffset.magnitude > 0) {
+                    if (Settings.toggleZoomableLocalMaps && isInlocalMap && scrollOffset.magnitude > 0) {
                         var frameRotation = LocalMapPatches.FrameRotation;
                         var zoom = LocalMapPatches.Zoom;
                         var newScrollOffset = Quaternion.AngleAxis(-frameRotation.z, Vector3.forward) * scrollOffset;
                         //Mod.Debug($"inMap: {scrollOffset} -> {newScrollOffset} angle: {frameRotation}");
-                        scrollOffset = newScrollOffset * settings.zoomableLocalMapScrollSpeedMultiplier / zoom;
+                        scrollOffset = newScrollOffset * Settings.zoomableLocalMapScrollSpeedMultiplier / zoom;
                     }
                     if ((bool)(SimpleBlueprint)BlueprintRoot.Instance && !Game.Instance.IsControllerGamepad && (bool)(SettingsEntity<bool>)SettingsRoot.Controls.ScreenEdgeScrolling && (Cursor.visible || (bool)(SettingsEntity<bool>)SettingsRoot.Controls.CameraScrollOutOfScreenEnabled) && Game.Instance.CurrentMode != GameModeType.FullScreenUi)
                         scrollOffset += __instance.GetCameraScrollShiftByMouse();
@@ -180,7 +221,7 @@ namespace ToyBox.BagOfPatches {
                         dPos += scaledScrollVector.y * (float)Math.Sin(pitchRadians) * yAxis;
                     //Mod.Debug($"dPos: {dPos} pitch: {pitch:##.000} sine: {Math.Sin(pitchRadians):#.000}");
                     __instance.m_TargetPosition += dPos;
-                    if (!settings.toggleFreeCamera) {
+                    if (!Settings.toggleFreeCamera) {
                         if (!__instance.NoClamp && !__instance.m_SkipClampOneFrame)
                             __instance.m_TargetPosition = __instance.ClampByLevelBounds(__instance.m_TargetPosition);
                         __instance.m_TargetPosition = __instance.PlaceOnGround(__instance.m_TargetPosition);
@@ -194,29 +235,12 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_ScrollOffset = Vector2.zero;
                 return false;
             }
-        }
 
-        private static Vector2 CameraDragToRotate2D(this CameraRig __instance) {
-            if (!__instance.m_BaseMousePoint.HasValue)
-                return new Vector2(0.0f, 0.0f);
-            var basePoint = __instance.m_BaseMousePoint.Value;
-            var dx = basePoint.x - __instance.GetLocalPointerPosition().x;
-            var dy = basePoint.y - __instance.GetLocalPointerPosition().y;
-            var dist = Math.Sqrt(dx * dx + dy * dy);
-            var rotateDistance = ((double)__instance.m_RotateDistance - (double)dist) * ((bool)(SimpleBlueprint)BlueprintRoot.Instance ? (double)SettingsRoot.Controls.CameraRotationSpeedEdge.GetValue() : 2.0);
-            __instance.m_RotateDistance = (float)rotateDistance;
-            basePoint.x -= 0.25f * dx;
-            basePoint.y -= 0.25f * dy;
-            __instance.m_BaseMousePoint = basePoint;
-            return new Vector2(dx, dy);
-        }
-
-        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.TickRotate))]
-        private static class CameraRig_TickRotate_Patch {
-
-            public static bool Prefix(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
-                if (!settings.toggleRotateOnAllMaps && !settings.toggleCameraPitch && !settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !settings.toggleInvertXAxis && !settings.toggleInvertKeyboardXAxis) return true;
-                var usePitch = settings.toggleCameraPitch;
+            [HarmonyPatch(nameof(CameraRig.TickRotate))]
+            [HarmonyPrefix]
+            public static bool TickRotate(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
+                if (!Settings.toggleRotateOnAllMaps && !Settings.toggleCameraPitch && !Settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !Settings.toggleInvertXAxis && !Settings.toggleInvertKeyboardXAxis) return true;
+                var usePitch = Settings.toggleCameraPitch;
                 if (__instance.m_RotateRoutine != null && (double)Time.time > (double)__instance.m_RotateRoutineEndsOn) {
                     __instance.StopCoroutine(__instance.m_RotateRoutine);
                     __instance.m_RotateRoutine = (Coroutine)null;
@@ -227,14 +251,14 @@ namespace ToyBox.BagOfPatches {
                 __instance.RotateByMiddleButton();
                 var mouseMovement = new Vector2(0, 0);
                 var xRotationSign = 1f;
-                var yRotationSign = settings.toggleInvertYAxis ? 1f : -1f;
+                var yRotationSign = Settings.toggleInvertYAxis ? 1f : -1f;
                 if (__instance.m_RotationByMouse) {
-                    if (!settings.toggleInvertXAxis) xRotationSign = -1;
+                    if (!Settings.toggleInvertXAxis) xRotationSign = -1;
                     mouseMovement = __instance.CameraDragToRotate2D();
                 }
                 else if (__instance.m_RotationByKeyboard) {
                     mouseMovement.x = __instance.m_RotateOffset;
-                    if (settings.toggleInvertKeyboardXAxis) xRotationSign = -1;
+                    if (Settings.toggleInvertKeyboardXAxis) xRotationSign = -1;
                 }
                 if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
@@ -267,21 +291,20 @@ namespace ToyBox.BagOfPatches {
                 __instance.m_RotateOffset = 0.0f;
                 return false;
             }
-        }
-        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.PlaceOnGround))]
-        private static class CameraRig_PlaceOnGround_Patch {
-            private static void Postfix(ref Vector3 __result) {
-                if (!settings.toggleCameraElevation) return;
+
+            [HarmonyPatch(nameof(CameraRig.PlaceOnGround))]
+            [HarmonyPostfix]
+            private static void PlaceOnGround(ref Vector3 __result) {
+                if (!Settings.toggleCameraElevation) return;
                 __result.y = CameraElevation;
             }
-        }
 
-        [HarmonyPatch(typeof(CameraRig), nameof(CameraRig.SetMode))]
-        private static class CameraRig_SetMode_Apply {
-            public static void Postfix(CameraRig __instance, CameraMode mode) {
-                if (settings.fovMultiplierCutScenes == 1 && settings.fovMultiplier == 1) return;
+            [HarmonyPatch(nameof(CameraRig.SetMode))]
+            [HarmonyPostfix]
+            public static void SetMode(CameraRig __instance, CameraMode mode) {
+                if (Settings.fovMultiplierCutScenes == 1 && Settings.fovMultiplier == 1) return;
                 if (mode == CameraMode.Default && Game.Instance.CurrentMode == GameModeType.Cutscene) {
-                    __instance.Camera.fieldOfView = __instance.CameraZoom.FovMax * settings.fovMultiplierCutScenes / settings.fovMultiplier;
+                    __instance.Camera.fieldOfView = __instance.CameraZoom.FovMax * Settings.fovMultiplierCutScenes / Settings.fovMultiplier;
                 }
             }
         }

@@ -48,6 +48,7 @@ using UnityEngine;
 using Utilities = Kingmaker.Cheats.Utilities;
 using System.Collections.Generic;
 using System.Collections;
+using static ModKit.UI;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
@@ -585,7 +586,7 @@ namespace ToyBox.BagOfPatches {
                       })]
         public static class CommonVM_HandleOpen_Patch {
             public static bool Prefix(CounterWindowType type, ItemEntity item, Action<int> command) {
-                if (settings.toggleShiftClickToFastTransfer && UI.KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     command.Invoke(item.Count);
                     return false;
                 }
@@ -596,7 +597,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
         public static class ItemSlotPCView_OnClick_Patch {
             public static bool Prefix(ItemSlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && UI.KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     __instance.OnDoubleClick();
                     return false;
                 }
@@ -607,13 +608,13 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(InventorySlotPCView), nameof(InventorySlotPCView.OnClick))]
         public static class InventorySlotPCView_OnClick_Patch {
             public static bool Prefix(InventorySlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && UI.KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     __instance.OnDoubleClick();
                     return false;
                 }
                 if (__instance.UsableSource != UsableSourceType.Inventory) return true;
                 if (!settings.toggleShiftClickToUseInventorySlot) return true;
-                if (UI.KeyBindings.GetBinding("InventoryUseModifier").IsModifierActive) {
+                if (KeyBindings.GetBinding("InventoryUseModifier").IsModifierActive) {
                     var item = __instance.Item;
                     Mod.Debug($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
                     try {
@@ -631,7 +632,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(VendorSlotPCView), nameof(VendorSlotPCView.OnClick))]
         public static class VendorSlotPCView_OnClick_Patch {
             public static bool Prefix(VendorSlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && UI.KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     __instance.OnDoubleClick();
                     return false;
                 }
