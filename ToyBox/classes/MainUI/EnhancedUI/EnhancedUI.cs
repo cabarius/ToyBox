@@ -19,74 +19,82 @@ namespace ToyBox {
         public static Settings Settings => Main.Settings;
         public static void ResetGUI() { }
         public static void OnGUI() {
-            HStack("Common Tweaks".localize(), 1,
-                () => {
-                    Toggle("Enhanced Map View".localize(), ref Settings.toggleZoomableLocalMaps, 500.width());
-                    HelpLabel("Makes mouse zoom work for the local map (cities, dungeons, etc). Game restart required if you turn it off".localize());
-                },
-                () => {
-                    Toggle("Click On Equip Slots To Filter Inventory".localize(), ref Settings.togglEquipSlotInventoryFiltering, 500.width());
-                    HelpLabel($"If you tick this you can click on equipment slots to filter the inventory for items that fit in it.\nFor more {"Enhanced Inventory".orange()} and {"Spellbook".orange()} check out the {"Loot & Spellbook Tab".orange().bold()}".localize());
-                },
-                () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
-                () => {
-                    Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
-                    100.space();
-                    HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
-                },
-                () => {
-                    var modifier = KeyBindings.GetBinding("InventoryUseModifier");
-                    var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
-                    Toggle("Allow ".localize() + $"{modifierText}".cyan() + (" + Click".cyan() + " To Use Items In Inventory").localize(), ref Settings.toggleShiftClickToUseInventorySlot, 470.width());
-                    if (Settings.toggleShiftClickToUseInventorySlot) {
-                        ModifierPicker("InventoryUseModifier", "", 0);
-                    }
-                },
-                () => {
-                    var modifier = KeyBindings.GetBinding("ClickToTransferModifier");
-                    var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
-                    Toggle("Allow ".localize() + $"{modifierText}".cyan() + (" + Click".cyan() + " To Transfer Entire Stack").localize(), ref Settings.toggleShiftClickToFastTransfer, 470.width());
-                    if (Settings.toggleShiftClickToFastTransfer) {
-                        ModifierPicker("ClickToTransferModifier", "", 0);
-                    }
-                },
-                () => {
-                    Toggle("Enhanced Load/Save".localize(), ref Settings.toggleEnhancedLoadSave, 500.width());
-                    HelpLabel("Adds a search field to Load/Save screen (in game only)".localize());
-                },
-                () => Toggle("Object Highlight Toggle Mode".localize(), ref Settings.highlightObjectsToggle),
-                () => {
-                    Toggle("Mark Interesting NPCs".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
-                    HelpLabel("This will change the color of NPC names on the highlike makers and change the color map markers to indicate that they have interesting or conditional interactions".localize());
-                },
-                () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ".localize(), ref Settings.toggleWidenActionBarGroups),
-                () => {
-                    if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups".localize(), ref Settings.toggleShowAcronymsInSpellAndActionSlots)) {
-                        Main.SetNeedsResetGameUI();
-                    }
-                },
-                () => {
-                    Toggle("Make Puzzle Symbols More Clear".localize(), ref Settings.togglePuzzleRelief);
-                    25.space();
-                    HelpLabel(("ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: " + "[PuzzlePiece Green3x1]".yellow().bold() + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange()).localize());
-                },
-                () => {
-                    ActionButton("Clear Action Bar".localize(), () => Actions.ClearActionBar());
-                    50.space();
-                    Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".localize().green());
-                },
-                () => ActionButton("Fix Incorrect Main Character".localize(), () => {
-                    var probablyPlayer = Game.Instance.Player?.Party?
-                        .Where(x => !x.IsCustomCompanion())
-                        .Where(x => !x.IsStoryCompanion()).ToList();
-                    if (probablyPlayer is { Count: 1 }) {
-                        var newMainCharacter = probablyPlayer.First();
-                        var text = "Promoting % to main character!".localize().Split('%');
-                        Mod.Warn($"{text[0]}{newMainCharacter.CharacterName}{text[1]}");
-                        if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
-                    }
-                }, AutoWidth()),
-                () => { }
+            HStack("Common Tweaks".localize(),
+                   1,
+                   () => {
+                       ActionButton("Maximize Window".localize(), Actions.MaximizeModWindow, 200.width());
+                       300.space();
+                       HelpLabel("Maximize the ModManager window for best ToyBox user experience");
+                   },
+                   () => {
+                       Toggle("Enhanced Map View".localize(), ref Settings.toggleZoomableLocalMaps, 500.width());
+                       HelpLabel("Makes mouse zoom work for the local map (cities, dungeons, etc). Game restart required if you turn it off".localize());
+                   },
+                   () => {
+                       Toggle("Click On Equip Slots To Filter Inventory".localize(), ref Settings.togglEquipSlotInventoryFiltering, 500.width());
+                       HelpLabel($"If you tick this you can click on equipment slots to filter the inventory for items that fit in it.\nFor more {"Enhanced Inventory".orange()} and {"Spellbook".orange()} check out the {"Loot & Spellbook Tab".orange().bold()}".localize());
+                   },
+                   () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
+                   () => {
+                       Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
+                       100.space();
+                       HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
+                   },
+                   () => {
+                       var modifier = KeyBindings.GetBinding("InventoryUseModifier");
+                       var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
+                       Toggle("Allow ".localize() + $"{modifierText}".cyan() + (" + Click".cyan() + " To Use Items In Inventory").localize(), ref Settings.toggleShiftClickToUseInventorySlot, 470.width());
+                       if (Settings.toggleShiftClickToUseInventorySlot) {
+                           ModifierPicker("InventoryUseModifier", "", 0);
+                       }
+                   },
+                   () => {
+                       var modifier = KeyBindings.GetBinding("ClickToTransferModifier");
+                       var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
+                       Toggle("Allow ".localize() + $"{modifierText}".cyan() + (" + Click".cyan() + " To Transfer Entire Stack").localize(), ref Settings.toggleShiftClickToFastTransfer, 470.width());
+                       if (Settings.toggleShiftClickToFastTransfer) {
+                           ModifierPicker("ClickToTransferModifier", "", 0);
+                       }
+                   },
+                   () => {
+                       Toggle("Enhanced Load/Save".localize(), ref Settings.toggleEnhancedLoadSave, 500.width());
+                       HelpLabel("Adds a search field to Load/Save screen (in game only)".localize());
+                   },
+                   () => Toggle("Object Highlight Toggle Mode".localize(), ref Settings.highlightObjectsToggle),
+                   () => {
+                       Toggle("Mark Interesting NPCs".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
+                       HelpLabel("This will change the color of NPC names on the highlike makers and change the color map markers to indicate that they have interesting or conditional interactions".localize());
+                   },
+                   () => Toggle("Make Spell/Ability/Item Pop-Ups Wider ".localize(), ref Settings.toggleWidenActionBarGroups),
+                   () => {
+                       if (Toggle("Show Acronyms in Spell/Ability/Item Pop-Ups".localize(), ref Settings.toggleShowAcronymsInSpellAndActionSlots)) {
+                           Main.SetNeedsResetGameUI();
+                       }
+                   },
+                   () => {
+                       Toggle("Make Puzzle Symbols More Clear".localize(), ref Settings.togglePuzzleRelief);
+                       25.space();
+                       HelpLabel(("ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: " + "[PuzzlePiece Green3x1]".yellow().bold() + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange()).localize());
+                   },
+                   () => {
+                       ActionButton("Clear Action Bar".localize(), () => Actions.ClearActionBar());
+                       50.space();
+                       Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".localize().green());
+                   },
+                   () => ActionButton("Fix Incorrect Main Character".localize(),
+                                      () => {
+                                          var probablyPlayer = Game.Instance.Player?.Party?
+                                                                   .Where(x => !x.IsCustomCompanion())
+                                                                   .Where(x => !x.IsStoryCompanion()).ToList();
+                                          if (probablyPlayer is { Count: 1 }) {
+                                              var newMainCharacter = probablyPlayer.First();
+                                              var text = "Promoting % to main character!".localize().Split('%');
+                                              Mod.Warn($"{text[0]}{newMainCharacter.CharacterName}{text[1]}");
+                                              if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
+                                          }
+                                      },
+                                      AutoWidth()),
+                   () => { }
                 );
             Div(0, 25);
             HStack("Loot Rarity Coloring",
