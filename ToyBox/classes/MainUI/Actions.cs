@@ -451,5 +451,27 @@ namespace ToyBox {
                 }
             }
         }
+
+        public static void MaximizeModWindow() {
+            var modUI = BagOfPatches.ModUI.UnityModManagerUIPatch.UnityModMangerUI;
+            var screenWidth = Screen.width;
+            var screenHeight = Screen.height;
+            modUI.mWindowSize = new Vector2(screenWidth, screenHeight);
+            modUI.mWindowSize = modUI.ClampWindowSize(modUI.mWindowSize);
+            modUI.mExpectedWindowSize = modUI.mWindowSize;
+            modUI.mWindowRect = new Rect(
+                    (screenWidth - modUI.mWindowSize.x) / 2.0f,
+                    (screenHeight - modUI.mWindowSize.y) / 2.0f,
+                    0.0f,
+                    0.0f
+                );
+            var newScale = screenWidth switch {
+                >= 2560 => 1.5f,
+                >= 1920 => 1.25f,
+                _ => 1.0f
+            };
+            modUI.mUIScale = newScale;
+            modUI.mUIScaleChanged = true;
+        }
     }
 }

@@ -136,7 +136,10 @@ namespace ToyBox {
                 Label("ToyBox has limited functionality from the main menu".yellow().bold());
             }
             if (!IsWide) {
-                Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
+                using (HorizontalScope()) {
+                    ActionButton("Maximize Window".localize(), Actions.MaximizeModWindow);
+                    Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
+                }
             }
             try {
                 var e = Event.current;
