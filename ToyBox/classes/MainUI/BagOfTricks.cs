@@ -476,9 +476,9 @@ namespace ToyBox {
                        Label(("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green()).localize());
                    },
                    () => {
-                       Toggle("Auto Follow While Holding Camera Follow Key", ref Settings.toggleAutoFollowHold, 400.width());
+                       Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
                        153.space();
-                       HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it");
+                       HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
                    },
                    () => {
                        Toggle("Alt + Mouse Wheel To Adjust Clip Plane".localize(), ref Settings.toggleUseAltMouseWheelToAdjustClipPlane);
