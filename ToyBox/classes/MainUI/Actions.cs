@@ -471,7 +471,12 @@ namespace ToyBox {
                 _ => 1.0f
             };
             modUI.mUIScale = newScale;
+            modUI.mExpectedUIScale = newScale;
             modUI.mUIScaleChanged = true;
+            UnityModManager.Params.WindowWidth = modUI.mWindowSize.x;
+            UnityModManager.Params.WindowHeight = modUI.mWindowSize.y;
+            UnityModManager.Params.UIScale = newScale;
+            UnityModManager.SaveSettingsAndParams();
         }
     }
 }
