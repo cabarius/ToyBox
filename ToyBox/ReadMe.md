@@ -53,6 +53,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (**Narria***) **Added Enhanced Load/Save Window that lets you search for your saves in the main menu and in game**
  * (***Narria***) Overtips showing interesting NPCs now update immediately when their state changes (like after giving all your elven pages to the storyteller)
 * (***Narria***) **Murder Hobo** and **Kill All** now work in Tactical Combat cuz why not?
+* (***BuckAMayzing***) **More Bulk Sell** - integrated the More Bulk Sell mod into ToyBox (and fixed outstanding issues), as it appears to have been abandoned. Credit to zesen for the original version of the mod.
 * (***Narria***) Changed logic for creation points to enforce game point minimums and added a toggle to let you ignore this
 * (***Narria***) Fixed bug where mass loot would not come up in situations with no ground loot
 * (***Narria***) Fixed bug where NPC portraits were missing if you had **Expand Dialog To Include Remote Companions ** but not **Include Former Companions**
