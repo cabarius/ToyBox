@@ -40,8 +40,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 **ToyBox 1.5.3** ***Preview*** **May 16, 2023a**
 ### Ver 1.5.2
  * (***Narria***) **UI Reorg** Moved UI Enhancements into new top level **Enhanced UI** tab and the Loot tab is now just for loot related stuff
- * (***Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equiped by the slot you click on.
-   * **Click On Equip Slots** will mark items that have modifier conficts with a yellow background
+ * (***Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equipped by the slot you click on.
+   * **Click On Equip Slots** will mark items that have modifier conflicts with a yellow background
  * (***Narria***) **Ignore Forbidden Archetypes now also lets you choose ones such as Griffonheart in the creation and level up screen**
 * (***Narria***) **Fixed crasher when multiclass is turned in and doing class selection during char creation**
  * (***Narria***) Improved Interesting NPC calaculations
@@ -50,7 +50,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
    * Entries for the same condition are merged when they occur for multiple sources
    * Fixed issue for Interesting NPCs show all where it was showing other copies of the NPCs that were not really in the area at the current time.
    * Added toggle under Show All to show the other versions of NPCs
- * (**Narria***) **Added Enhanced Load/Save Window that lets you search for your saves in the main menu and in game**
+ * (***Narria***) **Added Enhanced Load/Save Window that lets you search for your saves in the main menu and in game**
  * (***Narria***) Overtips showing interesting NPCs now update immediately when their state changes (like after giving all your elven pages to the storyteller)
 * (***Narria***) **Murder Hobo** and **Kill All** now work in Tactical Combat cuz why not?
 * (***BuckAMayzing***) **More Bulk Sell** - integrated the More Bulk Sell mod into ToyBox (and fixed outstanding issues), as it appears to have been abandoned. Credit to zesen for the original version of the mod.

@@ -30,9 +30,9 @@ namespace ToyBox {
                 },
                 () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
                 () => {
-                    Toggle("Auto Follow While Holding Camera Follow Key", ref Settings.toggleAutoFollowHold, 400.width());
+                    Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
                     100.space();
-                    HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it");
+                    HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
                 },
                 () => {
                     var modifier = KeyBindings.GetBinding("InventoryUseModifier");
