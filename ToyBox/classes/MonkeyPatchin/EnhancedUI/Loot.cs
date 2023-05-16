@@ -158,11 +158,12 @@ namespace ToyBox.Inventory {
         }
 
         // Highlight copyable scolls
-        [HarmonyPatch(typeof(LootSlotPCView), nameof(LootSlotPCView.BindViewImplementation))]
-        private static class ItemSlot_IsUsable_Patch {
-            public static void Postfix(ViewBase<ItemSlotVM> __instance) {
+        [HarmonyPatch(typeof(LootSlotPCView))]
+        private static class LootSlotPCViewPatch {
+            [HarmonyPatch(nameof(LootSlotPCView.BindViewImplementation))]
+            [HarmonyPostfix]
+            public static void BindViewImplementation(ViewBase<ItemSlotVM> __instance) {
                 if (__instance is LootSlotPCView itemSlotPCView) {
-                    //                        modLogger.Log($"checking  {itemSlotPCView.ViewModel.Item}");
                     if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll && Settings.toggleHighlightCopyableScrolls) {
                         //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
                         itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
@@ -175,14 +176,17 @@ namespace ToyBox.Inventory {
         }
 
         // Adds Rarity color circles to items in inventory
-        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>), nameof(ItemSlotView<EquipSlotVM>.RefreshItem))]
-        private static class ItemSlotView_RefreshItem_Patch {
-            public static void Postfix(InventoryEquipSlotView __instance) {
-                if (!__instance.SlotVM.HasItem || !__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.color = Color.white;
+        [HarmonyPatch(typeof(ItemSlotView<EquipSlotVM>))]
+        private static class ItemSlotViewPatch {
+            [HarmonyPatch(nameof(ItemSlotView<EquipSlotVM>.RefreshItem))]
+            [HarmonyPostfix]
+            public static void RefreshItem(InventoryEquipSlotView __instance) {
+                if (__instance.ViewModel.HasItem && __instance.ViewModel.IsScroll && Settings.toggleHighlightCopyableScrolls) {
+                    //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
+                    __instance.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
                 }
-                else if (__instance.SlotVM.IsScroll) {
-                    __instance.m_Icon.color = new Color(0.5f, 1.0f, 0.5f, 1.0f);
+                else {
+                    __instance.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
                 }
                 var item = __instance.Item;
                 if (Settings.togglEquipSlotInventoryFiltering) {
@@ -191,8 +195,8 @@ namespace ToyBox.Inventory {
                             && inventorySlotView.Find("Item/NeedCheckLayer") is { } conflictFeedback) {
                             var unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
                             if (unit != null && item != null && SelectedLootSlotFilters.Any()) {
-                                Mod.Debug($"Unit: {unit.CharacterName}");
-                                Mod.Debug($"Item: {item.Blueprint.GetDisplayName()}");
+                                //Mod.Debug($"Unit: {unit.CharacterName}");
+                                //Mod.Debug($"Item: {item.Blueprint.GetDisplayName()}");
                                 var hasConflicts = unit.HasModifierConflicts(item);
                                 conflictFeedback.gameObject.SetActive(hasConflicts);
                                 var icon = conflictFeedback.GetComponent<Image>();

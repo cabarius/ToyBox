@@ -7,27 +7,27 @@ using static ModKit.UI;
 
 namespace ToyBox {
     public class LevelUp {
-        public static Settings settings => Main.Settings;
+        public static Settings Settings => Main.Settings;
         public static void ResetGUI() { }
         public static void OnGUI() {
             HStack("Character Creation".localize(), 1,
                 () => {
                     using (VerticalScope()) {
                         using (HorizontalScope()) {
-                            Slider("Build Points (Main)".localize(), ref settings.characterCreationAbilityPointsPlayer, 1, 600, 25, "", 300.width());
+                            Slider("Build Points (Main)".localize(), ref Settings.characterCreationAbilityPointsPlayer, 1, 600, 25, "", 300.width());
                             25.space();
-                            Toggle("Ignore Game Minimum".localize(), ref settings.characterCreationAbilityPointsOverrideGameMinimums);
+                            Toggle("Ignore Game Minimum".localize(), ref Settings.characterCreationAbilityPointsOverrideGameMinimums);
                             25.space();
                             HelpLabel("Tick this if you want these sliders to let you go below game specified minimum point value".localize());
                             Space();
                         }
                         using (HorizontalScope()) {
-                            Slider("Build Points (Mercenary)".localize(), ref settings.characterCreationAbilityPointsMerc, 1, 600, 25, "", AutoWidth());
+                            Slider("Build Points (Mercenary)".localize(), ref Settings.characterCreationAbilityPointsMerc, 1, 600, 25, "", AutoWidth());
                         }
                     }
                 },
-                () => Slider("Ability Max".localize(), ref settings.characterCreationAbilityPointsMax, 0, 50, 18, "", AutoWidth()),
-                () => Slider("Ability Min".localize(), ref settings.characterCreationAbilityPointsMin, 0, 50, 7, "", AutoWidth()),
+                () => Slider("Ability Max".localize(), ref Settings.characterCreationAbilityPointsMax, 0, 50, 18, "", AutoWidth()),
+                () => Slider("Ability Min".localize(), ref Settings.characterCreationAbilityPointsMin, 0, 50, 7, "", AutoWidth()),
                 //() => {
                 //    UI.Toggle("All Appearance Options", ref settings.toggleAllRaceCustomizations);
                 //    UI.Space(25);
@@ -38,66 +38,66 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Create & Level Up".localize(), 1,
                 () => {
-                    Slider("Feature Selection Multiplier".localize(), ref settings.featsMultiplier, 0, 10, 1, "", Width(600));
+                    Slider("Feature Selection Multiplier".localize(), ref Settings.featsMultiplier, 0, 10, 1, "", Width(600));
                     Space(25);
                     Label("This allows you to select a given feature more than once at level up".localize().green());
                 },
                 () => {
                     ActionButton("Maximize Mythic Flexibility",
                                  () => {
-                                     settings.toggleIgnoreClassRestrictions = true;
-                                     settings.toggleAllowCompanionsToBecomeMythic = true;
-                                     settings.toggleAllowMythicPets = true;
+                                     Settings.toggleIgnoreClassRestrictions = true;
+                                     Settings.toggleAllowCompanionsToBecomeMythic = true;
+                                     Settings.toggleAllowMythicPets = true;
                                  });
                     25.space();
                     HelpLabel(("This will set options below to enable you to choose mythics more freely for both you, companions and even pets" + "\nNote:".orange().bold() + " this will also ignore other class restrictions for non mythic").localize());
 
                 },
-                () => Toggle("Apply Feature Selection Multiplier to party members".localize(), ref settings.toggleFeatureMultiplierCompanions),
+                () => Toggle("Apply Feature Selection Multiplier to party members".localize(), ref Settings.toggleFeatureMultiplierCompanions),
                 () => {
-                    Toggle("Allow Multiple Archetypes When Selecting A New Class".localize(), ref settings.toggleMultiArchetype);
+                    Toggle("Allow Multiple Archetypes When Selecting A New Class".localize(), ref Settings.toggleMultiArchetype);
                     25.space();
                     Label("This allows you to select combinations of archetypes when selecting a class for the first time that contain distinct spellbooks".localize().green());
                 },
-                () => Toggle("Make All Feature Selections Optional".localize(), ref settings.toggleOptionalFeatSelection),
+                () => Toggle("Make All Feature Selections Optional".localize(), ref Settings.toggleOptionalFeatSelection),
                 () => {
-                    Toggle("Ignore Attribute Cap".localize(), ref settings.toggleIgnoreAttributeCap);
+                    Toggle("Ignore Attribute Cap".localize(), ref Settings.toggleIgnoreAttributeCap);
                     Space(25);
-                    Toggle("Ignore Remaining Attribute Points".localize(), ref settings.toggleIgnoreAttributePointsRemaining);
+                    Toggle("Ignore Remaining Attribute Points".localize(), ref Settings.toggleIgnoreAttributePointsRemaining);
                 },
                 () => {
-                    Toggle("Ignore Skill Cap".localize(), ref settings.toggleIgnoreSkillCap);
+                    Toggle("Ignore Skill Cap".localize(), ref Settings.toggleIgnoreSkillCap);
                     Space(73);
-                    Toggle("Ignore Remaining Skill Points".localize(), ref settings.toggleIgnoreSkillPointsRemaining);
+                    Toggle("Ignore Remaining Skill Points".localize(), ref Settings.toggleIgnoreSkillPointsRemaining);
                 },
-                () => Toggle("Always Able To Level Up".localize(), ref settings.toggleNoLevelUpRestrictions),
-                () => Toggle("Add Full Hit Die Value".localize(), ref settings.toggleFullHitdiceEachLevel),
+                () => Toggle("Always Able To Level Up".localize(), ref Settings.toggleNoLevelUpRestrictions),
+                () => Toggle("Add Full Hit Die Value".localize(), ref Settings.toggleFullHitdiceEachLevel),
                 () => {
-                    Toggle("Ignore Class Restrictions".localize(), ref settings.toggleIgnoreClassRestrictions);
+                    Toggle("Ignore Class Restrictions".localize(), ref Settings.toggleIgnoreClassRestrictions);
                     Space(25);
                     Label(("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from mythic rank 1. This may have interesting and unexpected effects. Backup early and often...".green()).localize());
                 },
                 () => {
-                    Toggle("Ignore Feat Restrictions".localize(), ref settings.toggleIgnoreFeatRestrictions);
+                    Toggle("Ignore Feat Restrictions".localize(), ref Settings.toggleIgnoreFeatRestrictions);
                     Space(25);
                     Label(("Experimental".cyan() + ": lets you select any feat ignoring prerequisites.".green()).localize());
                 },
-                () => Toggle("Allow Companions to Take Mythic Classes".localize(), ref settings.toggleAllowCompanionsToBecomeMythic),
-                () => Toggle("Allow Pets to Take Mythic Classes".localize(), ref settings.toggleAllowMythicPets),
-                () => Toggle("Ignore Prerequisites When Choosing A Feat".localize(), ref settings.toggleFeaturesIgnorePrerequisites),
-                () => Toggle("Ignore Caster Type And Spell Level Restrictions".localize(), ref settings.toggleIgnoreCasterTypeSpellLevel),
-                () => Toggle("Ignore Forbidden Archetypes".localize(), ref settings.toggleIgnoreForbiddenArchetype),
-                () => Toggle("Ignore Required Stat Values".localize(), ref settings.toggleIgnorePrerequisiteStatValue),
-                () => Toggle("Ignore Required Class Levels".localize(), ref settings.toggleIgnorePrerequisiteClassLevel),
-                () => Toggle("Ignore Alignment When Choosing A Class".localize(), ref settings.toggleIgnoreAlignmentWhenChoosingClass),
-                () => Toggle("Ignore Prerequisite Features (like Race) when choosing Class".localize(), ref settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass),
+                () => Toggle("Allow Companions to Take Mythic Classes".localize(), ref Settings.toggleAllowCompanionsToBecomeMythic),
+                () => Toggle("Allow Pets to Take Mythic Classes".localize(), ref Settings.toggleAllowMythicPets),
+                () => Toggle("Ignore Prerequisites When Choosing A Feat".localize(), ref Settings.toggleFeaturesIgnorePrerequisites),
+                () => Toggle("Ignore Caster Type And Spell Level Restrictions".localize(), ref Settings.toggleIgnoreCasterTypeSpellLevel),
+                () => Toggle("Ignore Forbidden Archetypes".localize(), ref Settings.toggleIgnoreForbiddenArchetype),
+                () => Toggle("Ignore Required Stat Values".localize(), ref Settings.toggleIgnorePrerequisiteStatValue),
+                () => Toggle("Ignore Required Class Levels".localize(), ref Settings.toggleIgnorePrerequisiteClassLevel),
+                () => Toggle("Ignore Alignment When Choosing A Class".localize(), ref Settings.toggleIgnoreAlignmentWhenChoosingClass),
+                () => Toggle("Ignore Prerequisite Features (like Race) when choosing Class".localize(), ref Settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass),
 #if false // This is incredibly optimistic and requires resolving a bunch of conflicts with the existing gestalt and scroll copy logic
                 () => UI.Toggle("Ignore Spellbook Restrictions When Choosing Spells", ref settings.toggleUniversalSpellbookd),
 #endif
 
-                () => Toggle("Skip Spell Selection".localize(), ref settings.toggleSkipSpellSelection),
+                () => Toggle("Skip Spell Selection".localize(), ref Settings.toggleSkipSpellSelection),
 #if DEBUG
-                () => Toggle("Lock Character Level".localize(), ref settings.toggleLockCharacterLevel),
+                () => Toggle("Lock Character Level".localize(), ref Settings.toggleLockCharacterLevel),
             //                    () => UI.Toggle("Ignore Alignment Restrictions", ref settings.toggleIgnoreAlignmentRestriction),
 #endif
 #if false
@@ -105,9 +105,9 @@ namespace ToyBox {
                 () => { UI.Toggle("Ignore Feat Prerequisites When Choosing A Class", ref settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass); },
                 () => { UI.Toggle("Ignore Feat Prerequisits (List) When Choosing A Class", ref settings.toggle); },
 #endif
-                () => Toggle("Remove Level 20 Caster Level Cap".localize(), ref settings.toggleUncappedCasterLevel),
-                () => Toggle("Party Level Cap 40 (continuous growth after 20)".localize(), ref settings.toggleContinousLevelCap),
-                () => Toggle("Party Level Cap 24 (exponential growth)".localize(), ref settings.toggleExponentialLevelCap),
+                () => Toggle("Remove Level 20 Caster Level Cap".localize(), ref Settings.toggleUncappedCasterLevel),
+                () => Toggle("Party Level Cap 40 (continuous growth after 20)".localize(), ref Settings.toggleContinousLevelCap),
+                () => Toggle("Party Level Cap 24 (exponential growth)".localize(), ref Settings.toggleExponentialLevelCap),
 
                 () => { }
                 );
@@ -136,7 +136,7 @@ namespace ToyBox {
             HStack("Multiple Classes".localize(), 1,
                 //() => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),
                 () => {
-                    Toggle("Multiple Classes On Level-Up".localize(), ref settings.toggleMulticlass);
+                    Toggle("Multiple Classes On Level-Up".localize(), ref Settings.toggleMulticlass);
                     Space(25);
                     using (VerticalScope()) {
                         Label("Experimental - With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. See the link for more information on this campaign variant.".localize().green());
@@ -145,16 +145,16 @@ namespace ToyBox {
                     }
                 },
                 () => {
-                    EnumGrid("Hit Point (Hit Die) Growth".localize(), ref settings.multiclassHitPointPolicy, 0, AutoWidth());
+                    EnumGrid("Hit Point (Hit Die) Growth".localize(), ref Settings.multiclassHitPointPolicy, 0, AutoWidth());
                 },
                 () => {
-                    EnumGrid("Basic Attack Growth Pr".localize(), ref settings.multiclassBABPolicy, 0, AutoWidth());
+                    EnumGrid("Basic Attack Growth Pr".localize(), ref Settings.multiclassBABPolicy, 0, AutoWidth());
                 },
                 () => {
-                    EnumGrid("Saving Throw Growth".localize(), ref settings.multiclassSavingThrowPolicy, 0, AutoWidth());
+                    EnumGrid("Saving Throw Growth".localize(), ref Settings.multiclassSavingThrowPolicy, 0, AutoWidth());
                 },
                 () => {
-                    EnumGrid("Skill Point Growth".localize(), ref settings.multiclassSkillPointPolicy, 0, AutoWidth());
+                    EnumGrid("Skill Point Growth".localize(), ref Settings.multiclassSkillPointPolicy, 0, AutoWidth());
                 },
 #if false
                 () => UI.Toggle("Use Recalculate Caster Levels", ref settings.toggleRecalculateCasterLevelOnLevelingUp),
@@ -168,7 +168,7 @@ namespace ToyBox {
                 () => { }
                 );
 
-            if (settings.toggleMulticlass) {
+            if (Settings.toggleMulticlass) {
                 UnitEntityData selectedChar = null;
                 Div(0, 25);
                 HStack("Class Selection".localize(), 1,
@@ -176,15 +176,15 @@ namespace ToyBox {
                          if (Main.IsInGame) {
                              var characters = Game.Instance.Player.m_PartyAndPets;
                              if (characters == null) { return; }
-                             settings.selectedClassToConfigMulticlass = Math.Min(characters.Count, settings.selectedClassToConfigMulticlass);
-                             ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
+                             Settings.selectedClassToConfigMulticlass = Math.Min(characters.Count, Settings.selectedClassToConfigMulticlass);
+                             ActionSelectionGrid(ref Settings.selectedClassToConfigMulticlass,
                                  characters.Select((ch) => ch.CharacterName).Prepend("Char Gen".localize()).ToArray(),
                                  6,
                                  (index) => { },
                                  AutoWidth()
                                  );
-                             if (settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;
-                             else selectedChar = characters[settings.selectedClassToConfigMulticlass - 1];
+                             if (Settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;
+                             else selectedChar = characters[Settings.selectedClassToConfigMulticlass - 1];
                          }
                      },
                      () => { }
