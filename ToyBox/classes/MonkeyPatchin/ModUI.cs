@@ -12,10 +12,14 @@ using ModKit;
 
 namespace ToyBox.BagOfPatches {
     internal static class ModUI {
-        [HarmonyPatch(typeof(UnityModManager.UI), nameof(UnityModManager.UI.Update))]
-        internal static class UnityModManager_UI_Update_Patch {
+        [HarmonyPatch(typeof(UnityModManager.UI))]
+        internal static class UnityModManagerUIPatch {
+            public static UnityModManager.UI UnityModMangerUI = null;
             private static readonly Dictionary<int, float> scrollOffsets = new() { };
-            private static void Postfix(UnityModManager.UI __instance, ref Rect ___mWindowRect, ref Vector2[] ___mScrollPosition, ref int ___tabId) {
+            [HarmonyPatch(nameof(UnityModManager.UI.Update))]
+            [HarmonyPostfix]
+            private static void Update(UnityModManager.UI __instance, ref Rect ___mWindowRect, ref Vector2[] ___mScrollPosition, ref int ___tabId) {
+                UnityModMangerUI = __instance;
 #if false
                 // hack to fix mouse wheel which seems to gets de-magnified when the cursor is on the right side of the screen
                 var scrollPosition = ___mScrollPosition[___tabId];

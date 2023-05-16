@@ -38,6 +38,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.3 (Coming Soon)
 **ToyBox 1.5.3** ***Preview*** **May 16, 2023a**
+ * (***Narria***) **Enhanced UI** Added buttons to maximize mod window size and also show it when you get get the UI warning for small mod windows
 ### Ver 1.5.2
  * (***Narria***) **UI Reorg** Moved UI Enhancements into new top level **Enhanced UI** tab and the Loot tab is now just for loot related stuff
  * (***Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equipped by the slot you click on.
