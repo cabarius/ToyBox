@@ -36,30 +36,22 @@ namespace ToyBox {
                 () => { }
                 );
             Div(0, 25);
-            HStack("Mythic Paths".localize(), 1,
-                () => Label("Warning! Using these might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".localize().green()),
-                () => ActionButton("Unlock Aeon".localize(), Actions.UnlockAeon, Width(300)),
-                () => ActionButton("Unlock Azata".localize(), Actions.UnlockAzata, Width(300)),
-                () => ActionButton("Unlock Trickster".localize(), Actions.UnlockTrickster, Width(300)),
-                () => ActionButton("Unlock Lich".localize(), Actions.UnlockLich, Width(300)),
-                () => { ActionButton("Unlock Swarm".localize(), Actions.UnlockSwarm, Width(300)); Space(25); Label("Only available at Mythic level 8 or higher".localize().green()); },
-                () => { ActionButton("Unlock Gold Dragon".localize(), Actions.UnlockGoldDragon, Width(300)); Space(25); Label("Only available at Mythic level 8 or higher".localize().green()); },
-                () => {
-                    ActionButton("All Mythic Paths".localize().orange(), Actions.UnlockAllBasicMythicPaths, Width(300));
-                    Space(25);
-                    Label("Unlock mythic paths besides Legend and Devil which block progression".localize().green());
-                },
-                () => Label("", Height(10)),
-                () => { ActionButton("Unlock Devil".localize(), Actions.UnlockDevil, Width(300)); Space(25); Label("Prevents you from advancing in Aeon or Azata".localize().green()); },
-                () => { ActionButton("Unlock Legend".localize(), Actions.UnlockLegend, Width(300)); Space(25); Label("Prevents you from advancing all other Mythic Path".localize().green()); },
-                () => { }
-                );
-            Div(0, 25);
             HStack("Create & Level Up".localize(), 1,
                 () => {
                     Slider("Feature Selection Multiplier".localize(), ref settings.featsMultiplier, 0, 10, 1, "", Width(600));
                     Space(25);
                     Label("This allows you to select a given feature more than once at level up".localize().green());
+                },
+                () => {
+                    ActionButton("Maximize Mythic Flexibility",
+                                 () => {
+                                     settings.toggleIgnoreClassRestrictions = true;
+                                     settings.toggleAllowCompanionsToBecomeMythic = true;
+                                     settings.toggleAllowMythicPets = true;
+                                 });
+                    25.space();
+                    HelpLabel(("This will set options below to enable you to choose mythics more freely for both you, companions and even pets" + "\nNote:".orange().bold() + " this will also ignore other class restrictions for non mythic").localize());
+
                 },
                 () => Toggle("Apply Feature Selection Multiplier to party members".localize(), ref settings.toggleFeatureMultiplierCompanions),
                 () => {
@@ -120,6 +112,26 @@ namespace ToyBox {
                 () => { }
                 );
 #if true
+            Div(0, 25);
+            HStack("Mythic Paths".localize(), 1,
+                   () => Label("Warning! Using these might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".localize().green()),
+                   () => ActionButton("Unlock Aeon".localize(), Actions.UnlockAeon, Width(300)),
+                   () => ActionButton("Unlock Azata".localize(), Actions.UnlockAzata, Width(300)),
+                   () => ActionButton("Unlock Trickster".localize(), Actions.UnlockTrickster, Width(300)),
+                   () => ActionButton("Unlock Lich".localize(), Actions.UnlockLich, Width(300)),
+                   () => { ActionButton("Unlock Swarm".localize(), Actions.UnlockSwarm, Width(300)); Space(25); Label("Only available at Mythic level 8 or higher".localize().green()); },
+                   () => { ActionButton("Unlock Gold Dragon".localize(), Actions.UnlockGoldDragon, Width(300)); Space(25); Label("Only available at Mythic level 8 or higher".localize().green()); },
+                   () => {
+                       ActionButton("All Mythic Paths".localize().orange(), Actions.UnlockAllBasicMythicPaths, Width(300));
+                       Space(25);
+                       Label("Unlock mythic paths besides Legend and Devil which block progression".localize().green());
+                   },
+                   () => Label("", Height(10)),
+                   () => { ActionButton("Unlock Devil".localize(), Actions.UnlockDevil, Width(300)); Space(25); Label("Prevents you from advancing in Aeon or Azata".localize().green()); },
+                   () => { ActionButton("Unlock Legend".localize(), Actions.UnlockLegend, Width(300)); Space(25); Label("Prevents you from advancing all other Mythic Path".localize().green()); },
+                   () => { }
+                );
+
             Div(0, 25);
             HStack("Multiple Classes".localize(), 1,
                 //() => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),

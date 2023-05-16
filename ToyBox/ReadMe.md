@@ -37,7 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.2 (Comming Soon)
-**ToyBox 1.5.2** ***Preview*** **May 15, 2023q**
+**ToyBox 1.5.2** ***Preview*** **May 15, 2023r**
  * (**Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equiped by the slot you click on.
    * **Click On Equip Slots** will mark items that have modifier conficts with a yellow background
  * (***Narria***) **Ignore Forbidden Archetypes now also lets you choose ones such as Griffonheart in the creation and level up screen**
@@ -59,6 +59,9 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Fixed crasher with add all Mercenaries in Mercenaries editor
 * (***Narria***) Cleaned up UI of Mercenaries Editor
 * (***Narria***) When you use **Expanded Answers For Conditional Responses** it will properly check to see if the answer has been seen before 
+* (***Narria***) **Level Up & Multiclass** 
+    * Reorganzed tab to move the settings closer to the top
+    * Added shortcut button to **Maximize Mythic Flexibility**
  * (***ADDB***) Initial support for localization
  * (***BuckAMayzing***) Patched an issue that could cause a crash if a shared string was referenced incorrectly in other mods.
 ### Ver 1.5.1

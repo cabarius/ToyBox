@@ -271,13 +271,15 @@ namespace ToyBox.BagOfPatches {
                                             if (dialog.SelectedAnswers.Where(a => a.AssetGuid == answer.AssetGuid).Any())
                                                 continue;
                                         }
-                                        var multiAnswer = answer.ShallowClone();
-                                        multiAnswer.name = multiAnswer.name + "-ToyBox";
-                                        var cueSel = cueSelection.ShallowClone();
-                                        cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
-                                        cueSel.Strategy = Strategy.First;
-                                        multiAnswer.NextCue = cueSel;
-                                        expandedAnswers.Add(multiAnswer);
+                                        if (settings.toggleShowAllAnswersForEachConditionalResponse || cueBase.CanShow()) {
+                                            var multiAnswer = answer.ShallowClone();
+                                            multiAnswer.name = multiAnswer.name + "-ToyBox";
+                                            var cueSel = cueSelection.ShallowClone();
+                                            cueSel.Cues = new List<BlueprintCueBaseReference>() { cueBase.ToReference<BlueprintCueBaseReference>() };
+                                            cueSel.Strategy = Strategy.First;
+                                            multiAnswer.NextCue = cueSel;
+                                            expandedAnswers.Add(multiAnswer);
+                                        }
                                     }
                                 }
                                 else
