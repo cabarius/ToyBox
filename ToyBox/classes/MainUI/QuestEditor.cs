@@ -25,9 +25,6 @@ using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using System.Security.AccessControl;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public static class QuestExensions {

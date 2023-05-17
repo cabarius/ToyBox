@@ -4,9 +4,6 @@ using System.Linq;
 using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
-#if RT
-
-#endif
 
 namespace ToyBox {
     internal class PartyUtils {

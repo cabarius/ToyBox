@@ -8,8 +8,6 @@ using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Items;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.MVVM;
-using Kingmaker.UI.MVVM._PCView.Loot;
-using Kingmaker.UI.MVVM._VM.Loot;
 using Kingmaker.UnitLogic;
 using Kingmaker.Utility;
 using Kingmaker.View;
@@ -25,8 +23,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-#if RT
-
+#if Wrath
+using Kingmaker.UI.MVVM._PCView.Loot;
+using Kingmaker.UI.MVVM._VM.Loot;
 #endif
 
 namespace ToyBox {

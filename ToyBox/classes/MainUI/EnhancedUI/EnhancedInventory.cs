@@ -6,9 +6,18 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic.Abilities;
 using ModKit;
+#if Wrath
 using ToyBox.Inventory;
+#endif
 
 namespace ToyBox {
+    public enum InventoryType {
+        InventoryStash,
+        Vendor,
+        LootCollector,
+        LootInventoryStash
+    }
+
     public static class EnhancedInventory {
         public static Settings Settings => Main.Settings;
         private static Harmony m_harmony;
@@ -37,7 +46,9 @@ namespace ToyBox {
             [FilterCategories.Weapon] = ((int)ItemsFilter.FilterType.Weapon, null),
             [FilterCategories.Armor] = ((int)ItemsFilter.FilterType.Armor, null),
             [FilterCategories.Accessories] = ((int)ItemsFilter.FilterType.Accessories, null),
+#if Wrath
             [FilterCategories.Ingredients] = ((int)ItemsFilter.FilterType.Ingredients, null),
+#endif
             [FilterCategories.Usable] = ((int)ItemsFilter.FilterType.Usable, null),
             [FilterCategories.Notable] = ((int)ItemsFilter.FilterType.Notable, null),
             [FilterCategories.NonUsable] = ((int)ItemsFilter.FilterType.NonUsable, null),
@@ -82,8 +93,11 @@ namespace ToyBox {
                         SorterMapper.Add(SorterCategoryMap[flag].index);
                 }
             }
+            // TODO: bring this back once we implement this for RT
+#if Wrath
             ItemsFilterPCViewPatch.ReloadFilterViews();
             ItemsFilterSearchPCViewPatch.ReloadFilterViews();
+#endif
         }
     }
 

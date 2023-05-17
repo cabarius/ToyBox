@@ -23,8 +23,6 @@ using Attribute = System.Attribute;
 #if Wrath
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-#elif RT
-using Kingmaker.Utility.UnityExtensions;
 #endif
 
 namespace ToyBox {

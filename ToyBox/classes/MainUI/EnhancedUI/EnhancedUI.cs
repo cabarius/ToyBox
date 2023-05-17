@@ -5,7 +5,6 @@ using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
-using ToyBox.Multiclass;
 using static ModKit.UI;
 using Kingmaker.View.MapObjects;
 using Kingmaker.View.MapObjects.InteractionRestrictions;
@@ -13,6 +12,9 @@ using ModKit.Utility;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using UnityModManagerNet;
+#if Wrath
+using ToyBox.Multiclass;
+#endif
 
 namespace ToyBox {
     public static class EnhancedUI {

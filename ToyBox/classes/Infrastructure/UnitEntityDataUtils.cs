@@ -26,8 +26,6 @@ using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.UI.Common;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
-#elif RT
-
 #endif
 
 namespace ToyBox {
@@ -80,8 +78,9 @@ namespace ToyBox {
             }
         }
 
+#if Wrath
         public static void Kill(UnitEntityData unit) => unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue + unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
-
+                   
         public static void ForceKill(UnitEntityData unit) => unit.Descriptor.State.ForceKill = true;
 
         public static void ResurrectAndFullRestore(UnitEntityData unit) => unit.Descriptor.ResurrectAndFullRestore();
@@ -96,6 +95,19 @@ namespace ToyBox {
             else
                 Mod.Warn("Unit is null!");
         }
+#elif RT
+        public static void Kill(UnitEntityData unit) => unit.Health.Damage = unit.Stats.GetStat(StatType.HitPoints) + unit.Stats.GetStat(StatType.TemporaryHitPoints);
+
+        public static void Charm(UnitEntityData unit) {
+            if (unit != null) {
+                // TODO: can we still do this?
+                // unit.SetFaction() = Game.Instance.BlueprintRoot.PlayerFaction;
+            }
+            else
+                Mod.Warn("Unit is null!");
+        }
+#endif
+                                                             
 
         public static void AddToParty(UnitEntityData unit) {
             Charm(unit);
@@ -106,8 +118,11 @@ namespace ToyBox {
             var currentMode = Game.Instance.CurrentMode;
             Game.Instance.Player.AddCompanion(unit);
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+#if Wrath
                 var pets = unit.Pets;
+#endif
                 unit.IsInGame = true;
+#if Wrath
                 unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
                 unit.LeaveCombat();
                 Charm(unit);
@@ -119,8 +134,22 @@ namespace ToyBox {
                 foreach (var pet in pets) {
                     pet.Entity.Position = unit.Position;
                 }
+#elif RT
+                unit.Position = Game.Instance.Player.MainCharacter.Entity.Position;
+                unit.CombatState.LeaveCombat();
+                Charm(unit);
+                var unitPartCompanion = unit.Get<UnitPartCompanion>();
+                unitPartCompanion.State = CompanionState.InParty;
+                if (unit.IsDetached) {
+                    Game.Instance.Player.AttachPartyMember(unit);
+                }
+                foreach (var pet in pets) {
+                    pet.Entity.Position = unit.Position;
+                }
+#endif
             }
         }
+#if Wrath
         public static void RecruitCompanion(UnitEntityData unit) {
             var currentMode = Game.Instance.CurrentMode;
             unit = Game.Instance.EntityCreator.RecruitNPC(unit, unit.Blueprint);
@@ -154,6 +183,7 @@ namespace ToyBox {
                 }
             }
         }
+#endif
 #else
 note this code from Owlcat 
   private static void RecruitCompanion(string parameters)
@@ -203,7 +233,7 @@ note this code from Owlcat
             }
         }
 #endif
-
+#if Wrath
         public static void RemoveCompanion(UnitEntityData unit) {
             _ = Game.Instance.CurrentMode;
             Game.Instance.Player.RemoveCompanion(unit);
@@ -294,5 +324,6 @@ note this code from Owlcat
             }
             return null;
         }
+#endif
     }
 }

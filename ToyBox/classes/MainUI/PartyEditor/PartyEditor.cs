@@ -10,9 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static ModKit.UI;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -47,7 +44,9 @@ namespace ToyBox {
         private static bool editSpellbooks = false;
         private static UnitEntityData spellbookEditCharacter = null;
         private static readonly Dictionary<string, int> statEditorStorage = new();
+#if Wrath        
         public static Dictionary<string, Spellbook> SelectedSpellbook = new();
+#endif
         private static UnitEntityData GetEditCharacter() {
             var characterList = CharacterPicker.GetCharacterList();
             if (characterList == null || characterList.Count == 0) return null;
@@ -89,6 +88,7 @@ namespace ToyBox {
             }
             //            else
             //                Space(178);
+#if Wrath
             if (RespecHelper.GetRespecableUnits().Contains(ch)) {
                 respecableCount++;
                 ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, Width(150));
@@ -96,6 +96,7 @@ namespace ToyBox {
             else {
                 Space(153);
             }
+#endif
 #if false
             Space(25);
             ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
@@ -113,10 +114,12 @@ namespace ToyBox {
             var characterListFunc = CharacterPicker.OnFilterPickerGUI();
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
+#if Wrath
             if (characterListFunc.name == "Nearby") {
                 Slider("Nearby Distance", ref CharacterPicker.nearbyRange, 1f, 200, 25, 0, " meters", Width(250));
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
+#endif
             Space(20);
             var chIndex = 0;
             recruitableCount = 0;
@@ -141,7 +144,11 @@ namespace ToyBox {
             foreach (var ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
+#if Wrath                
                 var progression = ch.Descriptor.Progression;
+#elif RT
+                var progression = ch.Progression;
+#endif
                 var xpTable = progression.ExperienceTable;
                 var level = progression.CharacterLevel;
                 var mythicLevel = progression.MythicLevel;
@@ -154,14 +161,18 @@ namespace ToyBox {
                         var oldEditState = nameEditState;
                         if (isWide) {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
+#if Wrath                
                                 ch.Descriptor.CustomName = name;
+#endif
                                 Main.SetNeedsResetGameUI();
                             }
                         }
                         else
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
-                            ch.Descriptor.CustomName = name;
-                            Main.SetNeedsResetGameUI();
+#if Wrath                
+                                ch.Descriptor.CustomName = name;
+#endif                            
+                                Main.SetNeedsResetGameUI();
                         }
                         if (nameEditState != oldEditState) {
                             Mod.Log($"EditState changed: {oldEditState} -> {nameEditState}");
@@ -174,10 +185,13 @@ namespace ToyBox {
                             Label(ch.CharacterName.orange().bold(), Width(230));
                     }
                     Space(5);
+#if Wrath
                     var distance = mainChar.DistanceTo(ch); ;
                     Label(distance < 1 ? "" : distance.ToString("0") + "m", Width(75));
+#endif
                     Space(5);
                     int nextLevel;
+#if Wrath
                     for (nextLevel = level; xpTable.HasBonusForLevel(nextLevel + 1) && progression.Experience >= xpTable.GetBonus(nextLevel + 1); nextLevel++) { }
                     if (nextLevel <= level || !isOnTeam)
                         Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", Width(90));
@@ -208,6 +222,7 @@ namespace ToyBox {
                         else { Label("max", Width(63)); }
                     }
                     else { Space(66); }
+#endif
                     Space(30);
                     Wrap(IsNarrow, NarrowIndent, 0);
                     var prevSelectedChar = selectedCharacter;
@@ -283,6 +298,7 @@ namespace ToyBox {
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Features) {
                     todo = FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
                 }
+#if Wrath
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
                     todo = FactsEditor.OnGUI(ch, ch.Descriptor.Buffs.Enumerable.ToList());
                 }
@@ -292,6 +308,14 @@ namespace ToyBox {
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     todo = OnSpellsGUI(ch, spellbooks);
                 }
+#elif RT
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
+                    todo = FactsEditor.OnGUI(ch, ch.Buffs.Enumerable.ToList());
+                }
+                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
+                    todo = FactsEditor.OnGUI(ch, ch.Abilities.Enumerable.ToList());
+                }
+#endif
                 if (selectedCharacter != GetEditCharacter()) {
                     editingCharacterIndex = characterList.IndexOf(selectedCharacter);
                 }
@@ -313,9 +337,11 @@ namespace ToyBox {
             foreach (var action in todo)
                 action();
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
+#if Wrath
             if (charToRecruit != null) { UnitEntityDataUtils.RecruitCompanion(charToRecruit); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
             if (charToUnrecruit != null) { charToUnrecruit.Ensure<UnitPartCompanion>().SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>(); }
+#endif
         }
     }
 }

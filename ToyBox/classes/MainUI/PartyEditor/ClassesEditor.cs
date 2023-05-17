@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
-using ToyBox.Multiclass;
 using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
 using static ModKit.UI;
@@ -20,8 +18,9 @@ using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Parts;
 using static Kingmaker.Utility.UnitDescription.UnitDescription;
-#if RT
-
+#if Wrath
+using Kingmaker.Blueprints.Classes.Spells;
+using ToyBox.Multiclass;
 #endif
 
 namespace ToyBox {
@@ -67,7 +66,11 @@ namespace ToyBox {
                 MulticlassPicker.OnGUI(ch);
             }
             else {
+#if Wrath
                 var prog = ch.Descriptor.Progression;
+#elif RT
+                var prog = ch.Progression;
+#endif
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
                         Space(100);
@@ -75,7 +78,14 @@ namespace ToyBox {
                         ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), AutoWidth());
                         Space(25);
                         Label("level".green() + $": {prog.CharacterLevel}", Width(100f));
-                        ActionButton(">", () => prog.CharacterLevel = Math.Min(prog.MaxCharacterLevel, prog.CharacterLevel + 1), AutoWidth());
+                        ActionButton(">", () => prog.CharacterLevel = Math.Min(
+#if Wrath
+                                                    prog.MaxCharacterLevel, 
+#elif RT
+                                                    int.MaxValue, // TODO: is this right?
+#endif
+                                                    prog.CharacterLevel + 1),
+                                     AutoWidth());
                     }
                     ActionButton("Reset", () => ch.resetClassLevel(), Width(150));
                     Space(23);
@@ -144,9 +154,11 @@ namespace ToyBox {
                     Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
                 }
                 var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
+#if Wrath
                 var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                 var mythicCount = classData.Count(x => x.CharacterClass.IsMythic);
                 var mythicGestaltCount = classData.Count(cd => cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
+#endif
                 foreach (var cd in classData) {
                     var showedGestalt = false;
                     Div(100, 20);

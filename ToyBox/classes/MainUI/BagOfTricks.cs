@@ -17,8 +17,6 @@ using UnityModManagerNet;
 using static ModKit.UI;
 #if Wrath
 using Kingmaker.Kingdom;
-#elif RT
-
 #endif
 namespace ToyBox {
     public static class BagOfTricks {

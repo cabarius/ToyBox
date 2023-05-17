@@ -14,6 +14,7 @@ namespace ToyBox {
         };
 
         public static void InitializeDefaultDamageTypes() {
+#if Wrath
             if (Main.Settings.bulkSellSettings.damageReality.Count == 0) {
                 foreach (DamageRealityType type in Enum.GetValues(typeof(DamageRealityType)))
                     Main.Settings.bulkSellSettings.damageReality.Add(type, true);
@@ -24,7 +25,7 @@ namespace ToyBox {
                 foreach (DamageEnergyType type in Enum.GetValues(typeof(DamageEnergyType)))
                     Main.Settings.bulkSellSettings.damageEnergy.Add(type, true);
             }
+#endif
         }
     }
-
 }

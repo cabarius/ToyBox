@@ -18,11 +18,6 @@ using Kingmaker.UnitLogic.Mechanics;
 #if Wrath
 using Kingmaker.UI.FullScreenUITypes;
 using Kingmaker.Assets.UI;
-#elif RT
-using Kingmaker.UI.Models.Tooltip.Base;
-using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
-using Kingmaker.EntitySystem.Entities;
-
 #endif
 #if Wrath        
 namespace ModKit {

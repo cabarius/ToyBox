@@ -303,6 +303,9 @@
       <HintPath>..\lib\RT\UnityModManager_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Utility.Rounds">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Utility.Rounds.dll</HintPath>
+    </Reference>
     <Reference Include="Utility.UnityExtensions">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Utility.UnityExtensions.dll</HintPath>
     </Reference>
@@ -315,8 +318,9 @@
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintDataSource.cs" />
     <Compile Include="classes\Infrastructure\Compatibility.cs" />
     <Compile Include="classes\Infrastructure\ItemEntityUtils.cs" />
-    <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
+    <Compile Include="classes\MainUI\ActionsRT.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\OnAreaLoad.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\ItemRarity.cs" />
@@ -327,7 +331,6 @@
     <Compile Include="classes\Infrastructure\Utils.cs" />
     <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensions.cs" />
-    <Compile Include="classes\MainUI\BraaainzEditor.cs" />
     <Compile Include="classes\MainUI\Browser\BuffExclusionEditor.cs" />
     <Compile Include="classes\MainUI\Browser\Editor.cs" />
     <Compile Include="classes\MainUI\EnchantmentEditor.cs" />
@@ -337,13 +340,11 @@
     <Compile Include="classes\MainUI\Etudes\EtudeTreeModel.cs" />
     <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\SelectedCharacterObserver.cs" />
-    <Compile Include="classes\MainUI\EnhancedUI\OnAreaLoad.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\RemappableInt.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\SearchBar.cs" />
     <Compile Include="classes\Infrastructure\UIWidgetHelpers.cs" />
     <Compile Include="classes\MainUI\PartyEditor\ClassesEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\FeaturesTreeEditor.cs" />
-    <Compile Include="classes\MainUI\PartyEditor\SpellsEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\StatsEditor.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\PhatLoot.cs" />
     <Compile Include="classes\MainUI\MulticlassPicker.cs" />
@@ -352,7 +353,6 @@
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
     <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />
-    <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintListUI.cs" />
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintLoader.cs" />
     <Compile Include="classes\MainUI\ActionButtons.cs" />
@@ -364,10 +364,10 @@
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
-    <Compile Include="classes\Models\Settings+BulkSell.cs" />
     <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\Models\Settings.cs" />
+    <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -398,12 +398,12 @@
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
-            xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
-            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb*"
-            xcopy /Y "$(ProjectDir)\Info.json" "$(WrathPath)\Mods\0$(ProjectName)0\Info.json*"
-            xcopy /Y "$(ProjectDir)\Repository.json" "$(WrathPath)\Mods\0$(ProjectName)0\Repository.json*"
-            xcopy /E /Y "$(ProjectDir)Localization\" "$(WrathPath)\Mods\0$(ProjectName)0\Localization\"
+    <PostBuildEvent>echo "$(TargetPath)" "&gt;$(RogueModPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+            xcopy /Y "$(TargetPath)" "$(RogueModPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(RogueModPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb*"
+            xcopy /Y "$(ProjectDir)\Info.json" "$(RogueModPath)\Mods\0$(ProjectName)0\Info.json*"
+            xcopy /Y "$(ProjectDir)\Repository.json" "$(RogueModPath)\Mods\0$(ProjectName)0\Repository.json*"
+            xcopy /E /Y "$(ProjectDir)Localization\" "$(RogueModPath)\Mods\0$(ProjectName)0\Localization\"
             cd "$(TargetDir)"
             powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
 </PostBuildEvent>

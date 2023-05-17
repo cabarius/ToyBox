@@ -8,9 +8,6 @@ using Kingmaker.BundlesLoading;
 using ModKit;
 using System;
 using Kingmaker.Blueprints.Facts;
-#if RT
-using BlueprintGuid = System.String;
-#endif
 
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {

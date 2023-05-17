@@ -19,7 +19,6 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.EntitySystem.Stats;
-using ToyBox.classes.Models;
 
 namespace ToyBox {
 

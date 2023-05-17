@@ -1,7 +1,22 @@
 ﻿#if RT
+// common alternate usings
+global using Kingmaker.EntitySystem.Entities.Base;
+global using Kingmaker.EntitySystem.Stats.Base;
+global using Kingmaker.PubSubSystem.Core;
+global using Kingmaker.UI.Models.Tooltip.Base;
+global using Kingmaker.UnitLogic.Levelup.Obsolete;
+global using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
+global using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
+global using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Spells;
+global using Kingmaker.UnitLogic.Progression.Features;
+global using Kingmaker.Utility.UnityExtensions;
+global using Owlcat.Runtime.Core;
+global using Owlcat.Runtime.UI.Utility;
+// Type Aliases
 global using BlueprintGuid = System.String;
 global using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
 global using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 using System;
 using System.Collections.Generic;

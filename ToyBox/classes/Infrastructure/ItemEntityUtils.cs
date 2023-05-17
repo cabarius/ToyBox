@@ -34,7 +34,6 @@ using static Kingmaker.EntitySystem.Stats.ModifiableValue;
 using ToyBox.Inventory;
 using Kingmaker.Blueprints.Classes.Selection;
 using static Kingmaker.EntitySystem.EntityDataBase;
-#elif RT
 #endif
 #if Wrath
 namespace ToyBox {

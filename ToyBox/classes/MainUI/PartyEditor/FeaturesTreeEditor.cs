@@ -1,7 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using ModKit;
@@ -11,8 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-#if RT
-
+#if Wrath
+using Kingmaker.Blueprints.Classes.Selection;
 #endif
 
 namespace ToyBox {
@@ -39,7 +38,11 @@ namespace ToyBox {
             try {
                 if (character != _selectedCharacter || refresh) {
                     _selectedCharacter = character;
-                    _featuresTree = new FeaturesTree(_selectedCharacter.Descriptor.Progression); ;
+#if Wrath
+                    _featuresTree = new FeaturesTree(_selectedCharacter.Descriptor.Progression);
+#elif RT
+                    _featuresTree = new FeaturesTree(_selectedCharacter.Progression);
+#endif
                 }
                 using (UI.HorizontalScope()) {
                     // features tree
@@ -50,7 +53,12 @@ namespace ToyBox {
 
                             // draw tool bar
                             using (UI.HorizontalScope()) {
-                                UI.ActionButton("Refresh", () => _featuresTree = new FeaturesTree(_selectedCharacter.Descriptor.Progression), UI.Width(200));
+                                UI.ActionButton("Refresh", () => _featuresTree = 
+                                                                     new FeaturesTree(_selectedCharacter
+#if Wrath
+                                                                                      .Descriptor
+#endif
+                                                                                      .Progression), UI.Width(200));
                                 UI.Button("Expand All", ref expandAll, UI.Width(200));
                                 UI.Button("Collapse All", ref collapseAll, UI.Width(200));
                             }
@@ -103,7 +111,11 @@ namespace ToyBox {
         private class FeaturesTree {
             public readonly List<FeatureNode> RootNodes = new();
 
+#if Wrath
             public FeaturesTree(UnitProgressionData progression) {
+#elif RT
+            public FeaturesTree(PartUnitProgression progression) {
+#endif
                 Dictionary<BlueprintScriptableObject, FeatureNode> normalNodes = new();
                 List<FeatureNode> parametrizedNodes = new();
 
@@ -114,12 +126,14 @@ namespace ToyBox {
                     if (name == null || name.Length == 0)
                         name = feature.Blueprint.name;
                     //Main.Log($"feature: {name}");
+#if Wrath
                     var source = feature.m_Source;
                     //Main.Log($"source: {source}");
                     if (feature.Blueprint is BlueprintParametrizedFeature)
                         parametrizedNodes.Add(new FeatureNode(name, feature.SourceLevel, feature.Blueprint, source));
                     else
                         normalNodes.Add(feature.Blueprint, new FeatureNode(name, feature.SourceLevel, feature.Blueprint, source));
+#endif
                 }
 
                 // get nodes (classes)
@@ -127,6 +141,7 @@ namespace ToyBox {
                     normalNodes.Add(characterClass, new FeatureNode(characterClass.Name, 0, characterClass, null));
                 }
 
+#if Wrath
                 // set source selection
                 var selectionNodes = normalNodes.Values
                     .Where(item => item.Blueprint is BlueprintFeatureSelection).ToList();
@@ -151,6 +166,7 @@ namespace ToyBox {
                         }
                     }
                 }
+#endif
 
                 // build tree
                 foreach (var node in normalNodes.Values.Concat(parametrizedNodes).ToList()) {

@@ -1,11 +1,12 @@
 ﻿using Kingmaker;
-using Kingmaker.UI.MVVM._PCView.CharGen.Phases.FeatureSelector;
 using ModKit;
 using Owlcat.Runtime.UI.Controls.Button;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+#if Wrath
+using Kingmaker.UI.MVVM._PCView.CharGen.Phases.FeatureSelector;
+#endif
 namespace ToyBox {
     public class SearchBar {
         public TMP_Dropdown Dropdown;
@@ -47,8 +48,9 @@ namespace ToyBox {
                 Dropdown.onValueChanged.AddListener(delegate { OnDropdownSelected(); });
                 DropdownButton.OnLeftClick.AddListener(delegate { OnDropdownButton(); });
             }
-
+#if Wrath
             Object.Destroy(GameObject.GetComponent<CharGenFeatureSearchPCView>()); // controller from where we stole the search bar
+#endif
             InputField.transform.Find("Text Area/Placeholder").GetComponent<TextMeshProUGUI>().SetText(placeholder);
 
             if (withDropdown) {

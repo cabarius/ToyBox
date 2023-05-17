@@ -5,6 +5,7 @@ using Kingmaker;
 using Kingmaker.GameModes;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Combat;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
 using Kingmaker.Utility;
 using ModKit;
@@ -16,10 +17,14 @@ using System.Linq;
 using System.Reflection;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
-using ToyBox.Multiclass;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
+#if Wrath
+using ToyBox.Multiclass;
+#elif RT
+using Kingmaker.UI.Models.Log.Enums;
+#endif
 
 namespace ToyBox {
 #if DEBUG
@@ -30,7 +35,9 @@ namespace ToyBox {
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         private static string _modId;
         public static Settings Settings;
+#if Wrath
         public static MulticlassMod multiclassMod;
+#endif
         public static bool Enabled;
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
@@ -76,17 +83,23 @@ namespace ToyBox {
                 modEntry.OnSaveGUI = OnSaveGUI;
                 Objects = new List<GameObject>();
                 KeyBindings.OnLoad(modEntry);
+#if Wrath
                 multiclassMod = new Multiclass.MulticlassMod();
+#endif
                 HumanFriendlyStats.EnsureFriendlyTypesContainAll();
                 Mod.logLevel = Settings.loggingLevel;
                 Mod.InGameTranscriptLogger = text => {
                     Mod.Log("CombatLog - " + text);
                     var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, PrefixIcon.RightArrow);
-
+#if Wrath
                     var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].First(x => x is MessageLogThread);
                     var tacticalCombatLog = LogThreadService.Instance.m_Logs[LogChannelType.TacticalCombat].First(x => x is MessageLogThread);
                     messageLog.AddMessage(message);
                     tacticalCombatLog?.AddMessage(message);
+#elif RT 
+                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].First(x => x is RulebookDealDamageLogThread);
+                    messageLog.AddMessage(message);
+#endif
                 };
             }
             catch (Exception e) {
@@ -121,7 +134,9 @@ namespace ToyBox {
             BagOfTricks.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
+#if Wrath
             CrusadeEditor.ResetGUI();
+#endif
             CharacterPicker.ResetGUI();
             SearchAndPick.ResetGUI();
             QuestEditor.ResetGUI();
@@ -176,11 +191,13 @@ namespace ToyBox {
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
                     new NamedAction("Search 'n Pick".localize(), SearchAndPick.OnGUI),
+#if Wrath
                     new NamedAction("Crusade".localize(), CrusadeEditor.OnGUI),
                     new NamedAction("Armies".localize(), ArmiesEditor.OnGUI),
                     new NamedAction("Events/Decrees".localize(), EventEditor.OnGUI),
 #if DEBUG
                     new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
+#endif
 #endif
                     new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
                     new NamedAction("Quests".localize(), QuestEditor.OnGUI),
@@ -198,7 +215,9 @@ namespace ToyBox {
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
+#if Wrath
             ArmiesEditor.OnShowGUI();
+#endif
             EtudesEditor.OnShowGUI();
             Mod.OnShowGUI();
         }
@@ -207,6 +226,7 @@ namespace ToyBox {
 
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
             if (Game.Instance?.Player != null) {
+#if Wrath
                 var corruption = Game.Instance.Player.Corruption;
                 var corruptionDisabled = (bool)corruption.Disabled;
                 if (corruptionDisabled != Settings.toggleDisableCorruption) {
@@ -215,12 +235,15 @@ namespace ToyBox {
                     else
                         corruption.Disabled.ReleaseAll();
                 }
+#endif
             }
             Mod.logLevel = Settings.loggingLevel;
             if (NeedsActionInit) {
                 BagOfTricks.OnLoad();
                 PhatLoot.OnLoad();
+#if Wrath
                 ArmiesEditor.OnLoad();
+#endif
                 EnhancedInventory.OnLoad();
                 NeedsActionInit = false;
             }
@@ -237,6 +260,7 @@ namespace ToyBox {
                 }
             }
             if (_needsResetGameUI) {
+#if Wrath
                 Game.Instance.ScheduleAction(() => {
                     _needsResetGameUI = false;
                     Game.ResetUI();
@@ -252,6 +276,7 @@ namespace ToyBox {
                     initiaveTracker?.gameObject?.SetActive(false);
 
                 });
+#endif
             }
             var currentMode = Game.Instance.CurrentMode;
             if (IsModGUIShown || Event.current == null || !Event.current.isKey) return;
@@ -263,6 +288,7 @@ namespace ToyBox {
                     || currentMode == GameModeType.GlobalMap
                     )
                 ) {
+#if Wrath
                 if (UIUtility.IsGlobalMap()) {
                     if (KeyBindings.IsActive("TeleportParty"))
                         Teleport.TeleportPartyOnGlobalMap();
@@ -273,6 +299,7 @@ namespace ToyBox {
                     Teleport.TeleportSelected();
                 if (KeyBindings.IsActive("TeleportParty"))
                     Teleport.TeleportParty();
+#endif
             }
         }
     }
