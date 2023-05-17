@@ -22,13 +22,6 @@ using System.Runtime.CompilerServices;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Craft;
-#elif RT
-using Kingmaker.UI.Models.Tooltip.Base;
-using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
-using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
-using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Spells;
-using Kingmaker.UnitLogic.Progression.Features;
-using Owlcat.Runtime.Core;
 #endif
 namespace ToyBox {
 

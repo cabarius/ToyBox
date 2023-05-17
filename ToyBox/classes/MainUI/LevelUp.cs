@@ -4,9 +4,6 @@ using ModKit;
 using System;
 using System.Linq;
 using static ModKit.UI;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public class LevelUp {

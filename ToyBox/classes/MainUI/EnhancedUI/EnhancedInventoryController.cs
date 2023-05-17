@@ -15,13 +15,6 @@ using UnityEngine.UI;
 using Owlcat.Runtime.UI.MVVM;
 
 namespace ToyBox {
-    public enum InventoryType {
-        InventoryStash,
-        Vendor,
-        LootCollector,
-        LootInventoryStash
-    }
-
     public class EnhancedInventoryController : MonoBehaviour {
         public InventoryType Type;
 

@@ -10,13 +10,17 @@ using Kingmaker.PubSubSystem;
 using UniRx;
 using ModKit;
 #if RT
-
+using Kingmaker.EntitySystem.Interfaces;
 #endif
 
 namespace ToyBox.classes.MainUI.Inventory {
-    internal class SelectedCharacterObserver : IGlobalSubscriber,
-                                                        ISubscriber {
-        public static SelectedCharacterObserver Shared { get; private set; } = new();
+#if Wrath    
+    internal class SelectedCharacterObserver : IGlobalSubscriber, ISubscriber {
+#elif RT
+    internal class SelectedCharacterObserver : IEntitySubscriber {
+#endif
+
+    public static SelectedCharacterObserver Shared { get; private set; } = new();
         private IDisposable m_SelectedUnitUpdate;
         public UnitEntityData SelectedUnit = null;
         public delegate void NotifyDelegate();
@@ -24,11 +28,18 @@ namespace ToyBox.classes.MainUI.Inventory {
 
         public SelectedCharacterObserver() {
             EventBus.Subscribe((object)this);
+#if Wrath
             m_SelectedUnitUpdate = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate(UnitReference u) {
-                SelectedUnit = u.Value;
+#elif RT
+            Game.Instance.SelectionCharacter.SelectedUnit.Subscribe<BaseUnitEntity>(delegate(BaseUnitEntity u) {
+#endif
+                SelectedUnit = u;
                 Mod.Debug($"SelectedCharacterObserver - selected character changed to {SelectedUnit?.CharacterName.orange() ?? "null"} notifierCount: {Notifiers?.GetInvocationList()?.Length}");
                 Notifiers?.Invoke();
             });
         }
+#if RT
+        public IEntity GetSubscribingEntity() => throw new NotImplementedException();
+#endif
     }
 }

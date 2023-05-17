@@ -13,9 +13,6 @@ using System.Linq;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public partial class PartyEditor {

@@ -17,10 +17,6 @@ using ModKit.Utility;
 using static ToyBox.BlueprintExtensions;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
-#elif RT
-using Owlcat.Runtime.UI.Utility;
-using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
-
 #endif
 namespace ToyBox {
     public class BlueprintListUI {

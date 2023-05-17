@@ -5,9 +5,8 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Utility;
 using ModKit;
 using System.Linq;
+#if Wrath
 using ToyBox.Multiclass;
-#if RT
-
 #endif
 
 namespace ToyBox {

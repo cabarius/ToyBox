@@ -1,9 +1,6 @@
 ﻿using Kingmaker.Blueprints.Classes;
 #if Wrath
 using Kingmaker.UnitLogic.Class.LevelUp;
-#elif RT
-using Kingmaker.UnitLogic.Levelup.Obsolete;
-using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
 #endif
 
 namespace ToyBox {

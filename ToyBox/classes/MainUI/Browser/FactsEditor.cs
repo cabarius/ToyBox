@@ -24,11 +24,6 @@ using static ToyBox.BlueprintExtensions;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
-#elif RT
-using Kingmaker.PubSubSystem.Core;
-using Kingmaker.UI.Models.Tooltip.Base;
-using Kingmaker.UnitLogic.Progression.Features;
-using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
 #endif
 
 namespace ToyBox {

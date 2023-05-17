@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public class NamedTypeFilter {

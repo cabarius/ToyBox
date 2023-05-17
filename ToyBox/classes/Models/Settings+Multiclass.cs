@@ -6,6 +6,7 @@ using ModKit;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem;
 using Newtonsoft.Json;
+using Kingmaker.Utility.UnitDescription;
 
 namespace ToyBox {
     public class ArchetypeOptions : HashSet<string> {
@@ -25,7 +26,11 @@ namespace ToyBox {
     }
     public class MulticlassOptions : SerializableDictionary<string, ArchetypeOptions> {
         public const string CharGenKey = @"$CharacterGeneration";
+#if Wrath
         public static MulticlassOptions Get(UnitDescriptor ch) {
+#elif RT
+        public static MulticlassOptions Get(UnitEntityData ch) {
+#endif
             //Main.Log($"stack: {System.Environment.StackTrace}");
             MulticlassOptions options;
             if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") {
@@ -39,7 +44,11 @@ namespace ToyBox {
             }
             return options;
         }
+#if Wrath
         public static bool CanSelectClassAsMulticlass(UnitDescriptor ch, BlueprintCharacterClass cl) {
+#elif RT
+        public static bool CanSelectClassAsMulticlass(UnitEntityData ch, BlueprintCharacterClass cl) {
+#endif
             if (!Main.IsInGame) return true;
             if (ch == null) return true;
             if (cl == null) return false;
@@ -64,7 +73,11 @@ namespace ToyBox {
             //Mod.Trace($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
             return result;
         }
+#if Wrath
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
+#elif RT
+        public static void Set(UnitEntityData ch, MulticlassOptions options) {
+#endif
             //modLogger.Log($"stack: {System.Environment.StackTrace}");
             if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") 
                 Main.Settings.multiclassSettings[CharGenKey] = options;

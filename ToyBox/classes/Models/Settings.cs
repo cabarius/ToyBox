@@ -7,7 +7,6 @@ using ModKit.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using ToyBox.classes.Models;
 using UnityEngine;
 using UnityModManagerNet;
 
@@ -46,6 +45,7 @@ namespace ToyBox {
             var player = Game.Instance?.Player;
             if (player == null || Game.Instance.SaveManager.CurrentState == SaveManager.State.Loading) return;
             Mod.Debug($"reloading per save settings from Player.SettingsList[{PerSaveKey}]");
+#if Wrath
             if (player.SettingsList.TryGetValue(PerSaveKey, out var obj) && obj is string json) {
                 try {
                     cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
@@ -62,6 +62,7 @@ namespace ToyBox {
                 };
                 SavePerSaveSettings();
             }
+#endif
         }
         public static void SavePerSaveSettings() {
             var player = Game.Instance?.Player;
@@ -69,6 +70,7 @@ namespace ToyBox {
             if (cachedPerSave == null)
                 ReloadPerSaveSettings();
             var json = JsonConvert.SerializeObject(cachedPerSave);
+#if Wrath            
             player.SettingsList[PerSaveKey] = json;
             try {
                 Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
@@ -90,6 +92,7 @@ namespace ToyBox {
             catch (Exception e) {
                 Mod.Error(e);
             }
+#endif
         }
         public PerSaveSettings perSave {
             get {
@@ -227,8 +230,9 @@ namespace ToyBox {
         public RarityType lootChecklistFilterRarity = RarityType.None;
         public RarityType maxRarityToHide = RarityType.None;
         public bool toggleCustomBulkSell = false;
+#if Wrath        
         public BulkSellSettings bulkSellSettings = new();
-
+#endif
         // Enhanced Inventory
         public bool toggleEnhancedInventory = false;
         public bool togglEquipSlotInventoryFiltering = false;
@@ -439,11 +443,12 @@ namespace ToyBox {
         // Dictionary of Name/IsLegendaryHero for configuration per party member
         public SerializableDictionary<string, bool> charIsLegendaryHero = new();
 
+#if Wrath
         public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassBABPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSkillPointPolicy = 0;
-
+#endif
 
         public bool toggleTakeHighestHitDie = true;
         public bool toggleTakeHighestSkillPoints = true;

@@ -5,11 +5,13 @@ using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
-using ToyBox.Multiclass;
 using static ModKit.UI;
 using Kingmaker.View.MapObjects;
 using Kingmaker.View.MapObjects.InteractionRestrictions;
 using ModKit.Utility;
+#if Wrath
+using ToyBox.Multiclass;
+#endif
 
 namespace ToyBox {
     public class PhatLoot {
@@ -188,7 +190,19 @@ namespace ToyBox {
                                 else return (int)loot.Max(l => l.Rarity());
                             }).ToList();
                             var rarity = Settings.lootChecklistFilterRarity;
-                            var count = presents.Where(p => p.Unit == null || (Settings.toggleLootChecklistFilterFriendlies && !p.Unit.IsPlayersEnemy || p.Unit.IsPlayersEnemy) || (!Settings.toggleLootChecklistFilterFriendlies && p.Unit.IsPlayersEnemy)).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
+                            var count = presents
+                                        .Where(p => 
+                                                   p.Unit == null 
+#if Wrath                                                   
+                                                   || (Settings.toggleLootChecklistFilterFriendlies 
+                                                       && !p.Unit.IsPlayersEnemy 
+                                                       || p.Unit.IsPlayersEnemy
+                                                       ) 
+                                                   || (!Settings.toggleLootChecklistFilterFriendlies 
+                                                       && p.Unit.IsPlayersEnemy
+                                                       )
+#endif
+                                                   ).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
                             Label($"{group.Key.cyan()}: {count}");
                             Div(indent);
                             foreach (var present in presents) {
@@ -196,8 +210,15 @@ namespace ToyBox {
                                 var unit = present.Unit;
                                 if (phatLewtz.Any()
                                     && (unit == null
-                                        || (Settings.toggleLootChecklistFilterFriendlies && !unit.IsPlayersEnemy || unit.IsPlayersEnemy)
-                                        || (!Settings.toggleLootChecklistFilterFriendlies && unit.IsPlayersEnemy)
+#if Wrath
+                                        || (Settings.toggleLootChecklistFilterFriendlies 
+                                            && !unit.IsPlayersEnemy 
+                                            || unit.IsPlayersEnemy
+                                            )
+                                        || (!Settings.toggleLootChecklistFilterFriendlies 
+                                            && unit.IsPlayersEnemy
+                                            )
+#endif
                                         )
                                     ) {
                                     isEmpty = false;
@@ -206,6 +227,7 @@ namespace ToyBox {
                                         Space(indent);
                                         Label($"{present.GetName()}".orange().bold(), Width(325));
                                         if (present.InteractionLoot != null) {
+#if Wrath
                                             if (present.InteractionLoot?.Owner?.PerceptionCheckDC > 0)
                                                 Label($" Perception DC: {present.InteractionLoot?.Owner?.PerceptionCheckDC}".green().bold(), Width(125));
                                             else
@@ -215,6 +237,7 @@ namespace ToyBox {
                                                 Label($" Trickery DC: {trickDc}".green().bold(), Width(125));
                                             else
                                                 Label($" Trickery DC: NA".orange().bold(), Width(125));
+#endif
                                         }
                                         Space(25);
                                         using (VerticalScope()) {

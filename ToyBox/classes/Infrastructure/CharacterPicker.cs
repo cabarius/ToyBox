@@ -6,9 +6,6 @@ using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using static ModKit.UI;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public class CharacterPicker {

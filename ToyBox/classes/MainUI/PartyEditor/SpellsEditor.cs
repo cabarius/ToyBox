@@ -1,5 +1,4 @@
 ﻿using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -15,8 +14,8 @@ using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
-#if RT
-
+#if Wrath
+using Kingmaker.Blueprints.Classes.Spells;
 #endif
 
 namespace ToyBox {

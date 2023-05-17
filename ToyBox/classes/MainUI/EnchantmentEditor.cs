@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-
 namespace ToyBox.classes.MainUI {
     public static class EnchantmentEditor {
         public static Settings settings => Main.Settings;
@@ -152,7 +151,9 @@ namespace ToyBox.classes.MainUI {
                                 Label($"rating: {item.Rating().ToString().orange().bold()} (bp:{item.Blueprint.Rating().ToString().orange().bold()})".cyan());
                                 using (HorizontalScope()) {
                                     var modifers = bp.Attributes();
+#if Wrath
                                     if (item.IsEpic) modifers = modifers.Prepend("epic ");
+#endif
                                     Label(string.Join(" ", modifers).cyan(), AutoWidth());
                                     //if (bp is BlueprintItemWeapon bpW) {
                                     //    if (bpW.IsMagic) UI.Label("magic ".cyan(), UI.AutoWidth());
@@ -207,6 +208,7 @@ namespace ToyBox.classes.MainUI {
                                 TargetItemGUI(item);
                             }
                         }
+#if Wrath
                         using (HorizontalScope()) {
                             ActionButton("Sandal".cyan() + ", yer a Trickster!", () => {
                                 AddTricksterEnchantmentsTier1(item);
@@ -219,6 +221,7 @@ namespace ToyBox.classes.MainUI {
                             }, rarityButtonStyle, AutoWidth());
                             Label("Sandal".cyan() + " has discovered the mythic path of Trickster and can reveal hidden secrets in your items".green());
                         }
+#endif
                         Div();
                     }
                     // Search Field and modifiers
@@ -503,8 +506,11 @@ namespace ToyBox.classes.MainUI {
         public static void AddEnchantment(ItemEntity item, BlueprintItemEnchantment enchantment, Rounds? duration = null) {
             if (item?.m_Enchantments == null)
                 Mod.Trace("item.m_Enchantments is null");
-
+#if Wrath
             var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
+#elif RT
+            var fake_context = new MechanicsContext(null, null, enchantment, null, null); // if context is null, items may stack which could cause bugs
+#endif            
 
             //var fi = AccessTools.Field(typeof(MechanicsContext), nameof(MechanicsContext.AssociatedBlueprint));
             //fi.SetValue(fake_context, enchantment);  // check if AssociatedBlueprint must be set; I think not
@@ -521,9 +527,7 @@ namespace ToyBox.classes.MainUI {
             if (item == null) return;
             item.RemoveEnchantment(enchantment);
         }
-
-
-
+#if Wrath
         public static void AddTricksterEnchantmentsTier1(ItemEntity item) {
             var tricksterKnowledgeArcanaTier1 = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>("c7bb946de7454df4380c489a8350ba38");
             var tricksterTier1Toy = tricksterKnowledgeArcanaTier1.GetComponent<TricksterArcanaBetterEnhancements>();
@@ -563,7 +567,11 @@ namespace ToyBox.classes.MainUI {
             }
             foreach (var enchantment in item.Enchantments)
                 source.Remove(enchantment.Blueprint);
+#if Wrath
             if (source.Empty<BlueprintItemEnchantment>())
+#elif RT
+            if (source.DefaultIfEmpty<BlueprintItemEnchantment>())
+#endif
                 return;
             var blueprint = source.ToList<BlueprintItemEnchantment>().Random<BlueprintItemEnchantment>();
             var itemEntityShield = item as ItemEntityShield;
@@ -582,6 +590,7 @@ namespace ToyBox.classes.MainUI {
                     break;
             }
         }
+#endif
         /// <summary>definitely not useless</summary>
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {
@@ -647,7 +656,7 @@ namespace ToyBox.classes.MainUI {
                 }
             }
 
-            if (!enhancements.Empty()) {
+            if (enhancements.Any()) {
                 return enhancements.Max();
             }
 
