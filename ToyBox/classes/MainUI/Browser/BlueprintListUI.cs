@@ -11,12 +11,17 @@ using Kingmaker.RuleSystem;
 using Kingmaker.Utility;
 using ModKit;
 using static ModKit.UI;
-using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items;
 using ModKit.DataViewer;
 using ModKit.Utility;
 using static ToyBox.BlueprintExtensions;
-
+#if Wrath
+using Kingmaker.Blueprints.Classes.Selection;
+#elif RT
+using Owlcat.Runtime.UI.Utility;
+using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox {
     public class BlueprintListUI {
         public delegate void NavigateTo(params string[] argv);
@@ -27,7 +32,9 @@ namespace ToyBox {
         public static int maxActions = 0;
         public static bool needsLayout = true;
         public static int[] ParamSelected = new int[1000];
+#if Wrath
         public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
+#endif
         public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
         public static List<Action> OnGUI(UnitEntityData unit,
@@ -219,6 +226,7 @@ namespace ToyBox {
                         if (description.Length > 0) Label(description.green(), Width(remWidth));
                     }
                 }
+#if Wrath
                 if (blueprint is BlueprintParametrizedFeature paramBP) {
                     using (HorizontalScope()) {
                         Space(titleWidth);
@@ -249,6 +257,7 @@ namespace ToyBox {
                         }
                     }
                 }
+#endif
                 if (blueprint is BlueprintFeatureSelection selectionBP) {
                     using (HorizontalScope()) {
                         Space(titleWidth);
@@ -278,6 +287,7 @@ namespace ToyBox {
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                             }
+#if Wrath
                             if (unit.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
                                 foreach (var entry in selectionData.SelectionsByLevel) {
                                     foreach (var selection in entry.Value) {
@@ -297,6 +307,7 @@ namespace ToyBox {
                                     }
                                 }
                             }
+#endif
                             Space(15);
                         }
                     }

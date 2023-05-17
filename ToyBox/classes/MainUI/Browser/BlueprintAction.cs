@@ -1,16 +1,12 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using Kingmaker;
-using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Quests;
@@ -20,8 +16,6 @@ using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap.Blueprints;
-using Kingmaker.Kingdom;
-using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
@@ -31,8 +25,25 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if Wrath
+using Kingmaker.AI.Blueprints.Considerations;
+using Kingmaker.Armies.Blueprints;
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Crusade.GlobalMagic;
-
+#elif RT
+using Kingmaker.UI.Models.Tooltip.Base;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Spells;
+using Kingmaker.UnitLogic.Progression.Features;
+using Owlcat.Runtime.Core;
+using BlueprintGuid = System.String;
+using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox {
     public abstract class BlueprintAction {
         public delegate void Perform(SimpleBlueprint bp, UnitEntityData ch = null, int count = 1, int listValue = 0);
@@ -106,6 +117,7 @@ namespace ToyBox {
 
     public static class BlueprintActions {
         public static IEnumerable<BlueprintAction> GetActions(this SimpleBlueprint bp) => BlueprintAction.ActionsForBlueprint(bp);
+#if Wrath
         private static Dictionary<BlueprintParametrizedFeature, IFeatureSelectionItem[]> parametrizedSelectionItems = new();
         public static IFeatureSelectionItem ParametrizedSelectionItems(this BlueprintParametrizedFeature feature, int index) {
             if (parametrizedSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null ;
@@ -114,6 +126,7 @@ namespace ToyBox {
             parametrizedSelectionItems[feature] = value;
             return index < value.Length ? value[index] : null;
         }
+#endif
         private static Dictionary<BlueprintFeatureSelection, BlueprintFeature[]> featureSelectionItems = new();
         public static BlueprintFeature FeatureSelectionItems(this BlueprintFeatureSelection feature, int index) {
             if (featureSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null;
@@ -155,6 +168,7 @@ namespace ToyBox {
                                                            var feature = ch.Progression.Features.GetFact(bp);
                                                            return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                                                        });
+#if Wrath
             // Paramaterized Feature
             BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
                  (bp, ch, n, index) => {
@@ -178,6 +192,7 @@ namespace ToyBox {
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing != null;
                 });
+#endif
             // Feature Selection
             BlueprintAction.Register<BlueprintFeatureSelection>("Add",
                  (bp, ch, n, index) => {

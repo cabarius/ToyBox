@@ -4,25 +4,35 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Craft;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.Utility;
 using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-
+#if Wrath
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Craft;
+#elif RT
+using Kingmaker.UI.Models.Tooltip.Base;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Spells;
+using Kingmaker.UnitLogic.Progression.Features;
+using Owlcat.Runtime.Core;
+using BlueprintGuid = System.String;
+using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
@@ -178,6 +188,7 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
+        #if Wrath
         public static List<string> CollationNames(this BlueprintIngredient bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.Destructible) names.Add("Destructible");
@@ -185,6 +196,7 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
+        #endif
         public static List<string> CollationNames(this BlueprintArea bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
@@ -211,9 +223,10 @@ namespace ToyBox {
         public static string[] CaptionNames(this SimpleBlueprint bp) => bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] { };
         public static List<String> CaptionCollationNames(this SimpleBlueprint bp) => bp.CollationNames(bp.CaptionNames());
         // Custom Attributes that Owlcat uses 
+        #if Wrath
         public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
-
         public static string GetInfoBoxDescription(this SimpleBlueprint bp) => string.Join("\n", bp.GetInfoBoxes().Select(attr => attr.Text));
+        #endif
 
         private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
         public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {
@@ -240,6 +253,7 @@ namespace ToyBox {
         }
 
         public static IEnumerable<T> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
+#if Wrath        
         public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
             var count = 0;
             var component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();
@@ -305,7 +319,6 @@ namespace ToyBox {
             if (fact == null) return;
             progression.Features.RemoveFact(fact);
         }
-
         // BlueprintParametrizedFeature Helpers
         public static bool HasParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
             if (!bp.Items.Any()) return false;
@@ -318,5 +331,6 @@ namespace ToyBox {
             var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
             ch?.Progression?.Features?.RemoveFact(fact);
         }
+#endif
     }
 }

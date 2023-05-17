@@ -4,18 +4,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Quests;
-using Kingmaker.Craft;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -30,12 +26,18 @@ using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
 using Kingmaker.AreaLogic.QuestSystem;
+#if Wrath
+using Kingmaker.Armies.Blueprints;
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Craft;
+using Kingmaker.Kingdom.Blueprints;
+using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.Crusade.GlobalMagic;
+#endif
 using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {

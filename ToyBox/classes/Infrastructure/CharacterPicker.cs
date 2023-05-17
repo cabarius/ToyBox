@@ -6,6 +6,9 @@ using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using static ModKit.UI;
+#if RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 
 namespace ToyBox {
     public class CharacterPicker {
@@ -29,11 +32,17 @@ namespace ToyBox {
                         var player = GameHelper.GetPlayerCharacter();
                         return player == null 
                                    ? new List<UnitEntityData> () 
-                                   : GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, nearbyRange , false, false).ToList();
+                                   : GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, (int)nearbyRange , false, false).ToList();
                     }),
+#if Wrath
                     new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
                     new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
                     new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
+#elif RT
+                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.AllUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.AllUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.AllUnits.ToList()),
+#endif
                };
             }
             return PartyFilterChoices;

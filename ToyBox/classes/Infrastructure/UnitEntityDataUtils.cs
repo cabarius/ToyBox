@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kingmaker;
-using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Cheats;
 using Kingmaker.Designers;
@@ -25,6 +24,11 @@ using ModKit.Utility;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.UI.Common;
+#if Wrath
+using Kingmaker.Blueprints.Classes.Selection;
+#elif RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 
 namespace ToyBox {
     public enum UnitSelectType {
@@ -38,8 +42,9 @@ namespace ToyBox {
 
     public static class UnitEntityDataUtils {
         public static Settings settings => Main.Settings;
+#if Wrath
         public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.ModifiedSpeedMps).Max();
-
+#endif
         public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType) {
             if (unitEntityData == null) return false;
             switch (selectType) {

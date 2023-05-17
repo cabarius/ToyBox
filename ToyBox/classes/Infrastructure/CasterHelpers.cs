@@ -1,7 +1,11 @@
 ﻿using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
+#elif RT
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Spells;
+#endif
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
@@ -12,7 +16,9 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+#if RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox.classes.Infrastructure {
     public static class CasterHelpers {
         private static readonly Dictionary<string, List<int>> UnitSpellsKnown = new();

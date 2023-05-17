@@ -4,7 +4,6 @@ using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.Kingdom;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using Kingmaker.View;
@@ -16,7 +15,11 @@ using System.Web.UI.WebControls;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
-
+#if Wrath
+using Kingmaker.Kingdom;
+#elif RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox {
     public static class BagOfTricks {
         public static Settings Settings => Main.Settings;

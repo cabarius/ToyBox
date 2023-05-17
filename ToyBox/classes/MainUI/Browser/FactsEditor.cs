@@ -1,8 +1,6 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
@@ -20,9 +18,20 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.PubSubSystem.Core;
+using Kingmaker.UI.Models.Tooltip.Base;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
+#if Wrath
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Classes.Spells;
+#elif RT
+using Kingmaker.UnitLogic.Progression.Features;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
+using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 
 namespace ToyBox {
     public class FactsEditor {
@@ -51,9 +60,10 @@ namespace ToyBox {
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintAbility, Ability>> AbilityBrowserDict = new();
+#if Wrath
         private static readonly Browser<BlueprintFeature, FeatureSelectionEntry> FeatureSelectionBrowser = new() { IsDetailBrowser = true };
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { IsDetailBrowser = true };
-
+#endif
         public static void BlueprintRowGUI<Item, Definition>(Browser<Definition, Item> browser,
                                                              Item feature, 
                                                              Definition blueprint, 
@@ -72,7 +82,9 @@ namespace ToyBox {
                 text = text.Cyan().Bold();
             }
             if (blueprint is BlueprintFeatureSelection featureSelection
+#if Wrath
                 || blueprint is BlueprintParametrizedFeature parametrizedFeature
+#endif
                 ) {
                 if (Browser.DetailToggle(text, blueprint, feature != null ? feature : blueprint, (int)titleWidth)) 
                     browser.ReloadData();
@@ -168,14 +180,17 @@ namespace ToyBox {
                             reloadData |= Toggle("Search Descriptions", ref Settings.searchDescriptions);
                             if (reloadData) {
                                 browser.ResetSearch();
+#if Wrath
                                 FeatureSelectionBrowser.ResetSearch();
                                 ParameterizedFeatureBrowser.ResetSearch();
+#endif
                             }
                         }
                     },
                     (blueprint, feature) => BlueprintRowGUI(browser,feature, blueprint, ch, todo),
                     (blueprint, feature) => {
                         ReflectionTreeView.OnDetailGUI(blueprint);
+#if Wrath
                         switch (blueprint) {
                             case BlueprintFeatureSelection featureSelection:
                                 Browser.OnDetailGUI(blueprint, bp => {
@@ -276,6 +291,7 @@ namespace ToyBox {
                                     });
                                     break;
                             }
+#endif
                     }, 50, false, true, 100, 300, "", true);
             }
             return todo;
@@ -302,7 +318,11 @@ namespace ToyBox {
                 abilityBrowser = new Browser<BlueprintAbility, Ability>(true, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
+#if Wrath
             return OnGUI(ch, abilityBrowser, ability, "Abilities");
+#elif RT
+            return new List<Action>(); // TODO: make a browser for these non fact abilities
+#endif
         }
     }
 }

@@ -9,20 +9,26 @@ using System;
 using UnityEngine;
 using JetBrains.Annotations;
 using Kingmaker.Globalmap.Blueprints;
-using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Globalmap;
 using Kingmaker.Utility;
 using Kingmaker.EntitySystem.Persistence;
 using ModKit;
 using UnityModManagerNet;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.Visual.LocalMap;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Designers;
 using System.Linq;
-
+#if Wrath
+using Kingmaker.Globalmap.State;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
+#elif RT
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
+using Kingmaker.PubSubSystem.Core;
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox {
     public static class Teleport {
         public static Settings Settings => Main.Settings;
@@ -43,9 +49,7 @@ namespace ToyBox {
                 Game.Instance.UI.GetCameraRig().ScrollTo(vector3);
                 position = vector3;
             }
-
             if (view != null) view.StopMoving();
-
             unit.Stop();
 
             unit.Position = position;
