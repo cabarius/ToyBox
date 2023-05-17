@@ -4,12 +4,14 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
+#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Craft;
+#endif
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Craft;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI;
@@ -33,7 +35,9 @@ using Kingmaker;
 using Kingmaker.EntitySystem;
 using Kingmaker.View.MapObjects;
 using Kingmaker.DialogSystem.Blueprints;
-
+#if RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {

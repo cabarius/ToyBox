@@ -11,6 +11,7 @@ using Kingmaker.Blueprints.Facts;
 using System.Web.Caching;
 
 namespace ToyBox {
+    using BlueprintGuid = String;
     internal class BlueprintDataSource : DataSource<SimpleBlueprint> {
         private HashSet<BlueprintGuid> _allGUIDS;
         internal readonly HashSet<string> badBlueprints = new() { "ce0842546b73aa34b8fcf40a970ede68", "2e3280bf21ec832418f51bee5136ec7a", "b60252a8ae028ba498340199f48ead67", "fb379e61500421143b52c739823b4082" };

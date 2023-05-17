@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31105.61
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyBox", "ToyBox\ToyBox.csproj", "{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}"
 EndProject
@@ -12,11 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyBoxRT", "ToyBox\ToyBoxRT.csproj", "{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ModKit\ModKitSrc.projitems*{22dcb4e1-d979-4ea9-913a-4ee1634b4ded}*SharedItemsImports = 4
-		ModKit\ModKitSrc.projitems*{7d3f9428-c134-47fe-9d04-305b4d330401}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -26,11 +24,20 @@ Global
 		{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA000E91-0748-40FC-8104-184CCB5CEA32}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ModKit\ModKitSrc.projitems*{22dcb4e1-d979-4ea9-913a-4ee1634b4ded}*SharedItemsImports = 4
+		ModKit\ModKitSrc.projitems*{4d9cda59-3942-46ef-9ebe-ff0498df5abb}*SharedItemsImports = 4
+		ModKit\ModKitSrc.projitems*{7d3f9428-c134-47fe-9d04-305b4d330401}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

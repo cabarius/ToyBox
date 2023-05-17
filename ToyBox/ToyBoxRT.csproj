@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToyBox</RootNamespace>
+    <AssemblyName>ToyBox</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+    <LangVersion>9</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\RT\Debug\0ToyBox0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;RT</DefineConstants>
+    <ErrorReport>none</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\0ToyBox0\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <Target Name="Publicise" AfterTargets="Clean">
+    <ItemGroup>
+      <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
+    </ItemGroup>
+    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
+  </Target>
+  <ItemGroup>
+    <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
+    <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Owlcat.Runtime.UI.dll" />
+    <PubliciseInputAssemblies Include="$(RogueModPath)\UnityModManager.dll" />
+  </ItemGroup>
+  <Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\RT\%(PubliciseInputAssemblies.FileName)_public.hash">
+    <MakeDir Directories="$(SolutionDir)lib/RT" />
+    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/RT/" PubliciseCompilerGenerated="true" />
+  </Target>
+  <ItemGroup>
+    <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
+    <Reference Include="0Harmony">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityModManager\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BundlesBaseTypes">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\BundlesBaseTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Code">
+      <HintPath>$(SolutionDir)lib\RT\Code_public.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\DOTween.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Kingmaker.AreaLogic.TimeOfDay">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.AreaLogic.TimeOfDay.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.Attributes">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.Hack">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.Hack.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.JsonSystem.EditorDatabase.FileDatabaseClient">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.JsonSystem.EditorDatabase.FileDatabaseClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.JsonSystem.Hepers">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.JsonSystem.Hepers.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.JsonSystem.PropertyUtility">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.JsonSystem.PropertyUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.JsonSystem.PropertyUtility.Helper">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.JsonSystem.PropertyUtility.Helper.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Blueprints.OverridesManager">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Blueprints.OverridesManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Controllers.Enums">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Controllers.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.ElementsSystem.Interfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.ElementsSystem.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.EntitySystem.Interfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.EntitySystem.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.EntitySystem.Stats.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.EntitySystem.Stats.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Enums">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Enums.Damage">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Enums.Damage.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.GameInfo">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.GameInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Localization.Enums">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Localization.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.PubSubSystem.Core">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.PubSubSystem.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.PubSubSystem.Core.Interfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.PubSubSystem.Core.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.QA.Arbiter.Profiling">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.QA.Arbiter.Profiling.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.ResourceLinks.BaseInterfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.ResourceLinks.BaseInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.ResourceReplacementProvider">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.ResourceReplacementProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.RuleSystem.Enum">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.RuleSystem.Enum.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.RuleSystem.Rules.Interfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.RuleSystem.Rules.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Settings.ConstructionHelpers.KeyPrefix">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Settings.ConstructionHelpers.KeyPrefix.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Settings.Entities">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Settings.Entities.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Settings.Interfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Settings.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Sound.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Sound.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Stores">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Stores.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Stores.DlcInterfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Stores.DlcInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.TextTools.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.TextTools.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.TextTools.Core">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.TextTools.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.UI.InputSystems.Enums">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.UI.InputSystems.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.UI.Models.Log.ContextFlag">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.UI.Models.Log.ContextFlag.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.UI.Models.Log.Enums">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.UI.Models.Log.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.UI.Models.Log.GameLogCntxt">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.UI.Models.Log.GameLogCntxt.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.UI.Models.Tooltip.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.UI.Models.Tooltip.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.UnitLogic.Mechanics.Facts.Interfaces">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.UnitLogic.Mechanics.Facts.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Utility.Enums">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Utility.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Utility.FlagCountable">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Utility.FlagCountable.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Visual.Animation.GraphVisualizerClient">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Visual.Animation.GraphVisualizerClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Visual.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Visual.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Visual.HitSystem.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Visual.HitSystem.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Kingmaker.Visual.Particles.GameObjectsPooling">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Kingmaker.Visual.Particles.GameObjectsPooling.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.Core">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.UniRx">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UniRx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.UI_public">
+      <HintPath>$(SolutionDir)lib\RT\Owlcat.Runtime.UI_public.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.Validation">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Validation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.Visual">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UniRx">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UniRx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(WrathPath)\Wrath_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityModManager_public">
+      <HintPath>..\lib\RT\UnityModManager_public.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Utility.UnityExtensions">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Utility.UnityExtensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="classes\CustomEnchantmentStackingFix.cs" />
+    <Compile Include="classes\Infrastructure\AssetLoader.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensionsQuest.cs" />
+    <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintDataSource.cs" />
+    <Compile Include="classes\Infrastructure\Compatibility.cs" />
+    <Compile Include="classes\Infrastructure\ItemEntityUtils.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
+    <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\ItemRarity.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\EnhancedInventory.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\LootHelper.cs" />
+    <Compile Include="classes\Infrastructure\SettingsDefaults.cs" />
+    <Compile Include="classes\Infrastructure\UIHelpers.cs" />
+    <Compile Include="classes\Infrastructure\Utils.cs" />
+    <Compile Include="classes\Infrastructure\WrathExtensions.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensions.cs" />
+    <Compile Include="classes\MainUI\BraaainzEditor.cs" />
+    <Compile Include="classes\MainUI\Browser\BuffExclusionEditor.cs" />
+    <Compile Include="classes\MainUI\Browser\Editor.cs" />
+    <Compile Include="classes\MainUI\EnchantmentEditor.cs" />
+    <Compile Include="classes\MainUI\Etudes\EtudeChildrenDrawer.cs" />
+    <Compile Include="classes\MainUI\Etudes\EtudeInfo.cs" />
+    <Compile Include="classes\MainUI\Etudes\EtudesEditor.cs" />
+    <Compile Include="classes\MainUI\Etudes\EtudeTreeModel.cs" />
+    <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\EnhancedInventoryController.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\SelectedCharacterObserver.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\OnAreaLoad.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\RemappableInt.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\SearchBar.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\EnhancedSpellbookController.cs" />
+    <Compile Include="classes\Infrastructure\UIWidgetHelpers.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\ClassesEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\FeaturesTreeEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\SpellsEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\StatsEditor.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\PhatLoot.cs" />
+    <Compile Include="classes\MainUI\MulticlassPicker.cs" />
+    <Compile Include="classes\MainUI\LevelUp.cs" />
+    <Compile Include="classes\MainUI\Browser\BlueprintAction.cs" />
+    <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
+    <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
+    <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />
+    <Compile Include="classes\MainUI\Actions.cs" />
+    <Compile Include="classes\MainUI\Browser\BlueprintListUI.cs" />
+    <Compile Include="classes\Infrastructure\Blueprints\BlueprintLoader.cs" />
+    <Compile Include="classes\MainUI\ActionButtons.cs" />
+    <Compile Include="classes\MainUI\Browser\FactsEditor.cs" />
+    <Compile Include="classes\MainUI\Main.cs" />
+    <Compile Include="classes\MainUI\Browser\SearchAndPick.cs" />
+    <Compile Include="classes\MainUI\BagOfTricks.cs" />
+    <Compile Include="classes\Infrastructure\CharacterPicker.cs" />
+    <Compile Include="classes\MainUI\QuestEditor.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
+    <Compile Include="classes\Infrastructure\RespecHelper.cs" />
+    <Compile Include="classes\Models\Settings+BulkSell.cs" />
+    <Compile Include="classes\Models\Settings+Multiclass.cs" />
+    <Compile Include="classes\Models\Settings+UI.cs" />
+    <Compile Include="classes\Models\Settings.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\bindings.json" />
+    <None Include="Repository.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Info.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="classes\MainUI\Playground.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.md" />
+    <Content Include="Localization\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="zmisc\api.txt" />
+    <None Include="zip-hash-sign.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Art\**\*.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+            xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb*"
+            xcopy /Y "$(ProjectDir)\Info.json" "$(WrathPath)\Mods\0$(ProjectName)0\Info.json*"
+            xcopy /Y "$(ProjectDir)\Repository.json" "$(WrathPath)\Mods\0$(ProjectName)0\Repository.json*"
+            xcopy /E /Y "$(ProjectDir)Localization\" "$(WrathPath)\Mods\0$(ProjectName)0\Localization\"
+            cd "$(TargetDir)"
+            powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
+</PostBuildEvent>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

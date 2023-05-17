@@ -6,6 +6,9 @@ using Kingmaker.Utility;
 using ModKit;
 using System.Linq;
 using ToyBox.Multiclass;
+#if RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 
 namespace ToyBox {
     public class MulticlassPicker {

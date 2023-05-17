@@ -13,11 +13,18 @@ using ModKit;
 using Kingmaker.UnitLogic.Alignments;
 using System.Linq;
 using Kingmaker;
-using Kingmaker.UI.FullScreenUITypes;
 using Kingmaker.Utility;
 using Kingmaker.UnitLogic.Mechanics;
+#if Wrath
+using Kingmaker.UI.FullScreenUITypes;
 using Kingmaker.Assets.UI;
-
+#elif RT
+using Kingmaker.UI.Models.Tooltip.Base;
+using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
+using Kingmaker.EntitySystem.Entities;
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
+#if Wrath        
 namespace ModKit {
     public partial class UI {
         public static string Name(this Alignment a) => UIUtility.GetAlignmentName(a);
@@ -118,11 +125,14 @@ namespace ModKit {
             => AlignmentGrid(null, alignment, action, options);
     }
 }
+#endif
 
 namespace ToyBox {
     public static class WrathExtensions {
         public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
+#if Wrath        
         public static string HashKey(this UnitDescriptor ch) => ch.CharacterName;
+#endif
         public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
         public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();
 

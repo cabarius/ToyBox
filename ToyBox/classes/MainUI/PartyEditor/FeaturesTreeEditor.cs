@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 
 namespace ToyBox {
     public class FeaturesTreeEditor {

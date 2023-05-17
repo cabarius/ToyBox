@@ -18,8 +18,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\0ToyBox0\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Wrath\Debug\0ToyBox0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Wrath</DefineConstants>
     <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -39,8 +39,9 @@
     <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UI.dll" />
     <PubliciseInputAssemblies Include="$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll" />
   </ItemGroup>
-  <Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.hash">
-    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
+  <Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\ToyBox\%(PubliciseInputAssemblies.FileName)_public.hash">
+    <MakeDir Directories="$(SolutionDir)lib/Wrath" />
+    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/Wrath/" PubliciseCompilerGenerated="true" />
   </Target>
   <ItemGroup>
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
@@ -49,7 +50,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>$(SolutionDir)lib\Assembly-CSharp_public.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\Wrath\Assembly-CSharp_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
@@ -75,7 +76,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Owlcat.Runtime.UI_public">
-      <HintPath>$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\Wrath\Owlcat.Runtime.UI_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Owlcat.Runtime.Validation">
@@ -158,7 +159,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityModManager_public">
-      <HintPath>..\lib\UnityModManager_public.dll</HintPath>
+      <HintPath>..\lib\Wrath\UnityModManager_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

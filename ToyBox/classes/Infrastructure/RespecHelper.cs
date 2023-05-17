@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ModKit;
-
+#if Wrath
 namespace ToyBox {
     internal class RespecHelper {
 
@@ -43,3 +43,4 @@ namespace ToyBox {
         private static void FinishRespec() => Mod.Debug("Finishing Respec");// Maybe Apply Rest Without Advancing Time ?
     }
 }
+#endif

@@ -25,6 +25,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+#if RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 
 namespace ToyBox {
     public static class LootHelper {

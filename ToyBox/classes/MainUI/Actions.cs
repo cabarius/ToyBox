@@ -1,14 +1,11 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.Armies;
-using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap.View;
-using Kingmaker.Kingdom;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.RuleSystem;
@@ -29,8 +26,14 @@ using ToyBox.BagOfPatches;
 using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.Designers;
+#if Wrath
+using Kingmaker.Armies;
+using Kingmaker.Armies.Blueprints;
+using Kingmaker.Kingdom;
 using Kingmaker.Armies.TacticalCombat.Parts;
-
+#elif RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
 namespace ToyBox {
     public static class Actions {
         public static Settings settings => Main.Settings;

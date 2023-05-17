@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kingmaker;
-using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Cheats;
 using Kingmaker.Designers;
@@ -31,16 +30,25 @@ using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Designers.Mechanics.Facts;
 using Owlcat.Runtime.Core.Utils;
 using ToyBox.Inventory;
-using static Kingmaker.EntitySystem.EntityDataBase;
 using static Kingmaker.EntitySystem.Stats.ModifiableValue;
-
+#if Wrath
+using Kingmaker.Blueprints.Classes.Selection;
+using static Kingmaker.EntitySystem.EntityDataBase;
+#elif RT
+using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
+#if Wrath
 namespace ToyBox {
     public static class ItemEntityUtils {
         public static bool HasModifierConflicts(this UnitEntityData unit, ItemEntity item) {
             var itemModifiers = item.GetModifierDescriptors();
             return unit.Stats.AllStats.SelectMany(stat => stat.Modifiers)
                        .Any(m => !m.Stacks 
+#if Wrath
                                  && m.ItemSource != (Loot.selectedSlot?.Item ?? null)
+#elif RT
+                                 && m.SourceItem != (Loot.selectedSlot?.Item ?? null)
+#endif
                                  && itemModifiers.Contains(m.ModDescriptor));
         }
         public static HashSet<ModifierDescriptor> GetNonStackingModifiers(this UnitEntityData unit) {
@@ -75,3 +83,4 @@ namespace ToyBox {
         }
     }
 }
+#endif
