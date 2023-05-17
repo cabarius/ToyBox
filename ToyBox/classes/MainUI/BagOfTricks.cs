@@ -18,7 +18,7 @@ using static ModKit.UI;
 #if Wrath
 using Kingmaker.Kingdom;
 #elif RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 namespace ToyBox {
     public static class BagOfTricks {

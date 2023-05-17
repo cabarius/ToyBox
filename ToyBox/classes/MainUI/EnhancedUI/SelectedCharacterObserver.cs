@@ -10,7 +10,7 @@ using Kingmaker.PubSubSystem;
 using UniRx;
 using ModKit;
 #if RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 
 namespace ToyBox.classes.MainUI.Inventory {
