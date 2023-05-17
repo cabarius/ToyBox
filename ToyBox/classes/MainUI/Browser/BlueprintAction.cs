@@ -42,7 +42,7 @@ using Kingmaker.UnitLogic.Progression.Features;
 using Owlcat.Runtime.Core;
 using BlueprintGuid = System.String;
 using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 namespace ToyBox {
     public abstract class BlueprintAction {

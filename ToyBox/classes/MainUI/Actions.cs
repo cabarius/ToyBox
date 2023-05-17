@@ -32,7 +32,7 @@ using Kingmaker.Armies.Blueprints;
 using Kingmaker.Kingdom;
 using Kingmaker.Armies.TacticalCombat.Parts;
 #elif RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 namespace ToyBox {
     public static class Actions {

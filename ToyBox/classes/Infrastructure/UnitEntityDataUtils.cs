@@ -27,7 +27,7 @@ using Kingmaker.UI.Common;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 #elif RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 
 namespace ToyBox {
@@ -65,7 +65,13 @@ namespace ToyBox {
                     return !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter());
                 case UnitSelectType.Enemies:
                     // TODO - should this be IsEnemy instead?
-                    if (!unitEntityData.IsPlayerFaction && unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)) {
+                    if (!unitEntityData.IsPlayerFaction 
+#if Wrath
+                        && unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)
+#elif RT
+                        && unitEntityData.Faction == Game.Instance.BlueprintRoot.PlayerFaction
+#endif
+                        ) {
                         return true;
                     }
                     return false;

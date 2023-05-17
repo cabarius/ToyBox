@@ -35,9 +35,6 @@ using Kingmaker;
 using Kingmaker.EntitySystem;
 using Kingmaker.View.MapObjects;
 using Kingmaker.DialogSystem.Blueprints;
-#if RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
-#endif
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {

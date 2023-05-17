@@ -1,4 +1,9 @@
-﻿using System;
+﻿#if RT
+global using BlueprintGuid = System.String;
+global using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
+global using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+#endif
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

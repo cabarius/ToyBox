@@ -22,7 +22,7 @@ using Kingmaker.Assets.UI;
 using Kingmaker.UI.Models.Tooltip.Base;
 using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
 using Kingmaker.EntitySystem.Entities;
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 #if Wrath        
 namespace ModKit {

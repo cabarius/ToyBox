@@ -14,7 +14,7 @@ using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
 #if RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 
 namespace ToyBox {

@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
-    <LangVersion>9</LangVersion>
+    <LangVersion>11</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -336,12 +336,10 @@
     <Compile Include="classes\MainUI\Etudes\EtudesEditor.cs" />
     <Compile Include="classes\MainUI\Etudes\EtudeTreeModel.cs" />
     <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
-    <Compile Include="classes\MainUI\EnhancedUI\EnhancedInventoryController.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\SelectedCharacterObserver.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\OnAreaLoad.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\RemappableInt.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\SearchBar.cs" />
-    <Compile Include="classes\MainUI\EnhancedUI\EnhancedSpellbookController.cs" />
     <Compile Include="classes\Infrastructure\UIWidgetHelpers.cs" />
     <Compile Include="classes\MainUI\PartyEditor\ClassesEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\FeaturesTreeEditor.cs" />
@@ -412,7 +410,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

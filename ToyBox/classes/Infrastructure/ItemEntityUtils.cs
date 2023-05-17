@@ -29,13 +29,12 @@ using Kingmaker.Designers.Mechanics.EquipmentEnchants;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Designers.Mechanics.Facts;
 using Owlcat.Runtime.Core.Utils;
-using ToyBox.Inventory;
 using static Kingmaker.EntitySystem.Stats.ModifiableValue;
 #if Wrath
+using ToyBox.Inventory;
 using Kingmaker.Blueprints.Classes.Selection;
 using static Kingmaker.EntitySystem.EntityDataBase;
 #elif RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
 #endif
 #if Wrath
 namespace ToyBox {

@@ -18,8 +18,6 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.PubSubSystem.Core;
-using Kingmaker.UI.Models.Tooltip.Base;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
@@ -27,10 +25,10 @@ using static ToyBox.BlueprintExtensions;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 #elif RT
+using Kingmaker.PubSubSystem.Core;
+using Kingmaker.UI.Models.Tooltip.Base;
 using Kingmaker.UnitLogic.Progression.Features;
 using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
-using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
 #endif
 
 namespace ToyBox {

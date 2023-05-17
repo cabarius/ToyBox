@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using static ModKit.UI;
 #if RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 
 namespace ToyBox {

@@ -21,7 +21,7 @@ using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Parts;
 using static Kingmaker.Utility.UnitDescription.UnitDescription;
 #if RT
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
+
 #endif
 
 namespace ToyBox {
