@@ -6,6 +6,8 @@ using Kingmaker.Blueprints.Items;
 using Kingmaker.Items;
 using Kingmaker.Utility;
 using Kingmaker.Visual.LocalMap;
+using Kingmaker.Localization;
+using Kingmaker.Utility;
 using ModKit;
 using Newtonsoft.Json;
 using Owlcat.Runtime.Core.Utils;
@@ -284,5 +286,15 @@ namespace ToyBox {
             }
             return newMap;
         }
+    }
+
+    public static class LocalizationUtils {
+#if Wrath
+        public static void AddLocalizedString(this string value) => Kingmaker.Localization.LocalizationManager.CurrentPack.PutString(value, value);
+#elif RT
+        public static void AddLocalizedString(this string value) => Kingmaker.Localization.LocalizationManager.Instance.CurrentPack.PutString(value, value);
+#endif
+        public static LocalizedString LocalizedStringInGame(this string key) => new LocalizedString() { Key = key };
+
     }
 }

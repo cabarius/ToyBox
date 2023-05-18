@@ -38,11 +38,7 @@ namespace ToyBox {
             try {
                 if (character != _selectedCharacter || refresh) {
                     _selectedCharacter = character;
-#if Wrath
-                    _featuresTree = new FeaturesTree(_selectedCharacter.Descriptor.Progression);
-#elif RT
-                    _featuresTree = new FeaturesTree(_selectedCharacter.Progression);
-#endif
+                    _featuresTree = new FeaturesTree(_selectedCharacter.Descriptor().Progression);
                 }
                 using (UI.HorizontalScope()) {
                     // features tree
@@ -111,11 +107,7 @@ namespace ToyBox {
         private class FeaturesTree {
             public readonly List<FeatureNode> RootNodes = new();
 
-#if Wrath
             public FeaturesTree(UnitProgressionData progression) {
-#elif RT
-            public FeaturesTree(PartUnitProgression progression) {
-#endif
                 Dictionary<BlueprintScriptableObject, FeatureNode> normalNodes = new();
                 List<FeatureNode> parametrizedNodes = new();
 

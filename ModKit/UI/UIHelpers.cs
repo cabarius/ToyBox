@@ -1,6 +1,4 @@
-﻿using Kingmaker.Localization;
-using Kingmaker.Utility;
-using System;
+﻿using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -43,10 +41,12 @@ namespace ToyBox {
         }
 
         public static void DestroyChildren(this GameObject obj, params string[] paths) {
-            obj.ChildObjects(paths).ForEach(UnityEngine.Object.Destroy);
+            foreach (var doomed in obj.ChildObjects(paths)) 
+                UnityEngine.Object.Destroy(doomed);
         }
         public static void DestroyChildrenImmediate(this GameObject obj, params string[] paths) {
-            obj.ChildObjects(paths).ForEach(UnityEngine.Object.DestroyImmediate);
+            foreach (var doomed in obj.ChildObjects(paths))
+                UnityEngine.Object.DestroyImmediate(doomed);
         }
 
         public static void DestroyComponents<T>(this GameObject obj) where T : UnityEngine.Object {
@@ -151,8 +151,5 @@ namespace ToyBox {
                 label.text = label.text.Split('(').FirstOrDefault().Trim();
 
         }
-        public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
-        public static LocalizedString LocalizedStringInGame(this string key) => new LocalizedString() { Key = key };
-
     }
 }

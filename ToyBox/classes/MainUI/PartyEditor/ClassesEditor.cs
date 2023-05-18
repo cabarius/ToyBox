@@ -66,11 +66,7 @@ namespace ToyBox {
                 MulticlassPicker.OnGUI(ch);
             }
             else {
-#if Wrath
-                var prog = ch.Descriptor.Progression;
-#elif RT
-                var prog = ch.Progression;
-#endif
+                var prog = ch.Descriptor().Progression;
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
                         Space(100);

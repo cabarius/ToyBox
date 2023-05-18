@@ -25,7 +25,6 @@ using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.Designers;
-using Kingmaker.Blueprints.Area;
 #if Wrath
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
@@ -36,7 +35,7 @@ using ToyBox.BagOfPatches;
 namespace ToyBox {
     public static partial class Actions {
         public static Settings settings => Main.Settings;
-#if false
+
         public static void RestSelected() {
             foreach (var selectedUnit in Game.Instance.UI.SelectionManager.SelectedUnits) {
                 if (selectedUnit.Descriptor.State.IsFinallyDead) {
@@ -453,6 +452,5 @@ namespace ToyBox {
                 }
             }
         }
-#endif
     }
 }

@@ -79,7 +79,7 @@ namespace ToyBox {
                                                                    ;
         public static int InterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
         public static List<BlueprintDialog> GetDialog(this UnitEntityData unit) {
-            var dialogs = unit.Parts.Parts
+            var dialogs = unit.Parts.m_Parts
                                          .OfType<UnitPartInteractions>()
                                          .SelectMany(p => p.m_Interactions)
                                          .OfType<Wrapper>()
@@ -89,7 +89,7 @@ namespace ToyBox {
             return dialogs;
         }
         public static IEnumerable<IntrestingnessEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
-            var spawnInterations = unit.Parts.Parts
+            var spawnInterations = unit.Parts.m_Parts
                                .OfType<UnitPartInteractions>()
                                .SelectMany(p => p.m_Interactions)
                                .OfType<Wrapper>()
@@ -157,11 +157,19 @@ namespace ToyBox {
             return result;
         }
         public static void RevealInterestingNPCs() {
-            if (Game.Instance?.State?.Units is { } unitsPool) {
+            if (Game.Instance?.State?
+#if Wrath
+                .Units 
+#elif RT
+                .AllUnits
+#endif
+                is { } unitsPool) {
                 var inerestingUnits = unitsPool.Where(u => u.InterestingnessCoefficent() > 0);
                 foreach (var unit in inerestingUnits) {
                     Mod.Debug($"Revealing {unit.CharacterName}");
+#if Wrath
                     unit.SetIsRevealedSilent(true);
+#endif
                 }
             }
         }
