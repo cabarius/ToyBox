@@ -144,11 +144,7 @@ namespace ToyBox {
             foreach (var ch in characterList) {
                 var classData = ch.Progression.Classes;
                 // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
-#if Wrath                
-                var progression = ch.Descriptor.Progression;
-#elif RT
-                var progression = ch.Progression;
-#endif
+                var progression = ch.Descriptor().Progression;
                 var xpTable = progression.ExperienceTable;
                 var level = progression.CharacterLevel;
                 var mythicLevel = progression.MythicLevel;
@@ -298,22 +294,15 @@ namespace ToyBox {
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Features) {
                     todo = FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
                 }
-#if Wrath
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor.Buffs.Enumerable.ToList());
+                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Buffs.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor.Abilities.Enumerable.ToList());
+                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable.ToList());
                 }
+#if Wrath
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     todo = OnSpellsGUI(ch, spellbooks);
-                }
-#elif RT
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
-                    todo = FactsEditor.OnGUI(ch, ch.Buffs.Enumerable.ToList());
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
-                    todo = FactsEditor.OnGUI(ch, ch.Abilities.Enumerable.ToList());
                 }
 #endif
                 if (selectedCharacter != GetEditCharacter()) {

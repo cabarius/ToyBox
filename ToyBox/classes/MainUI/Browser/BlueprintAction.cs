@@ -188,12 +188,12 @@ namespace ToyBox {
                  (bp, ch, n, index) => {
                      var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
                      var source = new FeatureSource();
-                     ch?.Descriptor?.Progression.Features.AddFeature(bp).SetSource(source, 1);
+                     ch?.Descriptor()?.Progression.Features.AddFeature(bp).SetSource(source, 1);
                      ch?.Progression?.AddSelection(bp, source, 0, value);
 
                  },
                 (bp, ch, index) => {
-                    var progression = ch?.Descriptor?.Progression;
+                    var progression = ch?.Descriptor()?.Progression;
                     if (progression == null) return false;
                     if (!progression.Features.HasFact(bp)) return true;
                     var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);

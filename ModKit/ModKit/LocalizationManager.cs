@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ModKit {
     public class Language {
@@ -115,7 +116,7 @@ namespace ModKit {
             if (!_cacheFiles) {
                 if (Directory.Exists(_localFolderPath)) {
                     foreach (var file in Directory.GetFiles(_localFolderPath)) {
-                        var parts = file.Split(Path.DirectorySeparatorChar).LastItem().Split('.');
+                        var parts = file.Split(Path.DirectorySeparatorChar).Last().Split('.');
                         if (parts[1] == "json") {
                             _LanguageCache.Add(parts[0]);
                         }
@@ -147,7 +148,7 @@ namespace ModKit {
                 }
                 toSerialize.LanguageCode = toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
                 toSerialize.Version = Mod.modEntry.Version.ToString();
-                if (toSerialize.Contributors.IsNullOrEmpty()) toSerialize.Contributors = "The ToyBox Team";
+                if (string.IsNullOrEmpty(toSerialize.Contributors)) toSerialize.Contributors = "The ToyBox Team";
                 toSerialize.HomePage = "https://github.com/cabarius/ToyBox/";
                 Language.Serialize(toSerialize, FilePath + _fileEnding);
                 return true;

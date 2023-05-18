@@ -43,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Pickers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Toggles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UI+Wrappers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UIHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\EmbeddedResourceUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\CodeInstructionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\DoubleDictionary.cs" />
