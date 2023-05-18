@@ -16,8 +16,8 @@ namespace ToyBox.classes.Infrastructure {
         }
 
         public static List<StatType> StatTypes = new() {
-            StatType.Unknown,
 #if Wrath
+            StatType.Unknown,
             StatType.Strength,
             StatType.Dexterity,
             StatType.Constitution,
@@ -41,26 +41,24 @@ namespace ToyBox.classes.Infrastructure {
             StatType.WarhammerInitialAPBlue,
             StatType.WarhammerInitialAPYellow,
 #endif
-            StatType.AttackOfOpportunityCount,
 #if Wrath
+            StatType.AttackOfOpportunityCount,
             StatType.Reach,
             StatType.SneakAttack,
 #endif
-
             StatType.HitPoints,
+#if Wrath
             StatType.TemporaryHitPoints,
             StatType.DamageNonLethal,
-#if Wrath
             StatType.AC,
             StatType.AdditionalCMB,
             StatType.AdditionalCMD,
-#endif
             StatType.SaveFortitude,
             StatType.SaveWill,
             StatType.SaveReflex,
+#endif
             StatType.Initiative,
             StatType.Speed,
-
             StatType.SkillAthletics,
 #if Wrath
             StatType.SkillKnowledgeArcana,

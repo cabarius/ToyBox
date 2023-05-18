@@ -146,8 +146,8 @@ namespace ToyBox {
 
         private EtudeInfo PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
 #if RT
-            var etudesTree = Game.Instance.Player.EtudesSystem.Etudes;
-            var etude = etudesTree.Get(blueprintEtude);
+            if (blueprintEtude.Parent == null)
+                EtudesEditor.rootEtudeId = blueprintEtude.AssetGuid;
 #endif
             var etudeInfo = new EtudeInfo {
                 Name = blueprintEtude.name,
@@ -156,7 +156,7 @@ namespace ToyBox {
 #if Wrath
                 AllowActionStart = blueprintEtude.AllowActionStart,
 #elif RT
-                AllowActionStart = etudesTree.EtudeCanPlay(etude),
+                AllowActionStart = blueprintEtude.CanPlay(),
 #endif
                 CompleteParent = blueprintEtude.CompletesParent,
                 Comment = blueprintEtude.Comment,
