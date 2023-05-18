@@ -234,18 +234,32 @@ note this code from Owlcat
         }
 #endif
 #if Wrath
-        public static void RemoveCompanion(UnitEntityData unit) {
-            _ = Game.Instance.CurrentMode;
-            Game.Instance.Player.RemoveCompanion(unit);
-        }
-
         public static bool IsPartyOrPet(this UnitDescriptor unit) {
-            if (unit?.Unit?.OriginalBlueprint == null || Game.Instance.Player?.AllCharacters == null || Game.Instance.Player?.AllCharacters.Count == 0) {
+            if (unit?.Unit?.OriginalBlueprint == null 
+                    || Game.Instance.Player?.AllCharacters == null  
+                    || Game.Instance.Player?.AllCharacters.Count == 0) {
                 return false;
             }
 
             return Game.Instance.Player.AllCharacters
                        .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null || Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
+#elif RT
+            public static bool IsPartyOrPet(this UnitEntityData unit) {
+                if (unit?.OriginalBlueprint == null 
+                    || Game.Instance.Player?.AllCharacters == null  
+                    || Game.Instance.Player?.AllCharacters.Count == 0) {
+                    return false;
+                }
+
+                return Game.Instance.Player.AllCharacters
+                           .Any(x => x.OriginalBlueprint == unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null || Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
+#endif
+        }
+
+#if Wrath
+        public static void RemoveCompanion(UnitEntityData unit) {
+            _ = Game.Instance.CurrentMode;
+            Game.Instance.Player.RemoveCompanion(unit);
         }
 
         public static bool TryGetPartyMemberForLevelUpVersion(this UnitDescriptor levelUpUnit, out UnitEntityData ch) {

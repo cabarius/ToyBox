@@ -125,7 +125,7 @@ namespace ToyBox {
             var bps = GetBlueprints();
             return bps?.OfType<BPType>().ToList() ?? null;
         }
-        private IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<BlueprintGuid> guids) where BPType: BlueprintFact {
+        internal IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<BlueprintGuid> guids) where BPType: BlueprintFact {
             var bps = GetBlueprints<BPType>();
             return bps?.Where(bp => guids.Contains(bp.AssetGuid));
         }

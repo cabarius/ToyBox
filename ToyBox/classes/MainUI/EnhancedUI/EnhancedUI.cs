@@ -78,11 +78,13 @@ namespace ToyBox {
                        25.space();
                        HelpLabel(("ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: " + "[PuzzlePiece Green3x1]".yellow().bold() + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange()).localize());
                    },
+#if Wrath
                    () => {
                        ActionButton("Clear Action Bar".localize(), () => Actions.ClearActionBar());
                        50.space();
                        Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".localize().green());
                    },
+#endif
                    () => ActionButton("Fix Incorrect Main Character".localize(),
                                       () => {
                                           var probablyPlayer = Game.Instance.Player?.Party?
