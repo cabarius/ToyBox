@@ -26,7 +26,7 @@ namespace ToyBox {
         private static Dictionary<BlueprintGuid, EtudeInfo> filteredEtudes = new();
         
         // TODO: is this still the right root etude?
-        private static readonly BlueprintGuid rootEtudeId = 
+        internal static BlueprintGuid rootEtudeId = 
 #if Wrath
             BlueprintGuid.Parse
 #endif

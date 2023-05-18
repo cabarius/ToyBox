@@ -6,6 +6,7 @@ global using Kingmaker.EntitySystem.Entities.Base;
 global using Kingmaker.EntitySystem.Stats.Base;
 global using Kingmaker.PubSubSystem.Core;
 global using Kingmaker.UI.Models.Tooltip.Base;
+
 global using Kingmaker.UnitLogic.Levelup.Obsolete;
 global using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints;
 global using Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection;
@@ -28,6 +29,7 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker;
 #elif Wrath
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
@@ -52,14 +54,28 @@ namespace ToyBox {
 
         // Hacks to get around ambiguity in Description due to te ILootable interface in BaseUnitEntity
         public static Gender? GetCustomGender(this UnitEntityData unit) {
+            return null;
             var unitType = unit.GetType();
             var description = unitType.GetPropValue<PartUnitDescription>("Description");
             return description.CustomGender;
         }
         public static void SetCustomGender(this UnitEntityData unit, Gender gender) {
+            return;
             var unitType = unit.GetType();
             var description = unitType.GetPropValue<PartUnitDescription>("Description");
             description.CustomGender = gender;
+        }
+        public static bool CanPlay(this BlueprintEtude etudeBP) {
+            try {
+                var etudesTree = Game.Instance.Player.EtudesSystem.Etudes;
+                var etude = etudesTree.Get(etudeBP);
+                if (etude != null) 
+                    return etudesTree.EtudeCanPlay(etude);
+            }
+            catch (Exception ex) {
+                Mod.Error(ex);
+            }
+            return false;
         }
 #elif Wrath
         public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;

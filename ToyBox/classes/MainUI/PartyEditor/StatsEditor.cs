@@ -90,16 +90,17 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 if (ch != null && ch.HashKey() != null) {
                     Space(100);
-                    var scaleMult = ch.View.gameObject.transform.localScale[0];
-                    var lastScale = lastScaleSize.GetValueOrDefault(ch.HashKey(), 1);
-                    if (lastScale != scaleMult) {
-                        ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
-                    }
-                    if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".color(RGBA.none) + " (This setting is per-save)", ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
-                        Main.Settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
-                        ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
-                        lastScaleSize[ch.HashKey()] = lastScale;
-                        Settings.SavePerSaveSettings();
+                    if (ch.View?.gameObject?.transform?.localScale[0] is float scaleMultiplier) {
+                        var lastScale = lastScaleSize.GetValueOrDefault(ch.HashKey(), 1);
+                        if (lastScale != scaleMultiplier) {
+                            ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
+                        }
+                        if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".color(RGBA.none) + " (This setting is per-save)", ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
+                            Main.Settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
+                            ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
+                            lastScaleSize[ch.HashKey()] = lastScale;
+                            Settings.SavePerSaveSettings();
+                        }
                     }
                 }
             }
@@ -192,37 +193,51 @@ namespace ToyBox {
             Space(10);
             Div(100, 20, 755);
             foreach (var obj in HumanFriendlyStats.StatTypes) {
-                var statType = (StatType)obj;
-                var modifiableValue = ch.Stats.GetStat(statType);
-                if (modifiableValue == null) {
-                    continue;
-                }
+                try {
+                    var statType = (StatType)obj;
+                    Mod.Debug($"stat: {statType}");
+#if Wrath
+                     var modifiableValue = ch.Stats.GetStat(statType);
+#elif RT
+                    var modifiableValue = ch.Stats.GetStatOptional(statType);
+#endif                    
+                    if (modifiableValue == null) {
+                        continue;
+                    }
 
-                var key = $"{ch.CharacterName}-{statType}";
-                var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
-                var statName = statType.ToString();
-                if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
-                    Div(100, 20, 755);
+                    var key = $"{ch.CharacterName}-{statType}";
+                    var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
+                    var statName = statType.ToString();
+                    if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
+                        Div(100, 20, 755);
+                    }
+                    using (HorizontalScope()) {
+                        Space(100);
+                        Label(statName, Width(400f));
+                        Space(25);
+                        ActionButton(" < ",
+                                     () => {
+                                         modifiableValue.BaseValue -= 1;
+                                         storedValue = modifiableValue.BaseValue;
+                                     },
+                                     GUI.skin.box,
+                                     AutoWidth());
+                        Space(20);
+                        Label($"{modifiableValue.BaseValue}".orange().bold(), Width(50f));
+                        ActionButton(" > ",
+                                     () => {
+                                         modifiableValue.BaseValue += 1;
+                                         storedValue = modifiableValue.BaseValue;
+                                     },
+                                     GUI.skin.box,
+                                     AutoWidth());
+                        Space(25);
+                        ActionIntTextField(ref storedValue, (v) => { modifiableValue.BaseValue = v; }, Width(75));
+                        statEditorStorage[key] = storedValue;
+                    }
                 }
-                using (HorizontalScope()) {
-                    Space(100);
-                    Label(statName, Width(400f));
-                    Space(25);
-                    ActionButton(" < ", () => {
-                        modifiableValue.BaseValue -= 1;
-                        storedValue = modifiableValue.BaseValue;
-                    }, GUI.skin.box, AutoWidth());
-                    Space(20);
-                    Label($"{modifiableValue.BaseValue}".orange().bold(), Width(50f));
-                    ActionButton(" > ", () => {
-                        modifiableValue.BaseValue += 1;
-                        storedValue = modifiableValue.BaseValue;
-                    }, GUI.skin.box, AutoWidth());
-                    Space(25);
-                    ActionIntTextField(ref storedValue, (v) => {
-                        modifiableValue.BaseValue = v;
-                    }, Width(75));
-                    statEditorStorage[key] = storedValue;
+                catch (Exception ex) {
+                    //Mod.Error(ex);
                 }
             }
         }

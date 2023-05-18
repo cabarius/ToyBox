@@ -44,11 +44,19 @@ namespace ToyBox {
         public static bool IsRevealed(this QuestObjective objective) => objective.State == QuestObjectiveState.Started || objective.State == QuestObjectiveState.Completed;
         public static string stateColored(this string text, Quest quest) => RichText.color(text, questColors[(int)quest.State]);
         public static string stateColored(this string text, QuestObjective objective) => RichText.color(text, questColors[(int)objective.State]);
+#if Wrath
         public static string titleColored(this Quest quest) => quest.Blueprint.Title.ToString().color(titleColors[(int)quest.State]);
+#elif RT
+        public static string titleColored(this Quest quest) => quest.Blueprint.Title.Text.color(titleColors[(int)quest.State]);
+#endif
         public static string titleColored(this QuestObjective objective, BlueprintQuestObjective bp = null) {
             var blueprint = objective?.Blueprint ?? bp;
             var state = objective?.State ?? QuestObjectiveState.None;
+#if Wrath
             var title = blueprint.Title.ToString();
+#elif RT
+            var title = blueprint.Title.Text;
+#endif            
             if (title.Length == 0) title = blueprint.ToString();
             if (blueprint.IsAddendum)
                 title = "Addendum: ".color(RGBA.white) + title;
@@ -220,7 +228,11 @@ namespace ToyBox {
                     if (!Settings.toggleQuestHideCompleted || quest.State != QuestState.Completed || selectedQuests[index]) {
                         using (HorizontalScope()) {
                             50.space();
+#if Wrath
                             Label(quest.Blueprint.Title.ToString().orange().bold(), Width(600));
+#elif RT
+                            Label(quest.Blueprint.Title.Text.orange().bold(), Width(600));
+#endif
                             50.space();
                             DisclosureToggle(quest.stateString(), ref selectedQuests[index]); 
                             if (Settings.toggleQuestInspector)
