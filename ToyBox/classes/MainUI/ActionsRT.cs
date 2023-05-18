@@ -26,6 +26,9 @@ using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.Designers;
 using Kingmaker.Blueprints.Area;
+using Kingmaker.Cheats;
+using Kingmaker.EntitySystem;
+using Kingmaker.UI;
 #if Wrath
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
@@ -36,110 +39,21 @@ using ToyBox.BagOfPatches;
 namespace ToyBox {
     public static partial class Actions {
         public static Settings settings => Main.Settings;
-#if false
+
         public static void RestSelected() {
-            foreach (var selectedUnit in Game.Instance.UI.SelectionManager.SelectedUnits) {
-                if (selectedUnit.Descriptor.State.IsFinallyDead) {
-                    selectedUnit.Descriptor.Resurrect();
-                    selectedUnit.Position = Game.Instance.Player.MainCharacter.Value.Position;
-                }
-
-                RestController.ApplyRest(selectedUnit.Descriptor);
-                Rulebook.Trigger(new RuleHealDamage(selectedUnit, selectedUnit, default, selectedUnit.Descriptor.Stats.HitPoints.ModifiedValue));
-                foreach (var attribute in selectedUnit.Stats.Attributes) {
-                    attribute.Damage = 0;
-                    attribute.Drain = 0;
-                }
+            foreach (var selectedUnit in UIAccess.SelectionManager.SelectedUnits) {
+                CheatsCombat.RestUnit(selectedUnit);
             }
-        }
-        public static void UnlockAllBasicMythicPaths() {
-            // TODO - do this right once I build the etude browser and understand this better
-            UnlockAeon();
-            UnlockAzata();
-            UnlockLich();
-            UnlockTrickster();
-            // The following two block progression so better not to
-            //UnlockDevil();
-            //UnockSwarm();
-            UnlockGoldDragon();
-#if false
-            var mythicInfos = BlueprintRoot.Instance.MythicsSettings.m_MythicsInfos;
-            foreach (var infoRef in mythicInfos) {
-                var info = infoRef.Get();
-                var etudeGUID = info.EtudeGuid;
-                var etudeBp = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeGUID);
-                Main.Log($"mythicInfo: {info} {etudeGUID} {etudeBp}");
-                Game.Instance.Player.EtudesSystem.StartEtude(etudeBp);
-            }
-#endif
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockAngel() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("d85f7367b453b7b468b77e5e708297ae"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockDemon() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("e6669aad304206c4d969f6602e6b412e"));
-            Main.SetNeedsResetGameUI();
-        }
-
-        public static void UnlockAeon() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("d85f7367b453b7b468b77e5e708297ae"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockAzata() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("e6669aad304206c4d969f6602e6b412e"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockLich() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("8f2f0ea65ef3a3f48948d27a39b37db1"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockTrickster() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("f6dce66b61f98eb4dbe6388e16b1de11"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockLegend() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("2943a647eb4017c49b4c121b15841d07"));
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("230552776ff941e1b054596bf589f9a9"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockDevil() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("26028ff893925ef44aa1179906ac9265"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockSwarm() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("6248db4784b301945b67b52143386b55"));
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("544443943d917e14ca72583d0357d4ad"));
-            Main.SetNeedsResetGameUI();
-        }
-        public static void UnlockGoldDragon() {
-            Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("067212d277e846a4f9ff96aee6138f0b"));
-            Main.SetNeedsResetGameUI();
-        }
-
-        public static void ToggleModWindow() => UnityModManager.UI.Instance.ToggleWindow();
-        public static void RunPerceptionTriggers() {
-            // On the local map
-            foreach (var obj in Game.Instance.State.MapObjects) {
-                obj.LastPerceptionRollRank = new Dictionary<UnitReference, int>();
-            }
-            // On the global map
-            foreach (var obj in Game.Instance.Player.AllGlobalMaps[0].Points.Values) {
-                obj.LastPerceptionRolled = 0;
-            }
-
-            Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
         }
         public static void RemoveAllBuffs() {
             foreach (var target in Game.Instance.Player.PartyAndPets) {
-                foreach (var buff in new List<Buff>(target.Descriptor.Buffs.Enumerable)) {
+                foreach (var buff in new List<Buff>(target.Descriptor().Buffs.Enumerable)) {
                     if (buff.Blueprint.IsClassFeature || buff.Blueprint.IsHiddenInUI) {
                         continue;
                     }
 
                     if (buff.Blueprint.IsFromSpell) {
-                        target.Descriptor.RemoveFact(buff); // Always remove spell effects, even if they'd persist
+                        target.Descriptor().Facts.Remove(buff); // Always remove spell effects, even if they'd persist
                         continue;
                     }
 
@@ -147,28 +61,36 @@ namespace ToyBox {
                         continue;
                     }
 
-                    target.Descriptor.RemoveFact(buff);
-                }
-            }
-        }
-        public static void KillAllTacticalUnits() {
-            foreach (var unitRef in Game.Instance.TacticalCombat?.Data?.UnitRefs) {
-                if (unitRef.Entity.Get<UnitPartTacticalCombat>().Faction != ArmyFaction.Crusaders) {
-                    GameHelper.KillUnit(unitRef.Entity);
+                    target.Descriptor().Facts.Remove(buff);
                 }
             }
         }
         public static void KillAll() {
-            foreach (UnitEntityData unit in Game.Instance.State.Units) {
-                if (unit.CombatState.IsInCombat && unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter()) {
-                    GameHelper.KillUnit(unit);
-                }
+            foreach (BaseUnitEntity unit in Game.Instance.State.AllUnits)
+            {
+                if (unit.CombatState.IsInCombat && unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter()))
+                    CheatsCombat.KillUnit(unit);
             }
-            KillAllTacticalUnits();
-            if (Game.Instance.IsPaused) {
-                Game.Instance.StopMode(GameModeType.Pause);
-            }
+            if (!Game.Instance.IsPaused)
+                return;
+            Game.Instance.StopMode(GameModeType.Pause);
         }
+
+        public static void SpawnEnemyUnderCursor(
+            BlueprintUnit bp = null,
+            BlueprintFaction factionBp = null,
+            Vector3 position = default (Vector3))
+        {
+            Vector3 position1 = position != new Vector3() ? position : Game.Instance.ClickEventsController.WorldPosition;
+            if (bp == null)
+                bp = Game.Instance.BlueprintRoot.Cheats.Enemy;
+            Mod.Log("Summoning: " + Kingmaker.Cheats.Utilities.GetBlueprintPath((BlueprintScriptableObject) bp));
+            BaseUnitEntity baseUnitEntity = Game.Instance.EntitySpawner.SpawnUnit(bp, position1, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+            if (factionBp == null)
+                return;
+            baseUnitEntity.Faction.Set(factionBp);
+        }
+
         public static void SpawnUnit(BlueprintUnit unit, int count) {
             var worldPosition = Game.Instance.ClickEventsController.WorldPosition;
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
@@ -179,24 +101,23 @@ namespace ToyBox {
                         worldPosition.x + offset.x,
                         worldPosition.y,
                         worldPosition.z + offset.z);
-                    Game.Instance.EntityCreator.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+                    Game.Instance.EntitySpawner.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
                 }
             }
         }
         public static void HandleChangeParty() {
             if (Game.Instance.CurrentMode == GameModeType.GlobalMap) {
                 var partyCharacters = Game.Instance.Player.Party.Select(u => (UnitReference)u).ToList(); ;
-                if ((partyCharacters != null ? (partyCharacters.Select(r => r.Value).SequenceEqual(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
+                if ((partyCharacters != null ? (partyCharacters.Select(r => r.Entity).SequenceEqual(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
                     return;
-                GlobalMapView.Instance.ChangePartyOnMap();
             }
             else {
                 foreach (var temp in Game.Instance.Player.RemoteCompanions.ToTempList())
                     temp.IsInGame = false;
                 Game.Instance.Player.FixPartyAfterChange();
-                Game.Instance.UI.SelectionManager.UpdateSelectedUnits();
+                UIAccess.SelectionManager.UpdateSelectedUnits();
                 var tempList = Game.Instance.Player.Party.Select(character => character.View).ToTempList<UnitEntityView>();
-                if (Game.Instance.UI.SelectionManager is SelectionManagerPC selectionManager)
+                if (UIAccess.SelectionManager is SelectionManagerPC selectionManager)
                     selectionManager.MultiSelect((IEnumerable<UnitEntityView>)tempList);
             }
         }
@@ -208,19 +129,40 @@ namespace ToyBox {
                 EventBus.RaiseEvent<IGroupChangerHandler>(h => h.HandleCall(new Action(HandleChangeParty), (Action)null, true));
             }
         }
-        public static void IdentifyAll() {
-            var inventory = Game.Instance?.Player?.Inventory;
-            if (inventory == null) return;
-            foreach (var item in inventory) {
-                item.Identify();
-            }
-            foreach (var ch in Game.Instance.Player.AllCharacters) {
-                foreach (var item in ch.Body.GetAllItemsInternal()) {
-                    item.Identify();
-                    //Main.Log($"{ch.CharacterName} - {item.Name} - {item.IsIdentified}");
+        public static void ApplyTimeScale() {
+            var timeScale = settings.useAlternateTimeScaleMultiplier
+                                ? settings.alternateTimeScaleMultiplier
+                                : settings.timeScaleMultiplier;
+            Game.Instance.TimeController.DebugTimeScale = timeScale;
+        }
+        public static void LobotomizeAllEnemies() {
+            foreach (var unit in Game.Instance.State.AllUnits) {
+                if (unit.CombatState.IsInCombat &&
+                    unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter()) &&
+                                             unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
+                        // removing the brain works better in RTWP, but gets stuck in turn based
+                        //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
+                        // add a bunch of conditions and hope for the best
+                        //var currentCharacter = WrathExtensions.GetCurrentCharacter();
+                        var fact = new EntityFact();
+                        unit.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity, fact);
+                        unit.State.AddCondition(UnitCondition.CantAct, fact);
+                        unit.State.AddCondition(UnitCondition.CantMove, fact);
                 }
             }
         }
+
+        // called when changing highlight settings so they take immediate effect
+        public static void UpdateHighlights(bool on) {
+            foreach (var mapObjectEntityData in Game.Instance.State.MapObjects) {
+                mapObjectEntityData.View.UpdateHighlight();
+            }
+            foreach (var unitEntityData in Game.Instance.State.AllUnits) {
+                unitEntityData.View.UpdateHighlight(false);
+            }
+        }
+
+#if false
         public static void ClearActionBar() {
             var selectedChar = Game.Instance?.SelectionCharacter?.CurrentSelectedCharacter;
             var uiSettings = selectedChar?.UISettings;
@@ -381,32 +323,7 @@ namespace ToyBox {
             }
             return true;
         }
-        public static void ApplyTimeScale() {
-            var timeScale = settings.useAlternateTimeScaleMultiplier
-                ? settings.alternateTimeScaleMultiplier
-                : settings.timeScaleMultiplier;
-            Game.Instance.TimeController.DebugTimeScale = timeScale;
-        }
-        public static void LobotomizeAllEnemies() {
-            foreach (var unit in Game.Instance.State.Units) {
-                if (unit.CombatState.IsInCombat &&
-                    unit.IsPlayersEnemy &&
-                    unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
-                    var descriptor = unit.Descriptor;
-                    if (descriptor != null) {
-                        // removing the brain works better in RTWP, but gets stuck in turn based
-                        //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
 
-                        // add a bunch of conditions and hope for the best
-                        descriptor.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity);
-                        descriptor.State.AddCondition(UnitCondition.CantAct);
-                        descriptor.State.AddCondition(UnitCondition.CanNotAttack);
-                        descriptor.State.AddCondition(UnitCondition.CantMove);
-                        descriptor.State.AddCondition(UnitCondition.MovementBan);
-                    }
-                }
-            }
-        }
         // can potentially go back in time but some parts of the game don't expect it
         public static void KingdomTimelineAdvanceDays(int days) {
             var kingdom = KingdomState.Instance;
@@ -432,17 +349,6 @@ namespace ToyBox {
 
             timelineManager.UpdateTimeline();
         }
-
-        // called when changing highlight settings so they take immediate effect
-        public static void UpdateHighlights(bool on) {
-            foreach (var mapObjectEntityData in Game.Instance.State.MapObjects) {
-                mapObjectEntityData.View.UpdateHighlight();
-            }
-            foreach (var unitEntityData in Game.Instance.State.Units) {
-                unitEntityData.View.UpdateHighlight(false);
-            }
-        }
-
         public static void RerollInteractionSkillChecks() {
             foreach (var obj in Game.Instance.State.MapObjects) {
                 foreach (var part in obj.Parts.GetAll<InteractionSkillCheckPart>()) {

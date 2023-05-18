@@ -59,15 +59,19 @@ namespace ToyBox {
             KeyBindings.RegisterAction(FullBuffPlease, () => CheatsCombat.FullBuffPlease(""));
             KeyBindings.RegisterAction(GoddesBuffs, () => CheatsCombat.Iddqd(""));
             KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
+#if Wrath
             KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
+#endif
             KeyBindings.RegisterAction(KillAllEnemies, () => Actions.KillAll());
             //KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
             KeyBindings.RegisterAction(LobotomizeAllEnemies, () => Actions.LobotomizeAllEnemies());
             // Common
+#if Wrath
             KeyBindings.RegisterAction(TeleportPartyToYou, () => Teleport.TeleportPartyToPlayer());
             KeyBindings.RegisterAction(GoToGlobalMap, () => Teleport.TeleportToGlobalMap());
             KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
             KeyBindings.RegisterAction(RerollInteractionSkillChecks, () => Actions.RerollInteractionSkillChecks());
+#endif
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
             KeyBindings.RegisterAction(ChangWeather, () => CheatsCommon.ChangeWeather(""));
             // Other
@@ -101,8 +105,12 @@ namespace ToyBox {
                 Label("increment".localize().cyan(), AutoWidth());
                 var increment = IntTextField(ref Settings.increment, null, Width(150));
                 EndHorizontal();
+#if Wrath
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 var kingdom = KingdomState.Instance;
+#elif RT
+                var mainChar = Game.Instance.Player.MainCharacter.Entity;
+#endif
                 HStack("Resources".localize(), 1,
                     () => {
                         var money = Game.Instance.Player.Money;
@@ -122,6 +130,7 @@ namespace ToyBox {
                             Game.Instance.Player.GainPartyExperience(increment);
                         }, AutoWidth());
                     },
+#if Wrath
                     () => {
                         var corruption = Game.Instance.Player.Corruption;
                         Label("Corruption".localize().cyan(), Width(150));
@@ -130,6 +139,7 @@ namespace ToyBox {
                         25.space();
                         Toggle("Disable Corruption".localize(), ref Settings.toggleDisableCorruption);
                     },
+#endif
                     () => { }
                 );
             }
@@ -197,12 +207,14 @@ namespace ToyBox {
                     Space(-75);
                     Label("This resets all the skill check rolls for all interactable objects in the area".localize().green());
                 },
+#if Wrath
             () => {
                 NonBindableActionButton("Set Perception to 40".localize(), () => {
                     CheatsCommon.StatPerception();
                     Actions.RunPerceptionTriggers();
                 });
             },
+#endif
             () => BindableActionButton(ChangWeather, true),
             () => NonBindableActionButton("Give All Items".localize(), () => CheatsUnlock.CreateAllItems("")),
             () => NonBindableActionButton("Identify All".localize(), () => Actions.IdentifyAll()),
@@ -370,11 +382,13 @@ namespace ToyBox {
                     25.space();
                     HelpLabel(("ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: " + "[PuzzlePiece Green3x1]".yellow().bold() + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange()).localize());
                 },
+#if Wrath
                 () => {
                     ActionButton("Clear Action Bar".localize(), () => Actions.ClearActionBar());
                     50.space();
                     Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".localize().green());
                 },
+#endif
                 () => ActionButton("Fix Incorrect Main Character".localize(), () => {
                     var probablyPlayer = Game.Instance.Player?.Party?
                         .Where(x => !x.IsCustomCompanion())
@@ -569,7 +583,9 @@ namespace ToyBox {
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => Toggle("Instant Rest After Combat".localize(), ref Settings.toggleInstantRestAfterCombat),
                 () => Toggle("Instant change party members".localize(), ref Settings.toggleInstantChangeParty),
+#if Wrath
                 () => ToggleCallback("Equipment No Weight".localize(), ref Settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
+#endif
                 () => Toggle("Allow Item Use From Inventory During Combat".localize(), ref Settings.toggleUseItemsDuringCombat),
                 () => Toggle("Ignore Alignment Requirements for Abilities".localize(), ref Settings.toggleIgnoreAbilityAlignmentRestriction),
                 () => Toggle("Ignore all Requirements for Abilities".localize(), ref Settings.toggleIgnoreAbilityAnyRestriction),
@@ -652,18 +668,26 @@ namespace ToyBox {
                     List<UnitEntityData> units = Game.Instance?.Player?.m_PartyAndPets;
                     if (units != null) {
                         foreach (var unit in units) {
+#if Wrath
                             FogOfWarController.VisionRadiusMultiplier = Settings.fowMultiplier;
+#endif
+                        // TODO: do we need this for RT?
                             FogOfWarRevealerSettings revealer = unit.View?.FogOfWarRevealer;
                             if (revealer != null) {
                                 if (Settings.fowMultiplier == 1) {
                                     revealer.DefaultRadius = true;
+#if Wrath
                                     revealer.UseDefaultFowBorder = true;
+#endif
                                     revealer.Radius = 1.0f;
                                 }
                                 else {
                                     revealer.DefaultRadius = false;
+#if Wrath
                                     revealer.UseDefaultFowBorder = false;
-                                    revealer.Radius = FogOfWarController.VisionRadius * Settings.fowMultiplier;
+#endif
+                                    // TODO: is this right?
+                                    revealer.Radius = Settings.fowMultiplier;
                                 }
                             }
                         }

@@ -323,6 +323,7 @@
     <Compile Include="classes\Infrastructure\ItemEntityUtils.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\ActionsRT.cs" />
+    <Compile Include="classes\MainUI\Browser\BlueprintActionRT.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\OnAreaLoad.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
@@ -413,7 +414,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

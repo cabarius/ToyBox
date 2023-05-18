@@ -116,8 +116,6 @@ namespace ToyBox {
             Game.Instance.Player.EtudesSystem.StartEtude(ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("067212d277e846a4f9ff96aee6138f0b"));
             Main.SetNeedsResetGameUI();
         }
-
-        public static void ToggleModWindow() => UnityModManager.UI.Instance.ToggleWindow();
         public static void RunPerceptionTriggers() {
             // On the local map
             foreach (var obj in Game.Instance.State.MapObjects) {
@@ -205,19 +203,6 @@ namespace ToyBox {
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause || currentMode == GameModeType.GlobalMap) {
                 if (Main.IsModGUIShown) UnityModManager.UI.Instance.ToggleWindow();
                 EventBus.RaiseEvent<IGroupChangerHandler>(h => h.HandleCall(new Action(HandleChangeParty), (Action)null, true));
-            }
-        }
-        public static void IdentifyAll() {
-            var inventory = Game.Instance?.Player?.Inventory;
-            if (inventory == null) return;
-            foreach (var item in inventory) {
-                item.Identify();
-            }
-            foreach (var ch in Game.Instance.Player.AllCharacters) {
-                foreach (var item in ch.Body.GetAllItemsInternal()) {
-                    item.Identify();
-                    //Main.Log($"{ch.CharacterName} - {item.Name} - {item.IsIdentified}");
-                }
             }
         }
         public static void ClearActionBar() {
