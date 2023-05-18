@@ -99,7 +99,7 @@ namespace ToyBox {
 #endif
 #if false
             Space(25);
-            ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor),
+            ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor()),
                 AutoWidth());
 #endif
             Label("", AutoWidth());
@@ -143,7 +143,7 @@ namespace ToyBox {
             List<Action> todo = new();
             foreach (var ch in characterList) {
                 var classData = ch.Progression.Classes;
-                // TODO - understand the difference between ch.Progression and ch.Descriptor.Progression
+                // TODO - understand the difference between ch.Progression and ch.Descriptor().Progression
                 var progression = ch.Descriptor().Progression;
                 var xpTable = progression.ExperienceTable;
                 var level = progression.CharacterLevel;
@@ -158,7 +158,7 @@ namespace ToyBox {
                         if (isWide) {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
 #if Wrath                
-                                ch.Descriptor.CustomName = name;
+                                ch.Descriptor().CustomName = name;
 #endif
                                 Main.SetNeedsResetGameUI();
                             }
@@ -166,7 +166,7 @@ namespace ToyBox {
                         else
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
 #if Wrath                
-                                ch.Descriptor.CustomName = name;
+                                ch.Descriptor().CustomName = name;
 #endif                            
                                 Main.SetNeedsResetGameUI();
                         }

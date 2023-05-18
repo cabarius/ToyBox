@@ -32,7 +32,12 @@ namespace ToyBox {
                     ?.OrderBy(b => b.GetDisplayName())
                     ?.ToList();
                 _allBuffs = BlueprintLoader.Shared.GetBlueprints<BlueprintBuff>()
-                    ?.Where(bp => !bp.IsHiddenInUI && !bp.HiddenInInspector && !bp.GetDisplayName().StartsWith("[unknown key") && !bp.IsClassFeature && !bp.Harmful)
+                    ?.Where(bp => !bp.IsHiddenInUI 
+#if Wrath
+                                  && !bp.HiddenInInspector 
+#endif
+                                  && !bp.GetDisplayName().StartsWith("[unknown key")
+                                  && !bp.IsClassFeature && !bp.Harmful)
                     ?.OrderBy(b => b.GetDisplayName())
                     ?.ToList();
                 _searchResults = GetValidBuffsToAdd();

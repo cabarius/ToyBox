@@ -83,7 +83,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintParametrizedFeature>("Remove",
                 (bp, ch, n, index) => {
                     var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
-                    var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
+                    var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     ch?.Progression?.Features?.RemoveFact(fact);
                 },
                 (bp, ch, index) => {
@@ -117,7 +117,7 @@ namespace ToyBox {
                     var progression = ch?.Descriptor?.Progression;
                     var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
                     //Feature fact = progression.Features.GetFact(bp);
-                    var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
+                    var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     var selections = ch?.Descriptor?.Progression.Selections;
                     BlueprintFeatureSelection featureSelection = null;
                     FeatureSelectionData featureSelectionData = null;
@@ -169,17 +169,17 @@ namespace ToyBox {
 
             // Spellbooks
             BlueprintAction.Register<BlueprintSpellbook>("Add",
-                                                         (bp, ch, n, index) => ch.Descriptor.DemandSpellbook(bp),
-                                                         (bp, ch, index) => ch.Descriptor.Spellbooks.All(sb => sb.Blueprint != bp));
+                                                         (bp, ch, n, index) => ch.Descriptor().DemandSpellbook(bp),
+                                                         (bp, ch, index) => ch.Descriptor().Spellbooks.All(sb => sb.Blueprint != bp));
 
             BlueprintAction.Register<BlueprintSpellbook>("Remove",
-                                                         (bp, ch, n, index) => ch.Descriptor.DeleteSpellbook(bp),
-                                                         (bp, ch, index) => ch.Descriptor.Spellbooks.Any(sb => sb.Blueprint == bp));
+                                                         (bp, ch, n, index) => ch.Descriptor().DeleteSpellbook(bp),
+                                                         (bp, ch, index) => ch.Descriptor().Spellbooks.Any(sb => sb.Blueprint == bp));
 
             BlueprintAction.Register<BlueprintSpellbook>(">",
                                                          (bp, ch, n, index) => {
                                                              try {
-                                                                 var spellbook = ch.Descriptor.Spellbooks.First(sb => sb.Blueprint == bp);
+                                                                 var spellbook = ch.Descriptor().Spellbooks.First(sb => sb.Blueprint == bp);
 
                                                                  if (spellbook.IsMythic) {
                                                                      spellbook.AddMythicLevel();
@@ -190,29 +190,29 @@ namespace ToyBox {
                                                              }
                                                              catch (Exception e) { Mod.Error(e); }
                                                          },
-                                                         (bp, ch, index) => ch.Descriptor.Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
+                                                         (bp, ch, index) => ch.Descriptor().Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
 
             // Buffs
             BlueprintAction.Register<BlueprintBuff>("Add",
                                                     (bp, ch, n, index) => GameHelper.ApplyBuff(ch, bp),
-                                                    (bp, ch, index) => !ch.Descriptor.Buffs.HasFact(bp));
+                                                    (bp, ch, index) => !ch.Descriptor().Buffs.HasFact(bp));
 
             BlueprintAction.Register<BlueprintBuff>("Remove",
-                                                    (bp, ch, n, index) => ch.Descriptor.RemoveFact(bp),
-                                                    (bp, ch, index) => ch.Descriptor.Buffs.HasFact(bp));
+                                                    (bp, ch, n, index) => ch.Descriptor().RemoveFact(bp),
+                                                    (bp, ch, index) => ch.Descriptor().Buffs.HasFact(bp));
 
             BlueprintAction.Register<BlueprintBuff>("<",
-                                                    (bp, ch, n, index) => ch.Descriptor.Buffs.GetFact(bp)?.RemoveRank(),
+                                                    (bp, ch, n, index) => ch.Descriptor().Buffs.GetFact(bp)?.RemoveRank(),
                                                     (bp, ch, index) => {
-                                                        var buff = ch.Descriptor.Buffs.GetFact(bp);
+                                                        var buff = ch.Descriptor().Buffs.GetFact(bp);
 
                                                         return buff?.GetRank() > 1;
                                                     });
 
             BlueprintAction.Register<BlueprintBuff>(">",
-                                                    (bp, ch, n, index) => ch.Descriptor.Buffs.GetFact(bp)?.AddRank(),
+                                                    (bp, ch, n, index) => ch.Descriptor().Buffs.GetFact(bp)?.AddRank(),
                                                     (bp, ch, index) => {
-                                                        var buff = ch.Descriptor.Buffs.GetFact(bp);
+                                                        var buff = ch.Descriptor().Buffs.GetFact(bp);
 
                                                         return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
                                                     });
@@ -261,12 +261,12 @@ namespace ToyBox {
 
             // BlueprintActivatableAbility
             BlueprintAction.Register<BlueprintActivatableAbility>("Add",
-                                                                  (bp, ch, n, index) => ch.Descriptor.AddFact(bp),
-                                                                  (bp, ch, index) => !ch.Descriptor.HasFact(bp));
+                                                                  (bp, ch, n, index) => ch.Descriptor().AddFact(bp),
+                                                                  (bp, ch, index) => !ch.Descriptor().HasFact(bp));
 
             BlueprintAction.Register<BlueprintActivatableAbility>("Remove",
-                                                                  (bp, ch, n, index) => ch.Descriptor.RemoveFact(bp),
-                                                                  (bp, ch, index) => ch.Descriptor.HasFact(bp));
+                                                                  (bp, ch, n, index) => ch.Descriptor().RemoveFact(bp),
+                                                                  (bp, ch, index) => ch.Descriptor().HasFact(bp));
 
             // Teleport
             BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (enterPoint, ch, n, index) => Teleport.To(enterPoint));

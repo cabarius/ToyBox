@@ -212,7 +212,7 @@ namespace ToyBox {
         public static Dictionary<string, string> GetCustomAttributes<T>(this T model) where T : class {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
-#if true
+#if Wrath
             PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
             foreach (var prop in props) {
                 var text = prop.GetCustomAttributes(true).OfType<InfoBoxAttribute>().Select(info => info.Text);

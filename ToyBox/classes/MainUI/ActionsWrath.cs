@@ -217,7 +217,7 @@ namespace ToyBox {
                     return UIUtilityUnit.SpellbookHasSpell(selectedSpellbook, ability);
                 }
             }
-            return ch.Spellbooks.Any(spellbook => spellbook.IsKnown(ability)) || ch.Descriptor.Abilities.HasFact(ability);
+            return ch.Spellbooks.Any(spellbook => spellbook.IsKnown(ability)) || ch.Descriptor().Abilities.HasFact(ability);
         }
         public static bool CanAddAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
@@ -240,7 +240,7 @@ namespace ToyBox {
                 }
             }
             else {
-                if (!ch.Descriptor.Abilities.HasFact(ability)) return true;
+                if (!ch.Descriptor().Abilities.HasFact(ability)) return true;
             }
             return false;
         }
@@ -274,11 +274,11 @@ namespace ToyBox {
                 }
             }
             else {
-                ch.Descriptor.AddFact(ability);
+                ch.Descriptor().AddFact(ability);
             }
         }
-        public static bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) => ability.IsSpell && !ch.Descriptor.HasFact(ability) && !PartyEditor.IsOnPartyEditor();
-        public static void AddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) => ch.Descriptor.AddFact(ability);
+        public static bool CanAddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) => ability.IsSpell && !ch.Descriptor().HasFact(ability) && !PartyEditor.IsOnPartyEditor();
+        public static void AddSpellAsAbility(this UnitEntityData ch, BlueprintAbility ability) => ch.Descriptor().AddFact(ability);
         public static void RemoveAbility(this UnitEntityData ch, BlueprintAbility ability) {
             if (ability.IsSpell) {
                 if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
@@ -293,18 +293,18 @@ namespace ToyBox {
                     }
                 }
             }
-            var abilities = ch.Descriptor.Abilities;
+            var abilities = ch.Descriptor().Abilities;
             if (abilities.HasFact(ability)) abilities.RemoveFact(ability);
         }
         public static void ResetMythicPath(this UnitEntityData ch) {
-            //            ch.Descriptor.Progression.RemoveMythicLevel
+            //            ch.Descriptor().Progression.RemoveMythicLevel
         }
         public static void resetClassLevel(this UnitEntityData ch) {
-            var level = ch.Descriptor.Progression.MaxCharacterLevel;
-            var xp = ch.Descriptor.Progression.Experience;
-            var xpTable = ch.Descriptor.Progression.ExperienceTable;
+            var level = ch.Descriptor().Progression.MaxCharacterLevel;
+            var xp = ch.Descriptor().Progression.Experience;
+            var xpTable = ch.Descriptor().Progression.ExperienceTable;
 
-            for (var i = ch.Descriptor.Progression.MaxCharacterLevel; i >= 1; i--) {
+            for (var i = ch.Descriptor().Progression.MaxCharacterLevel; i >= 1; i--) {
                 var xpBonus = xpTable.GetBonus(i);
 
                 Mod.Trace(i + ": " + xpBonus + " | " + xp);
@@ -315,7 +315,7 @@ namespace ToyBox {
                     break;
                 }
             }
-            ch.Descriptor.Progression.CharacterLevel = level;
+            ch.Descriptor().Progression.CharacterLevel = level;
         }
 
         public static void CreateArmy(BlueprintArmyPreset bp, bool friendlyorhostile) {

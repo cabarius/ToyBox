@@ -111,7 +111,7 @@ namespace ToyBox {
 
                 () => { }
                 );
-#if true
+#if Wrath
             Div(0, 25);
             HStack("Mythic Paths".localize(), 1,
                    () => Label("Warning! Using these might break your game somehow. Recommend for experimental tinkering like trying out different builds, and not for actually playing the game.".localize().green()),
@@ -131,7 +131,6 @@ namespace ToyBox {
                    () => { ActionButton("Unlock Legend".localize(), Actions.UnlockLegend, Width(300)); Space(25); Label("Prevents you from advancing all other Mythic Path".localize().green()); },
                    () => { }
                 );
-
             Div(0, 25);
             HStack("Multiple Classes".localize(), 1,
                 //() => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),

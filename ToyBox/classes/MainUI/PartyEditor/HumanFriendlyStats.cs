@@ -17,6 +17,7 @@ namespace ToyBox.classes.Infrastructure {
 
         public static List<StatType> StatTypes = new() {
             StatType.Unknown,
+#if Wrath
             StatType.Strength,
             StatType.Dexterity,
             StatType.Constitution,
@@ -27,16 +28,33 @@ namespace ToyBox.classes.Infrastructure {
             StatType.BaseAttackBonus,
             StatType.AdditionalAttackBonus,
             StatType.AdditionalDamage,
+#elif RT
+            StatType.WarhammerWeaponSkill,
+            StatType.WarhammerBallisticSkill,
+            StatType.WarhammerStrength,
+            StatType.WarhammerToughness,
+            StatType.WarhammerAgility,
+            StatType.WarhammerIntelligence,
+            StatType.WarhammerPerception,
+            StatType.WarhammerWillpower,
+            StatType.WarhammerFellowship,
+            StatType.WarhammerInitialAPBlue,
+            StatType.WarhammerInitialAPYellow,
+#endif
             StatType.AttackOfOpportunityCount,
+#if Wrath
             StatType.Reach,
             StatType.SneakAttack,
+#endif
 
             StatType.HitPoints,
             StatType.TemporaryHitPoints,
             StatType.DamageNonLethal,
+#if Wrath
             StatType.AC,
             StatType.AdditionalCMB,
             StatType.AdditionalCMD,
+#endif
             StatType.SaveFortitude,
             StatType.SaveWill,
             StatType.SaveReflex,
@@ -44,16 +62,27 @@ namespace ToyBox.classes.Infrastructure {
             StatType.Speed,
 
             StatType.SkillAthletics,
+#if Wrath
             StatType.SkillKnowledgeArcana,
             StatType.SkillKnowledgeWorld,
             StatType.SkillLoreNature,
             StatType.SkillLoreReligion,
             StatType.SkillMobility,
             StatType.SkillPerception,
+#elif RT
+            StatType.SkillAwareness,
+            StatType.SkillCarouse,
+#endif
             StatType.SkillPersuasion,
+#if Wrath
             StatType.SkillStealth,
             StatType.SkillThievery,
             StatType.SkillUseMagicDevice,
+#elif RT
+            StatType.SkillDemolition,
+            StatType.SkillMedicae,
+            StatType.SkillLogic,
+#endif
             StatType.CheckBluff,
             StatType.CheckDiplomacy,
             StatType.CheckIntimidate

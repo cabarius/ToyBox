@@ -21,7 +21,9 @@ namespace ToyBox {
     public static class EnhancedInventory {
         public static Settings Settings => Main.Settings;
         private static Harmony m_harmony;
+#if Wrath
         private static OnAreaLoad m_area_load_handler;
+#endif
 
         public static readonly Dictionary<ItemSortCategories, (int index, string title)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
             [ItemSortCategories.NotSorted] = ((int)ItemsFilter.SorterType.NotSorted, null),
@@ -70,12 +72,16 @@ namespace ToyBox {
         public static readonly RemappableInt FilterMapper = new RemappableInt();
         public static readonly RemappableInt SorterMapper = new RemappableInt();
         public static void OnLoad() {
+#if Wrath
             m_area_load_handler = new OnAreaLoad();
             EventBus.Subscribe(m_area_load_handler);
+#endif
             RefreshRemappers();
         }
         public static void OnUnLoad() {
+#if Wrath
             EventBus.Unsubscribe(m_area_load_handler);
+#endif
         }
         public static void RefreshRemappers() {
             FilterMapper.Clear();
