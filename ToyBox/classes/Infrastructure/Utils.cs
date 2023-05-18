@@ -137,6 +137,18 @@ namespace ToyBox {
             var maxStr = max.ToKM(units);
             return $"{minStr} - {maxStr}";
         }
+        public static string ToBinString(this float v, string units = "", float binSize = 2f) {
+            if (v < 0) return "< 0";
+            binSize = Mathf.Clamp(binSize, 1.1f, 20f);
+            var logv = Mathf.Log(v) / Mathf.Log(binSize);
+            var floorLogV = Mathf.Floor(logv);
+            var min = Mathf.Pow(binSize, floorLogV);
+            var minStr = min.ToKM(units);
+            var max = Mathf.Pow(binSize, floorLogV + 1);
+            if (min == max) return $"{min:0}{units}";
+            var maxStr = max.ToKM(units);
+            return $"{minStr} - {maxStr}";
+        }
         public static long LongSortKey(this string s) {
             s = s.StripHTML();
             var match = Regex.Match(s, @"\d+");

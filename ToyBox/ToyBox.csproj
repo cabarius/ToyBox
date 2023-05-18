@@ -164,7 +164,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\CustomEnchantmentStackingFix.cs" />
     <Compile Include="classes\Infrastructure\AssetLoader.cs" />
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintExtensionsQuest.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\SmartConsole.cs" />
@@ -261,6 +260,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs" />
     <Compile Include="classes\MonkeyPatchin\Braaainz.cs" />
+    <Compile Include="classes\MonkeyPatchin\CustomEnchantmentStackingFix.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\SaveLoadViews.cs" />
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\InventoryStashVM.cs" />

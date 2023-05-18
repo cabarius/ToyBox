@@ -57,6 +57,7 @@ namespace ToyBox {
                     Space(95 - 150);
                     Label("Lets you open up your player storage chest that you find near your bed at the Inn and other places".green());
                 },
+#if Wrath
                 () => {
                     ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), Width(400));
                     Space(150);
@@ -72,6 +73,7 @@ namespace ToyBox {
                     Space(150);
                     Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
                 },
+#endif
 #if DEBUG
                 () => Toggle("Show reasons you can not equip an item in tooltips", ref Settings.toggleShowCantEquipReasons),
 #endif
@@ -137,6 +139,7 @@ namespace ToyBox {
                     // The following options let you configure loot filtering and auto sell levels:".green());
                     () => { }
                     );
+#if Wrath
             Div(0, 25);
             HStack("Bulk Sell", 1,
                    () => {
@@ -147,8 +150,8 @@ namespace ToyBox {
                        using (VerticalScope()) {
                            BulkSell.OnGUI();
                        }
-
                    });
+#endif
             Div(0, 25);
             if (Game.Instance.CurrentlyLoadedArea == null) return;
             var isEmpty = true;

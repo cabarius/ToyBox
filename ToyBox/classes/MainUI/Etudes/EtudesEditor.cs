@@ -24,7 +24,13 @@ namespace ToyBox {
         private static BlueprintGuid selected;
         private static Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes => EtudesTreeModel.Instance.loadedEtudes;
         private static Dictionary<BlueprintGuid, EtudeInfo> filteredEtudes = new();
-        private static readonly BlueprintGuid rootEtudeId = BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
+        
+        // TODO: is this still the right root etude?
+        private static readonly BlueprintGuid rootEtudeId = 
+#if Wrath
+            BlueprintGuid.Parse
+#endif
+                ("f0e6f6b732c40284ab3c103cad2455cc");
         public static string searchText = "";
         public static string searrchTextInput = "";
         private static bool showOnlyFlagLikes;

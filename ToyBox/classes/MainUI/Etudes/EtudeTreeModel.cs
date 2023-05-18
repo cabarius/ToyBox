@@ -1,4 +1,5 @@
-﻿using Kingmaker.AreaLogic.Etudes;
+﻿using Kingmaker;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
 using ModKit;
@@ -144,11 +145,19 @@ namespace ToyBox {
         }
 
         private EtudeInfo PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
+#if RT
+            var etudesTree = Game.Instance.Player.EtudesSystem.Etudes;
+            var etude = etudesTree.Get(blueprintEtude);
+#endif
             var etudeInfo = new EtudeInfo {
                 Name = blueprintEtude.name,
                 Blueprint = blueprintEtude,
                 ParentId = blueprintEtude.Parent?.Get()?.AssetGuid ?? BlueprintGuid.Empty,
+#if Wrath
                 AllowActionStart = blueprintEtude.AllowActionStart,
+#elif RT
+                AllowActionStart = etudesTree.EtudeCanPlay(etude)
+#endif
                 CompleteParent = blueprintEtude.CompletesParent,
                 Comment = blueprintEtude.Comment,
                 Priority = blueprintEtude.Priority
