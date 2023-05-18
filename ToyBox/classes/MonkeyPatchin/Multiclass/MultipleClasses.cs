@@ -64,10 +64,10 @@ namespace ToyBox.Multiclass {
                     // Some companions have predefined levels so in some cases we get called iteratively for each level so we will make sure we only apply multiclass on the last level
                     if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)
                         && ch.TryGetClass(state.SelectedClass, out var cl)
-                        && unit != ch.Descriptor
+                        && unit != ch.Descriptor()
                         && state.NextClassLevel <= cl.Level
                         ) {
-                        Mod.Debug($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} isCH: {unit == ch.Descriptor}) - skip - lvl:{state.NextClassLevel} vs {cl.Level} ".green());
+                        Mod.Debug($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} isCH: {unit == ch.Descriptor()}) - skip - lvl:{state.NextClassLevel} vs {cl.Level} ".green());
                         return;
                     }
                     // get multi-class setting

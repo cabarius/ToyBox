@@ -163,9 +163,9 @@ namespace ToyBox {
                                 if (needsReload) spellBrowser.ResetSearch();
                                 GUI.enabled = !spellBrowser.isSearching;
                                 Space(20);
-                                ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor, spellBrowser.filteredDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
+                                ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor(), spellBrowser.filteredDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
                                 Space(20);
-                                ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor), AutoWidth());
+                                ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor()), AutoWidth());
                                 GUI.enabled = true;
                                 if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                     10.space();

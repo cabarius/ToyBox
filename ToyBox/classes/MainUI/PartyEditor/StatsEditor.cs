@@ -25,7 +25,8 @@ namespace ToyBox {
         private static int _increase = 1;
         public static void OnStatsGUI(UnitEntityData ch) {
             Div(100, 20, 755);
-            var alignment = ch.Descriptor.Alignment.ValueRaw;
+#if Wrath
+            var alignment = ch.Descriptor().Alignment.ValueRaw;
             using (HorizontalScope()) {
                 100.space();
                 Label("Alignment", Width(425));
@@ -33,11 +34,11 @@ namespace ToyBox {
             }
             using (HorizontalScope()) {
                 528.space();
-                AlignmentGrid(alignment, (a) => ch.Descriptor.Alignment.Set(a));
+                AlignmentGrid(alignment, (a) => ch.Descriptor().Alignment.Set(a));
             }
             Div(100, 20, 755);
             using (HorizontalScope()) {
-                var charAlignment = ch.Descriptor.Alignment;
+                var charAlignment = ch.Descriptor().Alignment;
                 100.space();
                 Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()} by", 340.width());
                 5.space();
@@ -51,7 +52,7 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
-            var alignmentMask = ch.Descriptor.Alignment.m_LockedAlignmentMask;
+            var alignmentMask = ch.Descriptor().Alignment.m_LockedAlignmentMask;
             using (HorizontalScope()) {
                 100.space();
                 Label("Alignment Lock", 425.width());
@@ -64,26 +65,27 @@ namespace ToyBox {
                 var titles = AlignmentMasks.Select(
                     a => a.ToString().color(a.Color()).bold()).ToArray();
                 if (SelectionGrid(ref maskIndex, titles, 3, 650.width())) {
-                    ch.Descriptor.Alignment.LockAlignment(AlignmentMasks[maskIndex], new Alignment?());
+                    ch.Descriptor().Alignment.LockAlignment(AlignmentMasks[maskIndex], new Alignment?());
                 }
             }
             Div(100, 20, 755);
+#endif
             using (HorizontalScope()) {
                 Space(100);
                 Label("Size", Width(425));
-                var size = ch.Descriptor.State.Size;
+                var size = ch.Descriptor().State.Size;
                 Label($"{size}".orange().bold(), Width(175));
             }
             using (HorizontalScope()) {
                 Space(528);
                 EnumGrid(
-                    () => ch.Descriptor.State.Size,
-                    (s) => ch.Descriptor.State.Size = s,
+                    () => ch.Descriptor().State.Size,
+                    (s) => ch.Descriptor().State.Size = s,
                     3, Width(600));
             }
             using (HorizontalScope()) {
                 Space(528);
-                ActionButton("Reset", () => { ch.Descriptor.State.Size = ch.Descriptor.OriginalSize; }, Width(197));
+                ActionButton("Reset", () => { ch.Descriptor().State.Size = ch.Descriptor().OriginalSize; }, Width(197));
             }
             using (HorizontalScope()) {
                 if (ch != null && ch.HashKey() != null) {
@@ -101,7 +103,8 @@ namespace ToyBox {
                     }
                 }
             }
-            if (ch.Descriptor.Progression.GetCurrentMythicClass()?.CharacterClass.Name == "Swarm That Walks") {
+#if Wrath
+            if (ch.Descriptor().Progression.GetCurrentMythicClass()?.CharacterClass.Name == "Swarm That Walks") {
                 UnitPartLocustSwarm SwarmPart = null;
                 UnitPartLocustClonePets SwarmClones = null;
                 bool found = false;
@@ -169,18 +172,19 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
+#endif
             using (HorizontalScope()) {
                 Space(100);
                 Label("Gender", Width(400));
                 Space(25);
-                var gender = ch.Descriptor.CustomGender ?? ch.Descriptor.Gender;
+                var gender = ch.Descriptor().GetCustomGender() ?? ch.Descriptor().Gender;
                 var isFemale = gender == Gender.Female;
                 using (HorizontalScope(Width(200))) {
                     if (Toggle(isFemale ? "Female" : "Male", ref isFemale,
                         "♀".color(RGBA.magenta).bold(),
                         "♂".color(RGBA.aqua).bold(),
                         0, largeStyle, GUI.skin.box, Width(300), Height(20))) {
-                        ch.Descriptor.CustomGender = isFemale ? Gender.Female : Gender.Male;
+                        ch.Descriptor().SetCustomGender(isFemale ? Gender.Female : Gender.Male);
                     }
                 }
                 Label("Changing your gender may cause visual glitches".green());

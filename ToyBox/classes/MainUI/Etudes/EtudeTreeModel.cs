@@ -156,7 +156,7 @@ namespace ToyBox {
 #if Wrath
                 AllowActionStart = blueprintEtude.AllowActionStart,
 #elif RT
-                AllowActionStart = etudesTree.EtudeCanPlay(etude)
+                AllowActionStart = etudesTree.EtudeCanPlay(etude),
 #endif
                 CompleteParent = blueprintEtude.CompletesParent,
                 Comment = blueprintEtude.Comment,

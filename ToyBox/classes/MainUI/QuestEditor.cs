@@ -94,7 +94,11 @@ namespace ToyBox {
                     50.space();
                     using (VerticalScope(GUI.skin.box)) {
                         //if (Game.Instance?.State?.Units.All is { } units) {
+#if Wrath
                         if (Game.Instance?.State?.Units is { } unitsPool) {
+#elif RT
+                        if (Game.Instance?.State?.AllUnits is { } unitsPool) {
+#endif
                             var units = Settings.toggleInterestingNPCsShowHidden ? unitsPool.All : unitsPool.ToList();
                             ConditionsBrowser.OnGUI(
                                 units.Where(u => u.InterestingnessCoefficent() >= 1),
@@ -125,14 +129,22 @@ namespace ToyBox {
                                     175.space();
                                     Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(coefficient.ToString()));
                                     50.space();
+#if Wrath
                                     ReflectionTreeView.DetailToggle("Unit", u.Parts.Parts, u.Parts.Parts,100);
+#elif RT
+                                    ReflectionTreeView.DetailToggle("Unit", u.Parts.m_Parts, u.Parts.m_Parts,100);
+#endif
                                     25.space();
                                     var dialogs = u.GetDialog();
                                     if (dialogs.Any()) 
                                         ReflectionTreeView.DetailToggle("Dialog", u, dialogs.Count == 1 ? dialogs.First() : dialogs, 100);
                                 },
                                 (u, _) => {
+#if Wrath
                                     ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
+#elif RT
+                                    ReflectionTreeView.OnDetailGUI(u.Parts.m_Parts);
+#endif
                                     ReflectionTreeView.OnDetailGUI(u);
                                     var entries = u.GetUnitInteractionConditions();
                                     var checkerEntries = entries.Where(e => e.HasConditins && (ShowInactive || e.IsActive()));
@@ -318,6 +330,7 @@ namespace ToyBox {
             Space(25);
         }
         public static void DrawTeleports(QuestObjective objective) {
+#if Wrath
             using (HorizontalScope(MaxWidth(850))) {
                 var areas = objective.Blueprint.Areas;
                 var locations = objective.Blueprint.Locations;
@@ -344,6 +357,7 @@ namespace ToyBox {
 #endif
                 }
             }
+#endif
         }
         public static void OnGUI(Element element, object source, int indent = 150, bool forceShow = false) {
             if (!element.IsActive()

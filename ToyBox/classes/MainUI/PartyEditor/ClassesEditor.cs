@@ -32,9 +32,11 @@ namespace ToyBox {
                 Toggle("Multiple Classes On Level-Up", ref Settings.toggleMulticlass);
                 if (Settings.toggleMulticlass) {
                     Space(40);
+#if Wrath
                     if (DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
                         multiclassEditCharacter = selectedCharacter;
                     }
+#endif
                     Space(53);
                     Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
                 }
@@ -63,7 +65,9 @@ namespace ToyBox {
             }
             Div(100, 20);
             if (editMultiClass) {
+#if Wrath
                 MulticlassPicker.OnGUI(ch);
+#endif
             }
             else {
                 var prog = ch.Descriptor().Progression;
@@ -179,6 +183,7 @@ namespace ToyBox {
                         var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                         ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), AutoWidth());
                         Space(23);
+#if Wrath
                         if (ch.IsClassGestalt(cd.CharacterClass)
                             || !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1
                             || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1
@@ -205,6 +210,7 @@ namespace ToyBox {
                             }
                             Label(cd.CharacterClass.Description.StripHTML().green(), AutoWidth());
                         }
+#endif
                     }
                 }
             }

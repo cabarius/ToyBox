@@ -271,7 +271,7 @@ namespace ToyBox {
         }
         public static List<BlueprintFeature> FeatureSelectionValues(this UnitEntityData ch, BlueprintFeatureSelection bp) => bp.AllFeatures.Where(f => ch.HasFeatureSelection(bp, f)).ToList();
         public static List<FeatureSelectionEntry> FeatureSelectionEntries(this UnitEntityData ch, BlueprintFeatureSelection bp)
-            => (from pair in ch.Descriptor.Progression.Selections
+            => (from pair in ch.Descriptor().Progression.Selections
                 where pair.Key == bp
                 from byLevelPair in pair.Value.SelectionsByLevel
                 from feature in byLevelPair.Value
@@ -318,7 +318,7 @@ namespace ToyBox {
         public static List<IFeatureSelectionItem> ParameterizedFeatureItems(this UnitEntityData ch, BlueprintParametrizedFeature bp) => bp.Items.Where(f => ch.HasParameterizedFeatureItem(bp, f)).ToList();
         public static void AddParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, item.Param);
         public static void RemoveParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
-            var fact = ch.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
+            var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
             ch?.Progression?.Features?.RemoveFact(fact);
         }
 #endif

@@ -24,6 +24,8 @@ using ModKit.Utility;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.UI.Common;
+using UnityEngine;
+using System;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 #endif
@@ -138,13 +140,10 @@ namespace ToyBox {
                 unit.Position = Game.Instance.Player.MainCharacter.Entity.Position;
                 unit.CombatState.LeaveCombat();
                 Charm(unit);
-                var unitPartCompanion = unit.Get<UnitPartCompanion>();
-                unitPartCompanion.State = CompanionState.InParty;
+                var unitPartCompanion = unit.GetAll<UnitPartCompanion>();
+                Game.Instance.Player.AddCompanion(unit);
                 if (unit.IsDetached) {
                     Game.Instance.Player.AttachPartyMember(unit);
-                }
-                foreach (var pet in pets) {
-                    pet.Entity.Position = unit.Position;
                 }
 #endif
             }

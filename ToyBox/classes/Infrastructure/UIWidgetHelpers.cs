@@ -29,17 +29,20 @@ namespace ToyBox {
         public static Transform UIRoot => UIUtility.IsGlobalMap() ? GlobalMapUI.Instance.transform : StaticCanvas.Instance.transform;
         public static Transform ServiceWindow => UIUtility.IsGlobalMap() ? UIRoot.Find("ServiceWindowsConfig").transform : UIRoot.Find("ServiceWindowsPCView");
 #elif RT
-        public static Transform UIRoot => StaticCanvas.Instance.transform;
+        public static Transform UIRoot => throw new NotImplementedException(); // StaticCanvas.Instance.transform;
         public static Transform ServiceWindow => UIRoot.Find("ServiceWindowsPCView");
 #endif
         // We deal with two different cases for finding our UI bits (thanks Owlcat!)
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView
         // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig
-
+#if Wrath
         public static Transform SearchViewPrototype
             => Main.IsInGame
                    ? Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView")
                    : Game.Instance.UI.MainMenu.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
+#elif RT
+        public static Transform SearchViewPrototype => throw new NotImplementedException();
+#endif
         // MainMenuPCView/Canvas/ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView/ FieldPlace/SearchField
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/ParentThing/Equipment/RightBlock/FeatureSelectorView(Clone)/FeatureSearchView/ FieldPlace/SearchField
 
