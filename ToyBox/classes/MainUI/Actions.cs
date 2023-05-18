@@ -62,5 +62,19 @@ namespace ToyBox {
             UnityModManager.Params.UIScale = newScale;
             UnityModManager.SaveSettingsAndParams();
         }
+        public static void ToggleModWindow() => UnityModManager.UI.Instance.ToggleWindow();
+        public static void IdentifyAll() {
+            var inventory = Game.Instance?.Player?.Inventory;
+            if (inventory == null) return;
+            foreach (var item in inventory) {
+                item.Identify();
+            }
+            foreach (var ch in Game.Instance.Player.AllCharacters) {
+                foreach (var item in ch.Body.GetAllItemsInternal()) {
+                    item.Identify();
+                    //Main.Log($"{ch.CharacterName} - {item.Name} - {item.IsIdentified}");
+                }
+            }
+        }
     }
 }
