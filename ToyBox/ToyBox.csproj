@@ -234,7 +234,7 @@
     <Compile Include="classes\Models\Settings.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\ActionBar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Alignment.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Camera.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\CameraWrath.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Clipboard+Guids.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
@@ -325,7 +325,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

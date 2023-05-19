@@ -13,8 +13,10 @@ using ModKit.DataViewer;
 using Owlcat.Runtime.Core.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using UnityEngine;
@@ -66,7 +68,7 @@ namespace ToyBox {
 
                 Mod.OnLoad(modEntry);
                 UIHelpers.OnLoad();
-                Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+                LoadSettings(modEntry);
                 SettingsDefaults.InitializeDefaultDamageTypes();
 
 
@@ -120,6 +122,39 @@ namespace ToyBox {
             return true;
         }
 #endif
+        private static void LoadSettings(UnityModManager.ModEntry modEntry) {
+            var thisToyBoxPath = modEntry.Path;
+            var thisSettingsPath = Path.Combine(thisToyBoxPath, "Settings.xml");
+            if (!File.Exists(thisSettingsPath)) {
+                try {
+                    Mod.Log("Settings file not found attempting to migrate from older ToyBox".yellow());
+                    var otherToyBoxPath = Path.Combine(UnityModManager.modsPath, "ToyBox");
+                    Mod.Log($"Checking {otherToyBoxPath}");
+                    if (Directory.Exists(otherToyBoxPath)) {
+                        Mod.Log($"    Found older ToyBox at {otherToyBoxPath} migrating all settings");
+                        File.Copy(Path.Combine(otherToyBoxPath, "Settings.xml"), thisSettingsPath);
+                        var thisUserSettingsPath = Path.Combine(thisToyBoxPath, "UserSettings");
+                        var otherUserSettingsPath = Path.Combine(otherToyBoxPath, "UserSettings");
+                        Directory.CreateDirectory(thisUserSettingsPath);
+                        var allFiles = Directory.GetFiles(otherUserSettingsPath, "*.*", SearchOption.AllDirectories);
+                        foreach (string otherPath in allFiles) {
+                            var thisPath = otherPath.Replace(otherUserSettingsPath, thisUserSettingsPath);
+                            Mod.Log($"    {otherPath} => {thisPath}");
+                            File.Copy(otherPath, thisPath, true);
+                        }
+                        Mod.Log("ToyBox settings migration => SUCCESS".green());
+                    }
+                    else {
+                        Mod.Log("Other ToyBox not found... creating default settings".yellow());
+                    }
+                }
+                catch (Exception e) {
+                    Mod.Error(e);
+                }
+            }
+            Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+
+        }
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value) {
             Enabled = value;
             return true;

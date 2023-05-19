@@ -420,6 +420,7 @@
     <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\Models\Settings.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\CamereRT.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
