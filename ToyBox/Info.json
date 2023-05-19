@@ -1,8 +1,8 @@
 ﻿{
   "Id": "0ToyBox0",
-  "DisplayName": "0_ToyBox_0 (Shodan begins her conquest of the Imperium)",
+  "DisplayName": "0_ToyBox_0 prepares to conqure the Imperium",
   "Author": "Narria",
-  "Version": "1.5.3",
+  "Version": "1.5.2b",
   "ManagerVersion": "0.23.0",
   "Requirements": [],
   "AssemblyName": "ToyBox.dll",
