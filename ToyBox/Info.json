@@ -1,8 +1,8 @@
 ﻿{
   "Id": "0ToyBox0",
-  "DisplayName": "0_ToyBox_0 prepares to conqure the Imperium",
+  "DisplayName": "{ToyBox} is preparing to conqure the Imperium",
   "Author": "Narria",
-  "Version": "1.5.2b",
+  "Version": "1.5.2c",
   "ManagerVersion": "0.23.0",
   "Requirements": [],
   "AssemblyName": "ToyBox.dll",

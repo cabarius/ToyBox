@@ -1,63 +1,23 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using HarmonyLib;
-using JetBrains.Annotations;
 using Kingmaker;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
-using Kingmaker.Items;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities;
-using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Parts;
 using Kingmaker.View;
 using System;
 using System.Linq;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 using Kingmaker.Settings;
-using Kingmaker.Settings.Difficulty;
 using ModKit;
-using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Utility;
 using System.Collections.Generic;
-using CameraMode = Kingmaker.View.CameraMode;
 using DG.Tweening;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Owlcat.Runtime.Visual.RenderPipeline;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.OccludedObjectHighlighting;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
-using Kingmaker.Visual.LocalMap;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
-using Kingmaker.UI;
-using Kingmaker.Visual.Particles.ForcedCulling;
-using Kingmaker.Visual.LocalMap;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-using static Kingmaker.Visual.LocalMap.LocalMapRenderer;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using UnityEngine.EventSystems;
-using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
-
-using Kingmaker.Controllers.Clicks.Handlers;
-using static ModKit.UI;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Interaction;
-using static Kingmaker.UnitLogic.FactLogic.AddLocalMapMarker;
-using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.Designers;
-using Kingmaker.UI.MVVM._VM.ServiceWindows;
-using Kingmaker.UI.SettingsUI;
-using Newtonsoft.Json;
-using UniRx;
+using Kingmaker.Controllers.Clicks;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
@@ -85,6 +45,34 @@ namespace ToyBox.BagOfPatches {
                         Camera ___m_Camera,
                         float ___m_ZoomLenght) {
                 if (Settings.fovMultiplier == 1 && !Settings.toggleZoomableLocalMaps) return true;
+
+                if (__instance.m_ZoomRoutine != null || __instance.ZoomLock)
+                    return false;
+                if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse 
+                                             && !__instance.IsOutOfScreen 
+                                             && !PointerController.InGui)
+                    __instance.m_PlayerScrollPosition += Input.GetAxis("Mouse ScrollWheel");
+                __instance.m_ScrollPosition = __instance.m_PlayerScrollPosition 
+                                              + __instance.m_GamepadScrollPosition;
+                __instance.m_GamepadScrollPosition = 0.0f;
+                __instance.m_ScrollPosition = Mathf.Clamp(__instance.m_ScrollPosition, 0.0f, __instance.ZoomLength);
+                __instance.m_SmoothScrollPosition =
+                    Mathf.Lerp(__instance.m_SmoothScrollPosition, __instance.m_ScrollPosition, Time.unscaledDeltaTime * __instance.Smoothness);
+                __instance.m_Camera.fieldOfView = Mathf.Lerp(FovMax, FovMin, __instance.CurrentNormalizePosition);
+                if ((bool)(Object)__instance.m_VirtualCamera)
+                    __instance.m_VirtualCamera.m_Lens.FieldOfView = __instance.m_Camera.fieldOfView;
+                if (__instance.EnablePhysicalZoom)
+                    __instance.m_Camera.transform.localPosition = new Vector3(
+                        __instance.m_Camera.transform.localPosition.x,
+                        __instance. m_Camera.transform.localPosition.y,
+                        Mathf.Lerp(__instance.PhysicalZoomMin, 
+                                   __instance.PhysicalZoomMax, 
+                                   __instance.CurrentNormalizePosition
+                                   )
+                        );
+                __instance.m_PlayerScrollPosition = __instance.m_ScrollPosition;
+                return false
+
                 if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse && (double)Input.GetAxis("Mouse ScrollWheel") != 0.0 && ((double)___m_Camera.fieldOfView > (double)FovMin || (double)Input.GetAxis("Mouse ScrollWheel") < 0.0)) {
                     if (Settings.toggleUseAltMouseWheelToAdjustClipPlane && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.LeftShift))) {
                         var cameraRig = Game.Instance.UI.GetCameraRig();
@@ -298,7 +286,6 @@ namespace ToyBox.BagOfPatches {
                 if (!Settings.toggleCameraElevation) return;
                 __result.y = CameraElevation;
             }
-
             [HarmonyPatch(nameof(CameraRig.SetMode))]
             [HarmonyPostfix]
             public static void SetMode(CameraRig __instance, CameraMode mode) {
