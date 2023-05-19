@@ -39,8 +39,9 @@ namespace ToyBox {
         private static int respecableCount = 0;
         private static int recruitableCount = 0;
         private static int selectedSpellbook = 0;
-        private static (string, string) nameEditState = (null, null);
         public static int selectedSpellbookLevel = 0;
+        public static int SelectedNewSpellLvl = 0;
+        private static (string, string) nameEditState = (null, null);
         private static bool editSpellbooks = false;
         private static UnitEntityData spellbookEditCharacter = null;
         private static readonly Dictionary<string, int> statEditorStorage = new();
@@ -63,7 +64,7 @@ namespace ToyBox {
         }
 
         // This bit of kludge is added in order to tell whether our generic actions are being accessed from this screen or the Search n' Pick
-        public static bool IsOnPartyEditor() => Main.Settings.selectedTab == 2;
+        public static bool IsOnPartyEditor() => Main.Settings.selectedTab == 3;
 
         public static void ActionsGUI(UnitEntityData ch) {
             var player = Game.Instance.Player;

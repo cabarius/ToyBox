@@ -25,6 +25,8 @@ using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.Designers;
+using ToyBox.classes.Infrastructure;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.Spellbook;
 #if Wrath
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
@@ -250,13 +252,15 @@ namespace ToyBox {
                     if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue(ch.HashKey(), out var selectedSpellbook)) {
                         var level = PartyEditor.selectedSpellbookLevel;
                         if (level == selectedSpellbook.Blueprint.MaxSpellLevel + 1)
-                            level = PartyEditor.newSpellLvl;
+                            level = PartyEditor.SelectedNewSpellLvl;
                         selectedSpellbook.AddKnown(level, ability);
                         return;
                     }
                 }
 
+                // Add this spell to all the character's spellbooks that it can be learned from
                 Mod.Trace($"adding spell: {ability.Name}");
+                int addCount = 0;
                 foreach (var spellbook in ch.Spellbooks) {
                     var spellbookBP = spellbook.Blueprint;
                     var maxLevel = spellbookBP.MaxSpellLevel;
@@ -269,6 +273,27 @@ namespace ToyBox {
                         if (allowsSpell) {
                             Mod.Trace($"spell level = {level}");
                             spellbook.AddKnown(level, ability);
+                            addCount++;
+                        }
+                    }
+                }
+                // If the spell is not available to the user and we have selected showFromAllSpellbooks, then add it to the selected spellbook at the lowest level it is available
+                if (addCount == 0 && Settings.showFromAllSpellbooks) {
+                    Mod.Trace("Trying to force add the spell from showFromAllSpellbooks");
+                    if (PartyEditor.IsOnPartyEditor() && PartyEditor.SelectedSpellbook.TryGetValue
+(ch.HashKey(), out var selectedSpellbook)) {
+                        Mod.Trace($"force adding spell: {ability.Name} to: {selectedSpellbook.Blueprint.Name}");
+                        var maxLevel = selectedSpellbook.MaxSpellLevel;
+                        for (var level = 0; level <= maxLevel; level++) {
+                            var learnable = CasterHelpers.GetAllSpells(level);
+                            var allowsSpell = learnable.Contains(ability);
+                            var allowText = allowsSpell ? "FOUND" : "did not find";
+                            Mod.Trace($"{allowText} spell {ability.Name} in {learnable.Count()} level {level} spells");
+                            if (allowsSpell) {
+                                Mod.Trace($"spell level = {level}");
+                                selectedSpellbook.AddKnown(level, ability);
+                                return; // no need to add higher level versions of the same spell
+                            }
                         }
                     }
                 }

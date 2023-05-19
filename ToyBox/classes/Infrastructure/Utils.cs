@@ -1,5 +1,4 @@
-﻿using Epic.OnlineServices.Lobby;
-using Kingmaker;
+﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items;
@@ -10,7 +9,6 @@ using Kingmaker.Localization;
 using Kingmaker.Utility;
 using ModKit;
 using Newtonsoft.Json;
-using Owlcat.Runtime.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.UI;
+using JetBrains.Annotations;
 using UnityEngine;
 using Attribute = System.Attribute;
 #if Wrath
@@ -280,6 +279,97 @@ namespace ToyBox {
                 return left.CompareTo(right);
         }
     }
+#if false
+    public static class TempListExtension {
+        public static List<T> ToTempList<T>([CanBeNull] this List<T> _this) {
+            List<T> list = TempList.Get<T>();
+            if (_this == null) {
+                return list;
+            }
+
+            list.Capacity = System.Math.Max(list.Capacity, _this.Capacity);
+            foreach (T _thi in _this) {
+                list.Add(_thi);
+            }
+
+            return list;
+        }
+
+        public static List<KeyValuePair<TKey, TValue>> ToTempList<TKey, TValue>([CanBeNull] this Dictionary<TKey, TValue> _this) {
+            List<KeyValuePair<TKey, TValue>> list = TempList.Get<KeyValuePair<TKey, TValue>>();
+            if (_this == null) {
+                return list;
+            }
+
+            foreach (KeyValuePair<TKey, TValue> _thi in _this) {
+                list.Add(_thi);
+            }
+
+            return list;
+        }
+
+        public static List<T> ToTempList<T>([CanBeNull] this IEnumerable<T> _this) {
+            List<T> list = TempList.Get<T>();
+            if (_this == null) {
+                return list;
+            }
+
+            foreach (T _thi in _this) {
+                list.Add(_thi);
+            }
+
+            return list;
+        }
+    }
+    public class TempList {
+        private abstract class Releasable {
+            public abstract void ReleaseInternal();
+        }
+
+        private class PoolHolder<T> : Releasable {
+            public static readonly PoolHolder<T> Instance;
+
+            public readonly Stack<List<T>> Pool = new Stack<List<T>>();
+
+            public readonly Stack<List<T>> Claimed = new Stack<List<T>>();
+
+            static PoolHolder() {
+                s_Pools.Add(Instance = new PoolHolder<T>());
+            }
+
+            public override void ReleaseInternal() {
+                while (Claimed.Count > 0) {
+                    List<T> list = Claimed.Pop();
+                    list.Clear();
+                    Pool.Push(list);
+                }
+            }
+        }
+
+        private static readonly List<Releasable> s_Pools = new List<Releasable>();
+
+        public static List<T> Get<T>() {
+            if (!UnityThreadHolder.IsMainThread) {
+                return new List<T>();
+            }
+
+            List<T> list = ((PoolHolder<T>.Instance.Pool.Count > 0) ? PoolHolder<T>.Instance.Pool.Pop() : new List<T>());
+            if (list.Count > 0) {
+                Mod.Error("Templist (of " + typeof(T).Name + ") is not empty on claim! Someone is storing a reference to templist.");
+                return Get<T>();
+            }
+
+            PoolHolder<T>.Instance.Claimed.Push(list);
+            return list;
+        }
+
+        public static void Release() {
+            foreach (Releasable s_Pool in s_Pools) {
+                s_Pool.ReleaseInternal();
+            }
+        }
+    }
+#endif
     public static class DictionaryExtensions {
         // Works in C#3/VS2008:
         // Returns a new dictionary of this ... others merged leftward.

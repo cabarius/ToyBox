@@ -191,6 +191,18 @@ namespace ToyBox {
                                                              catch (Exception e) { Mod.Error(e); }
                                                          },
                                                          (bp, ch, index) => ch.Descriptor().Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
+            // Abilities
+            BlueprintAction.Register<BlueprintAbility>("Add",
+                                                       (bp, ch, n, index) => ch.AddAbility(bp),
+                                                       (bp, ch, index) => ch.CanAddAbility(bp));
+
+            BlueprintAction.Register<BlueprintAbility>("At Will",
+                                                       (bp, ch, n, index) => ch.AddSpellAsAbility(bp),
+                                                       (bp, ch, index) => ch.CanAddSpellAsAbility(bp));
+
+            BlueprintAction.Register<BlueprintAbility>("Remove",
+                                                       (bp, ch, n, index) => ch.RemoveAbility(bp),
+                                                       (bp, ch, index) => ch.HasAbility(bp));
 
             // Buffs
             BlueprintAction.Register<BlueprintBuff>("Add",
@@ -225,19 +237,6 @@ namespace ToyBox {
                                                        (bp, ch, n, index) => KingdomState.Instance?.ActiveBuffs.RemoveFact(bp),
                                                        (bp, ch, index) => (KingdomState.Instance != null) && KingdomState.Instance.ActiveBuffs.HasFact(bp));
 
-
-            // Abilities
-            BlueprintAction.Register<BlueprintAbility>("Add",
-                                                       (bp, ch, n, index) => ch.AddAbility(bp),
-                                                       (bp, ch, index) => ch.CanAddAbility(bp));
-
-            BlueprintAction.Register<BlueprintAbility>("At Will",
-                                                       (bp, ch, n, index) => ch.AddSpellAsAbility(bp),
-                                                       (bp, ch, index) => ch.CanAddSpellAsAbility(bp));
-
-            BlueprintAction.Register<BlueprintAbility>("Remove",
-                                                       (bp, ch, n, index) => ch.RemoveAbility(bp),
-                                                       (bp, ch, index) => ch.HasAbility(bp));
             // GlobalSpells
             BlueprintAction.Register<BlueprintGlobalMagicSpell>("Add",
                                                        (bp, ch, n, index) => Game.Instance.Player.GlobalMapSpellsManager.AddSpell(bp),

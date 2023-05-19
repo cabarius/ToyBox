@@ -1,5 +1,5 @@
 ﻿#if RT
-// common alternate usings
+// common alternate using
 global using Kingmaker.Blueprints.Base;
 global using Kingmaker.EntitySystem;
 global using Kingmaker.EntitySystem.Entities.Base;
@@ -17,23 +17,34 @@ global using Kingmaker.Utility.UnityExtensions;
 global using Kingmaker.Code.UI.MVVM;
 global using Kingmaker.Code.UI.MVVM.VM.Loot;
 global using Owlcat.Runtime.Core;
+global using Owlcat.Runtime.Core.Utility;
 global using static Kingmaker.Utility.MassLootHelper;
+#elif Wrath
+global using Epic.OnlineServices.Lobby;
+global using Owlcat.Runtime.Core.Utils;
+#endif
 
 // Type Aliases
+#if RT
 global using BlueprintGuid = System.String;
 global using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
 global using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
 global using UnitProgressionData = Kingmaker.UnitLogic.PartUnitProgression;
+#endif
 
+#if RT
+// Local using
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker;
+
 #elif Wrath
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
 #endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +86,7 @@ namespace ToyBox {
             catch (Exception ex) {
                 Mod.Error(ex);
             }
-            return false;
+            return true;
         }
 #elif Wrath
         public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;

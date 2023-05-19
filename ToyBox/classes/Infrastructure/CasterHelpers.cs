@@ -146,7 +146,7 @@ namespace ToyBox.classes.Infrastructure {
             }
             var level = PartyEditor.selectedSpellbookLevel;
             if (level == selectedSpellbook.Blueprint.MaxSpellLevel + 1)
-                level = PartyEditor.newSpellLvl;
+                level = PartyEditor.SelectedNewSpellLvl;
             if (abilities != null) {
                 abilities.ForEach(x => selectedSpellbook.AddIfUnknown(level, x));
             }
@@ -161,7 +161,7 @@ namespace ToyBox.classes.Infrastructure {
             }
             var level = PartyEditor.selectedSpellbookLevel;
             if (level == selectedSpellbook.Blueprint.MaxSpellLevel + 1)
-                level = PartyEditor.newSpellLvl;
+                level = PartyEditor.SelectedNewSpellLvl;
             selectedSpellbook.RemoveSpellsOfLevel(level);
         }
 

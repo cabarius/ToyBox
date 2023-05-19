@@ -50,6 +50,7 @@ namespace ToyBox {
                     0.0f
                 );
             var newScale = screenWidth switch {
+                >= 3840 => 1.8f,
                 >= 2560 => 1.5f,
                 >= 1920 => 1.25f,
                 _ => 1.0f
