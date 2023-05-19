@@ -37,14 +37,15 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.3 (Coming Soon)
-**ToyBox 1.5.3** - ***Shodan Experimental Preview*** **May 18, 2023c**
+**ToyBox 1.5.3** - ***Shodan Experimental Preview*** **May 18, 2023d**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
    * **Your old ToyBox settings show migrate automatically**
    * Please report any issues you encounter
  * (***Narria***) **Enhanced UI** Added buttons to maximize mod window size and also show it when you get get the UI warning for small mod windows
-* (***Narria***) Fixed issue where adding spells from all spellbooks and other cases wasn't working
+ * (***Narria***) Fixed crasher bug with kill all button (most apparent when you use it from ToyBox UI)  
+ * (***Narria***) Fixed issue where adding spells from all spellbooks and other cases wasn't working
 ### Ver 1.5.2
  * (***Narria***) **UI Reorg** Moved UI Enhancements into new top level **Enhanced UI** tab and the Loot tab is now just for loot related stuff
  * (***Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equipped by the slot you click on.

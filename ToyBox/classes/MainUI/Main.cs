@@ -128,7 +128,11 @@ namespace ToyBox {
             if (!File.Exists(thisSettingsPath)) {
                 try {
                     Mod.Log("Settings file not found attempting to migrate from older ToyBox".yellow());
+#if Wrath
                     var otherToyBoxPath = Path.Combine(UnityModManager.modsPath, "ToyBox");
+#elif RT
+                    var otherToyBoxPath = Path.Combine(UnityModManager.ModsPath, "ToyBox");
+#endif                    
                     Mod.Log($"Checking {otherToyBoxPath}");
                     if (Directory.Exists(otherToyBoxPath)) {
                         Mod.Log($"    Found older ToyBox at {otherToyBoxPath} migrating all settings");

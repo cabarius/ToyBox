@@ -18,6 +18,10 @@ using Owlcat.Runtime.Visual.RenderPipeline;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.OccludedObjectHighlighting;
 using UnityEngine.EventSystems;
 using Kingmaker.Controllers.Clicks;
+using Kingmaker.UI.Models.SettingsUI.SettingAssets;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows;
+using Kingmaker.Controllers.Rest;
+using Kingmaker.Settings.Entities;
 
 namespace ToyBox.BagOfPatches {
     internal static class CameraPatches {
@@ -25,7 +29,28 @@ namespace ToyBox.BagOfPatches {
         public static Player player = Game.Instance.Player;
         private static float CameraElevation = 0f;
 
-
+        [HarmonyPatch(typeof(CameraController))]
+        private static class CameraControllerPatch {
+            [HarmonyPatch(nameof(CameraController.Tick))]
+            [HarmonyPrefix]
+            public static bool Tick(CameraController __instance) {
+                var instance = CameraRig.Instance;
+                if (instance == null || (bool)instance.FixCamera)
+                    return false;
+                if (__instance.m_AllowScroll) {
+                    __instance.Follower.TryFollow();
+                    instance.TickScroll();
+                }
+                if (__instance.m_AllowRotate) {
+                    instance.TickRotate();
+                }
+                if (__instance.m_AllowZoom)
+                    instance.CameraZoom.TickZoom();
+                instance.TickShake();
+                return false;
+            }
+        }
+        
         [HarmonyPatch(typeof(CameraZoom))]
         private static class CameraZoomPatch {
             private static bool firstCall = true;
@@ -36,71 +61,35 @@ namespace ToyBox.BagOfPatches {
 
             [HarmonyPatch(nameof(CameraZoom.TickZoom))]
             [HarmonyPrefix]
-            private static bool TickZoom(CameraZoom __instance,
-                        Coroutine ___m_ZoomRoutine,
-                        float ___m_Smooth,
-                        ref float ___m_PlayerScrollPosition,
-                        ref float ___m_ScrollPosition,
-                        ref float ___m_SmoothScrollPosition,
-                        Camera ___m_Camera,
-                        float ___m_ZoomLenght) {
+            private static bool TickZoom(CameraZoom __instance) {
                 if (Settings.fovMultiplier == 1 && !Settings.toggleZoomableLocalMaps) return true;
 
                 if (__instance.m_ZoomRoutine != null || __instance.ZoomLock)
                     return false;
-                if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse 
-                                             && !__instance.IsOutOfScreen 
-                                             && !PointerController.InGui)
+                if (!__instance.IsScrollBusy
+                    && Game.Instance.IsControllerMouse
+                    && !__instance.IsOutOfScreen
+                    && !PointerController.InGui)
                     __instance.m_PlayerScrollPosition += Input.GetAxis("Mouse ScrollWheel");
-                __instance.m_ScrollPosition = __instance.m_PlayerScrollPosition 
+                __instance.m_ScrollPosition = __instance.m_PlayerScrollPosition
                                               + __instance.m_GamepadScrollPosition;
                 __instance.m_GamepadScrollPosition = 0.0f;
                 __instance.m_ScrollPosition = Mathf.Clamp(__instance.m_ScrollPosition, 0.0f, __instance.ZoomLength);
                 __instance.m_SmoothScrollPosition =
                     Mathf.Lerp(__instance.m_SmoothScrollPosition, __instance.m_ScrollPosition, Time.unscaledDeltaTime * __instance.Smoothness);
                 __instance.m_Camera.fieldOfView = Mathf.Lerp(FovMax, FovMin, __instance.CurrentNormalizePosition);
-                if ((bool)(Object)__instance.m_VirtualCamera)
+                if ((bool)(UnityEngine.Object)__instance.m_VirtualCamera)
                     __instance.m_VirtualCamera.m_Lens.FieldOfView = __instance.m_Camera.fieldOfView;
                 if (__instance.EnablePhysicalZoom)
                     __instance.m_Camera.transform.localPosition = new Vector3(
-                        __instance.m_Camera.transform.localPosition.x,
-                        __instance. m_Camera.transform.localPosition.y,
-                        Mathf.Lerp(__instance.PhysicalZoomMin, 
-                                   __instance.PhysicalZoomMax, 
-                                   __instance.CurrentNormalizePosition
-                                   )
+                            __instance.m_Camera.transform.localPosition.x,
+                            __instance.m_Camera.transform.localPosition.y,
+                            Mathf.Lerp(__instance.PhysicalZoomMin,
+                                       __instance.PhysicalZoomMax,
+                                       __instance.CurrentNormalizePosition
+                                )
                         );
                 __instance.m_PlayerScrollPosition = __instance.m_ScrollPosition;
-                return false
-
-                if (!__instance.IsScrollBusy && Game.Instance.IsControllerMouse && (double)Input.GetAxis("Mouse ScrollWheel") != 0.0 && ((double)___m_Camera.fieldOfView > (double)FovMin || (double)Input.GetAxis("Mouse ScrollWheel") < 0.0)) {
-                    if (Settings.toggleUseAltMouseWheelToAdjustClipPlane && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.LeftShift))) {
-                        var cameraRig = Game.Instance.UI.GetCameraRig();
-                        var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
-                        if (Input.GetKey(KeyCode.LeftAlt)) {
-                            highlightingFeature.DepthClip.NearCameraClipDistance += Input.GetAxis("Mouse ScrollWheel") * 5;
-                            Mod.Debug($"highlightingFeature.DepthClip.NearCameraClipDistance: {highlightingFeature.DepthClip.NearCameraClipDistance}");
-                        }
-                        if (Input.GetKey(KeyCode.LeftShift)) {
-                            highlightingFeature.DepthClip.ClipTreshold += Input.GetAxis("Mouse ScrollWheel") / 5;
-                            Mod.Debug($"highlightingFeature.DepthClip.ClipTreshold: {highlightingFeature.DepthClip.ClipTreshold}");
-                            //highlightingFeature.DepthClip.AlphaScale += Input.GetAxis("Mouse ScrollWheel");
-                            //highlightingFeature.DepthClip.NoiseTiling += Input.GetAxis("Mouse ScrollWheel");
-
-                        }
-                        return false;
-                    }
-                    ___m_PlayerScrollPosition += __instance.IsOutOfScreen ? 0.0f : Input.GetAxis("Mouse ScrollWheel");
-                    if ((double)___m_PlayerScrollPosition <= 0.0)
-                        ___m_PlayerScrollPosition = 0.01f;
-                }
-                if ((double)___m_PlayerScrollPosition <= 0.0) {
-                    ___m_PlayerScrollPosition = (float)(((double)FovMax - (double)FovMin) / 18.0);
-                }
-                ___m_ScrollPosition = ___m_PlayerScrollPosition;
-                ___m_SmoothScrollPosition = Mathf.Lerp(___m_SmoothScrollPosition, ___m_PlayerScrollPosition, Time.unscaledDeltaTime * ___m_Smooth);
-                ___m_Camera.fieldOfView = Mathf.Lerp(FovMax, FovMin, (float)((double)__instance.CurrentNormalizePosition * ((double)__instance.FovMax - (double)__instance.FovMin) / ((double)FovMax - (double)FovMin)));
-                ___m_PlayerScrollPosition = ___m_ScrollPosition;
                 return false;
             }
         }
@@ -108,22 +97,25 @@ namespace ToyBox.BagOfPatches {
         // Camera Rig Helper
         private static Vector2 CameraDragToRotate2D(this CameraRig __instance) {
             if (!__instance.m_BaseMousePoint.HasValue)
-                return new Vector2(0.0f, 0.0f);
-            var basePoint = __instance.m_BaseMousePoint.Value;
-            var dx = basePoint.x - __instance.GetLocalPointerPosition().x;
-            var dy = basePoint.y - __instance.GetLocalPointerPosition().y;
-            var dist = Math.Sqrt(dx * dx + dy * dy);
-            var rotateDistance = ((double)__instance.m_RotateDistance - (double)dist) * ((bool)(SimpleBlueprint)BlueprintRoot.Instance ? (double)SettingsRoot.Controls.CameraRotationSpeedEdge.GetValue() : 2.0);
-            __instance.m_RotateDistance = (float)rotateDistance;
-            basePoint.x -= 0.25f * dx;
-            basePoint.y -= 0.25f * dy;
-            __instance.m_BaseMousePoint = basePoint;
-            return new Vector2(dx, dy);
+                return Vector2.zero;
+            var localPointerPos = __instance.GetLocalPointerPosition();
+            var deltaR = new Vector2(__instance.m_BaseMousePoint.Value.x - localPointerPos.x,
+                                      __instance.m_BaseMousePoint.Value.y - localPointerPos.y);
+            var rotate = (__instance.m_RotateDistance - deltaR)
+                         * ((bool)(SimpleBlueprint)BlueprintRoot.Instance
+                                ? SettingsRoot.Controls.CameraRotationSpeedEdge.GetValue() * 0.05f
+                                : 2f);
+            //Mod.Debug($"CameraDragToRotate2D - {__instance.m_BaseMousePoint.Value} => deltaR: {deltaR} - {rotate}");
+
+            __instance.m_RotateDistance = deltaR;
+            return rotate;
         }
+
 
         [HarmonyPatch(typeof(CameraRig))]
         public static class CameraRigPatch {
             private static UISettingsEntityKeyBinding _followKeyBinding = null;
+            private static bool _RotationByMouse = false;
             public static void OnAreaLoad() {
                 _followKeyBinding = null;
             }
@@ -158,6 +150,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(CameraRig.TickScroll))]
             [HarmonyPrefix]
             public static bool TickScroll(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
+                return true;
                 if (!Settings.toggleCameraPitch && !Settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !Settings.toggleFreeCamera) return true;
                 var isInlocalMap = Game.Instance?.RootUiContext.CurrentServiceWindow == ServiceWindowsType.LocalMap;
                 var dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
@@ -170,6 +163,7 @@ namespace ToyBox.BagOfPatches {
                     var scrollOffset = __instance.m_ScrollOffset;
                     if (eulerAngles.x > 180)
                         scrollOffset.y = -scrollOffset.y;
+#if FALSE
                     if (Settings.toggleZoomableLocalMaps && isInlocalMap && scrollOffset.magnitude > 0) {
                         var frameRotation = LocalMapPatches.FrameRotation;
                         var zoom = LocalMapPatches.Zoom;
@@ -177,15 +171,16 @@ namespace ToyBox.BagOfPatches {
                         //Mod.Debug($"inMap: {scrollOffset} -> {newScrollOffset} angle: {frameRotation}");
                         scrollOffset = newScrollOffset * Settings.zoomableLocalMapScrollSpeedMultiplier / zoom;
                     }
-                    if ((bool)(SimpleBlueprint)BlueprintRoot.Instance && !Game.Instance.IsControllerGamepad && (bool)(SettingsEntity<bool>)SettingsRoot.Controls.ScreenEdgeScrolling && (Cursor.visible || (bool)(SettingsEntity<bool>)SettingsRoot.Controls.CameraScrollOutOfScreenEnabled) && Game.Instance.CurrentMode != GameModeType.FullScreenUi)
+#endif
+                    if ((bool)(SimpleBlueprint)BlueprintRoot.Instance && !Game.Instance.IsControllerGamepad && (bool)(SettingsEntity<bool>)SettingsRoot.Controls.ScreenEdgeScrolling && (Cursor.visible || (bool)(SettingsEntity<bool>)SettingsRoot.Controls.CameraScrollOutOfScreenEnabled) && __instance. m_FullScreenUIType != 0)
                         scrollOffset += __instance.GetCameraScrollShiftByMouse();
-                    var scrollVector2 = scrollOffset + __instance.CameraDragToMove() + __instance.m_ScrollBy2D;
+                    var scrollVector2 = scrollOffset + __instance.CameraDragToRotate() + __instance.m_ScrollBy2D;
                     __instance.m_ScrollBy2D.Set(0.0f, 0.0f);
-                    __instance.TickCameraDrag();
+                    //__instance.CameraDragToRotate();
                     Game.Instance.CameraController?.Follower?.Release();
                     var currentlyLoadedArea = Game.Instance.CurrentlyLoadedArea;
                     var num = currentlyLoadedArea != null ? currentlyLoadedArea.CameraScrollMultiplier : 1f;
-                    var scaledScrollVector = scrollVector2 * (__instance.m_ScrollSpeed * dt * num * CameraRig.ConsoleScrollMod);
+                    var scaledScrollVector = scrollVector2 * (10* dt * num * CameraRig.ConsoleScrollMod);
                     var scrollMagnatude = (float)Math.Sqrt(Vector2.Dot(scaledScrollVector, scaledScrollVector));
 
                     //var scaledScrollVector3 = scrollVector3 * (__instance.m_ScrollSpeed * dt * num * CameraRig.ConsoleScrollMod);
@@ -205,7 +200,7 @@ namespace ToyBox.BagOfPatches {
                     var targetPosition = __instance.m_TargetPosition;
                     var yAxis = new Vector3(0, 2, 0);
                     var dPos = scaledScrollVector.x * __instance.Right + scaledScrollVector.y * __instance.Up;
-                    if (__instance.m_RotationByMouse)
+                    if (_RotationByMouse)
                         dPos += scaledScrollVector.y * (float)Math.Sin(pitchRadians) * yAxis;
                     //Mod.Debug($"dPos: {dPos} pitch: {pitch:##.000} sine: {Math.Sin(pitchRadians):#.000}");
                     __instance.m_TargetPosition += dPos;
@@ -214,9 +209,10 @@ namespace ToyBox.BagOfPatches {
                             __instance.m_TargetPosition = __instance.ClampByLevelBounds(__instance.m_TargetPosition);
                         __instance.m_TargetPosition = __instance.PlaceOnGround(__instance.m_TargetPosition);
                         if (__instance.NewBehaviour) {
-                            if (!__instance.m_AttachPointPos.HasValue)
-                                __instance.m_AttachPointPos = new Vector3?(__instance.Camera.transform.parent.localPosition);
-                            __instance.m_TargetPosition = __instance.LowerGently(targetPosition, __instance.m_TargetPosition, dt);
+                            if (!__instance.m_AttackPointPos.HasValue)
+                                __instance.m_AttackPointPos = __instance.Camera.transform.parent.localPosition;
+                            // TODO: what do we do about this stupid private set var?  Reflection???
+                            //__instance.TargetPosition = __instance.LowerGently(targetPosition, __instance.TargetPosition, dt);
                         }
                     }
                 }
@@ -224,9 +220,38 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
 
+            [HarmonyPatch(nameof(CameraRig.RotateByMiddleButton))]
+            [HarmonyPrefix]
+            public static bool RotateByMiddleButton(CameraRig __instance) {
+                return true;
+                //Mod.Debug("RotateByMiddleButton");
+                if (!PointerController.InGui 
+                    && Input.GetMouseButtonDown(2) 
+                    && !_RotationByMouse 
+                    && !__instance.m_RotationByKeyboard) {
+                    Mod.Debug("hi2");
+                    _RotationByMouse = true;
+                    Game.Instance.CursorController.SetRotateCameraCursor(true);
+                    __instance.m_BaseMousePoint = __instance.GetLocalPointerPosition();
+                    __instance.m_RotateDistance = Vector2.zero;
+                    __instance.m_TargetRotate = __instance.transform.eulerAngles;
+                }
+
+                if (!Input.GetMouseButtonUp(2) || !_RotationByMouse) {
+                    return false;
+                }
+                Game.Instance.CursorController.SetRotateCameraCursor(false);
+                __instance.m_BaseMousePoint = new Vector3?();
+                _RotationByMouse = false;
+                return false;
+            }
+
             [HarmonyPatch(nameof(CameraRig.TickRotate))]
             [HarmonyPrefix]
             public static bool TickRotate(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
+                //__instance.m_EnableOrbitCamera = true;
+                return true;
+                //Mod.Log("TickRotate");
                 if (!Settings.toggleRotateOnAllMaps && !Settings.toggleCameraPitch && !Settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !Settings.toggleInvertXAxis && !Settings.toggleInvertKeyboardXAxis) return true;
                 var usePitch = Settings.toggleCameraPitch;
                 if (__instance.m_RotateRoutine != null && (double)Time.time > (double)__instance.m_RotateRoutineEndsOn) {
@@ -240,7 +265,7 @@ namespace ToyBox.BagOfPatches {
                 var mouseMovement = new Vector2(0, 0);
                 var xRotationSign = 1f;
                 var yRotationSign = Settings.toggleInvertYAxis ? 1f : -1f;
-                if (__instance.m_RotationByMouse) {
+                if (_RotationByMouse) {
                     if (!Settings.toggleInvertXAxis) xRotationSign = -1;
                     mouseMovement = __instance.CameraDragToRotate2D();
                 }
@@ -248,18 +273,30 @@ namespace ToyBox.BagOfPatches {
                     mouseMovement.x = __instance.m_RotateOffset;
                     if (Settings.toggleInvertKeyboardXAxis) xRotationSign = -1;
                 }
-                if (__instance.m_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
+                if (_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
-                    eulerAngles.y += xRotationSign * mouseMovement.x * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
+                    eulerAngles.y += xRotationSign * mouseMovement.x * __instance.RotationSpeed * CameraRig.ConsoleRotationMod;
+                    if (__instance.m_EnableOrbitCamera || Settings.toggleCameraPitch) {
+                        eulerAngles.x += mouseMovement.y * __instance.RotationSpeed;
+                        eulerAngles.x = Mathf.Clamp(eulerAngles.x <= 180.0 ? eulerAngles.x : (float)-(360.0 - eulerAngles.x),__instance.MinSpaceCameraAngle, __instance.MaxSpaceCameraAngle);
+                        Mod.Debug($"{mouseMovement.y} => eulerAngles: {eulerAngles}");
+                    }
+
+                    __instance.transform.DOKill();
+                    __instance.transform.DOLocalRotate(eulerAngles, __instance.RotationTime).SetUpdate(true);
+
+
                     if (Main.resetExtraCameraAngles) {
                         eulerAngles.x = 0f;
                         CameraElevation = 60f;
                         __instance.m_TargetPosition = __instance.PlaceOnGround2(__instance.m_TargetPosition);
-                        var cameraRig = Game.Instance.UI.GetCameraRig();
+                        var cameraRig = CameraRig.Instance;
+#if false               // TODO: figure out if we still need this
                         var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
                         highlightingFeature.DepthClip.NearCameraClipDistance = 10;
                         highlightingFeature.DepthClip.ClipTreshold = 0;
                         Main.resetExtraCameraAngles = false;
+#endif
                     }
                     else {
                         if (Input.GetKey(KeyCode.LeftControl)) {
@@ -267,32 +304,63 @@ namespace ToyBox.BagOfPatches {
                             CameraElevation = ___m_TargetPosition.y;
                         }
                         else if (usePitch) {
-                            eulerAngles.x += yRotationSign * mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
-                            //Mod.Debug($"eulerX: {eulerAngles.x} Y: {eulerAngles.y} Z: {eulerAngles.z}");
+                            eulerAngles.x += yRotationSign * mouseMovement.y * __instance.RotationSpeed * CameraRig.ConsoleRotationMod;
+                            Mod.Debug($"eulerX: {eulerAngles.x} Y: {eulerAngles.y} Z: {eulerAngles.z}");
                         }
                     }
                     __instance.transform.DOKill();
-                    __instance.transform.DOLocalRotate(eulerAngles, __instance.m_RotationTime).SetUpdate<Tweener>(true);
+                    __instance.transform.DOLocalRotate(eulerAngles, __instance.RotationTime).SetUpdate<Tweener>(true);
                 }
 
                 __instance.m_RotationByKeyboard = false;
                 __instance.m_RotateOffset = 0.0f;
                 return false;
             }
+#if false
+            [HarmonyPatch(nameof(CameraRig.RotateToRoutine))]
+            [HarmonyPrefix]
+            public static bool RotateToTimed(
+                    CameraRig __instance
+                        ) {
+                return false;
+            public static bool RotateToTimed(
+                    CameraRig __instance,
+                    float toAngle,
+                    out float targetTime,
+                    float maxTime,
+                    float speed,
+                    AnimationCurve curve,
+                    ref Coroutine __result
+                ) {
+                if (__instance.m_RotateRoutine != null)
+                    __instance.StopCoroutine(__instance.m_RotateRoutine);
+                __instance.transform.DOKill();
+                _RotationByMouse = false;
+                __instance.m_RotationByKeyboard = false;
+                var y = __instance.transform.rotation.eulerAngles.y;
+                var num1 = Mathf.Abs(Mathf.DeltaAngle(y, toAngle));
+                var num2 = 0.0 < maxTime ? num1 / maxTime : speed;
+                var time = 0.0 < num2 ? num1 / num2 : 0.0f;
+                if (curve == null)
+                    curve = AnimationCurveUtility.LinearAnimationCurve;
+                targetTime = time;
+                if (num1 <= 0.0) {
+                    __instance.m_RotateRoutine = null;
+                    __result = __instance.m_RotateRoutine;
+                    return false;
+                }
+
+                __instance.m_RotateRoutine = __instance.StartCoroutine(__instance.RotateToRoutine(y, toAngle, time, curve));
+                __result = __instance.m_RotateRoutine;
+                return false;
+            }
+#endif
 
             [HarmonyPatch(nameof(CameraRig.PlaceOnGround))]
             [HarmonyPostfix]
             private static void PlaceOnGround(ref Vector3 __result) {
                 if (!Settings.toggleCameraElevation) return;
                 __result.y = CameraElevation;
-            }
-            [HarmonyPatch(nameof(CameraRig.SetMode))]
-            [HarmonyPostfix]
-            public static void SetMode(CameraRig __instance, CameraMode mode) {
-                if (Settings.fovMultiplierCutScenes == 1 && Settings.fovMultiplier == 1) return;
-                if (mode == CameraMode.Default && Game.Instance.CurrentMode == GameModeType.Cutscene) {
-                    __instance.Camera.fieldOfView = __instance.CameraZoom.FovMax * Settings.fovMultiplierCutScenes / Settings.fovMultiplier;
-                }
             }
         }
     }

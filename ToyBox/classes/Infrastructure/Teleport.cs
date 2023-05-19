@@ -27,13 +27,29 @@ using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
 using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.PubSubSystem.Core;
-using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
 #endif
 namespace ToyBox {
     public static class Teleport {
         public static Settings Settings => Main.Settings;
         //private static readonly HoverHandler _hover = new();
-
+#if RT
+        public static void TeleportTo(
+            [NotNull] BlueprintAreaEnterPoint areaEnterPoint,
+            bool includeFollowers = false,
+            Action callback = null)
+        {
+            if (areaEnterPoint == null)
+                throw new ArgumentException("areaEnterPoint is null", nameof(areaEnterPoint));
+            if (Game.Instance.CurrentlyLoadedArea != areaEnterPoint.Area)
+                throw new InvalidOperationException(string.Format(
+                                                        "Cant teleport to {0}. Target zone {1} should be same as current {2}", areaEnterPoint,
+                                                        areaEnterPoint.Area, Game.Instance.CurrentlyLoadedArea));
+            LoadingProcess.Instance.StartLoadingProcess(Game.Instance.TeleportPartyCoroutine(areaEnterPoint, includeFollowers),
+                                                        () => Game.ExecuteSafe(callback), LoadingProcessTag.TeleportParty);
+            EventBus.RaiseEvent((Action<IAreaTransitionHandler>)(h => h.HandleAreaTransition()));
+        }
+#endif
+#if Wrath
         public static void TeleportUnit(UnitEntityData unit, Vector3 position) {
             var view = unit.View;
             var localMap = Game.Instance?.UI.Canvas?.transform?.Find("ServiceWindowsPCView/LocalMapPCView");
@@ -179,5 +195,6 @@ namespace ToyBox {
                     this.Unit = _currentUnit;
             }
         }
+#endif
     }
 }

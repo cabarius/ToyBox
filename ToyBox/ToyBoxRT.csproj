@@ -59,6 +59,9 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\BundlesBaseTypes.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="Code">
       <HintPath>$(SolutionDir)lib\RT\Code_public.dll</HintPath>
       <Private>False</Private>
@@ -66,6 +69,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="CountingGuard">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader\WH40KRT_Data\Managed\CountingGuard.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\DOTween.dll</HintPath>
@@ -372,6 +378,7 @@
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintDataSource.cs" />
     <Compile Include="classes\Infrastructure\Compatibility.cs" />
     <Compile Include="classes\Infrastructure\ItemEntityUtils.cs" />
+    <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\ActionsRT.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintActionRT.cs" />
@@ -421,12 +428,16 @@
     <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\Models\Settings.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\CamereRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config\bindings.json" />
+    <None Include="OwlcatModificationManifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Repository.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -448,7 +459,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Art\**\*.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="classes\MonkeyPatchin\EnhancedUI\" />
+  </ItemGroup>
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -464,7 +477,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

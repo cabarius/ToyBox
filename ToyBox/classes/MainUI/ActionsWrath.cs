@@ -151,7 +151,13 @@ namespace ToyBox {
             }
         }
         public static void KillAllTacticalUnits() {
-            foreach (var unitRef in Game.Instance.TacticalCombat?.Data?.UnitRefs) {
+            var tacticalCombat = Game.Instance.TacticalCombat;
+            if (tacticalCombat == null) return;
+            var data = tacticalCombat.Data;
+            if (data == null) return;
+            var unitRefs = data.UnitRefs;
+            if (unitRefs == null) return;
+            foreach (var unitRef in unitRefs) {
                 if (unitRef.Entity.Get<UnitPartTacticalCombat>().Faction != ArmyFaction.Crusaders) {
                     GameHelper.KillUnit(unitRef.Entity);
                 }
