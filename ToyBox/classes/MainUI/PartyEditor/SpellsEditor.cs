@@ -23,7 +23,6 @@ namespace ToyBox {
         public static Dictionary<UnitEntityData, Browser<BlueprintSpellbook, Spellbook>> SpellbookBrowserDict = new();
         public static Dictionary<UnitEntityData, Browser<BlueprintAbility, AbilityData>> SpellBrowserDict = new();
         private static bool _startedLoading = false;
-        public static int newSpellLvl = 0;
         public static List<Action> OnSpellsGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             List<Action> todo = new();
             Space(20);
@@ -169,24 +168,24 @@ namespace ToyBox {
                                 GUI.enabled = true;
                                 if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                     10.space();
-                                    Label("Spells are added at Level: ".green() + newSpellLvl.ToString().orange(), AutoWidth());
+                                    Label("Spells are added at Level: ".green() + SelectedNewSpellLvl.ToString().orange(), AutoWidth());
                                     10.space();
                                     ActionButton("-", () => {
-                                        if (newSpellLvl >= 0) {
-                                            if (newSpellLvl == 0) {
-                                                newSpellLvl = spellbook.Blueprint.MaxSpellLevel;
+                                        if (SelectedNewSpellLvl >= 0) {
+                                            if (SelectedNewSpellLvl == 0) {
+                                                SelectedNewSpellLvl = spellbook.Blueprint.MaxSpellLevel;
                                             }
                                             else {
-                                                newSpellLvl -= 1;
+                                                SelectedNewSpellLvl -= 1;
                                             }
                                         }
                                     }, AutoWidth());
                                     ActionButton("+", () => {
-                                        if (newSpellLvl == spellbook.MaxSpellLevel) {
-                                            newSpellLvl = 1;
+                                        if (SelectedNewSpellLvl == spellbook.MaxSpellLevel) {
+                                            SelectedNewSpellLvl = 1;
                                         }
                                         else {
-                                            newSpellLvl += 1;
+                                            SelectedNewSpellLvl += 1;
                                         }
                                     }, AutoWidth());
                                 }

@@ -14,7 +14,6 @@ using Kingmaker.View;
 using Kingmaker.View.MapObjects;
 using ModKit;
 using Newtonsoft.Json;
-using Owlcat.Runtime.Core.Utils;
 using Owlcat.Runtime.UI.Controls.Button;
 using System;
 using System.Collections.Generic;

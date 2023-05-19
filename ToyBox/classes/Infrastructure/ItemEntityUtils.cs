@@ -28,7 +28,6 @@ using Kingmaker.UI.Common;
 using Kingmaker.Designers.Mechanics.EquipmentEnchants;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Designers.Mechanics.Facts;
-using Owlcat.Runtime.Core.Utils;
 using static Kingmaker.EntitySystem.Stats.ModifiableValue;
 #if Wrath
 using ToyBox.Inventory;

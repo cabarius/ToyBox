@@ -28,9 +28,11 @@ namespace ToyBox {
         // TODO: is this still the right root etude?
         internal static BlueprintGuid rootEtudeId = 
 #if Wrath
-            BlueprintGuid.Parse
+            BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
+
+#elif RT
+                "4f66e8b792ecfad46ae1d9ecfd7ecbc2";
 #endif
-                ("f0e6f6b732c40284ab3c103cad2455cc");
         public static string searchText = "";
         public static string searrchTextInput = "";
         private static bool showOnlyFlagLikes;
