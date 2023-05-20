@@ -424,6 +424,9 @@ namespace ToyBox {
         public bool toggleIntrestingNPCsShowFalseConditions = false;
         public bool toggleInterestingNPCsShowHidden = false;
 
+        // Saves 
+        public bool toggleShowGameIDs = false;
+
         // Multi-Class 
         public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
         public bool toggleMultiArchetype = false;
