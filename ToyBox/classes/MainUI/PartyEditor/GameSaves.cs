@@ -46,6 +46,9 @@ namespace ToyBox {
         };
 
         public static void OnGUI() {
+            var currentGameID = Game.Instance.Player.GameId;
+            var saveManager = Game.Instance.SaveManager;
+
             Div(0, 25);
             HStack("Saves".localize(),
                    1,
@@ -53,13 +56,11 @@ namespace ToyBox {
                        Toggle("Auto load Last Save on launch".localize(), ref Settings.toggleAutomaticallyLoadLastSave, 500.width());
                        HelpLabel("Hold down shift during launch to bypass".localize());
                    },
-                   () => { }
+                   () => Label($"Save ID: {currentGameID}"),
+            () => { }
                 );
-            Div(0, 25);
             if (Main.IsInGame) {
-                var currentGameID = Game.Instance.Player.GameId;
-                var saveManager = Game.Instance.SaveManager;
-                Label($"Current Save ID: {currentGameID}");
+                Div(50, 25);
                 //var currentSave = Game.Instance.SaveManager.GetLatestSave();
                 // TODO: add refresh
                 if (_currentSaves == null || _allSaves == null) {
@@ -73,19 +74,35 @@ namespace ToyBox {
                                        info => info,
                                        info => info.SearchKey(),
                                        info => info.SortKey(),
-                                       null,
+                                       () => {
+                                           Toggle("Show GameID", ref Settings.toggleShowGameIDs);
+                                       },
                                        (info, _) => {
                                            var isCurrent = _currentSaves.Contains(info);
                                            var characterName = isCurrent ? info.PlayerCharacterName.orange() : info.PlayerCharacterName;
                                            Label(characterName, 400.width());
-                                           25.space();
 #if RT
+                                           25.space();
                                            Label($"Level: {info.PlayerCharacterRank}");
 #endif
                                            25.space();
-                                           HelpLabel(info.Name); 
+                                           Label($"{info.Area.AreaName}".cyan(), 400.width());
+                                           if (Settings.toggleShowGameIDs) {
+                                               25.space();
+                                               ClipboardLabel(info.GameId, 400.width());
+                                           }
+                                           25.space();
+                                           HelpLabel(info.Name);
                                        },
-                                       null,50, true);
+                                       null,
+                                       50,
+                                       true,
+                                       true,
+                                       100,
+                                       400,
+                                       "",
+                                       false
+                        );
                 }
             }
 

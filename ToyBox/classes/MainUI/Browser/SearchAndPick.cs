@@ -154,6 +154,8 @@ namespace ToyBox {
                 }),
             new NamedTypeFilter<BlueprintAnswer>("Answer", null, bp => bp.CaptionCollationNames()),
 #if Wrath
+            new NamedTypeFilter<BlueprintCrusadeEvent>("Crusade Events", null, bp => bp.CollationNames()),
+
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp =>  bp.CollationNames()),
 #endif
