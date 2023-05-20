@@ -46,7 +46,7 @@ namespace ToyBox {
         // other
         private const string TimeScaleMultToggle = "Main/Alt Timescale";
         private const string PreviewDialogResults = "Preview Results";
-        private const string ResetAdditionalCameraAngles = "Fix Camera";
+
 
         //For buffs exceptions
         private static bool showBuffDurationExceptions = false;
@@ -85,9 +85,6 @@ namespace ToyBox {
             KeyBindings.RegisterAction(PreviewDialogResults, () => {
                 Settings.previewDialogResults = !Settings.previewDialogResults;
                 var dialogController = Game.Instance.DialogController;
-            });
-            KeyBindings.RegisterAction(ResetAdditionalCameraAngles, () => {
-                Main.resetExtraCameraAngles = true;
             });
             KeyBindings.RegisterAction(ToggleMurderHobo,
                                        () => Settings.togglekillOnEngage = !Settings.togglekillOnEngage,
@@ -328,12 +325,18 @@ namespace ToyBox {
                     Toggle("Mark Interesting NPCs".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
                     HelpLabel("This will change the color of NPC names on the highlike makers and change the color map markers to indicate that they have interesting or conditional interactions".localize());
                 },
-                () => Toggle("Make game continue to play music on lost focus".localize(), ref Settings.toggleContinueAudioOnLostFocus),
                 () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
                 () => {
                     Toggle("Auto load Last Save on launch".localize(), ref Settings.toggleAutomaticallyLoadLastSave, 500.width());
                     HelpLabel("Hold down shift during launch to bypass".localize());
                 },
+#if RT
+                () => {
+                    Toggle("Don't wait for keypress when loading saves".localize(), ref Settings.toggleSkipAnyKeyToContinueWhenLoadingSaves, 500.width());
+                    HelpLabel("When loading a game this will go right into the game without having to 'Press any key to continue'".localize());
+                },
+#endif
+                () => Toggle("Make game continue to play music on lost focus".localize(), ref Settings.toggleContinueAudioOnLostFocus),
                 () => Toggle(("Game Over Fix For " + "LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon) + " omg he just ran in!").localize(), ref Settings.toggleGameOverFixLeeerrroooooyJenkins),
                 () => {
                     503.space();
@@ -482,60 +485,7 @@ namespace ToyBox {
             () => { }
             );
             Div(0, 25);
-            HStack("Camera".localize(),
-                   1,
-                   () => Toggle("Enable Zoom on all maps and cutscenes".localize(), ref Settings.toggleZoomOnAllMaps),
-                   () => {
-                       Toggle("Enable Rotate on all maps and cutscenes".localize(), ref Settings.toggleRotateOnAllMaps, 400.width());
-                       153.space();
-                       Label(("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green()).localize());
-                   },
-                   () => {
-                       Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
-                       153.space();
-                       HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
-                   },
-                   () => {
-                       Toggle("Alt + Mouse Wheel To Adjust Clip Plane".localize(), ref Settings.toggleUseAltMouseWheelToAdjustClipPlane);
-                   },
-                   () => {
-                       Toggle("Ctrl + Mouse3 Drag To Adjust Camera Elevation".localize(), ref Settings.toggleCameraElevation);
-                       25.space();
-                       Toggle("Free Camera".localize(), ref Settings.toggleFreeCamera);
-                   },
-                   () => Label("Rotation".localize().cyan()),
-                   () => {
-                       50.space();
-                       if (Toggle("Allow Mouse3 Drag to adjust Camera Tilt".localize(), ref Settings.toggleCameraPitch,400.width())) {
-                           Main.resetExtraCameraAngles = true;
-                       }
-                       100.space();
-                       Label(("Experimental".orange() + " This allows you to adjust pitch (Camera Tilt) by holding down Mouse3 (which previously just rotated).".green() + " Note:".orange() + " Holding alt while Mouse3 dragging lets you move the camera location.".green()).localize());
-                   },
-                   () => {
-                       50.space();
-                       Label("Mouse:".localize().cyan(), 125.width());
-                       25.space();
-                       Toggle("Invert X Axis".localize(), ref Settings.toggleInvertXAxis);
-                       if (Settings.toggleCameraPitch) {
-                           25.space();
-                           Toggle("Invert Y Axis".localize(), ref Settings.toggleInvertYAxis);
-                       }
-                   },
-                   () => {
-                       50.space();
-                       Label("Keyboard:".localize().cyan(), 125.width());
-                       25.space();
-                       Toggle("Invert X Axis".localize(), ref Settings.toggleInvertKeyboardXAxis);
-                   },
-                   () => {
-                       50.space();
-                       BindableActionButton(ResetAdditionalCameraAngles, true);
-                   },
-                   () => LogSlider("Field Of View".localize(), ref Settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                   () => LogSlider("FoV (Cut Scenes)".localize(), ref Settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                   () => { }
-                );
+            EnhancedCamera.OnGUI();
             Div(0, 25);
             HStack("Alignment".localize(), 1,
                 () => { Toggle("Fix Alignment Shifts".localize(), ref Settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".localize().green()); },

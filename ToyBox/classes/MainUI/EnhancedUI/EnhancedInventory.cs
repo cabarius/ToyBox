@@ -78,7 +78,7 @@ namespace ToyBox {
 #endif
             RefreshRemappers();
         }
-        public static void OnUnLoad() {
+        public static void OnUnload() {
 #if Wrath
             EventBus.Unsubscribe(m_area_load_handler);
 #endif

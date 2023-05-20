@@ -54,7 +54,6 @@ namespace ToyBox {
             Mod.Debug($"resetRequested - {_resetRequestTime}");
         }
         public static bool IsInGame => Game.Instance.Player?.Party.Any() ?? false;
-
         private static Exception _caughtException = null;
 
         public static List<GameObject> Objects;
@@ -62,7 +61,7 @@ namespace ToyBox {
         private static bool Load(UnityModManager.ModEntry modEntry) {
             try {
 #if DEBUG
-                modEntry.OnUnload = Unload;
+                modEntry.OnUnload = OnUnload;
 #endif
                 _modId = modEntry.Info.Id;
 
@@ -111,13 +110,13 @@ namespace ToyBox {
             return true;
         }
 #if DEBUG
-        private static bool Unload(UnityModManager.ModEntry modEntry) {
+        private static bool OnUnload(UnityModManager.ModEntry modEntry) {
             foreach (var obj in Objects) {
                 UnityEngine.Object.DestroyImmediate(obj);
             }
             BlueprintExtensions.ResetCollationCache();
             HarmonyInstance.UnpatchAll(_modId);
-            EnhancedInventory.OnUnLoad();
+            EnhancedInventory.OnUnload();
             NeedsActionInit = true;
             return true;
         }
@@ -171,6 +170,7 @@ namespace ToyBox {
             Mod.ModKitSettings.browserSearchLimit = 25;
             ModKitSettings.Save();
             BagOfTricks.ResetGUI();
+            EnhancedCamera.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
 #if Wrath
@@ -278,6 +278,7 @@ namespace ToyBox {
             }
             Mod.logLevel = Settings.loggingLevel;
             if (NeedsActionInit) {
+                EnhancedCamera.OnLoad();
                 BagOfTricks.OnLoad();
                 PhatLoot.OnLoad();
 #if Wrath

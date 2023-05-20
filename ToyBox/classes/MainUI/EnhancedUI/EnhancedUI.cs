@@ -36,6 +36,13 @@ namespace ToyBox {
                        Toggle("Click On Equip Slots To Filter Inventory".localize(), ref Settings.togglEquipSlotInventoryFiltering, 500.width());
                        HelpLabel($"If you tick this you can click on equipment slots to filter the inventory for items that fit in it.\nFor more {"Enhanced Inventory".orange()} and {"Spellbook".orange()} check out the {"Loot & Spellbook Tab".orange().bold()}".localize());
                    },
+#if Wrath                   
+                   () => {
+                       Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
+                       100.space();
+                       HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
+                   },
+#endif
                    () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
                    () => {
                        Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
@@ -140,6 +147,8 @@ namespace ToyBox {
                    },
                    () => { }
                 );
+            Div(0, 25);
+            EnhancedCamera.OnGUI();
             Div(0, 25);
             HStack("Enhanced Inventory",
                    1,
