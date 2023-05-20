@@ -2,12 +2,12 @@
 
 using HarmonyLib;
 using Kingmaker;
-using Kingmaker.Armies;
-using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Assets.Controllers.GlobalMap;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Armies;
+using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.UnitLogic.Commands;
@@ -22,17 +22,17 @@ using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class Movement {
-        public static Settings settings = Main.Settings;
-        public static Player player = Game.Instance.Player;
+        public static Settings Settings = Main.Settings;
+        public static Player Player = Game.Instance.Player;
 
         [HarmonyPatch(typeof(UnitEntityData), nameof(UnitEntityData.ModifiedSpeedMps), MethodType.Getter)]
         public static class UnitEntityData_CalculateSpeedModifier_Patch {
             private static void Postfix(UnitEntityData __instance, ref float __result) {
-                if (settings.partyMovementSpeedMultiplier == 1.0f || (__instance?.Descriptor?.IsPartyOrPet() != true))
+                if (Settings.partyMovementSpeedMultiplier == 1.0f || (__instance?.Descriptor?.IsPartyOrPet() != true))
                     return;
                 var partTacticalCombat = __instance.Get<UnitPartTacticalCombat>();
                 if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return;
-                __result *= settings.partyMovementSpeedMultiplier;
+                __result *= Settings.partyMovementSpeedMultiplier;
             }
         }
 
@@ -80,7 +80,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GlobalMapMovementController), nameof(GlobalMapMovementController.GetRegionalModifier), new Type[] { })]
         public static class MovementSpeed_GetRegionalModifier_Patch1 {
             public static void Postfix(ref float __result) {
-                var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                var speedMultiplier = Mathf.Clamp(Settings.travelSpeedMultiplier, 0.1f, 100f);
                 __result = speedMultiplier * __result;
             }
         }
@@ -88,7 +88,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GlobalMapMovementController), nameof(GlobalMapMovementController.GetRegionalModifier), new Type[] { typeof(Vector3) })]
         public static class MovementSpeed_GetRegionalModifier_Patch2 {
             public static void Postfix(ref float __result) {
-                var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                var speedMultiplier = Mathf.Clamp(Settings.travelSpeedMultiplier, 0.1f, 100f);
                 __result = speedMultiplier * __result;
             }
         }
@@ -110,7 +110,7 @@ namespace ToyBox.BagOfPatches {
                 ref float visualStepDistance) {
                 // TODO - can we get rid of the other map movement multipliers and do them all here?
                 if (traveler is GlobalMapArmyState armyState && armyState.Data.Faction == ArmyFaction.Crusaders) {
-                    var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                    var speedMultiplier = Mathf.Clamp(Settings.travelSpeedMultiplier, 0.1f, 100f);
                     visualStepDistance = speedMultiplier * visualStepDistance;
                 }
             }
@@ -120,7 +120,7 @@ namespace ToyBox.BagOfPatches {
         public static class GlobalMapArmyState_SpendMovementPoints_Patch {
             public static void Prefix(GlobalMapArmyState __instance, ref float points) {
                 if (__instance.Data.Faction == ArmyFaction.Crusaders) {
-                    var speedMultiplier = Mathf.Clamp(settings.travelSpeedMultiplier, 0.1f, 100f);
+                    var speedMultiplier = Mathf.Clamp(Settings.travelSpeedMultiplier, 0.1f, 100f);
                     points /= speedMultiplier;
                 }
             }

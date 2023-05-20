@@ -113,7 +113,7 @@ namespace ToyBox {
                                 () => units,
                                 i => i,
                                 u => u.CharacterName,
-                                u => u.CharacterName,
+                                u => new[] { u.CharacterName },
                                 () => {
                                     Toggle("Show Inactive Conditions", ref Settings.toggleIntrestingNPCsShowFalseConditions);
                                     if (ConditionsBrowser.ShowAll) {

@@ -76,7 +76,7 @@ namespace ToyBox.classes.MainUI {
                 BlueprintExtensions.GetBlueprints<BlueprintAiAction>,
                 a => (BlueprintAiAction)a.Blueprint,
                 bp => bp.GetDisplayName(),
-                bp => $"{bp.GetDisplayName()} {bp.GetDescription()}",
+                bp => new string[] {$"{bp.GetDisplayName()} {bp.GetDescription()}"},
                 null,
                 (bp, action) => {
                     Browser.DetailToggle(bp.GetDisplayName(), bp, bp);
@@ -98,7 +98,7 @@ namespace ToyBox.classes.MainUI {
                                BlueprintExtensions.GetBlueprints<Consideration>,
                                c => c,
                                c => c.GetDisplayName(),
-                               c => c.GetDisplayName(),
+                               c =>  new[] { c.GetDisplayName() },
                                null,
                                (bp, c) => {
                                    Label(c.GetDisplayName());
@@ -126,7 +126,7 @@ namespace ToyBox.classes.MainUI {
                             BlueprintExtensions.GetBlueprints<Consideration>,
                             c => c,
                             c => c.GetDisplayName(),
-                            c => c.GetDisplayName(),
+                            c =>  new[] { c.GetDisplayName() },
                             null,
                             (bp, c) => {
                                 Label(c.GetDisplayName());

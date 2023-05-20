@@ -143,7 +143,7 @@ namespace ToyBox {
                         },
                         feature => feature.Blueprint,
                         blueprint => $"{GetTitle(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
-                                        GetTitle,
+                                        blueprint => new[] { GetTitle(blueprint) },
                         () => {
                             using (HorizontalScope()) {
                                 bool needsReload = false;
@@ -218,7 +218,7 @@ namespace ToyBox {
                 BlueprintExtensions.GetBlueprints<BlueprintSpellbook>,
                 (feature) => feature.Blueprint,
                 blueprint => $"{GetTitle(blueprint)}" + (Settings.searchDescriptions ? $" {blueprint.GetDescription()}" : ""),
-                GetTitle,
+                blueprint => new[] { GetTitle(blueprint) },
                 () => {
                     using (HorizontalScope()) {
                         Toggle("Show GUIDs", ref Main.Settings.showAssetIDs, 150.width());

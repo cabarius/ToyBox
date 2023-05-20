@@ -97,7 +97,7 @@ namespace ModKit {
                 Func<IEnumerable<Definition>> available,    // Func because available may be slow
                 Func<Item, Definition> definition,
                 Func<Definition, string> searchKey,
-                Func<Definition, string> sortKey,
+                Func<Definition, IComparable[]> sortKeys,
                 Action onHeaderGUI = null,
                 Action<Definition, Item> onRowGUI = null,
                 Action<Definition, Item> onDetailGUI = null,
@@ -110,7 +110,7 @@ namespace ModKit {
                 bool showItemDiv = false
                 ) {
                 current ??= new List<Item>();
-                List<Definition> definitions = Update(current, available, search, searchKey, sortKey, definition);
+                List<Definition> definitions = Update(current, available, search, searchKey, sortKeys, definition);
                 if (search || SearchLimit < _matchCount) {
                     if (search) {
                         using (HorizontalScope()) {
@@ -210,8 +210,14 @@ namespace ModKit {
                 }
             }
 
-            private List<Definition> Update(IEnumerable<Item> current, Func<IEnumerable<Definition>> available, bool search,
-                Func<Definition, string> searchKey, Func<Definition, string> sortKey, Func<Item, Definition> definition) {
+            private List<Definition> Update(
+                IEnumerable<Item> current, 
+                Func<IEnumerable<Definition>> available, 
+                bool search,
+                Func<Definition, string> searchKey, 
+                Func<Definition, IComparable[]> sortKeys, 
+                Func<Item, Definition> definition
+                ) {
                 if (Event.current.type == EventType.Layout) {
                     if (startedLoadingAvailable) {
                         _availableCache = available()?.ToList();
@@ -238,7 +244,16 @@ namespace ModKit {
                                     filteredDefinitions.Add(cachedSearchResults.Dequeue());
                                 }
                             }
-                            filteredDefinitions.Sort(Comparer<Definition>.Create((x, y) => sortKey(x).CompareTo(sortKey(y))));
+                            filteredDefinitions.Sort(Comparer<Definition>.Create((x, y) => {
+                                var xKeys = sortKeys(x);
+                                var yKeys = sortKeys(y);
+                                var zipped = xKeys.Zip(yKeys, (x, y) => (x: x, y: y));
+                                foreach (var pair in zipped) {
+                                    var compare = pair.x.CompareTo(pair.y);
+                                    if (compare != 0) return compare;
+                                }
+                                return xKeys.Length > yKeys.Length ? -1 : 1;
+                            }));
                         }
                         _matchCount = filteredDefinitions.Count;
                         UpdatePageCount();
@@ -270,7 +285,7 @@ namespace ModKit {
                         }
                         if (!isSearching) {
                             _cancellationTokenSource = new();
-                            Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, search));
+                            Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKeys, search));
                             if (_searchQueryChanged) {
                                 filteredDefinitions = new List<Definition>();
                             }
@@ -294,7 +309,7 @@ namespace ModKit {
             public void UpdateSearchResults(string searchTextParam,
                 IEnumerable<Definition> definitions,
                 Func<Definition, string> searchKey,
-                Func<Definition, string> sortKey,
+                Func<Definition, IComparable[]> sortKey,
                 bool search
                 ) {
                 if (definitions == null) {

@@ -158,7 +158,7 @@ namespace ToyBox {
                     GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
                     (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""), 
-                    GetSortKey,
+                    blueprint =>  new[] { GetSortKey(blueprint) },
                     () => {
                         using (HorizontalScope()) {
                             var reloadData = false;
@@ -194,7 +194,7 @@ namespace ToyBox {
                                       featureSelection.AllFeatures.OrderBy(f => f.Name),
                                     e => e.feature,
                                     f => $"{GetSearchKey(f)} " + (Settings.searchDescriptions ? f.Description : ""),
-                                    GetTitle,
+                                    f => new[] {GetTitle(f)},
                                     null,
                                     (f, selectionEntry) => {
                                         var title = GetTitle(f).MarkedSubstring(FeatureSelectionBrowser.SearchText);
@@ -256,7 +256,7 @@ namespace ToyBox {
                                       () => parametrizedFeature.Items.OrderBy(i => i.Name),
                                       i => i,
                                       i => $"{i.Name} " + (Settings.searchDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
-                                      i => i.Name,
+                                      i =>  new[] { i.Name },
                                       null,
                                       (def , item) => {
                                           var title = def.Name.MarkedSubstring(ParameterizedFeatureBrowser.SearchText);
