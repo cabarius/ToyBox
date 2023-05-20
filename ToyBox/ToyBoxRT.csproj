@@ -410,6 +410,7 @@
     <Compile Include="classes\MainUI\Browser\BlueprintActionRT.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedCamera.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\GameSavesBrowser.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\ItemRarity.cs" />
@@ -455,6 +456,7 @@
     <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\Models\Settings.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\CamereRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -504,7 +506,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

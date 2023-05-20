@@ -175,6 +175,7 @@
     <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedCamera.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
+    <Compile Include="classes\MainUI\PartyEditor\GameSavesBrowser.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
@@ -249,7 +250,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestricted.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Localization.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Movement.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementWrath.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\NewChar.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Pets.cs" />

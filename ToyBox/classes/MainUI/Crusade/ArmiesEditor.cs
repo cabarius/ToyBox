@@ -197,7 +197,7 @@ namespace ToyBox.classes.MainUI {
                                    },
                                    (unit) => unit,
                                    (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
-                                   (unit) => $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}",
+                                   (unit) =>  new[] { $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}" },
                                    () => {
                                        var bluh = ummWidth - 50;
                                        var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
