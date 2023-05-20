@@ -79,8 +79,7 @@ namespace ToyBox {
                                            var characterName = isCurrent ? info.PlayerCharacterName.orange() : info.PlayerCharacterName;
                                            Label(characterName, 400.width());
                                            25.space();
-#if Wrath
-#elif RT
+#if RT
                                            Label($"Level: {info.PlayerCharacterRank}");
 #endif
                                            25.space();
