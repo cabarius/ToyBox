@@ -36,22 +36,29 @@ using Kingmaker.Visual.Sound;
 using ModKit;
 using Owlcat.Runtime.Core;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
+using Owlcat.Runtime.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using DG.Tweening;
 using UnityEngine;
 using static Kingmaker.Utility.MassLootHelper;
 using Object = UnityEngine.Object;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Code.UI.MVVM.View.MainMenu.PC;
 using Kingmaker.Globalmap;
+using Kingmaker.UI.Legacy.LoadingScreen;
 using ToyBox;
+using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
+using Kingmaker.Networking;
+using Kingmaker.UI.Sound;
+using UniRx;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
-        public static Settings settings = Main.Settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
 
@@ -291,13 +298,34 @@ namespace ToyBox.BagOfPatches {
                     Mod.Warn("Auto Load Save on Launch disabled");
                     return;
                 }
-                if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
+                if (Settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
                     __instance.ViewModel.LoadLastGame();
                 }
                 Main.freshlyLaunched = false;
             }
         }
+
+        [HarmonyPatch(typeof(LoadingScreenBaseView))]
+        public static class LoadingScreenBaseViewPatch {
+            [HarmonyPatch(nameof(LoadingScreenBaseView.ShowUserInputLayer))]
+            [HarmonyPrefix]
+            private static bool ShowUserInputLayer(LoadingScreenBaseView __instance, bool state) {
+                if (!Settings.toggleSkipAnyKeyToContinueWhenLoadingSaves) return true;
+                if (!state)
+                    return false;
+                __instance.m_ProgressBarContainer.DOFade(0.0f, 1f).OnComplete(() => __instance.StartPressAnyKeyLoopAnimation()).SetUpdate(true);
+                __instance.AddDisposable(MainThreadDispatcher.UpdateAsObservable()
+                                                            .Subscribe(_ => {
+                                                                UISounds.Instance.Sounds.Buttons.ButtonClick.Play();
+                                                                if (PhotonManager.Lobby.IsLoading)
+                                                                    PhotonManager.Instance.ContinueLoading();
+                                                                EventBus.RaiseEvent((Action<IContinueLoadingHandler>)(h => h.HandleContinueLoading()));
+                                                            }));
+                return false;
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(Player), nameof(Player.GameOver))]
         private static class Player_GameOverReason_Patch {

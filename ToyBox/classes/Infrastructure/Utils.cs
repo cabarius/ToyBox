@@ -197,12 +197,16 @@ namespace ToyBox {
         }
         public static Dictionary<string, string> ToStringDictionary(this object obj) {
             var propDict = obj.GetType()
-                            .GetProperties(BindingFlags.Instance | BindingFlags.NonPublic)
+                            .GetProperties(BindingFlags.Instance 
+                                           | BindingFlags.NonPublic
+                                           | BindingFlags.Public)
                             .Where(field => field.GetValue(obj) is string)
                             .ToDictionary(prop => prop.Name, prop => prop.StringValue(obj)
                             );
             var fieldDict = obj.GetType()
-                            .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                            .GetFields(BindingFlags.Instance 
+                                       | BindingFlags.NonPublic
+                                       | BindingFlags.Public)
                             .Where(field => field.GetValue(obj) is string)
                             .ToDictionary(field => field.Name, field => field.StringValue(obj)
                             );

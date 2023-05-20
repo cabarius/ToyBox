@@ -173,6 +173,7 @@
     <Compile Include="classes\MainUI\ActionsWrath.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintActionWrath.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\EnhancedCamera.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
@@ -313,7 +314,7 @@
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
+    <PostBuildEvent>echo "Wrath: $(TargetPath)" "&gt;$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
             xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).dll*"
             xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\0$(ProjectName)0\$(ProjectName).pdb*"
             xcopy /Y "$(ProjectDir)\Info.json" "$(WrathPath)\Mods\0$(ProjectName)0\Info.json*"
@@ -325,7 +326,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
