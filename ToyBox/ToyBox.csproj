@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-      <IntermediateOutputPath>obj\Wrath\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\Wrath\Debug\</IntermediateOutputPath>
     <OutputPath>bin\Wrath\Debug\0ToyBox0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Wrath</DefineConstants>
     <ErrorReport>none</ErrorReport>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-      <IntermediateOutputPath>obj\Wrath\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\Wrath\Release\</IntermediateOutputPath>
     <OutputPath>bin\Wrath\Release\0ToyBox0\</OutputPath>
     <DefineConstants>TRACE;Wrath</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -284,7 +284,7 @@
     <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs" />
     <Compile Include="classes\MonkeyPatchin\Multiclass\WrathExtensionsMulticlass.cs" />
     <Compile Include="classes\MonkeyPatchin\PartyView.cs" />
-    <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
+    <Compile Include="classes\MonkeyPatchin\PreviewManagerWrath.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
     <Compile Include="classes\MonkeyPatchin\Vendor\BulkSellLogic.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -329,7 +329,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

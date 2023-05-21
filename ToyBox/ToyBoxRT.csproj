@@ -18,8 +18,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-      <IntermediateOutputPath>obj\RT\Debug\</IntermediateOutputPath>
-      <OutputPath>bin\RT\Debug\0ToyBox0\</OutputPath>
+    <IntermediateOutputPath>obj\RT\Debug\</IntermediateOutputPath>
+    <OutputPath>bin\RT\Debug\0ToyBox0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;RT</DefineConstants>
     <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,8 +29,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-      <IntermediateOutputPath>obj\RT\Release\</IntermediateOutputPath>
-      <OutputPath>bin\RT\Release\0ToyBox0\</OutputPath>
+    <IntermediateOutputPath>obj\RT\Release\</IntermediateOutputPath>
+    <OutputPath>bin\RT\Release\0ToyBox0\</OutputPath>
     <DefineConstants>TRACE;RT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -461,6 +461,8 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
+    <Compile Include="classes\MonkeyPatchin\PreviewManagerRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -508,7 +510,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
