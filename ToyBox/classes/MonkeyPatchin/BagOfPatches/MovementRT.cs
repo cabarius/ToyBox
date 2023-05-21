@@ -39,7 +39,6 @@ namespace ToyBox.BagOfPatches {
                 __result *= Settings.partyMovementSpeedMultiplier;
             }
         }
-#if false
 
         [HarmonyPatch(typeof(UnitHelper))]
         public static class UnitHelperPatch {
@@ -53,8 +52,10 @@ namespace ToyBox.BagOfPatches {
                     ref UnitMoveToProperParams __result
 
                 ) {
+                if (Settings.partyMovementSpeedMultiplier == 1.0f) return;
+                if (!unit.CombatGroup.IsPlayerParty) return;
                 __result.SpeedLimit = settings.SpeedLimit * Settings.partyMovementSpeedMultiplier;
-                __result.OverrideSpeed = __result.SpeedLimit;
+                __result.OverrideSpeed = 5 * Settings.partyMovementSpeedMultiplier;
             }
 
             [HarmonyPatch(nameof(UnitHelper.CreateMoveCommandShip))]
@@ -68,7 +69,7 @@ namespace ToyBox.BagOfPatches {
                     ref UnitMoveToProperParams __result
                 ) {
                 __result.SpeedLimit = settings.SpeedLimit * Settings.partyMovementSpeedMultiplier;
-                __result.OverrideSpeed = __result.SpeedLimit;
+                __result.OverrideSpeed = 5 * Settings.partyMovementSpeedMultiplier;
             }
 
             [HarmonyPatch(nameof(UnitHelper.CreateMoveCommandParamsRT))]
@@ -78,11 +79,12 @@ namespace ToyBox.BagOfPatches {
                     MoveCommandSettings settings,
                     ref UnitMoveToParams __result
                 ) {
+                if (Settings.partyMovementSpeedMultiplier == 1.0f) return;
+                if (!unit.CombatGroup.IsPlayerParty) return;
                 __result.SpeedLimit = settings.SpeedLimit * Settings.partyMovementSpeedMultiplier;
-                __result.OverrideSpeed = __result.SpeedLimit;
+                __result.OverrideSpeed = 5 * Settings.partyMovementSpeedMultiplier;
             }
         }
-#endif
 #if false
         [HarmonyPatch(typeof(ClickGroundHandler), nameof(ClickGroundHandler.RunCommand))]
         public static class ClickGroundHandler_RunCommand_Patch {
