@@ -428,7 +428,7 @@ namespace ToyBox.BagOfPatches {
 
                     var mainMenu = UnityEngine.Object.FindObjectOfType<MainMenu>();
                     mainMenu.EnterGame(new Action(() => {
-                        if (Game.Instance.SaveManager.GetLatestSave() == null)
+                        if (Game.Instance?.SaveManager?.GetLatestSave() == null)
                             return;
                         Game.Instance.LoadGame(Game.Instance.SaveManager.GetLatestSave());
                     }));

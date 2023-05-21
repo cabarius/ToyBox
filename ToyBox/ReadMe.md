@@ -37,7 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.3 (Coming Soon)
-**ToyBox 1.5.3** - ***Shodan Experimental Preview*** **May 20, 2023f**
+**ToyBox 1.5.3** - ***Shodan Experimental Preview*** **May 21, 2023g**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
@@ -51,6 +51,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) **You should now be able to select Sorc again when you respec with Barley's mod.** This was a crasher introduced when I moved to c# 11
  * (***Narria***) Fixed other crashers introduced by c#11
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
+ * (***Narria***) Added work around for issue of game double calling SelectClass.Apply leading to multiclass levels being added more than once during character creation **Please test out and report any issues you find in gestalt/multiclassing**
 ### Ver 1.5.2
  * (***Narria***) **UI Reorg** Moved UI Enhancements into new top level **Enhanced UI** tab and the Loot tab is now just for loot related stuff
  * (***Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equipped by the slot you click on.

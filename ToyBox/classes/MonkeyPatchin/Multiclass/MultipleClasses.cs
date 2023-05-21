@@ -51,10 +51,14 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
-        [HarmonyPatch(typeof(SelectClass), nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
-        private static class SelectClass_Apply_Patch {
+        [HarmonyPatch(typeof(SelectClass))]
+        private static class SelectClassPatch {
+            public static HashSet<BlueprintCharacterClass> HackPreviouslyAppliedMulticlassSet { get; internal set; }
+                = new HashSet<BlueprintCharacterClass>();
+
+            [HarmonyPatch(nameof(SelectClass.Apply), new Type[] { typeof(LevelUpState), typeof(UnitDescriptor) })]
             [HarmonyPostfix]
-            private static void Postfix(LevelUpState state, UnitDescriptor unit) {
+            private static void Apply(LevelUpState state, UnitDescriptor unit) {
                 if (!settings.toggleMulticlass) return;
                 if (!unit.IsPartyOrPet()) return;
                 //if (Mod.IsCharGen()) Main.Log($"stack: {System.Environment.StackTrace}");
@@ -84,10 +88,15 @@ namespace ToyBox.Multiclass {
                     // applying classes
                     var selectedClass = state.SelectedClass;
                     StateReplacer stateReplacer = new(state);
+
                     foreach (var characterClass in Main.multiclassMod.AllClasses) {
                         if (characterClass.IsMythic != selectedClass.IsMythic) continue;
                         if (Main.multiclassMod.AppliedMulticlassSet.Contains(characterClass)) {
                             Mod.Warn($"SelectClass_Apply_Patch - duplicate application of multiclass detected: {characterClass.name.yellow()}");
+                            continue;
+                        }
+                        if (HackPreviouslyAppliedMulticlassSet.Contains(characterClass)) {
+                            Mod.Warn($"SelectClass_Apply_Patch - HACK - used deduping HACK: {characterClass.name.yellow()}");
                             continue;
                         }
                         if (options.Contains(characterClass)) {
@@ -111,6 +120,7 @@ namespace ToyBox.Multiclass {
                                 //EventBus.RaiseEvent<ILevelUpSelectClassHandler>(h => h.HandleSelectClass(unit, state));
 
                                 Main.multiclassMod.AppliedMulticlassSet.Add(characterClass);
+                                HackPreviouslyAppliedMulticlassSet.Add(characterClass);
                             }
                         }
                     }
@@ -134,6 +144,18 @@ namespace ToyBox.Multiclass {
                             }
                         }
                     });
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(CharGenRoadmapMenuView))]
+        public static class CharGenRoadmapMenuViewPatch {
+            [HarmonyPatch(nameof(CharGenRoadmapMenuView.SelectNextPhase))]
+            [HarmonyPostfix]
+            public static void SelectNextPhase() {
+                if (SelectClassPatch.HackPreviouslyAppliedMulticlassSet.Count > 0) {
+                    Mod.Warn("HackPreviouslyAppliedMulticlassSet detected - clearing hack state!");
+                    SelectClassPatch.HackPreviouslyAppliedMulticlassSet.Clear();
                 }
             }
         }
