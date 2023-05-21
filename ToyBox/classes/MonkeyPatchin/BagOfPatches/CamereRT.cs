@@ -167,7 +167,7 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_ScrollRoutine == null) {
                     var scrollOffset = __instance.m_ScrollOffset;
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
-                    Mod.Log($"eulerAngles: {eulerAngles}");
+                    //Mod.Log($"eulerAngles: {eulerAngles}");
                     // TODO: find out from OwlCat why these angles are so weird
                     if (eulerAngles.x >= 42.75 && eulerAngles.x <= 312.75) {
                         scrollOffset.y = -scrollOffset.y;

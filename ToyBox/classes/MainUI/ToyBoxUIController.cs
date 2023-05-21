@@ -33,7 +33,7 @@ namespace ToyBox {
                         return;
                     _followKeyBinding = controlSettingsGroup.SettingsList
                                                             .OfType<UISettingsEntityKeyBinding>()
-                                                            .First(item => item.name == "FollowUnit");
+                                                            .FirstOrDefault(item => item.name == "FollowUnit");
                 }
                 if (_followKeyBinding?.IsDown ?? false) {
                     var selectedUnit = WrathExtensions.GetCurrentCharacter();

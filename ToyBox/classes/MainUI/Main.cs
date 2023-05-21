@@ -93,13 +93,13 @@ namespace ToyBox {
                     Mod.Log("CombatLog - " + text);
                     var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, PrefixIcon.RightArrow);
 #if Wrath
-                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].First(x => x is MessageLogThread);
-                    var tacticalCombatLog = LogThreadService.Instance.m_Logs[LogChannelType.TacticalCombat].First(x => x is MessageLogThread);
-                    messageLog.AddMessage(message);
+                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].FirstOrDefault(x => x is MessageLogThread);
+                    var tacticalCombatLog = LogThreadService.Instance.m_Logs[LogChannelType.TacticalCombat].FirstOrDefault(x => x is MessageLogThread);
+                    messageLog?.AddMessage(message);
                     tacticalCombatLog?.AddMessage(message);
 #elif RT 
-                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].First(x => x is RulebookDealDamageLogThread);
-                    messageLog.AddMessage(message);
+                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].FirstOrDefault(x => x is RulebookDealDamageLogThread);
+                    messageLog?.AddMessage(message);
 #endif
                 };
             }

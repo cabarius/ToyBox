@@ -175,7 +175,7 @@ namespace ToyBox.classes.Infrastructure {
             Spellbook spellbookOfNormalUnit = null;
             if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)) { // get the real units spellbook, the levelup version does not contain flags like CopiedFromScroll
                 if (ch?.Spellbooks?.Count() > 0)
-                    spellbookOfNormalUnit = ch.Spellbooks.First(s => s.Blueprint == spellbook.Blueprint);
+                    spellbookOfNormalUnit = ch.Spellbooks.FirstOrDefault(s => s.Blueprint == spellbook.Blueprint);
             }
             return GetActualSpellsLearned(spellbook, level, spellsToIgnore, spellbookOfNormalUnit);
         }
@@ -197,7 +197,7 @@ namespace ToyBox.classes.Infrastructure {
             if (spellbookOfNormalUnit != null) {
                 var normalSpellsOfLevel = spellbookOfNormalUnit.SureKnownSpells(level);
                 normalSpellbookCondition = x => {
-                    var sp = normalSpellsOfLevel.First(a => a.Blueprint == x.Blueprint);
+                    var sp = normalSpellsOfLevel.FirstOrDefault(a => a.Blueprint == x.Blueprint);
                     if (sp == null)
                         return true;
                     return !sp.IsTemporary

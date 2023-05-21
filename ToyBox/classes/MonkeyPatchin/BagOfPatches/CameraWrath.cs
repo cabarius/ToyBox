@@ -113,10 +113,10 @@ namespace ToyBox.BagOfPatches {
                 }
                 if (Settings.toggleAutoFollowHold) {
                     if (_followKeyBinding == null) {
-                        var controlSettingsGroup = Game.Instance.UISettingsManager.m_ControlSettingsList.First(g => g.name == "KeybindingsGeneral");
-                        _followKeyBinding = controlSettingsGroup.SettingsList
+                        var controlSettingsGroup = Game.Instance.UISettingsManager.m_ControlSettingsList.FirstOrDefault(g => g.name == "KeybindingsGeneral");
+                        _followKeyBinding = controlSettingsGroup?.SettingsList
                                                                 .OfType<UISettingsEntityKeyBinding>()
-                                                                .First(item => item.name == "FollowUnit");
+                                                                .FirstOrDefault(item => item.name == "FollowUnit");
                     }
                     if (_followKeyBinding?.IsDown ?? false) {
                         var selectedUnit = WrathExtensions.GetCurrentCharacter();

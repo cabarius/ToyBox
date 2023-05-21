@@ -99,9 +99,9 @@ namespace ToyBox {
 
             // Setup string options...
 
-            m_localized_fort = LocalizedTexts.Instance.Stats.Entries.First(i => i.Stat == StatType.SaveFortitude).Text;
-            m_localized_reflex = LocalizedTexts.Instance.Stats.Entries.First(i => i.Stat == StatType.SaveReflex).Text;
-            m_localized_will = LocalizedTexts.Instance.Stats.Entries.First(i => i.Stat == StatType.SaveWill).Text;
+            m_localized_fort = LocalizedTexts.Instance.Stats.Entries.FirstOrDefault(i => i.Stat == StatType.SaveFortitude)?.Text;
+            m_localized_reflex = LocalizedTexts.Instance.Stats.Entries.FirstOrDefault(i => i.Stat == StatType.SaveReflex)?.Text;
+            m_localized_will = LocalizedTexts.Instance.Stats.Entries.FirstOrDefault(i => i.Stat == StatType.SaveWill)?.Text;
 
             List<string> options = Enum.GetValues(typeof(SpellbookFilter)).Cast<SpellbookFilter>().Select(i => i.ToString()).ToList();
             options[(int)SpellbookFilter.NoFilter] = "No Filter";

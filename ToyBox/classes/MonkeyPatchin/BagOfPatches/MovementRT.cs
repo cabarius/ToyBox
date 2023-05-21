@@ -15,6 +15,8 @@ using Kingmaker.Visual.Animation.Kingmaker.Actions;
 using ModKit;
 using System;
 using System.Linq;
+using Kingmaker.Pathfinding;
+using Kingmaker.UnitLogic;
 using UnityEngine;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
@@ -23,18 +25,64 @@ namespace ToyBox.BagOfPatches {
         public static Settings Settings = Main.Settings;
         public static Player Player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(PartMovable), nameof(PartMovable.ModifiedSpeedMps), MethodType.Getter)]
-        public static class UnitEntityData_CalculateSpeedModifier_Patch {
+
+        [HarmonyPatch(typeof(PartMovable))]
+        public static class PartMoveablePatch {
+            [HarmonyPatch(nameof(PartMovable.ModifiedSpeedMps), MethodType.Getter)]
             [HarmonyPostfix]
             private static void ModifiedSpeedMps(PartMovable __instance, ref float __result) {
-                if (Settings.partyMovementSpeedMultiplier == 1.0f) 
-                    // TODO: do not speed up non party members
-                    //|| (__instance?.Descriptor()?.IsPartyOrPet() != true))
-                    return;
+                if (Settings.partyMovementSpeedMultiplier == 1.0f) return;
+                if (!(__instance.Owner is UnitEntity unit)) return;
+                if (!unit.CombatGroup.IsPlayerParty) return;
+                Mod.Debug($"PartMovable.ModifiedSpeedMps - owner:{unit.CharacterName} old: {__result}");
                 // TODO: deal with space movement
                 __result *= Settings.partyMovementSpeedMultiplier;
             }
         }
+#if false
+
+        [HarmonyPatch(typeof(UnitHelper))]
+        public static class UnitHelperPatch {
+            [HarmonyPatch(nameof(UnitHelper.CreateMoveCommandUnit))]
+            [HarmonyPostfix]
+            public static void CreateMoveCommandUnit(
+                    BaseUnitEntity unit,
+                    MoveCommandSettings settings,
+                    float[] costPerEveryCell,
+                    ForcedPath forcedPath,
+                    ref UnitMoveToProperParams __result
+
+                ) {
+                __result.SpeedLimit = settings.SpeedLimit * Settings.partyMovementSpeedMultiplier;
+                __result.OverrideSpeed = __result.SpeedLimit;
+            }
+
+            [HarmonyPatch(nameof(UnitHelper.CreateMoveCommandShip))]
+            [HarmonyPostfix]
+            public static void CreateMoveCommandShip(
+                    MoveCommandSettings settings,
+                    int straightDistance,
+                    int diagonalsCount,
+                    int length,
+                    ForcedPath forcedPath,
+                    ref UnitMoveToProperParams __result
+                ) {
+                __result.SpeedLimit = settings.SpeedLimit * Settings.partyMovementSpeedMultiplier;
+                __result.OverrideSpeed = __result.SpeedLimit;
+            }
+
+            [HarmonyPatch(nameof(UnitHelper.CreateMoveCommandParamsRT))]
+            [HarmonyPostfix]
+            public static void CreateMoveCommandParamsRT(
+                    BaseUnitEntity unit,
+                    MoveCommandSettings settings,
+                    ref UnitMoveToParams __result
+                ) {
+                __result.SpeedLimit = settings.SpeedLimit * Settings.partyMovementSpeedMultiplier;
+                __result.OverrideSpeed = __result.SpeedLimit;
+            }
+        }
+#endif
 #if false
         [HarmonyPatch(typeof(ClickGroundHandler), nameof(ClickGroundHandler.RunCommand))]
         public static class ClickGroundHandler_RunCommand_Patch {
