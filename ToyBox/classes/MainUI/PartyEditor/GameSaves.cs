@@ -46,8 +46,8 @@ namespace ToyBox {
         };
 
         public static void OnGUI() {
-            var currentGameID = Game.Instance.Player.GameId;
-            var saveManager = Game.Instance.SaveManager;
+            var currentGameID = Game.Instance?.Player?.GameId ?? "n/a";
+            var saveManager = Game.Instance?.SaveManager;
 
             Div(0, 25);
             HStack("Saves".localize(),
@@ -64,9 +64,12 @@ namespace ToyBox {
                 //var currentSave = Game.Instance.SaveManager.GetLatestSave();
                 // TODO: add refresh
                 if (_currentSaves == null || _allSaves == null) {
-                    saveManager.UpdateSaveListIfNeeded(true);
-                    _currentSaves = saveManager.Where(info => info?.GameId == currentGameID);
-                    _allSaves = saveManager.Where(info => info != null);
+                    saveManager?.UpdateSaveListIfNeeded(true);
+                    _currentSaves = saveManager?.Where(info => info?.GameId == currentGameID);
+                    _allSaves = saveManager?.Where(info => info != null);
+                }
+                if (_currentSaves == null || _allSaves == null) {
+                    return;
                 }
                 using (VerticalScope()) {
                     savesBrowser.OnGUI(_currentSaves,
