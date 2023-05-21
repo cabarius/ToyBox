@@ -172,8 +172,7 @@ namespace ToyBox {
                 }
             }
         }
-        public static void maybeKill(UnitCombatState unitCombatState) {
-
+        public static void MaybeKill(UnitCombatState unitCombatState) {
             if (settings.togglekillOnEngage) {
                 List<UnitEntityData> partyUnits = Game.Instance.Player.m_PartyAndPets;
                 UnitEntityData unit = unitCombatState.Unit;

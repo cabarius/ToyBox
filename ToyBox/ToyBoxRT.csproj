@@ -460,6 +460,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\CamereRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManagerRT.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
