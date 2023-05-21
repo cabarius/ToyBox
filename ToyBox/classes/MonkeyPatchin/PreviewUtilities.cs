@@ -4,7 +4,9 @@ using HarmonyLib;
 using UnityEngine;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
+#if Wrath
 using Kingmaker.Kingdom.Blueprints;
+#endif
 using Kingmaker.Blueprints;
 using System.Diagnostics;
 using System;
@@ -75,6 +77,7 @@ namespace ToyBox {
 
         public static string FormatConditions(Condition[] conditions) => conditions.Join(c => c.GetCaption());
         public static string FormatConditions(ConditionsChecker conditions) => FormatConditions(conditions.Conditions);
+#if Wrath
         public static bool CausesGameOver(BlueprintKingdomEventBase blueprint) {
             var results = blueprint.GetComponent<EventFinalResults>();
             if (results == null) return false;
@@ -85,6 +88,7 @@ namespace ToyBox {
             }
             return false;
         }
+#endif
         public class CodeTimer : IDisposable {
             private readonly Stopwatch m_Stopwatch;
             private readonly string m_Text;
