@@ -55,12 +55,32 @@ using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
 using Kingmaker.Networking;
 using Kingmaker.UI.Sound;
 using UniRx;
+using Kingmaker.Designers;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
+        [HarmonyPatch(typeof(PartUnitCombatState))]
+        private static class PartUnitCombatStatePatch {
+            public static void MaybeKill(PartUnitCombatState unitCombatState) {
+                if (Settings.togglekillOnEngage) {
+                    List<UnitEntityData> partyUnits = Game.Instance.Player.m_PartyAndPets;
+                    UnitEntityData unit = unitCombatState.Owner;
+                    if (unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter()) 
+                        && !partyUnits.Contains(unit)) {
+                        CheatsCombat.KillUnit(unit);
+                    }
+                }
+            }
+
+            [HarmonyPatch(nameof(PartUnitCombatState.JoinCombat))]
+            [HarmonyPostfix]
+            public static void JoinCombat(PartUnitCombatState __instance, bool surprised) {
+                MaybeKill(__instance);
+            }
+        }
 
 #if FALSE
         [HarmonyPatch(typeof(FogOfWarArea), nameof(FogOfWarArea.RevealOnStart), MethodType.Getter)]
@@ -512,32 +532,6 @@ namespace ToyBox.BagOfPatches {
             }
 
             private static void Postfix() => UnitEntityData_CanRollPerception_Extension.TriggerReroll = false;
-        }
-
-        [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.Engage))]
-        public static class UnitCombatState_Engage_Patch {
-            private static void Postfix(UnitCombatState __instance) {
-                UnitEntityDataUtils.maybeKill(__instance);
-            }
-        }
-
-        [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.JoinCombat))]
-        public static class UnitCombatState_JoinCombat_Patch {
-            private static void Postfix(UnitCombatState __instance) {
-                UnitEntityDataUtils.maybeKill(__instance);
-            }
-        }
-
-        [HarmonyPatch(typeof(TacticalCombatUnitEngagementController))]
-        public static class TacticalCombatUnitEngagementControllerPatch {
-            [HarmonyPatch(nameof(TacticalCombatUnitEngagementController.Tick))]
-            [HarmonyPostfix]
-            public static void Tick(TacticalCombatUnitEngagementController __instance) {
-                if (settings.togglekillOnEngage) {
-                    Actions.KillAllTacticalUnits();
-                }
-            }
-
         }
 
         [HarmonyPatch(typeof(AkSoundEngineController), nameof(AkSoundEngineController.OnApplicationFocus))]

@@ -627,14 +627,14 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.Engage))]
         public static class UnitCombatState_Engage_Patch {
             private static void Postfix(UnitCombatState __instance) {
-                UnitEntityDataUtils.maybeKill(__instance);
+                UnitEntityDataUtils.MaybeKill(__instance);
             }
         }
 
         [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.JoinCombat))]
         public static class UnitCombatState_JoinCombat_Patch {
             private static void Postfix(UnitCombatState __instance) {
-                UnitEntityDataUtils.maybeKill(__instance);
+                UnitEntityDataUtils.MaybeKill(__instance);
             }
         }
 

@@ -34,7 +34,7 @@ namespace ToyBox.BagOfPatches {
                 if (Settings.partyMovementSpeedMultiplier == 1.0f) return;
                 if (!(__instance.Owner is UnitEntity unit)) return;
                 if (!unit.CombatGroup.IsPlayerParty) return;
-                Mod.Debug($"PartMovable.ModifiedSpeedMps - owner:{unit.CharacterName} old: {__result}");
+                //Mod.Debug($"PartMovable.ModifiedSpeedMps - owner:{unit.CharacterName} old: {__result}");
                 // TODO: deal with space movement
                 __result *= Settings.partyMovementSpeedMultiplier;
             }

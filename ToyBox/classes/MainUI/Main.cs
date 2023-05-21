@@ -16,15 +16,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Kingmaker.Localization;
 using Newtonsoft.Json.Linq;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
+using LocalizationManager = ModKit.LocalizationManager;
+#if RT
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.LifeEvents;
+using Kingmaker.UI.Models.Log.GameLogCntxt;
+using Kingmaker.Code.UI.MVVM.VM.Tooltip.Templates;
+#endif
 #if Wrath
 using ToyBox.Multiclass;
 #elif RT
+using Kingmaker.Blueprints.Root.Strings.GameLog;
 using Kingmaker.UI.Models.Log.Enums;
 #endif
 
@@ -91,14 +99,16 @@ namespace ToyBox {
                 Mod.logLevel = Settings.loggingLevel;
                 Mod.InGameTranscriptLogger = text => {
                     Mod.Log("CombatLog - " + text);
-                    var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, PrefixIcon.RightArrow);
 #if Wrath
+                    var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, PrefixIcon.RightArrow);
                     var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].FirstOrDefault(x => x is MessageLogThread);
                     var tacticalCombatLog = LogThreadService.Instance.m_Logs[LogChannelType.TacticalCombat].FirstOrDefault(x => x is MessageLogThread);
                     messageLog?.AddMessage(message);
                     tacticalCombatLog?.AddMessage(message);
 #elif RT 
-                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].FirstOrDefault(x => x is RulebookDealDamageLogThread);
+                    var template = new TooltipTemplateCombatLogMessage(text, new LocalizedString());
+                    var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, GameLogContext.GetIcon(), template);
+                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Dialog].FirstOrDefault(x => x is DialogLogThread);
                     messageLog?.AddMessage(message);
 #endif
                 };
