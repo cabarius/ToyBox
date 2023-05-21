@@ -30,6 +30,7 @@ global using BlueprintGuid = System.String;
 global using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
 global using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
 global using UnitProgressionData = Kingmaker.UnitLogic.PartUnitProgression;
+using Kingmaker.Localization;
 #endif
 
 #if RT
@@ -51,6 +52,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Localization;
 using Kingmaker.UnitLogic;
 using ModKit;
 using ModKit.Utility;
@@ -58,6 +60,7 @@ using ModKit.Utility;
 namespace ToyBox {
     public static class Compatibility {
 #if RT
+        public static string StringValue(this LocalizedString locStr) => locStr.Text;
         public static bool IsNullOrEmpty(this string str) => str == null || str.Length == 0;
         public static UnitEntityData Descriptor(this UnitEntityData entity) => entity;
         public static float GetCost(this BlueprintItem item) => item.ProfitFactorCost;
@@ -89,6 +92,7 @@ namespace ToyBox {
             return true;
         }
 #elif Wrath
+        public static string StringValue(this LocalizedString locStr) => locStr.ToString();
         public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
         public static float GetCost(this BlueprintItem item) => item.Cost;
         public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;

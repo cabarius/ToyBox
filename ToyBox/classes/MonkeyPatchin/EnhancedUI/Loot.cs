@@ -297,6 +297,13 @@ namespace ToyBox.Inventory {
                     image.color = ColoredLootBackgroundColor;
                 }
             }
+            [HarmonyPatch(nameof(InventoryPCView.HideWindow))]
+            [HarmonyPrefix]
+            public static void OnHide() {
+                Mod.Log("InventoryPCView.HideWindow");
+                ClearSelectedLootSlotFilters();
+                SelectedCharacterObserver.Shared.Notifiers -= SelectedCharacterDidChange;
+            }
         }
         // modifies weapon slot backgrounds to work with rarity coloring
         [HarmonyPatch(typeof(WeaponSetPCView), nameof(WeaponSetPCView.BindViewImplementation))]

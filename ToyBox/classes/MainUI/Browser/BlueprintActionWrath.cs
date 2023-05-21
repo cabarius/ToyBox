@@ -179,7 +179,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintSpellbook>(">",
                                                          (bp, ch, n, index) => {
                                                              try {
-                                                                 var spellbook = ch.Descriptor().Spellbooks.First(sb => sb.Blueprint == bp);
+                                                                 var spellbook = ch.Descriptor().Spellbooks.FirstOrDefault(sb => sb.Blueprint == bp);
 
                                                                  if (spellbook.IsMythic) {
                                                                      spellbook.AddMythicLevel();

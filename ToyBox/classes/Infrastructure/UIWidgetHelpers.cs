@@ -23,8 +23,8 @@ using static ToyBox.UIHelpers;
 namespace ToyBox {
     public static partial class UIHelpers {
         public static WidgetPaths_1_0 WidgetPaths;
-        public static Transform Settings => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("Canvas/SettingsView");
-        public static Transform SaveLoadScreen => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().First(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("FadeCanvas/SaveLoadView");
+        public static Transform Settings => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().FirstOrDefault(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("Canvas/SettingsView");
+        public static Transform SaveLoadScreen => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().FirstOrDefault(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("FadeCanvas/SaveLoadView");
 #if Wrath
         public static Transform UIRoot => UIUtility.IsGlobalMap() ? GlobalMapUI.Instance.transform : StaticCanvas.Instance.transform;
         public static Transform ServiceWindow => UIUtility.IsGlobalMap() ? UIRoot.Find("ServiceWindowsConfig").transform : UIRoot.Find("ServiceWindowsPCView");

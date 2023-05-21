@@ -86,13 +86,13 @@ namespace ToyBox {
                                            Label($"Level: {info.PlayerCharacterRank}");
 #endif
                                            25.space();
-                                           Label($"{info.Area.AreaName}".cyan(), 400.width());
+                                           Label($"{info.Area.AreaName.StringValue()}".cyan(), 400.width());
                                            if (Settings.toggleShowGameIDs) {
                                                25.space();
                                                ClipboardLabel(info.GameId, 400.width());
                                            }
                                            25.space();
-                                           HelpLabel(info.Name);
+                                           HelpLabel(info.Name.ToString());
                                        },
                                        null,
                                        50,
