@@ -70,10 +70,8 @@ namespace ToyBox {
             // Common
             KeyBindings.RegisterAction(TeleportPartyToYou, () => Teleport.TeleportPartyToPlayer());
             KeyBindings.RegisterAction(GoToGlobalMap, () => Teleport.TeleportToGlobalMap());
-#if Wrath
             KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
             KeyBindings.RegisterAction(RerollInteractionSkillChecks, () => Actions.RerollInteractionSkillChecks());
-#endif
             KeyBindings.RegisterAction(ChangeParty, () => { Actions.ChangeParty(); });
             KeyBindings.RegisterAction(ChangWeather, () => CheatsCommon.ChangeWeather(""));
             // Other
@@ -232,6 +230,7 @@ namespace ToyBox {
                        Toggle("Dialog Alignment".localize(), ref Settings.previewAlignmentRestrictedDialog);
                        Space(25);
                        Toggle("Random Encounters".localize(), ref Settings.previewRandomEncounters);
+#if Wrath               // TODO: looks like colonization is the new Kingdom/Crusade mechanic
                        Space(25);
                        Toggle("Events".localize(), ref Settings.previewEventResults);
                        Space(25);
@@ -239,11 +238,13 @@ namespace ToyBox {
                        Space(25);
                        Toggle("Relic Info".localize(), ref Settings.previewRelicResults);
                        Space(25);
+#endif
                        BindableActionButton(PreviewDialogResults, true);
                    });
             Div(0, 25);
             HStack("Dialog".localize(),
                    1,
+#if Wrath
                    () => {
                        Toggle(("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
                        25.space();
@@ -264,6 +265,7 @@ namespace ToyBox {
                        200.space();
                        Label("Warning: ".localize().color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can  otherwise break your save".localize().orange());
                    },
+#endif
                    () => {
                        Toggle("Previously Chosen Dialog Is Smaller ".localize(), ref Settings.toggleMakePreviousAnswersMoreClear, 300.width());
                        200.space();
@@ -302,9 +304,13 @@ namespace ToyBox {
                        Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
                    },
 #endif
+#if Wrath                   
                    () => Toggle("Disable Dialog Restrictions (Alignment)".localize(), ref Settings.toggleDialogRestrictions),
                    () => Toggle("Disable Dialog Restrictions (Mythic Path)".localize(), ref Settings.toggleDialogRestrictionsMythic),
                    () => Toggle("Ignore Event Solution Restrictions".localize(), ref Settings.toggleIgnoreEventSolutionRestrictions),
+#elif RT
+                   () => Toggle("Disable Dialog Restrictions (SoulMark)".localize(), ref Settings.toggleDialogRestrictions),
+#endif
 #if DEBUG
                    () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref Settings.toggleDialogRestrictionsEverything),
 #endif

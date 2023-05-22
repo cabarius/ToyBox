@@ -28,6 +28,7 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Cheats;
 using Kingmaker.EntitySystem;
 using Kingmaker.UI;
+using ToyBox.BagOfPatches;
 #if Wrath
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
@@ -135,6 +136,25 @@ namespace ToyBox {
             ch.Descriptor().Progression.CharacterLevel = level;
 #endif
         }
+        public static void RunPerceptionTriggers() {
+            // On the local map
+            foreach (var obj in Game.Instance.State.MapObjects) {
+                obj.LastAwarenessRollRank = new Dictionary<UnitReference, int>();
+            }
+            Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
+        }
+
+        public static void RerollInteractionSkillChecks() {
+            foreach (var obj in Game.Instance.State.MapObjects) {
+                foreach (var part in obj.Parts.GetAll<InteractionSkillCheckPart>()) {
+                    if (part.AlreadyUsed && !part.CheckPassed) {
+                        part.AlreadyUsed = false;
+                        part.Enabled = true;
+                    }
+                }
+            }
+        }
+
 #if false
         public static void ClearActionBar() {
             var selectedChar = Game.Instance?.SelectionCharacter?.CurrentSelectedCharacter;
@@ -321,16 +341,6 @@ namespace ToyBox {
             }
 
             timelineManager.UpdateTimeline();
-        }
-        public static void RerollInteractionSkillChecks() {
-            foreach (var obj in Game.Instance.State.MapObjects) {
-                foreach (var part in obj.Parts.GetAll<InteractionSkillCheckPart>()) {
-                    if (part.AlreadyUsed && !part.CheckPassed) {
-                        part.AlreadyUsed = false;
-                        part.Enabled = true;
-                    }
-                }
-            }
         }
 #endif
     }
