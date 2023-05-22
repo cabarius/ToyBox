@@ -157,12 +157,7 @@ namespace ToyBox {
             return result;
         }
         public static void RevealInterestingNPCs() {
-            if (Game.Instance?.State?
-#if Wrath
-                .Units 
-#elif RT
-                .AllUnits
-#endif
+            if (Shodan.AllUnits
                 is { } unitsPool) {
                 var inerestingUnits = unitsPool.Where(u => u.InterestingnessCoefficent() > 0);
                 foreach (var unit in inerestingUnits) {

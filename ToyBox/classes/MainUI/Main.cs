@@ -344,13 +344,13 @@ namespace ToyBox {
                     if (KeyBindings.IsActive("TeleportParty"))
                         Teleport.TeleportPartyOnGlobalMap();
                 }
+#endif
                 if (KeyBindings.IsActive("TeleportMain"))
-                    Teleport.TeleportUnit(Game.Instance.Player.MainCharacter.Value, Utils.PointerPosition());
+                    Teleport.TeleportUnit(Shodan.MainCharacter, Utils.PointerPosition());
                 if (KeyBindings.IsActive("TeleportSelected"))
                     Teleport.TeleportSelected();
                 if (KeyBindings.IsActive("TeleportParty"))
                     Teleport.TeleportParty();
-#endif
             }
         }
     }

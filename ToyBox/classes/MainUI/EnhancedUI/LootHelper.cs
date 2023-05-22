@@ -81,7 +81,7 @@ namespace ToyBox {
 #if Wrath
         public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea() {
             List<LootWrapper> lootWrapperList = new();
-            var units = Game.Instance.State.Units.All
+            var units = Shodan.AllUnits
                 .Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsInGame && !u.Descriptor.IsPartyOrPet()));
             //.Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsRevealed && u.IsDeadAndHasLoot));
             foreach (var unitEntityData in units)
@@ -114,7 +114,7 @@ namespace ToyBox {
         public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea()
         {
             var lootFromCurrentArea = new List<LootWrapper>();
-            foreach (var baseUnitEntity in Game.Instance.State.AllUnits.Where(u => u.IsRevealed && u.IsDeadAndHasLoot))
+            foreach (var baseUnitEntity in Shodan.AllUnits.Where(u => u.IsRevealed && u.IsDeadAndHasLoot))
                 lootFromCurrentArea.Add(new LootWrapper
                 {
                     Unit = baseUnitEntity

@@ -1,4 +1,6 @@
-﻿#if RT
+﻿// global statics
+global using static ModKit.UI;
+#if RT
 // common alternate using
 global using Kingmaker.Blueprints.Base;
 global using Kingmaker.EntitySystem;
@@ -30,7 +32,9 @@ global using BlueprintGuid = System.String;
 global using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
 global using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
 global using UnitProgressionData = Kingmaker.UnitLogic.PartUnitProgression;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Localization;
+using UniRx;
 #endif
 
 #if RT
@@ -41,9 +45,12 @@ using Kingmaker.EntitySystem;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.Levelup.Components;
+using Kingmaker.GameCommands;
 #elif Wrath
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Cheats;
+using Kingmaker.EntitySystem;
 #endif
 
 using System;
@@ -57,11 +64,18 @@ using Kingmaker.UnitLogic;
 using ModKit;
 using ModKit.Utility;
 using Kingmaker;
+using Kingmaker.Blueprints.Area;
+using Kingmaker.Cheats;
+using Kingmaker.Designers;
+using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.UI;
 using RewiredConsts;
 
 
 namespace ToyBox {
-    public static class Compatibility {
+    public static partial class Shodan {
+
+        // General Stuff
 #if RT
         public static string StringValue(this LocalizedString locStr) => locStr.Text;
         public static bool IsNullOrEmpty(this string str) => str == null || str.Length == 0;
@@ -95,9 +109,41 @@ namespace ToyBox {
             return true;
         }
         public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.State?.InGameSettings?.List;
+#elif Wrath
+        public static string StringValue(this LocalizedString locStr) => locStr.ToString();
+        public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
+        public static float GetCost(this BlueprintItem item) => item.Cost;
+        public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;
+        public static void SetCustomGender(this UnitDescriptor descriptor, Gender gender) => descriptor.CustomGender = gender;
+        public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.Player?.SettingsList;
+#endif
 
+        // Unit Entity Utils
+#if RT
+        public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Entity;
+        public static EntityPool<UnitEntityData> AllUnits => Game.Instance?.State?.AllUnits;
+        public static List<UnitEntityData> SelectedUnits => UIAccess.SelectionManager.SelectedUnits.ToList();
+        public static ReactiveCollection<UnitEntityData> SelectedUnitsReactive() => UIAccess.SelectionManager.SelectedUnits;
+        public static bool IsEnemy(UnitEntityData unit) => unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter())  && unit != GameHelper.GetPlayerCharacter();
+        public static void KillUnit(UnitEntityData unit) => CheatsCombat.KillUnit(unit);
+#elif Wrath
+        public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Value;
+        public static EntityPool<UnitEntityData> AllUnits => Game.Instance?.State?.Units;
+        public static List<UnitEntityData> SelectedUnits => Game.Instance.UI.SelectionManager.SelectedUnits;
+        public static bool IsEnemy(UnitEntityData unit) => unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter();
+        public static void KillUnit(UnitEntityData unit) => GameHelper.KillUnit(unit);
+
+        // Teleport and Travel
+#endif
+#if RT
+        public static void EnterToArea(BlueprintAreaEnterPoint enterPoint) => Game.Instance.GameCommandQueue.AreaTransition(enterPoint, AutoSaveMode.None, false);
+#elif Wrath
+        public static void EnterToArea(BlueprintAreaEnterPoint enterPoint) => GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+#endif
+
+#if RT
+        // disabled for now in beta
         public static bool CanRespec(this BaseUnitEntity ch) {
-            // disabled for now in beta
             return false;
             if (ch == null)
                 return false;
@@ -109,12 +155,6 @@ namespace ToyBox {
             Game.Instance.Player.RespecCompanion(ch);
         }
 #elif Wrath
-        public static string StringValue(this LocalizedString locStr) => locStr.ToString();
-        public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
-        public static float GetCost(this BlueprintItem item) => item.Cost;
-        public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;
-        public static void SetCustomGender(this UnitDescriptor descriptor, Gender gender) => descriptor.CustomGender = gender;
-        public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.Player?.SettingsList;
         public static bool CanRespec(this UnitEntityData ch) {
             return RespecHelper.GetRespecableUnits().Contains(ch);
         }

@@ -31,15 +31,9 @@ namespace ToyBox {
                                    ? new List<UnitEntityData> () 
                                    : GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, (int)nearbyRange , false, false).ToList();
                     }),
-#if Wrath
-                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.Units.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.Units.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.Units.ToList()),
-#elif RT
-                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Game.Instance.State.AllUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Game.Instance.State.AllUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("All Units", () => Game.Instance.State.AllUnits.ToList()),
-#endif
+                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Shodan.AllUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Shodan.AllUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("All Units", () => Shodan.AllUnits.ToList()),
                };
             }
             return PartyFilterChoices;
