@@ -266,14 +266,11 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintActivatableAbility>("Remove",
                                                                   (bp, ch, n, index) => ch.Descriptor().RemoveFact(bp),
                                                                   (bp, ch, index) => ch.Descriptor().HasFact(bp));
-
             // Teleport
-            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (enterPoint, ch, n, index) => Teleport.To(enterPoint));
             BlueprintAction.Register<BlueprintGlobalMap>("Teleport", (map, ch, n, index) => Teleport.To(map));
-            BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n, index) => Teleport.To(area));
             BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, index) => Teleport.To(globalMapPoint));
 
-            //Army
+            // Army
             BlueprintAction.Register<BlueprintArmyPreset>("Add Friendly", (bp, ch, n, l) => {
                 Actions.CreateArmy(bp,true);
             });
@@ -281,12 +278,12 @@ namespace ToyBox {
                 Actions.CreateArmy(bp,false);
             });
 
-            //ArmyGeneral
+            // ArmyGeneral
             BlueprintAction.Register<BlueprintLeaderSkill>("Add",
                 (bp, ch, n, l) => Actions.AddSkillToLeader(bp),
                 (bp, ch, index) => Actions.LeaderSelected(bp) && !Actions.LeaderHasSkill(bp));
 
-            //ArmyGeneral
+            // ArmyGeneral
             BlueprintAction.Register<BlueprintLeaderSkill>("Remove",
                 (bp, ch, n, l) => Actions.RemoveSkillFromLeader(bp),
                 (bp, ch, index) => Actions.LeaderSelected(bp) && Actions.LeaderHasSkill(bp));

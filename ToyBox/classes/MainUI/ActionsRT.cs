@@ -44,36 +44,6 @@ namespace ToyBox {
                 CheatsCombat.RestUnit(selectedUnit);
             }
         }
-        public static void RemoveAllBuffs() {
-            foreach (var target in Game.Instance.Player.PartyAndPets) {
-                foreach (var buff in new List<Buff>(target.Descriptor().Buffs.Enumerable)) {
-                    if (buff.Blueprint.IsClassFeature || buff.Blueprint.IsHiddenInUI) {
-                        continue;
-                    }
-
-                    if (buff.Blueprint.IsFromSpell) {
-                        target.Descriptor().Facts.Remove(buff); // Always remove spell effects, even if they'd persist
-                        continue;
-                    }
-
-                    if (buff.Blueprint.StayOnDeath) { // Not a spell and persists through death, generally seems to be items
-                        continue;
-                    }
-
-                    target.Descriptor().Facts.Remove(buff);
-                }
-            }
-        }
-        public static void KillAll() {
-            foreach (BaseUnitEntity unit in Game.Instance.State.AllUnits)
-            {
-                if (unit.CombatState.IsInCombat && unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter()))
-                    CheatsCombat.KillUnit(unit);
-            }
-            if (!Game.Instance.IsPaused)
-                return;
-            Game.Instance.StopMode(GameModeType.Pause);
-        }
 
         public static void SpawnEnemyUnderCursor(
             BlueprintUnit bp = null,
@@ -133,22 +103,6 @@ namespace ToyBox {
                                 ? settings.alternateTimeScaleMultiplier
                                 : settings.timeScaleMultiplier;
             Game.Instance.TimeController.DebugTimeScale = timeScale;
-        }
-        public static void LobotomizeAllEnemies() {
-            foreach (var unit in Game.Instance.State.AllUnits) {
-                if (unit.CombatState.IsInCombat &&
-                    unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter()) &&
-                                             unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
-                        // removing the brain works better in RTWP, but gets stuck in turn based
-                        //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
-                        // add a bunch of conditions and hope for the best
-                        //var currentCharacter = WrathExtensions.GetCurrentCharacter();
-                        var fact = new EntityFact();
-                        unit.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity, fact);
-                        unit.State.AddCondition(UnitCondition.CantAct, fact);
-                        unit.State.AddCondition(UnitCondition.CantMove, fact);
-                }
-            }
         }
 
         // called when changing highlight settings so they take immediate effect

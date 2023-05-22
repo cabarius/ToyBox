@@ -157,6 +157,10 @@ namespace ToyBox {
             //    (bp, ch, index) => ch.Progression.Classes.First().Archetypes.Contains(bp)
             //    );
 
+            // Teleport
+            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (enterPoint, ch, n, index) => Teleport.To(enterPoint));
+            BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n, index) => Teleport.To(area));
+
             // Quests
             BlueprintAction.Register<BlueprintQuest>("Start",
                                                      (bp, ch, n, index) => Game.Instance.Player.QuestBook.GiveObjective(bp.Objectives.First()),

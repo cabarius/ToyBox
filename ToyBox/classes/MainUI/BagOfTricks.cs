@@ -61,14 +61,16 @@ namespace ToyBox {
             KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
 #if Wrath
             KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
+#elif RT
+            //KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachAllBuffs());
 #endif
             KeyBindings.RegisterAction(KillAllEnemies, () => Actions.KillAll());
             //KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
             KeyBindings.RegisterAction(LobotomizeAllEnemies, () => Actions.LobotomizeAllEnemies());
             // Common
-#if Wrath
             KeyBindings.RegisterAction(TeleportPartyToYou, () => Teleport.TeleportPartyToPlayer());
             KeyBindings.RegisterAction(GoToGlobalMap, () => Teleport.TeleportToGlobalMap());
+#if Wrath
             KeyBindings.RegisterAction(RerollPerception, () => Actions.RunPerceptionTriggers());
             KeyBindings.RegisterAction(RerollInteractionSkillChecks, () => Actions.RerollInteractionSkillChecks());
 #endif

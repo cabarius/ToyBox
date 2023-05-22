@@ -37,6 +37,8 @@ using Kingmaker.Craft;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.Crusade.GlobalMagic;
+#elif RT 
+using Kingmaker.Globalmap.Blueprints.SectorMap;
 #endif
 using static ToyBox.BlueprintExtensions;
 
@@ -138,6 +140,17 @@ namespace ToyBox {
 #if Wrath
             new NamedTypeFilter<BlueprintGlobalMapPoint>("Map Points", null, bp => bp.CollationNames(bp.GlobalMapZone.ToString())),
             new NamedTypeFilter<BlueprintGlobalMap>("Global Map"),
+#elif RT
+            new NamedTypeFilter<BlueprintStarSystemMap>(
+                    "System Map", null,
+                    bp => {
+                        var starNames = bp.Stars.Select(r => $"☀ {r.Star.Get().NameForAcronym}");
+                        var planetNames = bp.Planets.Select(p => $"◍ {p.Get().Name}");
+                        return bp.CollationNames(starNames.Concat(planetNames).ToArray());
+                    }
+                ),
+            new NamedTypeFilter<BlueprintSectorMapPoint>("Sector Map Points", null,  bp => bp.CollationNames(bp.Name.Split(' '))),
+
 #endif
             new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.CollationNames(bp.Priority.ToString())),
             //new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),

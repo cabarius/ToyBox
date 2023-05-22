@@ -367,7 +367,7 @@ namespace ToyBox.Inventory {
         public static class PatchLootEverythingOnLeave_Patch {
             public static bool Prefix(ref IEnumerable<LootWrapper> __result) {
                 if (!Settings.toggleMassLootEverything) return true;
-                IEnumerable<UnitEntityData> all_units = Game.Instance.State.AllUnits.All;
+                IEnumerable<UnitEntityData> all_units = Shodan.AllUnits.All;
                 if (Settings.toggleLootAliveUnits) {
                     all_units = all_units.Where(unit => unit.IsInGame && (unit.IsDeadAndHasLoot || unit.Inventory.HasLoot));
                 }

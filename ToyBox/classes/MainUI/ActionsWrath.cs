@@ -130,26 +130,7 @@ namespace ToyBox {
 
             Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
         }
-        public static void RemoveAllBuffs() {
-            foreach (var target in Game.Instance.Player.PartyAndPets) {
-                foreach (var buff in new List<Buff>(target.Descriptor.Buffs.Enumerable)) {
-                    if (buff.Blueprint.IsClassFeature || buff.Blueprint.IsHiddenInUI) {
-                        continue;
-                    }
 
-                    if (buff.Blueprint.IsFromSpell) {
-                        target.Descriptor.RemoveFact(buff); // Always remove spell effects, even if they'd persist
-                        continue;
-                    }
-
-                    if (buff.Blueprint.StayOnDeath) { // Not a spell and persists through death, generally seems to be items
-                        continue;
-                    }
-
-                    target.Descriptor.RemoveFact(buff);
-                }
-            }
-        }
         public static void KillAllTacticalUnits() {
             var tacticalCombat = Game.Instance.TacticalCombat;
             if (tacticalCombat == null) return;
@@ -163,17 +144,7 @@ namespace ToyBox {
                 }
             }
         }
-        public static void KillAll() {
-            foreach (UnitEntityData unit in Game.Instance.State.Units) {
-                if (unit.CombatState.IsInCombat && unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter()) {
-                    GameHelper.KillUnit(unit);
-                }
-            }
-            KillAllTacticalUnits();
-            if (Game.Instance.IsPaused) {
-                Game.Instance.StopMode(GameModeType.Pause);
-            }
-        }
+
         public static void SpawnUnit(BlueprintUnit unit, int count) {
             var worldPosition = Game.Instance.ClickEventsController.WorldPosition;
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
@@ -401,26 +372,6 @@ namespace ToyBox {
                 ? settings.alternateTimeScaleMultiplier
                 : settings.timeScaleMultiplier;
             Game.Instance.TimeController.DebugTimeScale = timeScale;
-        }
-        public static void LobotomizeAllEnemies() {
-            foreach (var unit in Game.Instance.State.Units) {
-                if (unit.CombatState.IsInCombat &&
-                    unit.IsPlayersEnemy &&
-                    unit != Kingmaker.Designers.GameHelper.GetPlayerCharacter()) {
-                    var descriptor = unit.Descriptor;
-                    if (descriptor != null) {
-                        // removing the brain works better in RTWP, but gets stuck in turn based
-                        //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
-
-                        // add a bunch of conditions and hope for the best
-                        descriptor.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity);
-                        descriptor.State.AddCondition(UnitCondition.CantAct);
-                        descriptor.State.AddCondition(UnitCondition.CanNotAttack);
-                        descriptor.State.AddCondition(UnitCondition.CantMove);
-                        descriptor.State.AddCondition(UnitCondition.MovementBan);
-                    }
-                }
-            }
         }
         // can potentially go back in time but some parts of the game don't expect it
         public static void KingdomTimelineAdvanceDays(int days) {

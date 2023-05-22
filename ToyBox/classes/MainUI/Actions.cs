@@ -35,6 +35,73 @@ using ToyBox.BagOfPatches;
 namespace ToyBox {
     public static partial class Actions {
         public static Settings Settings => Main.Settings;
+        public static void KillAll() {
+            foreach (UnitEntityData unit in Shodan.AllUnits) {
+                if (unit.CombatState.IsInCombat && Shodan.IsEnemy(unit)) {
+                    Shodan.KillUnit(unit);
+                }
+            }
+#if Wrath
+            KillAllTacticalUnits();
+#endif
+            if (Game.Instance.IsPaused) {
+                Game.Instance.StopMode(GameModeType.Pause);
+            }
+#if RT
+            if (!Game.Instance.IsPaused)
+                return;
+            Game.Instance.StopMode(GameModeType.Pause);
+#endif
+        }
+        public static void RemoveAllBuffs() {
+            foreach (var target in Game.Instance.Player.PartyAndPets) {
+                foreach (var buff in new List<Buff>(target.Descriptor().Buffs.Enumerable)) {
+                    if (buff.Blueprint.IsClassFeature || buff.Blueprint.IsHiddenInUI) {
+                        continue;
+                    }
+
+                    if (buff.Blueprint.IsFromSpell) {
+                        target.Descriptor().Facts.Remove(buff); // Always remove spell effects, even if they'd persist
+                        continue;
+                    }
+
+                    if (buff.Blueprint.StayOnDeath) { // Not a spell and persists through death, generally seems to be items
+                        continue;
+                    }
+
+                    target.Descriptor().Facts.Remove(buff);
+                }
+            }
+        }
+        public static void LobotomizeAllEnemies() {
+            foreach (var unit in Shodan.AllUnits) {
+                if (unit.CombatState.IsInCombat && Shodan.IsEnemy(unit)) {
+                    // removing the brain works better in RTWP, but gets stuck in turn based
+                    //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
+                    // add a bunch of conditions and hope for the best
+                    //var currentCharacter = WrathExtensions.GetCurrentCharacter();
+#if Wrath
+                    var descriptor = unit.Descriptor;
+                    if (descriptor != null) {
+                        // removing the brain works better in RTWP, but gets stuck in turn based
+                        //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
+
+                        // add a bunch of conditions and hope for the best
+                        descriptor.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity);
+                        descriptor.State.AddCondition(UnitCondition.CantAct);
+                        descriptor.State.AddCondition(UnitCondition.CanNotAttack);
+                        descriptor.State.AddCondition(UnitCondition.CantMove);
+                        descriptor.State.AddCondition(UnitCondition.MovementBan);
+                    }
+#elif RT
+                    var fact = new EntityFact();
+                    unit.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity, fact);
+                    unit.State.AddCondition(UnitCondition.CantAct, fact);
+                    unit.State.AddCondition(UnitCondition.CantMove, fact);
+#endif
+                }
+            }
+        }
 
         public static void MaximizeModWindow() {
             var modUI = BagOfPatches.ModUI.UnityModManagerUIPatch.UnityModMangerUI;

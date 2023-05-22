@@ -238,7 +238,7 @@ namespace ToyBox {
                             if (Settings.toggleQuestInspector)
                                 ReflectionTreeView.DetailToggle("Inspect", quest, quest, 0);
                             50.space();
-                            Label(quest.Blueprint.Description.ToString().StripHTML().green());
+                            Label(quest.Blueprint.Description.StringValue().StripHTML().green());
                         }
                         if (Settings.toggleQuestInspector) {
                             ReflectionTreeView.OnDetailGUI(quest);
@@ -285,7 +285,7 @@ namespace ToyBox {
                                                 }
                                             }
                                             DrawTeleports(questObjective);
-                                            Label(questObjective.Blueprint.Description.ToString().StripHTML().green(), 1000.width());
+                                            Label(questObjective.Blueprint.Description.StringValue().StripHTML().green(), 1000.width());
                                             Label("", AutoWidth());
                                         }
                                         if (Settings.toggleQuestInspector) {
@@ -320,7 +320,7 @@ namespace ToyBox {
                                                                 else 153.space();
                                                             }
                                                             DrawTeleports(childObjective);
-                                                            Label(childObjective.Blueprint.Description.ToString().StripHTML().green(), 1000.width());
+                                                            Label(childObjective.Blueprint.Description.StringValue().StripHTML().green(), 1000.width());
                                                             Label("", AutoWidth());
                                                         }
                                                         if (Settings.toggleQuestInspector) {

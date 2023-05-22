@@ -19,6 +19,7 @@ using Kingmaker.Visual.LocalMap;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Designers;
 using System.Linq;
+using Kingmaker.Cheats;
 #if Wrath
 using Kingmaker.Globalmap.State;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
@@ -28,56 +29,14 @@ using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
 using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.PubSubSystem.Core;
 #endif
+
 namespace ToyBox {
-    public static class Teleport {
+    public static partial class Teleport {
         public static Settings Settings => Main.Settings;
         //private static readonly HoverHandler _hover = new();
-#if RT
-        public static void TeleportTo(
-            [NotNull] BlueprintAreaEnterPoint areaEnterPoint,
-            bool includeFollowers = false,
-            Action callback = null)
-        {
-            if (areaEnterPoint == null)
-                throw new ArgumentException("areaEnterPoint is null", nameof(areaEnterPoint));
-            if (Game.Instance.CurrentlyLoadedArea != areaEnterPoint.Area)
-                throw new InvalidOperationException(string.Format(
-                                                        "Cant teleport to {0}. Target zone {1} should be same as current {2}", areaEnterPoint,
-                                                        areaEnterPoint.Area, Game.Instance.CurrentlyLoadedArea));
-            LoadingProcess.Instance.StartLoadingProcess(Game.Instance.TeleportPartyCoroutine(areaEnterPoint, includeFollowers),
-                                                        () => Game.ExecuteSafe(callback), LoadingProcessTag.TeleportParty);
-            EventBus.RaiseEvent((Action<IAreaTransitionHandler>)(h => h.HandleAreaTransition()));
-        }
-#endif
-#if Wrath
-        public static void TeleportUnit(UnitEntityData unit, Vector3 position) {
-            var view = unit.View;
-            var localMap = Game.Instance?.UI.Canvas?.transform?.Find("ServiceWindowsPCView/LocalMapPCView");
-            if (localMap?.gameObject.activeSelf ?? false) {
-                var localMapView = localMap.GetComponent<LocalMapPCView>();
-                var viewModel = localMapView.ViewModel;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(localMapView.m_Image.rectTransform, (Vector2)Input.mousePosition, Game.Instance.UI.UICamera, out var localPoint);
-                var localPos = localPoint + Vector2.Scale(localMapView.m_Image.rectTransform.sizeDelta, localMapView.m_Image.rectTransform.pivot);
-                var vector3 = LocalMapRenderer.Instance.ViewportToWorldPoint((Vector3)new Vector2(localPos.x / (float)viewModel.DrawResult.Value.ColorRT.width, localPos.y / (float)viewModel.DrawResult.Value.ColorRT.height));
-                if (!LocalMapModel.IsInCurrentArea(vector3))
-                    vector3 = AreaService.Instance.CurrentAreaPart.Bounds.LocalMapBounds.ClosestPoint(vector3);
-                Mod.Debug($"PointerPosition - adjusting result {position} to {vector3}");
-                Game.Instance.UI.GetCameraRig().ScrollTo(vector3);
-                position = vector3;
-            }
-            if (view != null) view.StopMoving();
-            unit.Stop();
-
-            unit.Position = position;
-
-            foreach (var fam in unit.Familiars) {
-                if (fam)
-                    fam.TeleportToMaster(false);
-            }
-        }
 
         public static void TeleportSelected() {
-            foreach (var unit in Game.Instance.UI.SelectionManager.SelectedUnits) {
+            foreach (var unit in  Shodan.SelectedUnits) {
                 TeleportUnit(unit, Utils.PointerPosition());
             }
         }
@@ -92,10 +51,10 @@ namespace ToyBox {
             var partyMembers = Game.Instance.Player.m_PartyAndPets;
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 foreach (var unit in partyMembers) {
-                    if (unit != Game.Instance.Player.MainCharacter.Value) {
+                    if (unit != Shodan.MainCharacter) {
                         unit.Commands.InterruptMove();
                         unit.Commands.InterruptMove();
-                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                        unit.Position = Shodan.MainCharacter.Position;
                     }
                 }
             }
@@ -103,81 +62,26 @@ namespace ToyBox {
         public static void TeleportEveryoneToPlayer() {
             var currentMode = Game.Instance.CurrentMode;
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-                foreach (var unit in Game.Instance.State.Units) {
-                    if (unit != Game.Instance.Player.MainCharacter.Value) {
+                foreach (var unit in Shodan.AllUnits) {
+                    if (unit != Shodan.MainCharacter) {
                         unit.Commands.InterruptMove();
                         unit.Commands.InterruptMove();
-                        unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                        unit.Position = Shodan.MainCharacter.Position;
                     }
                 }
             }
         }
-        public static void TeleportPartyOnGlobalMap() {
-            _ = GlobalMapView.Instance;
-            var pointerPos = Utils.PointerPosition();
-            var pointerTransform = new GameObject().transform;
-            pointerTransform.position = pointerPos;
-            var locationToObject = GlobalMapView.Instance.GetNearestLocationToObject(pointerTransform);
-            locationToObject.Blueprint.TeleportToGlobalMapPoint();
-        }
-        public static void TeleportToGlobalMap(Action callback = null) {
-            var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
-            var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
-            Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback ?? (() => { }));
-        }
-        public static bool TeleportToGlobalMapPoint(this BlueprintGlobalMapPoint destination) {
-            if (GlobalMapView.Instance != null) {
-                var globalMapController = Game.Instance.GlobalMapController;
-                var globalMapUI = Game.Instance.UI.GlobalMapUI;
-                var globalMapView = GlobalMapView.Instance;
-                var globalMapState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap);
 
-                var pointState = Game.Instance.Player.GetGlobalMap(destination.GlobalMap).GetPointState(destination);
-                pointState.EdgesOpened = true;
-                pointState.Reveal();
-                var pointView = globalMapView.GetPointView(destination);
-                if ((bool)(UnityEngine.Object)globalMapView) {
-                    if ((bool)(UnityEngine.Object)pointView)
-                        globalMapView.RevealLocation(pointView);
-                }
-                foreach (var edge in pointState.Edges) {
-                    edge.UpdateExplored(1f, 1);
-                    globalMapView.GetEdgeView(edge.Blueprint)?.UpdateRenderers();
-
-                }
-                globalMapController.StartTravels();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>(h => h.HandleGlobalMapPlayerTravelStarted(globalMapView.State.Player, false));
-                globalMapView.State.Player.SetCurrentPosition(new GlobalMapPosition(destination));
-                globalMapView.GetPointView(destination)?.OpenOutgoingEdges((GlobalMapPointView)null);
-                globalMapView.UpdatePawnPosition();
-                globalMapController.Stop();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped((IGlobalMapTraveler)globalMapView.State.Player)));
-                globalMapView.PlayerPawn?.m_Compass?.TryClear();
-                globalMapView.PlayerPawn?.m_Compass?.TrySet();
-                return true;
-            }
-            return false;
-        }
-
-        public static void To(this BlueprintAreaEnterPoint enterPoint) => GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
-        public static void To(this BlueprintGlobalMap globalMap) => GameHelper.EnterToArea(globalMap.GlobalMapEnterPoint, AutoSaveMode.None);
+        public static void To(this BlueprintAreaEnterPoint enterPoint) => Shodan.EnterToArea(enterPoint);
         public static void To(this BlueprintArea area) {
             var areaEnterPoints = BlueprintExtensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
             var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
             if (blueprint is BlueprintAreaEnterPoint enterPoint) {
-                GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
+                ;Shodan.EnterToArea(enterPoint);
             }
         }
-        public static void To(this BlueprintGlobalMapPoint globalMapPoint) {
-            Game.Instance.LoadArea(globalMapPoint.GlobalMap.GlobalMapEnterPoint, AutoSaveMode.None, () => {
-                TeleportToGlobalMapPoint(globalMapPoint);
-            });
-            //if (!Teleport.TeleportToGlobalMapPoint(globalMapPoint)) {
-            //    Teleport.TeleportToGlobalMap(() => Teleport.TeleportToGlobalMapPoint(globalMapPoint));
-            //}
-        }
 
-        internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {
+      internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {
             public UnitEntityData Unit { get; private set; }
             private UnitEntityData _currentUnit;
 
@@ -195,6 +99,5 @@ namespace ToyBox {
                     this.Unit = _currentUnit;
             }
         }
-#endif
     }
 }
