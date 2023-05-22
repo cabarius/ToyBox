@@ -105,9 +105,9 @@ namespace ToyBox {
                     var tacticalCombatLog = LogThreadService.Instance.m_Logs[LogChannelType.TacticalCombat].FirstOrDefault(x => x is MessageLogThread);
                     messageLog?.AddMessage(message);
                     tacticalCombatLog?.AddMessage(message);
-#elif RT 
-                    var template = new TooltipTemplateCombatLogMessage(text, new LocalizedString());
-                    var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, GameLogContext.GetIcon(), template);
+#elif RT
+                    var messageText = "ToyBox".blue() + " - " + text;
+                    var message = new CombatLogMessage(messageText, Color.black, PrefixIcon.RightArrow);
                     var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Dialog].FirstOrDefault(x => x is DialogLogThread);
                     messageLog?.AddMessage(message);
 #endif
