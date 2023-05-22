@@ -52,6 +52,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) Fixed other crashers introduced by c#11
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
  * (***Narria***) Added work around for issue of game double calling SelectClass.Apply leading to multiclass levels being added more than once during character creation **Please test out and report any issues you find in gestalt/multiclassing**
+ * (***BuckAMayzing***) Fixed issue with Bulk Sell unintentionally selling items that were still equipped on characters.
 ### Ver 1.5.2
  * (***Narria***) **UI Reorg** Moved UI Enhancements into new top level **Enhanced UI** tab and the Loot tab is now just for loot related stuff
  * (***Narria***) Quality of Life: **Click On Equip Slots To Filter Inventory** this lets you filter the inventory to just the items that can be equipped by the slot you click on.
