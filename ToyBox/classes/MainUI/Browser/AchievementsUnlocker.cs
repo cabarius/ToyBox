@@ -17,8 +17,16 @@ namespace ToyBox {
         public static void OnGUI() {
             bool justInit = false;
             if (availableAchievements == null || availableAchievements?.Count == 0) {
-                UI.Label("You must unlock the crusade before you can access these toys.".localize().yellow().bold());
-                availableAchievements = Game.Instance?.Player?.Achievements?.m_Achievements?.Where(ach => !ach.Data.Steam.ExcludeFromThisPlatform).ToList();
+                UI.Label("Achievements not available on the current platform or at your current progression in the game".localize().yellow().bold());
+                availableAchievements = Game.Instance?.Player?
+                    .Achievements?
+                    .m_Achievements?
+#if Wrath
+                    .Where(ach => !ach.Data.ExcludedFromCurrentPlatform)
+#elif RT
+                    .Where(ach => !ach.Data.SteamId.IsNullOrEmpty())
+#endif
+                    .ToList();
                 if (availableAchievements != null && availableAchievements?.Count > 0)
                     unlocked = availableAchievements.Where(ach => ach.IsUnlocked).ToList();
                 justInit = true;
@@ -32,7 +40,11 @@ namespace ToyBox {
             AchievementBrowser.OnGUI(unlocked,
                 () => availableAchievements,
                 current => current,
+#if Wrath
                 achievement => $"{achievement.Data.AchievementName} {achievement.Data.GetDescription()} {achievement.Data.name}",
+#elif RT
+                achievement => $"{achievement.Data.SteamId} {achievement.Data.GetDescription()} {achievement.Data.name}",
+#endif                
                 achievement => new[] { achievement.Data.name },
                 () => {
                     using (VerticalScope()) {
