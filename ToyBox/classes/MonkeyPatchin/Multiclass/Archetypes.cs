@@ -23,7 +23,12 @@ using Owlcat.Runtime.UI.Tooltips;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using Kingmaker.UnitLogic.Abilities;
+using ToyBox.BagOfPatches;
 using UniRx;
+using System.Linq.Expressions;
 
 namespace ToyBox.Multiclass {
     public static class Archetypes {
@@ -67,12 +72,38 @@ namespace ToyBox.Multiclass {
 
         [HarmonyPatch(typeof(ClassProgressionVM))]
         private static class ClassProgressionVMPatch {
-/*            [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(UnitDescriptor), typeof(ClassData) })]
-            [HarmonyPrefix]
-            private static bool Prefix(ClassProgressionVM __instance, UnitDescriptor unit, ClassData unitClass) {
-
-                return true;
-            }*/
+            // First we Transpile a bugged call to First in the constructor
+            // if (Level.Value <= 1) {
+            //    var progressionVm = ProgressionVms.First();
+            //    if (progressionVm != null)
+            //        AddProgressionSources(progressionVm.ProgressionSourceFeatures);
+            //}
+            private static ProgressionVM FirstReplacement(IList<ProgressionVM> progressionVMs) {
+                Mod.Debug("FirstReplacement");
+                return progressionVMs.FirstOrDefault();
+            }
+            [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(UnitDescriptor), typeof(ClassData) })]
+            [HarmonyTranspiler]
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+                var enumerableFirstMethed = typeof(Enumerable)
+                    .GetMethods()
+                    .Where(m => m.Name == "First")
+                    .Single(m => m.GetParameters().Length == 1)
+                    .MakeGenericMethod(typeof(ProgressionVM));
+                var enumerableFirstOrDefault =         typeof(Enumerable)
+                                                       .GetMethods()
+                                                       .Where(m => m.Name == "FirstOrDefault")
+                                                       .Single(m => m.GetParameters().Length == 1)
+                                                       .MakeGenericMethod(typeof(ProgressionVM));
+                foreach (CodeInstruction c in instructions) {
+                    if (c.opcode == OpCodes.Call && (c.operand as MethodInfo) == enumerableFirstMethed) {
+                            c.operand = enumerableFirstOrDefault;
+                            Mod.Trace($"ProgressionVms.First found and replaced: {c.ToString()}");
+                    }
+                    yield return c;
+                }
+            }
+            // Now we can do our multiclass patch
             [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(UnitDescriptor), typeof(ClassData) })]
             [HarmonyPostfix]
             private static void Postfix(ClassProgressionVM __instance, UnitDescriptor unit, ClassData unitClass) {
