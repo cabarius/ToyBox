@@ -5,7 +5,6 @@ using Kingmaker;
 using Kingmaker.GameModes;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
-using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Combat;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
 using Kingmaker.Utility;
 using ModKit;
@@ -16,8 +15,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Kingmaker.Localization;
-using Newtonsoft.Json.Linq;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using UnityEngine;
@@ -248,9 +245,10 @@ namespace ToyBox {
                     new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
 #endif
 #endif
+                    new NamedAction("Achievements".localize(), AchievementsUnlocker.OnGUI),
                     new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
                     new NamedAction("Quests".localize(), QuestEditor.OnGUI),
-                    new NamedAction("Saves".localize(), GameSavesBrowser.OnGUI), 
+                    new NamedAction("Saves".localize(), GameSavesBrowser.OnGUI),
                     new NamedAction("Settings".localize(), SettingsUI.OnGUI)
                     );
             }
