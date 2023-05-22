@@ -1,5 +1,4 @@
-﻿using Kingmaker.Utility;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -144,6 +143,13 @@ namespace ModKit {
                     toSerialize.Strings = new();
                     foreach (var k in _localDefault.Strings.Keys) {
                         toSerialize.Strings.Add(k, "");
+                    }
+                }
+                else {
+                    foreach (var k in _localDefault.Strings.Keys) {
+                        if (!toSerialize.Strings.ContainsKey(k)) {
+                            toSerialize.Strings.Add(k, "");
+                        }
                     }
                 }
                 toSerialize.LanguageCode = toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
