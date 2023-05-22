@@ -14,6 +14,7 @@ using Kingmaker.UnitLogic;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
+using Kingmaker.DialogSystem.Blueprints;
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -80,27 +81,26 @@ namespace ToyBox {
                     var index = 0;
                     foreach (var name in names) {
                         if (name == "None") continue;
-                        var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, (SoulMarkDirection)index);
+                        var soulMarkDirection = (SoulMarkDirection)index;
+                        var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, soulMarkDirection);
                         using (HorizontalScope()) {
                             Label(name.orange(), 200.width());
-                            Label($"Rank: {(soulMark?.Rank ?? 0)}", 100.width());
-                            //HelpLabel(soulMark.Blueprint.Description.StripHTML());
+                            var oldRank = soulMark?.GetRank() - 1 ?? 0;
                             ValueAdjuster(
-                                "Rank", () => soulMark?.GetRank() ?? 0,
+                                "Rank", () => oldRank,
                                 v => {
-                                    if (soulMark == null) return;
-                                    var oldRank = soulMark.Rank;
-                                    if (v > oldRank) {
-                                        while (soulMark.GetRank() < v)
-                                            soulMark.AddRank();
-                                    }
-                                    else if (v < oldRank) {
-                                        while (soulMark.GetRank() > v)
-                                            soulMark.RemoveRank();
+                                    var change = v - oldRank;
+                                    if (Math.Abs(change) > 0) {
+                                        var soulMarkShift = new SoulMarkShift {
+                                            Direction = soulMarkDirection,
+                                            Value = change
+                                        };
+                                        new BlueprintAnswer {
+                                            SoulMarkShift = soulMarkShift
+                                        }.ApplyShiftDialog();
 
                                     }
-                                    
-                                }, 1, 1, 5);
+                                }, 1, 0, 120);
 
                         }
                         index++;
