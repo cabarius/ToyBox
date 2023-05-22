@@ -175,6 +175,7 @@
     <Compile Include="classes\Infrastructure\Compatibility.cs" />
     <Compile Include="classes\Infrastructure\ItemEntityUtils.cs" />
     <Compile Include="classes\MainUI\ActionsWrath.cs" />
+    <Compile Include="classes\MainUI\Browser\AchievementsUnlocker.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintActionWrath.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedCamera.cs" />

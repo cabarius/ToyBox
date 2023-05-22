@@ -9,7 +9,6 @@ using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Root;
-using Kingmaker.Cheats;
 using Kingmaker.Controllers;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem;
@@ -41,14 +40,11 @@ using ModKit;
 using Owlcat.Runtime.UniRx;
 using System;
 using System.Linq;
-using Kingmaker.Settings.Graphics;
 using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
-using Utilities = Kingmaker.Cheats.Utilities;
-using System.Collections.Generic;
-using System.Collections;
 using static ModKit.UI;
+using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
@@ -667,6 +663,14 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(Polymorph __instance) {
                 float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
                 __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
+            }
+        }
+
+        [HarmonyPatch(typeof(AchievementsManager), nameof(AchievementsManager.OnAchievementUnlocked))]
+        private static class AchievementsManager_OnAchievementsUnlocked_Patch {
+            private static void Postfix(AchievementEntity ach) {
+                AchievementsUnlocker.unlocked.Add(ach);
+                AchievementsUnlocker.AchievementBrowser.needsReloadData = true;
             }
         }
 #if false
