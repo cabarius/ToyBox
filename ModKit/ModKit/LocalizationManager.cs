@@ -146,9 +146,12 @@ namespace ModKit {
                     }
                 }
                 else {
-                    foreach (var k in _localDefault.Strings.Keys) {
-                        if (!toSerialize.Strings.ContainsKey(k)) {
-                            toSerialize.Strings.Add(k, "");
+                    var notToSerialize = Mod.ModKitSettings.uiCultureCode == "en" ? _local : _localDefault;
+                    if (notToSerialize != null) {
+                        foreach (var k in notToSerialize.Strings.Keys) {
+                            if (!toSerialize.Strings.ContainsKey(k)) {
+                                toSerialize.Strings.Add(k, "");
+                            }
                         }
                     }
                 }
