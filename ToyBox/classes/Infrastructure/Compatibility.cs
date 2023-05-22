@@ -39,7 +39,8 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem;
 using Kingmaker.UnitLogic.Parts;
-
+using Kingmaker.Blueprints;
+using Kingmaker.UnitLogic.Levelup.Components;
 #elif Wrath
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
@@ -56,6 +57,8 @@ using Kingmaker.UnitLogic;
 using ModKit;
 using ModKit.Utility;
 using Kingmaker;
+using RewiredConsts;
+
 
 namespace ToyBox {
     public static class Compatibility {
@@ -92,6 +95,19 @@ namespace ToyBox {
             return true;
         }
         public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.State?.InGameSettings?.List;
+
+        public static bool CanRespec(this BaseUnitEntity ch) {
+            // disabled for now in beta
+            return false;
+            if (ch == null)
+                return false;
+            var component = ch.OriginalBlueprint.GetComponent<CharacterLevelLimit>();
+            var levelLimit = component != null ? component.LevelLimit : 0;
+            return !ch.LifeState.IsDead && !ch.IsPet && ch.Progression.CharacterLevel > levelLimit;
+        }
+        public static void DoRespec(this BaseUnitEntity ch) {
+            Game.Instance.Player.RespecCompanion(ch);
+        }
 #elif Wrath
         public static string StringValue(this LocalizedString locStr) => locStr.ToString();
         public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
@@ -99,6 +115,12 @@ namespace ToyBox {
         public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;
         public static void SetCustomGender(this UnitDescriptor descriptor, Gender gender) => descriptor.CustomGender = gender;
         public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.Player?.SettingsList;
+        public static bool CanRespec(this UnitEntityData ch) {
+            return RespecHelper.GetRespecableUnits().Contains(ch);
+        }
+        public static void DoRespec(this UnitEntityData ch) {
+            RespecHelper.Respec(ch);
+        }
 #endif
     }
 }
