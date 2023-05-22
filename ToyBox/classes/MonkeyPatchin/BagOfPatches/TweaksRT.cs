@@ -352,6 +352,42 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
+
+        public static class UnitEntityData_CanRollPerception_Extension {
+            public static bool TriggerReroll = false;
+            public static bool CanRollPerception(UnitEntityData unit) {
+                if (TriggerReroll) {
+                    return true;
+                }
+
+                return unit.MovementAgent.Position.To2D() != unit.MovementAgent.m_PreviousPosition;
+            }
+        }
+
+        [HarmonyPatch(typeof(PartyAwarenessController))]
+        public static class PartyAwarenessControllerPatch {
+            public static MethodInfo HasMotionThisSimulationTick_Method = AccessTools.DeclaredMethod(typeof(PartMovable), "get_HasMotionThisSimulationTick");
+            public static MethodInfo CanRollPerception_Method = AccessTools.DeclaredMethod(typeof(UnitEntityData_CanRollPerception_Extension), "CanRollPerception");
+
+            [HarmonyPatch(nameof(PartyAwarenessController.Tick))]
+            [HarmonyTranspiler]
+            private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+                foreach (var instr in instructions) {
+                    if (instr.Calls(HasMotionThisSimulationTick_Method)) {
+                        Mod.Trace("Found HasMotionThisSimulationTick and modded it");
+                        yield return new CodeInstruction(OpCodes.Call, CanRollPerception_Method);
+                    }
+                    else {
+                        yield return instr;
+                    }
+                }
+            }
+
+            [HarmonyPatch(nameof(PartyAwarenessController.Tick))]
+            [HarmonyPostfix]
+            private static void Tick() => UnitEntityData_CanRollPerception_Extension.TriggerReroll = false;
+        }
+
 #if false
 
         private static void BindViewImplementation(MainMenuPCView __instance) {

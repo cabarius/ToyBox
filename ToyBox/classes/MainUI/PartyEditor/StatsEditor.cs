@@ -10,6 +10,7 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.UnitLogic;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
@@ -69,6 +70,69 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
+#elif RT
+            var soulMarks = ch.GetSoulMarks();
+            using (HorizontalScope()) {
+                100.space();
+                Label("Soul Marks", Width(200));
+                using (VerticalScope()) {
+                    var names = Enum.GetNames(typeof(SoulMarkDirection));
+                    var index = 0;
+                    foreach (var name in names) {
+                        if (name == "None") continue;
+                        var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, (SoulMarkDirection)index);
+                        using (HorizontalScope()) {
+                            Label(name.orange(), 200.width());
+                            Label($"Rank: {(soulMark?.Rank ?? 0)}", 100.width());
+                            //HelpLabel(soulMark.Blueprint.Description.StripHTML());
+                            ValueAdjuster(
+                                "Rank", () => soulMark?.GetRank() ?? 0,
+                                v => {
+                                    if (soulMark == null) return;
+                                    var oldRank = soulMark.Rank;
+                                    if (v > oldRank) {
+                                        while (soulMark.GetRank() < v)
+                                            soulMark.AddRank();
+                                    }
+                                    else if (v < oldRank) {
+                                        while (soulMark.GetRank() > v)
+                                            soulMark.RemoveRank();
+
+                                    }
+                                    
+                                }, 1, 1, 5);
+
+                        }
+                        index++;
+                    }
+                }
+            }
+            using (HorizontalScope()) {
+                528.space();
+//                AlignmentGrid(alignment, (a) => ch.Descriptor().Alignment.Set(a));
+            }
+            Div(100, 20, 755);
+#endif
+#if false
+                                    var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, (SoulMarkDirection)index);
+                        using (HorizontalScope()) {
+                            Label(name.orange(), 200.width());
+                            if (soulMark == null) continue;
+                            ValueAdjuster(
+                                "Rank", soulMark.GetRank,
+                                v => {
+                                    var oldRank = soulMark.Rank;
+                                    if (v > oldRank) {
+                                        while (soulMark.GetRank() < v)
+                                            soulMark.AddRank();
+                                    }
+                                    else if (v < oldRank) {
+                                        while (soulMark.GetRank() > v)
+                                            soulMark.RemoveRank();
+
+                                    }
+                                }, 1, 1, 5);
+                        }
 #endif
 #if wrath
             using (HorizontalScope()) {
