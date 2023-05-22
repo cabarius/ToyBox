@@ -9,8 +9,10 @@ using Kingmaker.UI.MVVM._VM.CharGen.Phases.Class.Mechanic;
 using Kingmaker.UI.MVVM._VM.Other.NestedSelectionGroup;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Classes;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.Progression.ChupaChupses;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.Progression.Level;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.Progression.Main;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.Progression.Spellbook;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.Progression.Stats;
 using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
@@ -62,15 +64,58 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
-        [HarmonyPatch(typeof(ClassProgressionVM), MethodType.Constructor, new Type[] { typeof(UnitDescriptor), typeof(ClassData) })]
-        private static class ClassProgressionVM_Constructor_Patch {
+
+        [HarmonyPatch(typeof(ClassProgressionVM))]
+        private static class ClassProgressionVMPatch {
+/*            [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(UnitDescriptor), typeof(ClassData) })]
+            [HarmonyPrefix]
+            private static bool Prefix(ClassProgressionVM __instance, UnitDescriptor unit, ClassData unitClass) {
+
+                return true;
+            }*/
+            [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(UnitDescriptor), typeof(ClassData) })]
+            [HarmonyPostfix]
             private static void Postfix(ClassProgressionVM __instance, UnitDescriptor unit, ClassData unitClass) {
                 if (!settings.toggleMultiArchetype) return;
                 var Name = string.Join("/", unitClass.Archetypes.Select(a => a.Name));
                 if (!string.IsNullOrEmpty(Name)) {
                     __instance.Name = string.Join(" ", unitClass.CharacterClass.Name, $"({Name})");
                 }
-                var castingArchetype = unitClass.Archetypes.Where(a => a.ReplaceSpellbook != null).FirstOrDefault();
+                var castingArchetype = unitClass.Archetypes.FirstOrDefault(a => a.ReplaceSpellbook != null);
+                if (castingArchetype != null) {
+                    __instance.AddDisposable(__instance.SpellbookProgressionVM = new SpellbookProgressionVM(
+                                                 __instance.m_UnitClass,
+                                                 castingArchetype,
+                                                 __instance.m_Unit,
+                                                 __instance.m_LevelProgressionVM));
+                }
+            }
+            [HarmonyPatch(MethodType.Constructor,
+                          new Type[] {
+                              typeof(UnitDescriptor),
+                              typeof(BlueprintCharacterClass),
+                              typeof(BlueprintArchetype),
+                              typeof(bool),
+                              typeof(int),
+                          })]
+            [HarmonyPostfix]
+            private static void Postfix(ClassProgressionVM __instance, BlueprintCharacterClass classBlueprint, int level, bool buildDifference) {
+                if (!settings.toggleMultiArchetype) return;
+                var data = __instance.ProgressionVms.Select(vm => vm.ProgressionData).OfType<AdvancedProgressionData>().FirstOrDefault();
+                __instance.ProgressionVms.Clear();
+                var addArchetypes = Game.Instance.LevelUpController.LevelUpActions.OfType<AddArchetype>();
+                foreach (var add in addArchetypes) {
+                    data.AddArchetype(add.Archetype);
+                }
+                var newVM = new ProgressionVM(data, __instance.m_Unit, new int?(level), buildDifference);
+                __instance.ProgressionVms.Add(newVM);
+                __instance.AddProgressions(__instance.m_Unit.Progression.GetClassProgressions(__instance.m_UnitClass).EmptyIfNull<ProgressionData>());
+                __instance.AddProgressionSources(newVM.ProgressionSourceFeatures);
+                var archetypeString = string.Join("/", addArchetypes.Select(a => a.Archetype.Name));
+                if (!string.IsNullOrEmpty(archetypeString)) {
+                    __instance.Name = string.Join(" ", classBlueprint.Name, $"({archetypeString})");
+                }
+                var castingArchetype = addArchetypes.Select(a => a.Archetype).FirstOrDefault(a => a.ReplaceSpellbook != null);
                 if (castingArchetype != null) {
                     __instance.AddDisposable(__instance.SpellbookProgressionVM = new SpellbookProgressionVM(
                         __instance.m_UnitClass,
@@ -184,40 +229,6 @@ namespace ToyBox.Multiclass {
                 }
                 __instance.UpdateClassInformation();
                 return false;
-            }
-        }
-        [HarmonyPatch(typeof(ClassProgressionVM), MethodType.Constructor, new Type[] {
-            typeof(UnitDescriptor),
-            typeof(BlueprintCharacterClass),
-            typeof(BlueprintArchetype),
-            typeof(bool),
-            typeof(int),
-        })]
-        private static class ClassProgressionVM2_Constructor_Patch {
-            private static void Postfix(ClassProgressionVM __instance, BlueprintCharacterClass classBlueprint, int level, bool buildDifference) {
-                if (!settings.toggleMultiArchetype) return;
-                var data = __instance.ProgressionVms.Select(vm => vm.ProgressionData).OfType<AdvancedProgressionData>().First();
-                __instance.ProgressionVms.Clear();
-                var addArchetypes = Game.Instance.LevelUpController.LevelUpActions.OfType<AddArchetype>();
-                foreach (var add in addArchetypes) {
-                    data.AddArchetype(add.Archetype);
-                }
-                var newVM = new ProgressionVM(data, __instance.m_Unit, new int?(level), buildDifference);
-                __instance.ProgressionVms.Add(newVM);
-                __instance.AddProgressions(__instance.m_Unit.Progression.GetClassProgressions(__instance.m_UnitClass).EmptyIfNull<ProgressionData>());
-                __instance.AddProgressionSources(newVM.ProgressionSourceFeatures);
-                var archetypeString = string.Join("/", addArchetypes.Select(a => a.Archetype.Name));
-                if (!string.IsNullOrEmpty(archetypeString)) {
-                    __instance.Name = string.Join(" ", classBlueprint.Name, $"({archetypeString})");
-                }
-                var castingArchetype = addArchetypes.Select(a => a.Archetype).Where(a => a.ReplaceSpellbook != null).FirstOrDefault();
-                if (castingArchetype != null) {
-                    __instance.AddDisposable(__instance.SpellbookProgressionVM = new SpellbookProgressionVM(
-                        __instance.m_UnitClass,
-                        castingArchetype,
-                        __instance.m_Unit,
-                        __instance.m_LevelProgressionVM));
-                }
             }
         }
         [HarmonyPatch(typeof(ProgressionVM), nameof(ProgressionVM.SetClassArchetypeDifType), new Type[] { typeof(ProgressionVM.FeatureEntry) })]

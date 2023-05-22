@@ -500,7 +500,7 @@ namespace ToyBox {
                     BlueprintCrusadeEvent subEvent = null;
                     foreach (var relicProject in allRelicProjects) {
                         if (relicProject.TriggerCondition.HasConditions &&
-                            relicProject.TriggerCondition.Conditions.First() is FlagUnlocked unlockedFlag) {
+                            relicProject.TriggerCondition.Conditions.FirstOrDefault() is FlagUnlocked unlockedFlag) {
                             var conditionFlag = unlockedFlag.ConditionFlag;
                             if (blueprint.ElementsArray.Exists(elem
                                     => elem is KingdomActionStartEvent actE

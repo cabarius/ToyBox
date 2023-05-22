@@ -39,7 +39,6 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.EntitySystem;
 using Kingmaker.UnitLogic.Parts;
-using Kingmaker;
 
 #elif Wrath
 using Kingmaker.Blueprints;
@@ -56,6 +55,7 @@ using Kingmaker.Localization;
 using Kingmaker.UnitLogic;
 using ModKit;
 using ModKit.Utility;
+using Kingmaker;
 
 namespace ToyBox {
     public static class Compatibility {
@@ -91,12 +91,14 @@ namespace ToyBox {
             }
             return true;
         }
+        public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.State?.InGameSettings?.List;
 #elif Wrath
         public static string StringValue(this LocalizedString locStr) => locStr.ToString();
         public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
         public static float GetCost(this BlueprintItem item) => item.Cost;
         public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;
         public static void SetCustomGender(this UnitDescriptor descriptor, Gender gender) => descriptor.CustomGender = gender;
+        public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.Player?.SettingsList;
 #endif
     }
 }

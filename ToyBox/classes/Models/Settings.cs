@@ -45,8 +45,7 @@ namespace ToyBox {
             var player = Game.Instance?.Player;
             if (player == null || Game.Instance.SaveManager.CurrentState == SaveManager.State.Loading) return;
             Mod.Debug($"reloading per save settings from Player.SettingsList[{PerSaveKey}]");
-#if Wrath
-            if (player.SettingsList.TryGetValue(PerSaveKey, out var obj) && obj is string json) {
+            if (Compatibility.GetInGameSettingsList().TryGetValue(PerSaveKey, out var obj) && obj is string json) {
                 try {
                     cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
                     Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
@@ -62,7 +61,6 @@ namespace ToyBox {
                 };
                 SavePerSaveSettings();
             }
-#endif
         }
         public static void SavePerSaveSettings() {
             var player = Game.Instance?.Player;
@@ -70,8 +68,7 @@ namespace ToyBox {
             if (cachedPerSave == null)
                 ReloadPerSaveSettings();
             var json = JsonConvert.SerializeObject(cachedPerSave);
-#if Wrath            
-            player.SettingsList[PerSaveKey] = json;
+            Compatibility.GetInGameSettingsList()[PerSaveKey] = json;
             try {
                 Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
                 Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
@@ -92,7 +89,6 @@ namespace ToyBox {
             catch (Exception e) {
                 Mod.Error(e);
             }
-#endif
         }
         public PerSaveSettings perSave {
             get {
