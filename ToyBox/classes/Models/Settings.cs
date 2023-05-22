@@ -45,7 +45,7 @@ namespace ToyBox {
             var player = Game.Instance?.Player;
             if (player == null || Game.Instance.SaveManager.CurrentState == SaveManager.State.Loading) return;
             Mod.Debug($"reloading per save settings from Player.SettingsList[{PerSaveKey}]");
-            if (Compatibility.GetInGameSettingsList().TryGetValue(PerSaveKey, out var obj) && obj is string json) {
+            if (Shodan.GetInGameSettingsList().TryGetValue(PerSaveKey, out var obj) && obj is string json) {
                 try {
                     cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
                     Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
@@ -68,7 +68,7 @@ namespace ToyBox {
             if (cachedPerSave == null)
                 ReloadPerSaveSettings();
             var json = JsonConvert.SerializeObject(cachedPerSave);
-            Compatibility.GetInGameSettingsList()[PerSaveKey] = json;
+            Shodan.GetInGameSettingsList()[PerSaveKey] = json;
             try {
                 Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
                 Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
@@ -415,6 +415,7 @@ namespace ToyBox {
 
         // Quests
         public bool toggleQuestHideCompleted = true;
+        public bool toggleQuestShowUnseen = false;
         public bool toggleQuestsShowUnrevealedObjectives = false;
         public bool toggleQuestInspector = false;
         public bool toggleIntrestingNPCsShowFalseConditions = false;

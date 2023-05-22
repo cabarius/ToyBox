@@ -25,6 +25,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.Globalmap.Blueprints.SectorMap;
 
 namespace ToyBox {
 
@@ -65,6 +66,13 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintActivatableAbility>("Remove",
                                                                   (bp, ch, n, index) => ch.Descriptor().Facts.Remove(bp),
                                                                   (bp, ch, index) => ch.Descriptor().Facts.Contains(bp));
+
+            // Teleport
+            BlueprintAction.Register<BlueprintStarSystemMap>("Teleport", (map, ch, n, index) => Teleport.To(map));
+            BlueprintAction.Register<BlueprintSectorMapPoint>("Teleport",
+                                                              (globalMapPoint, ch, n, index) => { } //Teleport.To(globalMapPoint)
+                                                                                                            );
+
 
 #if false   // TODO: implement this
             // Teleport
