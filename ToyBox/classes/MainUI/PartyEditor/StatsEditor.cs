@@ -70,6 +70,7 @@ namespace ToyBox {
             }
             Div(100, 20, 755);
 #endif
+#if wrath
             using (HorizontalScope()) {
                 Space(100);
                 Label("Size", Width(425));
@@ -87,6 +88,7 @@ namespace ToyBox {
                 Space(528);
                 ActionButton("Reset", () => { ch.Descriptor().State.Size = ch.Descriptor().OriginalSize; }, Width(197));
             }
+#endif
             using (HorizontalScope()) {
                 if (ch != null && ch.HashKey() != null) {
                     Space(100);
