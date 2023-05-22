@@ -9,6 +9,10 @@ using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if RT
+using Kingmaker.Blueprints;
+using Kingmaker.UnitLogic.Levelup.Components;
+#endif
 using static ModKit.UI;
 
 namespace ToyBox {
@@ -89,15 +93,13 @@ namespace ToyBox {
             }
             //            else
             //                Space(178);
-#if Wrath
-            if (RespecHelper.GetRespecableUnits().Contains(ch)) {
+            if (ch.CanRespec()) {
                 respecableCount++;
-                ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); RespecHelper.Respec(ch); }, Width(150));
+                ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
             }
             else {
                 Space(153);
             }
-#endif
 #if false
             Space(25);
             ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor()),
@@ -143,7 +145,11 @@ namespace ToyBox {
             ReflectionTreeView.OnDetailGUI("All");
             List<Action> todo = new();
             foreach (var ch in characterList) {
+#if Wrath
                 var classData = ch.Progression.Classes;
+#elif RT
+                var classData = ch.Progression.AllCareerPaths.ToList();
+#endif
                 // TODO - understand the difference between ch.Progression and ch.Descriptor().Progression
                 var progression = ch.Descriptor().Progression;
                 var xpTable = progression.ExperienceTable;

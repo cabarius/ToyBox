@@ -97,7 +97,7 @@ namespace ToyBox.Multiclass {
                         }
                         if (HackPreviouslyAppliedMulticlassSet.Contains(characterClass)) {
                             Mod.Warn($"SelectClass_Apply_Patch - HACK - used deduping HACK: {characterClass.name.yellow()}");
-                            continue;
+                            //continue;
                         }
                         if (options.Contains(characterClass)) {
                             Mod.Trace($"   checking {characterClass.HashKey()} {characterClass.GetDisplayName()} ");
@@ -108,7 +108,7 @@ namespace ToyBox.Multiclass {
                             ) {
                             stateReplacer.Replace(null, 0); // TODO - figure out and document what this is doing
                             Mod.Trace($"       {characterClass.Name} matches".cyan());
-                            //stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
+                            stateReplacer.Replace(characterClass, unit.Progression.GetClassLevel(characterClass));
 
                             if (new SelectClass(characterClass).Check(state, unit)) {
                                 Mod.Trace($"         - {nameof(SelectClass)}.{nameof(SelectClass.Apply)}*({characterClass}, {unit})".cyan());

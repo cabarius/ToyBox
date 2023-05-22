@@ -56,6 +56,10 @@ using Kingmaker.Networking;
 using Kingmaker.UI.Sound;
 using UniRx;
 using Kingmaker.Designers;
+using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
+using Kingmaker.UI.Common;
+using System.Collections;
+using Kingmaker.UI;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -68,7 +72,7 @@ namespace ToyBox.BagOfPatches {
                 if (Settings.togglekillOnEngage) {
                     List<UnitEntityData> partyUnits = Game.Instance.Player.m_PartyAndPets;
                     UnitEntityData unit = unitCombatState.Owner;
-                    if (unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter()) 
+                    if (unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter())
                         && !partyUnits.Contains(unit)) {
                         CheatsCombat.KillUnit(unit);
                     }
@@ -83,6 +87,7 @@ namespace ToyBox.BagOfPatches {
         }
 
 #if FALSE
+
         [HarmonyPatch(typeof(FogOfWarArea), nameof(FogOfWarArea.RevealOnStart), MethodType.Getter)]
         public static class FogOfWarArea_Active_Patch {
             private static bool Prefix(ref bool __result) {
@@ -308,6 +313,86 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
+
+        [HarmonyPatch(typeof(MainMenuPCView))]
+        private static class MainMenuPCViewPatch {
+            [HarmonyPatch(nameof(MainMenuPCView.BindViewImplementation))]
+            [HarmonyPostfix]
+            private static void BindViewImplementation(MainMenuPCView __instance) {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    Main.freshlyLaunched = false;
+                    Mod.Warn("Auto Load Save on Launch disabled");
+                    return;
+                }
+                if (Settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
+                    Main.freshlyLaunched = false;
+                    Game.Instance.SaveManager.UpdateSaveListIfNeeded();
+                    MainThreadDispatcher.StartCoroutine(UIUtilityCheckSaves.WaitForSaveUpdated(() => { __instance.ViewModel.LoadLastGame(); }));
+                }
+                Main.freshlyLaunched = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(LoadingScreenBaseView))]
+        public static class LoadingScreenBaseViewPatch {
+            [HarmonyPatch(nameof(LoadingScreenBaseView.ShowUserInputLayer))]
+            [HarmonyPrefix]
+            private static bool ShowUserInputLayer(LoadingScreenBaseView __instance, bool state) {
+                if (!Settings.toggleSkipAnyKeyToContinueWhenLoadingSaves) return true;
+                if (!state)
+                    return false;
+                __instance.m_ProgressBarContainer.DOFade(0.0f, 1f).OnComplete(() => __instance.StartPressAnyKeyLoopAnimation()).SetUpdate(true);
+                __instance.AddDisposable(MainThreadDispatcher.UpdateAsObservable()
+                                                             .Subscribe(_ => {
+                                                                 UISounds.Instance.Sounds.Buttons.ButtonClick.Play();
+                                                                 if (PhotonManager.Lobby.IsLoading)
+                                                                     PhotonManager.Instance.ContinueLoading();
+                                                                 EventBus.RaiseEvent((Action<IContinueLoadingHandler>)(h => h.HandleContinueLoading()));
+                                                             }));
+                return false;
+            }
+        }
+#if false
+
+        private static void BindViewImplementation(MainMenuPCView __instance) {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    Main.freshlyLaunched = false;
+                    Mod.Warn("Auto Load Save on Launch disabled");
+                    return;
+                }
+                if (Settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
+                    Main.freshlyLaunched = false;
+                    __instance.ViewModel.LoadLastGame();
+                }
+                Main.freshlyLaunched = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(MainMenuSideBarVM))]
+        private static class UIUtilityCheckSavesPatch {
+            [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(IUIMainMenu) })]
+            [HarmonyPostfix]
+            public static void Postfix(MainMenuSideBarVM __instance) {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                    Main.freshlyLaunched = false;
+                    Mod.Warn("Auto Load Save on Launch disabled");
+                    return;
+                }
+                if (Settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
+                    Main.freshlyLaunched = false;
+                    Game.Instance.SaveManager.UpdateSaveListIfNeeded();
+                    MainThreadDispatcher.StartCoroutine(UIUtilityCheckSaves.WaitForSaveUpdated(() => {
+                        var latestSave = Game.Instance.SaveManager.GetLatestSave();
+                        if (latestSave != null)
+                            Game.Instance.LoadGameFromMainMenu(latestSave);
+                        else
+                            Game.Instance.LoadNewGame();
+                    }));
+                }
+            }
+        }
+
+
         [HarmonyPatch(typeof(MainMenuPCView))]
         private static class MainMenuPCViewPatch {
             [HarmonyPatch(nameof(MainMenuPCView.BindViewImplementation))]
@@ -326,25 +411,18 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+
         [HarmonyPatch(typeof(LoadingScreenBaseView))]
         public static class LoadingScreenBaseViewPatch {
-            [HarmonyPatch(nameof(LoadingScreenBaseView.ShowUserInputLayer))]
+            [HarmonyPatch(nameof(LoadingScreenBaseView.Show))]
             [HarmonyPrefix]
-            private static bool ShowUserInputLayer(LoadingScreenBaseView __instance, bool state) {
+            private static bool Show(LoadingScreenBaseView __instance) {
                 if (!Settings.toggleSkipAnyKeyToContinueWhenLoadingSaves) return true;
-                if (!state)
-                    return false;
-                __instance.m_ProgressBarContainer.DOFade(0.0f, 1f).OnComplete(() => __instance.StartPressAnyKeyLoopAnimation()).SetUpdate(true);
-                __instance.AddDisposable(MainThreadDispatcher.UpdateAsObservable()
-                                                            .Subscribe(_ => {
-                                                                UISounds.Instance.Sounds.Buttons.ButtonClick.Play();
-                                                                if (PhotonManager.Lobby.IsLoading)
-                                                                    PhotonManager.Instance.ContinueLoading();
-                                                                EventBus.RaiseEvent((Action<IContinueLoadingHandler>)(h => h.HandleContinueLoading()));
-                                                            }));
-                return false;
+                __instance.ViewModel.NeedUserInput.Value = false;
+                return true;
             }
         }
+#endif
 
 #if false
         [HarmonyPatch(typeof(Player), nameof(Player.GameOver))]
