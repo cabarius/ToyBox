@@ -410,6 +410,7 @@
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\ActionsRT.cs" />
+    <Compile Include="classes\MainUI\Browser\AchievementsUnlocker.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintActionRT.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedCamera.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
