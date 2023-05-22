@@ -245,10 +245,10 @@ namespace ToyBox {
                     new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
 #endif
 #endif
-                    new NamedAction("Achievements".localize(), AchievementsUnlocker.OnGUI),
                     new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
                     new NamedAction("Quests".localize(), QuestEditor.OnGUI),
                     new NamedAction("Saves".localize(), GameSavesBrowser.OnGUI),
+                    new NamedAction("Achievements".localize(), AchievementsUnlocker.OnGUI),
                     new NamedAction("Settings".localize(), SettingsUI.OnGUI)
                     );
             }
