@@ -29,9 +29,11 @@ Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteou
 # Development Setup
 1. Install ToyBox mod into your game via Unity Mod Manager
 1. Clone the git repo
-1. Locate the install folder of Pathfinder Wrath of the Righteous
-1. Go to System Properties > Environment Variables and add WrathPath with a value that looks like this:
+1. You can contribute to Rogue Trader, Wrath or both of them. If you only want to contribute to one you can unload the unused one in Visual Studio and only need to setup the variable for the one you need.
+1. Locate the install folder of Pathfinder Wrath of the Righteous and/or Warhammer 40,000 Rogue Trader.
+1. Go to System Properties > Environment Variables and add WrathPath and/or RoguePath with a value that looks like this:
         `WrathPath`   `C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure`
+		`RoguePath`   `C:\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader`
 1.  First time and when the game updates make sure you clean the solution to trigger the publicize step
 1. build the solution debug and it will automatically build and install into the mod folder in the game
 1.  when you rebuild you can go to the mod and hit the reload button at the top to make it use the latest
