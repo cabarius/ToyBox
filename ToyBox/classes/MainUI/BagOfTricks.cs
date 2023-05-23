@@ -324,6 +324,7 @@ namespace ToyBox {
                        Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".localize().orange());
                    },
                    // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
+#if Wrath
                    () => {
                        Toggle("Enhanced Map View".localize(), ref Settings.toggleZoomableLocalMaps, 500.width());
                        HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off".localize());
@@ -336,6 +337,7 @@ namespace ToyBox {
                        Toggle("Enhanced Load/Save".localize(), ref Settings.toggleEnhancedLoadSave, 500.width());
                        HelpLabel("Adds a search field to Load/Save screen (in game only)".localize());
                    },
+#endif
                    () => Toggle("Object Highlight Toggle Mode".localize(), ref Settings.highlightObjectsToggle),
                    () => {
                        Toggle("Mark Interesting NPCs".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
@@ -364,6 +366,7 @@ namespace ToyBox {
                            Main.SetNeedsResetGameUI();
                        }
                    },
+#if Wrath
                    () => {
                        Toggle("Icky Stuff Begone!!!".localize(), ref Settings.toggleReplaceModelMenu, (Settings.toggleReplaceModelMenu ? 248 : 499).width());
                        if (Settings.toggleReplaceModelMenu) {
@@ -377,6 +380,7 @@ namespace ToyBox {
                        }
                        Label("Some players find spiders and other swarms icky. This replaces them with something more pleasant".localize().green());
                    },
+#endif
                    () => Toggle("Make tutorials not appear if disabled in settings".localize(), ref Settings.toggleForceTutorialsToHonorSettings),
                    () => Toggle("Refill consumables in belt slots if in inventory".localize(), ref Settings.togglAutoEquipConsumables),
                    () => {
@@ -422,6 +426,7 @@ namespace ToyBox {
                                           }
                                       },
                                       AutoWidth()),
+#if Wrath
                    () => {
                        Toggle("Enable Loading with Blueprint Errors".localize().color(RGBA.maroon), ref Settings.enableLoadWithMissingBlueprints);
                        25.space();
@@ -432,6 +437,7 @@ namespace ToyBox {
                            Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".localize().orange());
                        }
                    },
+#endif
                    () => {
                        using (VerticalScope()) {
                            Div(0, 25, 1280);
@@ -509,12 +515,14 @@ namespace ToyBox {
                 );
             Div(0, 25);
             EnhancedCamera.OnGUI();
+#if Wrath
             Div(0, 25);
             HStack("Alignment".localize(), 1,
                    () => { Toggle("Fix Alignment Shifts".localize(), ref Settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".localize().green()); },
                    () => { Toggle("Prevent Alignment Changes".localize(), ref Settings.togglePreventAlignmentChanges); Space(25); Label("See Party Editor for more fine grained alignment locking per character".localize().green()); },
                    () => { }
                 );
+#endif
             Div(0, 25);
             HStack("Cheats".localize(), 1,
                 () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)".localize(), ref Settings.toggleUnlimitedStatModifierStacking),
@@ -528,18 +536,20 @@ namespace ToyBox {
                     }
                 },
                 () => Toggle("Infinite Abilities".localize(), ref Settings.toggleInfiniteAbilities),
+#if Wrath
                 () => Toggle("Infinite Spell Casts".localize(), ref Settings.toggleInfiniteSpellCasts),
                 () => Toggle("No Material Components".localize(), ref Settings.toggleMaterialComponent),
                 () => Toggle("Disable Party Negative Levels".localize(), ref Settings.togglePartyNegativeLevelImmunity),
                 () => Toggle("Disable Party Ability Damage".localize(), ref Settings.togglePartyAbilityDamageImmunity),
                 () => Toggle("Disable Attacks of Opportunity".localize(), ref Settings.toggleAttacksofOpportunity),
+#endif
                 () => Toggle("Unlimited Actions During Turn".localize(), ref Settings.toggleUnlimitedActionsPerTurn),
                 () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
-
+#if Wrath
                 () => Toggle("Instant Cooldown".localize(), ref Settings.toggleInstantCooldown),
 
                 () => Toggle("Spontaneous Caster Scroll Copy".localize(), ref Settings.toggleSpontaneousCopyScrolls),
-
+#endif
                 () => Toggle("Disable Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
                 () => Toggle("Disable Armor Max Dexterity".localize(), ref Settings.toggleIgnoreMaxDexterity),
                 () => Toggle("Disable Armor Speed Reduction".localize(), ref Settings.toggleIgnoreSpeedReduction),
@@ -547,8 +557,9 @@ namespace ToyBox {
                 () => Toggle("Disable Armor & Shield Checks Penalty".localize(), ref Settings.toggleIgnoreArmorChecksPenalty),
 
                 () => Toggle("No Friendly Fire On AOEs".localize(), ref Settings.toggleNoFriendlyFireForAOE),
+#if Wrath
                 () => Toggle("Free Meta-Magic".localize(), ref Settings.toggleMetamagicIsFree),
-
+#endif
                 () => Toggle("No Fog Of War".localize(), ref Settings.toggleNoFogOfWar),
                 () => Toggle("Restore Spells & Skills After Combat".localize(), ref Settings.toggleRestoreSpellsAbilitiesAfterCombat),
                 //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat),
@@ -578,6 +589,7 @@ namespace ToyBox {
 #endif
                 );
             Div(0, 25);
+#if Wrath
             HStack("Class Specific".localize(), 1,
                 () => Slider("Kineticist: Burn Reduction".localize(), ref Settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
                         () => Slider("Arcanist: Spell Slot Multiplier".localize(), ref Settings.arcanistSpellslotMultiplier, 0.5f, 10f,
@@ -594,6 +606,7 @@ namespace ToyBox {
                         () => Toggle("Magus: Always Allow Spell Combat".localize(), ref Settings.toggleAlwaysAllowSpellCombat),
                         () => { }
                         );
+#endif
             Div(0, 25);
             HStack("Experience Multipliers".localize(), 1,
                 () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),

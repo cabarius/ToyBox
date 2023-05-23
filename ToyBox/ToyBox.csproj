@@ -181,7 +181,7 @@
     <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedCamera.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
-    <Compile Include="classes\MainUI\PartyEditor\GameSaves.cs" />
+    <Compile Include="classes\MainUI\EnhancedUI\GameSaves.cs" />
     <Compile Include="classes\MainUI\PartyEditor\HumanFriendlyStats.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\StateReplacer.cs" />
     <Compile Include="classes\Infrastructure\CasterHelpers.cs" />
@@ -244,7 +244,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Alignment.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\CameraWrath.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Clipboard+Guids.cs" />
-    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\ActionsWrath.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Development.cs" />
@@ -333,7 +333,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

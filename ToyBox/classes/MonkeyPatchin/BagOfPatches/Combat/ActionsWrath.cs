@@ -14,8 +14,8 @@ using TurnBased.Controllers;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    internal static class ACtions {
-        public static Settings settings = Main.Settings;
+    internal static class Actions {
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
 
@@ -23,10 +23,10 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(new Type[] { typeof(UnitCommand) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch1 {
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
-                if (settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
+                if (Settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
                     __result = false;
                 }
-                if (CombatController.IsInTurnBasedCombat() && settings.toggleUnlimitedActionsPerTurn) {
+                if (CombatController.IsInTurnBasedCombat() && Settings.toggleUnlimitedActionsPerTurn) {
                     __result = false;
                 }
             }
@@ -36,10 +36,10 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(new Type[] { typeof(UnitCommand.CommandType) })]
         public static class UnitCombatState_HasCooldownForCommand_Patch2 {
             public static void Postfix(ref bool __result, UnitCombatState __instance) {
-                if (settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
+                if (Settings.toggleInstantCooldown && __instance.Unit.IsDirectlyControllable) {
                     __result = false;
                 }
-                if (CombatController.IsInTurnBasedCombat() && settings.toggleUnlimitedActionsPerTurn) {
+                if (CombatController.IsInTurnBasedCombat() && Settings.toggleUnlimitedActionsPerTurn) {
                     __result = false;
                 }
             }
@@ -48,14 +48,14 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.OnNewRound))]
         public static class UnitCombatState_OnNewRound_Patch {
             public static bool Prefix(UnitCombatState __instance) {
-                if (__instance.Unit.IsDirectlyControllable && settings.toggleInstantCooldown) {
+                if (__instance.Unit.IsDirectlyControllable && Settings.toggleInstantCooldown) {
                     __instance.Cooldown.Initiative = 0f;
                     __instance.Cooldown.StandardAction = 0f;
                     __instance.Cooldown.MoveAction = 0f;
                     __instance.Cooldown.SwiftAction = 0f;
                     __instance.Cooldown.AttackOfOpportunity = 0f;
                 }
-                if (CombatController.IsInTurnBasedCombat() && settings.toggleUnlimitedActionsPerTurn) {
+                if (CombatController.IsInTurnBasedCombat() && Settings.toggleUnlimitedActionsPerTurn) {
                     __instance.Cooldown.Initiative = 0f;
                     __instance.Cooldown.StandardAction = 0f;
                     __instance.Cooldown.MoveAction = 0f;
@@ -71,7 +71,7 @@ namespace ToyBox.BagOfPatches {
 
             public static bool Prefix(UnitCommand.CommandType type, bool isFullRound, float timeSinceCommandStart, UnitEntityData __instance) {
                 if (!__instance.IsInCombat) return true;
-                if (!settings.toggleUnlimitedActionsPerTurn) return true;
+                if (!Settings.toggleUnlimitedActionsPerTurn) return true;
                 else if (CombatController.IsInTurnBasedCombat()) {
                     return false;
                 }
