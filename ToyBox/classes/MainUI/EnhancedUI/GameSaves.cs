@@ -1,20 +1,9 @@
 ﻿using Kingmaker;
-using Kingmaker.Cheats;
-using Kingmaker.Controllers;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.PubSubSystem;
-using Kingmaker.UnitLogic;
-using Kingmaker.View;
+using Kingmaker.EntitySystem.Persistence;
 using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls;
-using Kingmaker.EntitySystem.Persistence;
-using ModKit.Utility;
-using UnityEngine;
-using UnityModManagerNet;
-using static ModKit.UI;
 
 namespace ToyBox {
     // To be clear this is an editor of your list of saves
@@ -22,6 +11,7 @@ namespace ToyBox {
     public static class GameSavesBrowser {
         public static Settings Settings => Main.Settings;
         private static Browser<SaveInfo, SaveInfo> savesBrowser = new(true, true);
+        private static (string, string) nameEditState = (null, null);
         private static IEnumerable<SaveInfo> _allSaves = null;
         private static IEnumerable<SaveInfo> _currentSaves = null;
         public static string SearchKey(this SaveInfo info) =>
@@ -46,8 +36,8 @@ namespace ToyBox {
         };
 
         public static void OnGUI() {
-            var currentGameID = Game.Instance?.Player?.GameId ?? "n/a";
             var saveManager = Game.Instance?.SaveManager;
+            string currentGameID = Game.Instance?.Player?.GameId;
 
             Div(0, 25);
             HStack("Saves".localize(),
@@ -56,9 +46,22 @@ namespace ToyBox {
                        Toggle("Auto load Last Save on launch".localize(), ref Settings.toggleAutomaticallyLoadLastSave, 500.width());
                        HelpLabel("Hold down shift during launch to bypass".localize());
                    },
-                   () => Label($"Save ID: {currentGameID}"),
-            () => { }
-                );
+                   () => {
+                       using (HorizontalScope()) {
+                           Label("Save ID: ".localize());
+                           if (currentGameID != null) {
+                               if (EditableLabel(ref currentGameID, ref nameEditState, 100)) {
+                                   Game.Instance.Player.GameId = currentGameID;
+                               }
+                           }
+                           else {
+                               currentGameID = "N/A".localize();
+                               Label(currentGameID);
+                           }
+                       }
+                   },
+                   () => { }
+            );
             if (Main.IsInGame) {
                 Div(50, 25);
                 //var currentSave = Game.Instance.SaveManager.GetLatestSave();
@@ -78,7 +81,7 @@ namespace ToyBox {
                                        info => info.SearchKey(),
                                        info => info.SortKey(),
                                        () => {
-                                           Toggle("Show GameID", ref Settings.toggleShowGameIDs);
+                                           Toggle("Show GameID".localize(), ref Settings.toggleShowGameIDs);
                                        },
                                        (info, _) => {
                                            var isCurrent = _currentSaves.Contains(info);
