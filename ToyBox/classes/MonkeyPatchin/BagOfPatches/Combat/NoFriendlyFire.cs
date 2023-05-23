@@ -52,7 +52,7 @@ namespace ToyBox.BagOfPatches {
                     if (___m_Condition.HasConditions) {
                         targets = targets.Where(u => { using (context.GetDataScope(u)) { return ___m_Condition.Check(); } }).ToList();
                     }
-                    if (caster.Descriptor.IsPartyOrPet() && ((context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
+                    if (caster.IsPartyOrPet() && ((context.AbilityBlueprint.EffectOnAlly == AbilityEffectOnUnit.Harmful) || (context.AbilityBlueprint.EffectOnEnemy == AbilityEffectOnUnit.Harmful))) {
                         if (context.AbilityBlueprint.HasLogic<AbilityUseOnRest>()) {
                             var componentType = context.AbilityBlueprint.GetComponent<AbilityUseOnRest>().Type;
                             //bool healDamage = componentType == AbilityUseOnRestType.HealDamage || componentType == AbilityUseOnRestType.HealDamage;

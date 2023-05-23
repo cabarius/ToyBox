@@ -44,19 +44,11 @@ namespace ToyBox {
         public static bool IsRevealed(this QuestObjective objective) => objective.State == QuestObjectiveState.Started || objective.State == QuestObjectiveState.Completed;
         public static string stateColored(this string text, Quest quest) => RichText.color(text, questColors[(int)quest.State]);
         public static string stateColored(this string text, QuestObjective objective) => RichText.color(text, questColors[(int)objective.State]);
-#if Wrath
-        public static string titleColored(this Quest quest) => quest.Blueprint.Title.ToString().color(titleColors[(int)quest.State]);
-#elif RT
-        public static string titleColored(this Quest quest) => quest.Blueprint.Title.Text.color(titleColors[(int)quest.State]);
-#endif
+        public static string titleColored(this Quest quest) => quest.Blueprint.Title.StringValue().color(titleColors[(int)quest.State]);
         public static string titleColored(this QuestObjective objective, BlueprintQuestObjective bp = null) {
             var blueprint = objective?.Blueprint ?? bp;
             var state = objective?.State ?? QuestObjectiveState.None;
-#if Wrath
-            var title = blueprint.Title.ToString();
-#elif RT
-            var title = blueprint.Title.Text;
-#endif            
+            var title = blueprint.Title.StringValue();
             if (title.Length == 0) title = blueprint.ToString();
             if (blueprint.IsAddendum)
                 title = "Addendum: ".color(RGBA.white) + title;
@@ -228,11 +220,7 @@ namespace ToyBox {
                     if (!Settings.toggleQuestHideCompleted || quest.State != QuestState.Completed || selectedQuests[index]) {
                         using (HorizontalScope()) {
                             50.space();
-#if Wrath
-                            Label(quest.Blueprint.Title.ToString().orange().bold(), Width(600));
-#elif RT
-                            Label(quest.Blueprint.Title.Text.orange().bold(), Width(600));
-#endif
+                            Label(quest.Blueprint.Title.StringValue().orange().bold(), Width(600));
                             50.space();
                             DisclosureToggle(quest.stateString(), ref selectedQuests[index]); 
                             if (Settings.toggleQuestInspector)
@@ -420,7 +408,7 @@ namespace ToyBox {
             Label("Quest Status: ".cyan(), 150.width());
             var quest = questStatus.Quest;
             var state = GameHelper.Quests.GetQuestState(quest);
-            var title = $"{quest.Title.ToString().orange().bold()}";
+            var title = $"{quest.Title.StringValue().orange().bold()}";
             Label(title, 500.width());
             22.space();
             using (VerticalScope()) {
@@ -437,7 +425,7 @@ namespace ToyBox {
             var objective = Game.Instance.Player.QuestBook.GetObjective(objectiveBP);
             var quest = objectiveBP.Quest;
             var state = objective?.State ?? QuestObjectiveState.None;
-            var title = $"{quest.Title.ToString().orange().bold()} : {objective.titleColored(objectiveBP)}";
+            var title = $"{quest.Title.StringValue().orange().bold()} : {objective.titleColored(objectiveBP)}";
             Label(title, 500.width());
             22.space();
             using (VerticalScope()) {

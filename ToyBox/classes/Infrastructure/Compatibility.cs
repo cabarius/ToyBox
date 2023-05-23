@@ -129,12 +129,14 @@ namespace ToyBox {
         public static ReactiveCollection<UnitEntityData> SelectedUnitsReactive() => UIAccess.SelectionManager.SelectedUnits;
         public static bool IsEnemy(UnitEntityData unit) => unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter())  && unit != GameHelper.GetPlayerCharacter();
         public static void KillUnit(UnitEntityData unit) => CheatsCombat.KillUnit(unit);
+        public static bool IsPartyOrPet(this MechanicEntity entity) => Game.Instance.Player.PartyAndPets.Contains(entity);
 #elif Wrath
         public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Value;
         public static EntityPool<UnitEntityData> AllUnits => Game.Instance?.State?.Units;
         public static List<UnitEntityData> SelectedUnits => Game.Instance.UI.SelectionManager.SelectedUnits;
         public static bool IsEnemy(UnitEntityData unit) => unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter();
         public static void KillUnit(UnitEntityData unit) => GameHelper.KillUnit(unit);
+        public static bool IsPartyOrPet(this UnitEntityData entity) => entity.Descriptor.IsPartyOrPet();
 
         // Teleport and Travel
 #endif

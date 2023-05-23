@@ -193,6 +193,11 @@ namespace ToyBox {
         private static void OnGUI(UnityModManager.ModEntry modEntry) {
             if (!Enabled) return;
             IsModGUIShown = true;
+#if RT
+            if (!IsInGame) {
+                Label(("Warning: ".magenta().bold()+  $"This is an experimental preview of ToyBox ({"Sh0dan".cyan()}) for Rogue Trader Beta.".orange() +" Save early and often.\r\n".yellow().bold() +"Note:".magenta().bold() +" Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible".orange()).localize());
+            }
+#endif
             if (!IsInGame) {
                 Label("ToyBox has limited functionality from the main menu".yellow().bold());
             }
