@@ -53,6 +53,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
  * (***Narria***) Added work around for issue of game double calling SelectClass.Apply leading to multiclass levels being added more than once during character creation **Please test out and report any issues you find in gestalt/multiclassing**
  * (***ADDB***) Added Achievements Unlocker.
+ * (***ADDB***) Made GameID editable.
  * (***BuckAMayzing***) Fixed issue with Bulk Sell unintentionally selling items that were still equipped on characters.
  * (***icls1337***) Localization for Mandarin
 ### Ver 1.5.2
