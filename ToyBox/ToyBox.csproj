@@ -255,6 +255,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Metamagic.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestricted.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Localization.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscShared.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscWrath.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementWrath.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />

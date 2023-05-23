@@ -469,6 +469,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\ActionsRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestricted.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscShared.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\LocalMap.cs" />
