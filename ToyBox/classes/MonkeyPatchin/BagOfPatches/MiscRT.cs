@@ -42,7 +42,7 @@ using static ModKit.UI;
 using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
-    internal static class Misc {
+    internal static partial class Misc {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 

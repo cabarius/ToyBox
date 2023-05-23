@@ -43,11 +43,10 @@ using System.Linq;
 using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
-using static ModKit.UI;
 using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
-    internal static class Misc {
+    internal static partial class Misc {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
@@ -663,14 +662,6 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix(Polymorph __instance) {
                 float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
                 __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
-            }
-        }
-
-        [HarmonyPatch(typeof(AchievementsManager), nameof(AchievementsManager.OnAchievementUnlocked))]
-        private static class AchievementsManager_OnAchievementsUnlocked_Patch {
-            private static void Postfix(AchievementEntity ach) {
-                AchievementsUnlocker.unlocked.Add(ach);
-                AchievementsUnlocker.AchievementBrowser.needsReloadData = true;
             }
         }
 #if false

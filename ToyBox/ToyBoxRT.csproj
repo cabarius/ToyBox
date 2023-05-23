@@ -461,6 +461,7 @@
     <Compile Include="classes\Models\Settings.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\CamereRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscShared.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\LootRT.cs" />

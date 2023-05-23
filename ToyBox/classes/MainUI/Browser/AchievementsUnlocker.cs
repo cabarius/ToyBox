@@ -6,7 +6,6 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static ModKit.UI;
 
 namespace ToyBox {
     public class AchievementsUnlocker {
@@ -14,10 +13,11 @@ namespace ToyBox {
         public static List<AchievementEntity> availableAchievements = new();
         public static List<AchievementEntity> unlocked = new();
         public static Settings Settings => Main.Settings;
+        //TODO: Check in RT release version whether there is a good heuristic to check if an achievement is blocked on the platform
         public static void OnGUI() {
             bool justInit = false;
             if (availableAchievements == null || availableAchievements?.Count == 0) {
-                UI.Label("Achievements not available on the current platform or at your current progression in the game".localize().yellow().bold());
+                UI.Label("Achievements not available until you load a save.".localize().yellow().bold());
                 availableAchievements = Game.Instance?.Player?
                     .Achievements?
                     .m_Achievements?
