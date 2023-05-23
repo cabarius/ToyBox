@@ -45,7 +45,7 @@
   <ItemGroup>
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Owlcat.Runtime.UI.dll" />
-    <PubliciseInputAssemblies Include="$(RogueModPath)\UnityModManager.dll" />
+    <PubliciseInputAssemblies Include="$(userprofile)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager\UnityModManager.dll" />
   </ItemGroup>
   <Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\RT\%(PubliciseInputAssemblies.FileName)_public.hash">
     <MakeDir Directories="$(SolutionDir)lib/RT" />
@@ -518,15 +518,15 @@
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo "Rogue: $(TargetPath)" "&gt;$(RogueModPath)\0ToyBox0\ToyBox.dll*"
-            xcopy /Y "$(TargetPath)" "$(RogueModPath)\0ToyBox0\ToyBox.dll*"
-            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(RogueModPath)\0ToyBox0\ToyBox.pdb*"
-            xcopy /Y "$(ProjectDir)\Info.json" "$(RogueModPath)\0ToyBox0\Info.json*"
-            xcopy /Y "$(ProjectDir)\Repository.json" "$(RogueModPath)\0ToyBox0\Repository.json*"
-            xcopy /E /Y "$(ProjectDir)Localization\" "$(RogueModPath)\0ToyBox0\Localization\"
-            cd "$(TargetDir)"
-            powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
-</PostBuildEvent>
+    <PostBuildEvent>echo "Rogue: $(TargetPath)" "&gt;$(userprofile)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager\0ToyBox0\ToyBox.dll*"
+        xcopy /Y "$(TargetPath)" "$(userprofile)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager\0ToyBox0\ToyBox.dll*"
+        xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(userprofile)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager\0ToyBox0\ToyBox.pdb*"
+        xcopy /Y "$(ProjectDir)\Info.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager\0ToyBox0\Info.json*"
+        xcopy /Y "$(ProjectDir)\Repository.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager\0ToyBox0\Repository.json*"
+        xcopy /E /Y "$(ProjectDir)Localization\" "$(userprofile)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager\0ToyBox0\Localization\"
+        cd "$(TargetDir)"
+        powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
+    </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
