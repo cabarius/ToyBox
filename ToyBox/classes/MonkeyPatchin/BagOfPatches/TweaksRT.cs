@@ -60,6 +60,7 @@ using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
 using Kingmaker.UI.Common;
 using System.Collections;
 using Kingmaker.UI;
+using static Kingmaker.Sound.AkAudioService;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -83,6 +84,23 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void JoinCombat(PartUnitCombatState __instance, bool surprised) {
                 MaybeKill(__instance);
+            }
+        }
+
+        [HarmonyPatch(typeof(AudioServiceDrivingBehaviour), nameof(AudioServiceDrivingBehaviour.OnApplicationFocus))]
+        public static class AudioServiceDrivingBehaviourPatch
+        {
+            private static bool Prefix(AkSoundEngineController __instance)
+            {
+                return !Settings.toggleContinueAudioOnLostFocus;
+            }
+        }
+        [HarmonyPatch(typeof(SoundState), nameof(SoundState.OnApplicationFocusChanged))]
+        public static class SoundState_OnApplicationFocusChanged_Patch
+        {
+            private static bool Prefix()
+            {
+                return !Settings.toggleContinueAudioOnLostFocus;
             }
         }
 
@@ -459,8 +477,8 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-
-        [HarmonyPatch(typeof(Tutorial), nameof(Tutorial.IsActive))]
+#if false
+        [HarmonyPatch(typeof(Tutorial), nameof(Tutorial.IsBanned))]
         private static class Tutorial_IsBanned_Patch {
             private static bool Prefix(ref Tutorial __instance, ref bool __result) {
                 if (Settings.toggleForceTutorialsToHonorSettings) {
@@ -472,7 +490,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-
+#endif
 #if false
         [HarmonyPatch(typeof(Player), nameof(Player.GameOver))]
         private static class Player_GameOverReason_Patch {
@@ -648,27 +666,6 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix() => UnitEntityData_CanRollPerception_Extension.TriggerReroll = false;
         }
 
-        [HarmonyPatch(typeof(AkSoundEngineController), nameof(AkSoundEngineController.OnApplicationFocus))]
-        public static class AkSoundEngineController_OnApplicationFocus_Patch {
-            private static bool Prefix(AkSoundEngineController __instance) {
-                if (settings.toggleContinueAudioOnLostFocus) {
-                    return false;
-                }
-                else {
-                    return true;
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(SoundState), nameof(SoundState.OnApplicationFocusChanged))]
-        public static class SoundState_OnApplicationFocusChanged_Patch {
-            private static bool Prefix(SoundState __instance) {
-                if (settings.toggleContinueAudioOnLostFocus) {
-                    return false;
-                }
-                return true;
-            }
-        }
         [HarmonyPatch(typeof(FogOfWarController), "<CollectRevealers>g__CollectUnit|15_0")]
         public static class FogOfWarController_CollectRevealers_CompilerMethod_Patch {
             public static void Prefix(UnitEntityData unit) {
