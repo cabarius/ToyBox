@@ -60,7 +60,7 @@ using ToyBox;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
-        public static Settings settings = Main.Settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static readonly BlueprintGuid rage_barbarian = BlueprintGuid.Parse("df6a2cce8e3a9bd4592fb1968b83f730");
         private static readonly BlueprintGuid rage_blood = BlueprintGuid.Parse("e3a0056eedac7754ca9a50603ba05177");
@@ -81,7 +81,7 @@ namespace ToyBox.BagOfPatches {
                 }
                 var spellListContainsSpell = spellbook.Blueprint.SpellList.Contains(spell);
 
-                if (settings.toggleSpontaneousCopyScrolls && spellbook.Blueprint.Spontaneous && spellListContainsSpell) {
+                if (Settings.toggleSpontaneousCopyScrolls && spellbook.Blueprint.Spontaneous && spellListContainsSpell) {
                     __result = true;
                     return;
                 }
@@ -93,7 +93,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(KingdomUIEventWindow), nameof(KingdomUIEventWindow.OnClose))]
         public static class KingdomUIEventWindow_OnClose_Patch {
             public static bool Prefix(ref bool __state) {
-                __state = settings.toggleInstantEvent;
+                __state = Settings.toggleInstantEvent;
                 return !__state;
             }
 
@@ -131,7 +131,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(KingdomTaskEvent), nameof(KingdomTaskEvent.SkipPlayerTime), MethodType.Getter)]
         public static class KingdomTaskEvent_SkipPlayerTime_Patch {
             public static void Postfix(ref int __result) {
-                if (settings.toggleInstantEvent) {
+                if (Settings.toggleInstantEvent) {
                     __result = 0;
                 }
             }
@@ -140,7 +140,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(KingdomUIEventWindowFooter), nameof(KingdomUIEventWindowFooter.OnStart))]
         public static class KingdomUIEventWindowFooter_OnStart_Patch {
             public static bool Prefix(ref bool __state) {
-                __state = settings.toggleInstantEvent;
+                __state = Settings.toggleInstantEvent;
                 return !__state;
             }
 
@@ -175,7 +175,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(FogOfWarArea), nameof(FogOfWarArea.RevealOnStart), MethodType.Getter)]
         public static class FogOfWarArea_Active_Patch {
             private static bool Prefix(ref bool __result) {
-                if (!settings.toggleNoFogOfWar) return true;
+                if (!Settings.toggleNoFogOfWar) return true;
                 __result = true;
                 return false;
                 //    // We need this to avoid hanging the game on launch
@@ -188,7 +188,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GameHistoryLog), nameof(GameHistoryLog.HandlePartyCombatStateChanged))]
         private static class GameHistoryLog_HandlePartyCombatStateChanged_Patch {
             private static void Postfix(ref bool inCombat) {
-                if (!inCombat && settings.toggleRestoreSpellsAbilitiesAfterCombat) {
+                if (!inCombat && Settings.toggleRestoreSpellsAbilitiesAfterCombat) {
                     var partyMembers = Game.Instance.Player.PartyAndPets;
                     foreach (var u in partyMembers) {
                         foreach (var resource in u.Descriptor.Resources)
@@ -198,16 +198,16 @@ namespace ToyBox.BagOfPatches {
                         u.Brain.RestoreAvailableActions();
                     }
                 }
-                if (!inCombat && settings.toggleRechargeItemsAfterCombat) {
+                if (!inCombat && Settings.toggleRechargeItemsAfterCombat) {
 
                 }
-                if (!inCombat && settings.toggleInstantRestAfterCombat) {
+                if (!inCombat && Settings.toggleInstantRestAfterCombat) {
                     CheatsCombat.RestAll();
                 }
-                if (inCombat && (settings.toggleEnterCombatAutoRage || settings.toggleEnterCombatAutoRage)) {
+                if (inCombat && (Settings.toggleEnterCombatAutoRage || Settings.toggleEnterCombatAutoRage)) {
                     foreach (var unit in Game.Instance.Player.Party) {
                         var flag = true;
-                        if (settings.toggleEnterCombatAutoRageDemon) { // we prefer demon rage, as it's more powerful
+                        if (Settings.toggleEnterCombatAutoRageDemon) { // we prefer demon rage, as it's more powerful
                             foreach (var ability in unit.Abilities) {
                                 if (ability.Blueprint.AssetGuid == rage_demon && ability.Data.IsAvailableForCast) {
                                     Kingmaker.RuleSystem.Rulebook.Trigger(new RuleCastSpell(ability.Data, unit));
@@ -217,7 +217,7 @@ namespace ToyBox.BagOfPatches {
                                 }
                             }
                         }
-                        if (flag && settings.toggleEnterCombatAutoRage) {
+                        if (flag && Settings.toggleEnterCombatAutoRage) {
                             foreach (var activatable in unit.ActivatableAbilities) {
                                 if (activatable.Blueprint.AssetGuid == rage_barbarian
                                     || activatable.Blueprint.AssetGuid == rage_blood
@@ -251,7 +251,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GroupController), nameof(GroupController.WithRemote), MethodType.Getter)]
         private static class GroupController_WithRemote_Patch {
             private static void Postfix(GroupController __instance, ref bool __result) {
-                if (settings.toggleAccessRemoteCharacters) {
+                if (Settings.toggleAccessRemoteCharacters) {
                     if (__instance.FullScreenEnabled) {
                         switch (Traverse.Create(__instance).Field("m_FullScreenUIType").GetValue()) {
                             case FullScreenUIType.Inventory:
@@ -269,7 +269,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.RequireMaterialComponent), MethodType.Getter)]
         public static class AbilityData_RequireMaterialComponent_Patch {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleMaterialComponent) {
+                if (Settings.toggleMaterialComponent) {
                     __result = false;
                 }
             }
@@ -278,7 +278,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(BlueprintArmorType), nameof(BlueprintArmorType.HasDexterityBonusLimit), MethodType.Getter)]
         public static class BlueprintArmorType_HasDexterityBonusLimit_Patch {
             public static bool Prefix(ref bool __result) {
-                if (settings.toggleIgnoreMaxDexterity) {
+                if (Settings.toggleIgnoreMaxDexterity) {
                     __result = false;
                     return false;
                 }
@@ -289,7 +289,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(BlueprintArmorType), nameof(BlueprintArmorType.ArmorChecksPenalty), MethodType.Getter)]
         public static class BlueprintArmorType_ArmorChecksPenalty_Patch {
             public static bool Prefix(ref int __result) {
-                if (settings.toggleIgnoreArmorChecksPenalty) {
+                if (Settings.toggleIgnoreArmorChecksPenalty) {
                     __result = 0;
                     return false;
                 }
@@ -300,7 +300,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ItemEntityArmor), nameof(ItemEntityArmor.RecalculateStats))]
         public static class ItemEntityArmor_RecalculateStats_Patch {
             public static void Postfix(ItemEntityArmor __instance) {
-                if (settings.toggleIgnoreSpeedReduction) {
+                if (Settings.toggleIgnoreSpeedReduction) {
                     if (__instance.m_Modifiers != null) {
                         __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m) {
                             var appliedTo = m.AppliedTo;
@@ -317,7 +317,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(BlueprintArmorType), nameof(BlueprintArmorType.ArcaneSpellFailureChance), MethodType.Getter)]
         public static class BlueprintArmorType_ArcaneSpellFailureChance_Patch {
             public static bool Prefix(ref int __result) {
-                if (settings.toggleIgnoreSpellFailure) {
+                if (Settings.toggleIgnoreSpellFailure) {
                     __result = 0;
                     return false;
                 }
@@ -330,7 +330,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(RuleCastSpell.SpellFailureChance), MethodType.Getter)]
             [HarmonyPrefix]
             public static bool PrefixSpellFailureChance(ref int __result) {
-                if (settings.toggleIgnoreSpellFailure) {
+                if (Settings.toggleIgnoreSpellFailure) {
                     __result = 0;
                     return false;
                 }
@@ -340,7 +340,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(RuleCastSpell.ArcaneSpellFailureChance), MethodType.Getter)]
             [HarmonyPrefix]
             public static bool PrefixArcaneSpellFailureChance(ref int __result) {
-                if (settings.toggleIgnoreSpellFailure) {
+                if (Settings.toggleIgnoreSpellFailure) {
                     __result = 0;
                     return false;
                 }
@@ -351,7 +351,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RuleDrainEnergy), nameof(RuleDrainEnergy.TargetIsImmune), MethodType.Getter)]
         private static class RuleDrainEnergy_Immune_Patch {
             public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
-                if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyNegativeLevelImmunity) {
+                if (__instance.Target.Descriptor.IsPartyOrPet() && Settings.togglePartyNegativeLevelImmunity) {
                     __result = true;
                 }
             }
@@ -360,7 +360,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RuleDealStatDamage), nameof(RuleDealStatDamage.Immune), MethodType.Getter)]
         private static class RuleDealStatDamage_Immune_Patch {
             public static void Postfix(RuleDrainEnergy __instance, ref bool __result) {
-                if (__instance.Target.Descriptor.IsPartyOrPet() && settings.togglePartyAbilityDamageImmunity) {
+                if (__instance.Target.Descriptor.IsPartyOrPet() && Settings.togglePartyAbilityDamageImmunity) {
                     __result = true;
                 }
             }
@@ -371,7 +371,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(typeof(AbilityCasterAlignment), nameof(AbilityCasterAlignment.IsCasterRestrictionPassed))]
             [HarmonyPostfix]
             public static void PostfixCasterRestriction(ref bool __result) {
-                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
+                if (Settings.toggleIgnoreAbilityAlignmentRestriction) {
                     __result = true;
                 }
             }
@@ -379,7 +379,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(typeof(UnitPartForbiddenSpellbooks), nameof(UnitPartForbiddenSpellbooks.IsForbidden))]
             [HarmonyPostfix]
             public static void PostfixForbiddenSpellbookRestriction(ref bool __result) {
-                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
+                if (Settings.toggleIgnoreAbilityAlignmentRestriction) {
                     __result = false;
                 }
             }
@@ -387,7 +387,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(typeof(UnitPartForbiddenSpellbooks), nameof(UnitPartForbiddenSpellbooks.Add))]
             [HarmonyPrefix]
             public static bool PrefixForbidSpellbook(ForbidSpellbookReason reason) {
-                if (settings.toggleIgnoreAbilityAlignmentRestriction && reason == ForbidSpellbookReason.Alignment) { // Don't add to forbidden list
+                if (Settings.toggleIgnoreAbilityAlignmentRestriction && reason == ForbidSpellbookReason.Alignment) { // Don't add to forbidden list
                     return false;
                 }
                 return true;
@@ -396,7 +396,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(typeof(AbilityTargetAlignment), nameof(AbilityTargetAlignment.IsTargetRestrictionPassed))]
             [HarmonyPostfix]
             public static void PostfixTargetRestriction(ref bool __result) {
-                if (settings.toggleIgnoreAbilityAlignmentRestriction) {
+                if (Settings.toggleIgnoreAbilityAlignmentRestriction) {
                     __result = true;
                 }
             }
@@ -407,7 +407,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.CanBeCastByCaster), MethodType.Getter)]
             [HarmonyPrefix]
             public static bool PostfixCasterRestriction(ref bool __result, AbilityData __instance) {
-                if (settings.toggleIgnoreAbilityAnyRestriction && __instance?.Caster?.Unit?.Descriptor?.IsPartyOrPet() == true) {
+                if (Settings.toggleIgnoreAbilityAnyRestriction && __instance?.Caster?.Unit?.Descriptor?.IsPartyOrPet() == true) {
                     __result = true;
                     return false;
                 }
@@ -423,7 +423,7 @@ namespace ToyBox.BagOfPatches {
                     Mod.Warn("Auto Load Save on Launch disabled");
                     return;
                 }
-                if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
+                if (Settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
                     Main.freshlyLaunched = false;
 
                     var mainMenu = UnityEngine.Object.FindObjectOfType<MainMenu>();
@@ -440,7 +440,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Player), nameof(Player.GameOver))]
         private static class Player_GameOverReason_Patch {
             private static bool Prefix(Player __instance, Player.GameOverReasonType reason) {
-                if (!settings.toggleGameOverFixLeeerrroooooyJenkins || reason != Player.GameOverReasonType.EssentialUnitIsDead) return true;
+                if (!Settings.toggleGameOverFixLeeerrroooooyJenkins || reason != Player.GameOverReasonType.EssentialUnitIsDead) return true;
                 return false;
             }
         }
@@ -448,7 +448,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Tutorial), nameof(Tutorial.IsBanned))]
         private static class Tutorial_IsBanned_Patch {
             private static bool Prefix(ref Tutorial __instance, ref bool __result) {
-                if (settings.toggleForceTutorialsToHonorSettings) {
+                if (Settings.toggleForceTutorialsToHonorSettings) {
                     //                    __result = !__instance.HasTrigger ? __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) : __instance.Banned;
                     __result = __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) || __instance.Banned;
                     //modLogger.Log($"hasTrigger: {__instance.HasTrigger} tag: {__instance.Blueprint.Tag} isTagBanned:{__instance.Owner.IsTagBanned(__instance.Blueprint.Tag)} this.Banned: {__instance.Banned} ==> {__result}");
@@ -468,7 +468,7 @@ namespace ToyBox.BagOfPatches {
             }
 
             public static bool Prefix(ItemsCollection __instance) {
-                if (!settings.toggleEquipmentNoWeight) return true;
+                if (!Settings.toggleEquipmentNoWeight) return true;
 
                 if (__instance.IsPlayerInventory) {
                     __instance.Weight = 0f;
@@ -480,7 +480,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(UnitBody), nameof(UnitBody.EquipmentWeight), MethodType.Getter)]
         public static class NoWeight_Patch2 {
             public static bool Prefix(ref float __result) {
-                if (!settings.toggleEquipmentNoWeight) return true;
+                if (!Settings.toggleEquipmentNoWeight) return true;
 
                 __result = 0f;
                 return false;
@@ -491,7 +491,7 @@ namespace ToyBox.BagOfPatches {
         public static class ItemEntity_IsUsableFromInventory_Patch {
             // Allow Item Use From Inventory During Combat
             public static bool Prefix(ItemEntity __instance, ref bool __result) {
-                if (!settings.toggleUseItemsDuringCombat) return true;
+                if (!Settings.toggleUseItemsDuringCombat) return true;
 
                 var item = __instance.Blueprint as BlueprintItemEquipment;
                 __result = item?.Ability != null;
@@ -501,13 +501,13 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(Unrecruit), nameof(Unrecruit.RunAction))]
         public class Unrecruit_RunAction_Patch {
-            public static bool Prefix() => !settings.toggleBlockUnrecruit;
+            public static bool Prefix() => !Settings.toggleBlockUnrecruit;
         }
 
         [HarmonyPatch(typeof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked), nameof(Kingmaker.Designers.EventConditionActionSystem.Conditions.RomanceLocked.CheckCondition))]
         public static class RomanceLocked_CheckCondition_Patch {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleMultipleRomance) {
+                if (Settings.toggleMultipleRomance) {
                     __result = false;
                 }
             }
@@ -516,7 +516,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ContextActionReduceBuffDuration), nameof(ContextActionReduceBuffDuration.RunAction))]
         public static class ContextActionReduceBuffDuration_RunAction_Patch {
             public static bool Prefix(ContextActionReduceBuffDuration __instance) {
-                if (settings.toggleExtendHexes && !Game.Instance.Player.IsInCombat
+                if (Settings.toggleExtendHexes && !Game.Instance.Player.IsInCombat
                     && (__instance.TargetBuff.name.StartsWith("WitchHex") || __instance.TargetBuff.name.StartsWith("ShamanHex"))) {
                     __instance.Target.Unit.Buffs.GetBuff(__instance.TargetBuff).IncreaseDuration(new TimeSpan(0, 10, 0));
                     return false;
@@ -529,7 +529,7 @@ namespace ToyBox.BagOfPatches {
         public static class UnitPartActivatableAbility_GetGroupSize_Patch {
             public static List<ActivatableAbilityGroup> groups = Enum.GetValues(typeof(ActivatableAbilityGroup)).Cast<ActivatableAbilityGroup>().ToList();
             public static bool Prefix(ActivatableAbilityGroup group, ref int __result) {
-                if (settings.toggleAllowAllActivatable && groups.Any(group)) {
+                if (Settings.toggleAllowAllActivatable && groups.Any(group)) {
                     __result = 99;
                     return false;
                 }
@@ -540,7 +540,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ActivatableAbility), nameof(ActivatableAbility.SetIsOn))]
         public static class ActivatableAbility_SetIsOn_Patch {
             public static void Prefix(ref bool value, ActivatableAbility __instance) {
-                if (settings.toggleAllowAllActivatable && __instance.Blueprint.Group == ActivatableAbilityGroup.Judgment) {
+                if (Settings.toggleAllowAllActivatable && __instance.Blueprint.Group == ActivatableAbilityGroup.Judgment) {
                     value = true;
                 }
             }
@@ -549,7 +549,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RestrictionCanGatherPower), nameof(RestrictionCanGatherPower.IsAvailable))]
         public static class RestrictionCanGatherPower_IsAvailable_Patch {
             public static bool Prefix(ref bool __result) {
-                if (!settings.toggleKineticistGatherPower) {
+                if (!Settings.toggleKineticistGatherPower) {
                     return true;
                 }
 
@@ -560,13 +560,13 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(KineticistAbilityBurnCost), nameof(KineticistAbilityBurnCost.GetTotal))]
         public static class KineticistAbilityBurnCost_GetTotal_Patch {
-            public static void Postfix(ref int __result) => __result = Math.Max(0, __result - settings.kineticistBurnReduction);
+            public static void Postfix(ref int __result) => __result = Math.Max(0, __result - Settings.kineticistBurnReduction);
         }
 
         [HarmonyPatch(typeof(UnitPartMagus), nameof(UnitPartMagus.IsSpellCombatThisRoundAllowed))]
         public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
             public static void Postfix(ref bool __result, UnitPartMagus __instance) {
-                if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
                     __result = true;
                 }
             }
@@ -575,7 +575,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(GlobalMapPathManager), nameof(GlobalMapPathManager.GetTimeToCapital))]
         public static class GlobalMapPathManager_GetTimeToCapital_Patch {
             public static void Postfix(bool andBack, ref TimeSpan? __result) {
-                if (settings.toggleInstantChangeParty && andBack && __result != null) {
+                if (Settings.toggleInstantChangeParty && andBack && __result != null) {
                     __result = TimeSpan.Zero;
                 }
             }
@@ -643,8 +643,8 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(TacticalCombatUnitEngagementController.Tick))]
             [HarmonyPostfix]
             public static void Tick(TacticalCombatUnitEngagementController __instance) {
-                if (settings.togglekillOnEngage) {
-                    Actions.KillAllTacticalUnits();
+                if (Settings.togglekillOnEngage) {
+                    ToyBox.Actions.KillAllTacticalUnits();
                 }
             }
 
@@ -653,7 +653,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(AkSoundEngineController), nameof(AkSoundEngineController.OnApplicationFocus))]
         public static class AkSoundEngineController_OnApplicationFocus_Patch {
             private static bool Prefix(AkSoundEngineController __instance) {
-                if (settings.toggleContinueAudioOnLostFocus) {
+                if (Settings.toggleContinueAudioOnLostFocus) {
                     return false;
                 }
                 else {
@@ -665,7 +665,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SoundState), nameof(SoundState.OnApplicationFocusChanged))]
         public static class SoundState_OnApplicationFocusChanged_Patch {
             private static bool Prefix(SoundState __instance) {
-                if (settings.toggleContinueAudioOnLostFocus) {
+                if (Settings.toggleContinueAudioOnLostFocus) {
                     return false;
                 }
                 return true;
@@ -675,10 +675,10 @@ namespace ToyBox.BagOfPatches {
         public static class FogOfWarController_CollectRevealers_CompilerMethod_Patch {
             public static void Prefix(UnitEntityData unit) {
                 var revealer = unit.View.SureFogOfWarRevealer();
-                if (settings.fowMultiplier != 1) {
+                if (Settings.fowMultiplier != 1) {
                     revealer.DefaultRadius = false;
                     revealer.UseDefaultFowBorder = false;
-                    revealer.Radius = FogOfWarController.VisionRadius * settings.fowMultiplier;
+                    revealer.Radius = FogOfWarController.VisionRadius * Settings.fowMultiplier;
                 }
                 else {
                     revealer.DefaultRadius = true;

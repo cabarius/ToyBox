@@ -352,7 +352,6 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
-
         public static class UnitEntityData_CanRollPerception_Extension {
             public static bool TriggerReroll = false;
             public static bool CanRollPerception(UnitEntityData unit) {
@@ -366,6 +365,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(PartyAwarenessController))]
         public static class PartyAwarenessControllerPatch {
+#if false // TODO: why does this crash the game on load into area
             public static MethodInfo HasMotionThisSimulationTick_Method = AccessTools.DeclaredMethod(typeof(PartMovable), "get_HasMotionThisSimulationTick");
             public static MethodInfo CanRollPerception_Method = AccessTools.DeclaredMethod(typeof(UnitEntityData_CanRollPerception_Extension), "CanRollPerception");
 
@@ -382,7 +382,7 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
             }
-
+#endif
             [HarmonyPatch(nameof(PartyAwarenessController.Tick))]
             [HarmonyPostfix]
             private static void Tick() => UnitEntityData_CanRollPerception_Extension.TriggerReroll = false;
@@ -460,25 +460,25 @@ namespace ToyBox.BagOfPatches {
         }
 #endif
 
+        [HarmonyPatch(typeof(Tutorial), nameof(Tutorial.IsActive))]
+        private static class Tutorial_IsBanned_Patch {
+            private static bool Prefix(ref Tutorial __instance, ref bool __result) {
+                if (Settings.toggleForceTutorialsToHonorSettings) {
+                    //                    __result = !__instance.HasTrigger ? __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) : __instance.Banned;
+                    __result = !__instance.Owner.IsTagBanned(__instance.Blueprint.Tag) || !__instance.Banned;
+                    //modLogger.Log($"hasTrigger: {__instance.HasTrigger} tag: {__instance.Blueprint.Tag} isTagBanned:{__instance.Owner.IsTagBanned(__instance.Blueprint.Tag)} this.Banned: {__instance.Banned} ==> {__result}");
+                    return false;
+                }
+                return true;
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(Player), nameof(Player.GameOver))]
         private static class Player_GameOverReason_Patch {
             private static bool Prefix(Player __instance, Player.GameOverReasonType reason) {
                 if (!settings.toggleGameOverFixLeeerrroooooyJenkins || reason != Player.GameOverReasonType.EssentialUnitIsDead) return true;
                 return false;
-            }
-        }
-
-        [HarmonyPatch(typeof(Tutorial), nameof(Tutorial.IsBanned))]
-        private static class Tutorial_IsBanned_Patch {
-            private static bool Prefix(ref Tutorial __instance, ref bool __result) {
-                if (settings.toggleForceTutorialsToHonorSettings) {
-                    //                    __result = !__instance.HasTrigger ? __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) : __instance.Banned;
-                    __result = __instance.Owner.IsTagBanned(__instance.Blueprint.Tag) || __instance.Banned;
-                    //modLogger.Log($"hasTrigger: {__instance.HasTrigger} tag: {__instance.Blueprint.Tag} isTagBanned:{__instance.Owner.IsTagBanned(__instance.Blueprint.Tag)} this.Banned: {__instance.Banned} ==> {__result}");
-                    return false;
-                }
-                return true;
             }
         }
 

@@ -4,12 +4,6 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.UI._ConsoleUI.Overtips;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Interaction;
@@ -28,25 +22,40 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
+#if Wrath
+using Kingmaker.UI._ConsoleUI.Overtips;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
+#elif RT
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.Common.Markers;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Markers;
+#endif
 
 namespace ToyBox.BagOfPatches {
     internal static class LocalMapPatches {
-        public static Settings settings = Main.Settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
         public static float Zoom = 1.0f;
         public static float Width = 0.0f;
         public static Vector3 Position = Vector3.zero;
         public static Vector3 FrameRotation = Vector3.zero;
-
         [HarmonyPatch(typeof(LocalMapVM))]
         internal static class LocalMapVMPatch {
+#if Wrath
             public static Vector3 prevLocalPos = new Vector2();
 
             [HarmonyPatch(nameof(OnClick), new Type[] { typeof(Vector2), typeof(bool) })]
             [HarmonyPrefix]
             public static bool OnClick(LocalMapVM __instance, Vector2 localPos, bool state) {
-                if (false && !settings.toggleZoomableLocalMaps) return true;
+                if (false && !Settings.toggleZoomableLocalMaps) return true;
                 var vector3 = LocalMapRenderer.Instance.ViewportToWorldPoint(
                         new Vector2(
                                 localPos.x / (__instance.DrawResult.Value.ColorRT.width), 
@@ -65,6 +74,7 @@ namespace ToyBox.BagOfPatches {
                 }
                 return false;
             }
+#endif
             [HarmonyPatch(nameof(LocalMapVM.SetMarkers))]
             [HarmonyPrefix]
             private static bool SetMarkers(LocalMapVM __instance) {
@@ -77,18 +87,34 @@ namespace ToyBox.BagOfPatches {
                 if (Game.Instance.Player.CapitalPartyMode)
                     first = first.Concat(Game.Instance.Player.RemoteCompanions.Where(u => !u.IsCustomCompanion()));
                 foreach (var unit in first)
-                    if (unit.View != null && unit.View.enabled && !unit.IsHiddenBecauseDead &&
-                        LocalMapModel.IsInCurrentArea(unit.Position)) {
+                    if (unit.View != null 
+                        && unit.View.enabled 
+                        && !unit
+#if RT
+                            .LifeState
+#endif
+                            .IsHiddenBecauseDead 
+                        && LocalMapModel.IsInCurrentArea(unit.Position)
+                        ) {
                         __instance.MarkersVm.Add(new LocalMapCharacterMarkerVM(unit));
                         __instance.MarkersVm.Add(new LocalMapDestinationMarkerVM(unit));
                     }
 
-                foreach (var units in Game.Instance.Player.MainCharacter.Value.Memory.UnitsList) {
+                foreach (var units in Shodan.MainCharacter
+#if RT
+                                            .CombatGroup
+#endif
+                                            .Memory.UnitsList) {
                     Mod.Debug($"Checking {units.Unit.CharacterName}");
                     if (!units.Unit.IsPlayerFaction
                         && (units.Unit.IsVisibleForPlayer || units.Unit.InterestingnessCoefficent() > 0)
-                        && !units.Unit.Descriptor.State.IsDead
+                        && !units.Unit.Descriptor()
+#if Wrath
+                                 .State.IsDead
                         && !units.Unit.State.Features.IsUntargetable.Value
+#elif RT
+                                 .LifeState.IsDead
+#endif
                         && LocalMapModel.IsInCurrentArea(units.Unit.Position)
                        ) {
                         __instance.MarkersVm.Add(new LocalMapUnitMarkerVM(units));
@@ -97,6 +123,8 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
+
+#if Wrath
         // Modifies Local Map View to zoom the map for easier reading
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
@@ -135,10 +163,10 @@ namespace ToyBox.BagOfPatches {
                     && frameBlock is RectTransform frameBlockRect
                     && frame is RectTransform frameRect
                    ) {
-                    if (settings.toggleZoomableLocalMaps) {
+                    if (Settings.toggleZoomableLocalMaps) {
                         // Calculate a zoom factor based on info used previously to scale the Frame Block. In our new world we will center the Frame Block in middle of the ContentGroup and then pan the map behind it.  TODO - make it rotate so that it matches exactly the view of the camera (Frame Block will always point up)
                         var worldWidth = (dr.WorldRect.z - dr.WorldRect.x);
-                        var fovMultiplier = settings.AdjustedFovMultiplier;
+                        var fovMultiplier = Settings.AdjustedFovMultiplier;
                         var worldZoom = worldWidth / (fovMultiplier * 47f);
                         Zoom = width / (worldZoom * sizeDelta.x);
                         //Mod.Log($"zoom: {Zoom} worldZoom: {worldZoom} sizeDelta: {sizeDelta} - screenRect:{dr.ScreenRect.z - dr.ScreenRect.x} worldRec:{dr.WorldRect.z - dr.WorldRect.x} proj:\n{dr.InverseViewProj}");
@@ -199,7 +227,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(SetupBPRVisible))]
             [HarmonyPrefix]
             public static bool SetupBPRVisible(LocalMapBaseView __instance) {
-                if (!settings.toggleZoomableLocalMaps) return true;
+                if (!Settings.toggleZoomableLocalMaps) return true;
 #if true
                 bool show = Zoom <= 1.0f && __instance.m_Image.rectTransform.rect.width < 975.0;
                 __instance.m_BPRImage.CrossFadeColor(show ? Color.white : Color.clear, 0.5f, true, true);
@@ -228,7 +256,7 @@ namespace ToyBox.BagOfPatches {
                 [HarmonyPatch(nameof(OnPointerClick))]
                 [HarmonyPrefix]
                 public static bool OnPointerClick(LocalMapPCView __instance, PointerEventData eventData) {
-                    if (!settings.toggleZoomableLocalMaps) return true;
+                    if (!Settings.toggleZoomableLocalMaps) return true;
                     if (eventData.button == PointerEventData.InputButton.Middle)
                         return false;
                     Vector2 adjustedPoint = eventStartPosition;
@@ -254,7 +282,7 @@ namespace ToyBox.BagOfPatches {
                 [HarmonyPatch(nameof(Update))]
                 [HarmonyPrefix]
                 private static bool Update(LocalMapPCView __instance) {
-                    if (!settings.toggleZoomableLocalMaps) return true;
+                    if (!Settings.toggleZoomableLocalMaps) return true;
                     if (!__instance.m_MouseDown) {
                         eventState = MouseEventState.Off;
                         return false;
@@ -293,6 +321,8 @@ namespace ToyBox.BagOfPatches {
                 }
             }
             #endif
+        #endif
+
 
         [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
         private static class LocalMapMarkerPCView_BindViewImplementation_Patch {
@@ -302,8 +332,15 @@ namespace ToyBox.BagOfPatches {
                     return;
                 //Mod.Debug($"LocalMapMarkerPCView.BindViewImplementation - {__instance.ViewModel.MarkerType} - {__instance.ViewModel.GetType().Name}");
                 if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
-                    __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => { (__instance as LocalMapLootMarkerPCView)?.Hide(); }));
-                if (settings.toggleShowInterestingNPCsOnLocalMap) {
+                    __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
+                        (__instance as LocalMapLootMarkerPCView)?
+#if Wrath
+                            .Hide();
+#elif RT
+                            .gameObject.SetActive(value);
+#endif
+                    }));
+                if (Settings.toggleShowInterestingNPCsOnLocalMap) {
                     if (__instance.ViewModel is LocalMapCommonMarkerVM markerVM
                         && markerVM.m_Marker is AddLocalMapMarker.Runtime marker) {
                         var unit = marker.Owner;
@@ -342,7 +379,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(UnitOvertipView.BindViewImplementation))]
             [HarmonyPostfix]
             public static void BindViewImplementation(UnitOvertipView __instance) {
-                if (!settings.toggleShowInterestingNPCsOnLocalMap) return;
+                if (!Settings.toggleShowInterestingNPCsOnLocalMap) return;
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
@@ -352,10 +389,16 @@ namespace ToyBox.BagOfPatches {
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
             }
+#if Wrath
             [HarmonyPatch(nameof(UnitOvertipView.UpdateInternal))]
             [HarmonyPostfix]
             public static void UpdateInternal(UnitOvertipView __instance, Vector3 canvasPosition) {
-                if (!settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
+#elif RT
+            [HarmonyPatch(nameof(UnitOvertipView.UpdateVisibility))]
+            [HarmonyPostfix]
+            public static void UpdateInternal(UnitOvertipView __instance) {
+#endif
+                if (!Settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();

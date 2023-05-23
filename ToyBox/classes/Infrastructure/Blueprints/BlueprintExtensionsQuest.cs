@@ -77,6 +77,10 @@ namespace ToyBox {
                                                                    || element is ItemsEnough
                                                                    || element is Conditional
                                                                    ;
+#if RT
+        public static int InterestingnessCoefficent(this MechanicEntity entity)
+            => entity is UnitEntityData unit ? unit.InterestingnessCoefficent() : 0;
+#endif        
         public static int InterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
         public static List<BlueprintDialog> GetDialog(this UnitEntityData unit) {
             var dialogs = unit.Parts.m_Parts
