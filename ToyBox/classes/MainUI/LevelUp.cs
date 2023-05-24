@@ -43,7 +43,7 @@ namespace ToyBox {
                     Label("This allows you to select a given feature more than once at level up".localize().green());
                 },
                 () => {
-                    ActionButton("Maximize Mythic Flexibility",
+                    ActionButton("Maximize Mythic Flexibility".localize(),
                                  () => {
                                      Settings.toggleIgnoreClassRestrictions = true;
                                      Settings.toggleAllowCompanionsToBecomeMythic = true;
