@@ -21,13 +21,11 @@ namespace ToyBox {
                     25.space();
                     Label("Tells the game to reset the in game UI.".green() + " Warning".yellow() + " Using this in dialog or the book will dismiss that dialog which may break progress so use with care".orange());
                 },
-#if Wrath
-                () => {
-                    Toggle("Enable Game Development Mode", ref Main.Settings.toggleDevopmentMode);
-                    Space(25);
-                    Label("This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc".green());
+                   () => {
+                       Toggle("Enable Game Development Mode", ref Main.Settings.toggleDevopmentMode);
+                       Space(25);
+                       HelpLabel($"This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc.\n{"Warning: ".yellow().bold()}{"You may need to resart the game for this to fully take effect".orange()}");
                 },
-#endif
                 () => Label(""),
                 () => EnumGrid("Log Level", ref Main.Settings.loggingLevel, AutoWidth()),
                 () => Label(""),
