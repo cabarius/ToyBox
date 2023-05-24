@@ -551,11 +551,12 @@ namespace ToyBox {
                 () => Toggle("Spontaneous Caster Scroll Copy".localize(), ref Settings.toggleSpontaneousCopyScrolls),
 #endif
                 () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
+#if Wrath
                 () => Toggle("Disable Armor Max Dexterity".localize(), ref Settings.toggleIgnoreMaxDexterity),
                 () => Toggle("Disable Armor Speed Reduction".localize(), ref Settings.toggleIgnoreSpeedReduction),
                 () => Toggle("Disable Armor & Shield Arcane Spell Failure".localize(), ref Settings.toggleIgnoreSpellFailure),
                 () => Toggle("Disable Armor & Shield Checks Penalty".localize(), ref Settings.toggleIgnoreArmorChecksPenalty),
-
+#endif
                 () => Toggle("No Friendly Fire On AOEs".localize(), ref Settings.toggleNoFriendlyFireForAOE),
 #if Wrath
                 () => Toggle("Free Meta-Magic".localize(), ref Settings.toggleMetamagicIsFree),

@@ -11,6 +11,7 @@ using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.EntitySystem.Persistence.Versioning;
 using Kingmaker.Items;
+using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
 using Kingmaker.Utility;
 using Kingmaker.Utility.BuildModeUtils;
 using ModKit;
@@ -27,6 +28,20 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
         private static class BuildModeUtility_IsDevelopment_Patch {
             private static void Postfix(ref bool __result) {
                 if (settings.toggleDevopmentMode) __result = true;
+            }
+        }
+
+        // TODO: remove this hack when OwlCat fixes the combat logging
+        [HarmonyPatch(typeof(ReportCombatLogManager), nameof(ReportCombatLogManager.LogCombatLogMessage))]
+        public static class ReportCombatLogManagerPatch {
+            [HarmonyPrefix]
+            private static bool LogCombatLogMessage(ReportCombatLogManager __instance, CombatLogMessage msg) {
+                //Mod.Debug($"ReportCombatLogManager.LogCombatLogMessage - {msg.Message}");
+                if (msg.Message.Contains("ToyBox")) {
+                    __instance.ManageCombatMessageData(msg, null, null);
+                    return false;
+                }
+                return true;
             }
         }
 
