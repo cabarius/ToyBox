@@ -134,7 +134,7 @@ namespace ToyBox {
                                 }, 1, 1, 5);
                         }
 #endif
-#if wrath
+#if Wrath
             using (HorizontalScope()) {
                 Space(100);
                 Label("Size", Width(425));
