@@ -1,7 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
