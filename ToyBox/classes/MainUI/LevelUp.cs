@@ -49,7 +49,7 @@ namespace ToyBox {
                 },
 #if Wrath
                 () => {
-                    ActionButton("Maximize Mythic Flexibility",
+                    ActionButton("Maximize Mythic Flexibility".localize(),
                                  () => {
                                      Settings.toggleIgnoreClassRestrictions = true;
                                      Settings.toggleAllowCompanionsToBecomeMythic = true;
