@@ -31,8 +31,10 @@ using Kingmaker.View;
 using ModKit;
 using Owlcat.Runtime.UniRx;
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Linq;
+using Kingmaker.GameCommands;
 using Kingmaker.Modding;
 using Kingmaker.Stores.DlcInterfaces;
 //using ToyBox.Multiclass;
@@ -40,6 +42,7 @@ using Kingmaker.Stores.DlcInterfaces;
 using UnityEngine;
 using static ModKit.UI;
 using Utilities = Kingmaker.Cheats.Utilities;
+using UniRx;
 
 namespace ToyBox.BagOfPatches {
     internal static partial class Misc {
@@ -86,6 +89,47 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
+
+        [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), nameof(Kingmaker.Items.Slots.ItemSlot.RemoveItem), new Type[] { typeof(bool), typeof(bool) })]
+        private static class ItemSlot_RemoveItem_Patch {
+            private static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
+                    __state = null;
+                    if (__instance.Owner is BaseUnitEntity unit) {
+                        var slot = unit.Body.QuickSlots.FindOrDefault(s => s.HasItem && s.Item == __instance.m_ItemRef);
+                        if (slot != null) {
+                            __state = __instance.m_ItemRef;
+                        }
+                    }
+                }
+            }
+
+            private static IEnumerator FillItem(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity item) {
+                try {
+                    Mod.Debug($"refill {item.Blueprint.Name.cyan()}");
+                    __instance.InsertItem(item);
+                }
+                catch (Exception e) {
+                    Mod.Error($"{e}");
+                }
+                yield return null;
+            }
+
+            private static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
+                    if (__state != null) {
+                        var blueprint = __state.Blueprint;
+                        var item = Game.Instance.Player.Inventory.Items.FirstOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
+                        if (item != null) {
+
+                            MainThreadDispatcher.StartCoroutine(FillItem(__instance, item));
+                        }
+                        __state = null;
+                    }
+                }
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(Player), nameof(Player.OnAreaLoaded))]
         internal static class Player_OnAreaLoaded_Patch {
