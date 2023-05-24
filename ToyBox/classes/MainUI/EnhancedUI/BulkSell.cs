@@ -1,7 +1,7 @@
-﻿using ModKit.Utility;
+﻿using ModKit;
+using ModKit.Utility;
 using System;
 using System.Linq;
-using ModKit;
 using UnityEngine;
 using static ModKit.UI;
 
@@ -14,18 +14,18 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     Label($"{itemTypeName.Cyan()}:", 180.width());
                     Label($"{bonusType.orange()}", 150.width());
-                    Slider(ref enchantLevel, 0, 20, 0, "", 300.width());
-                    Slider(ref stackSize, 0, 20, 1, "", 300.width());
+                    Slider(ref enchantLevel, 0, 20, true, 0, "", 300.width());
+                    Slider(ref stackSize, 0, 20, true, 1, "", 300.width());
                     accessory?.Invoke();
                 }
             }
 
             void ConsumableOptions(string itemTypeName, ref bool sellToggle, ref int stackSize) {
                 using (HorizontalScope()) {
-                    Toggle($"Sell {itemTypeName}", ref sellToggle, 150.width());
+                    Toggle("Sell".localize() + $" {itemTypeName}", ref sellToggle, 150.width());
                     Space(25);
-                    Label("Amount To Keep".Cyan(), 150.width());
-                    Slider(ref stackSize, 0, 200, 1, "", AutoWidth());
+                    Label("Amount To Keep".localize().Cyan(), 150.width());
+                    Slider(ref stackSize, 0, 200, true, 1, "", AutoWidth());
                 }
             }
 
@@ -40,7 +40,7 @@ namespace ToyBox {
                                 .ForEach(group => {
                                     using (HorizontalScope()) {
                                         group.ToList().ForEach(type => {
-                                            ActionToggle(type.type.ToString(), () => settings[type.type], b => settings[type.type] = b, 150);
+                                            ActionToggle(type.type.ToString().localize(), () => settings[type.type], b => settings[type.type] = b, 150);
                                             Space(10);
                                         });
                                     }
@@ -52,58 +52,58 @@ namespace ToyBox {
             using (VerticalScope()) {
                 // create GUI sections
                 using (HorizontalScope()) {
-                    TitleLabel("Category".Cyan(),178.width());
-                    TitleLabel("Type".Cyan(), 150.width());
+                    TitleLabel("Category".localize().Cyan(), 178.width());
+                    TitleLabel("Type".localize().Cyan(), 150.width());
                     5.space();
-                    TitleLabel("Max Modifier".Cyan(), 300.width());
+                    TitleLabel("Max Modifier".localize().Cyan(), 300.width());
                     190.space();
-                    TitleLabel("Amount To Keep".Cyan(), 300.width());
+                    TitleLabel("Amount To Keep".localize().Cyan(), 300.width());
                 }
-                BonusItemOptions("Armors",
-                                 "enchantment",
+                BonusItemOptions("Armors".localize(),
+                                 "enchantment".localize(),
                                  ref _settings.armorEnchantLevel,
                                  ref _settings.armorStackSize,
-                                 () => Toggle("Sell unique armors", ref _settings.sellUniqueArmors)
+                                 () => Toggle("Sell unique armors".localize(), ref _settings.sellUniqueArmors)
                                  );
-                BonusItemOptions("Shields",
-                                 "enchantment",
+                BonusItemOptions("Shields".localize(),
+                                 "enchantment".localize(),
                                  ref
                                  _settings.shieldEnchantLevel,
                                  ref _settings.shieldStackSize,
-                                 () => Toggle("Sell unique shields", ref _settings.sellUniqueShields));
-                BonusItemOptions("Belts", "attribute", ref _settings.maxAttributeBonusForBelt, ref _settings.beltStackSize);
-                BonusItemOptions("Head items", "attribute", ref _settings.maxAttributeBonusForHead, ref _settings.headStackSize);
-                BonusItemOptions("Cloaks", "save", ref _settings.maxSaveBonusForCloaks, ref _settings.cloakStackSize);
-                BonusItemOptions("Bracers", "AC", ref _settings.maxACBonusForBracers, ref _settings.bracerStackSize);
-                BonusItemOptions("Amulets", "AC", ref _settings.maxACBonusForNeck, ref _settings.neckStackSize);
-                BonusItemOptions("Rings", "AC", ref _settings.maxACBonusForRings, ref _settings.ringStackSize);
-                BonusItemOptions("Weapons",
-                                 "enchantment",
+                                 () => Toggle("Sell unique shields".localize(), ref _settings.sellUniqueShields));
+                BonusItemOptions("Belts".localize(), "attribute".localize(), ref _settings.maxAttributeBonusForBelt, ref _settings.beltStackSize);
+                BonusItemOptions("Head items".localize(), "attribute".localize(), ref _settings.maxAttributeBonusForHead, ref _settings.headStackSize);
+                BonusItemOptions("Cloaks".localize(), "save".localize(), ref _settings.maxSaveBonusForCloaks, ref _settings.cloakStackSize);
+                BonusItemOptions("Bracers".localize(), "AC".localize(), ref _settings.maxACBonusForBracers, ref _settings.bracerStackSize);
+                BonusItemOptions("Amulets".localize(), "AC".localize(), ref _settings.maxACBonusForNeck, ref _settings.neckStackSize);
+                BonusItemOptions("Rings".localize(), "AC".localize(), ref _settings.maxACBonusForRings, ref _settings.ringStackSize);
+                BonusItemOptions("Weapons".localize(),
+                                 "enchantment".localize(),
                                  ref _settings.weaponEnchantLevel,
                                  ref _settings.weaponStackSize,
-                                 () => Toggle("Sell unique weapons", ref _settings.sellUniqueWeapons)
+                                 () => Toggle("Sell unique weapons".localize(), ref _settings.sellUniqueWeapons)
                                  );
                 using (HorizontalScope()) {
                     180.space();
-                    DisclosureToggle("Damage Types".Cyan(), ref _settings.showWeaponEnergyTypes, 240f);
+                    DisclosureToggle("Damage Types".localize().Cyan(), ref _settings.showWeaponEnergyTypes, 240f);
                     if (_settings.showWeaponEnergyTypes) {
                         using (VerticalScope()) {
-                            DamageTypeOptions("Elemental:", _settings.damageEnergy);
-                            DamageTypeOptions("Alignment:", _settings.damageAlignment);
-                            DamageTypeOptions("Materials:", _settings.damageMaterial);
-                            DamageTypeOptions("Other:", _settings.damageReality);
+                            DamageTypeOptions("Elemental:".localize(), _settings.damageEnergy);
+                            DamageTypeOptions("Alignment:".localize(), _settings.damageAlignment);
+                            DamageTypeOptions("Materials:".localize(), _settings.damageMaterial);
+                            DamageTypeOptions("Other:".localize(), _settings.damageReality);
                         }
                     }
                 }
-                Label("Consumables", AutoWidth());
+                Label("Consumables".localize(), AutoWidth());
                 DivLast();
-                 ConsumableOptions("Potions", ref _settings.sellPotions, ref _settings.potionStackSize);
-                 ConsumableOptions("Scrolls", ref _settings.sellScrolls, ref _settings.scrollStackSize);
-                 ConsumableOptions("Ingredients", ref _settings.sellIngredients, ref _settings.ingredientStackSize);
- 
+                ConsumableOptions("Potions".localize(), ref _settings.sellPotions, ref _settings.potionStackSize);
+                ConsumableOptions("Scrolls".localize(), ref _settings.sellScrolls, ref _settings.scrollStackSize);
+                ConsumableOptions("Ingredients".localize(), ref _settings.sellIngredients, ref _settings.ingredientStackSize);
+
                 Div(0, 25);
-                Slider("Change all enhancement modifiers", ref _settings.globalModifier, 0, 10, 0, "", AutoWidth());
-                ActionButton("Apply", () => {
+                Slider("Change all enhancement modifiers".localize(), ref _settings.globalModifier, 0, 10, 0, "", true, AutoWidth());
+                ActionButton("Apply".localize(), () => {
                     _settings.maxAttributeBonusForBelt = _settings.globalModifier;
                     _settings.maxAttributeBonusForHead = _settings.globalModifier;
                     _settings.maxSaveBonusForCloaks = _settings.globalModifier;

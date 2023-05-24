@@ -84,7 +84,7 @@ namespace ToyBox {
             int rating;
 
             var modifierRating = RarityScaling * bp.Components?.Sum(
-                c => c is AddStatBonusEquipment sbe ? sbe.Value 
+                c => c is AddStatBonusEquipment sbe ? sbe.Value
                     : c is AllSavesBonusEquipment asbe ? asbe.Value
                     : 0
                     ) ?? 0;
@@ -249,6 +249,7 @@ namespace ToyBox {
 }
 namespace ModKit {
     public static partial class UI {
+        public static void RarityGrid(ref RarityType rarity, int xCols, bool shouldLocalize, params GUILayoutOption[] options) => EnumGrid(ref rarity, xCols, (n, rarity) => shouldLocalize ? n.DarkModeRarity(rarity).localize() : n.DarkModeRarity(rarity), rarityStyle, options);
         public static void RarityGrid(ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(ref rarity, xCols, (n, rarity) => n.DarkModeRarity(rarity), rarityStyle, options);
         public static void RarityGrid(string title, ref RarityType rarity, int xCols, params GUILayoutOption[] options) => EnumGrid(title, ref rarity, xCols, (n, rarity) => n.DarkModeRarity(rarity), rarityStyle, options);
     }

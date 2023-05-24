@@ -48,94 +48,94 @@ namespace ToyBox {
             );
 #endif
             Div(0, 25);
-            HStack("Loot", 1,
+            HStack("Loot".localize(), 1,
                 () => {
-                    BindableActionButton(MassLootBox, Width(400));
+                    BindableActionButton(MassLootBox, true, Width(400));
                     Space(95 - 150);
-                    Label("Lets you open up the area's mass loot screen to grab goodies whenever you want. Normally shown only when you exit the area".green());
+                    Label("Lets you open up the area's mass loot screen to grab goodies whenever you want. Normally shown only when you exit the area".localize().green());
                 },
 #if Wrath
                 () => {
-                    BindableActionButton(OpenPlayerChest, Width(400));
+                    BindableActionButton(OpenPlayerChest, true, Width(400));
                     Space(95 - 150);
-                    Label("Lets you open up your player storage chest that you find near your bed at the Inn and other places".green());
+                    Label("Lets you open up your player storage chest that you find near your bed at the Inn and other places".localize().green());
                 },
                 () => {
-                    ActionButton("Reveal Ground Loot", () => LootHelper.ShowAllChestsOnMap(), Width(400));
+                    ActionButton("Reveal Ground Loot".localize(), () => LootHelper.ShowAllChestsOnMap(), Width(400));
                     Space(150);
-                    Label("Shows all chests/bags/etc on the map excluding hidden".green());
+                    Label("Shows all chests/bags/etc on the map excluding hidden".localize().green());
                 },
                 () => {
-                    ActionButton("Reveal Hidden Ground Loot", () => LootHelper.ShowAllChestsOnMap(true), Width(400));
+                    ActionButton("Reveal Hidden Ground Loot".localize(), () => LootHelper.ShowAllChestsOnMap(true), Width(400));
                     Space(150);
-                    Label("Shows all chests/bags/etc on the map including hidden".green());
+                    Label("Shows all chests/bags/etc on the map including hidden".localize().green());
                 },
                 () => {
-                    ActionButton("Reveal Inevitable Loot", LootHelper.ShowAllInevitablePortalLoot, Width(400));
+                    ActionButton("Reveal Inevitable Loot".localize(), LootHelper.ShowAllInevitablePortalLoot, Width(400));
                     Space(150);
-                    Label("Shows unlocked Inevitable Excess DLC rewards on the map".green());
+                    Label("Shows unlocked Inevitable Excess DLC rewards on the map".localize().green());
                 },
 #endif
 #if DEBUG
-                () => Toggle("Show reasons you can not equip an item in tooltips", ref Settings.toggleShowCantEquipReasons),
+                () => Toggle("Show reasons you can not equip an item in tooltips".localize(), ref Settings.toggleShowCantEquipReasons),
 #endif
                 () => { }
             );
             Div(0, 25);
-            HStack(("Mass Loot"), 1,
+            HStack("Mass Loot".localize(), 1,
                    () => {
-                       Toggle("Show Everything When Leaving Map", ref Settings.toggleMassLootEverything, 400.width());
+                       Toggle("Show Everything When Leaving Map".localize(), ref Settings.toggleMassLootEverything, 400.width());
                        150.space();
-                       Label("Some items might be invisible until looted".green());
+                       Label("Some items might be invisible until looted".localize().green());
                    },
                    () => {
-                       Toggle("Steal from living NPCs", ref Settings.toggleLootAliveUnits, 400.width());
+                       Toggle("Steal from living NPCs".localize(), ref Settings.toggleLootAliveUnits, 400.width());
                        150.space();
-                       Label("Allow Mass Loot to steal from living NPCs".green());
+                       Label("Allow Mass Loot to steal from living NPCs".localize().green());
                    },
                    () => {
-                       Toggle("Allow Looting Of Locked Items", ref Settings.toggleOverrideLockedItems, 400.width());
+                       Toggle("Allow Looting Of Locked Items".localize(), ref Settings.toggleOverrideLockedItems, 400.width());
                        150.space();
-                       Label("This allows you to loot items that are locked such as items carried by certain NPCs and items locked on your characters"
+                       Label(("This allows you to loot items that are locked such as items carried by certain NPCs and items locked on your characters"
                                  .green()
                              + "\nWARNING: ".yellow().bold()
-                             + "This may affect story progression (e.g. your purple knife)".yellow());
+                             + "This may affect story progression (e.g. your purple knife)".yellow()).localize());
                    },
                    () => { }
                   );
             Div(0, 25);
-            HStack("Loot Rarity Coloring", 1,
+            HStack("Loot Rarity Coloring".localize(), 1,
                    () => {
                        using (VerticalScope(300.width())) {
-                           Toggle("Show Rarity Tags", ref Settings.toggleShowRarityTags, 300.width());
-                           Toggle("Color Item Names", ref Settings.toggleColorLootByRarity, 300.width());
+                           Toggle("Show Rarity Tags".localize(), ref Settings.toggleShowRarityTags, 300.width());
+                           Toggle("Color Item Names".localize(), ref Settings.toggleColorLootByRarity, 300.width());
                        }
                        using (VerticalScope()) {
-                           Label($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}"
-                                     .green());
+                           Label(($"This makes loot function like Diablo or Borderlands. {"Note: turning this off requires you to save and reload for it to take effect.".orange()}"
+                                     .green()).localize());
                        }
                    },
                    () => {
                        using (VerticalScope(400.width())) {
-                           Label("Minimum Rarity For Loot Rarity Tags/Colors".cyan(), AutoWidth());
-                           RarityGrid(ref Settings.minRarityToColor, 4, AutoWidth());
+                           Label("Minimum Rarity For Loot Rarity Tags/Colors".localize().cyan(), AutoWidth());
+                           RarityGrid(ref Settings.minRarityToColor, 4, true, AutoWidth());
                        }
                    });
             Div(0, 25);
-            HStack("Loot Rarity Filtering", 1,
+            HStack("Loot Rarity Filtering".localize(), 1,
                     () => {
                         using (VerticalScope(300)) {
                             using (HorizontalScope(300)) {
                                 using (VerticalScope()) {
-                                    Label("Maximum Rarity To Hide:".cyan(), AutoWidth());
-                                    RarityGrid(ref Settings.maxRarityToHide, 4, AutoWidth());
+                                    Label("Maximum Rarity To Hide:".localize().cyan(), AutoWidth());
+                                    RarityGrid(ref Settings.maxRarityToHide, 4, true, AutoWidth());
                                 }
                             }
                         }
                         50.space();
                         using (VerticalScope()) {
                             Label("");
-                            HelpLabel($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}");
+                            HelpLabel($"This hides map pins of loot containers containing at most the selected rarity. {"Note: Changing settings requires reopening the map.".orange()}".localize());
                         }
                     },
                     // The following options let you configure loot filtering and auto sell levels:".green());
@@ -143,9 +143,9 @@ namespace ToyBox {
                     );
 #if Wrath
             Div(0, 25);
-            HStack("Bulk Sell", 1,
+            HStack("Bulk Sell".localize(), 1,
                    () => {
-                       Toggle("Enable custom bulk selling settings", ref Settings.toggleCustomBulkSell, 400.width());
+                       Toggle("Enable custom bulk selling settings".localize(), ref Settings.toggleCustomBulkSell, 400.width());
                    },
                    () => {
                        if (!Settings.toggleCustomBulkSell) return;
@@ -157,7 +157,7 @@ namespace ToyBox {
             Div(0, 25);
             if (Game.Instance.CurrentlyLoadedArea == null) return;
             var isEmpty = true;
-            HStack("Loot Checklist", 1,
+            HStack("Loot Checklist".localize(), 1,
                 () => {
                     var areaName = "";
                     if (Main.IsInGame) {
@@ -169,8 +169,8 @@ namespace ToyBox {
                         if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }
                     Label(areaName.orange().bold(), Width(300));
-                    Label("Rarity: ".cyan(), AutoWidth());
-                    RarityGrid(ref Settings.lootChecklistFilterRarity, 4, AutoWidth());
+                    Label("Rarity: ".localize().cyan(), AutoWidth());
+                    RarityGrid(ref Settings.lootChecklistFilterRarity, 4, true, AutoWidth());
                 },
                 () => {
                     ActionTextField(
@@ -179,12 +179,12 @@ namespace ToyBox {
                     (text) => { },
                     () => { },
                     Width(300));
-                    Space(25); Toggle("Show Friendly", ref Settings.toggleLootChecklistFilterFriendlies);
-                    Space(25); Toggle("Blueprint", ref Settings.toggleLootChecklistFilterBlueprint, AutoWidth());
-                    Space(25); Toggle("Description", ref Settings.toggleLootChecklistFilterDescription, AutoWidth());
+                    Space(25); Toggle("Show Friendly".localize(), ref Settings.toggleLootChecklistFilterFriendlies);
+                    Space(25); Toggle("Blueprint".localize(), ref Settings.toggleLootChecklistFilterBlueprint, AutoWidth());
+                    Space(25); Toggle("Description".localize(), ref Settings.toggleLootChecklistFilterDescription, AutoWidth());
                 },
                 () => {
-                    if (!Main.IsInGame) { Label("Not available in the Main Menu".orange()); return; }
+                    if (!Main.IsInGame) { Label("Not available in the Main Menu".localize().orange()); return; }
                     var presentGroups = LootHelper.GetMassLootFromCurrentArea().GroupBy(p => p.InteractionLoot != null ? "Containers" : "Units");
                     var indent = 3;
                     using (VerticalScope()) {
@@ -196,19 +196,19 @@ namespace ToyBox {
                             }).ToList();
                             var rarity = Settings.lootChecklistFilterRarity;
                             var count = presents
-                                        .Where(p => 
-                                                   p.Unit == null 
-#if Wrath                                                   
-                                                   || (Settings.toggleLootChecklistFilterFriendlies 
-                                                       && !p.Unit.IsPlayersEnemy 
+                                        .Where(p =>
+                                                   p.Unit == null
+#if Wrath
+                                                   || (Settings.toggleLootChecklistFilterFriendlies
+                                                       && !p.Unit.IsPlayersEnemy
                                                        || p.Unit.IsPlayersEnemy
-                                                       ) 
-                                                   || (!Settings.toggleLootChecklistFilterFriendlies 
+                                                       )
+                                                   || (!Settings.toggleLootChecklistFilterFriendlies
                                                        && p.Unit.IsPlayersEnemy
                                                        )
 #endif
                                                    ).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
-                            Label($"{group.Key.cyan()}: {count}");
+                            Label($"{group.Key.localize().cyan()}: {count}");
                             Div(indent);
                             foreach (var present in presents) {
                                 var phatLewtz = present.GetLewtz(searchText).Lootable(rarity).OrderByDescending(l => l.Rarity()).ToList();
@@ -216,11 +216,11 @@ namespace ToyBox {
                                 if (phatLewtz.Any()
                                     && (unit == null
 #if Wrath
-                                        || (Settings.toggleLootChecklistFilterFriendlies 
-                                            && !unit.IsPlayersEnemy 
+                                        || (Settings.toggleLootChecklistFilterFriendlies
+                                            && !unit.IsPlayersEnemy
                                             || unit.IsPlayersEnemy
                                             )
-                                        || (!Settings.toggleLootChecklistFilterFriendlies 
+                                        || (!Settings.toggleLootChecklistFilterFriendlies
                                             && unit.IsPlayersEnemy
                                             )
 #endif
@@ -234,14 +234,14 @@ namespace ToyBox {
                                         if (present.InteractionLoot != null) {
 #if Wrath
                                             if (present.InteractionLoot?.Owner?.PerceptionCheckDC > 0)
-                                                Label($" Perception DC: {present.InteractionLoot?.Owner?.PerceptionCheckDC}".green().bold(), Width(125));
+                                                Label(" Perception DC: ".localize() + $"{present.InteractionLoot?.Owner?.PerceptionCheckDC}".green().bold(), Width(125));
                                             else
-                                                Label($" Perception DC: NA".orange().bold(), Width(125));
+                                                Label(" Perception DC: NA".localize().orange().bold(), Width(125));
                                             int? trickDc = present.InteractionLoot?.Owner?.Get<DisableDeviceRestrictionPart>()?.DC;
                                             if (trickDc > 0)
-                                                Label($" Trickery DC: {trickDc}".green().bold(), Width(125));
+                                                Label(" Trickery DC: ".localize() + $"{trickDc}".green().bold(), Width(125));
                                             else
-                                                Label($" Trickery DC: NA".orange().bold(), Width(125));
+                                                Label(" Trickery DC: NA".localize().orange().bold(), Width(125));
 #endif
                                         }
                                         Space(25);
@@ -272,7 +272,7 @@ namespace ToyBox {
                 () => {
                     if (!isEmpty) return;
                     using (HorizontalScope()) {
-                        Label("No Loot Available".orange(), AutoWidth());
+                        Label("No Loot Available".localize().orange(), AutoWidth());
                     }
                 }
             );
