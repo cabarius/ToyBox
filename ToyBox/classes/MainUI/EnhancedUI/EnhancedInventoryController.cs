@@ -61,17 +61,15 @@ namespace ToyBox {
 
                     if (text == null)
                     {
-                        ItemsFilter.FilterType localization_enum = (ItemsFilter.FilterType)idx;
-
                         // For whatever reason, the localization DB has the wrong info for some of these options... I suspect someone changed the enum order
                         // around and these particular strings are not used anywhere.
 
-                        switch (idx)
-                        {
-                            case (int)ItemsFilter.FilterType.Ingredients:    localization_enum = ItemsFilter.FilterType.NonUsable; break;
-                            case (int)ItemsFilter.FilterType.Usable:         localization_enum = ItemsFilter.FilterType.Ingredients; break;
-                            case (int)ItemsFilter.FilterType.NonUsable:      localization_enum = ItemsFilter.FilterType.Usable; break;
-                        }
+                        ItemsFilter.FilterType localization_enum = idx switch {
+                            (int)ItemsFilter.FilterType.Ingredients => ItemsFilter.FilterType.NonUsable,
+                            (int)ItemsFilter.FilterType.Usable => ItemsFilter.FilterType.Ingredients,
+                            (int)ItemsFilter.FilterType.NonUsable => ItemsFilter.FilterType.Usable,
+                            _ => (ItemsFilter.FilterType)idx
+                        };
 
                         text = LocalizedTexts.Instance.ItemsFilter.GetText(localization_enum);
                         EnhancedInventory.FilterCategoryMap[flag] = (idx, text);

@@ -60,7 +60,11 @@ using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
 using Kingmaker.UI.Common;
 using System.Collections;
 using Kingmaker.UI;
+using Kingmaker.UI.PathRenderer;
 using static Kingmaker.Sound.AkAudioService;
+using Kingmaker.Pathfinding;
+using Kingmaker.View.Covers;
+using static Kingmaker.UnitLogic.Abilities.AbilityData;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -104,6 +108,24 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+
+        [HarmonyPatch(typeof(GameHistoryLog), nameof(GameHistoryLog.HandlePartyCombatStateChanged))]
+        private static class GameHistoryLog_HandlePartyCombatStateChanged_Patch {
+            private static void Postfix(ref bool inCombat) {
+                if (!inCombat && Settings.toggleRestoreSpellsAbilitiesAfterCombat) {
+                    var partyMembers = Game.Instance.Player.PartyAndPets;
+                    foreach (var u in partyMembers) {
+                        foreach (var resource in u.AbilityResources)
+                            u.AbilityResources.Restore(resource);
+                        u.Brain.RestoreAvailableActions();
+                    }
+                }
+                if (!inCombat && Settings.toggleRechargeItemsAfterCombat) { }
+                if (!inCombat && Settings.toggleInstantRestAfterCombat) {
+                    CheatsCombat.RestAll();
+                }
+            }
+        }
 #if FALSE
 
         [HarmonyPatch(typeof(FogOfWarArea), nameof(FogOfWarArea.RevealOnStart), MethodType.Getter)]
@@ -119,50 +141,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(GameHistoryLog), nameof(GameHistoryLog.HandlePartyCombatStateChanged))]
-        private static class GameHistoryLog_HandlePartyCombatStateChanged_Patch {
-            private static void Postfix(ref bool inCombat) {
-                if (!inCombat && settings.toggleRestoreSpellsAbilitiesAfterCombat) {
-                    var partyMembers = Game.Instance.Player.PartyAndPets;
-                    foreach (var u in partyMembers) {
-                        foreach (var resource in u.Descriptor.Resources)
-                            u.Descriptor.Resources.Restore(resource);
-                        foreach (var spellbook in u.Descriptor.Spellbooks)
-                            spellbook.Rest();
-                        u.Brain.RestoreAvailableActions();
-                    }
-                }
-                if (!inCombat && settings.toggleRechargeItemsAfterCombat) {
-
-                }
-                if (!inCombat && settings.toggleInstantRestAfterCombat) {
-                    CheatsCombat.RestAll();
-                }
-                if (inCombat && (settings.toggleEnterCombatAutoRage || settings.toggleEnterCombatAutoRage)) {
-                    foreach (var unit in Game.Instance.Player.Party) {
-                        var flag = true;
-                        if (settings.toggleEnterCombatAutoRageDemon) { // we prefer demon rage, as it's more powerful
-                            foreach (var ability in unit.Abilities) {
-                                if (ability.Blueprint.AssetGuid == rage_demon && ability.Data.IsAvailableForCast) {
-                                    Kingmaker.RuleSystem.Rulebook.Trigger(new RuleCastSpell(ability.Data, unit));
-                                    ability.Data.Spend();
-                                    flag = false; // if demon rage is active, we skip the normal rage checks
-                                    break;
-                                }
-                            }
-                        }
-                        if (flag && settings.toggleEnterCombatAutoRage) {
-                            foreach (var activatable in unit.ActivatableAbilities) {
-                                if (activatable.Blueprint.AssetGuid == rage_barbarian
-                                    || activatable.Blueprint.AssetGuid == rage_blood
-                                    || activatable.Blueprint.AssetGuid == rage_focused) {
-                                    activatable.IsOn = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
 #if false
                 if (!inCombat && settings.toggleRestoreItemChargesAfterCombat) {
                     Cheats.RestoreAllItemCharges();
@@ -282,6 +260,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        // This is probably a no go for RT
         [HarmonyPatch]
         private static class AbilityAlignment_IsRestrictionPassed_Patch {
             [HarmonyPatch(typeof(AbilityCasterAlignment), nameof(AbilityCasterAlignment.IsCasterRestrictionPassed))]
@@ -318,16 +297,160 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch]
-        private static class AbilityData_CanBeCastByCaster_Patch {
-            [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.CanBeCastByCaster), MethodType.Getter)]
+#endif
+        [HarmonyPatch(typeof(AbilityData))]
+        private static class AbilityDataPatch {
+            //[HarmonyPatch(nameof(AbilityData.CanTargetFromNode), new Type[] {typeof(CustomGridNodeBase), typeof(CustomGridNodeBase), typeof(TargetWrapper), typeof(int), typeof(LosCalculations.CoverType), typeof(UnavailabilityReasonType?)})]
+            [HarmonyPatch(nameof(AbilityData.CanTargetFromNode),
+                          new Type[] {
+                              typeof(CustomGridNodeBase),
+                              typeof(CustomGridNodeBase),
+                              typeof(TargetWrapper),
+                              typeof(int),
+                              typeof(LosCalculations.CoverType),
+                              typeof(UnavailabilityReasonType?)
+                          },
+                          new ArgumentType[] {
+                              ArgumentType.Normal,
+                              ArgumentType.Normal,
+                              ArgumentType.Normal,
+                              ArgumentType.Out,
+                              ArgumentType.Out,
+                              ArgumentType.Out
+                          })]
+            [HarmonyPostfix]
+            public static void CanTargetFromNode(
+                    CustomGridNodeBase casterNode,
+                    CustomGridNodeBase targetNodeHint,
+                    TargetWrapper target,
+                    ref int distance,
+                    ref LosCalculations.CoverType los,
+                    ref UnavailabilityReasonType? unavailabilityReason,
+                    AbilityData __instance,
+                    ref bool __result
+                ) {
+                if (!Settings.toggleIgnoreAbilityAnyRestriction) return;
+                if (!(__instance?.Caster?.IsPartyOrPet() ?? false)) return;
+                if (__result) return;
+
+                if (unavailabilityReason is UnavailabilityReasonType reason) {
+                    switch (reason) {
+                        case UnavailabilityReasonType.AreaEffectsCannotOverlap:
+                            if (Settings.toggleIgnoreAbilityAnyRestriction || Settings.toggleIgnoreAbilityAoeOverlap)
+                                __result = true;
+                            break;
+                        case UnavailabilityReasonType.HasNoLosToTarget:
+                            if (Settings.toggleIgnoreAbilityAnyRestriction || Settings.toggleIgnoreAbilityLineOfSight)
+                                __result = true;
+                            break;
+                        case UnavailabilityReasonType.TargetTooFar:
+                            if (Settings.toggleIgnoreAbilityAnyRestriction || Settings.toggleIgnoreAbilityTargetTooFar)
+                                __result = true;
+                            break;
+                        case UnavailabilityReasonType.TargetTooClose:
+                            if (Settings.toggleIgnoreAbilityAnyRestriction || Settings.toggleIgnoreAbilityTargetTooClose)
+                                __result = true;
+                            break;
+                        default:
+                            if (Settings.toggleIgnoreAbilityAnyRestriction)
+                                __result = true;
+                            break;
+                    }
+                }
+                else if (Settings.toggleIgnoreAbilityAnyRestriction)
+                    __result = true;
+            }
+        }
+#if false
+
+toggleIgnoreAbilityAoeOverlap
+toggleIgnoreAbilityLineOfSight
+toggleIgnoreAbilityTargetTooFar
+toggleIgnoreAbilityTargetTooClose
+
+        [HarmonyPatch(typeof(AbilityData))]
+        private static class AbilityDataPatch {
+            [HarmonyPatch(nameof(AbilityData.CanTargetFromNode), MethodType.Getter)]
             [HarmonyPrefix]
-            public static bool PostfixCasterRestriction(ref bool __result, AbilityData __instance) {
-                if (settings.toggleIgnoreAbilityAnyRestriction && __instance?.Caster?.Unit?.Descriptor?.IsPartyOrPet() == true) {
+            public static bool CanTargetFromNode(
+                    AbilityData __instance,
+                    CustomGridNodeBase casterNode,
+                    CustomGridNodeBase targetNodeHint,
+                    TargetWrapper target,
+                    out int distance,
+                    out LosCalculations.CoverType los,
+                    out UnavailabilityReasonType? unavailabilityReason,
+                    ref bool __result
+                ) {
+
+                distance = -1;
+                los = LosCalculations.CoverType.None;
+                unavailabilityReason = new UnavailabilityReasonType?();
+                if (!Settings.toggleIgnoreAbilityAnyRestriction) return true;
+                if (!(__instance?.Caster?.IsPartyOrPet() ?? false)) return true;
+
+                var shootingPosition = __instance.GetBestShootingPosition(casterNode, target);
+                if (!__instance.IsValid(target, casterNode.Vector3Position)) {
+                    unavailabilityReason = UnavailabilityReasonType.Unknown;
+                    __result = false;
+                    return false;
+                }
+
+                if (!__instance.IsPatternRestrictionPassed(target)) {
+                    unavailabilityReason = UnavailabilityReasonType.AreaEffectsCannotOverlap;
+                    __result = false;
+                    return false;
+                }
+
+                var customGridNodeBase = targetNodeHint ?? target.NearestNode;
+                if (__instance.Weapon?.Blueprint != null && __instance.Weapon.Blueprint.IsMelee && !LosCalculations.HasMeleeLos(casterNode, customGridNodeBase)) {
+                    unavailabilityReason = UnavailabilityReasonType.HasNoLosToTarget;
+                    __result = false;
+                    return false;
+                }
+
+                if (__instance.IsRangeUnrestrictedForTarget(target)) {
                     __result = true;
                     return false;
                 }
-                return true;
+                distance = WarhammerGeometryUtils.DistanceToInCells(casterNode.Vector3Position,
+                                                                    __instance.Caster.SizeRect,
+                                                                    __instance.Caster.Forward,
+                                                                    target.Point,
+                                                                    target.SizeRect,
+                                                                    target.Forward);
+                if (distance > __instance.RangeCells) {
+                    unavailabilityReason = UnavailabilityReasonType.TargetTooFar;
+                    __result = false;
+                    return false;
+                }
+
+                if (distance < __instance.MinRangeCells) {
+                    unavailabilityReason = UnavailabilityReasonType.TargetTooClose;
+                    __result = false;
+                    return false;
+                }
+
+                if (__instance.NeedLoS) {
+                    if (__instance.Blueprint.IsLosDefinedByPattern || __instance.Caster is StarshipEntity) {
+                        if (UnitPredictionManager.Instance != null && UnitPredictionManager.Instance.AffectedNodes != null && !UnitPredictionManager.Instance.AffectedNodes.Contains(customGridNodeBase)) {
+                            unavailabilityReason = UnavailabilityReasonType.HasNoLosToTarget;
+                            __result = false;
+                            return false;
+                        }
+                    }
+                    else if (!LosCalculations.HasLos(__instance.UseBestShootingPosition ? shootingPosition : casterNode,
+                                                     __instance.Caster.SizeRect,
+                                                     customGridNodeBase,
+                                                     target.SizeRect)) {
+                        unavailabilityReason = UnavailabilityReasonType.HasNoLosToTarget;
+                        __result = false;
+                        return false;
+                    }
+                }
+
+                __result = true;
+                return false;
             }
         }
 #endif
@@ -380,6 +503,16 @@ namespace ToyBox.BagOfPatches {
                 return unit.MovementAgent.Position.To2D() != unit.MovementAgent.m_PreviousPosition;
             }
         }
+
+        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.IsUsableFromInventory), MethodType.Getter)]
+        public static class ItemEntity_IsUsableFromInventory_Patch {
+            // Allow Item Use From Inventory During Combat
+            public static bool Prefix(ItemEntity __instance, ref bool __result) {
+                if (!Settings.toggleUseItemsDuringCombat) return true;
+                return __instance.Blueprint is not BlueprintItemEquipmentUsable;
+            }
+        }
+
 
         [HarmonyPatch(typeof(PartyAwarenessController))]
         public static class PartyAwarenessControllerPatch {
@@ -529,18 +662,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.IsUsableFromInventory), MethodType.Getter)]
-        public static class ItemEntity_IsUsableFromInventory_Patch {
-            // Allow Item Use From Inventory During Combat
-            public static bool Prefix(ItemEntity __instance, ref bool __result) {
-                if (!settings.toggleUseItemsDuringCombat) return true;
-
-                var item = __instance.Blueprint as BlueprintItemEquipment;
-                __result = item?.Ability != null;
-                return false;
-            }
-        }
-
         [HarmonyPatch(typeof(Unrecruit), nameof(Unrecruit.RunAction))]
         public class Unrecruit_RunAction_Patch {
             public static bool Prefix() => !settings.toggleBlockUnrecruit;
@@ -610,15 +731,6 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ref bool __result, UnitPartMagus __instance) {
                 if (settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
                     __result = true;
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(GlobalMapPathManager), nameof(GlobalMapPathManager.GetTimeToCapital))]
-        public static class GlobalMapPathManager_GetTimeToCapital_Patch {
-            public static void Postfix(bool andBack, ref TimeSpan? __result) {
-                if (settings.toggleInstantChangeParty && andBack && __result != null) {
-                    __result = TimeSpan.Zero;
                 }
             }
         }
