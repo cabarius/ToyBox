@@ -88,18 +88,18 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(AudioServiceDrivingBehaviour), nameof(AudioServiceDrivingBehaviour.OnApplicationFocus))]
-        public static class AudioServiceDrivingBehaviourPatch
-        {
-            private static bool Prefix(AkSoundEngineController __instance)
-            {
+        public static class AudioServiceDrivingBehaviourPatch {
+            [HarmonyPrefix]
+            private static bool OnApplicationFocus(AkSoundEngineController __instance) {
+                Mod.Trace($"AudioServiceDrivingBehaviour.OnApplicationFocus - {Settings.toggleContinueAudioOnLostFocus}");
                 return !Settings.toggleContinueAudioOnLostFocus;
             }
         }
         [HarmonyPatch(typeof(SoundState), nameof(SoundState.OnApplicationFocusChanged))]
-        public static class SoundState_OnApplicationFocusChanged_Patch
-        {
-            private static bool Prefix()
-            {
+        public static class SoundState_OnApplicationFocusChanged_Patch {
+            [HarmonyPrefix]
+            private static bool OnApplicationFocusChanged() {
+                Mod.Trace($"AudioServiceDrivingBehaviour.OnApplicationFocusChanged - {Settings.toggleContinueAudioOnLostFocus}");
                 return !Settings.toggleContinueAudioOnLostFocus;
             }
         }
