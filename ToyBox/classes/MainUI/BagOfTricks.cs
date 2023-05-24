@@ -314,9 +314,9 @@ namespace ToyBox {
                    },
 #if DEBUG
                    () => {
-                       Toggle("Randomize NPC Responses To Dialog Choices", ref Settings.toggleRandomizeCueSelections, 300.width());
+                       Toggle("Randomize NPC Responses To Dialog Choices".localize(), ref Settings.toggleRandomizeCueSelections, 300.width());
                        200.space();
-                       Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
+                       Label(("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange()).localize());
                    },
 #endif
 #if Wrath                   
@@ -327,7 +327,7 @@ namespace ToyBox {
                    () => Toggle("Disable Dialog Restrictions (SoulMark)".localize(), ref Settings.toggleDialogRestrictions),
 #endif
 #if DEBUG
-                   () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref Settings.toggleDialogRestrictionsEverything),
+                   () => Toggle("Disable Dialog Restrictions (Everything, Experimental)".localize(), ref Settings.toggleDialogRestrictionsEverything),
 #endif
                    () => { }
                 );
@@ -464,12 +464,12 @@ namespace ToyBox {
                            var altTimeScaleTitle = "Alternate Time Scale".localize();
                            if (!useAlt) altTimeScaleTitle = altTimeScaleTitle.grey();
                            using (HorizontalScope()) {
-                               LogSlider(mainTimeScaleTitle, ref Settings.timeScaleMultiplier, 0f, 20, 1, 1, "", Width(450));
+                               LogSlider(mainTimeScaleTitle, ref Settings.timeScaleMultiplier, 0f, 20, 1, 1, "", true, Width(450));
                                Space(25);
                                Label("Speeds up or slows down the entire game (movement, animation, everything)".localize().green());
                            }
                            using (HorizontalScope()) {
-                               LogSlider(altTimeScaleTitle, ref Settings.alternateTimeScaleMultiplier, 0f, 20, 5, 1, "", Width(450));
+                               LogSlider(altTimeScaleTitle, ref Settings.alternateTimeScaleMultiplier, 0f, 20, 5, 1, "", true, Width(450));
                            }
                            using (HorizontalScope()) {
                                BindableActionButton(TimeScaleMultToggle, true);
@@ -480,7 +480,7 @@ namespace ToyBox {
                        }
                    },
 #if Wrath
-                   () => Slider("Turn Based Combat Delay".localize(), ref Settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width(450)),
+                   () => Slider("Turn Based Combat Delay".localize(), ref Settings.turnBasedCombatStartDelay, 0f, 4f, true, 4f, 1, "", Width(450)),
                    () => {
                        using (VerticalScope()) {
 
@@ -489,19 +489,19 @@ namespace ToyBox {
                                    Div(0, 25, 1280);
                                    if (Toggle("Enable Brutal Unfair Difficulty".localize(), ref Settings.toggleBrutalUnfair)) {
                                        EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
-                                                                                                                                           h.HandleDifficultyChanged();
-                                                                                                                                           Main.SetNeedsResetGameUI();
-                                                                                                                                       }));
+                                           h.HandleDifficultyChanged();
+                                           Main.SetNeedsResetGameUI();
+                                       }));
                                    }
                                    Space(15);
                                    Label("This allows you to play with the originally released Unfair difficulty. ".localize().green() + ("Note:".orange().bold() + "This Unfair difficulty was bugged and applied the intended difficulty modifers twice. ToyBox allows you to keep playing at this Brutal difficulty level and beyond.  Use the slider below to select your desired Brutality Level".green()).localize(), Width(1200));
                                    Space(15);
                                    using (HorizontalScope()) {
-                                       if (Slider("Brutality Level".localize(), ref Settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", Width(450))) {
+                                       if (Slider("Brutality Level".localize(), ref Settings.brutalDifficultyMultiplier, 1f, 8f, true, 2f, 1, "", Width(450))) {
                                            EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
-                                                                                                                                               h.HandleDifficultyChanged();
-                                                                                                                                               Main.SetNeedsResetGameUI();
-                                                                                                                                           }));
+                                               h.HandleDifficultyChanged();
+                                               Main.SetNeedsResetGameUI();
+                                           }));
                                        }
                                        Space(25);
                                        var brutaltiy = Settings.brutalDifficultyMultiplier;
@@ -622,9 +622,9 @@ namespace ToyBox {
             Div(0, 25);
 #if Wrath
             HStack("Class Specific".localize(), 1,
-                () => Slider("Kineticist: Burn Reduction".localize(), ref Settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
+                () => Slider("Kineticist: Burn Reduction".localize(), ref Settings.kineticistBurnReduction, 0, 30, 0, "", true, AutoWidth()),
                         () => Slider("Arcanist: Spell Slot Multiplier".localize(), ref Settings.arcanistSpellslotMultiplier, 0.5f, 10f,
-                                1f, 1, "", AutoWidth()),
+                                true, 1f, 1, "", AutoWidth()),
                         () => {
                             Space(25);
                             Label("Please rest after adjusting to recalculate your spell slots.".localize().green());
@@ -640,13 +640,13 @@ namespace ToyBox {
 #endif
             Div(0, 25);
             HStack("Experience Multipliers".localize(), 1,
-                () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
+                () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", true, AutoWidth()),
                 () => {
                     using (HorizontalScope()) {
                         Toggle("Override for Combat".localize(), ref Settings.useCombatExpSlider, Width(275));
                         if (Settings.useCombatExpSlider) {
                             Space(10);
-                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierCombat, 0f, 100f, 1, 1, "", 12, AutoWidth());
+                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierCombat, 0f, 100f, 1, 1, "", 12, true, AutoWidth());
                         }
                     }
                 },
@@ -655,7 +655,7 @@ namespace ToyBox {
                         Toggle("Override for Quests".localize(), ref Settings.useQuestsExpSlider, Width(275));
                         if (Settings.useQuestsExpSlider) {
                             Space(10);
-                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierQuests, 0f, 100f, 1, 1, "", 12, AutoWidth());
+                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierQuests, 0f, 100f, 1, 1, "", 12, true, AutoWidth());
                         }
                     }
                 },
@@ -664,7 +664,7 @@ namespace ToyBox {
                         Toggle("Override for Skill Checks".localize(), ref Settings.useSkillChecksExpSlider, Width(275));
                         if (Settings.useSkillChecksExpSlider) {
                             Space(10);
-                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierSkillChecks, 0f, 100f, 1, 1, "", 12, AutoWidth());
+                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierSkillChecks, 0f, 100f, 1, 1, "", 12, true, AutoWidth());
                         }
                     }
                 },
@@ -673,7 +673,7 @@ namespace ToyBox {
                         Toggle("Override for Traps".localize(), ref Settings.useTrapsExpSlider, Width(275));
                         if (Settings.useTrapsExpSlider) {
                             Space(10);
-                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierTraps, 0f, 100f, 1, 1, "", 12, AutoWidth());
+                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierTraps, 0f, 100f, 1, 1, "", 12, true, AutoWidth());
                         }
                     }
                 }
@@ -681,14 +681,14 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Other Multipliers".localize(), 1,
                 () => {
-                    LogSlider("Fog of War Range".localize(), ref Settings.fowMultiplier, 0f, 100f, 1, 1, "", AutoWidth());
+                    LogSlider("Fog of War Range".localize(), ref Settings.fowMultiplier, 0f, 100f, 1, 1, "", true, AutoWidth());
                     List<UnitEntityData> units = Game.Instance?.Player?.m_PartyAndPets;
                     if (units != null) {
                         foreach (var unit in units) {
 #if Wrath
                             FogOfWarController.VisionRadiusMultiplier = Settings.fowMultiplier;
 #endif
-                        // TODO: do we need this for RT?
+                            // TODO: do we need this for RT?
                             FogOfWarRevealerSettings revealer = unit.View?.FogOfWarRevealer;
                             if (revealer != null) {
                                 if (Settings.fowMultiplier == 1) {
@@ -710,33 +710,33 @@ namespace ToyBox {
                         }
                     }
                 },
-                () => LogSlider("Money Earned".localize(), ref Settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Sell Price".localize(), ref Settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Buy Price".localize(), ref Settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => Slider("Increase Carry Capacity".localize(), ref Settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
-                () => Slider("Increase Carry Capacity (Party Only)".localize(), ref Settings.encumberanceMultiplierPartyOnly, 1, 100, 1, "", AutoWidth()),
-                () => LogSlider("Spontaneous Spells Per Day".localize(), ref Settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Prepared Spellslots".localize(), ref Settings.memorizedSpellsMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
+                () => LogSlider("Money Earned".localize(), ref Settings.moneyMultiplier, 0f, 20, 1, 1, "", true, AutoWidth()),
+                () => LogSlider("Vendor Sell Price".localize(), ref Settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", true, AutoWidth()),
+                () => LogSlider("Vendor Buy Price".localize(), ref Settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", true, AutoWidth()),
+                () => Slider("Increase Carry Capacity".localize(), ref Settings.encumberanceMultiplier, 1, 100, 1, "", true, AutoWidth()),
+                () => Slider("Increase Carry Capacity (Party Only)".localize(), ref Settings.encumberanceMultiplierPartyOnly, 1, 100, 1, "", true, AutoWidth()),
+                () => LogSlider("Spontaneous Spells Per Day".localize(), ref Settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", true, AutoWidth()),
+                () => LogSlider("Prepared Spellslots".localize(), ref Settings.memorizedSpellsMultiplier, 0f, 20, 1, 1, "", true, AutoWidth()),
                 () => {
-                    LogSlider("Movement Speed".localize(), ref Settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
+                    LogSlider("Movement Speed".localize(), ref Settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", true, Width(600));
                     Space(25);
                     Toggle("Whole Team Moves Same Speed".localize(), ref Settings.toggleMoveSpeedAsOne);
                     Space(25);
                     Label("Adjusts the movement speed of your party in area maps".localize().green());
                 },
                 () => {
-                    LogSlider("Travel Speed".localize(), ref Settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
+                    LogSlider("Travel Speed".localize(), ref Settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", true, Width(600));
                     Space(25);
                     Label("Adjusts the movement speed of your party on world maps".localize().green());
                 },
                 () => {
-                    LogSlider("Companion Cost".localize(), ref Settings.companionCostMultiplier, 0, 20, 1, 1, "", Width(600));
+                    LogSlider("Companion Cost".localize(), ref Settings.companionCostMultiplier, 0, 20, 1, 1, "", true, Width(600));
                     Space(25);
                     Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".localize().green());
 
                 },
-                () => LogSlider("Enemy HP Multiplier".localize(), ref Settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Buff Duration".localize(), ref Settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
+                () => LogSlider("Enemy HP Multiplier".localize(), ref Settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", true, AutoWidth()),
+                () => LogSlider("Buff Duration".localize(), ref Settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", true, AutoWidth()),
                 () => DisclosureToggle("Exceptions to Buff Duration Multiplier (Advanced; will cause blueprints to load)".localize(), ref showBuffDurationExceptions),
                 () => {
                     if (!showBuffDurationExceptions) return;
@@ -777,16 +777,16 @@ namespace ToyBox {
                         }
                         Space(25);
                         EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget1, true, AutoWidth());
-                        LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", AutoWidth());
+                        LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", true, AutoWidth());
+                        Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier1, -20f, +20f, true, 0f, 0, "", AutoWidth());
                         Div(0, 25);
                         using (HorizontalScope()) {
                             Label("Secondary".localize().orange(), AutoWidth()); Space(215); Label("good for larger group or to reduce enemies".localize().green());
                         }
                         Space(25);
                         EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget2, true, AutoWidth());
-                        LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", AutoWidth());
+                        LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", true, AutoWidth());
+                        Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier2, -20f, +20f, true, 0f, 0, "", AutoWidth());
                     }
                 },
                 () => { }
