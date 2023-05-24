@@ -1,10 +1,10 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
+using System.Collections.Generic;
+using System.Linq;
 using static ModKit.UI;
 
 namespace ToyBox {
@@ -27,8 +27,8 @@ namespace ToyBox {
                     //new NamedFunc<List<UnitEntityData>>("Familiars", Game.Instance.Player.Party.SelectMany(ch => ch.Familiars),
                     new NamedFunc<List<UnitEntityData>>("Nearby", () => {
                         var player = GameHelper.GetPlayerCharacter();
-                        return player == null 
-                                   ? new List<UnitEntityData> () 
+                        return player == null
+                                   ? new List<UnitEntityData> ()
                                    : GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, (int)nearbyRange , false, false).ToList();
                     }),
                     new NamedFunc<List<UnitEntityData>>("Friendly", () => Shodan.AllUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
@@ -54,13 +54,14 @@ namespace ToyBox {
         }
         public static void ResetGUI() => _selectedIndex = 0;
 
-        public static NamedFunc<List<UnitEntityData>> OnFilterPickerGUI() {
+        public static NamedFunc<List<UnitEntityData>> OnFilterPickerGUI(bool shouldLocalize = false) {
             var filterChoices = GetPartyFilterChoices();
             if (filterChoices == null) { return null; }
 
             var characterListFunc = TypePicker(
                 null,
                 ref Main.Settings.selectedPartyFilter,
+                shouldLocalize,
                 filterChoices
                 );
             return characterListFunc;
