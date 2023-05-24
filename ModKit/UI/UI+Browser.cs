@@ -53,6 +53,7 @@ namespace ModKit {
             private CancellationTokenSource _cancellationTokenSource;
             private string _searchText = "";
             public string SearchText => _searchText;
+            public bool shouldLocalize;
             public bool SearchAsYouType;
             public bool ShowAll;
             public bool IsDetailBrowser;
@@ -85,11 +86,12 @@ namespace ModKit {
             public bool availableIsStatic { get; private set; }
             private List<Definition> _availableCache;
             public void OnShowGUI() => needsReloadData = true;
-            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false) {
+            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false, bool shouldLocalize = false) {
                 SearchAsYouType = searchAsYouType;
                 this.availableIsStatic = availableIsStatic;
                 IsDetailBrowser = isDetailBrowser;
                 Mod.NotifyOnShowGUI += OnShowGUI;
+                this.shouldLocalize = shouldLocalize;
             }
 
             public void OnGUI(
@@ -121,13 +123,15 @@ namespace ModKit {
                                 _searchQueryChanged = true;
                             }, () => { needsReloadData = true; }, MinWidth(320), AutoWidth());
                             25.space();
-                            Label("Limit", ExpandWidth(false));
+                            var limitString = shouldLocalize ? "Limit".localize() : "Limit";
+                            Label(limitString, ExpandWidth(false));
                             var searchLimit = SearchLimit;
                             ActionIntTextField(ref searchLimit, "Search Limit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
                             if (searchLimit > 1000) { searchLimit = 1000; }
                             SearchLimit = searchLimit;
                             25.space();
-                            if (DisclosureToggle("Show All".Orange().Bold(), ref ShowAll)) {
+                            var showAllString = shouldLocalize ? "Show All".localize() : "Show All";
+                            if (DisclosureToggle(showAllString.Orange().Bold(), ref ShowAll)) {
                                 startedLoadingAvailable |= ShowAll;
                                 ResetSearch();
                             }
@@ -150,17 +154,18 @@ namespace ModKit {
                     using (HorizontalScope()) {
                         if (search) {
                             space(indent);
-                            ActionButton("Search", () => { needsReloadData = true; }, AutoWidth());
+                            var searchString = shouldLocalize ? "Search".localize() : "Search";
+                            ActionButton(searchString, () => { needsReloadData = true; }, AutoWidth());
                         }
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
-                            var matchesText = "Matches: ".Green().Bold() + $"{_matchCount}".Orange().Bold();
+                            var matchesText = "Matches: ".localize().Green().Bold() + $"{_matchCount}".Orange().Bold();
                             if (_matchCount > SearchLimit) { matchesText += " => ".Cyan() + $"{SearchLimit}".Cyan().Bold(); }
 
                             Label(matchesText, ExpandWidth(false));
                         }
                         if (_matchCount > SearchLimit) {
-                            string pageLabel = "Page: ".orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
+                            string pageLabel = "Page: ".localize().orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
                             25.space();
                             Label(pageLabel, ExpandWidth(false));
                             ActionButton("-", () => {
@@ -211,11 +216,11 @@ namespace ModKit {
             }
 
             private List<Definition> Update(
-                IEnumerable<Item> current, 
-                Func<IEnumerable<Definition>> available, 
+                IEnumerable<Item> current,
+                Func<IEnumerable<Definition>> available,
                 bool search,
-                Func<Definition, string> searchKey, 
-                Func<Definition, IComparable[]> sortKeys, 
+                Func<Definition, string> searchKey,
+                Func<Definition, IComparable[]> sortKeys,
                 Func<Item, Definition> definition
                 ) {
                 if (Event.current.type == EventType.Layout) {
