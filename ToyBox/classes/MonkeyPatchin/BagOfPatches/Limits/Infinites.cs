@@ -14,8 +14,10 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.ActivatableAbilities;
+#if Wrath
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
+#endif
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
@@ -25,11 +27,31 @@ namespace ToyBox.BagOfPatches {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
+        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.SpendCharges), new Type[] { typeof(UnitDescriptor) })]
+        public static class ItemEntity_SpendCharges_Patch {
+            public static bool Prefix(ref bool __result, UnitDescriptor user, ItemEntity __instance) {
+                if (settings.toggleInfiniteItems && user.IsPartyOrPet()) {
+                    var blueprintItemEquipment = __instance.Blueprint as BlueprintItemEquipment;
+                    __result = blueprintItemEquipment && blueprintItemEquipment.GainAbility; // Don't skip the check about being a valid item and having an ability to use
+                    return false; // We're skipping spend charges because even if someone else has logic to sometimes not spend charges, we don't care. We said "infinite" use.
+                }
+                return true;
+            }
+        }
+
+
         [HarmonyPatch(typeof(AbilityResourceLogic), nameof(AbilityResourceLogic.Spend))]
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
-                var unit = ability.Caster.Unit;
+                var unit = ability.Caster
+#if Wrath
+                                  .Unit;
                 if (unit?.Descriptor.IsPartyOrPet() == true && settings.toggleInfiniteAbilities) {
+#elif RT
+                    ;
+                if (unit?.IsPartyOrPet() == true && settings.toggleInfiniteAbilities) {
+                        
+#endif
                     return false;
                 }
 
@@ -42,11 +64,17 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix() => !settings.toggleInfiniteAbilities;
         }
 
+#if Wrath
         [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.SpellSlotCost), MethodType.Getter)]
+#elif RT
+        [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.ResourceCost), MethodType.Getter)]
+
+#endif
         public static class AbilityData_SpellSlotCost_Patch {
             public static bool Prefix() => !settings.toggleInfiniteSpellCasts;
         }
 
+#if Wrath
         [HarmonyPatch(typeof(SpendSkillPoint), nameof(SpendSkillPoint.Apply))]
         public static class SpendSkillPoint_Apply_Patch {
             public static bool Prefix(ref bool __state) {
@@ -60,17 +88,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.SpendCharges), new Type[] { typeof(UnitDescriptor) })]
-        public static class ItemEntity_SpendCharges_Patch {
-            public static bool Prefix(ref bool __result, UnitDescriptor user, ItemEntity __instance) {
-                if (settings.toggleInfiniteItems && user.IsPartyOrPet()) {
-                    var blueprintItemEquipment = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprintItemEquipment && blueprintItemEquipment.GainAbility; // Don't skip the check about being a valid item and having an ability to use
-                    return false; // We're skipping spend charges because even if someone else has logic to sometimes not spend charges, we don't care. We said "infinite" use.
-                }
-                return true;
-            }
-        }
+#endif
     }
 }

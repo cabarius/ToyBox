@@ -34,6 +34,8 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Linq;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.Inventory.PC;
+using Kingmaker.Code.UI.MVVM.View.Slots;
 using Kingmaker.GameCommands;
 using Kingmaker.Modding;
 using Kingmaker.Stores.DlcInterfaces;
@@ -43,6 +45,10 @@ using UnityEngine;
 using static ModKit.UI;
 using Utilities = Kingmaker.Cheats.Utilities;
 using UniRx;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.Inventory;
+using Kingmaker.Code.UI.MVVM.View.Vendor;
+using Kingmaker.Code.UI.MVVM.VM.Common;
+using Kingmaker.Code.UI.MVVM.VM.CounterWindow;
 
 namespace ToyBox.BagOfPatches {
     internal static partial class Misc {
@@ -130,13 +136,103 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-#if false
+        [HarmonyPatch(typeof(InventorySlotView), nameof(InventorySlotPCView.OnClick))]
+        public static class InventorySlotView_OnClick_Patch {
+            public static bool Prefix(InventorySlotPCView __instance) {
+                Mod.Debug("InventorySlotPCView.OnClick");
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                    __instance.OnDoubleClick();
+                    return false;
+                }
+                if (__instance.UsableSource != UsableSourceType.Inventory) return true;
+                if (!settings.toggleShiftClickToUseInventorySlot) return true;
+                if (KeyBindings.GetBinding("InventoryUseModifier").IsModifierActive) {
+                    var item = __instance.Item;
+                    Mod.Debug($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
+                    try {
+                        var user = item.GetBestAvailableUser();
+                        var target = WrathExtensions.GetCurrentCharacter();
+                        Mod.Debug($"user: {user.CharacterName} - target:{target.CharacterName}");
+                        GameCommandHelper.TryUseFromInventory(item, user, target);
+                    }
+                    catch (Exception e) {
+                        Mod.Error($"InventorySlotPCView_OnClick_Patch - {e}");
+                    }
+                    return false;
+                }
+                return true;
+            }
+        }
+
+                // Shift + Click Inventory Tweaks
+        [HarmonyPatch(typeof(CommonVM),
+                      nameof(CommonVM.HandleOpen),
+                      new Type[] {
+                          typeof(CounterWindowType), typeof(ItemEntity), typeof(Action<int>)
+                      })]
+        public static class CommonVM_HandleOpen_Patch {
+            public static bool Prefix(CounterWindowType type, ItemEntity item, Action<int> command) {
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                    command.Invoke(item.Count);
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
+        public static class ItemSlotPCView_OnClick_Patch {
+            public static bool Prefix(ItemSlotPCView __instance) {
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                    __instance.OnDoubleClick();
+                    return false;
+                }
+                return true;
+            }
+        }
+
+
+        [HarmonyPatch(typeof(VendorSlotPCView), nameof(VendorSlotPCView.OnClick))]
+        public static class VendorSlotPCView_OnClick_Patch {
+            public static bool Prefix(VendorSlotPCView __instance) {
+                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                    __instance.OnDoubleClick();
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.TryReplaceView))]
+        private static class Polymorph_TryReplaceView_Patch {
+            private static void Postfix(Polymorph __instance) {
+                float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
+                __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
+            }
+        }
+
+        [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.RestoreView))]
+        private static class Polymorph_RestoreView_Patch {
+            private static void Postfix(Polymorph __instance) {
+                float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
+                __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
+            }
+        }
+
         [HarmonyPatch(typeof(Player), nameof(Player.OnAreaLoaded))]
         internal static class Player_OnAreaLoaded_Patch {
             private static void Postfix() {
                 Mod.Debug("Player_OnAreaLoaded_Patch");
                 Settings.ClearCachedPerSave();
-                MultipleClasses.SyncAllGestaltState();
+                PartyEditor.lastScaleSize = new();
+                foreach (var ID in Main.Settings.perSave.characterModelSizeMultiplier.Keys) {
+                    foreach (UnitEntityData cha in Game.Instance.State.AllUnits.Where((u) => u.CharacterName.Equals(ID))) {
+                        float scale = Main.Settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
+                        cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
+                        PartyEditor.lastScaleSize[cha.HashKey()] = scale;
+                    }
+                }
+                //MultipleClasses.SyncAllGestaltState();
             }
         }
 
@@ -147,6 +243,9 @@ namespace ToyBox.BagOfPatches {
                 Settings.SavePerSaveSettings();
             }
         }
+
+
+#if false
 
         public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
             var itemEntityUsable = item as ItemEntityUsable;
@@ -614,97 +713,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        // Shift + Click Inventory Tweaks
-        [HarmonyPatch(typeof(CommonVM),
-                      nameof(CommonVM.HandleOpen),
-                      new Type[] {
-                          typeof(CounterWindowType), typeof(ItemEntity), typeof(Action<int>)
-                      })]
-        public static class CommonVM_HandleOpen_Patch {
-            public static bool Prefix(CounterWindowType type, ItemEntity item, Action<int> command) {
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
-                    command.Invoke(item.Count);
-                    return false;
-                }
-                return true;
-            }
-        }
 
-        [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
-        public static class ItemSlotPCView_OnClick_Patch {
-            public static bool Prefix(ItemSlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
-                    __instance.OnDoubleClick();
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        [HarmonyPatch(typeof(InventorySlotPCView), nameof(InventorySlotPCView.OnClick))]
-        public static class InventorySlotPCView_OnClick_Patch {
-            public static bool Prefix(InventorySlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
-                    __instance.OnDoubleClick();
-                    return false;
-                }
-                if (__instance.UsableSource != UsableSourceType.Inventory) return true;
-                if (!settings.toggleShiftClickToUseInventorySlot) return true;
-                if (KeyBindings.GetBinding("InventoryUseModifier").IsModifierActive) {
-                    var item = __instance.Item;
-                    Mod.Debug($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
-                    try {
-                        item.TryUseFromInventory(item.GetBestAvailableUser(), (TargetWrapper)WrathExtensions.GetCurrentCharacter());
-                    }
-                    catch (Exception e) {
-                        Mod.Error($"InventorySlotPCView_OnClick_Patch - {e}");
-                    }
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        [HarmonyPatch(typeof(VendorSlotPCView), nameof(VendorSlotPCView.OnClick))]
-        public static class VendorSlotPCView_OnClick_Patch {
-            public static bool Prefix(VendorSlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
-                    __instance.OnDoubleClick();
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        [HarmonyPatch(typeof(LogThreadService), nameof(LogThreadService.OnGameLoaded))]
-        public static class LogThreadService_OnGameLoaded_Patch {
-            private static void Postfix() {
-                PartyEditor.lastScaleSize = new();
-                foreach (var ID in Main.Settings.perSave.characterModelSizeMultiplier.Keys) {
-                    foreach (UnitEntityData cha in Game.Instance.State.Units.Where((u) => u.CharacterName.Equals(ID))) {
-                        float scale = Main.Settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
-                        cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
-                        PartyEditor.lastScaleSize[cha.HashKey()] = scale;
-                    }
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.TryReplaceView))]
-        private static class Polymorph_TryReplaceView_Patch {
-            private static void Postfix(Polymorph __instance) {
-                float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
-                __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
-            }
-        }
-
-        [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.RestoreView))]
-        private static class Polymorph_RestoreView_Patch {
-            private static void Postfix(Polymorph __instance) {
-                float scale = PartyEditor.lastScaleSize.GetValueOrDefault(__instance.Owner.HashKey(), 1);
-                __instance.Owner.View.transform.localScale = new Vector3(scale, scale, scale);
-            }
-        }
 
         [HarmonyPatch(typeof(AchievementsManager), nameof(AchievementsManager.OnAchievementUnlocked))]
         private static class AchievementsManager_OnAchievementsUnlocked_Patch {

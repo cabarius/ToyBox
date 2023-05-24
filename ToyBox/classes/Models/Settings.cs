@@ -481,6 +481,11 @@ namespace ToyBox {
 
         public bool toggleIgnoreAbilityAlignmentRestriction = false;
         public bool toggleIgnoreAbilityAnyRestriction = false;
+        public bool toggleIgnoreAbilityAoeOverlap = false;
+        public bool toggleIgnoreAbilityLineOfSight = false;
+        public bool toggleIgnoreAbilityTargetTooFar = false;
+        public bool toggleIgnoreAbilityTargetTooClose = false;
+
         public bool toggleIgnoreAolityCasterCheckers = false;
         public HashSet<string> ignoredAbilityCasterCheckerSet = new();
         public bool toggleIgnoreActivatableAbilityRestrictions = false;

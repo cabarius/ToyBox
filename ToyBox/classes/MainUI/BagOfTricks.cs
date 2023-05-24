@@ -355,6 +355,7 @@ namespace ToyBox {
                    },
 #endif
                    () => Toggle("Make game continue to play music on lost focus".localize(), ref Settings.toggleContinueAudioOnLostFocus),
+#if Wrath
                    () => Toggle(("Game Over Fix For " + "LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon) + " omg he just ran in!").localize(), ref Settings.toggleGameOverFixLeeerrroooooyJenkins),
                    () => {
                        503.space();
@@ -366,6 +367,7 @@ namespace ToyBox {
                            Main.SetNeedsResetGameUI();
                        }
                    },
+#endif
 #if Wrath
                    () => {
                        Toggle("Icky Stuff Begone!!!".localize(), ref Settings.toggleReplaceModelMenu, (Settings.toggleReplaceModelMenu ? 248 : 499).width());
@@ -399,13 +401,13 @@ namespace ToyBox {
                            ModifierPicker("ClickToTransferModifier", "", 0);
                        }
                    },
+#if Wrath
                    () => Toggle("Respec Refund Scrolls".localize(), ref Settings.toggleRespecRefundScrolls),
                    () => {
                        Toggle("Make Puzzle Symbols More Clear".localize(), ref Settings.togglePuzzleRelief);
                        25.space();
                        HelpLabel(("ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: " + "[PuzzlePiece Green3x1]".yellow().bold() + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange()).localize());
                    },
-#if Wrath
                 () => {
                     ActionButton("Clear Action Bar".localize(), () => Actions.ClearActionBar());
                     50.space();
@@ -462,6 +464,7 @@ namespace ToyBox {
                            Div(0, 25, 1280);
                        }
                    },
+#if Wrath
                    () => Slider("Turn Based Combat Delay".localize(), ref Settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width(450)),
                    () => {
                        using (VerticalScope()) {
@@ -511,6 +514,7 @@ namespace ToyBox {
                            }
                        }
                    },
+#endif
                    () => { }
                 );
             Div(0, 25);
@@ -536,8 +540,8 @@ namespace ToyBox {
                     }
                 },
                 () => Toggle("Infinite Abilities".localize(), ref Settings.toggleInfiniteAbilities),
-#if Wrath
                 () => Toggle("Infinite Spell Casts".localize(), ref Settings.toggleInfiniteSpellCasts),
+#if Wrath
                 () => Toggle("No Material Components".localize(), ref Settings.toggleMaterialComponent),
                 () => Toggle("Disable Party Negative Levels".localize(), ref Settings.togglePartyNegativeLevelImmunity),
                 () => Toggle("Disable Party Ability Damage".localize(), ref Settings.togglePartyAbilityDamageImmunity),
@@ -567,13 +571,21 @@ namespace ToyBox {
                 //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                 //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                 () => Toggle("Instant Rest After Combat".localize(), ref Settings.toggleInstantRestAfterCombat),
-                () => Toggle("Instant change party members".localize(), ref Settings.toggleInstantChangeParty),
 #if Wrath
+                () => Toggle("Instant change party members".localize(), ref Settings.toggleInstantChangeParty),
                 () => ToggleCallback("Equipment No Weight".localize(), ref Settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
 #endif
                 () => Toggle("Allow Item Use From Inventory During Combat".localize(), ref Settings.toggleUseItemsDuringCombat),
+#if Wrath
                 () => Toggle("Ignore Alignment Requirements for Abilities".localize(), ref Settings.toggleIgnoreAbilityAlignmentRestriction),
+#endif
                 () => Toggle("Ignore all Requirements for Abilities".localize(), ref Settings.toggleIgnoreAbilityAnyRestriction),
+#if RT
+                () => Toggle("Ignore Ability Requirement - AOE Overlap".localize(), ref Settings.toggleIgnoreAbilityAoeOverlap),
+                () => Toggle("Ignore Ability Requirement - Line of Sight".localize(), ref Settings.toggleIgnoreAbilityLineOfSight),
+                () => Toggle("Ignore Ability Requirement - Max Range".localize(), ref Settings.toggleIgnoreAbilityTargetTooFar),
+                () => Toggle("Ignore Ability Requirement - Min Range".localize(), ref Settings.toggleIgnoreAbilityTargetTooClose),
+#endif
                 () => Toggle("Ignore Pet Sizes For Mounting".localize(), ref Settings.toggleMakePetsRidable),
                 () => Toggle("Ride Any Unit As Your Mount".localize(), ref Settings.toggleRideAnything),
                 () => { }

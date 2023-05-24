@@ -60,6 +60,9 @@
     <Reference Include="AK.Wwise.Unity.MonoBehaviour">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\AK.Wwise.Unity.MonoBehaviour.dll</HintPath>
     </Reference>
+    <Reference Include="AstarPathfindingProject">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40000 Rogue Trader Playtest\WH40KRT_Data\Managed\AstarPathfindingProject.dll</HintPath>
+    </Reference>
     <Reference Include="BuildMode">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\BuildMode.dll</HintPath>
     </Reference>
@@ -476,6 +479,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Clipboard+Guids.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\ActionsRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DevelopmentRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestricted.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
@@ -532,7 +536,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
