@@ -58,7 +58,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
-   * **Your old ToyBox settings show migrate automatically**
+   * **Your old ToyBox settings should migrate automatically**
    * Please report any issues you encounter
  * (***Narria***) **Enhanced UI** Added buttons to maximize mod window size and also show it when you get get the UI warning for small mod windows
  * (***Narria***) Fixed crasher bug with kill all button (most apparent when you use it from ToyBox UI)  
