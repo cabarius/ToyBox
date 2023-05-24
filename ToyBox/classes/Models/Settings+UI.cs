@@ -36,7 +36,7 @@ namespace ToyBox {
                 () => Toggle("Display guids in most tooltips, use shift + left click on items/abilities to copy guid to clipboard", ref Main.Settings.toggleGuidsClipboard),
               () => { }
             );
-#if DEBUG
+#if true
             Div(0, 25);
             HStack("Localizaton", 1,
                 () => {
@@ -66,7 +66,7 @@ namespace ToyBox {
                             Toggle("Only show languages with existing localization files", ref Main.Settings.onlyShowLanguagesWithFiles);
                         }
                         Div(0, 25);
-                        if (GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => $"{ci.Name.orange().bold()} {ci.DisplayName}", ref cultureSearchText, 6, rarityButtonStyle, Width(ummWidth - 350))) {
+                        if (GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => $"{ci.Name.cyan().bold()} {ci.DisplayName.orange()}", ref cultureSearchText, 6, rarityButtonStyle, Width(ummWidth - 350))) {
                             Mod.ModKitSettings.uiCultureCode = uiCulture.Name;
                             LocalizationManager.Update();
                         }
