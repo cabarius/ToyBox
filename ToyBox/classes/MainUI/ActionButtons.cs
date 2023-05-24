@@ -1,9 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
-using System.Collections.Generic;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
+using System;
+using System.Collections.Generic;
 
 namespace ToyBox {
     public class NamedTypeFilter {
@@ -48,9 +48,14 @@ namespace ToyBox {
                 UI.Space(width + 3);
             }
         }
-        public static void BlueprintActionButton(this BlueprintAction action, UnitEntityData unit, SimpleBlueprint bp, Action buttonAction, float width) {
+        public static void BlueprintActionButton(this BlueprintAction action, UnitEntityData unit, SimpleBlueprint bp, Action buttonAction, float width, bool shouldLocalize = false) {
             if (action != null && action.canPerform(bp, unit)) {
-                UI.ActionButton(action.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
+                if (shouldLocalize) {
+                    UI.ActionButton(action.name.localize(), buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
+                }
+                else {
+                    UI.ActionButton(action.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
+                }
             }
             else {
                 UI.Space(width + 3);

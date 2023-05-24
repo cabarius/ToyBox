@@ -29,21 +29,21 @@ namespace ToyBox {
             Div(100, 20);
             using (HorizontalScope()) {
                 Space(100);
-                Toggle("Multiple Classes On Level-Up", ref Settings.toggleMulticlass);
+                Toggle("Multiple Classes On Level-Up".localize(), ref Settings.toggleMulticlass);
                 if (Settings.toggleMulticlass) {
                     Space(40);
 #if Wrath
-                    if (DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
+                    if (DisclosureToggle("Config".localize().orange().bold(), ref editMultiClass)) {
                         multiclassEditCharacter = selectedCharacter;
                     }
 #endif
                     Space(53);
-                    Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
+                    Label("Experimental - See 'Level Up + Multiclass' for more options and info".localize().green());
                 }
             }
             using (HorizontalScope()) {
                 Space(100);
-                ActionToggle("Allow Levels Past 20",
+                ActionToggle("Allow Levels Past 20".localize(),
                     () => {
                         var hasValue = Settings.perSave.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
                         return hasValue && isLegendaryHero;
@@ -61,7 +61,7 @@ namespace ToyBox {
                     0f,
                     AutoWidth());
                 Space(380);
-                Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".green());
+                Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".localize().green());
             }
             Div(100, 20);
             if (editMultiClass) {
@@ -74,31 +74,31 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
                         Space(100);
-                        Label("Character Level".cyan(), Width(250));
+                        Label("Character Level".localize().cyan(), Width(250));
                         ActionButton("<", () => prog.CharacterLevel = Math.Max(0, prog.CharacterLevel - 1), AutoWidth());
                         Space(25);
-                        Label("level".green() + $": {prog.CharacterLevel}", Width(100f));
+                        Label("level".localize().green() + $": {prog.CharacterLevel}", Width(100f));
                         ActionButton(">", () => prog.CharacterLevel = Math.Min(
 #if Wrath
-                                                    prog.MaxCharacterLevel, 
+                                                    prog.MaxCharacterLevel,
 #elif RT
                                                     int.MaxValue, // TODO: is this right?
 #endif
                                                     prog.CharacterLevel + 1),
                                      AutoWidth());
                     }
-                    ActionButton("Reset", () => ch.resetClassLevel(), Width(150));
+                    ActionButton("Reset".localize(), () => ch.resetClassLevel(), Width(150));
                     Space(23);
                     using (VerticalScope()) {
-                        Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green());
-                        Label("If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange());
-                        LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
+                        Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".localize().green());
+                        Label(("If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange()).localize());
+                        LinkButton("Gestalt Characters".localize(), "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
                     }
                 }
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
                         Space(100);
-                        Label("Experience".cyan(), Width(250));
+                        Label("Experience".localize().cyan(), Width(250));
                         Space(25);
                         int tmpExp = prog.Experience;
                         IntTextField(ref tmpExp, null, Width(150f));
@@ -108,30 +108,30 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(781))) {
                         Space(100);
-                        ActionButton("Adjust based on Level", () => {
+                        ActionButton("Adjust based on Level".localize(), () => {
                             prog.MythicExperience = prog.MythicLevel;
                         }, AutoWidth());
                         Space(27);
                     }
-                    Label("This sets your experience to match the current value of character level".green());
+                    Label("This sets your experience to match the current value of character level".localize().green());
                 }
                 Div(100, 25);
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
                         Space(100);
-                        Label("Mythic Level".cyan(), Width(250));
+                        Label("Mythic Level".localize().cyan(), Width(250));
                         ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), AutoWidth());
                         Space(25);
                         Label("my lvl".green() + $": {prog.MythicLevel}", Width(100f));
                         ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), AutoWidth());
                     }
                     Space(181);
-                    Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
+                    Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".localize().green());
                 }
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
                         Space(100);
-                        Label("Experience".cyan(), Width(250));
+                        Label("Experience".localize().cyan(), Width(250));
                         Space(25);
                         int tmpMythicExp = prog.MythicExperience;
                         IntTextField(ref tmpMythicExp, null, Width(150f));
@@ -146,12 +146,12 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(781))) {
                         Space(100);
-                        ActionButton("Adjust based on Level", () => {
+                        ActionButton("Adjust based on Level".localize(), () => {
                             prog.MythicExperience = prog.MythicLevel;
                         }, AutoWidth());
                         Space(27);
                     }
-                    Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
+                    Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".localize().green());
                 }
                 var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
 #if Wrath
@@ -179,7 +179,7 @@ namespace ToyBox {
                         }
                         ActionButton("<", () => cd.Level = Math.Max(0, cd.Level - 1), AutoWidth());
                         Space(25);
-                        Label("level".green() + $": {cd.Level}", Width(100f));
+                        Label("level".localize().green() + $": {cd.Level}", Width(100f));
                         var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                         ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), AutoWidth());
                         Space(23);
@@ -189,7 +189,7 @@ namespace ToyBox {
                             || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1
                             ) {
                             ActionToggle(
-                                "gestalt".grey(),
+                                "gestalt".localize().grey(),
                                 () => ch.IsClassGestalt(cd.CharacterClass),
                                 (v) => {
                                     ch.SetClassIsGestalt(cd.CharacterClass, v);
@@ -204,7 +204,7 @@ namespace ToyBox {
                         using (VerticalScope()) {
                             if (showedGestalt) {
                                 if (showedGestalt) {
-                                    Label("this flag lets you not count this class in computing character level".green());
+                                    Label("this flag lets you not count this class in computing character level".localize().green());
                                     DivLast();
                                 }
                             }

@@ -29,7 +29,7 @@ namespace ToyBox {
             if (!Main.IsInGame) return;
             var activeScene = SceneManager.GetActiveScene().name;
             if (Game.Instance?.Player == null || activeScene == "MainMenu" || activeScene == "Start") {
-                UI.Label(" * Please start or load the game first.".color(RGBA.yellow));
+                UI.Label(" * Please start or load the game first.".localize().color(RGBA.yellow));
                 return;
             }
             if (_buttonStyle == null)
@@ -49,14 +49,14 @@ namespace ToyBox {
 
                             // draw tool bar
                             using (UI.HorizontalScope()) {
-                                UI.ActionButton("Refresh", () => _featuresTree = 
+                                UI.ActionButton("Refresh".localize(), () => _featuresTree =
                                                                      new FeaturesTree(_selectedCharacter
 #if Wrath
                                                                                       .Descriptor
 #endif
                                                                                       .Progression), UI.Width(200));
-                                UI.Button("Expand All", ref expandAll, UI.Width(200));
-                                UI.Button("Collapse All", ref collapseAll, UI.Width(200));
+                                UI.Button("Expand All".localize(), ref expandAll, UI.Width(200));
+                                UI.Button("Collapse All".localize(), ref collapseAll, UI.Width(200));
                             }
 
                             UI.Space(10f);
@@ -69,7 +69,7 @@ namespace ToyBox {
                             void draw(FeaturesTree.FeatureNode node) {
                                 using (UI.HorizontalScope()) {
                                     var levelText = node.Level == 0 ? "" : $" {node.Level} - ";
-                                    var blueprintName =  $"[{node.Blueprint.name}]".color(node.IsMissing ? RGBA.maroon : RGBA.aqua);
+                                    var blueprintName = $"[{node.Blueprint.name}]".color(node.IsMissing ? RGBA.maroon : RGBA.aqua);
                                     var titleText = $"{levelText}{node.Name.Bold()} {blueprintName}";
                                     if (node.ChildNodes.Count > 0) {
                                         if (node.Expanded == ToggleState.None) {

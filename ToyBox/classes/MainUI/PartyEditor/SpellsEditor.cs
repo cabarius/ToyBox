@@ -36,16 +36,16 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     selectedSpellBookChanged = SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
                     if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
-                    DisclosureToggle("Edit".orange().bold(), ref editSpellbooks);
+                    DisclosureToggle("Edit".localize().orange().bold(), ref editSpellbooks);
                     Space(-50);
                     var mergeableClasses = ch.MergableClasses().ToList();
                     if (spellbook.IsStandaloneMythic || mergeableClasses.Count() == 0) {
-                        Label($"Mythic Merging".cyan(), AutoWidth());
+                        Label($"Mythic Merging".localize().cyan(), AutoWidth());
                         25.space();
-                        Label("When you get standalone mythic spellbooks you can merge them here by select.".green());
+                        Label("When you get standalone mythic spellbooks you can merge them here by select.".localize().green());
                     }
                     else {
-                        Label($"Merge Mythic:".cyan(), 175.width());
+                        Label($"Merge Mythic:".localize().cyan(), 175.width());
                         25.space();
                         foreach (var cl in mergeableClasses) {
                             var sb = spellbook;
@@ -54,8 +54,8 @@ namespace ToyBox {
                         }
                         25.space();
                         using (VerticalScope()) {
-                            Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up. Merging a second mythic spellbook will transfer the spells but not increase your caster level further.  If you want more CL then increase it below.".green());
-                            Label("Warning: This is irreversible. Please save before continuing!".Orange());
+                            Label("Merging your mythic spellbook will cause you to transfer all mythic spells to your normal spellbook and gain caster levels equal to your mythic level. You will then be able to re-select spells on next level up or mythic level up. Merging a second mythic spellbook will transfer the spells but not increase your caster level further.  If you want more CL then increase it below.".localize().green());
+                            Label("Warning: This is irreversible. Please save before continuing!".localize().Orange());
                         }
                     }
                 }
@@ -67,7 +67,7 @@ namespace ToyBox {
                 else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
-                        spellBrowser = new Browser<BlueprintAbility, AbilityData>();
+                        spellBrowser = new Browser<BlueprintAbility, AbilityData>(true, false, false, true);
                         SpellBrowserDict[ch] = spellBrowser;
                     }
                     var maxLevel = spellbook.Blueprint.MaxSpellLevel;
@@ -75,7 +75,7 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         var tempSelected = selectedSpellbookLevel;
                         EnumerablePicker(
-                            "Spells known",
+                            "Spells known".localize(),
                             ref selectedSpellbookLevel,
                             Enumerable.Range(0, spellbook.Blueprint.MaxSpellLevel + 2),
                             0,
@@ -105,14 +105,14 @@ namespace ToyBox {
                         }
                         // removes opposition schools; these are not cleared when removing facts; to add new opposition schools, simply add the corresponding fact again
                         if (spellbook.OppositionSchools.Any()) {
-                            ActionButton("Clear Opposition Schools", () => {
+                            ActionButton("Clear Opposition Schools".localize(), () => {
                                 spellbook.OppositionSchools.Clear();
                                 spellbook.ExOppositionSchools.Clear();
                                 ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionSchool>(), true);
                             }, AutoWidth());
                         }
                         if (spellbook.OppositionDescriptors != 0) {
-                            ActionButton("Clear Opposition Descriptors", () => {
+                            ActionButton("Clear Opposition Descriptors".localize(), () => {
                                 spellbook.OppositionDescriptors = 0;
                                 ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
                             }, AutoWidth());
@@ -147,28 +147,28 @@ namespace ToyBox {
                         () => {
                             using (HorizontalScope()) {
                                 bool needsReload = false;
-                                Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
+                                Toggle("Show GUIDs".localize(), ref Main.Settings.showAssetIDs);
                                 20.space();
-                                needsReload |= Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames);
+                                needsReload |= Toggle("Show Internal Names".localize(), ref Settings.showDisplayAndInternalNames);
                                 20.space();
                                 // Toggle("Show Inspector", ref Settings.factEditorShowInspector);
                                 // 20.space();
-                                needsReload |= Toggle("Search Descriptions", ref Settings.searchDescriptions);
+                                needsReload |= Toggle("Search Descriptions".localize(), ref Settings.searchDescriptions);
                                 20.space();
-                                if (Toggle("Search All Spellbooks", ref Settings.showFromAllSpellbooks)) {
+                                if (Toggle("Search All Spellbooks".localize(), ref Settings.showFromAllSpellbooks)) {
                                     spellBrowser.ResetSearch();
                                     _startedLoading = true;
                                 }
                                 if (needsReload) spellBrowser.ResetSearch();
                                 GUI.enabled = !spellBrowser.isSearching;
                                 Space(20);
-                                ActionButton("Add All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor(), spellBrowser.filteredDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
+                                ActionButton("Add All".localize(), () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor(), spellBrowser.filteredDefinitions.Cast<BlueprintAbility>().ToList()), AutoWidth());
                                 Space(20);
-                                ActionButton("Remove All", () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor()), AutoWidth());
+                                ActionButton("Remove All".localize(), () => CasterHelpers.HandleAddAllSpellsOnPartyEditor(ch.Descriptor()), AutoWidth());
                                 GUI.enabled = true;
                                 if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                     10.space();
-                                    Label("Spells are added at Level: ".green() + SelectedNewSpellLvl.ToString().orange(), AutoWidth());
+                                    Label("Spells are added at Level: ".localize().green() + SelectedNewSpellLvl.ToString().orange(), AutoWidth());
                                     10.space();
                                     ActionButton("-", () => {
                                         if (SelectedNewSpellLvl >= 0) {
@@ -192,7 +192,7 @@ namespace ToyBox {
                             }
                         },
                         (blueprint, feature) => FactsEditor.BlueprintRowGUI(spellBrowser, feature,
-                        blueprint, ch, todo), 
+                        blueprint, ch, todo),
                         (blueprint, feature) => {
                             ReflectionTreeView.OnDetailGUI(blueprint);
                         }, 50, false, true, 100, 300, "", true);
@@ -206,7 +206,7 @@ namespace ToyBox {
         private static void SpellBookBrowserOnGUI(UnitEntityData ch, IEnumerable<Spellbook> spellbooks, List<Action> todo, bool forceShowAll = false) {
             var spellbookBrowser = SpellbookBrowserDict.GetValueOrDefault(ch, null);
             if (spellbookBrowser == null) {
-                spellbookBrowser = new Browser<BlueprintSpellbook, Spellbook>();
+                spellbookBrowser = new Browser<BlueprintSpellbook, Spellbook>(true, false, false, true);
                 SpellbookBrowserDict[ch] = spellbookBrowser;
             }
             if (forceShowAll) {
@@ -221,15 +221,15 @@ namespace ToyBox {
                 blueprint => new[] { GetTitle(blueprint) },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Show GUIDs", ref Main.Settings.showAssetIDs, 150.width());
+                        Toggle("Show GUIDs".localize(), ref Main.Settings.showAssetIDs, 150.width());
                         20.space();
-                        if (Toggle("Show Internal Names", ref Settings.showDisplayAndInternalNames, 200.width()))
+                        if (Toggle("Show Internal Names".localize(), ref Settings.showDisplayAndInternalNames, 200.width()))
                             spellbookBrowser.ResetSearch();
                         20.space();
                         //                                Toggle("Show Inspector", ref Settings.factEditorShowInspector, 150.width());
                         //                                20.space();
 
-                        if (Toggle("Search Descriptions", ref Settings.searchDescriptions, 250.width())) {
+                        if (Toggle("Search Descriptions".localize(), ref Settings.searchDescriptions, 250.width())) {
                             spellbookBrowser.ResetSearch();
                         }
                     }
