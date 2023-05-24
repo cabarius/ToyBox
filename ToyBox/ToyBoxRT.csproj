@@ -59,12 +59,15 @@
     </Reference>
     <Reference Include="AK.Wwise.Unity.MonoBehaviour">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\AK.Wwise.Unity.MonoBehaviour.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="AstarPathfindingProject">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\AstarPathfindingProject.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="BuildMode">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\BuildMode.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="BundlesBaseTypes">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\BundlesBaseTypes.dll</HintPath>
@@ -84,6 +87,7 @@
     </Reference>
     <Reference Include="ContextData">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\ContextData.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="CountingGuard">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\CountingGuard.dll</HintPath>
@@ -337,6 +341,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UberLogger">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\UberLogger.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UniRx">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\UniRx.dll</HintPath>
@@ -536,7 +541,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

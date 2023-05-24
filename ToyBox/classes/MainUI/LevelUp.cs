@@ -10,6 +10,10 @@ namespace ToyBox {
         public static Settings Settings => Main.Settings;
         public static void ResetGUI() { }
         public static void OnGUI() {
+#if RT
+            Label("This area is under construction.\n".yellow().bold() + "As I play the game more it will get flushed out.  For now you see some of the anticipated features".orange());
+#endif
+#if Wrath
             HStack("Character Creation".localize(), 1,
                 () => {
                     using (VerticalScope()) {
@@ -35,6 +39,7 @@ namespace ToyBox {
                 //},
                 () => { }
                 );
+#endif
             Div(0, 25);
             HStack("Create & Level Up".localize(), 1,
                 () => {
@@ -42,6 +47,7 @@ namespace ToyBox {
                     Space(25);
                     Label("This allows you to select a given feature more than once at level up".localize().green());
                 },
+#if Wrath
                 () => {
                     ActionButton("Maximize Mythic Flexibility",
                                  () => {
@@ -53,13 +59,16 @@ namespace ToyBox {
                     HelpLabel(("This will set options below to enable you to choose mythics more freely for both you, companions and even pets" + "\nNote:".orange().bold() + " this will also ignore other class restrictions for non mythic").localize());
 
                 },
+#endif
                 () => Toggle("Apply Feature Selection Multiplier to party members".localize(), ref Settings.toggleFeatureMultiplierCompanions),
+#if Wrath
                 () => {
                     Toggle("Allow Multiple Archetypes When Selecting A New Class".localize(), ref Settings.toggleMultiArchetype);
                     25.space();
                     Label("This allows you to select combinations of archetypes when selecting a class for the first time that contain distinct spellbooks".localize().green());
                 },
                 () => Toggle("Make All Feature Selections Optional".localize(), ref Settings.toggleOptionalFeatSelection),
+#endif
                 () => {
                     Toggle("Ignore Attribute Cap".localize(), ref Settings.toggleIgnoreAttributeCap);
                     Space(25);
@@ -71,7 +80,9 @@ namespace ToyBox {
                     Toggle("Ignore Remaining Skill Points".localize(), ref Settings.toggleIgnoreSkillPointsRemaining);
                 },
                 () => Toggle("Always Able To Level Up".localize(), ref Settings.toggleNoLevelUpRestrictions),
+#if Wrath
                 () => Toggle("Add Full Hit Die Value".localize(), ref Settings.toggleFullHitdiceEachLevel),
+#endif
                 () => {
                     Toggle("Ignore Class Restrictions".localize(), ref Settings.toggleIgnoreClassRestrictions);
                     Space(25);
@@ -82,18 +93,25 @@ namespace ToyBox {
                     Space(25);
                     Label(("Experimental".cyan() + ": lets you select any feat ignoring prerequisites.".green()).localize());
                 },
+#if Wrath
                 () => Toggle("Allow Companions to Take Mythic Classes".localize(), ref Settings.toggleAllowCompanionsToBecomeMythic),
                 () => Toggle("Allow Pets to Take Mythic Classes".localize(), ref Settings.toggleAllowMythicPets),
+#endif
                 () => Toggle("Ignore Prerequisites When Choosing A Feat".localize(), ref Settings.toggleFeaturesIgnorePrerequisites),
+#if Wrath
                 () => Toggle("Ignore Caster Type And Spell Level Restrictions".localize(), ref Settings.toggleIgnoreCasterTypeSpellLevel),
+#endif
                 () => Toggle("Ignore Forbidden Archetypes".localize(), ref Settings.toggleIgnoreForbiddenArchetype),
                 () => Toggle("Ignore Required Stat Values".localize(), ref Settings.toggleIgnorePrerequisiteStatValue),
                 () => Toggle("Ignore Required Class Levels".localize(), ref Settings.toggleIgnorePrerequisiteClassLevel),
+#if Wrath
                 () => Toggle("Ignore Alignment When Choosing A Class".localize(), ref Settings.toggleIgnoreAlignmentWhenChoosingClass),
+#endif
                 () => Toggle("Ignore Prerequisite Features (like Race) when choosing Class".localize(), ref Settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass),
 #if false // This is incredibly optimistic and requires resolving a bunch of conflicts with the existing gestalt and scroll copy logic
                 () => UI.Toggle("Ignore Spellbook Restrictions When Choosing Spells", ref settings.toggleUniversalSpellbookd),
 #endif
+#if Wrath
 
                 () => Toggle("Skip Spell Selection".localize(), ref Settings.toggleSkipSpellSelection),
 #if DEBUG
@@ -108,7 +126,7 @@ namespace ToyBox {
                 () => Toggle("Remove Level 20 Caster Level Cap".localize(), ref Settings.toggleUncappedCasterLevel),
                 () => Toggle("Party Level Cap 40 (continuous growth after 20)".localize(), ref Settings.toggleContinousLevelCap),
                 () => Toggle("Party Level Cap 24 (exponential growth)".localize(), ref Settings.toggleExponentialLevelCap),
-
+#endif
                 () => { }
                 );
 #if Wrath
