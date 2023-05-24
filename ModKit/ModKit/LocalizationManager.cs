@@ -1,5 +1,4 @@
-﻿using Kingmaker.Utility;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,7 +73,7 @@ namespace ModKit {
         }
 
         public static string localize(this string key) {
-            if (key.IsNullOrEmpty()) return key;
+            if (key == null || key == "") return key;
             else {
                 string localizedString = "";
                 if (!IsDefault) {
