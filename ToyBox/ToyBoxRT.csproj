@@ -61,7 +61,7 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\AK.Wwise.Unity.MonoBehaviour.dll</HintPath>
     </Reference>
     <Reference Include="AstarPathfindingProject">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Warhammer 40000 Rogue Trader Playtest\WH40KRT_Data\Managed\AstarPathfindingProject.dll</HintPath>
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\AstarPathfindingProject.dll</HintPath>
     </Reference>
     <Reference Include="BuildMode">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\BuildMode.dll</HintPath>
@@ -536,7 +536,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

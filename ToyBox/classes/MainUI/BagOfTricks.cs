@@ -586,8 +586,10 @@ namespace ToyBox {
                 () => Toggle("Ignore Ability Requirement - Max Range".localize(), ref Settings.toggleIgnoreAbilityTargetTooFar),
                 () => Toggle("Ignore Ability Requirement - Min Range".localize(), ref Settings.toggleIgnoreAbilityTargetTooClose),
 #endif
+#if Wrath
                 () => Toggle("Ignore Pet Sizes For Mounting".localize(), ref Settings.toggleMakePetsRidable),
                 () => Toggle("Ride Any Unit As Your Mount".localize(), ref Settings.toggleRideAnything),
+#endif
                 () => { }
                 );
             Div(153, 25);
