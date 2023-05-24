@@ -1,11 +1,11 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using System;
 using System.Collections;
-using System.Linq;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using GL = UnityEngine.GUILayout;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
@@ -101,7 +101,7 @@ namespace ModKit {
                 }
             }
         }
-        public static void Row<T>(List<T> items, Action<T> action , string title = null, params GUILayoutOption[] options) {
+        public static void Row<T>(List<T> items, Action<T> action, string title = null, params GUILayoutOption[] options) {
             var length = items.Count();
             using (HorizontalScope()) {
                 if (title != null) {
@@ -146,6 +146,24 @@ namespace ModKit {
                 selected = 0;
             var sel = selected;
             var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
+            SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60));
+            GL.BeginVertical("box");
+            header?.Invoke();
+            actions[selected].action();
+            GL.EndVertical();
+        }
+
+        public static void TabBar(ref int selected, bool shouldLocalize, Action header = null, params NamedAction[] actions) {
+            if (selected >= actions.Count())
+                selected = 0;
+            var sel = selected;
+            IEnumerable<string> titles;
+            if (shouldLocalize) {
+                titles = actions.Select((a, i) => i == sel ? a.name.localize().orange().bold() : a.name.localize());
+            }
+            else {
+                titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
+            }
             SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60));
             GL.BeginVertical("box");
             header?.Invoke();

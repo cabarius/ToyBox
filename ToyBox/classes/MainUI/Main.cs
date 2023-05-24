@@ -198,12 +198,12 @@ namespace ToyBox {
             }
 #endif
             if (!IsInGame) {
-                Label("ToyBox has limited functionality from the main menu".yellow().bold());
+                Label("ToyBox has limited functionality from the main menu".localize().yellow().bold());
             }
             if (!IsWide) {
                 using (HorizontalScope()) {
                     ActionButton("Maximize Window".localize(), Actions.MaximizeModWindow);
-                    Label("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold());
+                    Label(("Note ".magenta().bold() + "ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k".orange().bold()).localize());
                 }
             }
             try {
@@ -224,7 +224,7 @@ namespace ToyBox {
                     UI.LinkButton("WoTR Discord", "https://discord.gg/wotr");
                 }
 #endif
-                TabBar(ref Settings.selectedTab,
+                TabBar(ref Settings.selectedTab, true,
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
