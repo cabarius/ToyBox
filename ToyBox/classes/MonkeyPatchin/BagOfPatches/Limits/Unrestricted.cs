@@ -52,7 +52,7 @@ namespace ToyBox.BagOfPatches {
         public static class ItemEntityArmor_CanBeEquippedInternal_Patch {
             public static void Postfix(ItemEntityArmor __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
-                    Mod.Debug($"armor blueprint: {__instance?.Blueprint} - type:{__instance.Blueprint?.GetType().Name}");
+                    //Mod.Debug($"armor blueprint: {__instance?.Blueprint} - type:{__instance.Blueprint?.GetType().Name}");
                     if (__instance.Blueprint is BlueprintItemEquipment blueprint) {
                         __result = blueprint.CanBeEquippedBy(owner);
                     }
@@ -75,7 +75,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void Postfix(ItemEntityWeapon __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
-                    Mod.Debug($"item: {__instance}");
+                    //Mod.Debug($"item: {__instance}");
                     __result = true;
 #if false           // TODO: the following was old code that would crash Wrath app and RT doesn't like it either. Why was this ever here?"
                     var blueprint = __instance.Blueprint;
