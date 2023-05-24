@@ -52,8 +52,10 @@ namespace ToyBox.BagOfPatches {
         public static class ItemEntityArmor_CanBeEquippedInternal_Patch {
             public static void Postfix(ItemEntityArmor __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
-                    var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
+                    Mod.Debug($"armor blueprint: {__instance?.Blueprint} - type:{__instance.Blueprint?.GetType().Name}");
+                    if (__instance.Blueprint is BlueprintItemEquipment blueprint) {
+                        __result = blueprint.CanBeEquippedBy(owner);
+                    }
                 }
             }
         }
@@ -61,21 +63,33 @@ namespace ToyBox.BagOfPatches {
         public static class ItemEntityShield_CanBeEquippedInternal_Patch {
             public static void Postfix(ItemEntityShield __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
-                    var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
+                    if (__instance.Blueprint is BlueprintItemEquipment blueprint) {
+                        __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
+                    }
                 }
             }
         }
+#if true
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.CanBeEquippedInternal))]
         public static class ItemEntity_CanBeEquippedInternal_Patch {
             [HarmonyPostfix]
             public static void Postfix(ItemEntityWeapon __instance, UnitDescriptor owner, ref bool __result) {
                 if (settings.toggleEquipmentRestrictions) {
-                    var blueprint = __instance.Blueprint as BlueprintItemEquipment;
-                    __result = blueprint != null && blueprint.CanBeEquippedBy(owner);
+                    Mod.Debug($"item: {__instance}");
+                    __result = true;
+#if false           // TODO: the following was old code that would crash Wrath app and RT doesn't like it either. Why was this ever here?"
+                    var blueprint = __instance.Blueprint;
+                    Mod.Debug($"blueprint: {blueprint} - type:{blueprint?.GetType().Name}");
+                    return;
+
+                    if (__instance.Blueprint is BlueprintItemEquipment blueprintItemEquipment) {
+                        __result = blueprintItemEquipment != null;
+                    }
+#endif
                 }
             }
         }
+#endif
 #if Wrath        
         internal static readonly Dictionary<string, bool> PlayerAlignmentIsOverrides = new() {
             { "fdc9eb3b03cf8ef4ca6132a04970fb41", false },  // DracoshaIntro_MythicAzata_dialog - Cue_0031

@@ -1,23 +1,46 @@
 ﻿using HarmonyLib;
 using Kingmaker.PubSubSystem;
-using Kingmaker.UI.MVVM._PCView.Slots;
-using Kingmaker.UI.MVVM._VM.ActionBar;
-using Kingmaker.UI.MVVM._VM.Tooltip.Bricks;
-using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
-using Kingmaker.UI.UnitSettings;
 using Owlcat.Runtime.UI.Tooltips;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ModKit;
 using UnityEngine;
+using ModKit.Utility;
+#if Wrath
+using Kingmaker.UI.MVVM._PCView.Slots;
+using Kingmaker.UI.MVVM._VM.ActionBar;
+using Kingmaker.UI.MVVM._VM.Tooltip.Bricks;
+using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
+using Kingmaker.UI.UnitSettings;
+#elif RT
+using Kingmaker.Code.UI.MVVM.VM.Tooltip.Templates;
+using Kingmaker.Code.UI.MVVM.View.Slots;
+using Kingmaker.Code.UI.MVVM.VM.Tooltip.Bricks;
+using Kingmaker.UI.Models.UnitSettings;
+using Kingmaker.Code.UI.MVVM.VM.ActionBar;
+#endif
 
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
+    public static class GUIDTooltipStyes {
+#if Wrath
+        public static string GUIDTooltipStyle(this string guid) => $"<color=grey>guid: {guid}</color>";
+#elif RT
+        public static string GUIDTooltipStyle(this string guid) => $"<color=grey>guid: {guid}</color>".sizePercent(85);
+#endif
+    }
 
     [HarmonyPatch]
     public class Clipboard_Guids {
         public static Settings settings = Main.Settings;
+#if Wrath
+        private const TooltipTextType GUIDTooltipTextTypes = TooltipTextType.Small | TooltipTextType.Italic;
+#elif RT
+        const TooltipTextType GUIDTooltipTextTypes = TooltipTextType.Simple | TooltipTextType.Italic;
+#endif
+
         public static void CopyToClipboard(string guid) {
             GUIUtility.systemCopyBuffer = guid;
             EventBus.RaiseEvent<IWarningNotificationUIHandler>(h => h.HandleWarning("Copied Guid to clipboard: " + guid, false));
@@ -32,7 +55,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             var list = __result.ToList();
 
             var guid = __instance.BlueprintAbility?.AssetGuidThreadSafe;
-            list.Insert(0, new TooltipBrickText($"<color=grey>guid: {guid}</color>", TooltipTextType.Small | TooltipTextType.Italic));
+            list.Insert(0, new TooltipBrickText(guid.GUIDTooltipStyle(), GUIDTooltipTextTypes));
 
             __result = list;
         }
@@ -47,7 +70,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
             var guid = __instance.BlueprintActivatableAbility?.AssetGuidThreadSafe;
             var guid2 = __instance.BlueprintActivatableAbility?.m_Buff?.Guid.ToString();
-            list.Insert(0, new TooltipBrickText($"<color=grey>guid: {guid}\nbuff: {guid2}</color>", TooltipTextType.Small | TooltipTextType.Italic));
+            list.Insert(0, new TooltipBrickText($"{guid}\nbuff: {guid2}".GUIDTooltipStyle(), GUIDTooltipTextTypes));
 
             __result = list;
         }
@@ -61,7 +84,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             var list = __result.ToList();
 
             var guid = __instance.m_BlueprintItem?.AssetGuidThreadSafe ?? __instance.m_Item?.Blueprint?.AssetGuidThreadSafe;
-            list.Insert(0, new TooltipBrickText($"<color=grey>guid: {guid}</color>", TooltipTextType.Small | TooltipTextType.Italic));
+            list.Insert(0, new TooltipBrickText(guid.GUIDTooltipStyle(), GUIDTooltipTextTypes));
 
             __result = list;
         }
@@ -75,7 +98,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             var list = __result.ToList();
 
             var guid = __instance.Buff?.Blueprint?.AssetGuidThreadSafe;
-            list.Insert(0, new TooltipBrickText($"<color=grey>guid: {guid}</color>", TooltipTextType.Small | TooltipTextType.Italic));
+            list.Insert(0, new TooltipBrickText(guid.GUIDTooltipStyle(), GUIDTooltipTextTypes));
 
             __result = list;
         }

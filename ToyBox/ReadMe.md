@@ -37,7 +37,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.3 (Coming Soon)
-**ToyBox 1.5.3** - ***Sh0dan Experimental Preview*** **May 21, 2023g**
+**ToyBox 1.5.3** - ***Sh0dan Experimental Preview*** **May 24, 2023h**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
@@ -52,6 +52,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) Fixed other crashers introduced by c#11
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
  * (***Narria***) Added work around for issue of game double calling SelectClass.Apply leading to multiclass levels being added more than once during character creation **Please test out and report any issues you find in gestalt/multiclassing**
+ * (***Narria***) Fixed crasher when you ignore equipment restrictions
  * (***ADDB***) Added Achievements Unlocker.
  * (***ADDB***) Made GameID editable.
  * (***BuckAMayzing***) Fixed issue with Bulk Sell unintentionally selling items that were still equipped on characters.
