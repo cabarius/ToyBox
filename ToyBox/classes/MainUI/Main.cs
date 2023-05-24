@@ -62,7 +62,6 @@ namespace ToyBox {
         private static Exception _caughtException = null;
 
         public static List<GameObject> Objects;
-
         private static bool Load(UnityModManager.ModEntry modEntry) {
             try {
 #if DEBUG
