@@ -44,11 +44,13 @@ namespace ToyBox {
                 () => {
                     if (Event.current.type != EventType.Repaint) {
                         uiCulture = CultureInfo.GetCultureInfo(Mod.ModKitSettings.uiCultureCode);
+                        cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(ci => ci.DisplayName).ToList();
                         if (Main.Settings.onlyShowLanguagesWithFiles) {
-                            cultures = LocalizationManager.getLanguagesWithFile().Select((code, index) => CultureInfo.GetCultureInfo(code)).OrderBy(ci => ci.DisplayName).ToList();
-                        }
-                        else {
-                            cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(ci => ci.DisplayName).ToList();
+                            var languages = LocalizationManager.getLanguagesWithFile().ToHashSet();
+                            cultures = cultures
+                                       .Where(ci =>  languages.Contains(ci.Name))
+                                       .OrderBy(ci => ci.DisplayName).
+                                       ToList(); 
                         }
                     }
                     using (VerticalScope()) {
@@ -59,11 +61,14 @@ namespace ToyBox {
                             Space(25);
                             ActionButton("Export current locale to file".cyan(), () => LocalizationManager.Export());
                             Space(25);
-                            Toggle("Only show languages with existing localization files", ref Main.Settings.onlyShowLanguagesWithFiles);
-                            Space(25);
                             LinkButton("Open the Localization Guide", "https://github.com/cabarius/ToyBox/wiki/Localization-Guide");
                         }
-                        if (GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => ci.DisplayName, ref cultureSearchText, 8, rarityButtonStyle, Width(ummWidth - 350))) {
+                        15.space();
+                        using (HorizontalScope()) {
+                            Toggle("Only show languages with existing localization files", ref Main.Settings.onlyShowLanguagesWithFiles);
+                        }
+                        Div(0, 25);
+                        if (GridPicker<CultureInfo>("Culture", ref uiCulture, cultures, null, ci => $"{ci.Name.orange().bold()} {ci.DisplayName}", ref cultureSearchText, 6, rarityButtonStyle, Width(ummWidth - 350))) {
                             Mod.ModKitSettings.uiCultureCode = uiCulture.Name;
                             LocalizationManager.Update();
                         }
