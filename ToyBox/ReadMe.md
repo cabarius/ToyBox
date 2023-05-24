@@ -14,7 +14,7 @@
 
 **Please backup early and backup often.**
 
-### Install & Setup
+### Install & Setup (Wrath)
 1. Install the Unity Mod Manager﻿﻿.
 1. Install the mod using the Unity Mod Manager﻿ or extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure\Mods').
 1. Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
@@ -23,6 +23,17 @@
 1. Important this mod is designed to be run at 1920x1080 or higher.
 1. Please set your resolution to at least 1920x1080
 1. Go to Settings tab on Unity Mod Manager to set your screen width to at least 1920 wide
+### Install & Setup (Rogue)
+1. Download the ToyBox mod file and unzip
+1. If the folder is not already named 0ToyBox0 please rename it to that
+Launch the game at least once
+1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager
+1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat\WH 40000 RT\UnityModManager
+1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
+1. Load a save or start a new game to get the most out of of the mod
+* Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
+* Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible
 
 ### Usage 
 * **Bag of Tricks**: this is a collection of quality of life, quick cheats, settings, multipliers, etc from the awesome Kingmaker mod of the same name plus a bag or two of new tricks ^_^
@@ -36,8 +47,14 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-### Ver 1.5.3 (Coming Soon)
-**ToyBox 1.5.3** - ***Sh0dan Experimental Preview*** **May 24, 2023h**
+### Ver 1.5.3 Rogue (Coming Soon)
+**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 24, 2023h**
+ * Port for prelease versions of War Hammer 40000: Rogue Trader
+ * This is a work in progress. 
+ * Please enjoy the parts of the mod that do work (which is more than one might expect)
+ * Please be patient as I bring up more of the mod over time
+### Ver 1.5.3 Wrath (Coming Soon)
+**ToyBox 1.5.3 Wrath** - ***Sh0dan Experimental Preview*** **May 24, 2023h**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
