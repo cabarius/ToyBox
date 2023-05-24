@@ -74,20 +74,20 @@ namespace ToyBox {
             var player = Game.Instance.Player;
             Space(25);
             if (!player.PartyAndPets.Contains(ch) && player.AllCharacters.Contains(ch)) {
-                ActionButton("Add", () => { charToAdd = ch; }, Width(150));
+                ActionButton("Add".localize(), () => { charToAdd = ch; }, Width(150));
                 Space(25);
             }
             else if (player.ActiveCompanions.Contains(ch)) {
-                ActionButton("Remove", () => { charToRemove = ch; }, Width(150));
+                ActionButton("Remove".localize(), () => { charToRemove = ch; }, Width(150));
                 Space(25);
             }
             else if (!player.AllCharacters.Contains(ch)) {
                 recruitableCount++;
-                ActionButton("Recruit".cyan(), () => { charToRecruit = ch; }, Width(150));
+                ActionButton("Recruit".localize().cyan(), () => { charToRecruit = ch; }, Width(150));
                 Space(25);
             }
             if (player.AllCharacters.Contains(ch) && !ch.IsStoryCompanion()) {
-                ActionButton("Unrecruit".cyan(), () => { charToUnrecruit = ch; charToRemove = ch; }, Width(150));
+                ActionButton("Unrecruit".localize().cyan(), () => { charToUnrecruit = ch; charToRemove = ch; }, Width(150));
                 Space(25);
 
             }
@@ -95,7 +95,7 @@ namespace ToyBox {
             //                Space(178);
             if (ch.CanRespec()) {
                 respecableCount++;
-                ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
+                ActionButton("Respec".localize().cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
             }
             else {
                 Space(153);
@@ -114,12 +114,12 @@ namespace ToyBox {
             charToRecruit = null;
             charToRemove = null;
             charToUnrecruit = null;
-            var characterListFunc = CharacterPicker.OnFilterPickerGUI();
+            var characterListFunc = CharacterPicker.OnFilterPickerGUI(true);
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
 #if Wrath
             if (characterListFunc.name == "Nearby") {
-                Slider("Nearby Distance", ref CharacterPicker.nearbyRange, 1f, 200, 25, 0, " meters", Width(250));
+                Slider("Nearby Distance".localize(), ref CharacterPicker.nearbyRange, 1f, 200, 25, 0, " meters".localize(), Width(250));
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
 #endif
@@ -131,9 +131,9 @@ namespace ToyBox {
             var isWide = IsWide;
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
-                    Label($"Party Level ".cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), AutoWidth());
+                    Label($"Party Level ".localize().cyan() + $"{Game.Instance.Player.PartyLevel}".orange().bold(), AutoWidth());
                     Space(110);
-                    ReflectionTreeView.DetailToggle("Inspect Party "+ "(for modders)".orange(), "All" , characterList, 0);
+                    ReflectionTreeView.DetailToggle($"Inspect Party {"(for modders)".orange()}".localize(), "All", characterList, 0);
 #if false   // disabled until we fix performance
                     var encounterCR = CheatsCombat.GetEncounterCr();
                     if (encounterCR > 0) {
@@ -172,10 +172,10 @@ namespace ToyBox {
                         }
                         else
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
-#if Wrath                
-                                ch.Descriptor().CustomName = name;
-#endif                            
-                                Main.SetNeedsResetGameUI();
+#if Wrath
+                            ch.Descriptor().CustomName = name;
+#endif
+                            Main.SetNeedsResetGameUI();
                         }
                         if (nameEditState != oldEditState) {
                             Mod.Log($"EditState changed: {oldEditState} -> {nameEditState}");
@@ -230,14 +230,14 @@ namespace ToyBox {
                     Wrap(IsNarrow, NarrowIndent, 0);
                     var prevSelectedChar = selectedCharacter;
                     var showClasses = ch == selectedCharacter && selectedToggle == ToggleChoice.Classes;
-                    if (DisclosureToggle($"{classData.Count} Classes", ref showClasses, 140)) {
+                    if (DisclosureToggle($"{classData.Count} " + "Classes".localize(), ref showClasses, 140)) {
                         if (showClasses) {
                             selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Trace($"selected {ch.CharacterName}");
                         }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
-                    if (DisclosureToggle("Stats", ref showStats, 95)) {
+                    if (DisclosureToggle("Stats".localize(), ref showStats, 95)) {
                         if (showStats) { selectedCharacter = ch; selectedToggle = ToggleChoice.Stats; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
@@ -247,28 +247,28 @@ namespace ToyBox {
                     //    else { selectedToggle = ToggleChoice.None; }
                     //}
                     var showFeatures = ch == selectedCharacter && selectedToggle == ToggleChoice.Features;
-                    if (DisclosureToggle("Features", ref showFeatures, 125)) {
+                    if (DisclosureToggle("Features".localize(), ref showFeatures, 125)) {
                         if (showFeatures) { selectedCharacter = ch; selectedToggle = ToggleChoice.Features; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     Wrap(!IsWide, NarrowIndent, 0);
                     var showBuffs = ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs;
-                    if (DisclosureToggle("Buffs", ref showBuffs, 90)) {
+                    if (DisclosureToggle("Buffs".localize(), ref showBuffs, 90)) {
                         if (showBuffs) { selectedCharacter = ch; selectedToggle = ToggleChoice.Buffs; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showAbilities = ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities;
-                    if (DisclosureToggle("Abilities", ref showAbilities, 125)) {
+                    if (DisclosureToggle("Abilities".localize(), ref showAbilities, 125)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
-                    if (DisclosureToggle($"{spellCount} Spells", ref showSpells, 150)) {
+                    if (DisclosureToggle($"{spellCount} " + "Spells".localize(), ref showSpells, 150)) {
                         if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
-                    ReflectionTreeView.DetailToggle("Ins", ch, ch, 75);
+                    ReflectionTreeView.DetailToggle("Inspect".localize(), ch, ch, 75);
                     Wrap(!isWide, NarrowIndent - 20);
                     ActionsGUI(ch);
                     if (prevSelectedChar != selectedCharacter) {
@@ -319,15 +319,15 @@ namespace ToyBox {
             }
             Space(25);
             if (recruitableCount > 0) {
-                Label($"{recruitableCount} character(s) can be ".orange().bold() + " Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green());
+                Label($"{recruitableCount} " + ("character(s) can be ".orange().bold() + "Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green()).localize());
             }
             if (respecableCount > 0) {
-                Label($"{respecableCount} character(s)  can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green());
-                Label("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange());
+                Label($"{respecableCount} " + ("character(s) can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green()).localize());
+                Label(("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange()).localize());
             }
             if (recruitableCount > 0 || respecableCount > 0) {
-                Label("WARNING".yellow().bold() + " these features are ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange());
-                Label("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange());
+                Label(("WARNING".yellow().bold() + " these features are ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange()).localize());
+                Label(("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange()).localize());
             }
             Space(25);
             foreach (var action in todo)
