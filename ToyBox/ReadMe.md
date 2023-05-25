@@ -54,6 +54,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
  * Please be patient as I bring up more of the mod over time
+ * (***Narria***) Fixed crasher that made saves disappear if you use custom portraits
+ * (***Narria***) Added a toggle at the top of Bag of Tricks to enable ToyBox bug fixes like the one above
 ### Ver 1.5.3 Wrath (Coming Soon)
 **ToyBox 1.5.3 Wrath** - ***Sh0dan Preview*** **May 24, 2023i**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)

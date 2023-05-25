@@ -102,6 +102,7 @@ namespace ToyBox {
         public int selectedTab = 0;
         public int increment = 10000;
         public int alignmentIncrement = 5;
+        public bool toggleBugFixes = false;
 
         // Quality of Life
         public bool toggleContinueAudioOnLostFocus = false;

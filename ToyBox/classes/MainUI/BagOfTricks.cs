@@ -96,6 +96,21 @@ namespace ToyBox {
 #if BUILD_CRUI
             ActionButton("Demo crUI", () => ModKit.crUI.Demo());
 #endif
+#if RT
+            using (HorizontalScope()) {
+                Toggle("Apply Bug Fixes", ref Settings.toggleBugFixes, 400.width());
+                using (VerticalScope()) {
+                    HelpLabel("ToyBox can patch some critical bugs in Rogue Trader Beta, including the following:");
+                    using (HorizontalScope()) {
+                        50.space();
+                        using (VerticalScope()) {
+                            Label("Failure to load custom portraits".cyan());
+                        }
+                    }
+                }
+
+            }
+#endif
             if (Main.IsInGame) {
                 BeginHorizontal();
                 Space(25);

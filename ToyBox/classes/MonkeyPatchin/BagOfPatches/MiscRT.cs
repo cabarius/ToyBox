@@ -49,11 +49,25 @@ using Kingmaker.Code.UI.MVVM.View.ServiceWindows.Inventory;
 using Kingmaker.Code.UI.MVVM.View.Vendor;
 using Kingmaker.Code.UI.MVVM.VM.Common;
 using Kingmaker.Code.UI.MVVM.VM.CounterWindow;
+using System.Runtime.Serialization;
 
 namespace ToyBox.BagOfPatches {
     internal static partial class Misc {
-        public static Settings settings = Main.Settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
+
+        [HarmonyPatch(typeof(PortraitData))]
+        public static class PortraitDataPatch {
+            [HarmonyPatch(nameof(PortraitData.OnDeserialized))]
+            [HarmonyPrefix]
+            private static bool OnDeserialized(PortraitData __instance, StreamingContext context) {
+                if (!Settings.toggleBugFixes) return true;
+                if (!__instance.IsCustom)
+                __instance.InitHandles();
+                //__instance.EnsureImages();
+                return false;
+            }
+        }
 
                 // Disables the lockout for reporting achievements
         [HarmonyPatch(typeof(AchievementEntity), nameof(AchievementEntity.IsDisabled), MethodType.Getter)]
@@ -88,7 +102,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Player), nameof(Player.ModsUser), MethodType.Getter)]
         public static class Player_ModsUser_Patch {
             public static bool Prefix(ref bool __result) {
-                if (settings.toggleAllowAchievementsDuringModdedGame) {
+                if (Settings.toggleAllowAchievementsDuringModdedGame) {
                     __result = false;
                     return false;
                 }
@@ -99,7 +113,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), nameof(Kingmaker.Items.Slots.ItemSlot.RemoveItem), new Type[] { typeof(bool), typeof(bool) })]
         private static class ItemSlot_RemoveItem_Patch {
             private static void Prefix(Kingmaker.Items.Slots.ItemSlot __instance, ref ItemEntity __state) {
-                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && Settings.togglAutoEquipConsumables) {
                     __state = null;
                     if (__instance.Owner is BaseUnitEntity unit) {
                         var slot = unit.Body.QuickSlots.FindOrDefault(s => s.HasItem && s.Item == __instance.m_ItemRef);
@@ -122,7 +136,7 @@ namespace ToyBox.BagOfPatches {
             }
 
             private static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state) {
-                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && Settings.togglAutoEquipConsumables) {
                     if (__state != null) {
                         var blueprint = __state.Blueprint;
                         var item = Game.Instance.Player.Inventory.Items.FirstOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
@@ -140,12 +154,12 @@ namespace ToyBox.BagOfPatches {
         public static class InventorySlotView_OnClick_Patch {
             public static bool Prefix(InventorySlotPCView __instance) {
                 Mod.Debug("InventorySlotPCView.OnClick");
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (Settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     __instance.OnDoubleClick();
                     return false;
                 }
                 if (__instance.UsableSource != UsableSourceType.Inventory) return true;
-                if (!settings.toggleShiftClickToUseInventorySlot) return true;
+                if (!Settings.toggleShiftClickToUseInventorySlot) return true;
                 if (KeyBindings.GetBinding("InventoryUseModifier").IsModifierActive) {
                     var item = __instance.Item;
                     Mod.Debug($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
@@ -172,7 +186,7 @@ namespace ToyBox.BagOfPatches {
                       })]
         public static class CommonVM_HandleOpen_Patch {
             public static bool Prefix(CounterWindowType type, ItemEntity item, Action<int> command) {
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (Settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     command.Invoke(item.Count);
                     return false;
                 }
@@ -183,7 +197,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
         public static class ItemSlotPCView_OnClick_Patch {
             public static bool Prefix(ItemSlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (Settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     __instance.OnDoubleClick();
                     return false;
                 }
@@ -195,7 +209,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(VendorSlotPCView), nameof(VendorSlotPCView.OnClick))]
         public static class VendorSlotPCView_OnClick_Patch {
             public static bool Prefix(VendorSlotPCView __instance) {
-                if (settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
+                if (Settings.toggleShiftClickToFastTransfer && KeyBindings.GetBinding("ClickToTransferModifier").IsModifierActive) {
                     __instance.OnDoubleClick();
                     return false;
                 }
