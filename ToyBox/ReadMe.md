@@ -49,18 +49,19 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.3 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 24, 2023h**
+**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 24, 2023i**
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
  * Please be patient as I bring up more of the mod over time
 ### Ver 1.5.3 Wrath (Coming Soon)
-**ToyBox 1.5.3 Wrath** - ***Sh0dan Experimental Preview*** **May 24, 2023h**
+**ToyBox 1.5.3 Wrath** - ***Sh0dan Preview*** **May 24, 2023i**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
    * **Your old ToyBox settings should migrate automatically**
    * Please report any issues you encounter
+ * (***Narria***) **Fixed nastry regression that broke gestalt level ups. Things should be back to ToyBox 1.5.1 goodness**
  * (***Narria***) **Enhanced UI** Added buttons to maximize mod window size and also show it when you get get the UI warning for small mod windows
  * (***Narria***) Fixed crasher bug with kill all button (most apparent when you use it from ToyBox UI)  
  * (***Narria***) Fixed issue where adding spells from all spellbooks and other cases wasn't working
