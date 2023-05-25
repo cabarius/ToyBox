@@ -253,6 +253,7 @@ namespace ToyBox.classes.Infrastructure {
             return known.Count;
         }
 #endif
+
         public static IEnumerable<ClassData> MergableClasses(this UnitEntityData unit) {
             var spellbookCandidates = unit.Spellbooks
                                           .Where(sb => sb.IsStandaloneMythic && sb.Blueprint.CharacterClass != null)
