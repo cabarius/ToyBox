@@ -165,7 +165,7 @@ namespace ToyBox.classes.Infrastructure {
             selectedSpellbook.RemoveSpellsOfLevel(level);
         }
 
-#if true // TODO: the else case if a patch that fixes the level for spontaneous spell casters learning scrolls
+#if true // TODO: the else case of this #if has a patch that fixes the level for spontaneous spell casters learning scrolls but causes the gestalt feature to stop working by causing spells to not show up for spell casting classes like oracle and sorc when you try to select/gestalt them after choosing say a scaled fist monk
         public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
             Mod.Trace($"GetActualSpellsLearnedForClass - unit: {unit?.CharacterName} spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
             // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
