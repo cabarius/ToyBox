@@ -141,7 +141,7 @@ namespace ToyBox {
             foreach (var obj in Game.Instance.State.MapObjects) {
                 obj.LastAwarenessRollRank = new Dictionary<UnitReference, int>();
             }
-            Tweaks.UnitEntityData_CanRollPerception_Extension.TriggerReroll = true;
+            Tweaks.UnitEntityDataCanRollPerceptionExtension.TriggerReroll = true;
         }
 
         public static void RerollInteractionSkillChecks() {

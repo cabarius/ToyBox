@@ -544,52 +544,53 @@ namespace ToyBox {
 #endif
             Div(0, 25);
             HStack("Cheats".localize(), 1,
-                () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)".localize(), ref Settings.toggleUnlimitedStatModifierStacking),
-                () => {
-                    using (HorizontalScope()) {
-                        ToggleCallback("Highlight Hidden Objects".localize(), ref Settings.highlightHiddenObjects, Actions.UpdateHighlights);
-                        if (Settings.highlightHiddenObjects) {
-                            Space(100);
-                            ToggleCallback("In Fog Of War ".localize(), ref Settings.highlightHiddenObjectsInFog, Actions.UpdateHighlights);
-                        }
-                    }
-                },
-                () => Toggle("Infinite Abilities".localize(), ref Settings.toggleInfiniteAbilities),
-                () => Toggle("Infinite Spell Casts".localize(), ref Settings.toggleInfiniteSpellCasts),
+                   () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)".localize(), ref Settings.toggleUnlimitedStatModifierStacking),
+                   () => {
+                       using (HorizontalScope()) {
+                           ToggleCallback("Highlight Hidden Objects".localize(), ref Settings.highlightHiddenObjects, Actions.UpdateHighlights);
+                           if (Settings.highlightHiddenObjects) {
+                               Space(100);
+                               ToggleCallback("In Fog Of War ".localize(), ref Settings.highlightHiddenObjectsInFog, Actions.UpdateHighlights);
+                           }
+                       }
+                   },
+                   () => Toggle("Infinite Abilities".localize(), ref Settings.toggleInfiniteAbilities),
+                   () => Toggle("Infinite Spell Casts".localize(), ref Settings.toggleInfiniteSpellCasts),
 #if Wrath
                 () => Toggle("No Material Components".localize(), ref Settings.toggleMaterialComponent),
                 () => Toggle("Disable Party Negative Levels".localize(), ref Settings.togglePartyNegativeLevelImmunity),
                 () => Toggle("Disable Party Ability Damage".localize(), ref Settings.togglePartyAbilityDamageImmunity),
                 () => Toggle("Disable Attacks of Opportunity".localize(), ref Settings.toggleAttacksofOpportunity),
 #endif
-                () => Toggle("Unlimited Actions During Turn".localize(), ref Settings.toggleUnlimitedActionsPerTurn),
-                () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
+                   () => Toggle("Unlimited Actions During Turn".localize(), ref Settings.toggleUnlimitedActionsPerTurn),
+                   () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
 #if Wrath
                 () => Toggle("Instant Cooldown".localize(), ref Settings.toggleInstantCooldown),
 
                 () => Toggle("Spontaneous Caster Scroll Copy".localize(), ref Settings.toggleSpontaneousCopyScrolls),
 #endif
-                () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
+                   () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
 #if Wrath
                 () => Toggle("Disable Armor Max Dexterity".localize(), ref Settings.toggleIgnoreMaxDexterity),
                 () => Toggle("Disable Armor Speed Reduction".localize(), ref Settings.toggleIgnoreSpeedReduction),
                 () => Toggle("Disable Armor & Shield Arcane Spell Failure".localize(), ref Settings.toggleIgnoreSpellFailure),
                 () => Toggle("Disable Armor & Shield Checks Penalty".localize(), ref Settings.toggleIgnoreArmorChecksPenalty),
 #endif
-                () => Toggle("No Friendly Fire On AOEs".localize(), ref Settings.toggleNoFriendlyFireForAOE),
+                   () => Toggle("No Friendly Fire On AOEs".localize(), ref Settings.toggleNoFriendlyFireForAOE),
 #if Wrath
                 () => Toggle("Free Meta-Magic".localize(), ref Settings.toggleMetamagicIsFree),
 #endif
-                () => Toggle("No Fog Of War".localize(), ref Settings.toggleNoFogOfWar),
-                () => Toggle("Restore Spells & Skills After Combat".localize(), ref Settings.toggleRestoreSpellsAbilitiesAfterCombat),
-                //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat),
-                //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
-                //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
-                () => Toggle("Instant Rest After Combat".localize(), ref Settings.toggleInstantRestAfterCombat),
+                   () => Toggle("No Fog Of War".localize(), ref Settings.toggleNoFogOfWar),
+                   () => Toggle("Restore Spells & Skills After Combat".localize(), ref Settings.toggleRestoreSpellsAbilitiesAfterCombat),
+                   //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat),
+                   //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
+                   //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
+                   () => Toggle("Instant Rest After Combat".localize(), ref Settings.toggleInstantRestAfterCombat),
 #if Wrath
                 () => Toggle("Instant change party members".localize(), ref Settings.toggleInstantChangeParty),
                 () => ToggleCallback("Equipment No Weight".localize(), ref Settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
 #endif
+                () => Toggle("Allow Equipment Change During Combat".localize(), ref Settings.toggleEquipItemsDuringCombat),
                 () => Toggle("Allow Item Use From Inventory During Combat".localize(), ref Settings.toggleUseItemsDuringCombat),
 #if Wrath
                 () => Toggle("Ignore Alignment Requirements for Abilities".localize(), ref Settings.toggleIgnoreAbilityAlignmentRestriction),

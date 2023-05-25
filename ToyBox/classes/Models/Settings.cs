@@ -195,6 +195,7 @@ namespace ToyBox {
         public bool toggleEnterCombatAutoRage = false;
         public bool toggleEnterCombatAutoRageDemon = false;
         public bool toggleEquipmentNoWeight = false;
+        public bool toggleEquipItemsDuringCombat = false;
         public bool toggleUseItemsDuringCombat = false;
         public bool toggleTeleportKeysEnabled = false;
         public bool toggleRespecRefundScrolls = false;

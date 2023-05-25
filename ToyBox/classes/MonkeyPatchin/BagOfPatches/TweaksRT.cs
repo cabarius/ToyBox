@@ -100,7 +100,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
         [HarmonyPatch(typeof(SoundState), nameof(SoundState.OnApplicationFocusChanged))]
-        public static class SoundState_OnApplicationFocusChanged_Patch {
+        public static class SoundStateOnApplicationFocusChangedPatch {
             [HarmonyPrefix]
             private static bool OnApplicationFocusChanged() {
                 Mod.Trace($"AudioServiceDrivingBehaviour.OnApplicationFocusChanged - {Settings.toggleContinueAudioOnLostFocus}");
@@ -110,7 +110,7 @@ namespace ToyBox.BagOfPatches {
 
 
         [HarmonyPatch(typeof(GameHistoryLog), nameof(GameHistoryLog.HandlePartyCombatStateChanged))]
-        private static class GameHistoryLog_HandlePartyCombatStateChanged_Patch {
+        private static class GameHistoryLogHandlePartyCombatStateChangedPatch {
             private static void Postfix(ref bool inCombat) {
                 if (!inCombat && Settings.toggleRestoreSpellsAbilitiesAfterCombat) {
                     var partyMembers = Game.Instance.Player.PartyAndPets;
@@ -493,7 +493,7 @@ toggleIgnoreAbilityTargetTooClose
                 return false;
             }
         }
-        public static class UnitEntityData_CanRollPerception_Extension {
+        public static class UnitEntityDataCanRollPerceptionExtension {
             public static bool TriggerReroll = false;
             public static bool CanRollPerception(UnitEntityData unit) {
                 if (TriggerReroll) {
@@ -503,16 +503,35 @@ toggleIgnoreAbilityTargetTooClose
                 return unit.MovementAgent.Position.To2D() != unit.MovementAgent.m_PreviousPosition;
             }
         }
+        #if false // TODO: these don't work by themselves so figure out what to do
+        [HarmonyPatch(typeof(InventoryHelper))]
+        public static class InventoryHelperPatch {
+            [HarmonyPrefix]
+            [HarmonyPatch(nameof(InventoryHelper.CanChangeEquipment))]
+            public static bool CanChangeEquipment(BaseUnitEntity unit, ref bool __result) {
+                if (!Settings.toggleEquipItemsDuringCombat) return true;
+                __result = true;
+                return false;
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(nameof(InventoryHelper.CanEquipItem))]
+            public static bool CanEquipItem(ItemEntity item, BaseUnitEntity unit, ref bool __result) {
+                if (!Settings.toggleEquipItemsDuringCombat) return true;
+                __result = InventoryHelper.CanEquipItemInCombat(item);
+                return false;
+            }
+        }
 
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.IsUsableFromInventory), MethodType.Getter)]
-        public static class ItemEntity_IsUsableFromInventory_Patch {
+        public static class ItemEntityIsUsableFromInventoryPatch {
             // Allow Item Use From Inventory During Combat
             public static bool Prefix(ItemEntity __instance, ref bool __result) {
                 if (!Settings.toggleUseItemsDuringCombat) return true;
                 return __instance.Blueprint is not BlueprintItemEquipmentUsable;
             }
         }
-
+        #endif
 
         [HarmonyPatch(typeof(PartyAwarenessController))]
         public static class PartyAwarenessControllerPatch {
@@ -536,7 +555,7 @@ toggleIgnoreAbilityTargetTooClose
 #endif
             [HarmonyPatch(nameof(PartyAwarenessController.Tick))]
             [HarmonyPostfix]
-            private static void Tick() => UnitEntityData_CanRollPerception_Extension.TriggerReroll = false;
+            private static void Tick() => UnitEntityDataCanRollPerceptionExtension.TriggerReroll = false;
         }
 
 #if false
