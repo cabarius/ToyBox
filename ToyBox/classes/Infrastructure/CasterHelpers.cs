@@ -178,7 +178,6 @@ namespace ToyBox.classes.Infrastructure {
 #if Wrath
         public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
             Mod.Trace($"GetActualSpellsLearnedForClass - unit: {unit?.CharacterName} spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
-
             // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
             var spellsToIgnore = unit.Facts.List.SelectMany(x =>
                 x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell)
