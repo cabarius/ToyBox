@@ -73,7 +73,7 @@ namespace ModKit {
         }
 
         public static string localize(this string key) {
-            if (key == null || key == "") return key;
+            if (string.IsNullOrEmpty(key)) return key;
             else {
                 string localizedString = "";
                 if (!IsDefault) {
