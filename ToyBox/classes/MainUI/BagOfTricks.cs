@@ -108,15 +108,15 @@ namespace ToyBox {
                         }
                     }
                 }
-
             }
 #endif
             if (Main.IsInGame) {
-                BeginHorizontal();
-                Space(25);
-                Label("increment".localize().cyan(), AutoWidth());
-                var increment = IntTextField(ref Settings.increment, null, Width(150));
-                EndHorizontal();
+                using (HorizontalScope()) {
+                    Space(25);
+                    Label("increment".localize().cyan(), AutoWidth());
+                   IntTextField(ref Settings.increment, null, Width(150));
+                }
+                var increment = Settings.increment;
 #if Wrath
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 var kingdom = KingdomState.Instance;
