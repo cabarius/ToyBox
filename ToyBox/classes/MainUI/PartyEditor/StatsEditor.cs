@@ -7,6 +7,7 @@ using Kingmaker.Enums;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Visual.LightSelector;
 using ModKit;
 using ModKit.Utility;
 using System;
@@ -25,7 +26,8 @@ namespace ToyBox {
 
         public static Dictionary<string, float> lastScaleSize = new();
         private static int _increase = 1;
-        public static void OnStatsGUI(UnitEntityData ch) {
+        public static List<Action> OnStatsGUI(UnitEntityData ch) {
+            List<Action> todo = new();
             Div(100, 20, 755);
 #if Wrath
             var alignment = ch.Descriptor().Alignment.ValueRaw;
@@ -205,7 +207,7 @@ namespace ToyBox {
                             Label("Warning:".localize().red().bold(), Width(150));
                             Label("This is not reversible.".localize().orange().bold(), Width(250));
                             Space(25);
-                            ActionButton("Increase Swarm Power".localize(), () => SwarmPart.AddStrength(_increase));
+                            ActionButton("Increase Swarm Power".localize(), () => todo.Add(() => SwarmPart.AddStrength(_increase)));
                             Space(10);
                             IntTextField(ref _increase, "", MinWidth(50), AutoWidth());
                             Space(25);
@@ -223,7 +225,7 @@ namespace ToyBox {
                             Label("Warning:".localize().red().bold(), Width(150));
                             Label("This is not reversible.".localize().orange().bold(), Width(250));
                             Space(25);
-                            ActionButton("Remove all Clones".localize(), () => {
+                            ActionButton("Remove all Clones".localize(), () => todo.Add(() => {
                                 var toRemove = SwarmClones.m_SpawnedPetRefs.ToList();
                                 SwarmClones.RemoveClones();
                                 foreach (var clone in toRemove) {
@@ -239,7 +241,7 @@ namespace ToyBox {
                                         ch.Buffs.RemoveFact(buff);
                                     }
                                 }
-                            });
+                            }));
                         }
                     }
                 }
@@ -312,6 +314,7 @@ namespace ToyBox {
                     //Mod.Error(ex);
                 }
             }
+            return todo;
         }
     }
 }

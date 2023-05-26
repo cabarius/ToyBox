@@ -293,7 +293,7 @@ namespace ToyBox {
                     OnClassesGUI(ch, classData, selectedCharacter);
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
-                    OnStatsGUI(ch);
+                    todo = OnStatsGUI(ch);
                 }
                 //if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
                 //    todo = FactsEditor.OnGUI(ch, ch.Facts.m_Facts);
