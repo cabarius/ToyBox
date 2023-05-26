@@ -49,7 +49,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.3 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 26, 2023k** for beta 0.2.1y
+**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 26, 2023l** for beta 0.2.1y
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -60,8 +60,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) Add/Remove/Recruit/Uncrecruit now work
  * (***Narria***) You can now edit abilities in the party editor
  * (***Narria***) You can now edit your Starship in the party editor
- * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
- * (***Narria***) **Got this up on Beta 0.2.1y**
+   * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
+ * (***Narria***) **Got this up on Beta 0.2.1y including fixing the dialog bug**
 ### Install & Setup (Rogue)
 1. Download the ToyBox mod file and unzip
 1. If the folder is not already named 0ToyBox0 please rename it to that
@@ -76,7 +76,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
 * Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible
 ### Ver 1.5.3 Wrath (Coming Soon)
-**ToyBox 1.5.3 Wrath** - ***Sh0dan Preview*** **May 26, 2023j**
+**ToyBox 1.5.3 Wrath** - ***Sh0dan Preview*** **May 26, 2023l**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
