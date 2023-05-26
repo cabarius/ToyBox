@@ -91,7 +91,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
 gestalt/multiclassing**
  * (***Narria***) Fixed crasher when you ignore equipment restrictions
- * (***Narria***) Fixed bug in Party Editor where Adjust Level Based On Experience modified your mythic experience and not your charaacter experience
+ * (***Narria***) Fixed bug in Party Editor where Adjust Level Based On Experience modified your mythic experience and not your character experience
  * (***ADDB***) Added Achievements Unlocker.
  * (***ADDB***) Made GameID editable.
  * (***BuckAMayzing***) Fixed issue with Bulk Sell unintentionally selling items that were still equipped on characters.
