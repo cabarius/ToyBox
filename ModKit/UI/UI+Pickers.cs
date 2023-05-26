@@ -93,18 +93,7 @@ namespace ModKit {
 
         public static void EnumGrid<TEnum>(Func<TEnum> get, Action<TEnum> set, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             var value = get();
-            var names = Enum.GetNames(typeof(TEnum));
-            var index = Array.IndexOf(names, value.ToString());
-            if (SelectionGrid(ref index, names, xCols, options)) {
-                if (Enum.TryParse(names[index], out TEnum newValue)) {
-                    set(newValue);
-                }
-            }
-        }
-        public static void EnumGrid<TEnum>(Func<TEnum> get, Action<TEnum> set, int xCols, bool shouldLocalize, params GUILayoutOption[] options) where TEnum : struct {
-            var value = get();
-            var names = Enum.GetNames(typeof(TEnum));
-            if (shouldLocalize) names = names.Select(name => name.localize()).ToArray();
+            var names = Enum.GetNames(typeof(TEnum)).Select(name => name.localize()).ToArray();
             var index = Array.IndexOf(names, value.ToString());
             if (SelectionGrid(ref index, names, xCols, options)) {
                 if (Enum.TryParse(names[index], out TEnum newValue)) {
@@ -120,6 +109,7 @@ namespace ModKit {
             var nameToEnum = value.NameToValueDictionary();
             if (titleFormater != null)
                 formatedNames = names.Select((n) => titleFormater(n, nameToEnum[n])).ToArray();
+            formatedNames = formatedNames.Select(n => n.localize()).ToArray();
             var index = Array.IndexOf(names, value.ToString());
             var oldIndex = index;
             if (style == null ? SelectionGrid(ref index, formatedNames, xCols, options) : SelectionGrid(ref index, formatedNames, xCols, style, options)) {
@@ -143,15 +133,11 @@ namespace ModKit {
             return changed;
         }
         public static bool EnumGrid<TEnum>(string title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
-            return EnumGrid(title, ref value, false, options);
-        }
-        public static bool EnumGrid<TEnum>(string title, ref TEnum value, bool shouldLocalize = false, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
-            Func<string, TEnum, string> titleFormatter = shouldLocalize ? (name, en) => name.localize() : null;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
                 Space(25);
-                changed = EnumGrid(ref value, 0, titleFormatter, options);
+                changed = EnumGrid(ref value, 0, null, options);
             }
             return changed;
         }
@@ -221,15 +207,7 @@ namespace ModKit {
             Space(25);
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
-        public static NamedFunc<T> TypePicker<T>(string title, ref int selectedIndex, NamedFunc<T>[] items) where T : class {
-            var sel = selectedIndex;
-            var titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();
-            if (title?.Length > 0) { Label(title); }
-            selectedIndex = GL.SelectionGrid(selectedIndex, titles, 6);
-            return items[selectedIndex];
-        }
-
-        public static NamedFunc<T> TypePicker<T>(string title, ref int selectedIndex, bool shouldLocalize, NamedFunc<T>[] items) where T : class {
+        public static NamedFunc<T> TypePicker<T>(string title, ref int selectedIndex, NamedFunc<T>[] items, bool shouldLocalize = false) where T : class {
             var sel = selectedIndex;
             string[] titles;
             if (shouldLocalize) {

@@ -224,21 +224,21 @@ namespace ToyBox {
                     UI.LinkButton("WoTR Discord", "https://discord.gg/wotr");
                 }
 #endif
-                TabBar(ref Settings.selectedTab, true,
+                TabBar(ref Settings.selectedTab,
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
                         }
                         else Space(25);
                     },
-                    new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
+                    new NamedAction("Bag of Tricks".localize(), BagOfTricks.OnGUI),
                     new NamedAction("Enhanced UI".localize(), EnhancedUI.OnGUI),
                     new NamedAction("Level Up".localize(), LevelUp.OnGUI),
                     new NamedAction("Party".localize(), PartyEditor.OnGUI),
                     new NamedAction("Loot".localize(), PhatLoot.OnGUI),
                     new NamedAction("Enchantment".localize(), EnchantmentEditor.OnGUI),
 #if false
-                    new NamedAction("Playground", () => Playground.OnGUI()),
+                    new NamedAction("Playground".localize(), () => Playground.OnGUI()),
 #endif
                     new NamedAction("Search 'n Pick".localize(), SearchAndPick.OnGUI),
 #if Wrath

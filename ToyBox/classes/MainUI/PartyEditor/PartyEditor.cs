@@ -114,7 +114,7 @@ namespace ToyBox {
             charToRecruit = null;
             charToRemove = null;
             charToUnrecruit = null;
-            var characterListFunc = CharacterPicker.OnFilterPickerGUI(true);
+            var characterListFunc = CharacterPicker.OnFilterPickerGUI();
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
 #if Wrath

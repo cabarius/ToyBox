@@ -54,15 +54,15 @@ namespace ToyBox {
         }
         public static void ResetGUI() => _selectedIndex = 0;
 
-        public static NamedFunc<List<UnitEntityData>> OnFilterPickerGUI(bool shouldLocalize = false) {
+        public static NamedFunc<List<UnitEntityData>> OnFilterPickerGUI() {
             var filterChoices = GetPartyFilterChoices();
             if (filterChoices == null) { return null; }
 
             var characterListFunc = TypePicker(
                 null,
                 ref Main.Settings.selectedPartyFilter,
-                shouldLocalize,
-                filterChoices
+                filterChoices,
+                true
                 );
             return characterListFunc;
         }

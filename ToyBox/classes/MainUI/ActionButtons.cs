@@ -48,14 +48,9 @@ namespace ToyBox {
                 UI.Space(width + 3);
             }
         }
-        public static void BlueprintActionButton(this BlueprintAction action, UnitEntityData unit, SimpleBlueprint bp, Action buttonAction, float width, bool shouldLocalize = false) {
+        public static void BlueprintActionButton(this BlueprintAction action, UnitEntityData unit, SimpleBlueprint bp, Action buttonAction, float width) {
             if (action != null && action.canPerform(bp, unit)) {
-                if (shouldLocalize) {
-                    UI.ActionButton(action.name.localize(), buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
-                }
-                else {
-                    UI.ActionButton(action.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
-                }
+                UI.ActionButton(action.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
             }
             else {
                 UI.Space(width + 3);

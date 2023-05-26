@@ -152,7 +152,7 @@ namespace ToyBox {
                 EnumGrid(
                     () => ch.Descriptor().State.Size,
                     (s) => ch.Descriptor().State.Size = s,
-                    3, true, Width(600));
+                    3, Width(600));
             }
             using (HorizontalScope()) {
                 Space(528);
@@ -167,7 +167,7 @@ namespace ToyBox {
                         if (lastScale != scaleMultiplier) {
                             ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                         }
-                        if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".localize().color(RGBA.none) + " (This setting is per-save)".localize(), ref lastScale, 0.01f, 40f, 1, 2, "", 400, true, AutoWidth())) {
+                        if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".localize().color(RGBA.none) + " (This setting is per-save)".localize(), ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
                             Main.Settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
                             ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                             lastScaleSize[ch.HashKey()] = lastScale;

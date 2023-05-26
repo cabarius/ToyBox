@@ -102,10 +102,10 @@ namespace ToyBox {
                 bool canIncrease = increase?.canPerform(blueprint, ch) ?? false;
                 if ((canDecrease || canIncrease) && feature is UnitFact rankFeature) {
                     var v = rankFeature.GetRank();
-                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease!.action(blueprint, ch, repeatCount)), 60, true);
+                    decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease!.action(blueprint, ch, repeatCount)), 60);
                     Space(10f);
                     Label($"{v}".orange().bold(), Width(30));
-                    increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase!.action(blueprint, ch, repeatCount)), 60, true);
+                    increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase!.action(blueprint, ch, repeatCount)), 60);
                     Space(17);
                     remainingWidth -= 190;
                 }
@@ -121,10 +121,10 @@ namespace ToyBox {
             var canAdd = add?.canPerform(blueprint, ch) ?? false;
             var canRemove = remove?.canPerform(blueprint, ch) ?? false;
             if (canRemove) {
-                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { browser.needsReloadData = true; remove.action(blueprint, ch, repeatCount); }), 150, true);
+                remove.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { browser.needsReloadData = true; remove.action(blueprint, ch, repeatCount); }), 150);
             }
             if (canAdd) {
-                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { browser.needsReloadData = true; add.action(blueprint, ch, repeatCount); }), 150, true);
+                add.BlueprintActionButton(ch, blueprint, () => todo.Add(() => { browser.needsReloadData = true; add.action(blueprint, ch, repeatCount); }), 150);
             }
             remainingWidth -= 178;
             Space(20); remainingWidth -= 20;
@@ -295,7 +295,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
             var featureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
             if (featureBrowser == null) {
-                featureBrowser = new Browser<BlueprintFeature, Feature>(true, true, false, true) { };
+                featureBrowser = new Browser<BlueprintFeature, Feature>(true, true) { };
                 FeatureBrowserDict[ch] = featureBrowser;
             }
             return OnGUI(ch, featureBrowser, feature, "Features");
@@ -303,7 +303,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
             var buffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
             if (buffBrowser == null) {
-                buffBrowser = new Browser<BlueprintBuff, Buff>(true, true, false, true);
+                buffBrowser = new Browser<BlueprintBuff, Buff>(true, true);
                 BuffBrowserDict[ch] = buffBrowser;
             }
             return OnGUI(ch, buffBrowser, buff, "Buffs");
@@ -311,7 +311,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
             var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
             if (abilityBrowser == null) {
-                abilityBrowser = new Browser<BlueprintAbility, Ability>(true, true, false, true);
+                abilityBrowser = new Browser<BlueprintAbility, Ability>(true, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
 #if Wrath

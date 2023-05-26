@@ -14,8 +14,8 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     Label($"{itemTypeName.Cyan()}:", 180.width());
                     Label($"{bonusType.orange()}", 150.width());
-                    Slider(ref enchantLevel, 0, 20, true, 0, "", 300.width());
-                    Slider(ref stackSize, 0, 20, true, 1, "", 300.width());
+                    Slider(ref enchantLevel, 0, 20, 0, "", 300.width());
+                    Slider(ref stackSize, 1, 20, 1, "", 300.width());
                     accessory?.Invoke();
                 }
             }
@@ -25,7 +25,7 @@ namespace ToyBox {
                     Toggle("Sell".localize() + $" {itemTypeName}", ref sellToggle, 150.width());
                     Space(25);
                     Label("Amount To Keep".localize().Cyan(), 150.width());
-                    Slider(ref stackSize, 0, 200, true, 1, "", AutoWidth());
+                    Slider(ref stackSize, 1, 200, 1, "", AutoWidth());
                 }
             }
 
@@ -102,7 +102,7 @@ namespace ToyBox {
                 ConsumableOptions("Ingredients".localize(), ref _settings.sellIngredients, ref _settings.ingredientStackSize);
 
                 Div(0, 25);
-                Slider("Change all enhancement modifiers".localize(), ref _settings.globalModifier, 0, 10, 0, "", true, AutoWidth());
+                Slider("Change all enhancement modifiers".localize(), ref _settings.globalModifier, 0, 10, 0, "", AutoWidth());
                 ActionButton("Apply".localize(), () => {
                     _settings.maxAttributeBonusForBelt = _settings.globalModifier;
                     _settings.maxAttributeBonusForHead = _settings.globalModifier;

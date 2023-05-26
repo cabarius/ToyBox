@@ -118,7 +118,7 @@ namespace ToyBox {
                    () => {
                        using (VerticalScope(400.width())) {
                            Label("Minimum Rarity For Loot Rarity Tags/Colors".localize().cyan(), AutoWidth());
-                           RarityGrid(ref Settings.minRarityToColor, 4, true, AutoWidth());
+                           RarityGrid(ref Settings.minRarityToColor, 4, AutoWidth());
                        }
                    });
             Div(0, 25);
@@ -128,7 +128,7 @@ namespace ToyBox {
                             using (HorizontalScope(300)) {
                                 using (VerticalScope()) {
                                     Label("Maximum Rarity To Hide:".localize().cyan(), AutoWidth());
-                                    RarityGrid(ref Settings.maxRarityToHide, 4, true, AutoWidth());
+                                    RarityGrid(ref Settings.maxRarityToHide, 4, AutoWidth());
                                 }
                             }
                         }
@@ -170,7 +170,7 @@ namespace ToyBox {
                     }
                     Label(areaName.orange().bold(), Width(300));
                     Label("Rarity: ".localize().cyan(), AutoWidth());
-                    RarityGrid(ref Settings.lootChecklistFilterRarity, 4, true, AutoWidth());
+                    RarityGrid(ref Settings.lootChecklistFilterRarity, 4, AutoWidth());
                 },
                 () => {
                     ActionTextField(
