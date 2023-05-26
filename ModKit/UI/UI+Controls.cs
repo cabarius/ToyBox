@@ -341,7 +341,7 @@ namespace ModKit {
 
         // Sliders
 
-        public static bool Slider(ref float value, float min, float max, bool shouldLocalize, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+        public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var newValue = (float)Math.Round(GL.HorizontalSlider(value, min, max, Width(200)), decimals);
             using (HorizontalScope(options)) {
@@ -350,21 +350,17 @@ namespace ModKit {
                 if (units.Length > 0)
                     Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
                 Space(25);
-                var resetText = shouldLocalize ? "Reset".localize() : "Reset";
-                ActionButton(resetText, () => { newValue = defaultValue; }, AutoWidth());
+                ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
             }
             var changed = Math.Abs(value - newValue) > float.Epsilon;
             value = newValue;
             return changed;
         }
-        public static bool Slider(ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
-            return Slider(ref value, min, max, false, defaultValue, decimals, units, options);
-        }
 
         private const int SliderTop = 3;
         private const int SliderBottom = -7;
 
-        public static bool Slider(string title, ref float value, float min, float max, bool shouldLocalize, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+        public static bool Slider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var newValue = value;
             using (HorizontalScope(options)) {
@@ -390,8 +386,7 @@ namespace ModKit {
                 Space(25);
                 using (VerticalScope(AutoWidth())) {
                     Space((SliderTop - 0).point());
-                    var resetText = shouldLocalize ? "Reset".localize() : "Reset";
-                    ActionButton(resetText, () => { newValue = defaultValue; }, AutoWidth());
+                    ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
                     Space(SliderBottom.point());
                 }
             }
@@ -400,24 +395,12 @@ namespace ModKit {
             value = newValue;
             return changed;
         }
-        public static bool Slider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
-            return Slider(title, ref value, min, max, false, defaultValue, decimals, units, options);
-        }
         public static bool Slider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             var value = get();
             var changed = Slider(title, ref value, min, max, defaultValue, decimals, units, options);
             if (changed)
                 set(value);
             return changed;
-        }
-        public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", bool shouldLocalize = false, params GUILayoutOption[] options) {
-            float floatValue = value;
-            var changed = Slider(title, ref floatValue, min, max, shouldLocalize, (float)defaultValue, 0, units, options);
-            value = (int)floatValue;
-            return changed;
-        }
-        public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
-            return Slider(title, ref value, min, max, defaultValue, units, false, options);
         }
         public static bool Slider(string title, Func<int> get, Action<int> set, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float floatValue = get();
@@ -426,17 +409,8 @@ namespace ModKit {
                 set((int)floatValue);
             return changed;
         }
-        public static bool Slider(ref int value, int min, int max, bool shouldLocalize, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
-            float floatValue = value;
-            var changed = Slider(ref floatValue, min, max, shouldLocalize, (float)defaultValue, 0, units, options);
-            value = (int)floatValue;
-            return changed;
-        }
-        public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
-            return Slider(ref value, min, max, false, defaultValue, units, options);
-        }
 
-        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", bool shouldLocalize = false, params GUILayoutOption[] options) {
+        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             if (min < 0)
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             BeginHorizontal(options);
@@ -470,8 +444,7 @@ namespace ModKit {
             Space(25);
             using (VerticalScope(AutoWidth())) {
                 Space((SliderTop + 0).point());
-                var resetText = shouldLocalize ? "Reset".localize() : "Reset";
-                ActionButton(resetText, () => { newValue = defaultValue; }, AutoWidth());
+                ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
                 Space(SliderBottom.point());
             }
             EndHorizontal();
@@ -480,9 +453,6 @@ namespace ModKit {
             return changed;
         }
 
-        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
-            return LogSlider(title, ref value, min, max, defaultValue, decimals, units, false, options);
-        }
         public static bool LogSlider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             var value = get();
             var changed = LogSlider(title, ref value, min, max, defaultValue, decimals, units, options);
@@ -491,7 +461,7 @@ namespace ModKit {
             return changed;
         }
 
-        public static bool LogSliderCustomLabelWidth(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", int labelWidth = 300, bool shouldLocalize = false, params GUILayoutOption[] options) {
+        public static bool LogSliderCustomLabelWidth(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", int labelWidth = 300, params GUILayoutOption[] options) {
             if (min < 0)
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             BeginHorizontal(options);
@@ -525,17 +495,13 @@ namespace ModKit {
             Space(25);
             using (VerticalScope(AutoWidth())) {
                 Space((SliderTop + 0).point());
-                var resetText = shouldLocalize ? "Reset".localize() : "Reset";
-                ActionButton(resetText, () => { newValue = defaultValue; }, AutoWidth());
+                ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
                 Space(SliderBottom.point());
             }
             EndHorizontal();
             var changed = Math.Abs(value - newValue) > float.Epsilon;
             value = Math.Min(max, Math.Max(min, newValue));
             return changed;
-        }
-        public static bool LogSliderCustomLabelWidth(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", int labelWidth = 300, params GUILayoutOption[] options) {
-            return LogSliderCustomLabelWidth(title, ref value, min, max, defaultValue, decimals, units, labelWidth, false, options);
         }
     }
 }
