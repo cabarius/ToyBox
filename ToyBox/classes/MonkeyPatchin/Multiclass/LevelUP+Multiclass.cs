@@ -199,7 +199,7 @@ namespace ToyBox.Multiclass {
                     for (var index = 0; index <= 10; ++index) {
                         var spellsKnown = spellbook1.Blueprint.SpellsKnown;
                         var expectedCount = spellsKnown.GetCount(casterLevelAfter, index);
-                        var actual = CasterHelpers.GetActualSpellsLearnedForClass(unit, spellbook1, index);
+                        var actual = CasterHelpers.GetActualSpellsLearnedForClass(unit, spellbook1, index, Game.Instance.LevelUpController.m_BaseUnit);
                         int learnabl = spellbook1.GetSpellsLearnableOfLevel(index).Count();
                         int spelladd = Math.Max(0, Math.Min(expectedCount - actual, learnabl));
 #if DEBUG
