@@ -12,12 +12,17 @@ using Kingmaker.EntitySystem.Entities;
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
 using ModKit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Reflection;
 using ToyBox.classes.Infrastructure;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 //using Kingmaker.UI.LevelUp.Phase;
@@ -223,6 +228,32 @@ namespace ToyBox.Multiclass {
                 foreach (var component2 in spellbook1.Blueprint.GetComponents<AddCustomSpells>())
                     ApplySpellbook.TryApplyCustomSpells(spellbook1, component2, state, unit);
                 return false;
+            }
+        }
+
+        // fix CopiedFromScroll not being copied over
+        [HarmonyPatch(typeof(UnitHelper), nameof(UnitHelper.CopySpellbook))]
+        private static class UnitHelper_CopySpellbook {
+            private static AbilityData AddSave(Spellbook th, int lvl, BlueprintAbility ab, bool ev, AbilityData from) {
+                var added = th.AddKnown(lvl, ab, ev);
+                added.IsTemporary = from.IsTemporary;
+                added.CopiedFromScroll = from.CopiedFromScroll;
+                added.IsFromMythicSpellList = from.IsFromMythicSpellList;
+                added.IsMysticTheurgeCombinedSpell = from.IsMysticTheurgeCombinedSpell;
+                added.m_Fact = from.Fact; // SourceItem, SourceItemEquipmentBlueprint, SourceItemUsableBlueprint
+                return added;
+            }
+
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instruction) {
+                var search = AccessTools.Method(typeof(Spellbook), nameof(Spellbook.AddKnown));
+                foreach (var c in instruction) {
+                    if (c.opcode == OpCodes.Callvirt && c.operand is MethodInfo i && i == search) {
+                        yield return new CodeInstruction(OpCodes.Ldloc_S, 6);
+                        yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(UnitHelper_CopySpellbook), nameof(UnitHelper_CopySpellbook.AddSave)));
+                        continue;
+                    }
+                    yield return c;
+                }
             }
         }
 
