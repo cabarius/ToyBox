@@ -122,7 +122,7 @@ namespace ToyBox {
                         Label("Mythic Level".localize().cyan(), Width(250));
                         ActionButton("<", () => prog.MythicLevel = Math.Max(0, prog.MythicLevel - 1), AutoWidth());
                         Space(25);
-                        Label("my lvl".green() + $": {prog.MythicLevel}", Width(100f));
+                        Label("my lvl".localize().green() + $": {prog.MythicLevel}", Width(100f));
                         ActionButton(">", () => prog.MythicLevel = Math.Min(10, prog.MythicLevel + 1), AutoWidth());
                     }
                     Space(181);
