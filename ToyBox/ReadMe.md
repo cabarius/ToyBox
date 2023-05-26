@@ -83,15 +83,13 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
    * **Your old ToyBox settings should migrate automatically**
    * Please report any issues you encounter
  * (***Narria***) **Fixed nastry regression that broke gestalt level ups. Things should be back to ToyBox 1.5.1 goodness**
- * (***Narria***) **Enhanced UI** Added buttons to maximize mod window size and also show it when you get get the UI warning for small mod windows
+ * (***Narria***) Fixed issue of game double calling SelectClass.Apply leading to multiclass levels being added more than once during character creation **Please test out and report any issues you find in  * (***Narria***) **Enhanced UI** Added buttons to maximize mod window size and also show it when you get get the UI warning for small mod windows
  * (***Narria***) Fixed crasher bug with kill all button (most apparent when you use it from ToyBox UI)  
  * (***Narria***) Fixed issue where adding spells from all spellbooks and other cases wasn't working
  * (***Narria***) Added Saves tab where you can currently just view saves.  Look for more in the future
  * (***Narria***) Added Crusade Events to Search 'n Pick
- * (***Narria***) **You should now be able to select Sorc again when you respec with Barley's mod.** This was a crasher introduced when I moved to c# 11
- * (***Narria***) Fixed other crashers introduced by c#11
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
- * (***Narria***) Added work around for issue of game double calling SelectClass.Apply leading to multiclass levels being added more than once during character creation **Please test out and report any issues you find in gestalt/multiclassing**
+gestalt/multiclassing**
  * (***Narria***) Fixed crasher when you ignore equipment restrictions
  * (***Narria***) Fixed bug in Party Editor where Adjust Level Based On Experience modified your mythic experience and not your charaacter experience
  * (***ADDB***) Added Achievements Unlocker.
