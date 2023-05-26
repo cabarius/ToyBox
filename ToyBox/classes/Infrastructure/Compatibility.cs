@@ -88,16 +88,10 @@ namespace ToyBox {
 
         // Hacks to get around ambiguity in Description due to te ILootable interface in BaseUnitEntity
         public static Gender? GetCustomGender(this UnitEntityData unit) {
-            return null;
-            var unitType = unit.GetType();
-            var description = unitType.GetPropValue<PartUnitDescription>("Description");
-            return description.CustomGender;
+            return unit.Description.CustomGender;
         }
         public static void SetCustomGender(this UnitEntityData unit, Gender gender) {
-            return;
-            var unitType = unit.GetType();
-            var description = unitType.GetPropValue<PartUnitDescription>("Description");
-            description.CustomGender = gender;
+            unit.Description.CustomGender = gender;
         }
         public static bool CanPlay(this BlueprintEtude etudeBP) {
             try {
@@ -128,15 +122,21 @@ namespace ToyBox {
         public static List<UnitEntityData> SelectedUnits => UIAccess.SelectionManager.SelectedUnits.ToList();
         public static ReactiveCollection<UnitEntityData> SelectedUnitsReactive() => UIAccess.SelectionManager.SelectedUnits;
         public static bool IsEnemy(UnitEntityData unit) => unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter())  && unit != GameHelper.GetPlayerCharacter();
+        public static bool IsPlayerFaction(this UnitEntityData unit) => unit.Faction == Game.Instance.BlueprintRoot.PlayerFaction;
         public static void KillUnit(UnitEntityData unit) => CheatsCombat.KillUnit(unit);
-        public static bool IsPartyOrPet(this MechanicEntity entity) => Game.Instance.Player.PartyAndPets.Contains(entity);
+        public static bool ToyBoxIsPartyOrPet(this MechanicEntity entity) => Game.Instance.Player.PartyAndPets.Contains(entity);
+        public static bool HasBonusForLevel(this BlueprintStatProgression xpTable, int level) => level >= 0 && level < xpTable.Bonuses.Length;
+        public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.OwnerEntity.Movable.ModifiedSpeedMps).Max();
+
 #elif Wrath
         public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Value;
         public static EntityPool<UnitEntityData> AllUnits => Game.Instance?.State?.Units;
         public static List<UnitEntityData> SelectedUnits => Game.Instance.UI.SelectionManager.SelectedUnits;
         public static bool IsEnemy(UnitEntityData unit) => unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter();
+        public static bool IsPlayerFaction(this UnitEntityData unit) => unit.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction);
         public static void KillUnit(UnitEntityData unit) => GameHelper.KillUnit(unit);
         public static bool IsPartyOrPet(this UnitEntityData entity) => entity.Descriptor.IsPartyOrPet();
+        public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.ModifiedSpeedMps).Max();
 
         // Teleport and Travel
 #endif

@@ -623,18 +623,28 @@ namespace ToyBox.BagOfPatches {
 
             private static void Postfix() => UnitEntityData_CanRollPerception_Extension.TriggerReroll = false;
         }
+        public static void MaybeKill(UnitCombatState unitCombatState) {
+            if (Settings.togglekillOnEngage) {
+                List<UnitEntityData> partyUnits = Game.Instance.Player.m_PartyAndPets;
+                UnitEntityData unit = unitCombatState.Unit;
+                if (unit.IsPlayersEnemy && !partyUnits.Contains(unit)) {
+                    CheatsCombat.KillUnit(unit);
+                }
+            }
+        }
+
 
         [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.Engage))]
         public static class UnitCombatState_Engage_Patch {
             private static void Postfix(UnitCombatState __instance) {
-                UnitEntityDataUtils.MaybeKill(__instance);
+                MaybeKill(__instance);
             }
         }
 
         [HarmonyPatch(typeof(UnitCombatState), nameof(UnitCombatState.JoinCombat))]
         public static class UnitCombatState_JoinCombat_Patch {
             private static void Postfix(UnitCombatState __instance) {
-                UnitEntityDataUtils.MaybeKill(__instance);
+                MaybeKill(__instance);
             }
         }
 

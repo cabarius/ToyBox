@@ -27,22 +27,23 @@ using ToyBox.Multiclass;
 namespace ToyBox {
     public partial class PartyEditor {
         public static void OnClassesGUI(UnitEntityData ch, List<(BlueprintCareerPath path, int level)> careerPaths, UnitEntityData selectedCharacter) {
+#if Wrath
             Div(100, 20);
             using (HorizontalScope()) {
                 Space(100);
                 Toggle("Multiple Classes On Level-Up", ref Settings.toggleMulticlass);
                 if (Settings.toggleMulticlass) {
                     Space(40);
-#if Wrath
                     if (DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
                         multiclassEditCharacter = selectedCharacter;
                     }
-#endif
                     Space(53);
                     Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
                 }
             }
+#endif
             using (HorizontalScope()) {
+#if Wrath
                 Space(100);
                 ActionToggle("Allow Levels Past 20",
                     () => {
@@ -63,8 +64,10 @@ namespace ToyBox {
                     AutoWidth());
                 Space(380);
                 Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".green());
+#endif
             }
             Div(100, 20);
+
             if (editMultiClass) {
 #if Wrath
                 MulticlassPicker.OnGUI(ch);
@@ -92,8 +95,6 @@ namespace ToyBox {
                     Space(23);
                     using (VerticalScope()) {
                         Label("This directly changes your character level but will not change exp or adjust any features associated with your character. To do a normal level up use +1 Lvl above.  This gets recalculated when you reload the game.  ".green());
-                        Label("If you want to alter default character level mark classes you want to exclude from the calculation with ".orange() + "gestalt".orange().bold() + " which means those levels were added for multi-classing. See the link for more information on this campaign variant.".orange());
-                        LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
                     }
                 }
                 using (HorizontalScope()) {
@@ -110,12 +111,14 @@ namespace ToyBox {
                     using (HorizontalScope(Width(781))) {
                         Space(100);
                         ActionButton("Adjust based on Level", () => {
-                            prog.MythicExperience = prog.MythicLevel;
+                            var xpTable = prog.ExperienceTable;
+                            prog.Experience = xpTable.GetBonus(prog.CharacterLevel);
                         }, AutoWidth());
                         Space(27);
                     }
                     Label("This sets your experience to match the current value of character level".green());
                 }
+#if false
                 Div(100, 25);
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
@@ -129,6 +132,7 @@ namespace ToyBox {
                     Space(181);
                     Label("This directly changes your mythic level but will not adjust any features associated with your character. To do a normal mythic level up use +1 my above".green());
                 }
+
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
                         Space(100);
@@ -154,6 +158,7 @@ namespace ToyBox {
                     }
                     Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".green());
                 }
+#endif
                 var classCount = careerPaths.Count();
 #if Wrath
                 var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));

@@ -24,6 +24,8 @@ using static ToyBox.BlueprintExtensions;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
+#elif RT 
+using Kingmaker.UnitLogic.Mechanics.Facts;
 #endif
 
 namespace ToyBox {
@@ -142,7 +144,11 @@ namespace ToyBox {
         }
 
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Definition, Item> browser, List<Item> fact, string name)
+#if Wrath
             where Item : UnitFact
+#elif RT
+            where Item : MechanicEntityFact
+#endif
             where Definition : BlueprintUnitFact {
             bool updateTree = false;
             List<Action> todo = new();
@@ -311,11 +317,7 @@ namespace ToyBox {
                 abilityBrowser = new Browser<BlueprintAbility, Ability>(true, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
-#if Wrath
             return OnGUI(ch, abilityBrowser, ability, "Abilities");
-#elif RT
-            return new List<Action>(); // TODO: make a browser for these non fact abilities
-#endif
         }
     }
 }

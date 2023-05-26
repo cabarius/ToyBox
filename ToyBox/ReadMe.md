@@ -28,14 +28,14 @@
 1. If the folder is not already named 0ToyBox0 please rename it to that
 1. Launch the game at least once. 
 1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one.**
-1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\WH 40000 RT\UnityModManager
-1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat\WH 40000 RT\UnityModManager
+1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. You may want to copy your Settings.xml and UserSettings folder from the old `WH 4000 RT` folder
 1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
 1. Load a save or start a new game to get the most out of of the mod
 * Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
 * Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible
-
 ### Usage 
 * **Bag of Tricks**: this is a collection of quality of life, quick cheats, settings, multipliers, etc from the awesome Kingmaker mod of the same name plus a bag or two of new tricks ^_^
 * **Level Up & Multiclass**: a variety of character creation, level up, unlock mythic paths plus support for multiple classes per level up and gestalt gameplay
@@ -49,15 +49,34 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.3 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 24, 2023i**
+**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 26, 2023k** for beta 0.2.1y
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
  * Please be patient as I bring up more of the mod over time
  * (***Narria***) Fixed crasher that made saves disappear if you use custom portraits
  * (***Narria***) Added a toggle at the top of Bag of Tricks to enable ToyBox bug fixes like the one above
+ * (***Narria***) Got character rename working in the party editor
+ * (***Narria***) Add/Remove/Recruit/Uncrecruit now work
+ * (***Narria***) You can now edit abilities in the party editor
+ * (***Narria***) You can now edit your Starship in the party editor
+ * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
+ * (***Narria***) **Got this up on Beta 0.2.1y**
+### Install & Setup (Rogue)
+1. Download the ToyBox mod file and unzip
+1. If the folder is not already named 0ToyBox0 please rename it to that
+1. Launch the game at least once. 
+1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one.**
+1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. You may want to copy your Settings.xml and UserSettings folder from the old `WH 4000 RT` folder
+1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
+1. Load a save or start a new game to get the most out of of the mod
+* Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
+* Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible
 ### Ver 1.5.3 Wrath (Coming Soon)
-**ToyBox 1.5.3 Wrath** - ***Sh0dan Preview*** **May 24, 2023i**
+**ToyBox 1.5.3 Wrath** - ***Sh0dan Preview*** **May 26, 2023j**
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
@@ -74,6 +93,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
  * (***Narria***) Added work around for issue of game double calling SelectClass.Apply leading to multiclass levels being added more than once during character creation **Please test out and report any issues you find in gestalt/multiclassing**
  * (***Narria***) Fixed crasher when you ignore equipment restrictions
+ * (***Narria***) Fixed bug in Party Editor where Adjust Level Based On Experience modified your mythic experience and not your charaacter experience
  * (***ADDB***) Added Achievements Unlocker.
  * (***ADDB***) Made GameID editable.
  * (***BuckAMayzing***) Fixed issue with Bulk Sell unintentionally selling items that were still equipped on characters.

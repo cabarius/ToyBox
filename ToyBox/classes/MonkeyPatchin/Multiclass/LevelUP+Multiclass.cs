@@ -226,6 +226,7 @@ namespace ToyBox.Multiclass {
             }
         }
 
+
         // Fixed a vanilla PFK bug that caused dragon bloodline to be displayed in Magus' feats tree
         [HarmonyPatch(typeof(ApplyClassMechanics), nameof(ApplyClassMechanics.ApplyProgressions))]
         private static class ApplyClassMechanics_ApplyProgressions_Patch {

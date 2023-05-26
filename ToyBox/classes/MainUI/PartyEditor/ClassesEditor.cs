@@ -109,7 +109,8 @@ namespace ToyBox {
                     using (HorizontalScope(Width(781))) {
                         Space(100);
                         ActionButton("Adjust based on Level", () => {
-                            prog.MythicExperience = prog.MythicLevel;
+                            var xpTable = prog.ExperienceTable;
+                            prog.Experience = xpTable.GetBonus(prog.CharacterLevel);
                         }, AutoWidth());
                         Space(27);
                     }

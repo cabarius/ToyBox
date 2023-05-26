@@ -12,6 +12,7 @@ using System.Linq;
 #if RT
 using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.Levelup.Components;
+using Kingmaker.Code.UnitLogic;
 #endif
 using static ModKit.UI;
 
@@ -49,9 +50,7 @@ namespace ToyBox {
         private static bool editSpellbooks = false;
         private static UnitEntityData spellbookEditCharacter = null;
         private static readonly Dictionary<string, int> statEditorStorage = new();
-#if Wrath        
         public static Dictionary<string, Spellbook> SelectedSpellbook = new();
-#endif
         private static UnitEntityData GetEditCharacter() {
             var characterList = CharacterPicker.GetCharacterList();
             if (characterList == null || characterList.Count == 0) return null;
@@ -73,26 +72,38 @@ namespace ToyBox {
         public static void ActionsGUI(UnitEntityData ch) {
             var player = Game.Instance.Player;
             Space(25);
+            var buttonCount = 0;
             if (!player.PartyAndPets.Contains(ch) && player.AllCharacters.Contains(ch)) {
                 ActionButton("Add", () => { charToAdd = ch; }, Width(150));
                 Space(25);
+                buttonCount++;
             }
             else if (player.ActiveCompanions.Contains(ch)) {
                 ActionButton("Remove", () => { charToRemove = ch; }, Width(150));
                 Space(25);
+                buttonCount++;
             }
+#if Wrath
             else if (!player.AllCharacters.Contains(ch)) {
+#elif RT
+            else if (!player.AllCharactersAndStarships.Contains(ch)) {
+#endif
                 recruitableCount++;
                 ActionButton("Recruit".cyan(), () => { charToRecruit = ch; }, Width(150));
                 Space(25);
+                buttonCount++;
             }
-            if (player.AllCharacters.Contains(ch) && !ch.IsStoryCompanion()) {
-                ActionButton("Unrecruit".cyan(), () => { charToUnrecruit = ch; charToRemove = ch; }, Width(150));
+            if (player.AllCharacters.Contains(ch) && !ch.IsMainCharacter && !ch.IsStoryCompanion()) {
+                ActionButton("Unrecruit".cyan(),
+                             () => {
+                                 charToUnrecruit = ch;
+                                 charToRemove = ch;
+                             },
+                             Width(150));
                 Space(25);
-
+                buttonCount++;
             }
-            //            else
-            //                Space(178);
+#if Wrath
             if (ch.CanRespec()) {
                 respecableCount++;
                 ActionButton("Respec".cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
@@ -100,6 +111,9 @@ namespace ToyBox {
             else {
                 Space(153);
             }
+#endif
+            if (buttonCount >= 0)
+                Space(178 * (2 - buttonCount));
 #if false
             Space(25);
             ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor()),
@@ -117,12 +131,10 @@ namespace ToyBox {
             var characterListFunc = CharacterPicker.OnFilterPickerGUI();
             var characterList = characterListFunc.func();
             var mainChar = GameHelper.GetPlayerCharacter();
-#if Wrath
             if (characterListFunc.name == "Nearby") {
                 Slider("Nearby Distance", ref CharacterPicker.nearbyRange, 1f, 200, 25, 0, " meters", Width(250));
                 characterList = characterList.OrderBy((ch) => ch.DistanceTo(mainChar)).ToList();
             }
-#endif
             Space(20);
             var chIndex = 0;
             recruitableCount = 0;
@@ -166,6 +178,8 @@ namespace ToyBox {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
 #if Wrath                
                                 ch.Descriptor().CustomName = name;
+#elif RT
+                                ch.Description.CustomName = name;
 #endif
                                 Main.SetNeedsResetGameUI();
                             }
@@ -174,6 +188,8 @@ namespace ToyBox {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
 #if Wrath                
                                 ch.Descriptor().CustomName = name;
+#elif RT
+                                ch.Description.CustomName = name;
 #endif                            
                                 Main.SetNeedsResetGameUI();
                         }
@@ -188,13 +204,10 @@ namespace ToyBox {
                             Label(ch.CharacterName.orange().bold(), Width(230));
                     }
                     Space(5);
-#if Wrath
                     var distance = mainChar.DistanceTo(ch); ;
                     Label(distance < 1 ? "" : distance.ToString("0") + "m", Width(75));
-#endif
                     Space(5);
                     int nextLevel;
-#if Wrath
                     for (nextLevel = level; xpTable.HasBonusForLevel(nextLevel + 1) && progression.Experience >= xpTable.GetBonus(nextLevel + 1); nextLevel++) { }
                     if (nextLevel <= level || !isOnTeam)
                         Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", Width(90));
@@ -210,6 +223,7 @@ namespace ToyBox {
                         else { Label("max", Width(63)); }
                     }
                     else { Space(66); }
+#if Wrath
                     Space(10);
                     var nextML = progression.MythicExperience;
                     if (nextML <= mythicLevel || !isOnTeam)
@@ -262,11 +276,13 @@ namespace ToyBox {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
+#if Wrath
                     var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
                     if (DisclosureToggle($"{spellCount} Spells", ref showSpells, 150)) {
                         if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
+#endif
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
                     ReflectionTreeView.DetailToggle("Ins", ch, ch, 75);
                     Wrap(!isWide, NarrowIndent - 20);
@@ -333,11 +349,15 @@ namespace ToyBox {
             foreach (var action in todo)
                 action();
             if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
-#if Wrath
             if (charToRecruit != null) { UnitEntityDataUtils.RecruitCompanion(charToRecruit); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
-            if (charToUnrecruit != null) { charToUnrecruit.Ensure<UnitPartCompanion>().SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>(); }
+            if (charToUnrecruit != null) {
+#if Wrath
+                charToUnrecruit.Ensure<UnitPartCompanion>().SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>();
+#elif RT
+                charToUnrecruit.GetCompanionOptional()?.SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>();
 #endif
+            }
         }
     }
 }

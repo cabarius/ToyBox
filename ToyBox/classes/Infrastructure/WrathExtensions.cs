@@ -127,6 +127,9 @@ namespace ToyBox {
         public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
 #if Wrath        
         public static string HashKey(this UnitDescriptor ch) => ch.CharacterName;
+#elif RT
+        public static string HashKey(this MechanicEntity entity) => 
+            entity is UnitEntityData ch ? ch.CharacterName : entity.Name;
 #endif
         public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
         public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();

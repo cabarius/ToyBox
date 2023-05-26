@@ -42,9 +42,7 @@ namespace ToyBox {
 
     public static class UnitEntityDataUtils {
         public static Settings settings => Main.Settings;
-#if Wrath
-        public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.ModifiedSpeedMps).Max();
-#endif
+        public static float GetMaxSpeed(List<UnitEntityData> data) => GetMaxSpeed(data);
         public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType) {
             if (unitEntityData == null) return false;
             switch (selectType) {
@@ -65,13 +63,7 @@ namespace ToyBox {
                     return !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter());
                 case UnitSelectType.Enemies:
                     // TODO - should this be IsEnemy instead?
-                    if (!unitEntityData.IsPlayerFaction 
-#if Wrath
-                        && unitEntityData.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction)
-#elif RT
-                        && unitEntityData.Faction == Game.Instance.BlueprintRoot.PlayerFaction
-#endif
-                        ) {
+                    if (!unitEntityData.IsPlayerFaction && unitEntityData.IsPlayerFaction()) {
                         return true;
                     }
                     return false;
@@ -87,9 +79,7 @@ namespace ToyBox {
 
         public static void ResurrectAndFullRestore(UnitEntityData unit) => unit.Descriptor.ResurrectAndFullRestore();
 
-        public static void Buff(UnitEntityData unit, string buffGuid) => unit.Descriptor.AddFact((BlueprintUnitFact)Utilities.GetBlueprintByGuid<BlueprintBuff>(buffGuid),
-                                                                                                 (MechanicsContext)null,
-                                                                                                 new FeatureParam());
+        public static void Buff(UnitEntityData unit, string buffGuid) => unit.Descriptor.AddFact((BlueprintUnitFact)Utilities.GetBlueprintByGuid<BlueprintBuff>(buffGuid), (MechanicsContext)null, new FeatureParam());
 
         public static void Charm(UnitEntityData unit) {
             if (unit != null)
@@ -109,13 +99,10 @@ namespace ToyBox {
                 Mod.Warn("Unit is null!");
         }
 #endif
-                                                             
-
         public static void AddToParty(UnitEntityData unit) {
             Charm(unit);
             Game.Instance.Player.AddCompanion(unit);
         }
-#if true
         public static void AddCompanion(UnitEntityData unit) {
             var currentMode = Game.Instance.CurrentMode;
             Game.Instance.Player.AddCompanion(unit);
@@ -148,127 +135,73 @@ namespace ToyBox {
 #endif
             }
         }
-#if Wrath
         public static void RecruitCompanion(UnitEntityData unit) {
             var currentMode = Game.Instance.CurrentMode;
-            unit = Game.Instance.EntityCreator.RecruitNPC(unit, unit.Blueprint);
+            unit = GameHelper.RecruitNPC(unit, unit.Blueprint);
             // this line worries me but the dev said I should do it
             //unit.HoldingState.RemoveEntityData(unit);  
             //player.AddCompanion(unit);
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
+#if Wrath
                 var pets = unit.Pets;
+#elif RT
+                var pets = Game.Instance.Player.PartyAndPets.Where(u => u.IsPet && u.OwnerEntity == unit);
+#endif
                 unit.IsInGame = true;
-                unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
+                unit.Position = Shodan.MainCharacter.Position;
+#if Wrath
                 unit.LeaveCombat();
+#elif RT
+                unit.CombatState.LeaveCombat();
+#endif
                 Charm(unit);
-                unit.SwitchFactions(Game.Instance.Player.MainCharacter.Value.Faction);
+#if Wrath
+                unit.SwitchFactions(Shodan.MainCharacter.Faction);
+#endif
                 //unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
                 //Game.Instance.Player.CrossSceneState.AddEntityData(unit);
                 if (unit.IsDetached) {
                     Game.Instance.Player.AttachPartyMember(unit);
                 }
                 foreach (var pet in pets) {
-                    pet.Entity.Position = unit.Position;
-                }
-            }
-        }
-        public static void MaybeKill(UnitCombatState unitCombatState) {
-            if (settings.togglekillOnEngage) {
-                List<UnitEntityData> partyUnits = Game.Instance.Player.m_PartyAndPets;
-                UnitEntityData unit = unitCombatState.Unit;
-                if (unit.IsPlayersEnemy && !partyUnits.Contains(unit)) {
-                    CheatsCombat.KillUnit(unit);
-                }
-            }
-        }
-#endif
-#else
-note this code from Owlcat 
-  private static void RecruitCompanion(string parameters)
-    {
-      string paramString = Utilities.GetParamString(parameters, 1, (string) null);
-      bool? paramBool = Utilities.GetParamBool(parameters, 2, (string) null);
-      BlueprintUnit blueprint = Utilities.GetBlueprint<BlueprintUnit>(paramString);
-      if (blueprint == null)
-        PFLog.SmartConsole.Log("Cant get companion with name '" + paramString + "'", (object[]) Array.Empty<object>());
-      else if (!paramBool.HasValue || paramBool.Value)
-      {
-        UnitEntityData unitVacuum = Game.Instance.CreateUnitVacuum(blueprint);
-        Game.Instance.State.PlayerState.CrossSceneState.AddEntityData((EntityDataBase) unitVacuum);
-        unitVacuum.IsInGame = false;
-        unitVacuum.Ensure<UnitPartCompanion>().SetState(CompanionState.ExCompanion);
-      }
-      else
-      {
-        Vector3 position = Game.Instance.Player.MainCharacter.Value.Position;
-        SceneEntitiesState crossSceneState = Game.Instance.State.PlayerState.CrossSceneState;
-        UnitEntityData unit = Game.Instance.EntityCreator.SpawnUnit(blueprint, position, Quaternion.identity, crossSceneState);
-        Game.Instance.Player.AddCompanion(unit);
-        EventBus.RaiseEvent<IPartyHandler>((Action<IPartyHandler>) (h => h.HandleAddCompanion(unit)));
-      }
-    }
-
-
-        public static void AddCompanion(UnitEntityData unit) {
-            Player player = Game.Instance.Player;
-            player.AddCompanion(unit);
-            GameModeType currentMode = Game.Instance.CurrentMode;
-            if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-                var pets = unit.Pets;
-                unit.IsInGame = true;
-                unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
-                unit.LeaveCombat();
-                Charm(unit);
-                UnitPartCompanion unitPartCompanion = unit.Get<UnitPartCompanion>();
-                unit.Ensure<UnitPartCompanion>().SetState(CompanionState.InParty);
-                unit.SwitchFactions(Game.Instance.Player.MainCharacter.Value.Faction);
-                unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
-                unit.HoldingState.RemoveEntityData(unit);
-                Game.Instance.Player.CrossSceneState.AddEntityData(unit);
-                foreach (var pet in pets) {
-                    pet.Entity.Position = unit.Position;
-                }
-            }
-        }
-#endif
+                    pet
 #if Wrath
+                            .Entity!
+#endif
+                            .Position = unit.Position;
+                }
+            }
+        }
         public static bool IsPartyOrPet(this UnitDescriptor unit) {
-            if (unit?.Unit?.OriginalBlueprint == null 
-                    || Game.Instance.Player?.AllCharacters == null  
-                    || Game.Instance.Player?.AllCharacters.Count == 0) {
+            if (unit?
+#if Wrath
+                    .Unit?
+#endif
+                    .OriginalBlueprint == null
+                || Game.Instance.Player?.AllCharacters == null
+                || Game.Instance.Player?.AllCharacters.Count == 0) {
                 return false;
             }
 
             return Game.Instance.Player.AllCharacters
-                       .Any(x => x.OriginalBlueprint == unit.Unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null || Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
-#elif RT
-            public static bool IsPartyOrPet(this UnitEntityData unit) {
-                if (unit?.OriginalBlueprint == null 
-                    || Game.Instance.Player?.AllCharacters == null  
-                    || Game.Instance.Player?.AllCharacters.Count == 0) {
-                    return false;
-                }
-
-                return Game.Instance.Player.AllCharacters
-                           .Any(x => x.OriginalBlueprint == unit.OriginalBlueprint && (x.Master == null || x.Master.OriginalBlueprint == null || Game.Instance.Player.AllCharacters.Any(y => y.OriginalBlueprint == x.Master.OriginalBlueprint)));
+                       .Any(x => x.OriginalBlueprint                                 == unit
+#if Wrath
+                                                        .Unit
 #endif
+                                     .OriginalBlueprint
+                                 && (x.Master == null
+                                     || x.Master.OriginalBlueprint == null
+                                     || Game.Instance.Player.AllCharacters.Any(
+                                         y => y.OriginalBlueprint == x.Master.OriginalBlueprint)
+                                    )
+                           );
         }
 
-#if Wrath
         public static void RemoveCompanion(UnitEntityData unit) {
             _ = Game.Instance.CurrentMode;
             Game.Instance.Player.RemoveCompanion(unit);
         }
-
-        public static bool TryGetPartyMemberForLevelUpVersion(this UnitDescriptor levelUpUnit, out UnitEntityData ch) {
-            ch = Game.Instance?.Player?.AllCharacters.Find(c => c.CharacterName == levelUpUnit.CharacterName);
-            return ch != null;
-        }
-
-        public static bool TryGetClass(this UnitEntityData unit, BlueprintCharacterClass cl, out ClassData cd) {
-            cd = unit.Progression.Classes.Find(c => c.CharacterClass == cl);
-            return cd != null;
-        }
+#if false
         public static string GetEquipmentRestrictionCaption(this EquipmentRestriction restriction) {
             switch (restriction) {
                 case EquipmentRestrictionAlignment era: return $"Alignment must be {era.Alignment}";

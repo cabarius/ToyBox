@@ -231,7 +231,7 @@ namespace ToyBox {
                         }
                         else Space(25);
                     },
-                    new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
+                    new NamedAction("Bag of Tricks".localize(), BagOfTricks.OnGUI),
                     new NamedAction("Enhanced UI".localize(), EnhancedUI.OnGUI),
                     new NamedAction("Level Up".localize(), LevelUp.OnGUI),
                     new NamedAction("Party".localize(), PartyEditor.OnGUI),

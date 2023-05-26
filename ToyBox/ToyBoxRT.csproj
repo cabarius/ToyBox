@@ -484,6 +484,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Clipboard+Guids.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\ActionsRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DevelopmentRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUpPatchesRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Unrestricted.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscRT.cs" />
