@@ -65,10 +65,13 @@ namespace ToyBox.Multiclass {
                     if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)
                         && ch.TryGetClass(state.SelectedClass, out var cl)
                         && unit != ch.Descriptor()
-                        && state.NextClassLevel <= cl.Level
                         ) {
-                        Mod.Debug($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} isCH: {unit == ch.Descriptor()}) - skip - lvl:{state.NextClassLevel} vs {cl.Level} ".green());
-                        return;
+                        var classLevelLimit = unit.Blueprint.GetComponent<ClassLevelLimit>().LevelLimit;
+                        if (state.NextClassLevel <= classLevelLimit) {
+                            Mod.Debug($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} isCH: {unit == ch.Descriptor()}) - skip - lvl:{state.NextClassLevel} vs {classLevelLimit} ".green());
+                            Mod.Debug($"classLevelLimit: {classLevelLimit}");
+                            return;
+                        }
                     }
                     // get multi-class setting
                     var isPet = unit.Unit?.IsPet ?? false;
