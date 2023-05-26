@@ -217,11 +217,11 @@ namespace ModKit {
                 ActionButton(title, () => { areYouSure = !areYouSure; });
                 if (areYouSureState) {
                     Space(25);
-                    Label("Are you sure?".yellow());
+                    Label("Are you sure?".localize().yellow());
                     Space(25);
-                    ActionButton("YES".yellow().bold(), action);
+                    ActionButton("YES".localize().yellow().bold(), action);
                     Space(10);
-                    ActionButton("NO".green(), () => areYouSure = false);
+                    ActionButton("NO".localize().green(), () => areYouSure = false);
                     Space(25);
                     Label(warning.orange());
                 }
@@ -402,6 +402,12 @@ namespace ModKit {
                 set(value);
             return changed;
         }
+        public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
+            float floatValue = value;
+            var changed = Slider(title, ref floatValue, min, max, (float)defaultValue, 0, units, options);
+            value = (int)floatValue;
+            return changed;
+        }
         public static bool Slider(string title, Func<int> get, Action<int> set, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float floatValue = get();
             var changed = Slider(title, ref floatValue, min, max, (float)defaultValue, 0, units, options);
@@ -409,7 +415,12 @@ namespace ModKit {
                 set((int)floatValue);
             return changed;
         }
-
+        public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
+            float floatValue = value;
+            var changed = Slider(ref floatValue, min, max, (float)defaultValue, 0, units, options);
+            value = (int)floatValue;
+            return changed;
+        }
         public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             if (min < 0)
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
