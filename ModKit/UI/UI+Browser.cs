@@ -53,7 +53,6 @@ namespace ModKit {
             private CancellationTokenSource _cancellationTokenSource;
             private string _searchText = "";
             public string SearchText => _searchText;
-            public bool shouldLocalize;
             public bool SearchAsYouType;
             public bool ShowAll;
             public bool IsDetailBrowser;
@@ -86,12 +85,11 @@ namespace ModKit {
             public bool availableIsStatic { get; private set; }
             private List<Definition> _availableCache;
             public void OnShowGUI() => needsReloadData = true;
-            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false, bool shouldLocalize = false) {
+            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false) {
                 SearchAsYouType = searchAsYouType;
                 this.availableIsStatic = availableIsStatic;
                 IsDetailBrowser = isDetailBrowser;
                 Mod.NotifyOnShowGUI += OnShowGUI;
-                this.shouldLocalize = shouldLocalize;
             }
 
             public void OnGUI(
@@ -123,20 +121,19 @@ namespace ModKit {
                                 _searchQueryChanged = true;
                             }, () => { needsReloadData = true; }, MinWidth(320), AutoWidth());
                             25.space();
-                            var limitString = shouldLocalize ? "Limit".localize() : "Limit";
-                            Label(limitString, ExpandWidth(false));
+                            Label("Limit".localize(), ExpandWidth(false));
                             var searchLimit = SearchLimit;
                             ActionIntTextField(ref searchLimit, "Search Limit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
                             if (searchLimit > 1000) { searchLimit = 1000; }
                             SearchLimit = searchLimit;
                             25.space();
-                            var showAllString = shouldLocalize ? "Show All".localize() : "Show All";
-                            if (DisclosureToggle(showAllString.Orange().Bold(), ref ShowAll)) {
+                            if (DisclosureToggle("Show All".localize().Orange().Bold(), ref ShowAll)) {
                                 startedLoadingAvailable |= ShowAll;
                                 ResetSearch();
                             }
                             25.space();
                             //                            if (isSearching && false) { // ADDB - Please add a delay timer before this appears because having it flash on very short searches is distracting or let's just get rid of it
+                            //                                                        // It was helpful for debugging but I don't think we need it anymore?
                             //                                Label("Searching...", AutoWidth());
                             //                                25.space();
                             //                            }
@@ -154,8 +151,7 @@ namespace ModKit {
                     using (HorizontalScope()) {
                         if (search) {
                             space(indent);
-                            var searchString = shouldLocalize ? "Search".localize() : "Search";
-                            ActionButton(searchString, () => { needsReloadData = true; }, AutoWidth());
+                            ActionButton("Search".localize(), () => { needsReloadData = true; }, AutoWidth());
                         }
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {

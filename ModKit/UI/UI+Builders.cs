@@ -150,23 +150,5 @@ namespace ModKit {
             actions[selected].action();
             GL.EndVertical();
         }
-
-        public static void TabBar(ref int selected, bool shouldLocalize, Action header = null, params NamedAction[] actions) {
-            if (selected >= actions.Count())
-                selected = 0;
-            var sel = selected;
-            IEnumerable<string> titles;
-            if (shouldLocalize) {
-                titles = actions.Select((a, i) => i == sel ? a.name.localize().orange().bold() : a.name.localize());
-            }
-            else {
-                titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
-            }
-            SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60));
-            GL.BeginVertical("box");
-            header?.Invoke();
-            actions[selected].action();
-            GL.EndVertical();
-        }
     }
 }
