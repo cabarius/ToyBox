@@ -10,6 +10,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.Utility;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -202,10 +203,14 @@ namespace ToyBox.classes.Infrastructure {
             return known.Count;
         }
 
-        public static int CountExternallyAddedSpells(Spellbook spellbook, int level) {
+        public static int CountExternallyAddedSpells(UnitDescriptor unit, Spellbook spellbook, int level) {
+
+            if (!unit.TryGetPartyMemberForLevelUpVersion(out var ch)) return 0;
+            if (ch?.Spellbooks?.Count() <= 0) return 0;
+            if (!ch.Spellbooks.TryFind(s => s.Blueprint == spellbook.Blueprint, out var unitSpellbook)) return 0;
             if(spellbook?.SureKnownSpells(level) == null) return 0;
 
-            return spellbook.SureKnownSpells(level).Where(sp => sp.IsTemporary
+            return unitSpellbook.SureKnownSpells(level).Where(sp => sp.IsTemporary
                         || sp.CopiedFromScroll
                         || sp.IsFromMythicSpellList
                         || sp.SourceItem != null
