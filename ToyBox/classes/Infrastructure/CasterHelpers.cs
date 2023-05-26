@@ -208,15 +208,23 @@ namespace ToyBox.classes.Infrastructure {
             if (!unit.TryGetPartyMemberForLevelUpVersion(out var ch)) return 0;
             if (ch?.Spellbooks?.Count() <= 0) return 0;
             if (!ch.Spellbooks.TryFind(s => s.Blueprint == spellbook.Blueprint, out var unitSpellbook)) return 0;
-            if(unitSpellbook?.SureKnownSpells(level) == null) return 0;
+            if (unitSpellbook?.SureKnownSpells(level) == null) return 0;
 
-            return unitSpellbook.SureKnownSpells(level).Where(sp => sp.IsTemporary
-                        || sp.CopiedFromScroll
-                        || sp.IsFromMythicSpellList
-                        || sp.SourceItem != null
-                        || sp.SourceItemEquipmentBlueprint != null
-                        || sp.SourceItemUsableBlueprint != null
-                        || sp.IsMysticTheurgeCombinedSpell).Count();
+            var IsExternal = (AbilityData spell) => {
+                return spell.IsTemporary
+                        || spell.CopiedFromScroll
+                        || spell.IsFromMythicSpellList
+                        || spell.SourceItem != null
+                        || spell.SourceItemEquipmentBlueprint != null
+                        || spell.SourceItemUsableBlueprint != null
+                        || spell.IsMysticTheurgeCombinedSpell;
+            };
+
+            //If copiedCount has records here, we've already taken them into account in GetActualSpellsLearned, and would be double counting here.
+            var copiedCount = spellbook.SureKnownSpells(level).Where(IsExternal).Count();
+            if (copiedCount > 0) return 0;
+
+            return unitSpellbook.SureKnownSpells(level).Where(IsExternal).Count();
         }
 
         public static IEnumerable<ClassData> MergableClasses(this UnitEntityData unit) {
