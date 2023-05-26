@@ -208,7 +208,7 @@ namespace ToyBox.classes.Infrastructure {
             if (!unit.TryGetPartyMemberForLevelUpVersion(out var ch)) return 0;
             if (ch?.Spellbooks?.Count() <= 0) return 0;
             if (!ch.Spellbooks.TryFind(s => s.Blueprint == spellbook.Blueprint, out var unitSpellbook)) return 0;
-            if(spellbook?.SureKnownSpells(level) == null) return 0;
+            if(unitSpellbook?.SureKnownSpells(level) == null) return 0;
 
             return unitSpellbook.SureKnownSpells(level).Where(sp => sp.IsTemporary
                         || sp.CopiedFromScroll
