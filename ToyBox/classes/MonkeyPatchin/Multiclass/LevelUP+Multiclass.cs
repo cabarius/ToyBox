@@ -236,7 +236,11 @@ namespace ToyBox.Multiclass {
         private static class UnitHelper_CopySpellbook {
             private static AbilityData AddSave(Spellbook th, int lvl, BlueprintAbility ab, bool ev, AbilityData from) {
                 var added = th.AddKnown(lvl, ab, ev);
+                added.IsTemporary = from.IsTemporary;
                 added.CopiedFromScroll = from.CopiedFromScroll;
+                added.IsFromMythicSpellList = from.IsFromMythicSpellList;
+                added.IsMysticTheurgeCombinedSpell = from.IsMysticTheurgeCombinedSpell;
+                added.m_Fact = from.Fact; // SourceItem, SourceItemEquipmentBlueprint, SourceItemUsableBlueprint
                 return added;
             }
 
