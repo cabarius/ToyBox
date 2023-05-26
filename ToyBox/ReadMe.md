@@ -48,7 +48,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 * **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have Elements will offer a second disclosure triangle next to the status that will show them to you.
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
-### Ver 1.5.3 Rogue (Coming Soon)
+### Ver 1.5.4 Rogue (Coming Soon)
 **ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 26, 2023m** for beta 0.2.1y
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
@@ -75,8 +75,8 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 1. Load a save or start a new game to get the most out of of the mod
 * Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
 * Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible
-### Ver 1.5.3 Wrath (Coming Soon)
-**ToyBox 1.5.3 Wrath** - ***Sh0dan Preview*** **May 26, 2023m**
+**ToyBox 1.5.4 Wrath** - ***Sh0dan Preview*** **May 26, 2023m**
+### Ver 1.5.3 Wrath - Sh0dan Unified Edition
  * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
    * Changed mod ID and title name in Mod Manager to make this clear. 
    * Mod will appear a new folder, please disable old ToyBox once you are happy with this version
@@ -97,6 +97,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***ADDB***) Added Achievements Unlocker.
  * (***ADDB***) Made GameID editable.
  * (***BuckAMayzing***) Fixed issue with Bulk Sell unintentionally selling items that were still equipped on characters.
+ * (***BuckAMayzing***) Fixed infiinte recursion bug that broke loading from saves and movement in certain cases
  * (***icls1337***) Localization for Mandarin
 ### Ver 1.5.2
  * (***Narria***) **UI Reorg** Moved UI Enhancements into new top level **Enhanced UI** tab and the Loot tab is now just for loot related stuff
