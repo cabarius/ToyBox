@@ -15,7 +15,7 @@ namespace ToyBox {
                     Label($"{itemTypeName.Cyan()}:", 180.width());
                     Label($"{bonusType.orange()}", 150.width());
                     Slider(ref enchantLevel, 0, 20, 0, "", 300.width());
-                    Slider(ref stackSize, 1, 20, 1, "", 300.width());
+                    Slider(ref stackSize, 0, 20, 1, "", 300.width());
                     accessory?.Invoke();
                 }
             }
@@ -25,7 +25,7 @@ namespace ToyBox {
                     Toggle("Sell".localize() + $" {itemTypeName}", ref sellToggle, 150.width());
                     Space(25);
                     Label("Amount To Keep".localize().Cyan(), 150.width());
-                    Slider(ref stackSize, 1, 200, 1, "", AutoWidth());
+                    Slider(ref stackSize, 0, 200, 1, "", AutoWidth());
                 }
             }
 

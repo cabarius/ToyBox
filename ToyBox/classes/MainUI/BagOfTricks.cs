@@ -469,7 +469,7 @@ namespace ToyBox {
                                Label("Speeds up or slows down the entire game (movement, animation, everything)".localize().green());
                            }
                            using (HorizontalScope()) {
-                               LogSlider(altTimeScaleTitle, ref Settings.alternateTimeScaleMultiplier, 0f, 20, 5, 5, "", Width(450));
+                               LogSlider(altTimeScaleTitle, ref Settings.alternateTimeScaleMultiplier, 0f, 20, 5, 1, "", Width(450));
                            }
                            using (HorizontalScope()) {
                                BindableActionButton(TimeScaleMultToggle, true);
