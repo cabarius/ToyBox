@@ -13,12 +13,15 @@ using System.Linq;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
+#elif RT
+using Kingmaker.Code.UnitLogic;
 #endif
 
 namespace ToyBox.classes.Infrastructure {
     public static class CasterHelpers {
         private static readonly Dictionary<string, List<int>> UnitSpellsKnown = new();
         // This is to figure out how many caster levels you actually have real levels in
+#if Wrath        
         public static Dictionary<BlueprintSpellbook, int> GetOriginalCasterLevel(UnitDescriptor unit) {
             var mythicLevel = 0;
             BlueprintSpellbook mythicSpellbook = null;
@@ -78,7 +81,7 @@ namespace ToyBox.classes.Infrastructure {
             var hasCasterLevel = GetOriginalCasterLevel(unit).TryGetValue(spellbook, out var level);
             return hasCasterLevel ? level : 0;
         }
-
+#endif
 
         private static int GetPrestigeCasterLevelStart(BlueprintProgression progression) {
             foreach (var level in progression.LevelEntries) {
@@ -97,7 +100,9 @@ namespace ToyBox.classes.Infrastructure {
 
         public static void LowerCasterLevel(Spellbook spellbook) {
             var oldMaxSpellLevel = spellbook.MaxSpellLevel;
+#if Wrath
             spellbook.m_BaseLevelInternal--;
+#endif
             var newMaxSpellLevel = spellbook.MaxSpellLevel;
             if (newMaxSpellLevel < oldMaxSpellLevel) {
                 RemoveSpellsOfLevel(spellbook, oldMaxSpellLevel);
@@ -106,10 +111,14 @@ namespace ToyBox.classes.Infrastructure {
 
         public static void AddCasterLevel(Spellbook spellbook) {
             var oldMaxSpellLevel = spellbook.MaxSpellLevel;
+#if Wrath
             spellbook.m_BaseLevelInternal++;
+#endif
             var newMaxSpellLevel = spellbook.MaxSpellLevel;
             if (newMaxSpellLevel > oldMaxSpellLevel) {
+#if Wrath
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
+#endif
             }
         }
         public static void AddIfUnknown(this Spellbook spellbook, int level, BlueprintAbility ability) {
@@ -164,8 +173,8 @@ namespace ToyBox.classes.Infrastructure {
                 level = PartyEditor.SelectedNewSpellLvl;
             selectedSpellbook.RemoveSpellsOfLevel(level);
         }
-
-#if true // TODO: the else case if a patch that fixes the level for spontaneous spell casters learning scrolls
+#if Wrath
+#if true // TODO: the else case of this #if has a patch that fixes the level for spontaneous spell casters learning scrolls but causes the gestalt feature to stop working by causing spells to not show up for spell casting classes like oracle and sorc when you try to select/gestalt them after choosing say a scaled fist monk
         public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
             Mod.Trace($"GetActualSpellsLearnedForClass - unit: {unit?.CharacterName} spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
             // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
@@ -280,6 +289,8 @@ namespace ToyBox.classes.Infrastructure {
             }
             unit.DeleteSpellbook(oldMythicSpellbookBp);
         }
+#endif
+
         private static readonly Dictionary<int, List<BlueprintAbility>> AllSpellsCache = new();
         public static List<BlueprintAbility> GetAllSpells(int level) {
             if (AllSpellsCache.TryGetValue(level, out var spells)) {

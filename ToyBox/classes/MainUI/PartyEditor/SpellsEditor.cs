@@ -16,6 +16,8 @@ using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Spells;
+#elif RT
+using Kingmaker.Code.UnitLogic;
 #endif
 
 namespace ToyBox {
@@ -37,6 +39,7 @@ namespace ToyBox {
                     selectedSpellBookChanged = SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
                     if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                     DisclosureToggle("Edit".localize().orange().bold(), ref editSpellbooks);
+#if Wrath
                     Space(-50);
                     var mergeableClasses = ch.MergableClasses().ToList();
                     if (spellbook.IsStandaloneMythic || mergeableClasses.Count() == 0) {
@@ -58,13 +61,13 @@ namespace ToyBox {
                             Label("Warning: This is irreversible. Please save before continuing!".localize().Orange());
                         }
                     }
+#endif
                 }
                 spellbook = spellbooks.ElementAt(selectedSpellbook);
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
                     SpellBookBrowserOnGUI(ch, spellbooks, todo);
-                }
-                else {
+                } else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
                         spellBrowser = new Browser<BlueprintAbility, AbilityData>();
@@ -85,8 +88,7 @@ namespace ToyBox {
                                     var knownCount = spellbook.GetKnownSpells(lvl).Count;
                                     var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                     return levelText + countText;
-                                }
-                                else {
+                                } else {
                                     return "All Spells";
                                 }
                             },
@@ -104,6 +106,7 @@ namespace ToyBox {
                             ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), AutoWidth());
                         }
                         // removes opposition schools; these are not cleared when removing facts; to add new opposition schools, simply add the corresponding fact again
+#if Wrath
                         if (spellbook.OppositionSchools.Any()) {
                             ActionButton("Clear Opposition Schools".localize(), () => {
                                 spellbook.OppositionSchools.Clear();
@@ -117,6 +120,7 @@ namespace ToyBox {
                                 ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
                             }, AutoWidth());
                         }
+#endif
                     }
                     var unorderedSpells = selectedSpellbookLevel <= spellbook.Blueprint.MaxSpellLevel ? spellbook.GetKnownSpells(selectedSpellbookLevel) : spellbook.GetAllKnownSpells();
                     var spells = unorderedSpells.OrderBy(d => d.Name).ToList();
@@ -128,12 +132,10 @@ namespace ToyBox {
                             if (Settings.showFromAllSpellbooks || (spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                 if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                     availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(-1));
-                                }
-                                else {
+                                } else {
                                     availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(selectedSpellbookLevel));
                                 }
-                            }
-                            else {
+                            } else {
                                 availableSpells = new List<BlueprintAbility>(spellbook.Blueprint.SpellList.GetSpells(selectedSpellbookLevel));
                             }
                             if (!((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel)) {
@@ -174,8 +176,7 @@ namespace ToyBox {
                                         if (SelectedNewSpellLvl >= 0) {
                                             if (SelectedNewSpellLvl == 0) {
                                                 SelectedNewSpellLvl = spellbook.Blueprint.MaxSpellLevel;
-                                            }
-                                            else {
+                                            } else {
                                                 SelectedNewSpellLvl -= 1;
                                             }
                                         }
@@ -183,8 +184,7 @@ namespace ToyBox {
                                     ActionButton("+", () => {
                                         if (SelectedNewSpellLvl == spellbook.MaxSpellLevel) {
                                             SelectedNewSpellLvl = 1;
-                                        }
-                                        else {
+                                        } else {
                                             SelectedNewSpellLvl += 1;
                                         }
                                     }, AutoWidth());
@@ -197,8 +197,7 @@ namespace ToyBox {
                             ReflectionTreeView.OnDetailGUI(blueprint);
                         }, 50, false, true, 100, 300, "", true);
                 }
-            }
-            else {
+            } else {
                 SpellBookBrowserOnGUI(ch, spellbooks, todo, true);
             }
             return todo;

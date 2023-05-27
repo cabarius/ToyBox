@@ -1,23 +1,23 @@
-﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Kingmaker;
+﻿using Kingmaker;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
-using Kingmaker.UnitLogic;
-using Alignment = Kingmaker.Enums.Alignment;
-using ModKit;
-using static ModKit.UI;
-using ModKit.Utility;
-using ToyBox.classes.Infrastructure;
 using Kingmaker.PubSubSystem;
-using Kingmaker.Blueprints;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Parts;
+using ModKit;
+using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToyBox.classes.Infrastructure;
+using UnityEngine;
 using static Kingmaker.Utility.UnitDescription.UnitDescription;
+using static ModKit.UI;
+using Alignment = Kingmaker.Enums.Alignment;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Spells;
 using ToyBox.Multiclass;
@@ -52,8 +52,7 @@ namespace ToyBox {
                         if (Settings.perSave.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
                             Settings.perSave.charIsLegendaryHero[ch.HashKey()] = val;
                             Settings.SavePerSaveSettings();
-                        }
-                        else {
+                        } else {
                             Settings.perSave.charIsLegendaryHero.Add(ch.HashKey(), val);
                             Settings.SavePerSaveSettings();
                         }
@@ -68,8 +67,7 @@ namespace ToyBox {
 #if Wrath
                 MulticlassPicker.OnGUI(ch);
 #endif
-            }
-            else {
+            } else {
                 var prog = ch.Descriptor().Progression;
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
@@ -109,7 +107,8 @@ namespace ToyBox {
                     using (HorizontalScope(Width(781))) {
                         Space(100);
                         ActionButton("Adjust based on Level".localize(), () => {
-                            prog.MythicExperience = prog.MythicLevel;
+                            var xpTable = prog.ExperienceTable;
+                            prog.Experience = xpTable.GetBonus(prog.CharacterLevel);
                         }, AutoWidth());
                         Space(27);
                     }
@@ -172,8 +171,7 @@ namespace ToyBox {
                                 Label(archName.orange(), Width(250));
                                 if (!archName.Contains(className))
                                     Label(className.yellow(), Width(250));
-                            }
-                            else {
+                            } else {
                                 Label(className.orange(), Width(250));
                             }
                         }

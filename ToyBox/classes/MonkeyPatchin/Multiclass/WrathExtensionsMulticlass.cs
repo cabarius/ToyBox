@@ -13,9 +13,19 @@ using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Kingmaker.Utility;
 using ModKit.Utility;
 using ModKit;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker;
 
 namespace ToyBox.Multiclass {
     public static class WrathExtensionsMulticlass {
+        public static bool TryGetPartyMemberForLevelUpVersion(this UnitDescriptor levelUpUnit, out UnitEntityData ch) {
+            ch = Game.Instance?.Player?.AllCharacters.Find(c => c.CharacterName == levelUpUnit.CharacterName);
+            return ch != null;
+        }
+        public static bool TryGetClass(this UnitEntityData unit, BlueprintCharacterClass cl, out ClassData cd) {
+            cd = unit.Progression.Classes.Find(c => c.CharacterClass == cl);
+            return cd != null;
+        }
         public static void AddClassLevel_NotCharacterLevel(this UnitProgressionData instance, BlueprintCharacterClass characterClass) {
             //instance.SureClassData(characterClass).Level++;
             Mod.Debug($"AddClassLevel_NotCharLevel: class = {characterClass.name.cyan()} - lvl:{instance.GetClassLevel(characterClass)} - {string.Join(", ", instance.Features.Enumerable.Select(f => f.Name.orange()))}");
