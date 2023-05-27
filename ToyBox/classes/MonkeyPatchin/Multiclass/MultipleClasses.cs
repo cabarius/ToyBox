@@ -66,7 +66,7 @@ namespace ToyBox.Multiclass {
                         && ch.TryGetClass(state.SelectedClass, out var cl)
                         && unit != ch.Descriptor()
                         ) {
-                        var classLevelLimit = unit.Blueprint.GetComponent<ClassLevelLimit>().LevelLimit;
+                        var classLevelLimit = unit.Blueprint.GetComponent<ClassLevelLimit>()?.LevelLimit ?? 0;
                         if (state.NextClassLevel <= classLevelLimit) {
                             Mod.Debug($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} isCH: {unit == ch.Descriptor()}) - skip - lvl:{state.NextClassLevel} vs {classLevelLimit} ".green());
                             Mod.Debug($"classLevelLimit: {classLevelLimit}");
