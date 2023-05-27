@@ -66,7 +66,9 @@ namespace ToyBox.Multiclass {
                         && ch.TryGetClass(state.SelectedClass, out var cl)
                         && unit != ch.Descriptor()
                         ) {
-                        var classLevelLimit = unit.Blueprint.GetComponent<ClassLevelLimit>().LevelLimit;
+                        //ClassLevelLimit is the number of classes that a companion comes with by default.
+                        //This is null for mercenaries, so we have to default it back to 0 for them.
+                        var classLevelLimit = unit.Blueprint.GetComponent<ClassLevelLimit>()?.LevelLimit ?? 0;
                         if (state.NextClassLevel <= classLevelLimit) {
                             Mod.Debug($"SelectClass_Apply_Patch, unit: {unit.CharacterName.orange()} isCH: {unit == ch.Descriptor()}) - skip - lvl:{state.NextClassLevel} vs {classLevelLimit} ".green());
                             Mod.Debug($"classLevelLimit: {classLevelLimit}");
