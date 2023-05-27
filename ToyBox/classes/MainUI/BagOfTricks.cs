@@ -114,7 +114,7 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     Space(25);
                     Label("increment".localize().cyan(), AutoWidth());
-                   IntTextField(ref Settings.increment, null, Width(150));
+                    IntTextField(ref Settings.increment, null, Width(150));
                 }
                 var increment = Settings.increment;
 #if Wrath
@@ -314,9 +314,9 @@ namespace ToyBox {
                    },
 #if DEBUG
                    () => {
-                       Toggle("Randomize NPC Responses To Dialog Choices", ref Settings.toggleRandomizeCueSelections, 300.width());
+                       Toggle("Randomize NPC Responses To Dialog Choices".localize(), ref Settings.toggleRandomizeCueSelections, 300.width());
                        200.space();
-                       Label("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange());
+                       Label(("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange()).localize());
                    },
 #endif
 #if Wrath                   
@@ -327,7 +327,7 @@ namespace ToyBox {
                    () => Toggle("Disable Dialog Restrictions (SoulMark)".localize(), ref Settings.toggleDialogRestrictions),
 #endif
 #if DEBUG
-                   () => Toggle("Disable Dialog Restrictions (Everything, Experimental)", ref Settings.toggleDialogRestrictionsEverything),
+                   () => Toggle("Disable Dialog Restrictions (Everything, Experimental)".localize(), ref Settings.toggleDialogRestrictionsEverything),
 #endif
                    () => { }
                 );
@@ -489,9 +489,9 @@ namespace ToyBox {
                                    Div(0, 25, 1280);
                                    if (Toggle("Enable Brutal Unfair Difficulty".localize(), ref Settings.toggleBrutalUnfair)) {
                                        EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
-                                                                                                                                           h.HandleDifficultyChanged();
-                                                                                                                                           Main.SetNeedsResetGameUI();
-                                                                                                                                       }));
+                                           h.HandleDifficultyChanged();
+                                           Main.SetNeedsResetGameUI();
+                                       }));
                                    }
                                    Space(15);
                                    Label("This allows you to play with the originally released Unfair difficulty. ".localize().green() + ("Note:".orange().bold() + "This Unfair difficulty was bugged and applied the intended difficulty modifers twice. ToyBox allows you to keep playing at this Brutal difficulty level and beyond.  Use the slider below to select your desired Brutality Level".green()).localize(), Width(1200));
@@ -499,9 +499,9 @@ namespace ToyBox {
                                    using (HorizontalScope()) {
                                        if (Slider("Brutality Level".localize(), ref Settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", Width(450))) {
                                            EventBus.RaiseEvent<IDifficultyChangedClassHandler>((Action<IDifficultyChangedClassHandler>)(h => {
-                                                                                                                                               h.HandleDifficultyChanged();
-                                                                                                                                               Main.SetNeedsResetGameUI();
-                                                                                                                                           }));
+                                               h.HandleDifficultyChanged();
+                                               Main.SetNeedsResetGameUI();
+                                           }));
                                        }
                                        Space(25);
                                        var brutaltiy = Settings.brutalDifficultyMultiplier;
@@ -610,8 +610,8 @@ namespace ToyBox {
                 );
             Div(153, 25);
             HStack("", 1,
-                () => EnumGrid("Disable Attacks Of Opportunity".localize(), ref Settings.noAttacksOfOpportunitySelection, true, AutoWidth()),
-                    () => EnumGrid("Can Move Through".localize(), ref Settings.allowMovementThroughSelection, true, AutoWidth()),
+                () => EnumGrid("Disable Attacks Of Opportunity".localize(), ref Settings.noAttacksOfOpportunitySelection, AutoWidth()),
+                    () => EnumGrid("Can Move Through".localize(), ref Settings.allowMovementThroughSelection, AutoWidth()),
                     () => {
                         Space(328); Label("This allows characters you control to move through the selected category of units during combat".localize().green(), AutoWidth());
                     }
@@ -688,7 +688,7 @@ namespace ToyBox {
 #if Wrath
                             FogOfWarController.VisionRadiusMultiplier = Settings.fowMultiplier;
 #endif
-                        // TODO: do we need this for RT?
+                            // TODO: do we need this for RT?
                             FogOfWarRevealerSettings revealer = unit.View?.FogOfWarRevealer;
                             if (revealer != null) {
                                 if (Settings.fowMultiplier == 1) {
@@ -748,22 +748,22 @@ namespace ToyBox {
             Actions.ApplyTimeScale();
             Div(0, 25);
             HStack("Dice Rolls".localize(), 1,
-                () => EnumGrid("All Attacks Hit".localize(), ref Settings.allAttacksHit, true, AutoWidth()),
-                () => EnumGrid("All Hits Critical".localize(), ref Settings.allHitsCritical, true, AutoWidth()),
-                () => EnumGrid("Roll With Avantage".localize(), ref Settings.rollWithAdvantage, true, AutoWidth()),
-                () => EnumGrid("Roll With Disavantage".localize(), ref Settings.rollWithDisadvantage, true, AutoWidth()),
-                () => EnumGrid("Always Roll 20".localize(), ref Settings.alwaysRoll20, true, AutoWidth()),
-                () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll1, true, AutoWidth()),
-                () => EnumGrid("Never Roll 20".localize(), ref Settings.neverRoll20, true, AutoWidth()),
-                () => EnumGrid("Never Roll 1".localize(), ref Settings.neverRoll1, true, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 20".localize(), ref Settings.roll20Initiative, true, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 1".localize(), ref Settings.roll1Initiative, true, AutoWidth()),
-                () => EnumGrid("Non Combat: Take 10".localize(), ref Settings.take10always, true, AutoWidth()),
+                () => EnumGrid("All Attacks Hit".localize(), ref Settings.allAttacksHit, AutoWidth()),
+                () => EnumGrid("All Hits Critical".localize(), ref Settings.allHitsCritical, AutoWidth()),
+                () => EnumGrid("Roll With Avantage".localize(), ref Settings.rollWithAdvantage, AutoWidth()),
+                () => EnumGrid("Roll With Disavantage".localize(), ref Settings.rollWithDisadvantage, AutoWidth()),
+                () => EnumGrid("Always Roll 20".localize(), ref Settings.alwaysRoll20, AutoWidth()),
+                () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll1, AutoWidth()),
+                () => EnumGrid("Never Roll 20".localize(), ref Settings.neverRoll20, AutoWidth()),
+                () => EnumGrid("Never Roll 1".localize(), ref Settings.neverRoll1, AutoWidth()),
+                () => EnumGrid("Initiative: Always Roll 20".localize(), ref Settings.roll20Initiative, AutoWidth()),
+                () => EnumGrid("Initiative: Always Roll 1".localize(), ref Settings.roll1Initiative, AutoWidth()),
+                () => EnumGrid("Non Combat: Take 10".localize(), ref Settings.take10always, AutoWidth()),
                 //                () => EnumGrid("Non Combat: Take 10 (Min)", ref settings.take10minimum, AutoWidth()),
-                () => EnumGrid("Non Combat: Take 20".localize(), ref Settings.alwaysRoll20OutOfCombat, true, AutoWidth()),
+                () => EnumGrid("Non Combat: Take 20".localize(), ref Settings.alwaysRoll20OutOfCombat, AutoWidth()),
                 () => { 330.space(); Label("The following skill check adjustments apply only out of combat".localize().green()); },
-                () => EnumGrid("Skill Checks: Take 10".localize(), ref Settings.skillsTake10, true, AutoWidth()),
-                () => EnumGrid("Skill Checks: Take 20".localize(), ref Settings.skillsTake20, true, AutoWidth()),
+                () => EnumGrid("Skill Checks: Take 10".localize(), ref Settings.skillsTake10, AutoWidth()),
+                () => EnumGrid("Skill Checks: Take 20".localize(), ref Settings.skillsTake20, AutoWidth()),
                 () => { }
                 );
             Div(0, 25);
@@ -776,7 +776,7 @@ namespace ToyBox {
                             Label("Primary".localize().orange(), AutoWidth()); Space(215); Label("good for party".localize().green());
                         }
                         Space(25);
-                        EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget1, true, AutoWidth());
+                        EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget1, AutoWidth());
                         LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", AutoWidth());
                         Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", AutoWidth());
                         Div(0, 25);
@@ -784,7 +784,7 @@ namespace ToyBox {
                             Label("Secondary".localize().orange(), AutoWidth()); Space(215); Label("good for larger group or to reduce enemies".localize().green());
                         }
                         Space(25);
-                        EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget2, true, AutoWidth());
+                        EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget2, AutoWidth());
                         LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", AutoWidth());
                         Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", AutoWidth());
                     }

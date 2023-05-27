@@ -121,18 +121,19 @@ namespace ModKit {
                                 _searchQueryChanged = true;
                             }, () => { needsReloadData = true; }, MinWidth(320), AutoWidth());
                             25.space();
-                            Label("Limit", ExpandWidth(false));
+                            Label("Limit".localize(), ExpandWidth(false));
                             var searchLimit = SearchLimit;
                             ActionIntTextField(ref searchLimit, "Search Limit", (i) => { _updatePages = true; }, () => { _updatePages = true; }, width(175));
                             if (searchLimit > 1000) { searchLimit = 1000; }
                             SearchLimit = searchLimit;
                             25.space();
-                            if (DisclosureToggle("Show All".Orange().Bold(), ref ShowAll)) {
+                            if (DisclosureToggle("Show All".localize().Orange().Bold(), ref ShowAll)) {
                                 startedLoadingAvailable |= ShowAll;
                                 ResetSearch();
                             }
                             25.space();
                             //                            if (isSearching && false) { // ADDB - Please add a delay timer before this appears because having it flash on very short searches is distracting or let's just get rid of it
+                            //                                                        // It was helpful for debugging but I don't think we need it anymore?
                             //                                Label("Searching...", AutoWidth());
                             //                                25.space();
                             //                            }
@@ -150,17 +151,17 @@ namespace ModKit {
                     using (HorizontalScope()) {
                         if (search) {
                             space(indent);
-                            ActionButton("Search", () => { needsReloadData = true; }, AutoWidth());
+                            ActionButton("Search".localize(), () => { needsReloadData = true; }, AutoWidth());
                         }
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
-                            var matchesText = "Matches: ".Green().Bold() + $"{_matchCount}".Orange().Bold();
+                            var matchesText = "Matches: ".localize().Green().Bold() + $"{_matchCount}".Orange().Bold();
                             if (_matchCount > SearchLimit) { matchesText += " => ".Cyan() + $"{SearchLimit}".Cyan().Bold(); }
 
                             Label(matchesText, ExpandWidth(false));
                         }
                         if (_matchCount > SearchLimit) {
-                            string pageLabel = "Page: ".orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
+                            string pageLabel = "Page: ".localize().orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
                             25.space();
                             Label(pageLabel, ExpandWidth(false));
                             ActionButton("-", () => {
@@ -211,11 +212,11 @@ namespace ModKit {
             }
 
             private List<Definition> Update(
-                IEnumerable<Item> current, 
-                Func<IEnumerable<Definition>> available, 
+                IEnumerable<Item> current,
+                Func<IEnumerable<Definition>> available,
                 bool search,
-                Func<Definition, string> searchKey, 
-                Func<Definition, IComparable[]> sortKeys, 
+                Func<Definition, string> searchKey,
+                Func<Definition, IComparable[]> sortKeys,
                 Func<Item, Definition> definition
                 ) {
                 if (Event.current.type == EventType.Layout) {

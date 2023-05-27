@@ -1,20 +1,21 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Visual.LightSelector;
 using ModKit;
 using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.UnitLogic;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
-using Kingmaker.DialogSystem.Blueprints;
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -25,13 +26,14 @@ namespace ToyBox {
 
         public static Dictionary<string, float> lastScaleSize = new();
         private static int _increase = 1;
-        public static void OnStatsGUI(UnitEntityData ch) {
+        public static List<Action> OnStatsGUI(UnitEntityData ch) {
+            List<Action> todo = new();
             Div(100, 20, 755);
 #if Wrath
             var alignment = ch.Descriptor().Alignment.ValueRaw;
             using (HorizontalScope()) {
                 100.space();
-                Label("Alignment", Width(425));
+                Label("Alignment".localize(), Width(425));
                 Label($"{alignment.Name()}".color(alignment.Color()).bold(), Width(1250f));
             }
             using (HorizontalScope()) {
@@ -42,7 +44,13 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 var charAlignment = ch.Descriptor().Alignment;
                 100.space();
-                Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()} by", 340.width());
+                var text = "Shift Alignment % by".localize()?.Split('%');
+                if (text.Length < 2) {
+                    Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()} by", 340.width());
+                }
+                else {
+                    Label($"{text?[0]}{alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()}{text?[1]}", 340.width());
+                }
                 5.space();
                 var increment = IntTextField(ref Settings.alignmentIncrement, null, 55.width());
                 var maskIndex = -1;
@@ -57,9 +65,9 @@ namespace ToyBox {
             var alignmentMask = ch.Descriptor().Alignment.m_LockedAlignmentMask;
             using (HorizontalScope()) {
                 100.space();
-                Label("Alignment Lock", 425.width());
+                Label("Alignment Lock".localize(), 425.width());
                 //UI.Label($"{alignmentMask.ToString()}".color(alignmentMask.Color()).bold(), UI.Width(325));
-                Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".green());
+                Label($"Experimental - this sets a mask on your alignment shifts. {"Warning".bold().orange()}{": Using this may change your alignment.".orange()}".localize().green());
             }
             using (HorizontalScope()) {
                 528.space();
@@ -75,7 +83,7 @@ namespace ToyBox {
             var soulMarks = ch.GetSoulMarks();
             using (HorizontalScope()) {
                 100.space();
-                Label("Soul Marks", Width(200));
+                Label("Soul Marks".localize(), Width(200));
                 using (VerticalScope()) {
                     var names = Enum.GetNames(typeof(SoulMarkDirection));
                     var index = 0;
@@ -84,10 +92,10 @@ namespace ToyBox {
                         var soulMarkDirection = (SoulMarkDirection)index;
                         var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, soulMarkDirection);
                         using (HorizontalScope()) {
-                            Label(name.orange(), 200.width());
+                            Label(name.localize().orange(), 200.width());
                             var oldRank = soulMark?.GetRank() - 1 ?? 0;
                             ValueAdjuster(
-                                "Rank", () => oldRank,
+                                "Rank".localize(), () => oldRank,
                                 v => {
                                     var change = v - oldRank;
                                     if (Math.Abs(change) > 0) {
@@ -137,7 +145,7 @@ namespace ToyBox {
 #if Wrath
             using (HorizontalScope()) {
                 Space(100);
-                Label("Size", Width(425));
+                Label("Size".localize(), Width(425));
                 var size = ch.Descriptor().State.Size;
                 Label($"{size}".orange().bold(), Width(175));
             }
@@ -150,7 +158,7 @@ namespace ToyBox {
             }
             using (HorizontalScope()) {
                 Space(528);
-                ActionButton("Reset", () => { ch.Descriptor().State.Size = ch.Descriptor().OriginalSize; }, Width(197));
+                ActionButton("Reset".localize(), () => { ch.Descriptor().State.Size = ch.Descriptor().OriginalSize; }, Width(197));
             }
 #endif
             using (HorizontalScope()) {
@@ -161,7 +169,7 @@ namespace ToyBox {
                         if (lastScale != scaleMultiplier) {
                             ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                         }
-                        if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".color(RGBA.none) + " (This setting is per-save)", ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
+                        if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".localize().color(RGBA.none) + " (This setting is per-save)".localize(), ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
                             Main.Settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
                             ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                             lastScaleSize[ch.HashKey()] = lastScale;
@@ -191,33 +199,33 @@ namespace ToyBox {
                     if (SwarmPart != null) {
                         using (HorizontalScope()) {
                             Space(100);
-                            Label("Swarm Power", Width(150));
-                            Label($"Currently: {SwarmPart.CurrentStrength}/{SwarmPart.CurrentScale}".green());
+                            Label("Swarm Power".localize(), Width(150));
+                            Label("Currently:".localize() + $" {SwarmPart.CurrentStrength}/{SwarmPart.CurrentScale}".green());
                         }
                         using (HorizontalScope()) {
                             Space(100);
-                            Label("Warning:".red().bold(), Width(150));
-                            Label("This is not reversible.".orange().bold(), Width(250));
+                            Label("Warning:".localize().red().bold(), Width(150));
+                            Label("This is not reversible.".localize().orange().bold(), Width(250));
                             Space(25);
-                            ActionButton("Increase Swarm Power", () => SwarmPart.AddStrength(_increase));
+                            ActionButton("Increase Swarm Power".localize(), () => todo.Add(() => SwarmPart.AddStrength(_increase)));
                             Space(10);
                             IntTextField(ref _increase, "", MinWidth(50), AutoWidth());
                             Space(25);
-                            Label("This increases your Swarm Power by the provided value.".green());
+                            Label("This increases your Swarm Power by the provided value.".localize().green());
                         }
                     }
                     if (SwarmClones != null) {
                         using (HorizontalScope()) {
                             Space(100);
-                            Label("Swarm Clones", Width(150));
-                            Label($"Currently: {SwarmClones?.m_SpawnedPetRefs?.Count}".green());
+                            Label("Swarm Clones".localize(), Width(150));
+                            Label("Currently:".localize() + $" {SwarmClones?.m_SpawnedPetRefs?.Count}".green());
                         }
                         using (HorizontalScope()) {
                             Space(100);
-                            Label("Warning:".red().bold(), Width(150));
-                            Label("This is not reversible.".orange().bold(), Width(250));
+                            Label("Warning:".localize().red().bold(), Width(150));
+                            Label("This is not reversible.".localize().orange().bold(), Width(250));
                             Space(25);
-                            ActionButton("Remove all Clones", () => {
+                            ActionButton("Remove all Clones".localize(), () => todo.Add(() => {
                                 var toRemove = SwarmClones.m_SpawnedPetRefs.ToList();
                                 SwarmClones.RemoveClones();
                                 foreach (var clone in toRemove) {
@@ -233,7 +241,7 @@ namespace ToyBox {
                                         ch.Buffs.RemoveFact(buff);
                                     }
                                 }
-                            });
+                            }));
                         }
                     }
                 }
@@ -242,19 +250,19 @@ namespace ToyBox {
 #endif
             using (HorizontalScope()) {
                 Space(100);
-                Label("Gender", Width(400));
+                Label("Gender".localize(), Width(400));
                 Space(25);
                 var gender = ch.Descriptor().GetCustomGender() ?? ch.Descriptor().Gender;
                 var isFemale = gender == Gender.Female;
                 using (HorizontalScope(Width(200))) {
-                    if (Toggle(isFemale ? "Female" : "Male", ref isFemale,
+                    if (Toggle(isFemale ? "Female".localize() : "Male".localize(), ref isFemale,
                         "♀".color(RGBA.magenta).bold(),
                         "♂".color(RGBA.aqua).bold(),
                         0, largeStyle, GUI.skin.box, Width(300), Height(20))) {
                         ch.Descriptor().SetCustomGender(isFemale ? Gender.Female : Gender.Male);
                     }
                 }
-                Label("Changing your gender may cause visual glitches".green());
+                Label("Changing your gender may cause visual glitches".localize().green());
             }
             Space(10);
             Div(100, 20, 755);
@@ -263,7 +271,7 @@ namespace ToyBox {
                     var statType = (StatType)obj;
                     Mod.Debug($"stat: {statType}");
 #if Wrath
-                     var modifiableValue = ch.Stats.GetStat(statType);
+                    var modifiableValue = ch.Stats.GetStat(statType);
 #elif RT
                     var modifiableValue = ch.Stats.GetStatOptional(statType);
 #endif                    
@@ -279,7 +287,7 @@ namespace ToyBox {
                     }
                     using (HorizontalScope()) {
                         Space(100);
-                        Label(statName, Width(400f));
+                        Label(statName.localize(), Width(400f));
                         Space(25);
                         ActionButton(" < ",
                                      () => {
@@ -306,6 +314,7 @@ namespace ToyBox {
                     //Mod.Error(ex);
                 }
             }
+            return todo;
         }
     }
 }

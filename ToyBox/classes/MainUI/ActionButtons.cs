@@ -1,9 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
-using System.Collections.Generic;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
+using System;
+using System.Collections.Generic;
 
 namespace ToyBox {
     public class NamedTypeFilter {

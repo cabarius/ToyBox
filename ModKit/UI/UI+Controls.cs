@@ -42,7 +42,7 @@ namespace ModKit {
             using (VerticalScope(options.AddDefaults())) {
                 Rect lastRect;
                 using (HorizontalScope(options.AddDefaults())) {
-                    GL.Label(title,AutoWidth());
+                    GL.Label(title, AutoWidth());
                     lastRect = GUILayoutUtility.GetLastRect();
                 }
                 DivLast(lastRect);
@@ -105,7 +105,8 @@ namespace ModKit {
             TextField(ref text, name, options);
             if (int.TryParse(text, out var val)) {
                 value = val;
-            } else if (text == "") {
+            }
+            else if (text == "") {
                 value = 0;
             }
             return value;
@@ -115,7 +116,8 @@ namespace ModKit {
             TextField(ref text, name, options);
             if (float.TryParse(text, out var val)) {
                 value = val;
-            } else if (text == "") {
+            }
+            else if (text == "") {
                 value = 0;
             }
             return value;
@@ -215,11 +217,11 @@ namespace ModKit {
                 ActionButton(title, () => { areYouSure = !areYouSure; });
                 if (areYouSureState) {
                     Space(25);
-                    Label("Are you sure?".yellow());
+                    Label("Are you sure?".localize().yellow());
                     Space(25);
-                    ActionButton("YES".yellow().bold(), action);
+                    ActionButton("YES".localize().yellow().bold(), action);
                     Space(10);
-                    ActionButton("NO".green(), () => areYouSure = false);
+                    ActionButton("NO".localize().green(), () => areYouSure = false);
                     Space(25);
                     Label(warning.orange());
                 }
@@ -236,7 +238,8 @@ namespace ModKit {
             else if (showMinMax) {
                 Space(-21);
                 ActionButton("min ".cyan(), () => { }, textBoxStyle, AutoWidth());
-            } else {
+            }
+            else {
                 34.space();
             }
             var temp = false;
@@ -246,7 +249,8 @@ namespace ModKit {
             else if (showMinMax) {
                 ActionButton(" max".cyan(), () => { }, textBoxStyle, AutoWidth());
                 Space(-27);
-            } else
+            }
+            else
                 34.space();
             if (v != value) {
                 value = v;
@@ -346,7 +350,7 @@ namespace ModKit {
                 if (units.Length > 0)
                     Label($"{units}".orange().bold(), Width(25 + GUI.skin.label.CalcSize(new GUIContent(units)).x));
                 Space(25);
-                ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
+                ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
             }
             var changed = Math.Abs(value - newValue) > float.Epsilon;
             value = newValue;
@@ -355,6 +359,7 @@ namespace ModKit {
 
         private const int SliderTop = 3;
         private const int SliderBottom = -7;
+
         public static bool Slider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var newValue = value;
@@ -381,7 +386,7 @@ namespace ModKit {
                 Space(25);
                 using (VerticalScope(AutoWidth())) {
                     Space((SliderTop - 0).point());
-                    ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
+                    ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
                     Space(SliderBottom.point());
                 }
             }
@@ -410,7 +415,6 @@ namespace ModKit {
                 set((int)floatValue);
             return changed;
         }
-
         public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float floatValue = value;
             var changed = Slider(ref floatValue, min, max, (float)defaultValue, 0, units, options);
@@ -451,7 +455,7 @@ namespace ModKit {
             Space(25);
             using (VerticalScope(AutoWidth())) {
                 Space((SliderTop + 0).point());
-                ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
+                ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
                 Space(SliderBottom.point());
             }
             EndHorizontal();
@@ -459,6 +463,7 @@ namespace ModKit {
             value = Math.Min(max, Math.Max(min, newValue));
             return changed;
         }
+
         public static bool LogSlider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             var value = get();
             var changed = LogSlider(title, ref value, min, max, defaultValue, decimals, units, options);
@@ -501,7 +506,7 @@ namespace ModKit {
             Space(25);
             using (VerticalScope(AutoWidth())) {
                 Space((SliderTop + 0).point());
-                ActionButton("Reset", () => { newValue = defaultValue; }, AutoWidth());
+                ActionButton("Reset".localize(), () => { newValue = defaultValue; }, AutoWidth());
                 Space(SliderBottom.point());
             }
             EndHorizontal();

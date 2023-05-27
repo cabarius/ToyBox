@@ -124,22 +124,22 @@ namespace ToyBox {
 
         public static void InitializeActions() {
             var flags = Game.Instance.Player.UnlockableFlags;
-            BlueprintAction.Register<BlueprintItem>("Add",
+            BlueprintAction.Register<BlueprintItem>("Add".localize(),
                                                     (bp, ch, n, index) => Game.Instance.Player.Inventory.Add(bp, n), isRepeatable: true);
 
-            BlueprintAction.Register<BlueprintItem>("Remove",
+            BlueprintAction.Register<BlueprintItem>("Remove".localize(),
                                                     (bp, ch, n, index) => Game.Instance.Player.Inventory.Remove(bp, n),
                                                     (bp, ch, index) => Game.Instance.Player.Inventory.Contains(bp), true);
 
-            BlueprintAction.Register<BlueprintUnit>("Spawn",
+            BlueprintAction.Register<BlueprintUnit>("Spawn".localize(),
                                                     (bp, ch, n, index) => Actions.SpawnUnit(bp, n), isRepeatable: true);
 
             // Facts
-            BlueprintAction.Register<BlueprintUnitFact>("Add",
+            BlueprintAction.Register<BlueprintUnitFact>("Add".localize(),
                                                        (bp, ch, n, index) => ch.AddFact(bp),
                                                        (bp, ch, index) => !ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
-            BlueprintAction.Register<BlueprintUnitFact>("Remove",
+            BlueprintAction.Register<BlueprintUnitFact>("Remove".localize(),
 #if Wrath
                                                        (bp, ch, n, index) => ch.RemoveFact(bp),
 #elif RT
@@ -158,15 +158,15 @@ namespace ToyBox {
             //    );
 
             // Teleport
-            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (enterPoint, ch, n, index) => Teleport.To(enterPoint));
-            BlueprintAction.Register<BlueprintArea>("Teleport", (area, ch, n, index) => Teleport.To(area));
+            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport".localize(), (enterPoint, ch, n, index) => Teleport.To(enterPoint));
+            BlueprintAction.Register<BlueprintArea>("Teleport".localize(), (area, ch, n, index) => Teleport.To(area));
 
             // Quests
-            BlueprintAction.Register<BlueprintQuest>("Start",
+            BlueprintAction.Register<BlueprintQuest>("Start".localize(),
                                                      (bp, ch, n, index) => Game.Instance.Player.QuestBook.GiveObjective(bp.Objectives.First()),
                                                      (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp) == null);
 
-            BlueprintAction.Register<BlueprintQuest>("Complete",
+            BlueprintAction.Register<BlueprintQuest>("Complete".localize(),
                                                      (bp, ch, n, index) => {
                                                          foreach (var objective in bp.Objectives) {
                                                              Game.Instance.Player.QuestBook.CompleteObjective(objective);
@@ -174,46 +174,48 @@ namespace ToyBox {
                                                      }, (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp)?.State == QuestState.Started);
 
             // Quests Objectives
-            BlueprintAction.Register<BlueprintQuestObjective>("Start",
+            BlueprintAction.Register<BlueprintQuestObjective>("Start".localize(),
                                                               (bp, ch, n, index) => Game.Instance.Player.QuestBook.GiveObjective(bp),
                                                               (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest) == null);
 
-            BlueprintAction.Register<BlueprintQuestObjective>("Complete",
+            BlueprintAction.Register<BlueprintQuestObjective>("Complete".localize(),
                                                               (bp, ch, n, index) => Game.Instance.Player.QuestBook.CompleteObjective(bp),
                                                               (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest)?.State == QuestState.Started);
 
             // Etudes
-            BlueprintAction.Register<BlueprintEtude>("Start",
+            BlueprintAction.Register<BlueprintEtude>("Start".localize(),
                                                      (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
                                                      (bp, ch, index) => Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
 #if Wrath  // TODO: confirm that Unstart doesn't exist in RT
-            BlueprintAction.Register<BlueprintEtude>("Unstart",
-                                                     (bp, ch, n, index) => 
+            // They don't seem to exist in the Beta; We might be able to port the code from Wrath if unstart isn't added
+            // Though that may be buggy
+            BlueprintAction.Register<BlueprintEtude>("Unstart".localize(),
+                                                     (bp, ch, n, index) =>
                                                          Game.Instance.Player.EtudesSystem.UnstartEtude(bp),
                                                      (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
 #endif
-            BlueprintAction.Register<BlueprintEtude>("Complete",
+            BlueprintAction.Register<BlueprintEtude>("Complete".localize(),
                                                      (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
                                                      (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&
                                                                         !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp));
             // Flags
-            BlueprintAction.Register<BlueprintUnlockableFlag>("Unlock",
+            BlueprintAction.Register<BlueprintUnlockableFlag>("Unlock".localize(),
                 (bp, ch, n, index) => flags.Unlock(bp),
                 (bp, ch, index) => !flags.IsUnlocked(bp));
 
-            BlueprintAction.Register<BlueprintUnlockableFlag>("Lock",
+            BlueprintAction.Register<BlueprintUnlockableFlag>("Lock".localize(),
                 (bp, ch, n, index) => flags.Lock(bp),
                 (bp, ch, index) => flags.IsUnlocked(bp));
 
-            BlueprintAction.Register<BlueprintUnlockableFlag>(">",
+            BlueprintAction.Register<BlueprintUnlockableFlag>(">".localize(),
                 (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) + n),
                 (bp, ch, index) => flags.IsUnlocked(bp));
 
-            BlueprintAction.Register<BlueprintUnlockableFlag>("<",
+            BlueprintAction.Register<BlueprintUnlockableFlag>("<".localize(),
                 (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n),
                 (bp, ch, index) => flags.IsUnlocked(bp));
             // Cutscenes
-            BlueprintAction.Register<Cutscene>("Play", (bp, ch, n, index) => {
+            BlueprintAction.Register<Cutscene>("Play".localize(), (bp, ch, n, index) => {
                 Actions.ToggleModWindow();
                 var cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
 

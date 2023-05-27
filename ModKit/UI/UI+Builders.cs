@@ -1,11 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using System;
-using System.Collections;
-using System.Linq;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using GL = UnityEngine.GUILayout;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
@@ -101,7 +99,7 @@ namespace ModKit {
                 }
             }
         }
-        public static void Row<T>(List<T> items, Action<T> action , string title = null, params GUILayoutOption[] options) {
+        public static void Row<T>(List<T> items, Action<T> action, string title = null, params GUILayoutOption[] options) {
             var length = items.Count();
             using (HorizontalScope()) {
                 if (title != null) {
