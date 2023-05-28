@@ -79,16 +79,17 @@ namespace ModKit {
                 if (!IsDefault) {
                     if (!(_local?.Strings.TryGetValue(key, out localizedString)) ?? true) {
                         _local?.Strings.Add(key, "");
-                        Mod.Warn($"Unlocalized Key: '{key.orange().bold()}' in current locale: " + key);
+                        Mod.Debug($"Unlocalized Key: '{key.orange().bold()}' in current locale: " + key);
                     }
                 }
                 if (IsDefault || localizedString == "") {
                     if (!(_localDefault?.Strings.TryGetValue(key, out localizedString)) ?? true) {
                         _localDefault?.Strings.Add(key, key);
                         Mod.Warn($"Unlocalized Key: '{key.orange().bold()}' in default locale");
+                        return key;
                     }
                 }
-                return localizedString != "" ? localizedString : key;
+                return localizedString;
             }
         }
         public static Language Import(Action<Exception> onError = null) {
