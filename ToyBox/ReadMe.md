@@ -89,7 +89,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) Added Saves tab where you can currently just view saves.  Look for more in the future
  * (***Narria***) Added Crusade Events to Search 'n Pick
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
-gestalt/multiclassing**
  * (***Narria***) Fixed crasher when you ignore equipment restrictions
  * (***Narria***) Fixed bug in Party Editor where Adjust Level Based On Experience modified your mythic experience and not your character experience
  * (***ADDB***) Added Achievements Unlocker.
