@@ -90,7 +90,7 @@ namespace ToyBox {
                     string title;
                     if (Settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
                         // FIXME - horrible perf bottleneck 
-                        if (titles.Contains("Remove") || titles.Contains("Lock")) {
+                        if (titles.Contains("Remove".localize()) || titles.Contains("Lock".localize())) {
                             title = displayName.cyan().bold();
                         }
                         else {
@@ -100,7 +100,7 @@ namespace ToyBox {
                     }
                     else {
                         // FIXME - horrible perf bottleneck 
-                        if (titles.Contains("Remove") || titles.Contains("Lock")) {
+                        if (titles.Contains("Remove") || titles.Contains("Lock".localize())) {
                             title = name.cyan().bold();
                         }
                         else {

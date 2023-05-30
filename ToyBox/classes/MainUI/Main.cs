@@ -11,12 +11,15 @@ using ModKit;
 using ModKit.DataViewer;
 using Owlcat.Runtime.Core.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Kingmaker.Items;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
+using UniRx;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
@@ -25,6 +28,7 @@ using LocalizationManager = ModKit.LocalizationManager;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.LifeEvents;
 using Kingmaker.UI.Models.Log.GameLogCntxt;
 using Kingmaker.Code.UI.MVVM.VM.Tooltip.Templates;
+using Owlcat.Runtime.UniRx;
 #endif
 #if Wrath
 using ToyBox.Multiclass;
@@ -275,7 +279,23 @@ namespace ToyBox {
         }
 
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
+        private static IEnumerator ResetGUI() {
+            _needsResetGameUI = false;
+            Game.ResetUI();
+            Mod.InGameTranscriptLogger?.Invoke("ResetUI");
+#if Wrath
+            // TODO - Find out why the intiative tracker comes up when I do Game.ResetUI.  The following kludge makes it go away
 
+            var canvas = Game.Instance?.UI?.Canvas?.transform;
+            //Main.Log($"canvas: {canvas}");
+            var hudLayout = canvas?.transform.Find("HUDLayout");
+            //Main.Log($"hudLayout: {hudLayout}");
+            var initiaveTracker = hudLayout.transform.Find("Console_InitiativeTrackerHorizontalPC");
+            //Main.Log($"    initiaveTracker: {initiaveTracker}");
+            initiaveTracker?.gameObject?.SetActive(false);
+#endif
+            yield return null;
+        }
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
             if (Game.Instance?.Player != null) {
 #if Wrath
@@ -313,22 +333,8 @@ namespace ToyBox {
                 }
             }
             if (_needsResetGameUI) {
-#if Wrath
-                Game.Instance.ScheduleAction(() => {
-                    _needsResetGameUI = false;
-                    Game.ResetUI();
-
-                    // TODO - Find out why the intiative tracker comes up when I do Game.ResetUI.  The following kludge makes it go away
-
-                    var canvas = Game.Instance?.UI?.Canvas?.transform;
-                    //Main.Log($"canvas: {canvas}");
-                    var hudLayout = canvas?.transform.Find("HUDLayout");
-                    //Main.Log($"hudLayout: {hudLayout}");
-                    var initiaveTracker = hudLayout.transform.Find("Console_InitiativeTrackerHorizontalPC");
-                    //Main.Log($"    initiaveTracker: {initiaveTracker}");
-                    initiaveTracker?.gameObject?.SetActive(false);
-
-                });
+#if true
+                MainThreadDispatcher.StartCoroutine(ResetGUI());
 #endif
             }
             var currentMode = Game.Instance.CurrentMode;

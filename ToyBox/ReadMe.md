@@ -49,7 +49,7 @@ Enchantment: allows you to add or remove enchantments from the items in your inv
 WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or skip quests you don't want to do.  Be warned this may break your game progression if used carelessly.
 ### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.3** - ***Sh0dan Experimental Preview*** **May 26, 2023m** for beta 0.2.1y
+**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **May 30, 2023b** for beta 0.2.1y
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -62,6 +62,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) You can now edit your Starship in the party editor
    * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
  * (***Narria***) **Got this up on Beta 0.2.1y including fixing the dialog bug**
+ * (***Narria***) show a little more info in dialog preview
 ### Ver 1.5.4 Wrath (Coming Soon)
 **ToyBox 1.5.4 Preview Version 1.5.3b May 29, 2023**
 * (**BuckAMayzing**) Gestalt Companion fix
@@ -98,7 +99,6 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
  * (***Narria***) Added Saves tab where you can currently just view saves.  Look for more in the future
  * (***Narria***) Added Crusade Events to Search 'n Pick
  * (***Narria***) **Fixed bug where loot slot filtering was being applied to things outside of inventory**
-gestalt/multiclassing**
  * (***Narria***) Fixed crasher when you ignore equipment restrictions
  * (***Narria***) Fixed bug in Party Editor where Adjust Level Based On Experience modified your mythic experience and not your character experience
  * (***ADDB***) Added Achievements Unlocker.

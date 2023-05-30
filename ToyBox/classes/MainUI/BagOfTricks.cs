@@ -104,7 +104,7 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         50.space();
                         using (VerticalScope()) {
-                            Label("Failure to load custom portraits".cyan());
+                            Label("Failure to load saves that reference custom portraits".cyan());
                         }
                     }
                 }

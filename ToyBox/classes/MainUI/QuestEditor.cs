@@ -32,12 +32,18 @@ namespace ToyBox {
             RGBA.brown,
             RGBA.cyan,
             RGBA.darkgrey,
+#if RT
+            RGBA.yellow,
+#endif
             RGBA.red
         };
         private static readonly string[] questColors = new string[] {
             "gray",
             "cyan",
             "white",
+#if RT
+            "yellow",
+#endif
             "red"
         };
 
@@ -282,7 +288,7 @@ namespace ToyBox {
                                         if (questObjective.State == QuestObjectiveState.Started) {
                                             var childIndex = 0;
                                             foreach (var childObjective in quest.Objectives) {
-                                                if (Settings.toggleQuestsShowUnrevealedObjectives || childObjective.IsRevealed()) {
+                                                 if (Settings.toggleQuestsShowUnrevealedObjectives || childObjective.IsRevealed()) {
                                                     if (childObjective.ParentObjective == questObjective) {
                                                         Div(100, 25);
                                                         using (HorizontalScope(AutoWidth())) {
