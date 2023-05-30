@@ -42,8 +42,8 @@ namespace ToyBox {
         public static Player player = Game.Instance.Player;
         private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
 
-        private static List<Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift>> CollateAnswerData(BlueprintAnswer answer, out bool isRecursive) {
-            var cueResults = new List<Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift>>();
+        private static List<Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>> CollateAnswerData(BlueprintAnswer answer, out bool isRecursive) {
+            var cueResults = new List<Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>>();
             var toCheck = new Queue<Tuple<BlueprintCueBase, int>>();
             isRecursive = false;
             var visited = new HashSet<BlueprintAnswerBase> { };
@@ -51,11 +51,13 @@ namespace ToyBox {
             if (answer.NextCue.Cues.Count > 0) {
                 toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(answer.NextCue.Cues[0], 1));
             }
-            cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift>(
+            cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
                 null,
                 0,
                 answer.OnSelect.Actions,
-                answer.SoulMarkShift
+                answer.SoulMarkShift,
+                answer.SoulMarkRequirement
+
             ));
             while (toCheck.Count > 0) {
                 var item = toCheck.Dequeue();
@@ -63,12 +65,13 @@ namespace ToyBox {
                 var currentDepth = item.Item2;
                 if (currentDepth > 20) break;
                 if (cueBase is BlueprintCue cue) {
-                    cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift>(
+                    cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
                         cue,
                         currentDepth,
                         cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray(),
-                        cue.SoulMarkShift
-                    ));
+                        cue.SoulMarkShift,
+                        cue.SoulMarkRequirement
+                                       ));
                     if (cue.Answers.Count > 0) {
                         var subAnswer = cue.Answers[0].Get();
                         if (visited.Contains(subAnswer)) {
@@ -82,10 +85,11 @@ namespace ToyBox {
                     }
                 }
                 else if (cueBase is BlueprintBookPage page) {
-                    cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift>(
+                    cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
                         page,
                         currentDepth,
                         page.OnShow.Actions,
+                        null,
                         null
                     ));
                     if (page.Answers.Count > 0) {
@@ -174,6 +178,15 @@ namespace ToyBox {
                 (!stringByBinding.Empty()) ? stringByBinding : index.ToString(),
                 text + ((!text.Empty()) ? " " : string.Empty) + answer.DisplayText);
         }
+        public static string FormatShift(this SoulMarkShift shift, string format) {
+            if (shift != null && shift.Value != 0) {
+                if (shift.Description?.Text is string { Length: > 0 } description) {
+                    return string.Format(format, $"{shift.Direction}, {shift.Value}, {shift.Description.Text}");
+                }
+                return string.Format(format, $"{shift.Direction}, {shift.Value}");
+            }
+            return null;
+        }
 
         [HarmonyPatch(typeof(UIConstsExtensions), nameof(UIConstsExtensions.GetAnswerString))]
         private static class UIConsts_GetAnswerString_Patch {
@@ -194,13 +207,17 @@ namespace ToyBox {
                         var depth = data.Item2;
                         var actions = data.Item3;
                         var alignment = data.Item4;
+                        var alignmentRequirement = data.Item5;
                         var line = new List<string>();
                         if (actions.Length > 0) {
                             line.AddRange(actions.SelectMany(action => PreviewUtilities.FormatActionAsList(action)
                                 .Select(actionText => actionText == "" ? "EmptyAction" : actionText)));
                         }
-                        if (alignment != null && alignment.Value > 0) {
-                            line.Add($"SoulMarkShift({alignment.Direction}, {alignment.Value}, {alignment.Description})");
+                        if (alignmentRequirement.FormatShift("SoulMarkRequired({0})") is { } soulMarkRequiredText) {
+                            line.Add(soulMarkRequiredText);
+                        }
+                        if (alignment.FormatShift("SoulMarkShift({0})") is { } soulMarkShiftText) {
+                            line.Add(soulMarkShiftText);
                         }
                         if (cue is BlueprintCheck check) {
                             line.Add($"Check({check.Type}, DC {check.DC}, hidden {check.Hidden})");
@@ -232,7 +249,7 @@ namespace ToyBox {
                         text += $" \n<size=75%>[{result}]</size>";
                     }
                     if (alignment != null && alignment.Value > 0) {
-                        text += $" \n<size=75%>[SoulMarkShift {alignment.Direction} by {alignment.Value} - {alignment.Description}]";
+                        text += $" \n<size=75%>[SoulMarkShift {alignment.Direction} by {alignment.Value} - {alignment.Description.Text}]";
                     }
                     __result += text;
                 }

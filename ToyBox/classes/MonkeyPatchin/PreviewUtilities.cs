@@ -60,11 +60,20 @@ namespace ToyBox {
             return result;
         }
         public static List<string> FormatActionAsList(GameAction action) {
-            if (action is Conditional) {
-                return ResolveConditional(action as Conditional);
+            if (action is Conditional conditional) {
+                return ResolveConditional(conditional);
             }
             var result = new List<string>();
-            var caption = action?.GetCaption();
+            var caption = "";
+            if (action is RunActionHolder actionHolder) {
+                if (actionHolder.Holder.Get()?.Actions is { } subActions) {
+                    var subActionList = FormatActions(subActions);
+                    caption = $"Run Action Holder({string.Join(", ", subActionList)})";
+                }
+            }
+            else {
+                caption = action?.GetCaption();
+            }
             caption = caption == "" || caption == null ? action?.GetType().Name ?? "" : caption;
             result.Add(caption);
             return result;
