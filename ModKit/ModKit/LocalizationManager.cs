@@ -75,7 +75,7 @@ namespace ModKit {
         public static string localize(this string key) {
             if (string.IsNullOrEmpty(key)) return key;
             else {
-                string localizedString = "";
+                string localizedString = null;
                 if (!IsDefault) {
                     if (!(_local?.Strings.TryGetValue(key, out localizedString)) ?? true) {
                         _local?.Strings.Add(key, "");
@@ -86,10 +86,9 @@ namespace ModKit {
                     if (!(_localDefault?.Strings.TryGetValue(key, out localizedString)) ?? true) {
                         _localDefault?.Strings.Add(key, key);
                         Mod.Warn($"Unlocalized Key: '{key.orange().bold()}' in default locale");
-                        return key;
                     }
                 }
-                return localizedString;
+                return localizedString != null ? localizedString : key;
             }
         }
         public static Language Import(Action<Exception> onError = null) {
