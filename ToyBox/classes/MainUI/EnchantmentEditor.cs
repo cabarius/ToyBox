@@ -53,7 +53,7 @@ namespace ToyBox.classes.MainUI {
                 ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType)).ToList().Prepend("All").Select(item => item.localize()).ToArray();
                 EnchantmentBrowser.DisplayShowAllGUI = false;
                 EnchantmentBrowser.doCollation = true;
-                EnchantmentBrowser.SortDirection = Browser.sortDirection.Desc;
+                EnchantmentBrowser.SortDirection = Browser.sortDirection.Descending;
             }
             Label(("Sandal says '".orange() + "Enchantment'".cyan().bold()).localize());
             // load blueprints

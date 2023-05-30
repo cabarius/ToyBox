@@ -13,8 +13,8 @@ namespace ModKit {
     public static partial class UI {
         public class Browser {
             public enum sortDirection {
-                Asc = 1,
-                Desc = -1
+                Ascending = 1,
+                Descending = -1
             };
 
             private static readonly Dictionary<object, object> ShowDetails = new();
@@ -61,7 +61,7 @@ namespace ModKit {
             private CancellationTokenSource _collationCancellationTokenSource;
             private string _searchText = "";
             public string SearchText => _searchText;
-            public sortDirection SortDirection = sortDirection.Asc;
+            public sortDirection SortDirection = sortDirection.Ascending;
             public bool doCollation = false;
             private bool _collationKeyIsNullOrAllOrDoesNotExist => collationKey == null || collationKey?.ToLower() == "all" || (!collatedDefinitions?.ContainsKey(collationKey) ?? true);
             public bool SearchAsYouType;
