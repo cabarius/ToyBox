@@ -114,7 +114,7 @@ namespace ToyBox.classes.MainUI {
                     using (HorizontalScope()) {
                         10.space();
                         Label("Limit".localize(), ExpandWidth(false));
-                        ActionIntTextField(ref searchLimit, "Search Limit".localize(), (i) => searchLimit = i < 1 ? 1 : i, null, 120.width());
+                        ActionIntTextField(ref searchLimit, "Search Limit".localize(), (i) => searchLimit = i < 1 ? 1 : i, null, 100.width());
                         if (searchLimit > 1000) { searchLimit = 1000; }
                         if (inventory.Count > searchLimit) {
                             string pageLabel = "Page: ".localize().orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
@@ -329,10 +329,12 @@ namespace ToyBox.classes.MainUI {
                                 }
                                 using (HorizontalScope()) {
                                     Space(5);
-                                    Label("Enchantment".localize().blue(), Width(400));
-                                    Space(314);
+                                    Label("Enchantment".localize().blue(), Width(320));
+                                    Space(275);
                                     Label("Rating".localize().blue(), Width(75));
-                                    Space(310);
+                                    Space(10);
+                                    Label("Ench. Type".localize().blue(), Width(140));
+                                    Space(130);
                                     Label("Description".localize().blue());
 
                                 }
@@ -342,62 +344,66 @@ namespace ToyBox.classes.MainUI {
                             var title = BlueprintExtensions.GetTitle(enchant).DarkModeRarity(enchant.Rarity());
                             using (HorizontalScope()) {
                                 Space(5);
-                                Label(title, Width(400));
+                                Label(title, Width(320));
                                 if (selectedItem is ItemEntityShield shield) {
-                                    ActionButton("+ " + "Armor".orange(), () => AddClicked(enchant), Width(150));
-                                    if (shield.ArmorComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                                        ActionButton("- " + "Armor".orange(), () => RemoveClicked(enchant), Width(150));
-                                    else
-                                        Space(154);
-                                    if (shield.WeaponComponent != null) {
-                                        ActionButton("+ " + "Spikes".orange(), () => AddClicked(enchant, true), Width(150));
-                                        if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                                            ActionButton("- " + "Spikes".orange(), () => RemoveClicked(enchant, true), Width(150));
-                                        else
-                                            Space(154);
+                                    using (VerticalScope(Width(260))) {
+                                        using (HorizontalScope()) {
+                                            ActionButton("+ " + "Armor".orange(), () => AddClicked(enchant), Width(130));
+                                            if (shield.ArmorComponent.Enchantments.Any(e => e.Blueprint == enchant))
+                                                ActionButton("- " + "Armor".orange(), () => RemoveClicked(enchant), Width(130));
+                                            else
+                                                Space(130);
+                                        }
+                                        if (shield.WeaponComponent != null) {
+                                            using (HorizontalScope()) {
+                                                ActionButton("+ " + "Spikes".orange(), () => AddClicked(enchant, true), Width(130));
+                                                if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant))
+                                                    ActionButton("- " + "Spikes".orange(), () => RemoveClicked(enchant, true), Width(130));
+                                                else
+                                                    Space(130);
+                                            }
+                                        }
                                     }
                                 }
                                 else if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
-                                    ActionButton("+ " + "Main".orange(), () => AddClicked(enchant), Width(150));
-                                    if (weapon.Enchantments.Any(e => e.Blueprint == enchant))
-                                        ActionButton("- " + "Main".orange(), () => RemoveClicked(enchant), Width(150));
-                                    else
-                                        Space(154);
-                                    ActionButton("+ " + "2nd".orange(), () => AddClicked(enchant, true), Width(150));
-                                    if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant))
-                                        ActionButton("- " + "2nd".orange(), () => RemoveClicked(enchant, true), Width(150));
-                                    else
-                                        Space(154);
+                                    using (VerticalScope()) {
+                                        using (HorizontalScope()) {
+                                            ActionButton("+ " + "Main".orange(), () => AddClicked(enchant), Width(130));
+                                            if (weapon.Enchantments.Any(e => e.Blueprint == enchant))
+                                                ActionButton("- " + "Main".orange(), () => RemoveClicked(enchant), Width(130));
+                                            else
+                                                Space(130);
+                                        }
+                                        using (HorizontalScope()) {
+                                            ActionButton("+ " + "2nd".orange(), () => AddClicked(enchant, true), Width(130));
+                                            if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant))
+                                                ActionButton("- " + "2nd".orange(), () => RemoveClicked(enchant, true), Width(130));
+                                            else
+                                                Space(130);
+                                        }
+                                    }
                                 }
                                 else {
-                                    ActionButton("Add", () => AddClicked(enchant), Width(150));
+                                    ActionButton("Add", () => AddClicked(enchant), Width(130));
                                     if (selectedItem?.Enchantments.Any(e => e.Blueprint == enchant) ?? false)
-                                        ActionButton("Remove", () => RemoveClicked(enchant), Width(150));
+                                        ActionButton("Remove", () => RemoveClicked(enchant), Width(130));
                                     else
-                                        Space(154);
+                                        Space(133);
                                 }
-
-                                Space(10);
+                                Space(15);
                                 Label($"{enchant.Rating()}".yellow(), 75.width()); // ⊙
                                 Space(10);
                                 var description = enchant.Description.StripHTML().green();
                                 if (enchant.Comment?.Length > 0) description = enchant.Comment.orange() + " " + description;
                                 if (enchant.Prefix?.Length > 0) description = enchant.Prefix.yellow() + " " + description;
                                 if (enchant.Suffix?.Length > 0) description = enchant.Suffix.yellow() + " " + description;
-                                ReflectionTreeView.DetailToggle("", enchant, enchant, 0);
-                                if (Settings.showAssetIDs) {
-                                    using (VerticalScope()) {
-                                        using (HorizontalScope()) {
-                                            Label(enchant.CollationNames().First().cyan(), Width(300));
-                                            ClipboardLabel(enchant.AssetGuid.ToString(), AutoWidth());
-                                        }
+                                Label(enchant.CollationNames().First().Replace("Enchantment", "").cyan(), Width(150));
+                                using (VerticalScope()) {
+                                    if (Settings.showAssetIDs) ClipboardLabel(enchant.AssetGuid.ToString(), AutoWidth());
+                                    using (HorizontalScope()) {
+                                        ReflectionTreeView.DetailToggle("", enchant, enchant, 0);
                                         Label(description);
-
                                     }
-                                }
-                                else {
-                                    Label(enchant.CollationNames().First().cyan(), Width(300));
-                                    Label(description);
                                 }
                             }
                         },
@@ -480,7 +486,7 @@ namespace ToyBox.classes.MainUI {
             var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
 #elif RT
             var fake_context = new MechanicsContext(null, null, enchantment, null, null); // if context is null, items may stack which could cause bugs
-#endif            
+#endif
 
             //var fi = AccessTools.Field(typeof(MechanicsContext), nameof(MechanicsContext.AssociatedBlueprint));
             //fi.SetValue(fake_context, enchantment);  // check if AssociatedBlueprint must be set; I think not
