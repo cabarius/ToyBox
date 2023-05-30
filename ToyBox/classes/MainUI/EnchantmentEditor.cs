@@ -76,7 +76,7 @@ namespace ToyBox.classes.MainUI {
                 });
                 enchantments.TrimExcess();
                 UpdateItems();
-                EnchantmentBrowser.needsReloadData = true;
+                EnchantmentBrowser.RedoCollation();
             }
 
             // Stackable browser

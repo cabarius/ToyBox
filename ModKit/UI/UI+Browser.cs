@@ -100,7 +100,7 @@ namespace ModKit {
             public bool startedLoadingAvailable = false;
             public bool availableIsStatic { get; private set; }
             private List<Definition> _availableCache;
-            public void OnShowGUI() => needsReloadData = true;
+            public void OnShowGUI() => RedoCollation();
             public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false) {
                 SearchAsYouType = searchAsYouType;
                 this.availableIsStatic = availableIsStatic;
