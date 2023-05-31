@@ -33,7 +33,8 @@ namespace ToyBox {
         public static void OnGUI() {
             if (!Main.IsInGame) return;
             if (Game.Instance?.DialogController is { } dialogController) {
-
+                ReflectionTreeView.DetailToggle("Dialog Controller", dialogController);
+                ReflectionTreeView.OnDetailGUI(dialogController);
             }
         }
     }

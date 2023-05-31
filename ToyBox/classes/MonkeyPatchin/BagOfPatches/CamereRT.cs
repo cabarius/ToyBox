@@ -128,13 +128,6 @@ namespace ToyBox.BagOfPatches {
             return rotate;
         }
 
-        [HarmonyPatch(nameof(CameraRig.PlaceOnGround))]
-        [HarmonyPostfix]
-        private static void PlaceOnGround(ref Vector3 __result) {
-            if (!Settings.toggleCameraElevation) return;
-            __result.y = CameraElevation;
-        }
-
         [HarmonyPatch(typeof(CameraRig))]
         public static class CameraRigPatch {
             private static UISettingsEntityKeyBinding _followKeyBinding = null;
@@ -298,239 +291,20 @@ namespace ToyBox.BagOfPatches {
                 __instance.FigureOutScreenBasis();
                 return false;
             }
-            public static bool TickRotateOld(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
-                //__instance.m_EnableOrbitCamera = true;
-                return true;
-                //Mod.Log("TickRotate");
-                if (!Settings.toggleRotateOnAllMaps && !Settings.toggleCameraPitch && !Settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !Settings.toggleInvertXAxis && !Settings.toggleInvertKeyboardXAxis) return true;
-                var usePitch = Settings.toggleCameraPitch;
-                if (__instance.m_RotateRoutine != null && (double)Time.time > (double)__instance.m_RotateRoutineEndsOn) {
-                    __instance.StopCoroutine(__instance.m_RotateRoutine);
-                    __instance.m_RotateRoutine = (Coroutine)null;
-                }
 
-                if (__instance.m_ScrollRoutine != null || __instance.m_RotateRoutine != null)// || __instance.m_HandRotationLock)
-                    return false;
-                __instance.RotateByMiddleButton();
-                var mouseMovement = new Vector2(0, 0);
-                var xRotationSign = 1f;
-                var yRotationSign = Settings.toggleInvertYAxis ? 1f : -1f;
-                if (_RotationByMouse) {
-                    if (!Settings.toggleInvertXAxis) xRotationSign = -1;
-                    mouseMovement = __instance.CameraDragToRotate2D();
-                }
-                else if (__instance.m_RotationByKeyboard) {
-                    mouseMovement.x = __instance.m_RotateOffset;
-                    if (Settings.toggleInvertKeyboardXAxis) xRotationSign = -1;
-                }
-                if (_RotationByMouse || __instance.m_RotationByKeyboard || Main.resetExtraCameraAngles) {
-                    var eulerAngles = __instance.transform.rotation.eulerAngles;
-                    eulerAngles.y += xRotationSign * mouseMovement.x * __instance.RotationSpeed * CameraRig.ConsoleRotationMod;
-                    if (__instance.m_EnableOrbitCamera || Settings.toggleCameraPitch) {
-                        eulerAngles.x += mouseMovement.y * __instance.RotationSpeed;
-                        eulerAngles.x = Mathf.Clamp(eulerAngles.x <= 180.0 ? eulerAngles.x : (float)-(360.0 - eulerAngles.x),__instance.MinSpaceCameraAngle, __instance.MaxSpaceCameraAngle);
-                        Mod.Debug($"{mouseMovement.y} => eulerAngles: {eulerAngles}");
-                    }
-
-                    __instance.transform.DOKill();
-                    __instance.transform.DOLocalRotate(eulerAngles, __instance.RotationTime).SetUpdate(true);
-
-
-                    if (Main.resetExtraCameraAngles) {
-                        eulerAngles.x = 0f;
-                        CameraElevation = 60f;
-                        __instance.m_TargetPosition = __instance.PlaceOnGround2(__instance.m_TargetPosition);
-                        var cameraRig = CameraRig.Instance;
-#if false               // TODO: figure out if we still need this
-                        var highlightingFeature = OwlcatRenderPipeline.Asset.ScriptableRendererData.rendererFeatures.OfType<OccludedObjectHighlightingFeature>().Single<OccludedObjectHighlightingFeature>();
-                        highlightingFeature.DepthClip.NearCameraClipDistance = 10;
-                        highlightingFeature.DepthClip.ClipTreshold = 0;
-                        Main.resetExtraCameraAngles = false;
-#endif
-                    }
-                    else {
-                        if (Input.GetKey(KeyCode.LeftControl)) {
-                            ___m_TargetPosition.y += yRotationSign * mouseMovement.y / 10f;
-                            CameraElevation = ___m_TargetPosition.y;
-                        }
-                        else if (usePitch) {
-                            eulerAngles.x += yRotationSign * mouseMovement.y * __instance.RotationSpeed * CameraRig.ConsoleRotationMod;
-                            Mod.Debug($"eulerX: {eulerAngles.x} Y: {eulerAngles.y} Z: {eulerAngles.z}");
-                        }
-                    }
-                    __instance.transform.DOKill();
-                    __instance.transform.DOLocalRotate(eulerAngles, __instance.RotationTime).SetUpdate<Tweener>(true);
-                }
-
-                __instance.m_RotationByKeyboard = false;
-                __instance.m_RotateOffset = 0.0f;
-                return false;
-            }
-#if false
-            public static bool TickScrollOld(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
-                return true;
-                if (!Settings.toggleCameraPitch && !Settings.toggleCameraElevation && !Main.resetExtraCameraAngles && !Settings.toggleFreeCamera) return true;
-                var isInlocalMap = Game.Instance?.RootUiContext.CurrentServiceWindow == ServiceWindowsType.LocalMap;
-                var dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
-                if (__instance.m_ScrollRoutine != null && (double)Time.time > (double)__instance.m_ScrollRoutineEndsOn) {
-                    __instance.StopCoroutine(__instance.m_ScrollRoutine);
-                    __instance.m_ScrollRoutine = (Coroutine)null;
-                }
-                if (__instance.m_ScrollRoutine == null) {
-                    var eulerAngles = __instance.transform.rotation.eulerAngles;
-                    var scrollOffset = __instance.m_ScrollOffset;
-                    if (eulerAngles.x > 180)
-                        scrollOffset.y = -scrollOffset.y;
-#if FALSE
-                    if (Settings.toggleZoomableLocalMaps && isInlocalMap && scrollOffset.magnitude > 0) {
-                        var frameRotation = LocalMapPatches.FrameRotation;
-                        var zoom = LocalMapPatches.Zoom;
-                        var newScrollOffset = Quaternion.AngleAxis(-frameRotation.z, Vector3.forward) * scrollOffset;
-                        //Mod.Debug($"inMap: {scrollOffset} -> {newScrollOffset} angle: {frameRotation}");
-                        scrollOffset = newScrollOffset * Settings.zoomableLocalMapScrollSpeedMultiplier / zoom;
-                    }
-#endif
-                    if ((bool)(SimpleBlueprint)BlueprintRoot.Instance && !Game.Instance.IsControllerGamepad && (bool)(SettingsEntity<bool>)SettingsRoot.Controls.ScreenEdgeScrolling && (Cursor.visible || (bool)(SettingsEntity<bool>)SettingsRoot.Controls.CameraScrollOutOfScreenEnabled) && __instance. m_FullScreenUIType != 0)
-                        scrollOffset += __instance.GetCameraScrollShiftByMouse();
-                    var scrollVector2 = scrollOffset + __instance.CameraDragToRotate() + __instance.m_ScrollBy2D;
-                    __instance.m_ScrollBy2D.Set(0.0f, 0.0f);
-                    //__instance.CameraDragToRotate();
-                    Game.Instance.CameraController?.Follower?.Release();
-                    var currentlyLoadedArea = Game.Instance.CurrentlyLoadedArea;
-                    var num = currentlyLoadedArea != null ? currentlyLoadedArea.CameraScrollMultiplier : 1f;
-                    var scaledScrollVector = scrollVector2 * (10* dt * num * CameraRig.ConsoleScrollMod);
-                    var scrollMagnatude = (float)Math.Sqrt(Vector2.Dot(scaledScrollVector, scaledScrollVector));
-
-                    //var scaledScrollVector3 = scrollVector3 * (__instance.m_ScrollSpeed * dt * num * CameraRig.ConsoleScrollMod);
-                    var worldPoint1 = __instance.Camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1f));
-                    var worldPoint2 = __instance.Camera.ViewportToWorldPoint(new Vector3(1f, 0.5f, 1f));
-                    var worldPoint3 = __instance.Camera.ViewportToWorldPoint(new Vector3(0.5f, 1f, 1f));
-                    //Mod.Debug($"worldPoint xyZ: {worldPoint1.normalized} XyZ: {worldPoint2.normalized} zYZ: {worldPoint3.normalized} ");
-                    var pitch = __instance.transform.eulerAngles.x - 42.75;
-                    var pitchRadians = Math.PI * pitch / 180f;
-                    worldPoint2.y = worldPoint1.y;
-                    worldPoint3.y = worldPoint1.y;
-                    var vector3 = worldPoint2 - worldPoint1;
-                    __instance.Right = vector3.normalized;
-                    vector3 = worldPoint3 - worldPoint1;
-                    __instance.Up = vector3.normalized;
-                    if (pitch >= 0) __instance.Up = -__instance.Up;
-                    var targetPosition = __instance.m_TargetPosition;
-                    var yAxis = new Vector3(0, 2, 0);
-                    var dPos = scaledScrollVector.x * __instance.Right + scaledScrollVector.y * __instance.Up;
-                    if (_RotationByMouse)
-                        dPos += scaledScrollVector.y * (float)Math.Sin(pitchRadians) * yAxis;
-                    //Mod.Debug($"dPos: {dPos} pitch: {pitch:##.000} sine: {Math.Sin(pitchRadians):#.000}");
-                    __instance.m_TargetPosition += dPos;
-                    if (!Settings.toggleFreeCamera) {
-                        if (!__instance.NoClamp && !__instance.m_SkipClampOneFrame)
-                            __instance.m_TargetPosition = __instance.ClampByLevelBounds(__instance.m_TargetPosition);
-                        __instance.m_TargetPosition = __instance.PlaceOnGround(__instance.m_TargetPosition);
-                        if (__instance.NewBehaviour) {
-                            if (!__instance.m_AttackPointPos.HasValue)
-                                __instance.m_AttackPointPos = __instance.Camera.transform.parent.localPosition;
-                            // TODO: what do we do about this stupid private set var?  Reflection???
-                            //__instance.TargetPosition = __instance.LowerGently(targetPosition, __instance.TargetPosition, dt);
-                        }
-                    }
-                }
-                __instance.m_ScrollOffset = Vector2.zero;
-                return false;
-            }
-
-
-            [HarmonyPatch(nameof(CameraRig.Update))]
+            [HarmonyPatch(nameof(CameraRig.ClampByLevelBounds))]
             [HarmonyPostfix]
-            static void Update(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
-                return;
-                if (Settings.toggleRotateOnAllMaps || Main.resetExtraCameraAngles)
-                    __instance.TickRotate();
-                if (Settings.toggleZoomOnAllMaps)
-                    __instance.CameraZoom.TickZoom();
-                if (Settings.toggleScrollOnAllMaps) {
-                    __instance.TickScroll();
-                    //__instance.TickCameraDrag();
-                    //__instance.CameraDragToMove();
-                }
-                if (Settings.toggleAutoFollowHold) {
-                    if (_followKeyBinding == null) {
-                        var controlSettingsGroup = Game.Instance.UISettingsManager.m_ControlSettingsList.First(g => g.name == "KeybindingsGeneral");
-                        _followKeyBinding = controlSettingsGroup.SettingsList
-                                                                .OfType<UISettingsEntityKeyBinding>()
-                                                                .First(item => item.name == "FollowUnit");
-                    }
-                    if (_followKeyBinding?.IsDown ?? false) {
-                        var selectedUnit = WrathExtensions.GetCurrentCharacter();
-                        if (selectedUnit != null)
-                            Game.Instance.CameraController?.Follower.Follow(selectedUnit);
-                    }
-                }
+
+            public static void ClampByLevelBounds(Vector3 point, ref Vector3 __result) {
+                if (!Settings.toggleCameraElevation && !Settings.toggleFreeCamera) return;
+                __result = point;
             }
-
-            [HarmonyPatch(nameof(CameraRig.RotateByMiddleButton))]
-            [HarmonyPrefix]
-            public static bool RotateByMiddleButton(CameraRig __instance) {
-                return true;
-                //Mod.Debug("RotateByMiddleButton");
-                if (!PointerController.InGui 
-                    && Input.GetMouseButtonDown(2) 
-                    && !_RotationByMouse 
-                    && !__instance.m_RotationByKeyboard) {
-                    Mod.Debug("hi2");
-                    _RotationByMouse = true;
-                    Game.Instance.CursorController.SetRotateCameraCursor(true);
-                    __instance.m_BaseMousePoint = __instance.GetLocalPointerPosition();
-                    __instance.m_RotateDistance = Vector2.zero;
-                    __instance.m_TargetRotate = __instance.transform.eulerAngles;
-                }
-
-                if (!Input.GetMouseButtonUp(2) || !_RotationByMouse) {
-                    return false;
-                }
-                Game.Instance.CursorController.SetRotateCameraCursor(false);
-                __instance.m_BaseMousePoint = new Vector3?();
-                _RotationByMouse = false;
-                return false;
+            [HarmonyPatch(nameof(CameraRig.PlaceOnGround))]
+            [HarmonyPostfix]
+            private static void PlaceOnGround(ref Vector3 __result) {
+                if (!Settings.toggleCameraElevation && !Settings.toggleFreeCamera) return;
+                __result.y = CameraElevation;
             }
-
-            [HarmonyPatch(nameof(CameraRig.RotateToRoutine))]
-            [HarmonyPrefix]
-            public static bool RotateToTimed(
-                    CameraRig __instance
-                        ) {
-                return false;
-            public static bool RotateToTimed(
-                    CameraRig __instance,
-                    float toAngle,
-                    out float targetTime,
-                    float maxTime,
-                    float speed,
-                    AnimationCurve curve,
-                    ref Coroutine __result
-                ) {
-                if (__instance.m_RotateRoutine != null)
-                    __instance.StopCoroutine(__instance.m_RotateRoutine);
-                __instance.transform.DOKill();
-                _RotationByMouse = false;
-                __instance.m_RotationByKeyboard = false;
-                var y = __instance.transform.rotation.eulerAngles.y;
-                var num1 = Mathf.Abs(Mathf.DeltaAngle(y, toAngle));
-                var num2 = 0.0 < maxTime ? num1 / maxTime : speed;
-                var time = 0.0 < num2 ? num1 / num2 : 0.0f;
-                if (curve == null)
-                    curve = AnimationCurveUtility.LinearAnimationCurve;
-                targetTime = time;
-                if (num1 <= 0.0) {
-                    __instance.m_RotateRoutine = null;
-                    __result = __instance.m_RotateRoutine;
-                    return false;
-                }
-
-                __instance.m_RotateRoutine = __instance.StartCoroutine(__instance.RotateToRoutine(y, toAngle, time, curve));
-                __result = __instance.m_RotateRoutine;
-                return false;
-            }
-#endif
         }
     }
 }

@@ -421,12 +421,13 @@ namespace ModKit.DataViewer {
                 nodeType.MakeGenericType(Type, InstType, child.PropertyType), this, child.Name)).ToList();
             // TODO: generalize this and implement custom data extractors
             if (Value is BlueprintReferenceBase bpRefBase) {
+#if Wrath
+                var customNode = new CustomNode<SimpleBlueprint>("Cached", bpRefBase.GetBlueprint(), NodeType.Property);
+#elif RT
                 var customNode = new CustomNode<BlueprintScriptableObject>("Cached", bpRefBase.GetBlueprint(), NodeType.Property);
+#endif
                 _propertyNodes.Add(customNode);
             }
-            if (InstType == typeof(BlueprintReferenceBase) || InstType.IsSubclassOf(typeof(BlueprintReferenceBase))) {
-            }
-
             _propertyNodes.Sort((x, y) => x.Name.CompareTo(y.Name));
         }
         protected override void UpdateValue() {
