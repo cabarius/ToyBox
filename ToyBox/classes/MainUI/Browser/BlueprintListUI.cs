@@ -100,7 +100,7 @@ namespace ToyBox {
                     }
                     else {
                         // FIXME - horrible perf bottleneck 
-                        if (titles.Contains("Remove") || titles.Contains("Lock".localize())) {
+                        if (titles.Contains("Remove".localize()) || titles.Contains("Lock".localize())) {
                             title = name.cyan().bold();
                         }
                         else {

@@ -10,20 +10,22 @@ using System.Linq;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
 using ModKit;
+using static ModKit.UI;
 using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using ModKit.Utility;
 using System.Reflection;
+using ModKit.DataViewer;
 
 namespace ToyBox {
     public static class EtudesEditor {
 
-        private static BlueprintGuid parent;
-        private static BlueprintGuid selected;
+        private static BlueprintGuid _parent;
+        private static BlueprintGuid _selected;
         private static Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes => EtudesTreeModel.Instance.loadedEtudes;
-        private static Dictionary<BlueprintGuid, EtudeInfo> filteredEtudes = new();
+        private static Dictionary<BlueprintGuid, EtudeInfo> _filteredEtudes = new();
         
         // TODO: is this still the right root etude?
         internal static BlueprintGuid rootEtudeId = 
@@ -34,15 +36,13 @@ namespace ToyBox {
                 "4f66e8b792ecfad46ae1d9ecfd7ecbc2";
 #endif
         public static string searchText = "";
-        public static string searrchTextInput = "";
-        private static bool showOnlyFlagLikes;
+        public static string searchTextInput = "";
+        private static bool _showOnlyFlagLikes;
         private static bool showComments => Main.Settings.showEtudeComments;
 
-        private static BlueprintEtude selectedEtude;
-
-        private static List<BlueprintArea> areas;
-        private static BlueprintArea selectedArea;
-        private static string areaSearchText = "";
+        private static List<BlueprintArea> _areas;
+        private static BlueprintArea _selectedArea;
+        private static string _areaSearchText = "";
         //private EtudeChildrenDrawer etudeChildrenDrawer;
 
         public static Dictionary<string, SimpleBlueprint> toValues = new();
@@ -65,26 +65,26 @@ namespace ToyBox {
             if (loadedEtudes?.Count == 0) {
                 ReloadEtudes();
             }
-            if (areas == null) areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.OrderBy(a => a.name).ToList();
-            if (areas == null) return;
-            if (parent == BlueprintGuid.Empty) {
-                parent = rootEtudeId;
-                selected = parent;
+            if (_areas == null) _areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.OrderBy(a => a.name).ToList();
+            if (_areas == null) return;
+            if (_parent == BlueprintGuid.Empty) {
+                _parent = rootEtudeId;
+                _selected = _parent;
             }
-            UI.Label("Note".orange().bold() + " this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of ".green() + "Etudes".cyan().bold() + " and other ".green() + "Elements".cyan().bold() + " that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of ".green() + "Elements".cyan().bold() + " that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have ".green() + "Elements".cyan().bold() + " will offer a second disclosure triangle next to the status that will show them to you.".green());
-            UI.Label("WARNING".yellow().bold() + " this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using.".orange());
-            using (UI.HorizontalScope(UI.ExpandWidth(true))) {
-                if (parent == BlueprintGuid.Empty)
+            Label("Note".orange().bold() + " this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of ".green() + "Etudes".cyan().bold() + " and other ".green() + "Elements".cyan().bold() + " that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of ".green() + "Elements".cyan().bold() + " that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have ".green() + "Elements".cyan().bold() + " will offer a second disclosure triangle next to the status that will show them to you.".green());
+            Label("WARNING".yellow().bold() + " this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using.".orange());
+            using (HorizontalScope(AutoWidth())) {
+                if (_parent == BlueprintGuid.Empty)
                     return;
-                UI.Label("Search");
-                UI.Space(25);
-                UI.ActionTextField(ref searrchTextInput, "Search", (s) => { }, () => { searchText = searrchTextInput; UpdateSearchResults(); }, UI.Width(200));
-                UI.Space(25);
-                if (UI.Toggle("Flags Only", ref showOnlyFlagLikes)) ApplyFilter();
+                Label("Search");
+                Space(25);
+                ActionTextField(ref searchTextInput, "Search", (s) => { }, () => { searchText = searchTextInput; UpdateSearchResults(); }, 400.width());
+                Space(25);
+                if (Toggle("Flags Only", ref _showOnlyFlagLikes)) ApplyFilter();
                 25.space();
-                UI.Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
+                Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
                 25.space();
-                UI.Toggle("Show Comments (some in Russian)", ref Main.Settings.showEtudeComments);
+                Toggle("Show Comments (some in Russian)", ref Main.Settings.showEtudeComments);
                 //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
                 //UI.Label($"H : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[selected].Name)}");
 
@@ -99,7 +99,7 @@ namespace ToyBox {
                 //    etudeChildrenDrawer.ReferenceGraph.Save();
                 //}
             }
-            using (UI.HorizontalScope(GUI.skin.box, UI.AutoWidth())) {
+            using (HorizontalScope(GUI.skin.box, AutoWidth())) {
                 //if (etudeChildrenDrawer != null) {
                 //    using (UI.VerticalScope(GUI.skin.box, UI.MinHeight(60),
                 //        UI.MinWidth(300))) {
@@ -128,29 +128,29 @@ namespace ToyBox {
                 //    }
                 //}
             }
-            var remainingWidth = UI.ummWidth;
-            using (UI.HorizontalScope()) {
-                UI.Label(""); firstRect = GUILayoutUtility.GetLastRect();
-                using (UI.VerticalScope(GUI.skin.box)) {
-                    if (UI.VPicker<BlueprintArea>("Areas".orange().bold(), ref selectedArea, areas, "All", bp => {
+            var remainingWidth = ummWidth;
+            using (HorizontalScope()) {
+                Label(""); firstRect = GUILayoutUtility.GetLastRect();
+                using (VerticalScope(GUI.skin.box)) {
+                    if (VPicker<BlueprintArea>("Areas".orange().bold(), ref _selectedArea, _areas, "All", bp => {
                         var name = bp.name; // bp.AreaDisplayName;
                         if (name?.Length == 0) name = bp.AreaName;
                         if (name?.Length == 0) name = bp.NameSafe();
                         return name;
-                    }, ref areaSearchText,
+                    }, ref _areaSearchText,
                     () => { },
-                    UI.rarityButtonStyle,
-                    UI.Width(300))) {
+                    rarityButtonStyle,
+                    Width(300))) {
                         ApplyFilter();
                     }
                 }
                 remainingWidth -= 300;
-                using (UI.VerticalScope(GUI.skin.box)) { //, UI.Width(remainingWidth))) {
+                using (VerticalScope(GUI.skin.box)) { //, UI.Width(remainingWidth))) {
                     //using (var scope = UI.ScrollViewScope(m_ScrollPos, GUI.skin.box)) {
                     //UI.Label($"Hierarchy tree : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.MinHeight(50));
 
-                    if (filteredEtudes.Count == 0) {
-                        UI.Label("No Etudes", UI.AutoWidth());
+                    if (_filteredEtudes.Count == 0) {
+                        Label("No Etudes", AutoWidth());
                         //UI.ActionButton("Refresh", () => ReloadEtudes(), UI.AutoWidth());
                         return;
                     }
@@ -177,7 +177,7 @@ namespace ToyBox {
                 //}
             }
 #if DEBUG
-            UI.ActionButton("Generate Comment Translation Table", () => { });
+            ActionButton("Generate Comment Translation Table", () => { });
 #endif
             foreach (var item in toValues) {
                 var mutator = actionLookup[item.Key];
@@ -194,10 +194,10 @@ namespace ToyBox {
         private static HashSet<BlueprintGuid> enclosingEtudes = new();
         private static void DrawEtude(BlueprintGuid etudeID, EtudeInfo etude, int indent) {
             if (enclosingEtudes.Contains(etudeID)) return;
-            var viewPort = UI.ummRect;
+            var viewPort = ummRect;
             var topLines = firstRect.y / 30;
             var linesVisible = 1 + viewPort.height / 30;
-            var scrollOffset = UI.ummScrollPosition[0].y / 30 - topLines;
+            var scrollOffset = ummScrollPosition[0].y / 30 - topLines;
             var viewPortLine = lineNumber - scrollOffset;
             var isVisible = viewPortLine >= 0 && viewPortLine < linesVisible;
 #if false
@@ -215,33 +215,33 @@ namespace ToyBox {
                     //}).ToList();
                     var conflicts = EtudesTreeModel.Instance.GetConflictingEtudes(etudeID);
                     var conflictCount = conflicts.Count - 1;
-                    using (UI.HorizontalScope(UI.ExpandWidth(true))) {
-                        using (UI.HorizontalScope(UI.Width(310))) {
+                    using (HorizontalScope(ExpandWidth(true))) {
+                        using (HorizontalScope(Width(310))) {
                             var actions = etude.Blueprint.GetActions().Where(action => action.canPerform(etude.Blueprint, null));
                             foreach (var action in actions) {
                                 actionLookup[action.name] = action;
-                                UI.ActionButton(action.name, () => toValues[action.name] = etude.Blueprint, UI.Width(150));
+                                ActionButton(action.name, () => toValues[action.name] = etude.Blueprint, Width(150));
                             }
                         }
-                        UI.Indent(indent);
+                        Indent(indent);
                         var style = GUIStyle.none;
                         style.fontStyle = FontStyle.Normal;
-                        if (selected == etudeID) name = name.orange().bold();
+                        if (_selected == etudeID) name = name.orange().bold();
 
-                        using (UI.HorizontalScope(UI.Width(825))) {
+                        using (HorizontalScope(Width(825))) {
                             if (etude.ChildrenId.Count == 0) etude.ShowChildren = ToggleState.None;
-                            UI.ToggleButton(ref etude.ShowChildren, name.orange().bold(), (state) => OpenCloseAllChildren(etude, state));
-                            UI.Space(25);
+                            ToggleButton(ref etude.ShowChildren, name.orange().bold(), (state) => OpenCloseAllChildren(etude, state));
+                            Space(25);
                             var eltCount = etude.Blueprint.m_AllElements.Count;
                             if (eltCount > 0)
-                                UI.ToggleButton(ref etude.ShowElements, $"{eltCount} elements", UI.Width(175));
+                                ToggleButton(ref etude.ShowElements, $"{eltCount} elements", Width(175));
                             else
-                                UI.Space(178);
+                                Space(178);
                             //UI.Space(126);
                             if (conflictCount > 0)
-                                UI.ToggleButton(ref etude.ShowConflicts, $"{conflictCount} conflicts", UI.Width(175));
+                                ToggleButton(ref etude.ShowConflicts, $"{conflictCount} conflicts", Width(175));
                             else
-                                UI.Space(178);
+                                Space(178);
 
                             //UI.Space(126);
                             //if (gameActions.Count > 0)
@@ -261,76 +261,78 @@ namespace ToyBox {
                         //    selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
                         //}
 
-                        UI.Space(100);
-                        UI.Label(etude.State.ToString().yellow(), UI.Width(125));
-                        UI.Space(-2);
-                        UI.Space(25);
-                        if (EtudeValidationProblem(etudeID, etude)) {
-                            UI.Label("ValidationProblem".yellow(), UI.AutoWidth());
+                        Space(100);
+                        Label(etude.State.ToString().yellow(), Width(125));
+                        Space(-2);
+                        Space(25);
+                        if (EtudeValidationProblem(etudeID, etude) is { } reason) {
+                            UI.Label($"{reason.cyan()}".yellow(), 300.width());
                             UI.Space(25);
                         }
-
-                        if (etude.LinkedArea != BlueprintGuid.Empty)
-                            UI.Label("🔗", UI.AutoWidth());
+                        Label("🔗", AutoWidth());
                         if (etude.CompleteParent)
-                            UI.Label("⎌", UI.AutoWidth());
+                            Label("⎌", AutoWidth());
                         if (etude.AllowActionStart) {
-                            UI.Space(25);
-                            UI.Label("Can Start", UI.AutoWidth());
+                            Space(25);
+                            Label("Can Start", 100.width());
                         }
+                        ReflectionTreeView.DetailToggle("Ins", etude, etude, 100);
                         if (Main.Settings.showAssetIDs) {
                             var guid = etudeID.ToString();
-                            UI.TextField(ref guid);
+                            TextField(ref guid);
                         }
                         if (showComments && !Main.Settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
-                            UI.Label(etude.Comment.green());
+                            Label(etude.Comment.green(),ExpandWidth(true));
                         }
+                        Label("", AutoWidth());
                     }
+                    ReflectionTreeView.OnDetailGUI(etude);
                     if (showComments && Main.Settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
-                        UI.Space(-15);
-                        using (UI.HorizontalScope(UI.Width(10000))) {
-                            UI.Space(310);
-                            UI.Indent(indent);
-                            UI.Space(933);
-                            UI.Label(etude.Comment.green());
+                        Space(-15);
+                        using (HorizontalScope(Width(200))) {
+                            Space(310);
+                            Indent(indent);
+                            Space(933);
+                            Label(etude.Comment.green(), ExpandWidth(true));
+                            Label("", AutoWidth());
                         }
                     }
                     indent += 2;
                     if (etude.ShowElements.IsOn()) {
-                        using (UI.HorizontalScope(UI.ExpandWidth(true))) {
-                            UI.Space(310);
-                            UI.Indent(indent);
-                            using (UI.VerticalScope()) {
+                        using (HorizontalScope(ExpandWidth(true))) {
+                            Space(310);
+                            Indent(indent);
+                            using (VerticalScope()) {
                                 foreach (var element in etude.Blueprint.m_AllElements) {
-                                    using (UI.HorizontalScope(UI.Width(10000))) {
+                                    using (HorizontalScope(Width(10000))) {
                                         // UI.Label(element.NameSafe().orange()); -- this is useless at the moment
-                                        using (UI.HorizontalScope(450)) {
+                                        using (HorizontalScope(450)) {
                                             if (element is GameAction gameAction) {
                                                 try {
-                                                    UI.ActionButton(gameAction.GetCaption().yellow(), gameAction.RunAction);
+                                                    ActionButton(gameAction.GetCaption().yellow(), gameAction.RunAction);
                                                 }
                                                 catch (Exception e) {
                                                     Mod.Warn($"{gameAction.GetCaption()} failed to run {e.ToString().yellow()}");
                                                 }
                                             }
                                             else
-                                                UI.Label(element.GetCaption().yellow() ?? "?");
-                                            UI.Space(0);
+                                                Label(element.GetCaption().yellow() ?? "?");
+                                            Space(0);
                                         }
-                                        UI.Space(25);
+                                        Space(25);
                                         if (element is Condition condition)
-                                            UI.Label($"{element.GetType().Name.cyan()} : {condition.CheckCondition().ToString().orange()}", UI.Width(250));
+                                            Label($"{element.GetType().Name.cyan()} : {condition.CheckCondition().ToString().orange()}", Width(250));
                                         else if (element is Conditional conditional)
-                                            UI.Label($"{element.GetType().Name.cyan()} : {conditional.ConditionsChecker.Check().ToString().orange()} - {string.Join(", ", conditional.ConditionsChecker.Conditions.Select(c => c.GetCaption())).yellow()}", UI.Width(250));
+                                            Label($"{element.GetType().Name.cyan()} : {conditional.ConditionsChecker.Check().ToString().orange()} - {string.Join(", ", conditional.ConditionsChecker.Conditions.Select(c => c.GetCaption())).yellow()}", Width(250));
                                         else
-                                            UI.Label(element.GetType().Name.cyan(), UI.Width(250));
+                                            Label(element.GetType().Name.cyan(), Width(250));
                                         if (element is AnotherEtudeOfGroupIsPlaying otherGroup)
-                                            UI.Label($"{conflictCount}", UI.Width(50));
+                                            Label($"{conflictCount}", Width(50));
                                         else
-                                            UI.Width(53);
-                                        UI.Space(25);
+                                            Width(53);
+                                        Space(25);
                                         if (showComments)
-                                            UI.Label(element.GetDescription().green());
+                                            Label(element.GetDescription().green());
 
                                     }
                                     if (element is StartEtude started) {
@@ -342,17 +344,17 @@ namespace ToyBox {
                                     if (element is CompleteEtude completed) {
                                         DrawEtudeTree(completed.Etude.Guid, 2, true);
                                     }
-                                    UI.Div();
+                                    Div();
                                 }
                             }
                         }
                     }
 
                     if (etude.ShowConflicts.IsOn()) {
-                        using (UI.HorizontalScope(UI.Width(10000))) {
-                            UI.Space(310);
-                            UI.Indent(indent);
-                            using (UI.VerticalScope()) {
+                        using (HorizontalScope(Width(10000))) {
+                            Space(310);
+                            Indent(indent);
+                            using (VerticalScope()) {
                                 foreach (var conflict in conflicts) {
                                     DrawEtudeTree(conflict, 2, true);
                                 }
@@ -376,9 +378,9 @@ namespace ToyBox {
             }
         }
         private static void ShowBlueprintsTree() {
-            using (UI.VerticalScope()) {
+            using (VerticalScope()) {
                 DrawEtude(rootEtudeId, loadedEtudes[rootEtudeId], 0);
-                using (UI.VerticalScope(GUI.skin.box)) {
+                using (VerticalScope(GUI.skin.box)) {
                     ShowParentTree(loadedEtudes[rootEtudeId], 1);
                 }
             }
@@ -394,19 +396,20 @@ namespace ToyBox {
         }
         private static void ShowParentTree(EtudeInfo etude, int indent, bool ignoreFilter = false) {
             foreach (var childID in etude.ChildrenId) {
-                if (!ignoreFilter && !filteredEtudes.ContainsKey(childID))
+                if (!ignoreFilter && !_filteredEtudes.ContainsKey(childID))
                     continue;
                 DrawEtudeTree(childID, indent, ignoreFilter);
             }
         }
         private static void UpdateSearchResults() {
-            var searchTextLower = searchText.ToLower();
             foreach (var entry in loadedEtudes)
                 entry.Value.hasSearchResults = false;
             if (searchText.Length != 0) {
                 foreach (var entry in loadedEtudes) {
                     var etude = entry.Value;
-                    if (etude.Name.ToLower().Contains(searchTextLower)) {
+                    if (etude.Name.Matches(searchText)
+                        || etude.Blueprint.AssetGuid.ToString().Matches(searchText)) {
+                        etude.hasSearchResults = true;
                         etude.TraverseParents(e => e.hasSearchResults = true);
                     }
                 }
@@ -416,19 +419,19 @@ namespace ToyBox {
             UpdateSearchResults();
             var etudesOfArea = new Dictionary<BlueprintGuid, EtudeInfo>();
 
-            filteredEtudes = loadedEtudes;
+            _filteredEtudes = loadedEtudes;
 
-            if (selectedArea != null) {
+            if (_selectedArea != null) {
                 etudesOfArea = GetAreaEtudes();
-                filteredEtudes = etudesOfArea;
+                _filteredEtudes = etudesOfArea;
             }
 
             var flaglikeEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
 
-            if (showOnlyFlagLikes) {
+            if (_showOnlyFlagLikes) {
                 flaglikeEtudes = GetFlaglikeEtudes();
-                filteredEtudes = filteredEtudes.Keys.Intersect(flaglikeEtudes.Keys)
-                    .ToDictionary(t => t, t => filteredEtudes[t]);
+                _filteredEtudes = _filteredEtudes.Keys.Intersect(flaglikeEtudes.Keys)
+                    .ToDictionary(t => t, t => _filteredEtudes[t]);
             }
         }
 
@@ -475,7 +478,7 @@ namespace ToyBox {
             var etudesWithAreaLink = new Dictionary<BlueprintGuid, EtudeInfo>();
 
             foreach (var etude in loadedEtudes) {
-                if (etude.Value.LinkedArea == selectedArea.AssetGuid) {
+                if (etude.Value.LinkedArea == _selectedArea.AssetGuid) {
                     if (!etudesWithAreaLink.ContainsKey(etude.Key))
                         etudesWithAreaLink.Add(etude.Key, etude.Value);
 
@@ -533,21 +536,23 @@ namespace ToyBox {
             }
         }
 
-        private static bool EtudeValidationProblem(BlueprintGuid etudeID, EtudeInfo etude) {
-            if (etude.ChainedTo != BlueprintGuid.Empty && etude.LinkedTo != BlueprintGuid.Empty)
-                return true;
+        private static string EtudeValidationProblem(BlueprintGuid etudeID, EtudeInfo etude) {
+            if (etude.ChainedTo == BlueprintGuid.Empty && etude.LinkedTo == BlueprintGuid.Empty)
+                return "Chained/Linked to Nothing";
 
             foreach (var chained in etude.ChainedId) {
-                if (loadedEtudes[chained].ParentId != etude.ParentId)
-                    return true;
+                var chainedEtude = loadedEtudes[chained];
+                if (chainedEtude.ParentId != etude.ParentId)
+                    return $"Chained etude {chainedEtude.Name} ({chainedEtude.Blueprint.AssetGuid} has different parent: {chainedEtude.ParentId} than {etude.Name} parent: {etude.ParentId}";
             }
 
             foreach (var linked in etude.LinkedId) {
-                if (loadedEtudes[linked].ParentId != etude.ParentId && loadedEtudes[linked].ParentId != etudeID)
-                    return true;
+                var linkedEtude = loadedEtudes[linked];
+                if (linkedEtude.ParentId != etude.ParentId && loadedEtudes[linked].ParentId != etudeID)
+                    return $"Linked to child {linkedEtude.Name} ({linkedEtude.Blueprint.AssetGuid} with different parent: {linkedEtude.ParentId} than {etude.Name} parent {etude.ParentId}";
             }
 
-            return false;
+            return null;
         }
         private static void UpdateEtudeStates() {
             if (Application.isPlaying) {

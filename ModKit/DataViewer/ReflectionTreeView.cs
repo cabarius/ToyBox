@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Kingmaker.Blueprints;
 using UnityEngine;
 using static ModKit.UI;
 using static ModKit.Utility.StringExtensions;
@@ -184,6 +185,7 @@ namespace ModKit.DataViewer {
                         Label($"found {_searchResults.Count}".Cyan()
                               + $" visited: {visitCount} (d: {searchDepth} b: {searchBreadth})".Orange());
                     }
+                    Toggle("Show Nulls/Empties", ref Mod.ModKitSettings.toggleDataViewerShowNullAndEmpties);
                     GUILayout.FlexibleSpace();
                     //                  10.space();
                     //                    Toggle("Enable Value Selection For Copy", ref enableCopy);
@@ -311,7 +313,9 @@ namespace ModKit.DataViewer {
                     var instText = "";  // if (node.InstanceID is int instID) instText = "@" + instID.ToString();
                     name = name.MarkedSubstring(SearchTerms);
                     var enumerableCount = node.EnumerableCount;
-                    if (enumerableCount == 0 || node.IsNull) return; // TODO - make this a config option
+                    if (!Mod.ModKitSettings.toggleDataViewerShowNullAndEmpties 
+                        && (enumerableCount == 0 || node.IsNull)) 
+                        return;
                     if (enumerableCount >= 0) name = name + $"[{enumerableCount}]".yellow();
                     var typeName = node.InstType?.Name ?? node.Type?.Name;
                     ToggleButton(ref expanded,
