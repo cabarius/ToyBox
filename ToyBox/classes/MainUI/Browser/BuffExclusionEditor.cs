@@ -12,6 +12,7 @@ namespace ToyBox {
         public static Settings settings => Main.Settings;
 
         //We'll use this to add new buffs
+        private static List<BlueprintBuff> _defaultBuffExceptions;
         private static List<BlueprintBuff> _buffExceptions;
         private static List<BlueprintBuff> _allBuffs;
         private static string _searchString;
@@ -22,6 +23,7 @@ namespace ToyBox {
         private static string _paginationString;
         private static string _goToPage = "1";
         private static bool _showCurrentExceptions = true;
+        private static bool _showDefaultExceptions = false;
         private static bool _showBuffsToAdd = false;
 
 
@@ -31,10 +33,13 @@ namespace ToyBox {
                 _buffExceptions = BlueprintLoader.Shared.GetBlueprintsByGuids<BlueprintBuff>(settings.buffsToIgnoreForDurationMultiplier)
                     ?.OrderBy(b => b.GetDisplayName())
                     ?.ToList();
+                _defaultBuffExceptions = BlueprintLoader.Shared.GetBlueprintsByGuids<BlueprintBuff>(SettingsDefaults.DefaultBuffsToIgnoreForDurationMultiplier)
+                    ?.OrderBy(b => b.GetDisplayName())
+                    ?.ToList();
                 _allBuffs = BlueprintLoader.Shared.GetBlueprints<BlueprintBuff>()
-                    ?.Where(bp => !bp.IsHiddenInUI 
+                    ?.Where(bp => !bp.IsHiddenInUI
 #if Wrath
-                                  && !bp.HiddenInInspector 
+                                  && !bp.HiddenInInspector
 #endif
                                   && !bp.GetDisplayName().StartsWith("[unknown key")
                                   && !bp.IsClassFeature && !bp.Harmful)
@@ -58,11 +63,14 @@ namespace ToyBox {
                     using (VerticalScope()) {
                         Func<bool, string> hideOrShowString = (bool isShown) => isShown ? "Hide".localize() : "Show".localize();
 
-                        DisclosureToggle($"{hideOrShowString(_showCurrentExceptions)} " + "current list".localize(), ref _showCurrentExceptions);
+                        DisclosureToggle($"{hideOrShowString(_showCurrentExceptions)} " + "custom exceptions".localize(), ref _showCurrentExceptions);
                         if (_showCurrentExceptions) {
                             BuffList(_buffExceptions);
                         }
-
+                        DisclosureToggle($"{hideOrShowString(_showDefaultExceptions)} " + "default exceptions".localize(), ref _showDefaultExceptions);
+                        if (_showDefaultExceptions) {
+                            BuffList(_defaultBuffExceptions, true);
+                        }
                         DisclosureToggle($"{hideOrShowString(_showBuffsToAdd)} " + "buffs to add to list".localize(), ref _showBuffsToAdd, 175, () => FilterBuffList(_searchString));
                         if (_showBuffsToAdd) {
                             using (HorizontalScope()) {
@@ -137,36 +145,37 @@ namespace ToyBox {
             return (int)Math.Ceiling((decimal)_searchResults.Count() / _pageSize);
         }
 
-        private static void BuffList(IEnumerable<BlueprintBuff> buffs) {
+        private static void BuffList(IEnumerable<BlueprintBuff> buffs, bool showDefaults = false) {
             if (buffs == null) return;
             var divisor = IsWide ? 6 : 4;
             var titleWidth = ummWidth / divisor;
             var complexNameWidth = ummWidth / divisor;
             var guidWidth = ummWidth / divisor / 2;
-            VStack(null, buffs?.OrderBy(b => b.GetDisplayName()).Select<BlueprintBuff, Action>(bp => () => {
-                using (HorizontalScope()) {
-                    Label(bp.GetDisplayName().cyan().bold(), Width(titleWidth));
-                    Label(bp.NameSafe().orange().bold(), Width(complexNameWidth));
-                    if (settings.showAssetIDs) {
-                        ClipboardLabel(bp.AssetGuidThreadSafe, ExpandWidth(false), Width(guidWidth));
+            VStack(null, buffs?.Where(bp => showDefaults || !SettingsDefaults.DefaultBuffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe))
+                ?.OrderBy(b => b.GetDisplayName()).Select<BlueprintBuff, Action>(bp => () => {
+                    using (HorizontalScope()) {
+                        Label(bp.GetDisplayName().cyan().bold(), Width(titleWidth));
+                        Label(bp.NameSafe().orange().bold(), Width(complexNameWidth));
+                        if (settings.showAssetIDs) {
+                            ClipboardLabel(bp.AssetGuidThreadSafe, ExpandWidth(false), Width(guidWidth));
+                        }
+                        //It seems that if you specify defaults, saving settings without the defaults won't actually
+                        //remove the items from the list. This just prevents confusion by removing the button altogether.
+                        if (!settings.buffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)) {
+                            ActionButton("Add".localize(), () => {
+                                AddBuff(bp.AssetGuidThreadSafe);
+                            });
+                        }
+                        if (settings.buffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)
+                            && !SettingsDefaults.DefaultBuffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)) {
+                            ActionButton("Remove".localize(), () => {
+                                RemoveBuff(bp.AssetGuidThreadSafe);
+                            });
+                        }
+                        Label(bp.GetDescription().green());
                     }
-                    //It seems that if you specify defaults, saving settings without the defaults won't actually
-                    //remove the items from the list. This just prevents confusion by removing the button altogether.
-                    if (!settings.buffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)) {
-                        ActionButton("Add".localize(), () => {
-                            AddBuff(bp.AssetGuidThreadSafe);
-                        });
-                    }
-                    if (settings.buffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)
-                        && !SettingsDefaults.DefaultBuffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe)) {
-                        ActionButton("Remove".localize(), () => {
-                            RemoveBuff(bp.AssetGuidThreadSafe);
-                        });
-                    }
-                    Label(bp.GetDescription().green());
-                }
-                Space(25);
-            })
+                    Space(25);
+                })
             .Prepend(() => {
                 using (HorizontalScope()) {
                     Label("In-Game Name".localize().red().bold(), Width(titleWidth));
