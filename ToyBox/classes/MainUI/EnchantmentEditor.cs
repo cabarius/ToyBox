@@ -129,6 +129,8 @@ namespace ToyBox.classes.MainUI {
                                         _currentPage -= 1;
                                     }
                                 }
+                                var offset = Math.Min(inventory.Count, (_currentPage - 1) * searchLimit);
+                                selectedItem = inventory[offset + selectedItemIndex];
                             }, AutoWidth());
                             ActionButton("+", () => {
                                 if (_currentPage > _pageCount) _currentPage = 1;
@@ -138,6 +140,8 @@ namespace ToyBox.classes.MainUI {
                                 else {
                                     _currentPage += 1;
                                 }
+                                var offset = Math.Min(inventory.Count, (_currentPage - 1) * searchLimit);
+                                selectedItem = inventory[offset + selectedItemIndex];
                             }, AutoWidth());
                         }
                     }
@@ -158,7 +162,7 @@ namespace ToyBox.classes.MainUI {
                             ref selectedItemIndex,
                             inventory.Select(item => item.NameAndOwner(true)).Skip(offset).Take(limit).ToArray(),
                             1,
-                            index => selectedItem = inventory[selectedItemIndex],
+                            index => selectedItem = inventory[offset + selectedItemIndex],
                             rarityButtonStyle,
                             Width(375));
                     }
