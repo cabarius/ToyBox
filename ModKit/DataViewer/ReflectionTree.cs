@@ -46,7 +46,7 @@ namespace ModKit.DataViewer {
         // this allows us to avoid duplicated nodes for the same value
         //public static ConditionalWeakTable<object, Node> ValueToNodeLookup = new ConditionalWeakTable<object, Node>();
 
-        protected const BindingFlags ALL_FLAGS = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        protected const BindingFlags AllFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
 
         public readonly NodeType NodeType;
         public readonly Type Type;
@@ -121,7 +121,7 @@ namespace ModKit.DataViewer {
         public abstract int? InstanceID { get; }
         public static IEnumerable<FieldInfo> GetFields(Type type) {
             HashSet<string> names = new HashSet<string>();
-            foreach (FieldInfo field in (Nullable.GetUnderlyingType(type) ?? type).GetFields(ALL_FLAGS)) {
+            foreach (FieldInfo field in (Nullable.GetUnderlyingType(type) ?? type).GetFields(AllFlags)) {
                 if (!field.IsStatic &&
                     !field.IsDefined(typeof(CompilerGeneratedAttribute), false) &&  // ignore backing field
                     names.Add(field.Name)) {
@@ -131,7 +131,7 @@ namespace ModKit.DataViewer {
         }
         public static IEnumerable<PropertyInfo> GetProperties(Type type) {
             HashSet<string> names = new HashSet<string>();
-            foreach (PropertyInfo property in (Nullable.GetUnderlyingType(type) ?? type).GetProperties(ALL_FLAGS)) {
+            foreach (PropertyInfo property in (Nullable.GetUnderlyingType(type) ?? type).GetProperties(AllFlags)) {
                 if (property.GetMethod != null &&
                     !property.GetMethod.IsStatic &&
                     property.GetMethod.GetParameters().Length == 0 &&
@@ -165,7 +165,7 @@ namespace ModKit.DataViewer {
 
     internal abstract class GenericNode<TNode> : Node {
         // the graph will not show any child nodes of following types
-        private static readonly HashSet<Type> BASE_TYPES = new HashSet<Type>()
+        private static readonly HashSet<Type> BaseTypes = new HashSet<Type>()
         {
             typeof(object),
             typeof(DBNull),
@@ -218,7 +218,7 @@ namespace ModKit.DataViewer {
             protected set {
                 if (!value?.Equals(_value) ?? _value != null) {
                     _value = value;
-                    if (value is BlueprintReferenceBase bpRefBase && bpRefBase.Cached is null)
+                    if (value is BlueprintReferenceBase { Cached: null } bpRefBase)
                         bpRefBase.GetBlueprint();
                     _enumerableCount = -1;
                     if (!Type.IsValueType || IsNullable) {
@@ -245,7 +245,7 @@ namespace ModKit.DataViewer {
         public override bool IsBaseType {
             get {
                 UpdateValue();
-                return _isBaseType ?? (_isBaseType = BASE_TYPES.Contains(Nullable.GetUnderlyingType(InstType ?? Type) ?? InstType ?? Type)).Value;
+                return _isBaseType ?? (_isBaseType = BaseTypes.Contains(Nullable.GetUnderlyingType(InstType ?? Type) ?? InstType ?? Type)).Value;
             }
         }
         public override bool IsEnumerable {
@@ -305,7 +305,7 @@ namespace ModKit.DataViewer {
             //if (item != null)
             //    ValueToNodeLookup.TryGetValue(item, out node);
             if (node == null) {
-                node = (Activator.CreateInstance(type, ALL_FLAGS, null, childArgs, null) as Node);
+                node = (Activator.CreateInstance(type, AllFlags, null, childArgs, null) as Node);
                 //if (item != null) 
                 //    ValueToNodeLookup.Add(item, node);
             }
@@ -357,10 +357,18 @@ namespace ModKit.DataViewer {
                 .Where(item => item.IsGenericType && item.GetGenericTypeDefinition() == typeof(IEnumerable<>))
                 .Select(item => item.GetGenericArguments()[0]);
             Type itemType = itemTypes.Count() == 1 ? itemTypes.First() : typeof(object);
+            if (itemType == typeof(BlueprintReferenceBase)
+                || itemType.IsSubclassOf(typeof(BlueprintReferenceBase))) {
+                itemType = typeof(BlueprintScriptableObject);
+            }
             Type nodeType = typeof(ItemNode<>).MakeGenericType(itemType);
             int i = 0;
             foreach (object item in Value as IEnumerable) {
-                _itemNodes.Add(FindOrCreateChildForValue(item, nodeType, this, "<item_" + i + ">", item));
+                var resolvedItem = item;
+                if (item is BlueprintReferenceBase bpRefBase) {
+                    resolvedItem = bpRefBase.GetBlueprint();
+                }
+                _itemNodes.Add(FindOrCreateChildForValue(resolvedItem, nodeType, this, "<item_" + i + ">", resolvedItem));
                 i++;
             }
             this._enumerableCount = i;
@@ -411,6 +419,13 @@ namespace ModKit.DataViewer {
 
             _propertyNodes = GetProperties(InstType).Select(child => FindOrCreateChildForValue(child,
                 nodeType.MakeGenericType(Type, InstType, child.PropertyType), this, child.Name)).ToList();
+            // TODO: generalize this and implement custom data extractors
+            if (Value is BlueprintReferenceBase bpRefBase) {
+                var customNode = new CustomNode<BlueprintScriptableObject>("Cached", bpRefBase.GetBlueprint(), NodeType.Property);
+                _propertyNodes.Add(customNode);
+            }
+            if (InstType == typeof(BlueprintReferenceBase) || InstType.IsSubclassOf(typeof(BlueprintReferenceBase))) {
+            }
 
             _propertyNodes.Sort((x, y) => x.Name.CompareTo(y.Name));
         }
@@ -454,6 +469,11 @@ namespace ModKit.DataViewer {
 
     internal class RootNode<TNode> : PassiveNode<TNode> {
         public RootNode(string name, TNode value) : base(name, value, NodeType.Root) { }
+    }
+
+    // This is a node that was created by some custom data extraction mechanism
+    internal class CustomNode<TNode> : PassiveNode<TNode> {
+        public CustomNode(string name, TNode value, NodeType nodeType) : base(name, value, nodeType) { }
     }
 
     internal class ComponentNode : PassiveNode<Component> {

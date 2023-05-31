@@ -249,12 +249,13 @@ namespace ToyBox {
                     new NamedAction("Crusade".localize(), CrusadeEditor.OnGUI),
                     new NamedAction("Armies".localize(), ArmiesEditor.OnGUI),
                     new NamedAction("Events/Decrees".localize(), EventEditor.OnGUI),
-#if DEBUG
+#if false
                     new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
 #endif
 #endif
                     new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
                     new NamedAction("Quests".localize(), QuestEditor.OnGUI),
+                    new NamedAction("NPCs & Dialog", DialogAndNPCs.OnGUI),
                     new NamedAction("Saves".localize(), GameSavesBrowser.OnGUI),
                     new NamedAction("Achievements".localize(), AchievementsUnlocker.OnGUI),
                     new NamedAction("Settings".localize(), SettingsUI.OnGUI)

@@ -178,6 +178,7 @@
     <Compile Include="classes\MainUI\ActionsWrath.cs" />
     <Compile Include="classes\MainUI\Browser\AchievementsUnlocker.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintActionWrath.cs" />
+    <Compile Include="classes\MainUI\DialogEditor.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\BulkSell.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedCamera.cs" />
     <Compile Include="classes\MainUI\EnhancedUI\EnhancedUI.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="classes\MainUI\Browser\SearchAndPick.cs" />
     <Compile Include="classes\MainUI\BagOfTricks.cs" />
     <Compile Include="classes\Infrastructure\CharacterPicker.cs" />
+    <Compile Include="classes\MainUI\Dialog+NPCs.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
@@ -334,7 +336,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

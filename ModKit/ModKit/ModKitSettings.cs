@@ -9,6 +9,7 @@
         public int browserSearchLimit = 20;
         public int browserDetailSearchLimit = 10;
         public bool toggleKeyBindingsOutputToTranscript = true;
+        public bool toggleDataViewerShowNullAndEmpties = false;
 
         // Localization
         public string uiCultureCode = "en";
