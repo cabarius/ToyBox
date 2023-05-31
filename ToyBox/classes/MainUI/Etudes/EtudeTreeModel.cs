@@ -24,16 +24,9 @@ namespace ToyBox {
             Mod.Debug($"loaded {commentTranslations.Count} key/value pairs");
         }
 
-        private static EtudesTreeModel instance;
+        private static EtudesTreeModel _instance;
 
-        public static EtudesTreeModel Instance {
-            get {
-                if (instance == null) {
-                    instance = new EtudesTreeModel();
-                }
-                return instance;
-            }
-        }
+        public static EtudesTreeModel Instance => _instance ??= new EtudesTreeModel();
 
         public void ReloadBlueprintsTree() {
             etudes = BlueprintLoader.Shared.GetBlueprints<BlueprintEtude>();

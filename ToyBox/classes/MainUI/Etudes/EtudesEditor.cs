@@ -22,10 +22,10 @@ using ModKit.DataViewer;
 namespace ToyBox {
     public static class EtudesEditor {
 
-        private static BlueprintGuid parent;
-        private static BlueprintGuid selected;
+        private static BlueprintGuid _parent;
+        private static BlueprintGuid _selected;
         private static Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes => EtudesTreeModel.Instance.loadedEtudes;
-        private static Dictionary<BlueprintGuid, EtudeInfo> filteredEtudes = new();
+        private static Dictionary<BlueprintGuid, EtudeInfo> _filteredEtudes = new();
         
         // TODO: is this still the right root etude?
         internal static BlueprintGuid rootEtudeId = 
@@ -36,15 +36,13 @@ namespace ToyBox {
                 "4f66e8b792ecfad46ae1d9ecfd7ecbc2";
 #endif
         public static string searchText = "";
-        public static string searrchTextInput = "";
-        private static bool showOnlyFlagLikes;
+        public static string searchTextInput = "";
+        private static bool _showOnlyFlagLikes;
         private static bool showComments => Main.Settings.showEtudeComments;
 
-        private static BlueprintEtude selectedEtude;
-
-        private static List<BlueprintArea> areas;
-        private static BlueprintArea selectedArea;
-        private static string areaSearchText = "";
+        private static List<BlueprintArea> _areas;
+        private static BlueprintArea _selectedArea;
+        private static string _areaSearchText = "";
         //private EtudeChildrenDrawer etudeChildrenDrawer;
 
         public static Dictionary<string, SimpleBlueprint> toValues = new();
@@ -67,22 +65,22 @@ namespace ToyBox {
             if (loadedEtudes?.Count == 0) {
                 ReloadEtudes();
             }
-            if (areas == null) areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.OrderBy(a => a.name).ToList();
-            if (areas == null) return;
-            if (parent == BlueprintGuid.Empty) {
-                parent = rootEtudeId;
-                selected = parent;
+            if (_areas == null) _areas = BlueprintLoader.Shared.GetBlueprints<BlueprintArea>()?.OrderBy(a => a.name).ToList();
+            if (_areas == null) return;
+            if (_parent == BlueprintGuid.Empty) {
+                _parent = rootEtudeId;
+                _selected = _parent;
             }
             Label("Note".orange().bold() + " this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of ".green() + "Etudes".cyan().bold() + " and other ".green() + "Elements".cyan().bold() + " that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of ".green() + "Elements".cyan().bold() + " that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have ".green() + "Elements".cyan().bold() + " will offer a second disclosure triangle next to the status that will show them to you.".green());
             Label("WARNING".yellow().bold() + " this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using.".orange());
-            using (HorizontalScope(ExpandWidth(true))) {
-                if (parent == BlueprintGuid.Empty)
+            using (HorizontalScope(AutoWidth())) {
+                if (_parent == BlueprintGuid.Empty)
                     return;
                 Label("Search");
                 Space(25);
-                ActionTextField(ref searrchTextInput, "Search", (s) => { }, () => { searchText = searrchTextInput; UpdateSearchResults(); }, Width(200));
+                ActionTextField(ref searchTextInput, "Search", (s) => { }, () => { searchText = searchTextInput; UpdateSearchResults(); }, 400.width());
                 Space(25);
-                if (Toggle("Flags Only", ref showOnlyFlagLikes)) ApplyFilter();
+                if (Toggle("Flags Only", ref _showOnlyFlagLikes)) ApplyFilter();
                 25.space();
                 Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
                 25.space();
@@ -134,12 +132,12 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 Label(""); firstRect = GUILayoutUtility.GetLastRect();
                 using (VerticalScope(GUI.skin.box)) {
-                    if (VPicker<BlueprintArea>("Areas".orange().bold(), ref selectedArea, areas, "All", bp => {
+                    if (VPicker<BlueprintArea>("Areas".orange().bold(), ref _selectedArea, _areas, "All", bp => {
                         var name = bp.name; // bp.AreaDisplayName;
                         if (name?.Length == 0) name = bp.AreaName;
                         if (name?.Length == 0) name = bp.NameSafe();
                         return name;
-                    }, ref areaSearchText,
+                    }, ref _areaSearchText,
                     () => { },
                     rarityButtonStyle,
                     Width(300))) {
@@ -151,7 +149,7 @@ namespace ToyBox {
                     //using (var scope = UI.ScrollViewScope(m_ScrollPos, GUI.skin.box)) {
                     //UI.Label($"Hierarchy tree : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.MinHeight(50));
 
-                    if (filteredEtudes.Count == 0) {
+                    if (_filteredEtudes.Count == 0) {
                         Label("No Etudes", AutoWidth());
                         //UI.ActionButton("Refresh", () => ReloadEtudes(), UI.AutoWidth());
                         return;
@@ -228,7 +226,7 @@ namespace ToyBox {
                         Indent(indent);
                         var style = GUIStyle.none;
                         style.fontStyle = FontStyle.Normal;
-                        if (selected == etudeID) name = name.orange().bold();
+                        if (_selected == etudeID) name = name.orange().bold();
 
                         using (HorizontalScope(Width(825))) {
                             if (etude.ChildrenId.Count == 0) etude.ShowChildren = ToggleState.None;
@@ -268,7 +266,7 @@ namespace ToyBox {
                         Space(-2);
                         Space(25);
                         if (EtudeValidationProblem(etudeID, etude) is { } reason) {
-                            UI.Label($"ValidationProblem\n{reason.cyan()}".yellow(), UI.AutoWidth());
+                            UI.Label($"{reason.cyan()}".yellow(), 300.width());
                             UI.Space(25);
                         }
                         Label("🔗", AutoWidth());
@@ -276,15 +274,15 @@ namespace ToyBox {
                             Label("⎌", AutoWidth());
                         if (etude.AllowActionStart) {
                             Space(25);
-                            Label("Can Start", AutoWidth());
+                            Label("Can Start", 100.width());
                         }
-                        ReflectionTreeView.DetailToggle("Ins", etude, etude);
+                        ReflectionTreeView.DetailToggle("Ins", etude, etude, 100);
                         if (Main.Settings.showAssetIDs) {
                             var guid = etudeID.ToString();
                             TextField(ref guid);
                         }
                         if (showComments && !Main.Settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
-                            Label(etude.Comment.green(),400.width());
+                            Label(etude.Comment.green(),ExpandWidth(true));
                         }
                         Label("", AutoWidth());
                     }
@@ -295,7 +293,7 @@ namespace ToyBox {
                             Space(310);
                             Indent(indent);
                             Space(933);
-                            Label(etude.Comment.green(), 400.width());
+                            Label(etude.Comment.green(), ExpandWidth(true));
                             Label("", AutoWidth());
                         }
                     }
@@ -398,19 +396,20 @@ namespace ToyBox {
         }
         private static void ShowParentTree(EtudeInfo etude, int indent, bool ignoreFilter = false) {
             foreach (var childID in etude.ChildrenId) {
-                if (!ignoreFilter && !filteredEtudes.ContainsKey(childID))
+                if (!ignoreFilter && !_filteredEtudes.ContainsKey(childID))
                     continue;
                 DrawEtudeTree(childID, indent, ignoreFilter);
             }
         }
         private static void UpdateSearchResults() {
-            var searchTextLower = searchText.ToLower();
             foreach (var entry in loadedEtudes)
                 entry.Value.hasSearchResults = false;
             if (searchText.Length != 0) {
                 foreach (var entry in loadedEtudes) {
                     var etude = entry.Value;
-                    if (etude.Name.ToLower().Contains(searchTextLower)) {
+                    if (etude.Name.Matches(searchText)
+                        || etude.Blueprint.AssetGuid.ToString().Matches(searchText)) {
+                        etude.hasSearchResults = true;
                         etude.TraverseParents(e => e.hasSearchResults = true);
                     }
                 }
@@ -420,19 +419,19 @@ namespace ToyBox {
             UpdateSearchResults();
             var etudesOfArea = new Dictionary<BlueprintGuid, EtudeInfo>();
 
-            filteredEtudes = loadedEtudes;
+            _filteredEtudes = loadedEtudes;
 
-            if (selectedArea != null) {
+            if (_selectedArea != null) {
                 etudesOfArea = GetAreaEtudes();
-                filteredEtudes = etudesOfArea;
+                _filteredEtudes = etudesOfArea;
             }
 
             var flaglikeEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
 
-            if (showOnlyFlagLikes) {
+            if (_showOnlyFlagLikes) {
                 flaglikeEtudes = GetFlaglikeEtudes();
-                filteredEtudes = filteredEtudes.Keys.Intersect(flaglikeEtudes.Keys)
-                    .ToDictionary(t => t, t => filteredEtudes[t]);
+                _filteredEtudes = _filteredEtudes.Keys.Intersect(flaglikeEtudes.Keys)
+                    .ToDictionary(t => t, t => _filteredEtudes[t]);
             }
         }
 
@@ -479,7 +478,7 @@ namespace ToyBox {
             var etudesWithAreaLink = new Dictionary<BlueprintGuid, EtudeInfo>();
 
             foreach (var etude in loadedEtudes) {
-                if (etude.Value.LinkedArea == selectedArea.AssetGuid) {
+                if (etude.Value.LinkedArea == _selectedArea.AssetGuid) {
                     if (!etudesWithAreaLink.ContainsKey(etude.Key))
                         etudesWithAreaLink.Add(etude.Key, etude.Value);
 
@@ -538,7 +537,7 @@ namespace ToyBox {
         }
 
         private static string EtudeValidationProblem(BlueprintGuid etudeID, EtudeInfo etude) {
-            if (etude.ChainedTo != BlueprintGuid.Empty && etude.LinkedTo != BlueprintGuid.Empty)
+            if (etude.ChainedTo == BlueprintGuid.Empty && etude.LinkedTo == BlueprintGuid.Empty)
                 return "Chained/Linked to Nothing";
 
             foreach (var chained in etude.ChainedId) {
