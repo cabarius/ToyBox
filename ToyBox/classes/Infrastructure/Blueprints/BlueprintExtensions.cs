@@ -76,9 +76,26 @@ namespace ToyBox {
                 }
                 return name;
             }
+            else if (blueprint is BlueprintItemEnchantment enchantment) {
+                string name;
+                var isEmpty = enchantment.Name.IsNullOrEmpty();
+                if (isEmpty) {
+                    name = blueprint.name;
+                }
+                else {
+                    name = enchantment.Name;
+                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                        name = blueprint.name;
+                    }
+                    else if (Settings.showDisplayAndInternalNames) {
+                        name += $" : {blueprint.name.color(RGBA.darkgrey)}";
+                    }
+                }
+                return name;
+            }
             return blueprint.name;
         }
-        public static string GetSearchKey<Definition>(Definition feature) where Definition : SimpleBlueprint, IUIDataProvider {
+        public static string GetSearchKey<Definition>(Definition feature, bool forceDisplayInternalName = false) where Definition : SimpleBlueprint, IUIDataProvider {
             string name;
             var isEmpty = feature.Name.IsNullOrEmpty();
             if (isEmpty) {
@@ -91,7 +108,7 @@ namespace ToyBox {
                 if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                     name = feature.name;
                 }
-                else if (Settings.showDisplayAndInternalNames) {
+                else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
                     name += $" : {feature.name}";
                 }
             }
@@ -108,6 +125,23 @@ namespace ToyBox {
                     if (blueprint is BlueprintSpellbook spellbook)
                         return $"{spellbook.Name} - {spellbook.name}";
                     name = uiDataProvider.Name;
+                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                        name = blueprint.name;
+                    }
+                    else if (Settings.showDisplayAndInternalNames) {
+                        name += blueprint.name;
+                    }
+                }
+                return name;
+            }
+            else if (blueprint is BlueprintItemEnchantment enchantment) {
+                string name;
+                var isEmpty = enchantment.Name.IsNullOrEmpty();
+                if (isEmpty) {
+                    name = blueprint.name;
+                }
+                else {
+                    name = enchantment.Name;
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = blueprint.name;
                     }
@@ -178,7 +212,7 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
-        #if Wrath
+#if Wrath
         public static List<string> CollationNames(this BlueprintIngredient bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.Destructible) names.Add("Destructible");
@@ -186,7 +220,7 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
-        #endif
+#endif
         public static List<string> CollationNames(this BlueprintArea bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
@@ -213,10 +247,10 @@ namespace ToyBox {
         public static string[] CaptionNames(this SimpleBlueprint bp) => bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] { };
         public static List<String> CaptionCollationNames(this SimpleBlueprint bp) => bp.CollationNames(bp.CaptionNames());
         // Custom Attributes that Owlcat uses 
-        #if Wrath
+#if Wrath
         public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
         public static string GetInfoBoxDescription(this SimpleBlueprint bp) => string.Join("\n", bp.GetInfoBoxes().Select(attr => attr.Text));
-        #endif
+#endif
 
         private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
         public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {
@@ -266,7 +300,7 @@ namespace ToyBox {
             var progression = ch?.Descriptor?.Progression;
             if (progression == null) return false;
             if (!progression.Features.HasFact(bp)) return false;
-            return progression.Selections.TryGetValue(bp, out var selection) 
+            return progression.Selections.TryGetValue(bp, out var selection)
                    && selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == feature));
         }
         public static List<BlueprintFeature> FeatureSelectionValues(this UnitEntityData ch, BlueprintFeatureSelection bp) => bp.AllFeatures.Where(f => ch.HasFeatureSelection(bp, f)).ToList();

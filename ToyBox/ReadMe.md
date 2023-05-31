@@ -63,6 +63,15 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
    * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
  * (***Narria***) **Got this up on Beta 0.2.1y including fixing the dialog bug**
  * (***Narria***) show a little more info in dialog preview
+### Ver 1.5.4 Wrath (Coming Soon)
+**ToyBox 1.5.4 Preview Version 1.5.3b May 29, 2023**
+* (***BuckAMayzing***) Gestalt Companion fix
+* (***BuckAMayzing***) Mercenary Gestalt fix
+* (***ADDB***) Small ToyBox Swarm GUI fix
+* (***ADDB***) Enchantment Tab Improvement
+  * Added paging to Inventory search for Improved Performance
+  * Improved Inventory Search Keys
+  * Exchanged old Enchant Browser for new Browser
 ### Install & Setup (Rogue)
 1. Download the ToyBox mod file and unzip
 1. If the folder is not already named 0ToyBox0 please rename it to that

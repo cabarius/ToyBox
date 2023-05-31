@@ -75,11 +75,11 @@ namespace ModKit {
         public static string localize(this string key) {
             if (string.IsNullOrEmpty(key)) return key;
             else {
-                string localizedString = "";
+                string localizedString = null;
                 if (!IsDefault) {
                     if (!(_local?.Strings.TryGetValue(key, out localizedString)) ?? true) {
                         _local?.Strings.Add(key, "");
-                        Mod.Warn($"Unlocalized Key: '{key.orange().bold()}' in current locale: " + key);
+                        Mod.Debug($"Unlocalized Key: '{key.orange().bold()}' in current locale: " + key);
                     }
                 }
                 if (IsDefault || localizedString == "") {
@@ -88,7 +88,7 @@ namespace ModKit {
                         Mod.Warn($"Unlocalized Key: '{key.orange().bold()}' in default locale");
                     }
                 }
-                return localizedString != "" ? localizedString : key;
+                return localizedString != null ? localizedString : key;
             }
         }
         public static Language Import(Action<Exception> onError = null) {
