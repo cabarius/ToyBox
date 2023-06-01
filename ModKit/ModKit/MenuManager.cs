@@ -31,24 +31,30 @@ namespace ModKit {
         // parameter causes the property name of the caller to be substituted as an argument.  
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        #region Fields
+    #region Fields
+
         private int _tabIndex;
+
         public int tabIndex {
-            get { return _tabIndex; }
-            set { _tabIndex = value; NotifyPropertyChanged(); }
+            get => _tabIndex;
+            set {
+                _tabIndex = value;
+                NotifyPropertyChanged();
+            }
         }
+
         private readonly List<IMenuTopPage> _topPages = new();
         private readonly List<IMenuSelectablePage> _selectablePages = new();
         private readonly List<IMenuBottomPage> _bottomPages = new();
         private static Exception caughtException = null;
 
-        #endregion
+    #endregion
 
-        #region Toggle
+    #region Toggle
 
         public void Enable(UnityModManager.ModEntry modEntry, Assembly _assembly) {
             foreach (var type in _assembly.GetTypes()
-                .Where(type => !type.IsInterface && !type.IsAbstract && typeof(IMenuPage).IsAssignableFrom(type))) {
+                                          .Where(type => !type.IsInterface && !type.IsAbstract && typeof(IMenuPage).IsAssignableFrom(type))) {
                 if (typeof(IMenuTopPage).IsAssignableFrom(type))
                     _topPages.Add(Activator.CreateInstance(type, true) as IMenuTopPage);
 
@@ -75,31 +81,28 @@ namespace ModKit {
             _bottomPages.Clear();
         }
 
-        #endregion
+    #endregion
 
         private void OnGUI(UnityModManager.ModEntry modEntry) {
             var hasPriorPage = false;
             try {
                 if (caughtException != null) {
                     GUILayout.Label("ERROR".Red().Bold() + $": caught exception {caughtException}");
-                    if (GUILayout.Button("Reset".Orange().Bold(), GUILayout.ExpandWidth(false))) {
-                        caughtException = null;
-                    }
+                    if (GUILayout.Button("Reset".Orange().Bold(), GUILayout.ExpandWidth(false))) caughtException = null;
                     return;
                 }
                 var e = Event.current;
-                UI.userHasHitReturn = e.keyCode == KeyCode.Return;
-                UI.focusedControlName = GUI.GetNameOfFocusedControl();
+                userHasHitReturn = e.keyCode == KeyCode.Return;
+                focusedControlName = GUI.GetNameOfFocusedControl();
 
 
-                if (_topPages.Count > 0) {
+                if (_topPages.Count > 0)
                     foreach (var page in _topPages) {
                         if (hasPriorPage)
                             GUILayout.Space(10f);
                         page.OnGUI(modEntry);
                         hasPriorPage = true;
                     }
-                }
 
                 if (_selectablePages.Count > 0) {
                     if (_selectablePages.Count > 1) {
@@ -114,14 +117,13 @@ namespace ModKit {
                     hasPriorPage = true;
                 }
 
-                if (_bottomPages.Count > 0) {
+                if (_bottomPages.Count > 0)
                     foreach (var page in _bottomPages) {
                         if (hasPriorPage)
                             GUILayout.Space(10f);
                         page.OnGUI(modEntry);
                         hasPriorPage = true;
                     }
-                }
             }
             catch (Exception e) {
                 Console.Write($"{e}");

@@ -244,7 +244,7 @@ namespace ToyBox.Inventory {
         // Adds Rarity tags/colors to item names
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.Name), MethodType.Getter)]
         private static class ItemEntity_Name_Patch {
-            public static void Postfix(ItemEntity __instance, ref string __result) {
+            public static void Postfix(ItemEntity __instance, ref string? __result) {
                 if (!Settings.UsingLootRarity && !Settings.togglePuzzleRelief && __result == null && __result.Length == 0) return;
                 var bp = __instance.Blueprint;
                 if (Settings.togglePuzzleRelief && bp is BlueprintItem bpItem && bpItem.NameForAcronym.Contains("Domino")) {
@@ -435,7 +435,7 @@ namespace ToyBox.Inventory {
             static void Prefix(SceneEntitiesState state) {
                 if (!Settings.togglePuzzleRelief) return;
                 Mod.Debug("SceneLoader_MatchStateWithScene_Patch");
-                string sceneName = state.SceneName;
+                string? sceneName = state.SceneName;
                 Mod.Debug(sceneName);
                 string sceneBundleName = BundledSceneLoader.GetBundleName(sceneName);
                 DependencyData dependency = OwlcatModificationsManager.Instance.GetDependenciesForBundle(sceneBundleName) ?? BundlesLoadService.Instance.m_DependencyData;

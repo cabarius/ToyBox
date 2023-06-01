@@ -25,18 +25,18 @@ namespace ToyBox {
         private readonly Vector2Int size;
 
         public ModIcon(string name, int w, int h) {
-            _Sprite = null;
+            _sprite = null;
             this.name = name;
             this.size = new Vector2Int(w, h);
         }
         public ModIcon(string name, Vector2Int size) {
-            _Sprite = null;
+            _sprite = null;
             this.name = name;
             this.size = size;
         }
 
-        private Sprite _Sprite;
-        public Sprite Sprite => _Sprite ??= (AssetLoader.LoadInternal("icons", name + ".png", size) ?? AssetLoader.LoadInternal("icons", "missing", new Vector2Int(32, 32)));
+        private Sprite? _sprite;
+        public Sprite Sprite => _sprite ??= (AssetLoader.LoadInternal("icons", name + ".png", size) ?? AssetLoader.LoadInternal("icons", "missing", new Vector2Int(32, 32)));
 
     }
 }

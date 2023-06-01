@@ -48,10 +48,10 @@ namespace ToyBox {
         };
 
         public static bool IsRevealed(this QuestObjective objective) => objective.State == QuestObjectiveState.Started || objective.State == QuestObjectiveState.Completed;
-        public static string stateColored(this string text, Quest quest) => RichText.color(text, questColors[(int)quest.State]);
-        public static string stateColored(this string text, QuestObjective objective) => RichText.color(text, questColors[(int)objective.State]);
-        public static string titleColored(this Quest quest) => quest.Blueprint.Title.StringValue().color(titleColors[(int)quest.State]);
-        public static string titleColored(this QuestObjective objective, BlueprintQuestObjective bp = null) {
+        public static string? stateColored(this string? text, Quest quest) => RichText.color(text, questColors[(int)quest.State]);
+        public static string? stateColored(this string? text, QuestObjective objective) => RichText.color(text, questColors[(int)objective.State]);
+        public static string? titleColored(this Quest quest) => quest.Blueprint.Title.StringValue().color(titleColors[(int)quest.State]);
+        public static string? titleColored(this QuestObjective objective, BlueprintQuestObjective? bp = null) {
             var blueprint = objective?.Blueprint ?? bp;
             var state = objective?.State ?? QuestObjectiveState.None;
             var title = blueprint.Title.StringValue();
@@ -63,9 +63,9 @@ namespace ToyBox {
             else
                 return title.color(titleColors[(int)state]);
         }
-        public static string titleColored(this string title, QuestObjectiveState state) => title.color(titleColors[(int)state]);
-        public static string stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest).bold();
-        public static string stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
+        public static string? titleColored(this string title, QuestObjectiveState state) => title.color(titleColors[(int)state]);
+        public static string? stateString(this Quest quest) => quest.State == QuestState.None ? "" : $"{quest.State}".stateColored(quest).bold();
+        public static string? stateString(this QuestObjective objective) => objective.State == QuestObjectiveState.None ? "" : $"{objective.State}".stateColored(objective).bold();
     }
 
     public class QuestEditor {

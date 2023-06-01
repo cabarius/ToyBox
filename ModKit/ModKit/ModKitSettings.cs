@@ -2,6 +2,7 @@
     public partial class Mod {
         public static ModKitSettings ModKitSettings;
     }
+
     public class ModKitSettings {
         public static void Save() => Mod.modEntry.SaveSettings("ModKitSettings.json", Mod.ModKitSettings);
         public static void Load() => Mod.modEntry.LoadSettings("ModKitSettings.json", ref Mod.ModKitSettings);

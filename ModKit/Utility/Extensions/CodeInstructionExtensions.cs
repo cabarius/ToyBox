@@ -140,19 +140,19 @@ namespace ModKit.Utility {
 
         public static IEnumerable<CodeInstruction> ReplaceAll(this IEnumerable<CodeInstruction> codes,
             CodeInstruction findingCode, CodeInstruction newCode,
-            bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction> comparer = null) => codes.ReplaceAll(findingCode, newCode, out _, moveLabelsFromIndex, comparer);
+            bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction>? comparer = null) => codes.ReplaceAll(findingCode, newCode, out _, moveLabelsFromIndex, comparer);
 
         public static IEnumerable<CodeInstruction> ReplaceAll(this IEnumerable<CodeInstruction> codes,
             CodeInstruction findingCode, CodeInstruction newCode,
-            out int replaced, bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction> comparer = null) => codes.ReplaceAll(new CodeInstruction[] { findingCode }, new CodeInstruction[] { newCode }, out replaced, moveLabelsFromIndex, comparer);
+            out int replaced, bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction>? comparer = null) => codes.ReplaceAll(new CodeInstruction[] { findingCode }, new CodeInstruction[] { newCode }, out replaced, moveLabelsFromIndex, comparer);
 
         public static IEnumerable<CodeInstruction> ReplaceAll(this IEnumerable<CodeInstruction> codes,
             IEnumerable<CodeInstruction> findingCodes, IEnumerable<CodeInstruction> newCodes,
-            bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction> comparer = null) => codes.ReplaceAll(findingCodes, newCodes, out _, moveLabelsFromIndex, comparer);
+            bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction>? comparer = null) => codes.ReplaceAll(findingCodes, newCodes, out _, moveLabelsFromIndex, comparer);
 
         public static IEnumerable<CodeInstruction> ReplaceAll(this IEnumerable<CodeInstruction> codes,
             IEnumerable<CodeInstruction> findingCodes, IEnumerable<CodeInstruction> newCodes,
-            out int replaced, bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction> comparer = null) {
+            out int replaced, bool moveLabelsFromIndex = false, IEqualityComparer<CodeInstruction>? comparer = null) {
             replaced = 0;
             if (comparer == null)
                 comparer = new CodeInstructionMatchComparer();
@@ -237,22 +237,22 @@ namespace ModKit.Utility {
 
         #region Exception Block
 
-        public static CodeInstruction BeginCatchBlock(this CodeInstruction code, Type catchType = null) {
+        public static CodeInstruction BeginCatchBlock(this CodeInstruction code, Type? catchType = null) {
             code.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, catchType ?? typeof(object)));
             return code;
         }
 
-        public static CodeInstruction BeginExceptionBlock(this CodeInstruction code, Type catchType = null) {
+        public static CodeInstruction BeginExceptionBlock(this CodeInstruction code, Type? catchType = null) {
             code.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock, catchType ?? typeof(object)));
             return code;
         }
 
-        public static CodeInstruction BeginFinallyBlock(this CodeInstruction code, Type catchType = null) {
+        public static CodeInstruction BeginFinallyBlock(this CodeInstruction code, Type? catchType = null) {
             code.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock, catchType ?? typeof(object)));
             return code;
         }
 
-        public static CodeInstruction EndExceptionBlock(this CodeInstruction code, Type catchType = null) {
+        public static CodeInstruction EndExceptionBlock(this CodeInstruction code, Type? catchType = null) {
             code.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock, catchType ?? typeof(object)));
             return code;
         }

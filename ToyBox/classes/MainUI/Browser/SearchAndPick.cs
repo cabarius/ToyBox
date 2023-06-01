@@ -51,7 +51,7 @@ namespace ToyBox {
         public static Dictionary<string, List<SimpleBlueprint>> collatedBPs = null;
         public static IEnumerable<SimpleBlueprint> selectedCollatedBPs = null;
         public static List<string> collationKeys = null;
-        public static List<string> collationTitles = null;
+        public static List<string?> collationTitles = null;
         public static int selectedCollationIndex = 0;
         private static bool firstSearch = true;
         public static string[] filteredBPNames = null;
@@ -79,7 +79,7 @@ namespace ToyBox {
 #endif
                                                       )),
 #if Wrath
-            new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string> {bp.ParameterType.ToString() }),
+            new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string?> {bp.ParameterType.ToString() }),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Selection", null, bp => bp.CollationNames(bp.Group.ToString(), bp.Group2.ToString())),
 #endif
             new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames()),
@@ -107,7 +107,7 @@ namespace ToyBox {
                 return bp.CollationNames(bp.ItemType.ToString());
             }),
             new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) =>  bp.CollationNames(bp.ItemType.ToString(), $"{bp.GetCost().ToBinString("⊙".yellow())}")),
-            new NamedTypeFilter<BlueprintItemEquipment>("Equip (rarity)", null, (bp) => new List<string> {bp.Rarity().GetString() }),
+            new NamedTypeFilter<BlueprintItemEquipment>("Equip (rarity)", null, (bp) => new List<string?> {bp.Rarity().GetString() }),
             new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
 #if Wrath
                 var type = bp.Type;
@@ -163,7 +163,7 @@ namespace ToyBox {
                 if (bp.Conditions.HasConditions) {
                     return bp.CollationNames(bp.Conditions.Conditions.First().NameSafe().SubstringBetweenCharacters('$', '$'));
                 }
-                return new List<string> { "-" };
+                return new List<string?> { "-" };
                 }),
             new NamedTypeFilter<BlueprintAnswer>("Answer", null, bp => bp.CaptionCollationNames()),
 #if Wrath
@@ -288,7 +288,7 @@ namespace ToyBox {
                 collationKeys = new List<string> { "All" };
                 collationKeys.AddRange(keys);
                 var titles = collatedBPs.ToList().Select(cbp => $"{cbp.Key} ({cbp.Value.Count()})").ToList();
-                collationTitles = new List<string> { $"All ({filtered.Count()})" };
+                collationTitles = new List<string?> { $"All ({filtered.Count()})" };
                 collationTitles.AddRange(titles);
             }
             else {

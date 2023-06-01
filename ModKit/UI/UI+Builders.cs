@@ -58,7 +58,7 @@ namespace ModKit {
                 action();
             }
         }
-        public static void HStack(string title = null, int stride = 0, params Action[] actions) {
+        public static void HStack(string? title = null, int stride = 0, params Action[] actions) {
             var length = actions.Length;
             if (stride < 1) { stride = length; }
             if (IsNarrow)
@@ -80,14 +80,14 @@ namespace ModKit {
                 }
             }
         }
-        public static void VStack(string title = null, params Action[] actions) {
+        public static void VStack(string? title = null, params Action[] actions) {
             using (VerticalScope()) {
                 if (title != null)
                     Label(title);
                 Group(actions);
             }
         }
-        public static void Column<T>(List<T> items, Action<T> action, string title = null, params GUILayoutOption[] options) {
+        public static void Column<T>(List<T> items, Action<T> action, string? title = null, params GUILayoutOption[] options) {
             var length = items.Count();
             using (VerticalScope(options)) {
                 if (title != null)
@@ -99,7 +99,7 @@ namespace ModKit {
                 }
             }
         }
-        public static void Row<T>(List<T> items, Action<T> action, string title = null, params GUILayoutOption[] options) {
+        public static void Row<T>(List<T> items, Action<T> action, string? title = null, params GUILayoutOption[] options) {
             var length = items.Count();
             using (HorizontalScope()) {
                 if (title != null) {
@@ -117,7 +117,7 @@ namespace ModKit {
             }
         }
 
-        public static void Table<T>(List<T> items, Action<T> action, int numColumns = 2, string title = null, params GUILayoutOption[] options) {
+        public static void Table<T>(List<T> items, Action<T> action, int numColumns = 2, string? title = null, params GUILayoutOption[] options) {
             var length = items.Count();
             if (numColumns < 1) {
                 numColumns = length;
@@ -139,7 +139,7 @@ namespace ModKit {
             Space(10);
         }
 
-        public static void TabBar(ref int selected, Action header = null, params NamedAction[] actions) {
+        public static void TabBar(ref int selected, Action? header = null, params NamedAction[] actions) {
             if (selected >= actions.Count())
                 selected = 0;
             var sel = selected;

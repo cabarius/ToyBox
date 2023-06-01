@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-using Kingmaker;
+﻿using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
-using ModKit;
-using static ModKit.UI;
 using Kingmaker.View.MapObjects;
 using Kingmaker.View.MapObjects.InteractionRestrictions;
+using ModKit;
 using ModKit.Utility;
+using System;
+using System.Linq;
+using UnityEngine;
+using static ModKit.UI;
 #if Wrath
 using ToyBox.Multiclass;
 #endif
@@ -169,8 +169,7 @@ namespace ToyBox {
                     if (Main.IsInGame) {
                         try {
                             areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
-                        }
-                        catch { }
+                        } catch { }
                         var areaPrivateName = Game.Instance.CurrentlyLoadedArea.name;
                         if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }

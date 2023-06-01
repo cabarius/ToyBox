@@ -45,8 +45,8 @@ namespace ToyBox {
         private static string _areaSearchText = "";
         //private EtudeChildrenDrawer etudeChildrenDrawer;
 
-        public static Dictionary<string, SimpleBlueprint> toValues = new();
-        public static Dictionary<string, BlueprintAction> actionLookup = new();
+        public static Dictionary<string?, SimpleBlueprint> toValues = new();
+        public static Dictionary<string?, BlueprintAction> actionLookup = new();
         public static void OnShowGUI() => UpdateEtudeStates();
         public static int lineNumber = 0;
         public static Rect firstRect;
