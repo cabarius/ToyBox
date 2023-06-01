@@ -1,27 +1,41 @@
 // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+using DG.Tweening;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Cheats;
+using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
+using Kingmaker.Code.UI.MVVM.View.MainMenu.PC;
+using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
+using Kingmaker.Code.UI.MVVM.VM.MainMenu;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Globalmap;
+using Kingmaker.Globalmap;
 using Kingmaker.Items;
+using Kingmaker.Networking;
+using Kingmaker.Pathfinding;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem.Rules;
 using Kingmaker.Tutorial;
-using Kingmaker.Code.UI.MVVM.VM.MainMenu;
+using Kingmaker.UI;
+using Kingmaker.UI.Common;
+using Kingmaker.UI.Legacy.LoadingScreen;
+using Kingmaker.UI.PathRenderer;
+using Kingmaker.UI.Sound;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -31,43 +45,29 @@ using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
+using Kingmaker.View.Covers;
 using Kingmaker.View.MapObjects;
 using Kingmaker.Visual.Sound;
 using ModKit;
 using Owlcat.Runtime.Core;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using Owlcat.Runtime.UI;
+using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using DG.Tweening;
+using ToyBox;
+using UniRx;
 using UnityEngine;
+using static Kingmaker.Sound.AkAudioService;
+using static Kingmaker.UnitLogic.Abilities.AbilityData;
 using static Kingmaker.Utility.MassLootHelper;
 using Object = UnityEngine.Object;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Code.UI.MVVM.View.MainMenu.PC;
-using Kingmaker.Globalmap;
-using Kingmaker.UI.Legacy.LoadingScreen;
-using ToyBox;
-using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
-using Kingmaker.Networking;
-using Kingmaker.UI.Sound;
-using UniRx;
-using Kingmaker.Designers;
-using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
-using Kingmaker.UI.Common;
-using System.Collections;
-using Kingmaker.UI;
-using Kingmaker.UI.PathRenderer;
-using static Kingmaker.Sound.AkAudioService;
-using Kingmaker.Pathfinding;
-using Kingmaker.View.Covers;
-using static Kingmaker.UnitLogic.Abilities.AbilityData;
 
 namespace ToyBox.BagOfPatches {
-    internal static class Tweaks {
+    internal static partial class Tweaks {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
@@ -503,7 +503,7 @@ toggleIgnoreAbilityTargetTooClose
                 return unit.MovementAgent.Position.To2D() != unit.MovementAgent.m_PreviousPosition;
             }
         }
-        #if false // TODO: these don't work by themselves so figure out what to do
+#if false // TODO: these don't work by themselves so figure out what to do
         [HarmonyPatch(typeof(InventoryHelper))]
         public static class InventoryHelperPatch {
             [HarmonyPrefix]
@@ -531,7 +531,7 @@ toggleIgnoreAbilityTargetTooClose
                 return __instance.Blueprint is not BlueprintItemEquipmentUsable;
             }
         }
-        #endif
+#endif
 
         [HarmonyPatch(typeof(PartyAwarenessController))]
         public static class PartyAwarenessControllerPatch {

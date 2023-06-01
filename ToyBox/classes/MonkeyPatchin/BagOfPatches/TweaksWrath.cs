@@ -2,7 +2,9 @@
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
+using Kingmaker.Armies.TacticalCombat.Controllers;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
@@ -17,6 +19,7 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Globalmap;
+using Kingmaker.Globalmap.State;
 using Kingmaker.Items;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;
@@ -50,16 +53,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Kingmaker.Armies.TacticalCombat.Controllers;
+using ToyBox;
 using UnityEngine;
 using static Kingmaker.Utility.MassLootHelper;
 using Object = UnityEngine.Object;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Globalmap.State;
-using ToyBox;
 
 namespace ToyBox.BagOfPatches {
-    internal static class Tweaks {
+    internal static partial class Tweaks {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static readonly BlueprintGuid rage_barbarian = BlueprintGuid.Parse("df6a2cce8e3a9bd4592fb1968b83f730");

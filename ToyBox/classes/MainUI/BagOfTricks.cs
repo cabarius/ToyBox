@@ -104,7 +104,7 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         50.space();
                         using (VerticalScope()) {
-                            Label("Failure to load saves that reference custom portraits".cyan());
+                            Label("Failure to load saves that reference custom portraits".localize().cyan());
                         }
                     }
                 }
@@ -544,6 +544,10 @@ namespace ToyBox {
 #endif
             Div(0, 25);
             HStack("Cheats".localize(), 1,
+                   () => {
+                       Toggle("Prevent Traps from triggering".localize(), ref Settings.disableTraps, 500.width());
+                       Label("Enterint a Trap Zone while having Traps disabled will prevent that Trap from triggering even if you deactivate this option in the future".localize().green());
+                   },
                    () => Toggle("Unlimited Stacking of Modifiers (Stat/AC/Hit/Damage/Etc)".localize(), ref Settings.toggleUnlimitedStatModifierStacking),
                    () => {
                        using (HorizontalScope()) {
