@@ -33,8 +33,7 @@
 1. Download the ToyBox mod file and unzip
 1. If the folder is not already named 0ToyBox0 please rename it to that
 1. Launch the game at least once.
-1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one.
-   **
+1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one**
 1. Navigate to $(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. Copy 0ToyBox0 into the UnityModManagerFolder
