@@ -26,12 +26,13 @@ using Kingmaker.Controllers.Dialog;
 using Kingmaker.DialogSystem;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.UI;
+using ModKit.Utility;
 
 namespace ToyBox {
     public static class DialogEditor {
         public static Settings Settings => Main.Settings;
         public static Player player => Game.Instance.Player;
-        private const int Indent = 50;
+        private const int Indent = 75;
         private static HashSet<BlueprintScriptableObject> Visited = new();
 
         public static void ResetGUI() { }
@@ -51,8 +52,8 @@ namespace ToyBox {
             if (dialogController.CurrentCue == null) {
                 Label("No Active Dialog".cyan());
             }
-            dialogController.CurrentCue?.OnGUI("Cur:");
-            dialogController.Answers?.OnGUI("Ans:");
+            dialogController.CurrentCue?.OnGUI("Current");
+            dialogController.Answers?.OnGUI("Answer");
             //if (dialogController.m_ContinueCue is BlueprintCue cue) cue.OnGUI("Continue:");
             dialogController?.Dialog.OnGUI();
         }
@@ -63,10 +64,14 @@ namespace ToyBox {
 
         }
         private static void OnGUI(this BlueprintCue cue, string? title = null) {
+            bool visited = Visited.Contains(cue);
             using (HorizontalScope()) {
                 OnTitleGUI(title);
                 using (VerticalScope()) {
-                    Label($"{cue.GetDisplayName().yellow()} {cue.DisplayText.orange()}");
+                    var displayText = cue.DisplayText;
+                    if (visited && displayText.Length > 50)
+                        displayText = displayText.StripHTML().Substring(0, 50) + "...";
+                    Label($"{cue.GetDisplayName().yellow()} {displayText.orange()}");
                     var resultsText = cue.ResultsText().StripHTML().Trim();
                     if (!resultsText.IsNullOrEmpty()) {
                         using (HorizontalScope()) {
@@ -76,11 +81,11 @@ namespace ToyBox {
                     }
                     if (cue.Conditions?.Conditions?.Count() > 0) {
                         using (HorizontalScope()) {
-                            Label("Cond".cyan(), Indent.width());
-                            Label(PreviewUtilities.FormatConditions(cue.Conditions));
+                            Label("Cond".color(RGBA.teal), Indent.width());
+                            Label(PreviewUtilities.FormatConditions(cue.Conditions).color(RGBA.teal));
                         }
                     }
-                    if (Visited.Contains(cue)) {
+                    if (visited) {
                         Label($"[Repeat]".yellow());
                         return;
                     }
@@ -133,27 +138,41 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 OnTitleGUI(title);
                 using (VerticalScope()) {
-                    Label($"{answer.GetDisplayName().yellow()} {answer.DisplayText}");
-                    if (answer.HasShowCheck && answer.ShowConditions.Conditions.Length > 0) {
+                    var text = $"{answer.GetDisplayName().yellow()} {answer.DisplayText}";
+                    if (answer.NextCue is CueSelection nextCueSelection && nextCueSelection.Cues.Any()) {
+                        Browser.DetailToggle(text, nextCueSelection, nextCueSelection);
+                        Browser.OnDetailGUI(nextCueSelection,(_) => nextCueSelection.OnGUI("Next"));
+                    }
+                    else
+                        Label(text);
+                    var checkStrings = PreviewUtilities.FormatConditionsAsList(answer);
+                    foreach (var checkString in checkStrings) {
+                        Label(checkString.color(RGBA.teal));
+                    }
+#if false                    
+                    if (answer.HasShowCheck) {
                         using (HorizontalScope()) {
-                            Label("Show Cond".cyan(), Indent.width());
-                            Label(PreviewUtilities.FormatConditions(answer.ShowConditions));
+                            Label("Check".color(RGBA.teal), Indent.width());
+                            Label($"{answer.ShowCheck.Type} DC: {answer.ShowCheck.DC}".color(RGBA.teal));
+                        }
+                    }
+                    if (answer.ShowConditions.Conditions.Length > 0) {
+                        using (HorizontalScope()) {
+                            Label("Show".color(RGBA.teal), Indent.width());
+                            Label(PreviewUtilities.FormatConditions(answer.ShowConditions).color(RGBA.teal));
                         }
                     }
                     if (answer.SelectConditions is ConditionsChecker selectChecker && selectChecker.Conditions.Count() > 0) {
-                        Label("Sel Cond".cyan(), Indent.width());
-                        Label(PreviewUtilities.FormatConditions(selectChecker));
-                        
+                        Label("Select".color(RGBA.teal), Indent.width());
+                        Label(PreviewUtilities.FormatConditions(selectChecker).color(RGBA.teal));
                     }
+#endif
                     var resultsText = answer.ResultsText().StripHTML();
                     if (!resultsText.IsNullOrEmpty()) {
                         using (HorizontalScope()) {
-                            Indent.space();
+                            Label("", Indent.width());
                             Label(resultsText.yellow());
                         }
-                    }
-                    if (answer.NextCue is CueSelection nextCueSelection && nextCueSelection.Cues.Any()) {
-                        nextCueSelection.OnGUI("Next");
                     }
                 }
             }
@@ -179,7 +198,7 @@ namespace ToyBox {
         }
         private static void OnTitleGUI(string? title) {
             if (title != null) {
-                Label(title.cyan(),100.width());
+                Label(title.cyan(),Indent.width());
             }
             else 
                 Indent.space();

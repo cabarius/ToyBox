@@ -11,6 +11,7 @@ using Kingmaker.Blueprints;
 using System.Diagnostics;
 using System;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.DialogSystem.Blueprints;
 using ModKit;
 
 namespace ToyBox {
@@ -93,6 +94,16 @@ namespace ToyBox {
                 return c.GetCaption();
         });
         public static string FormatConditions(ConditionsChecker conditions) => FormatConditions(conditions.Conditions);
+        public static List<string> FormatConditionsAsList(BlueprintAnswer answer) {
+            var list = new List<String>();
+            if (answer.HasShowCheck)
+                list.Add($"Show Check({answer.ShowCheck.Type} DC: {answer.ShowCheck.DC})");
+            if (answer.ShowConditions.Conditions.Length > 0)
+                list.Add($" Show Conditions({FormatConditions(answer.ShowConditions)}");
+            if (answer.SelectConditions is ConditionsChecker selectChecker && selectChecker.Conditions.Count() > 0)
+               list.Add($" Select Conditions({PreviewUtilities.FormatConditions(selectChecker)})");;
+            return list;
+        }
 #if Wrath
         public static bool CausesGameOver(BlueprintKingdomEventBase blueprint) {
             var results = blueprint.GetComponent<EventFinalResults>();

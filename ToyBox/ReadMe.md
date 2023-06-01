@@ -76,7 +76,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **May 30, 2023b** for beta 0.2.1y
+**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023c** for beta 0.2.1y
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -90,7 +90,8 @@
    * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
  * (***Narria***) **Got this up on Beta 0.2.1y including fixing the dialog bug**
  * (***Narria***) show a little more info in dialog preview
- * (***Narria***) beginnings of a dialog browser
+ * (***Narria***) basic dialog browser that lets you look through the dialog tree
+ * (***Narria***) dialog preview now shows conditions for answers too
 ### Install & Setup (Rogue)
 
 1. Download the ToyBox mod file and unzip
@@ -109,7 +110,7 @@
 * Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
   possible
 ### Ver 1.5.4 Wrath (Coming Soon)
-***ToyBox 1.5.4 Wrath** - ***Sh0dan Preview*** **May 26, 2023m**
+***ToyBox 1.5.4 Wrath** - ***Sh0dan Preview*** **June 1, 2023c**
 * (***Narria***) beginnings of a dialog browser
 ### Ver 1.5.3 Wrath - Sh0dan Unified Edition
 * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
