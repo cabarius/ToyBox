@@ -99,9 +99,9 @@ namespace ToyBox {
             if (answer.HasShowCheck)
                 list.Add($"Show Check({answer.ShowCheck.Type} DC: {answer.ShowCheck.DC})");
             if (answer.ShowConditions.Conditions.Length > 0)
-                list.Add($" Show Conditions({FormatConditions(answer.ShowConditions)}");
+                list.Add($"Show Conditions({FormatConditions(answer.ShowConditions)}");
             if (answer.SelectConditions is ConditionsChecker selectChecker && selectChecker.Conditions.Count() > 0)
-               list.Add($" Select Conditions({PreviewUtilities.FormatConditions(selectChecker)})");;
+               list.Add($"Select Conditions({PreviewUtilities.FormatConditions(selectChecker)})");;
             return list;
         }
 #if Wrath

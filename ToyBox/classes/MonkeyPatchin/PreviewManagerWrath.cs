@@ -43,7 +43,7 @@ using UnityEngine.UI;
 
 namespace ToyBox {
     internal static class PreviewManager {
-        public static Settings settings = Main.Settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
 
@@ -278,15 +278,19 @@ namespace ToyBox {
                         __result = GetFixedAnswerString(answer, bind, index);
                     }
                     if (!Main.Settings.previewDialogResults) return;
-                    var conditions = PreviewUtilities.FormatConditionsAsList(answer);
-                    var conditionsText = string.Join(" ", conditions);
                     var text = answer.ResultsText();
-                    if (!text.IsNullOrEmpty() && conditions.Any())
-                        __result += $"<size=75%>[{conditionsText}]\n{text}</size>";
+                    if (Settings.previewDialogConditions) {
+                        var conditions = PreviewUtilities.FormatConditionsAsList(answer);
+                        var conditionsText = string.Join("\v", conditions);
+                        if (!text.IsNullOrEmpty() && conditions.Any())
+                            __result += $"<size=75%>\v[{conditionsText}]\v{text}</size>";
+                        else if (!text.IsNullOrEmpty())
+                            __result += $"<size=75%>{text}</size>";
+                        else if (conditions.Any())
+                            __result += $"\v<size=75%>[{conditionsText}]</size>";
+                    }
                     else if (!text.IsNullOrEmpty())
                         __result += $"<size=75%>{text}</size>";
-                    else if (conditions.Any())
-                        __result += $"<size=75%>[{conditionsText}]</size>";
                 }
                 catch (Exception ex) {
                     Mod.Error(ex);
@@ -418,20 +422,20 @@ namespace ToyBox {
                                         ToggleGroup toggleGroup,
                                         bool isOn = false) {
 
-                bool showResults = settings.previewDialogResults || settings.previewEventResults;
-                if (!showResults && !settings.toggleIgnoreEventSolutionRestrictions) return true;
-                bool showRestrictions = (settings.toggleIgnoreEventSolutionRestrictions || settings.previewDialogResults) && !settings.toggleHideEventSolutionRestrictionsPreview;
+                bool showResults = Settings.previewDialogResults || Settings.previewEventResults;
+                if (!showResults && !Settings.toggleIgnoreEventSolutionRestrictions) return true;
+                bool showRestrictions = (Settings.toggleIgnoreEventSolutionRestrictions || Settings.previewDialogResults) && !Settings.toggleHideEventSolutionRestrictionsPreview;
                 __instance.gameObject.SetActive(true);
                 __instance.EventSolution = eventSolution;
                 __instance.Toggle.group = toggleGroup;
                 __instance.Toggle.onValueChanged.RemoveAllListeners();
                 __instance.Toggle.onValueChanged.AddListener(onToggle);
                 var extraText = "";
-                var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
+                var isAvail = eventSolution.IsAvail || Settings.toggleIgnoreEventSolutionRestrictions;
                 var color = eventSolution.IsAvail ? "#005800><b>" : "#800000>";
                 if (showResults || showRestrictions) {
                     if (eventSolution.m_AvailConditions.HasConditions && showRestrictions) {
-                        if (settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
+                        if (Settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
                             extraText += $"\n<color=#005800><b>[Overridden]:</b></color> ";
                         else
                             extraText += $"\n";
@@ -503,7 +507,7 @@ namespace ToyBox {
                 }
                 var blueprintKingdomProject = blueprint as BlueprintKingdomProject;
                 string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null);
-                if (settings.previewDecreeResults) {
+                if (Settings.previewDecreeResults) {
                     var eventResults = blueprintKingdomProject.Solutions.GetResolutions(blueprintKingdomProject.DefaultResolutionType);
                     if (eventResults != null) {
                         foreach (var result in eventResults) {
@@ -514,7 +518,7 @@ namespace ToyBox {
                 }
                 // RelicInfo code borrowed (with permission from Rathtr) from https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/200
                 var projectType = kingdomEventView.ProjectBlueprint.ProjectType;
-                if (settings.previewRelicResults
+                if (Settings.previewRelicResults
                     //&& projectType == KingdomProjectType.Relics
                     && blueprint.ElementsArray.Find(elem => elem is KingdomActionStartEvent) is KingdomActionStartEvent e
                     && e.Event is BlueprintCrusadeEvent crusadeEvent
@@ -594,7 +598,7 @@ namespace ToyBox {
             [HarmonyPatch(nameof(DialogAnswerView.SetAnswer))]
             [HarmonyPrefix]
             private static bool SetAnswer(DialogAnswerView __instance, BlueprintAnswer answer) {
-                if (!settings.previewDialogResults && !settings.toggleShowAnswersForEachConditionalResponse && !settings.toggleMakePreviousAnswersMoreClear) return true;
+                if (!Settings.previewDialogResults && !Settings.toggleShowAnswersForEachConditionalResponse && !Settings.toggleMakePreviousAnswersMoreClear) return true;
                 var type = Game.Instance.DialogController.Dialog.Type;
                 var str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
                 var text = UIConsts.GetAnswerString(answer, str, __instance.ViewModel.Index);
@@ -605,7 +609,7 @@ namespace ToyBox {
                     //var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
                     // the following is a kludge for toggleShowAnswersForEachConditionalResponse  to work around cases where there may be a next cue that doesn't get shown due it being already seen and the dialog being intended to fall through.  We assume that any singleton conditional nextCue (CueSelection) was generated by this feature.  We should look for edge cases to be sure.
                     isAvail = isAvail && (cue.CanShow() 
-                                          || !settings.toggleShowAnswersForEachConditionalResponse 
+                                          || !Settings.toggleShowAnswersForEachConditionalResponse 
                                           || !answer.name.Contains("ToyBox")
                                           || conditionText.Length == 0
                                           );
@@ -625,7 +629,7 @@ namespace ToyBox {
                     ) {
                     color32 = DialogAnswerView.Colors.SelectedAnswer;
                     __instance.AnswerText.alpha = 0.45f;
-                    if (settings.toggleMakePreviousAnswersMoreClear)
+                    if (Settings.toggleMakePreviousAnswersMoreClear)
                         __instance.AnswerText.text = text.sizePercent(83);
                 }
                 else

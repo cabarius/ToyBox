@@ -241,18 +241,20 @@ namespace ToyBox {
                    0,
                    () => {
                        Toggle("Dialog Results".localize(), ref Settings.previewDialogResults);
-                       Space(25);
+                       25.space();
+                       Toggle("Dialog Conditions".localize(), ref Settings.previewDialogConditions);
+                       25.space();
                        Toggle("Dialog Alignment".localize(), ref Settings.previewAlignmentRestrictedDialog);
-                       Space(25);
+                       25.space();
                        Toggle("Random Encounters".localize(), ref Settings.previewRandomEncounters);
 #if Wrath               // TODO: looks like colonization is the new Kingdom/Crusade mechanic
-                       Space(25);
+                       25.space();
                        Toggle("Events".localize(), ref Settings.previewEventResults);
-                       Space(25);
+                       25.space();
                        Toggle("Decrees".localize(), ref Settings.previewDecreeResults);
-                       Space(25);
+                       25.space();
                        Toggle("Relic Info".localize(), ref Settings.previewRelicResults);
-                       Space(25);
+                       25.space();
 #endif
                        BindableActionButton(PreviewDialogResults, true);
                    });
