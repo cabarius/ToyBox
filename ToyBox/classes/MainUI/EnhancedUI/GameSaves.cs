@@ -14,7 +14,7 @@ namespace ToyBox {
         private static (string, string) nameEditState = (null, null);
         private static IEnumerable<SaveInfo> _allSaves = null;
         private static IEnumerable<SaveInfo> _currentSaves = null;
-        public static string SearchKey(this SaveInfo info) =>
+        public static string? SearchKey(this SaveInfo info) =>
 #if Wrath
             $"{info.Name
             }{info.Area.AreaName.ToString()
@@ -30,14 +30,14 @@ namespace ToyBox {
             }{info.FileName
             }";
 #endif
-        public static IComparable[] SortKey(this SaveInfo info) => new IComparable[] {
+        public static IComparable?[] SortKey(this SaveInfo info) => new IComparable[] {
             info.PlayerCharacterName,
             info.GameSaveTime
         };
 
         public static void OnGUI() {
             var saveManager = Game.Instance?.SaveManager;
-            string currentGameID = Game.Instance?.Player?.GameId;
+            string? currentGameID = Game.Instance?.Player?.GameId;
 
             Div(0, 25);
             HStack("Saves".localize(),

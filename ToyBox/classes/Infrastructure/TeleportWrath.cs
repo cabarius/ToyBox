@@ -66,7 +66,7 @@ namespace ToyBox {
             var locationToObject = GlobalMapView.Instance.GetNearestLocationToObject(pointerTransform);
             locationToObject.Blueprint.TeleportToGlobalMapPoint();
         }
-        public static void TeleportToGlobalMap(Action callback = null) {
+        public static void TeleportToGlobalMap(Action? callback = null) {
             var globalMap = Game.Instance.BlueprintRoot.GlobalMap;
             var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
             Game.Instance.LoadArea(areaEnterPoint.Area, areaEnterPoint, AutoSaveMode.None, callback: callback ?? (() => { }));

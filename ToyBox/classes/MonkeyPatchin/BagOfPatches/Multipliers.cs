@@ -185,7 +185,7 @@ namespace ToyBox.BagOfPatches {
             typeof(AbilityParams)
         })]
         public static class BuffCollection_AddBuff_patch {
-            public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
+            public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, AbilityParams? abilityParams = null) {
                 try {
                     if (!caster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {

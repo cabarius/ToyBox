@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using Kingmaker.Blueprints;
 using UnityEngine;
 using static ModKit.UI;
@@ -23,14 +24,12 @@ namespace ModKit.DataViewer {
 #endif
         private static readonly Dictionary<object, ReflectionTreeView> ExpandedObjects = new();
         public static void ClearExpanded() => ExpandedObjects.Clear();
-        public static void DetailToggle(string title, object key, object target = null, int width = 600) {
+        public static void DetailToggle(string? title, object key, object? target = null, int width = 600) {
             target ??= key;
             var expanded = ExpandedObjects.ContainsKey(key);
             if (DisclosureToggle(title, ref expanded, width)) {
                 ExpandedObjects.Clear();
-                if (expanded) {
-                    ExpandedObjects[key] = new ReflectionTreeView(target);
-                }
+                if (expanded) ExpandedObjects[key] = new ReflectionTreeView(target);
             }
         }
         public static bool OnDetailGUI(object key, int indent = 50) {
@@ -43,14 +42,14 @@ namespace ModKit.DataViewer {
                 }
                 reflectionTreeView.OnGUI(false);
                 return true;
-            } else {
-                return false;
             }
+            else
+                return false;
         }
 
 
         private ReflectionTree _tree;
-        private ReflectionSearchResult _searchResults = new ReflectionSearchResult();
+        private ReflectionSearchResult _searchResults = new();
         private float _height;
         private bool _mouseOver;
         private GUIStyle _buttonStyle;
@@ -64,14 +63,15 @@ namespace ModKit.DataViewer {
         internal string[] SearchTerms => _searchText.Length == 0
                                              ? Array.Empty<string>()
                                              : _searchText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
         private bool enableCopy = false;
         private int visitCount = 0;
         private int searchDepth = 0;
         private int searchBreadth = 0;
         private void updateCounts(int visitCount, int depth, int breadth) {
             this.visitCount = visitCount;
-            this.searchDepth = depth;
-            this.searchBreadth = breadth;
+            searchDepth = depth;
+            searchBreadth = breadth;
         }
 
         private Rect _viewerRect;
@@ -86,15 +86,11 @@ namespace ModKit.DataViewer {
         public float TitleMinWidth { get; set; } = 300f;
 
         public ReflectionTreeView() { }
-        public ReflectionTreeView(object root) {
-            SetRoot(root);
-        }
+        public ReflectionTreeView(object root) => SetRoot(root);
 
         public void Clear() {
             _tree = null;
-            lock (_searchResults) {
-                _searchResults.Clear();
-            }
+            lock (_searchResults) _searchResults.Clear();
         }
 
         public void SetRoot(object root) {
@@ -102,9 +98,7 @@ namespace ModKit.DataViewer {
                 _tree.SetRoot(root);
             else
                 _tree = new ReflectionTree(root);
-            lock (_searchResults) {
-                _searchResults.Node = null;
-            }
+            lock (_searchResults) _searchResults.Node = null;
             _tree.RootNode.Expanded = ToggleState.On;
             //            ReflectionSearch.Shared.StartSearch(_tree.RootNode, searchText, updateCounts, _searchResults);
         }
@@ -122,7 +116,7 @@ namespace ModKit.DataViewer {
                 if (count > 0) Mod.Log($"ReflectionTreeView.OnGUI - {count} Search Updates Applied");
             }
 
-            int startIndexUBound = Math.Max(0, _nodesCount - MaxRows);
+            var startIndexUBound = Math.Max(0, _nodesCount - MaxRows);
 
             // mouse wheel & fix scroll position
             if (Event.current.type == EventType.Layout) {
@@ -135,13 +129,10 @@ namespace ModKit.DataViewer {
                         else if (delta.y < 0 && _startIndex < startIndexUBound)
                             _startIndex++;
                     }
-                    if (_startIndex > startIndexUBound) {
-                        _startIndex = startIndexUBound;
-                    }
+                    if (_startIndex > startIndexUBound) _startIndex = startIndexUBound;
                 }
-                else {
+                else
                     _startIndex = 0;
-                }
             }
             using (new GUILayout.VerticalScope()) {
                 // tool-bar
@@ -161,12 +152,11 @@ namespace ModKit.DataViewer {
                                     },
                                     Width(250));
                     GUILayout.Space(10f);
-                    bool isSearching = ReflectionSearch.Shared.isSearching;
+                    var isSearching = ReflectionSearch.Shared.isSearching;
                     ActionButton(isSearching ? "Stop" : "Search",
                                  () => {
-                                     if (isSearching) {
+                                     if (isSearching)
                                          ReflectionSearch.Shared.Stop();
-                                     }
                                      else {
                                          _searchText = _searchText.Trim();
                                          ReflectionSearch.Shared.StartSearch(_tree.RootNode,
@@ -177,14 +167,11 @@ namespace ModKit.DataViewer {
                                  },
                                  AutoWidth());
                     10.space();
-                    if (ValueAdjuster("Max Depth:", ref ReflectionSearch.maxSearchDepth)) {
-                        ReflectionSearch.Shared.StartSearch(_tree.RootNode, SearchTerms, updateCounts, _searchResults);
-                    }
+                    if (ValueAdjuster("Max Depth:", ref ReflectionSearch.maxSearchDepth)) ReflectionSearch.Shared.StartSearch(_tree.RootNode, SearchTerms, updateCounts, _searchResults);
                     10.space();
-                    if (visitCount > 0) {
+                    if (visitCount > 0)
                         Label($"found {_searchResults.Count}".Cyan()
                               + $" visited: {visitCount} (d: {searchDepth} b: {searchBreadth})".Orange());
-                    }
                     Toggle("Show Nulls/Empties", ref Mod.ModKitSettings.toggleDataViewerShowNullAndEmpties);
                     GUILayout.FlexibleSpace();
                     //                  10.space();
@@ -250,30 +237,26 @@ namespace ModKit.DataViewer {
                                     _nodesCount = 0;
                                     if (SearchTerms.Length > 0) {
                                         Div();
-                                        lock (_searchResults) {
+                                        lock (_searchResults)
                                             _searchResults.Traverse((node, depth) => {
-                                                if (node.Node == null) return true;
-                                                var toggleState = node.ToggleState;
-                                                if (!node.Node.hasChildren)
-                                                    toggleState = ToggleState.None;
-                                                else if (node.ToggleState == ToggleState.None)
-                                                    toggleState = ToggleState.Off;
-                                                if (node.Node.NodeType == NodeType.Root) {
-                                                    if (node.matches.Count == 0) return false;
-                                                    Label("Search Results".Cyan().Bold());
-                                                }
-                                                else
-                                                    DrawNodePrivate(node.Node, depth, ref toggleState);
-                                                if (node.ToggleState != toggleState) {
-                                                    Mod.Log(node.ToString());
-                                                }
-                                                node.ToggleState = toggleState;
-                                                if (toggleState.IsOn()) {
-                                                    DrawChildren(node.Node, depth + 1, collapse);
-                                                }
-                                                return true; // toggleState == ToggleState.On;
-                                            }, 0);
-                                        }
+                                                                        if (node.Node == null) return true;
+                                                                        var toggleState = node.ToggleState;
+                                                                        if (!node.Node.hasChildren)
+                                                                            toggleState = ToggleState.None;
+                                                                        else if (node.ToggleState == ToggleState.None)
+                                                                            toggleState = ToggleState.Off;
+                                                                        if (node.Node.NodeType == NodeType.Root) {
+                                                                            if (node.matches.Count == 0) return false;
+                                                                            Label("Search Results".Cyan().Bold());
+                                                                        }
+                                                                        else
+                                                                            DrawNodePrivate(node.Node, depth, ref toggleState);
+                                                                        if (node.ToggleState != toggleState) Mod.Log(node.ToString());
+                                                                        node.ToggleState = toggleState;
+                                                                        if (toggleState.IsOn()) DrawChildren(node.Node, depth + 1, collapse);
+                                                                        return true; // toggleState == ToggleState.On;
+                                                                    },
+                                                                    0);
                                         Div();
                                     }
                                     if (drawRoot)
@@ -304,40 +287,50 @@ namespace ModKit.DataViewer {
         private void DrawNodePrivate(Node node, int depth, ref ToggleState expanded) {
             _nodesCount++;
 
-            if (_nodesCount > _startIndex && _nodesCount <= _startIndex + MaxRows) {
-
+            if (_nodesCount > _startIndex && _nodesCount <= _startIndex + MaxRows)
                 using (HorizontalScope()) {
                     // title
                     Space(DepthDelta * (depth - _skipLevels));
                     var name = node.Name;
-                    var instText = "";  // if (node.InstanceID is int instID) instText = "@" + instID.ToString();
+                    var instText = ""; // if (node.InstanceID is int instID) instText = "@" + instID.ToString();
                     name = name.MarkedSubstring(SearchTerms);
                     var enumerableCount = node.EnumerableCount;
-                    if (!Mod.ModKitSettings.toggleDataViewerShowNullAndEmpties 
-                        && (enumerableCount == 0 || node.IsNull)) 
+                    if (!Mod.ModKitSettings.toggleDataViewerShowNullAndEmpties
+                        && (enumerableCount == 0 || node.IsNull))
                         return;
                     if (enumerableCount >= 0) name = name + $"[{enumerableCount}]".yellow();
                     var typeName = node.InstType?.Name ?? node.Type?.Name;
                     ToggleButton(ref expanded,
-                        $"[{node.NodeTypePrefix}] ".color(RGBA.grey) +
-                        name + " : " + typeName.color(
-                            node.IsBaseType ? RGBA.grey :
-                            node.IsGameObject ? RGBA.magenta :
-                            node.IsEnumerable ? RGBA.cyan : RGBA.orange)
-                        + instText,
-                        _buttonStyle, GUILayout.ExpandWidth(false), GUILayout.MinWidth(TitleMinWidth));
+                                 $"[{node.NodeTypePrefix}] ".color(RGBA.grey)
+                                 + name
+                                 + " : "
+                                 + typeName.color(
+                                     node.IsBaseType
+                                         ? RGBA.grey
+                                         : node.IsGameObject
+                                             ? RGBA.magenta
+                                             : node.IsEnumerable
+                                                 ? RGBA.cyan
+                                                 : RGBA.orange)
+                                 + instText,
+                                 _buttonStyle,
+                                 GUILayout.ExpandWidth(false),
+                                 GUILayout.MinWidth(TitleMinWidth));
 
                     // value
-                    Color originalColor = GUI.contentColor;
-                    GUI.contentColor = node.IsException ? Color.red : node.IsNull ? Color.grey : originalColor;
+                    var originalColor = GUI.contentColor;
+                    GUI.contentColor = node.IsException
+                                           ? Color.red
+                                           : node.IsNull
+                                               ? Color.grey
+                                               : originalColor;
                     var valueText = node.ValueText;
                     if (SearchTerms.Length == 0 || !SearchTerms.Any(term => valueText.Matches(term)))
                         ClipboardLabel(valueText); // + " " + node.GetPath().green(), _valueStyle);
-                    else {
+                    else
                         //if (valueText.Matches("mor"))
                         //    Mod.Log($"{valueText}/[{string.Join(", ", SearchTerms)}]");
                         Label(valueText.MarkedSubstring(SearchTerms), ExpandWidth(true));
-                    }
                     GUI.contentColor = originalColor;
 
                     // instance type
@@ -348,14 +341,13 @@ namespace ModKit.DataViewer {
                         style = _buttonStyle;
                         Label(text, _buttonStyle, GUILayout.ExpandWidth(false));
                     }
-                    else 
+                    else
                         Label("", ExpandWidth(false));
                 }
-            }
         }
         private void DrawNode(Node node, int depth, bool collapse) {
             try {
-                ToggleState expanded = node.Expanded;
+                var expanded = node.Expanded;
                 if (depth >= _skipLevels && !(collapse && depth > 0)) {
                     if (!node.hasChildren)
                         expanded = ToggleState.None;
@@ -368,14 +360,12 @@ namespace ModKit.DataViewer {
                     node.Expanded = ToggleState.Off;
 
                 // children
-                if (expanded.IsOn()) {
-                    DrawChildren(node, depth + 1, collapse);
-                }
-            } catch (Exception e) {
+                if (expanded.IsOn()) DrawChildren(node, depth + 1, collapse);
             }
+            catch (Exception e) { }
         }
 
-        private void DrawChildren(Node node, int depth, bool collapse, Func<Node, bool> hoist = null) {
+        private void DrawChildren(Node node, int depth, bool collapse, Func<Node, bool>? hoist = null) {
             if (node.IsBaseType)
                 return;
             if (hoist == null) hoist = (n) => n.Matches;
@@ -384,23 +374,31 @@ namespace ModKit.DataViewer {
             var nodesCount = _nodesCount;
             var maxNodeCount = _startIndex + MaxRows * 2;
             foreach (var child in node.GetItemNodes()) {
-                if (nodesCount > maxNodeCount) break; nodesCount++;
-                if (hoist(child)) toHoist.Add(child); else others.Add(child);
+                if (nodesCount > maxNodeCount) break;
+                nodesCount++;
+                if (hoist(child)) toHoist.Add(child);
+                else others.Add(child);
             }
             foreach (var child in node.GetComponentNodes()) {
-                if (nodesCount > maxNodeCount) break; nodesCount++;
-                if (hoist(child)) toHoist.Add(child); else others.Add(child);
+                if (nodesCount > maxNodeCount) break;
+                nodesCount++;
+                if (hoist(child)) toHoist.Add(child);
+                else others.Add(child);
             }
             foreach (var child in node.GetPropertyNodes()) {
-                if (nodesCount > maxNodeCount) break; nodesCount++;
-                if (hoist(child)) toHoist.Add(child); else others.Add(child);
+                if (nodesCount > maxNodeCount) break;
+                nodesCount++;
+                if (hoist(child)) toHoist.Add(child);
+                else others.Add(child);
             }
             foreach (var child in node.GetFieldNodes()) {
-                if (nodesCount > maxNodeCount) break; nodesCount++;
-                if (hoist(child)) toHoist.Add(child); else others.Add(child);
+                if (nodesCount > maxNodeCount) break;
+                nodesCount++;
+                if (hoist(child)) toHoist.Add(child);
+                else others.Add(child);
             }
-            foreach (var child in toHoist) { DrawNode(child, depth, collapse); }
-            foreach (var child in others) { DrawNode(child, depth, collapse); }
+            foreach (var child in toHoist) DrawNode(child, depth, collapse);
+            foreach (var child in others) DrawNode(child, depth, collapse);
             _totalNodeCount = Math.Max(_nodesCount, _totalNodeCount);
         }
     }

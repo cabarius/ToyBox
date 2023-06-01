@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -323,6 +324,10 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PFlog">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\PFlog.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web">
@@ -534,18 +539,18 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo "Rogue: $(TargetPath)" "&gt;$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
-        xcopy /Y "$(TargetPath)" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
-        xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.pdb*"
-        xcopy /Y "$(ProjectDir)\Info.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Info.json*"
-        xcopy /Y "$(ProjectDir)\Repository.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Repository.json*"
-        xcopy /E /Y "$(ProjectDir)Localization\" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Localization\"
-        cd "$(TargetDir)"
-        powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
-    </PostBuildEvent>
+            xcopy /Y "$(TargetPath)" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
+            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.pdb*"
+            xcopy /Y "$(ProjectDir)\Info.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Info.json*"
+            xcopy /Y "$(ProjectDir)\Repository.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Repository.json*"
+            xcopy /E /Y "$(ProjectDir)Localization\" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Localization\"
+            cd "$(TargetDir)"
+            powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
+        </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

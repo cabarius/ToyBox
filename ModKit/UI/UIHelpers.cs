@@ -97,7 +97,7 @@ namespace ToyBox {
         public static void AddTo(this GameObject obj, Transform parent) { obj.transform.AddTo(parent); }
         public static void AddTo(this GameObject obj, GameObject parent) { obj.transform.AddTo(parent.transform); }
 
-        public static (GameObject, RectTransform) Create(string name, Transform parent = null) {
+        public static (GameObject, RectTransform) Create(string name, Transform? parent = null) {
             var obj = new GameObject(name, typeof(RectTransform));
             if (parent != null)
                 obj.AddTo(parent);

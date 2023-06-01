@@ -19,52 +19,49 @@ namespace ModKit.DataViewer {
     public sealed class ObjectSetUsingConditionalWeakTable : IObjectSet {
         /// <summary> unit test on object set. </summary>
         internal static void Main() {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
-            ObjectSetUsingConditionalWeakTable objSet = new ObjectSetUsingConditionalWeakTable();
-            for (int i = 0; i < 10000000; ++i) {
-                object obj = new object();
-                if (objSet.IsExist(obj)) { Console.WriteLine("bug!!!"); }
-                if (!objSet.Add(obj)) { Console.WriteLine("bug!!!"); }
-                if (!objSet.IsExist(obj)) { Console.WriteLine("bug!!!"); }
+            var objSet = new ObjectSetUsingConditionalWeakTable();
+            for (var i = 0; i < 10000000; ++i) {
+                var obj = new object();
+                if (objSet.IsExist(obj)) Console.WriteLine("bug!!!");
+                if (!objSet.Add(obj)) Console.WriteLine("bug!!!");
+                if (!objSet.IsExist(obj)) Console.WriteLine("bug!!!");
             }
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds);
         }
 
-        public bool IsExist(object obj) {
-            return objectSet.TryGetValue(obj, out tryGetValue_out0);
-        }
+        public bool IsExist(object obj) => objectSet.TryGetValue(obj, out tryGetValue_out0);
 
         public bool Add(object obj) {
-            if (IsExist(obj)) {
+            if (IsExist(obj))
                 return false;
-            }
             else {
-                objectSet.Add(obj, null);
+                objectSet.Add(obj, obj);
                 return true;
             }
         }
 
         /// <summary> internal representation of the set. (only use the key) </summary>
-        private ConditionalWeakTable<object, object> objectSet = new ConditionalWeakTable<object, object>();
+        private ConditionalWeakTable<object, object> objectSet = new();
 
         /// <summary> used to fill the out parameter of ConditionalWeakTable.TryGetValue(). </summary>
-        private static object tryGetValue_out0 = null;
+        private static object? tryGetValue_out0 = null;
     }
 
     [Obsolete("It will crash if there are too many objects and ObjectSetUsingConditionalWeakTable get a better performance.")]
     public sealed class ObjectSetUsingObjectIDGenerator : IObjectSet {
         /// <summary> unit test on object set. </summary>
         internal static void Main() {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
-            ObjectSetUsingObjectIDGenerator objSet = new ObjectSetUsingObjectIDGenerator();
-            for (int i = 0; i < 10000000; ++i) {
-                object obj = new object();
-                if (objSet.IsExist(obj)) { Console.WriteLine("bug!!!"); }
-                if (!objSet.Add(obj)) { Console.WriteLine("bug!!!"); }
-                if (!objSet.IsExist(obj)) { Console.WriteLine("bug!!!"); }
+            var objSet = new ObjectSetUsingObjectIDGenerator();
+            for (var i = 0; i < 10000000; ++i) {
+                var obj = new object();
+                if (objSet.IsExist(obj)) Console.WriteLine("bug!!!");
+                if (!objSet.Add(obj)) Console.WriteLine("bug!!!");
+                if (!objSet.IsExist(obj)) Console.WriteLine("bug!!!");
             }
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds);
@@ -85,6 +82,6 @@ namespace ModKit.DataViewer {
 
 
         /// <summary> internal representation of the set. </summary>
-        private ObjectIDGenerator idGenerator = new ObjectIDGenerator();
+        private ObjectIDGenerator idGenerator = new();
     }
 }

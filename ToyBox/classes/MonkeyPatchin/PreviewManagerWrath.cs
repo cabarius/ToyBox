@@ -43,7 +43,7 @@ using UnityEngine.UI;
 
 namespace ToyBox {
     internal static class PreviewManager {
-        public static Settings settings = Main.Settings;
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
 
@@ -109,11 +109,11 @@ namespace ToyBox {
                 toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(answer.NextCue.Cues[0], 1));
             }
             cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>(
-                null,
-                0,
-                answer.OnSelect.Actions,
-                answer.AlignmentShift
-            ));
+                                   null,
+                                   0,
+                                   answer.OnSelect.Actions,
+                                   answer.AlignmentShift
+                               ));
             while (toCheck.Count > 0) {
                 var item = toCheck.Dequeue();
                 var cueBase = item.Item1;
@@ -121,11 +121,11 @@ namespace ToyBox {
                 if (currentDepth > 20) break;
                 if (cueBase is BlueprintCue cue) {
                     cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>(
-                        cue,
-                        currentDepth,
-                        cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray(),
-                        cue.AlignmentShift
-                    ));
+                                           cue,
+                                           currentDepth,
+                                           cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray(),
+                                           cue.AlignmentShift
+                                       ));
                     if (cue.Answers.Count > 0) {
                         var subAnswer = cue.Answers[0].Get();
                         if (visited.Contains(subAnswer)) {
@@ -138,54 +138,57 @@ namespace ToyBox {
                         toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(cue.Continue.Cues[0], currentDepth + 1));
                     }
                 }
-                else if (cueBase is BlueprintBookPage page) {
-                    cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>(
-                        page,
-                        currentDepth,
-                        page.OnShow.Actions,
-                        null
-                    ));
-                    if (page.Answers.Count > 0) {
-                        var subAnswer = page.Answers[0].Get();
-                        if (visited.Contains(subAnswer)) {
-                            isRecursive = true;
-                            break;
-                        }
-                        visited.Add(subAnswer);
-                        if (page.Answers[0].Get() is BlueprintAnswersList) break;
-                    }
-                    if (page.Cues.Count > 0) {
-                        foreach (var c in page.Cues)
-                            if (c.Get().CanShow())
-                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
-                    }
-                }
-                else if (cueBase is BlueprintCheck check) {
-                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Success, currentDepth + 1));
-                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
-                }
-                else if (cueBase is BlueprintCueSequence sequence) {
-                    foreach (var c in sequence.Cues)
-                        if (c.Get().CanShow())
-                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
-                    if (sequence.Exit != null) {
-                        var exit = sequence.Exit;
-                        if (exit.Answers.Count > 0) {
-                            var subAnswer = exit.Answers[0];
+                else
+                    if (cueBase is BlueprintBookPage page) {
+                        cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], AlignmentShift>(
+                                               page,
+                                               currentDepth,
+                                               page.OnShow.Actions,
+                                               null
+                                           ));
+                        if (page.Answers.Count > 0) {
+                            var subAnswer = page.Answers[0].Get();
                             if (visited.Contains(subAnswer)) {
                                 isRecursive = true;
                                 break;
                             }
                             visited.Add(subAnswer);
-                            if (exit.Continue.Cues.Count > 0) {
-                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
-                            }
+                            if (page.Answers[0].Get() is BlueprintAnswersList) break;
+                        }
+                        if (page.Cues.Count > 0) {
+                            foreach (var c in page.Cues)
+                                if (c.Get().CanShow())
+                                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
                         }
                     }
-                }
-                else {
-                    break;
-                }
+                    else
+                        if (cueBase is BlueprintCheck check) {
+                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Success, currentDepth + 1));
+                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
+                        }
+                        else
+                            if (cueBase is BlueprintCueSequence sequence) {
+                                foreach (var c in sequence.Cues)
+                                    if (c.Get().CanShow())
+                                        toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
+                                if (sequence.Exit != null) {
+                                    var exit = sequence.Exit;
+                                    if (exit.Answers.Count > 0) {
+                                        var subAnswer = exit.Answers[0];
+                                        if (visited.Contains(subAnswer)) {
+                                            isRecursive = true;
+                                            break;
+                                        }
+                                        visited.Add(subAnswer);
+                                        if (exit.Continue.Cues.Count > 0) {
+                                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                break;
+                            }
             }
             return cueResults;
         }
@@ -195,11 +198,15 @@ namespace ToyBox {
             string checkFormat = (!flag) ? UIDialog.Instance.AnswerStringWithCheckFormat : UIDialog.Instance.AnswerStringWithCheckBeFormat;
             var text = string.Empty;
             if (DialogSettings.ShowSkillcheckDC) {
-                text = answer.SkillChecksDC.Aggregate(string.Empty, (string current, SkillCheckDC skillCheck) => current
-                                                                                                                 + string.Format(checkFormat, UIUtility.PackKeys(new object[] {
-                                                                                                                     TooltipType.SkillcheckDC,
-                                                                                                                     skillCheck.StatType
-                                                                                                                 }), LocalizedTexts.Instance.Stats.GetText(skillCheck.StatType), skillCheck.ValueDC));
+                text = answer.SkillChecksDC.Aggregate(string.Empty,
+                                                      (string current, SkillCheckDC skillCheck) => current
+                                                                                                   + string.Format(checkFormat,
+                                                                                                                   UIUtility.PackKeys(new object[] {
+                                                                                                                       TooltipType.SkillcheckDC,
+                                                                                                                       skillCheck.StatType
+                                                                                                                   }),
+                                                                                                                   LocalizedTexts.Instance.Stats.GetText(skillCheck.StatType),
+                                                                                                                   skillCheck.ValueDC));
             }
             if (DialogSettings.ShowAlignmentRequirements && answer.AlignmentRequirement != AlignmentComponent.None) {
                 text = string.Format(UIDialog.Instance.AlignmentRequirementFormat, UIUtility.GetAlignmentRequirementText(answer.AlignmentRequirement)) + text;
@@ -212,8 +219,54 @@ namespace ToyBox {
             }
             var stringByBinding = UIKeyboardTexts.Instance.GetStringByBinding(Game.Instance.Keyboard.GetBindingByName(bind));
             return string.Format(UIDialog.Instance.AnswerDialogueFormat,
-                (!stringByBinding.Empty()) ? stringByBinding : index.ToString(),
-                text + ((!text.Empty()) ? " " : string.Empty) + answer.DisplayText);
+                                 (!stringByBinding.Empty()) ? stringByBinding : index.ToString(),
+                                 text + ((!text.Empty()) ? " " : string.Empty) + answer.DisplayText);
+        }
+        
+        
+        public static string ResultsText(this BlueprintCue cue) {
+            if (cue == null) return "";
+            var actions = cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray();
+            var alignment = cue.AlignmentShift;
+            var text = "";
+            if (actions.Length > 0) {
+                var result = PreviewUtilities.FormatActions(actions);
+                if (result == "") result = "EmptyAction";
+                text += $" \n<size=75%>[{result}]</size>";
+            }
+            if (alignment != null && alignment.Value > 0) {
+                text += $" \n<size=75%>[AlignmentShift {alignment.Direction} by {alignment.Value} - {alignment.Description}]";
+            }
+            return text;
+        }
+
+        public static string ResultsText(this BlueprintAnswer answer) {
+            var text = "";
+            var answerData = CollateAnswerData(answer, out var isRecursive);
+            if (isRecursive) {
+                text += $" <size=75%>[Repeats]</size>";
+            }
+            var results = new List<string>();
+            foreach (var data in answerData) {
+                var cue = data.Item1;
+                var depth = data.Item2;
+                var actions = data.Item3;
+                var alignment = data.Item4;
+                var line = new List<string>();
+                if (actions.Length > 0) {
+                    line.AddRange(actions.SelectMany(action => PreviewUtilities.FormatActionAsList(action)
+                                                                               .Select(actionText => actionText == "" ? "EmptyAction" : actionText)));
+                }
+                if (alignment != null && alignment.Value > 0) {
+                    line.Add($"AlignmentShift({alignment.Direction}, {alignment.Value}, {alignment.Description})");
+                }
+                if (cue is BlueprintCheck check) {
+                    line.Add($"Check({check.Type}, DC {check.DC}, hidden {check.Hidden})");
+                }
+                if (line.Count > 0) results.Add($"{depth}: {line.Join()}");
+            }
+            if (results.Count > 0) text += $" \v<size=75%>[{results.Join()}]</size>";
+            return text;
         }
 
         [HarmonyPatch(typeof(UIConsts), nameof(UIConsts.GetAnswerString))]
@@ -225,30 +278,19 @@ namespace ToyBox {
                         __result = GetFixedAnswerString(answer, bind, index);
                     }
                     if (!Main.Settings.previewDialogResults) return;
-                    var answerData = CollateAnswerData(answer, out var isRecursive);
-                    if (isRecursive) {
-                        __result += $" <size=75%>[Repeats]</size>";
+                    var text = answer.ResultsText();
+                    if (Settings.previewDialogConditions) {
+                        var conditions = PreviewUtilities.FormatConditionsAsList(answer);
+                        var conditionsText = string.Join("\v", conditions);
+                        if (!text.IsNullOrEmpty() && conditions.Any())
+                            __result += $"<size=75%>\v[{conditionsText}]\v{text}</size>";
+                        else if (!text.IsNullOrEmpty())
+                            __result += $"<size=75%>{text}</size>";
+                        else if (conditions.Any())
+                            __result += $"\v<size=75%>[{conditionsText}]</size>";
                     }
-                    var results = new List<string>();
-                    foreach (var data in answerData) {
-                        var cue = data.Item1;
-                        var depth = data.Item2;
-                        var actions = data.Item3;
-                        var alignment = data.Item4;
-                        var line = new List<string>();
-                        if (actions.Length > 0) {
-                            line.AddRange(actions.SelectMany(action => PreviewUtilities.FormatActionAsList(action)
-                                .Select(actionText => actionText == "" ? "EmptyAction" : actionText)));
-                        }
-                        if (alignment != null && alignment.Value > 0) {
-                            line.Add($"AlignmentShift({alignment.Direction}, {alignment.Value}, {alignment.Description})");
-                        }
-                        if (cue is BlueprintCheck check) {
-                            line.Add($"Check({check.Type}, DC {check.DC}, hidden {check.Hidden})");
-                        }
-                        if (line.Count > 0) results.Add($"{depth}: {line.Join()}");
-                    }
-                    if (results.Count > 0) __result += $" \v<size=75%>[{results.Join()}]</size>";
+                    else if (!text.IsNullOrEmpty())
+                        __result += $"<size=75%>{text}</size>";
                 }
                 catch (Exception ex) {
                     Mod.Error(ex);
@@ -263,17 +305,7 @@ namespace ToyBox {
                     if (!Main.Enabled) return;
                     if (!Main.Settings.previewDialogResults) return;
                     var cue = Game.Instance.DialogController.CurrentCue;
-                    var actions = cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray();
-                    var alignment = cue.AlignmentShift;
-                    var text = "";
-                    if (actions.Length > 0) {
-                        var result = PreviewUtilities.FormatActions(actions);
-                        if (result == "") result = "EmptyAction";
-                        text += $" \n<size=75%>[{result}]</size>";
-                    }
-                    if (alignment != null && alignment.Value > 0) {
-                        text += $" \n<size=75%>[AlignmentShift {alignment.Direction} by {alignment.Value} - {alignment.Description}]";
-                    }
+                    var text = cue.ResultsText();
                     __instance.DialogPhrase.text += text;
                 }
                 catch (Exception ex) {
@@ -390,20 +422,20 @@ namespace ToyBox {
                                         ToggleGroup toggleGroup,
                                         bool isOn = false) {
 
-                bool showResults = settings.previewDialogResults || settings.previewEventResults;
-                if (!showResults && !settings.toggleIgnoreEventSolutionRestrictions) return true;
-                bool showRestrictions = (settings.toggleIgnoreEventSolutionRestrictions || settings.previewDialogResults) && !settings.toggleHideEventSolutionRestrictionsPreview;
+                bool showResults = Settings.previewDialogResults || Settings.previewEventResults;
+                if (!showResults && !Settings.toggleIgnoreEventSolutionRestrictions) return true;
+                bool showRestrictions = (Settings.toggleIgnoreEventSolutionRestrictions || Settings.previewDialogResults) && !Settings.toggleHideEventSolutionRestrictionsPreview;
                 __instance.gameObject.SetActive(true);
                 __instance.EventSolution = eventSolution;
                 __instance.Toggle.group = toggleGroup;
                 __instance.Toggle.onValueChanged.RemoveAllListeners();
                 __instance.Toggle.onValueChanged.AddListener(onToggle);
                 var extraText = "";
-                var isAvail = eventSolution.IsAvail || settings.toggleIgnoreEventSolutionRestrictions;
+                var isAvail = eventSolution.IsAvail || Settings.toggleIgnoreEventSolutionRestrictions;
                 var color = eventSolution.IsAvail ? "#005800><b>" : "#800000>";
                 if (showResults || showRestrictions) {
                     if (eventSolution.m_AvailConditions.HasConditions && showRestrictions) {
-                        if (settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
+                        if (Settings.toggleIgnoreEventSolutionRestrictions && !eventSolution.IsAvail)
                             extraText += $"\n<color=#005800><b>[Overridden]:</b></color> ";
                         else
                             extraText += $"\n";
@@ -475,7 +507,7 @@ namespace ToyBox {
                 }
                 var blueprintKingdomProject = blueprint as BlueprintKingdomProject;
                 string mechanicalDescription = ((blueprintKingdomProject != null) ? blueprintKingdomProject.MechanicalDescription : null);
-                if (settings.previewDecreeResults) {
+                if (Settings.previewDecreeResults) {
                     var eventResults = blueprintKingdomProject.Solutions.GetResolutions(blueprintKingdomProject.DefaultResolutionType);
                     if (eventResults != null) {
                         foreach (var result in eventResults) {
@@ -486,7 +518,7 @@ namespace ToyBox {
                 }
                 // RelicInfo code borrowed (with permission from Rathtr) from https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/200
                 var projectType = kingdomEventView.ProjectBlueprint.ProjectType;
-                if (settings.previewRelicResults
+                if (Settings.previewRelicResults
                     //&& projectType == KingdomProjectType.Relics
                     && blueprint.ElementsArray.Find(elem => elem is KingdomActionStartEvent) is KingdomActionStartEvent e
                     && e.Event is BlueprintCrusadeEvent crusadeEvent
@@ -566,17 +598,18 @@ namespace ToyBox {
             [HarmonyPatch(nameof(DialogAnswerView.SetAnswer))]
             [HarmonyPrefix]
             private static bool SetAnswer(DialogAnswerView __instance, BlueprintAnswer answer) {
-                if (!settings.previewDialogResults && !settings.toggleShowAnswersForEachConditionalResponse && !settings.toggleMakePreviousAnswersMoreClear) return true;
+                if (!Settings.previewDialogResults && !Settings.toggleShowAnswersForEachConditionalResponse && !Settings.toggleMakePreviousAnswersMoreClear) return true;
                 var type = Game.Instance.DialogController.Dialog.Type;
                 var str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
                 var text = UIConsts.GetAnswerString(answer, str, __instance.ViewModel.Index);
                 var isAvail = answer.CanSelect();
                 if (answer.NextCue.Cues.Count == 1) {
                     var cue = answer.NextCue.Cues.Dereference<BlueprintCueBase>().FirstOrDefault();
-                    var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
+                    var conditionText = PreviewUtilities.FormatConditions(cue.Conditions);
+                    //var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
                     // the following is a kludge for toggleShowAnswersForEachConditionalResponse  to work around cases where there may be a next cue that doesn't get shown due it being already seen and the dialog being intended to fall through.  We assume that any singleton conditional nextCue (CueSelection) was generated by this feature.  We should look for edge cases to be sure.
                     isAvail = isAvail && (cue.CanShow() 
-                                          || !settings.toggleShowAnswersForEachConditionalResponse 
+                                          || !Settings.toggleShowAnswersForEachConditionalResponse 
                                           || !answer.name.Contains("ToyBox")
                                           || conditionText.Length == 0
                                           );
@@ -596,7 +629,7 @@ namespace ToyBox {
                     ) {
                     color32 = DialogAnswerView.Colors.SelectedAnswer;
                     __instance.AnswerText.alpha = 0.45f;
-                    if (settings.toggleMakePreviousAnswersMoreClear)
+                    if (Settings.toggleMakePreviousAnswersMoreClear)
                         __instance.AnswerText.text = text.sizePercent(83);
                 }
                 else

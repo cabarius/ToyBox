@@ -20,16 +20,14 @@ namespace ModKit {
         public static ShowGUINotifierMethod NotifyOnShowGUI;
 
         public static void OnShowGUI() {
-            if (NotifyOnShowGUI != null) {
-                NotifyOnShowGUI();
-            }
+            if (NotifyOnShowGUI != null) NotifyOnShowGUI();
         }
     }
 
     public class ModManager<TCore, TSettings>
         where TCore : class, new()
         where TSettings : UnityModManager.ModSettings, new() {
-        #region Fields & Properties
+    #region Fields & Properties
 
         private UnityModManager.ModEntry.ModLogger _logger;
         private List<IModEventHandler> _eventHandlers;
@@ -44,9 +42,9 @@ namespace ModKit {
 
         public bool Patched { get; private set; }
 
-        #endregion
+    #endregion
 
-        #region Toggle
+    #region Toggle
 
         public void Enable(UnityModManager.ModEntry modEntry, Assembly assembly) {
             _logger = modEntry.Logger;
@@ -62,9 +60,7 @@ namespace ModKit {
                 process.Log("Enabling.");
                 var dict = Harmony.VersionInfo(out var myVersion);
                 process.Log($"Harmony version: {myVersion}");
-                foreach (var entry in dict) {
-                    process.Log($"Mod {entry.Key} loaded with Harmony version {entry.Value}");
-                }
+                foreach (var entry in dict) process.Log($"Mod {entry.Key} loaded with Harmony version {entry.Value}");
 
                 process.Log("Loading settings.");
                 modEntry.OnSaveGUI += HandleSaveGUI;
@@ -96,18 +92,13 @@ namespace ModKit {
                 Enabled = true;
 
                 process.Log("Registering events.");
-                _eventHandlers = types.Where(type => type != typeof(TCore) &&
-                    !type.IsInterface && !type.IsAbstract && typeof(IModEventHandler).IsAssignableFrom(type))
-                    .Select(type => Activator.CreateInstance(type, true) as IModEventHandler).ToList();
-                if (Core is IModEventHandler core) {
-                    _eventHandlers.Add(core);
-                }
+                _eventHandlers = types.Where(type => type != typeof(TCore) && !type.IsInterface && !type.IsAbstract && typeof(IModEventHandler).IsAssignableFrom(type))
+                                      .Select(type => Activator.CreateInstance(type, true) as IModEventHandler).ToList();
+                if (Core is IModEventHandler core) _eventHandlers.Add(core);
                 _eventHandlers.Sort((x, y) => x.Priority - y.Priority);
 
                 process.Log("Raising events: OnEnable()");
-                for (var i = 0; i < _eventHandlers.Count; i++) {
-                    _eventHandlers[i].HandleModEnable();
-                }
+                for (var i = 0; i < _eventHandlers.Count; i++) _eventHandlers[i].HandleModEnable();
             }
             catch (Exception e) {
                 Error(e);
@@ -129,10 +120,13 @@ namespace ModKit {
             // use try-catch to prevent the progression being disrupt by exceptions
             if (_eventHandlers != null) {
                 process.Log("Raising events: OnDisable()");
-                for (var i = _eventHandlers.Count - 1; i >= 0; i--) {
-                    try { _eventHandlers[i].HandleModDisable(); }
-                    catch (Exception e) { Error(e); }
-                }
+                for (var i = _eventHandlers.Count - 1; i >= 0; i--)
+                    try {
+                        _eventHandlers[i].HandleModDisable();
+                    }
+                    catch (Exception e) {
+                        Error(e);
+                    }
                 _eventHandlers = null;
             }
 
@@ -142,13 +136,16 @@ namespace ModKit {
                     var patchInfo = Harmony.GetPatchInfo(method);
                     var patches =
                         patchInfo.Transpilers.Concat(patchInfo.Postfixes).Concat(patchInfo.Prefixes)
-                        .Where(patch => patch.owner == modEntry.Info.Id);
+                                 .Where(patch => patch.owner == modEntry.Info.Id);
                     if (patches.Any()) {
                         process.Log($"Unpatching: {patches.First().PatchMethod.DeclaringType.FullName} from {method.DeclaringType.FullName}.{method.Name}");
-                        foreach (var patch in patches) {
-                            try { harmonyInstance.Unpatch(method, patch.PatchMethod); }
-                            catch (Exception e) { Error(e); }
-                        }
+                        foreach (var patch in patches)
+                            try {
+                                harmonyInstance.Unpatch(method, patch.PatchMethod);
+                            }
+                            catch (Exception e) {
+                                Error(e);
+                            }
                     }
                 }
                 Patched = false;
@@ -163,9 +160,9 @@ namespace ModKit {
             process.Log("Disabled.");
         }
 
-        #endregion
+    #endregion
 
-        #region Settings
+    #region Settings
 
         public void ResetSettings() {
             if (Enabled) {
@@ -179,9 +176,9 @@ namespace ModKit {
             ModKitSettings.Save();
         }
 
-        #endregion
+    #endregion
 
-        #region Loggers
+    #region Loggers
 
         public void Critical(string str) => _logger.Critical(str);
 
@@ -214,7 +211,7 @@ namespace ModKit {
         [Conditional("DEBUG")]
         public void Debug(object obj) => _logger.Log(obj?.ToString() ?? "null");
 
-        #endregion
+    #endregion
 
         private class ProcessLogger : IDisposable {
             private readonly Stopwatch _stopWatch = new();

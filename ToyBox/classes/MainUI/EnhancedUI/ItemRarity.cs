@@ -104,7 +104,7 @@ namespace ToyBox {
             var bpEnchantmentRating = bp.CollectEnchantments().Sum((e) => e.Rating());
             return Math.Max(bpRating, bpEnchantmentRating);
         }
-        public static int Rating(this BlueprintItem bp, ItemEntity item = null) {
+        public static int Rating(this BlueprintItem bp, ItemEntity? item = null) {
             var rating = 0;
             var itemRating = 0;
 #if Wrath
@@ -182,10 +182,10 @@ namespace ToyBox {
         }
         public static RarityType Rarity(this BlueprintItemEnchantment bp) => bp.Rating().Rarity();
         public static Color Color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
-        public static string Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
-        public static string DarkModeRarity(this string s, RarityType rarity, float adjust = 0) => s.color(DarkModeRarityColors[(int)rarity]);
+        public static string? Rarity(this string s, RarityType rarity, float adjust = 0) => s.color(RarityColors[(int)rarity]);
+        public static string? DarkModeRarity(this string s, RarityType rarity, float adjust = 0) => s.color(DarkModeRarityColors[(int)rarity]);
 
-        public static string RarityInGame(this string s, RarityType rarity, float adjust = 0) {
+        public static string? RarityInGame(this string? s, RarityType rarity, float adjust = 0) {
             var name = Settings.toggleColorLootByRarity ? s.color(RarityColors[(int)rarity]) : s;
             if (!Settings.toggleShowRarityTags) return name;
             if (Settings.toggleColorLootByRarity)
@@ -193,7 +193,7 @@ namespace ToyBox {
             else
                 return name + " " + $"[{rarity}]".Rarity(rarity).bold(); //.SizePercent(75);
         }
-        public static string GetString(this RarityType rarity, float adjust = 0) => rarity.ToString().Rarity(rarity, adjust);
+        public static string? GetString(this RarityType rarity, float adjust = 0) => rarity.ToString().Rarity(rarity, adjust);
 #if Wrath
         public static void Hide(this LocalMapLootMarkerPCView localMapLootMarkerPCView) {
             LocalMapCommonMarkerVM markerVm = localMapLootMarkerPCView.ViewModel as LocalMapCommonMarkerVM;

@@ -23,29 +23,29 @@ namespace ToyBox {
         public static Settings Settings => Main.Settings;
 
         // cheats combat
-        private const string RestAll = "Rest All";
-        private const string RestSelected = "Rest Selected";
-        private const string Empowered = "Empowered";
-        private const string FullBuffPlease = "Common Buffs";
-        private const string GoddesBuffs = "Buff Like A Goddess";
-        private const string RemoveBuffs = "Remove Buffs";
-        private const string RemoveDeathsDoor = "Remove Deaths Door";
-        private const string KillAllEnemies = "Kill All Enemies";
+        private const string? RestAll = "Rest All";
+        private const string? RestSelected = "Rest Selected";
+        private const string? Empowered = "Empowered";
+        private const string? FullBuffPlease = "Common Buffs";
+        private const string? GoddesBuffs = "Buff Like A Goddess";
+        private const string? RemoveBuffs = "Remove Buffs";
+        private const string? RemoveDeathsDoor = "Remove Deaths Door";
+        private const string? KillAllEnemies = "Kill All Enemies";
         //private const string SummonZoo = "Summon Zoo"
-        private const string LobotomizeAllEnemies = "Lobotomize Enemies";
-        private const string ToggleMurderHobo = "Toggle Murder Hobo";
+        private const string? LobotomizeAllEnemies = "Lobotomize Enemies";
+        private const string? ToggleMurderHobo = "Toggle Murder Hobo";
 
         // cheats common
-        private const string TeleportPartyToYou = "Teleport Party To You";
-        private const string GoToGlobalMap = "Go To Global Map";
-        private const string RerollPerception = "Reroll Perception";
-        private const string RerollInteractionSkillChecks = "Reset Interactables";
-        private const string ChangeParty = "Change Party";
-        private const string ChangWeather = "Change Weather";
+        private const string? TeleportPartyToYou = "Teleport Party To You";
+        private const string? GoToGlobalMap = "Go To Global Map";
+        private const string? RerollPerception = "Reroll Perception";
+        private const string? RerollInteractionSkillChecks = "Reset Interactables";
+        private const string? ChangeParty = "Change Party";
+        private const string? ChangWeather = "Change Weather";
 
         // other
-        private const string TimeScaleMultToggle = "Main/Alt Timescale";
-        private const string PreviewDialogResults = "Preview Results";
+        private const string? TimeScaleMultToggle = "Main/Alt Timescale";
+        private const string? PreviewDialogResults = "Preview Results";
 
 
         //For buffs exceptions
@@ -241,18 +241,20 @@ namespace ToyBox {
                    0,
                    () => {
                        Toggle("Dialog Results".localize(), ref Settings.previewDialogResults);
-                       Space(25);
+                       25.space();
+                       Toggle("Dialog Conditions".localize(), ref Settings.previewDialogConditions);
+                       25.space();
                        Toggle("Dialog Alignment".localize(), ref Settings.previewAlignmentRestrictedDialog);
-                       Space(25);
+                       25.space();
                        Toggle("Random Encounters".localize(), ref Settings.previewRandomEncounters);
 #if Wrath               // TODO: looks like colonization is the new Kingdom/Crusade mechanic
-                       Space(25);
+                       25.space();
                        Toggle("Events".localize(), ref Settings.previewEventResults);
-                       Space(25);
+                       25.space();
                        Toggle("Decrees".localize(), ref Settings.previewDecreeResults);
-                       Space(25);
+                       25.space();
                        Toggle("Relic Info".localize(), ref Settings.previewRelicResults);
-                       Space(25);
+                       25.space();
 #endif
                        BindableActionButton(PreviewDialogResults, true);
                    });
@@ -505,7 +507,7 @@ namespace ToyBox {
                                        }
                                        Space(25);
                                        var brutaltiy = Settings.brutalDifficultyMultiplier;
-                                       string label;
+                                       string? label;
                                        var suffix = Math.Abs(brutaltiy - Math.Floor(brutaltiy)) <= float.Epsilon ? "" : "+";
                                        switch (brutaltiy) {
                                            case float level when level < 2.0:

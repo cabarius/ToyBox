@@ -24,7 +24,7 @@ namespace ModKit {
             };
         }
         private static bool TogglePrivate(
-                string title,
+                string? title,
                 ref bool value,
                 bool isEmpty,
                 bool disclosureStyle = false,
@@ -46,7 +46,7 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool ToggleButton(ref ToggleState toggle, string title, GUIStyle style = null, params GUILayoutOption[] options) {
+        public static bool ToggleButton(ref ToggleState toggle, string? title, GUIStyle? style = null, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
             var changed = false;
@@ -56,7 +56,7 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool ToggleButton(ref ToggleState toggle, string title, params GUILayoutOption[] options) {
+        public static bool ToggleButton(ref ToggleState toggle, string? title, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
             var changed = false;
@@ -66,7 +66,7 @@ namespace ModKit {
             }
             return changed;
         }
-        public static void ToggleButton(ref ToggleState toggle, string title, Action<ToggleState> applyToChildren, params GUILayoutOption[] options) {
+        public static void ToggleButton(ref ToggleState toggle, string? title, Action<ToggleState> applyToChildren, params GUILayoutOption[] options) {
             var isOn = toggle.IsOn();
             var isEmpty = toggle == ToggleState.None;
             var state = toggle;
@@ -90,7 +90,7 @@ namespace ModKit {
             toggle = state;
         }
 
-        public static bool Toggle(string title, ref bool value, string on, string off, float width = 0, GUIStyle stateStyle = null, GUIStyle labelStyle = null, params GUILayoutOption[] options) {
+        public static bool Toggle(string? title, ref bool value, string? on, string? off, float width = 0, GUIStyle? stateStyle = null, GUIStyle? labelStyle = null, params GUILayoutOption[] options) {
             var changed = false;
             if (stateStyle == null)
                 stateStyle = GUI.skin.box;
@@ -104,14 +104,14 @@ namespace ModKit {
             if (Private.UI.Toggle(title, value, on, off, stateStyle, labelStyle, options)) { value = !value; changed = true; }
             return changed;
         }
-        public static bool Toggle(string title, ref bool value, params GUILayoutOption[] options) {
+        public static bool Toggle(string? title, ref bool value, params GUILayoutOption[] options) {
             options = options.AddDefaults();
             var changed = false;
             if (Private.UI.CheckBox(title, value, false, toggleStyle, options)) { value = !value; changed = true; }
             return changed;
         }
         public static bool ActionToggle(
-                string title,
+                string? title,
                 Func<bool> get,
                 Action<bool> set,
                 float width = 0,
@@ -124,7 +124,7 @@ namespace ModKit {
         }
 
         public static bool ActionToggle(
-                string title,
+                string? title,
                 Func<bool> get,
                 Action<bool> set,
                 Func<bool> isEmpty,
@@ -139,7 +139,7 @@ namespace ModKit {
             return value;
         }
         public static bool ToggleCallback(
-                string title,
+                string? title,
                 ref bool value,
                 Action<bool> callback,
                 float width = 0,
@@ -152,7 +152,7 @@ namespace ModKit {
             return result;
         }
         public static bool BitFieldToggle(
-                string title,
+                string? title,
                 ref int bitfield,
                 int offset,
                 float width = 0,
@@ -164,17 +164,17 @@ namespace ModKit {
             if (bit != newBit) { bitfield ^= 1 << offset; }
             return bit != newBit;
         }
-        public static bool DisclosureToggle(string title, ref bool value, float width = 175, params Action[] actions) {
+        public static bool DisclosureToggle(string? title, ref bool value, float width = 175, params Action[] actions) {
             var changed = TogglePrivate(title, ref value, false, true, width);
             If(value, actions);
             return changed;
         }
-        public static bool DisclosureToggle(string title, ref bool value, params Action[] actions) {
+        public static bool DisclosureToggle(string? title, ref bool value, params Action[] actions) {
             var changed = TogglePrivate(title, ref value, false, true, 175);
             If(value, actions);
             return changed;
         }
-        public static bool DisclosureBitFieldToggle(string title, ref int bitfield, int offset, bool exclusive = true, float width = 175, params Action[] actions) {
+        public static bool DisclosureBitFieldToggle(string? title, ref int bitfield, int offset, bool exclusive = true, float width = 175, params Action[] actions) {
             var bit = ((1 << offset) & bitfield) != 0;
             var newBit = bit;
             TogglePrivate(title, ref newBit, false, true, width);

@@ -114,8 +114,8 @@ namespace ModKit {
                 return _rarityTexture;
             }
         }
-        private static GUIStyle _rarityStyle;
-        public static GUIStyle rarityStyle {
+        private static GUIStyle? _rarityStyle;
+        public static GUIStyle? rarityStyle {
             get {
                 if (_rarityStyle == null) {
                     _rarityStyle = new GUIStyle(GUI.skin.button);

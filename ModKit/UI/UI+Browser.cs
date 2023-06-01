@@ -19,7 +19,7 @@ namespace ModKit {
 
             private static readonly Dictionary<object, object> ShowDetails = new();
             public static void ClearDetails() => ShowDetails.Clear();
-            public static bool DetailToggle(string title, object key, object target = null, int width = 600) {
+            public static bool DetailToggle(string? title, object key, object? target = null, int width = 600) {
                 var changed = false;
                 if (target == null) target = key;
                 var expanded = ShowDetails.ContainsKey(key);
@@ -112,11 +112,11 @@ namespace ModKit {
                 IEnumerable<Item> current,
                 Func<IEnumerable<Definition>> available,    // Func because available may be slow
                 Func<Item, Definition> definition,
-                Func<Definition, string> searchKey,
-                Func<Definition, IComparable[]> sortKeys,
-                Action onHeaderGUI = null,
-                Action<Definition, Item> onRowGUI = null,
-                Action<Definition, Item> onDetailGUI = null,
+                Func<Definition, string?> searchKey,
+                Func<Definition, IComparable?[]> sortKeys,
+                Action? onHeaderGUI = null,
+                Action<Definition, Item>? onRowGUI = null,
+                Action<Definition, Item>? onDetailGUI = null,
                 int indent = 50,
                 bool showDiv = true,
                 bool search = true,
@@ -178,13 +178,13 @@ namespace ModKit {
                         }
                         space(25);
                         if (_matchCount > 0 || _searchText.Length > 0) {
-                            var matchesText = "Matches: ".localize().Green().Bold() + $"{_matchCount}".Orange().Bold();
+                            string? matchesText = "Matches: ".localize().Green().Bold() + $"{_matchCount}".Orange().Bold();
                             if (_matchCount > SearchLimit) { matchesText += " => ".Cyan() + $"{SearchLimit}".Cyan().Bold(); }
 
                             Label(matchesText, ExpandWidth(false));
                         }
                         if (_matchCount > SearchLimit) {
-                            string pageLabel = "Page: ".localize().orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
+                            string? pageLabel = "Page: ".localize().orange() + _currentPage.ToString().cyan() + " / " + _pageCount.ToString().cyan();
                             25.space();
                             Label(pageLabel, ExpandWidth(false));
                             ActionButton("-", () => {
@@ -238,8 +238,8 @@ namespace ModKit {
                 IEnumerable<Item> current,
                 Func<IEnumerable<Definition>> available,
                 bool search,
-                Func<Definition, string> searchKey,
-                Func<Definition, IComparable[]> sortKeys,
+                Func<Definition, string?> searchKey,
+                Func<Definition, IComparable?[]> sortKeys,
                 Func<Item, Definition> definition,
                 Func<Definition, IEnumerable<string>> collator
                 ) {
@@ -367,7 +367,7 @@ namespace ModKit {
             [UsedImplicitly]
             public void UpdateSearchResults(string searchTextParam,
                 IEnumerable<Definition> definitions,
-                Func<Definition, string> searchKey,
+                Func<Definition, string>? searchKey,
                 bool search
                 ) {
                 if (definitions == null) {

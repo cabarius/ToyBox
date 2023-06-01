@@ -7,11 +7,9 @@ namespace ToyBox {
     // https://github.com/paxchristos/pk_multiple_classes_per_level_fork
     public class StateReplacer {
         public readonly LevelUpState State;
-        public readonly BlueprintCharacterClass SelectedClass;
+        public readonly BlueprintCharacterClass? SelectedClass;
         public readonly int NextClassLevel;
-
-        private StateReplacer() { }
-
+        
         public StateReplacer(LevelUpState state) {
             State = state;
             SelectedClass = state.SelectedClass;

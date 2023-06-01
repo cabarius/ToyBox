@@ -8,33 +8,51 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Root.Strings;
+using Kingmaker.Cargo;
 using Kingmaker.Cheats;
+using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
 using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
 using Kingmaker.Code.UI.MVVM.View.MainMenu.PC;
 using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
+using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
 using Kingmaker.Code.UI.MVVM.VM.MainMenu;
+using Kingmaker.Code.UI.MVVM.VM.MessageBox;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.Inventory;
+using Kingmaker.Code.UI.MVVM.VM.ShipCustomization;
+using Kingmaker.Code.UI.MVVM.VM.Slots;
+using Kingmaker.Code.UI.MVVM.VM.WarningNotification;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers;
 using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
+using Kingmaker.GameCommands;
 using Kingmaker.Globalmap;
 using Kingmaker.Globalmap;
 using Kingmaker.Items;
+using Kingmaker.Items.Slots;
 using Kingmaker.Networking;
+using Kingmaker.Networking;
+using Kingmaker.Pathfinding;
 using Kingmaker.Pathfinding;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem.Rules;
 using Kingmaker.Tutorial;
 using Kingmaker.UI;
+using Kingmaker.UI;
+using Kingmaker.UI.Common;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Legacy.LoadingScreen;
 using Kingmaker.UI.PathRenderer;
+using Kingmaker.UI.PathRenderer;
+using Kingmaker.UI.Sound;
 using Kingmaker.UI.Sound;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -46,6 +64,7 @@ using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
 using Kingmaker.View.Covers;
+using Kingmaker.View.Covers;
 using Kingmaker.View.MapObjects;
 using Kingmaker.Visual.Sound;
 using ModKit;
@@ -54,13 +73,14 @@ using Owlcat.Runtime.UI;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using System;
 using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using ToyBox;
 using UniRx;
-using UnityEngine;
+using Warhammer.SpaceCombat.Blueprints;
 using static Kingmaker.Sound.AkAudioService;
 using static Kingmaker.UnitLogic.Abilities.AbilityData;
 using static Kingmaker.Utility.MassLootHelper;
@@ -356,8 +376,7 @@ namespace ToyBox.BagOfPatches {
                                 __result = true;
                             break;
                     }
-                }
-                else if (Settings.toggleIgnoreAbilityAnyRestriction)
+                } else if (Settings.toggleIgnoreAbilityAnyRestriction)
                     __result = true;
             }
         }
@@ -503,22 +522,145 @@ toggleIgnoreAbilityTargetTooClose
                 return unit.MovementAgent.Position.To2D() != unit.MovementAgent.m_PreviousPosition;
             }
         }
-#if false // TODO: these don't work by themselves so figure out what to do
+#if true // TODO: these don't work by themselves so figure out what to do
         [HarmonyPatch(typeof(InventoryHelper))]
         public static class InventoryHelperPatch {
-            [HarmonyPrefix]
             [HarmonyPatch(nameof(InventoryHelper.CanChangeEquipment))]
+            [HarmonyPrefix]
             public static bool CanChangeEquipment(BaseUnitEntity unit, ref bool __result) {
                 if (!Settings.toggleEquipItemsDuringCombat) return true;
                 __result = true;
                 return false;
             }
 
-            [HarmonyPrefix]
             [HarmonyPatch(nameof(InventoryHelper.CanEquipItem))]
+            [HarmonyPrefix]
             public static bool CanEquipItem(ItemEntity item, BaseUnitEntity unit, ref bool __result) {
                 if (!Settings.toggleEquipItemsDuringCombat) return true;
                 __result = InventoryHelper.CanEquipItemInCombat(item);
+                return false;
+            }
+
+            [HarmonyPatch(nameof(InventoryHelper.TryEquip))]
+            [HarmonyPrefix]
+            public static bool TryEquip(ItemSlotVM slot, BaseUnitEntity unit) {
+                if (!Settings.toggleEquipItemsDuringCombat) return true;
+                if (unit == null || slot == null || !slot.HasItem || !unit.IsMyNetRole())
+                    return false;
+                ItemEntity itemEntity = slot.ItemEntity;
+                Game.Instance.GameCommandQueue.EquipItem(itemEntity, (MechanicEntity)unit, (ItemSlotRef)null);
+                Game.Instance.GameCommandQueue.OrderCollection(slot, slot.Group);
+                bool isNotable = itemEntity.Blueprint.IsNotable;
+                if (UIUtilityItem.GetEquipPosibility(itemEntity)[0] | isNotable || itemEntity is ItemEntitySimple)
+                    UISounds.Instance.PlayItemSound(SlotAction.Put, itemEntity, true);
+                else
+                    UISounds.Instance.Sounds.Combat.CombatGridCantPerformActionClick.Play();
+                return false;
+            }
+
+            [HarmonyPatch(nameof(InventoryHelper.TryUnequip))]
+            [HarmonyPrefix]
+            public static bool TryUnequip(EquipSlotVM slot) {
+                if (!Settings.toggleEquipItemsDuringCombat) return true;
+                ItemSlot itemSlot = slot.ItemSlot;
+                if (itemSlot == null
+                    || !itemSlot.HasItem
+                    || itemSlot.HasItem && !itemSlot.CanRemoveItem()
+                    || !(itemSlot.Owner is BaseUnitEntity owner)
+                    || !owner.IsMyNetRole())
+                    return false;
+                Game.Instance.GameCommandQueue.UnequipItem((MechanicEntity)owner, slot.ToSlotRef(), (ItemSlotRef)null);
+                UISounds.Instance.PlayItemSound(SlotAction.Take, slot.ItemEntity, true);
+                InventoryStashVM stashVm = Game.Instance.RootUiContext?.SurfaceVM?.StaticPartVM?.ServiceWindowsVM?.InventoryVM?.Value?.StashVM;
+                if (stashVm == null)
+                    return false;
+                Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)slot, stashVm);
+                return false;
+            }
+
+            [HarmonyPatch(nameof(InventoryHelper.TryDrop), new Type[] { typeof(ItemEntity) })]
+            [HarmonyPrefix]
+            public static bool TryDrop(ItemEntity item) {
+                if (!Settings.toggleEquipItemsDuringCombat) return true;
+                if (UIUtility.IsGlobalMap()) {
+                    InventoryHelper.s_Item = item;
+                    InventoryHelper.s_ItemCallback = (Action)(() => EventBus.RaiseEvent<IDropItemHandler>((Action<IDropItemHandler>)(h => h.HandleDropItem(item, false))));
+                    UIUtility.ShowMessageBox((string)UIStrings.Instance.CommonTexts.DropItemFromGlobalMap, DialogMessageBoxBase.BoxType.Dialog, (button => {
+                        if (button != DialogMessageBoxBase.BoxButton.Yes || InventoryHelper.s_ItemSlot == null) return;
+                        InventoryHelper.DropItemMechanicGlobalMap(InventoryHelper.s_ItemSlot);
+                    }));
+                } else
+                    InventoryHelper.DropItemMechanic(item);
+                return false;
+            }
+
+            [HarmonyPatch(nameof(InventoryHelper.TryMoveSlotInInventory))]
+            [HarmonyPrefix]
+            public static bool TryMoveSlotInInventory(ItemSlotVM from, ItemSlotVM to) {
+                if (!Settings.toggleEquipItemsDuringCombat) return true;
+
+                CargoEntity owner1 = from.Group?.MechanicCollection.Owner as CargoEntity;
+                CargoEntity owner2 = to.Group?.MechanicCollection.Owner as CargoEntity;
+                if (from.Group != to.Group && owner1 != null || owner2 != null) {
+                    if (owner1 != null && !owner1.CanTransferFrom()) {
+                        if (owner1.Blueprint.Integral) {
+                            PFLog.Default.Log("Cannot transfer items from this cargo cause Integral true");
+                            return false;
+                        }
+                        PFLog.Default.Log("Cannot transfer items from this cargo cause CanRemoveItems false");
+                        return false;
+                    }
+                    if (owner2 != null && !owner2.CanAdd(from.ItemEntity, out int _)) {
+                        if (owner2.Blueprint.Integral) {
+                            PFLog.Default.Log("Cannot add to cargo cause Integral true");
+                            return false;
+                        }
+                        if (!owner2.CorrectOrigin(from.ItemEntity.Blueprint.Origin)) {
+                            PFLog.Default.Log("Cannot add to cargo cause item origin not correct");
+                            return false;
+                        }
+                        PFLog.Default.Log("Cannot add to cargo cause is is full");
+                        return false;
+                    }
+                }
+                if (from.Group != to.Group && to is EquipSlotVM slotVM2) {
+                    if (!(slotVM2.ItemSlot.Owner is BaseUnitEntity owner3) || !owner3.IsMyNetRole())
+                        return false;
+                    Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, slotVM2.ItemSlot.Owner, slotVM2.ToSlotRef());
+                    Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
+                } else if (from.Group != to.Group && to is ShipComponentSlotVM slotVM1) {
+                    Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, slotVM1.ItemSlot.Owner, slotVM1.ToSlotRef());
+                    Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
+                } else if (from.Group != to.Group && (bool)(SimpleBlueprint)(to.Item?.Value?.Blueprint as BlueprintStarshipItem)) {
+                    Game.Instance.GameCommandQueue.EquipItem(to.Item?.Value, from.ItemEntity?.Owner, from.ToSlotRef());
+                    Game.Instance.GameCommandQueue.OrderCollection(to, to.Group);
+                } else if (from.Group != to.Group && from is EquipSlotVM equipSlotVm) {
+                    if (!(equipSlotVm.ItemSlot.Owner is BaseUnitEntity owner4) || !owner4.IsMyNetRole())
+                        return false;
+                    Game.Instance.GameCommandQueue.UnequipItem((MechanicEntity)owner4, equipSlotVm.ToSlotRef(), to.ToSlotRef());
+                    Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)equipSlotVm, to.Group);
+                } else if (from.Group != to.Group && from is ShipComponentSlotVM shipComponentSlotVm) {
+                    Game.Instance.GameCommandQueue.UnequipItem(shipComponentSlotVm.ItemSlot.Owner, shipComponentSlotVm.ToSlotRef(), to.ToSlotRef());
+                    Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)shipComponentSlotVm, to.Group);
+                } else {
+                    bool isLootOrCargo = owner1 != null || owner2 != null;
+                    InventoryHelper.ProcessDragEnd(from, to, isLootOrCargo);
+                }
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(ItemSlot))]
+        public static class ItemSlotPatch {
+            [HarmonyPatch(nameof(ItemSlot.IsPossibleInsertItems))]
+            [HarmonyPrefix]
+            public static bool IsPossibleInsertItems(ItemSlot __instance, ref bool __result) {
+                if (!Settings.toggleEquipItemsDuringCombat) return true;
+                __result = !(bool)__instance.Lock
+                           || (bool)(Kingmaker.ElementsSystem.ContextData.ContextData<ItemSlot.IgnoreLock>)Kingmaker.ElementsSystem.ContextData.ContextData<ItemSlot.IgnoreLock>.Current
+                           || __instance.IsBodyInitializing;
+                Mod.Log($"ItemSlot.IsPossibleInsertItems: {__result}");
+
                 return false;
             }
         }

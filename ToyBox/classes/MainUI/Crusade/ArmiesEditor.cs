@@ -95,7 +95,7 @@ namespace ToyBox.classes.MainUI {
             }
         }
         public static bool discloseMercenaryUnits = false;
-        private const string RerollAll = "Reroll Mercs";
+        private const string? RerollAll = "Reroll Mercs";
 
         public static void OnLoad() {
             KeyBindings.RegisterAction(RerollAll, () => {
