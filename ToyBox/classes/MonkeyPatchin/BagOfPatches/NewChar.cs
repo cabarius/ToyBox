@@ -37,7 +37,7 @@ namespace ToyBox.BagOfPatches {
                                 minimumPoints = component != null ? component.StartingStatPoints : 20;
                             //Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
                             //Logger.Log($"not pregen - isCust: {isCustom}");
-                            var pointCount = Math.Max(minimumPoints, __instance.m_Unit.IsCustomCompanion() ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+                            var pointCount = Math.Max(minimumPoints, isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
 
                             //Logger.Log($"points: {pointCount}");
 
