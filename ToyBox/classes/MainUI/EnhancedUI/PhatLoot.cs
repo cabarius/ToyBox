@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-using Kingmaker;
+﻿using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
-using ModKit;
-using static ModKit.UI;
 using Kingmaker.View.MapObjects;
 using Kingmaker.View.MapObjects.InteractionRestrictions;
+using ModKit;
 using ModKit.Utility;
+using System;
+using System.Linq;
+using UnityEngine;
+using static ModKit.UI;
 #if Wrath
 using ToyBox.Multiclass;
 #endif
@@ -19,14 +19,20 @@ namespace ToyBox {
         public static string searchText = "";
 
         //
-        private const string? MassLootBox = "Open Mass Loot Window";
-        private const string? OpenPlayerChest = "Open Player Chest";
+        private const string MassLootBox = "Open Mass Loot Window";
+        private const string OpenPlayerChest = "Open Player Chest";
+        private const string RevealGroundLoot = "Reveal Ground Loot";
+        private const string RevealHiddenGroundLoot = "Reveal Hidden Ground Loot";
+        private const string RevealInevitableLoot = "Reveal Inevitable Loot";
         public static void ResetGUI() { }
 
         public static void OnLoad() {
             KeyBindings.RegisterAction(MassLootBox, LootHelper.OpenMassLoot);
 #if Wrath
             KeyBindings.RegisterAction(OpenPlayerChest, LootHelper.OpenPlayerChest);
+            KeyBindings.RegisterAction(RevealGroundLoot, () => LootHelper.ShowAllChestsOnMap());
+            KeyBindings.RegisterAction(RevealHiddenGroundLoot, () => LootHelper.ShowAllChestsOnMap(true));
+            KeyBindings.RegisterAction(RevealInevitableLoot, LootHelper.ShowAllInevitablePortalLoot);
 #endif
         }
 
@@ -61,18 +67,18 @@ namespace ToyBox {
                     Label("Lets you open up your player storage chest that you find near your bed at the Inn and other places".localize().green());
                 },
                 () => {
-                    ActionButton("Reveal Ground Loot".localize(), () => LootHelper.ShowAllChestsOnMap(), Width(400));
-                    Space(150);
+                    BindableActionButton(RevealGroundLoot, true, Width(400));
+                    Space(95 - 150);
                     Label("Shows all chests/bags/etc on the map excluding hidden".localize().green());
                 },
                 () => {
-                    ActionButton("Reveal Hidden Ground Loot".localize(), () => LootHelper.ShowAllChestsOnMap(true), Width(400));
-                    Space(150);
+                    BindableActionButton(RevealHiddenGroundLoot, true, Width(400));
+                    Space(95 - 150);
                     Label("Shows all chests/bags/etc on the map including hidden".localize().green());
                 },
                 () => {
-                    ActionButton("Reveal Inevitable Loot".localize(), LootHelper.ShowAllInevitablePortalLoot, Width(400));
-                    Space(150);
+                    BindableActionButton(RevealInevitableLoot, true, Width(400));
+                    Space(95 - 150);
                     Label("Shows unlocked Inevitable Excess DLC rewards on the map".localize().green());
                 },
 #endif
@@ -163,8 +169,7 @@ namespace ToyBox {
                     if (Main.IsInGame) {
                         try {
                             areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
-                        }
-                        catch { }
+                        } catch { }
                         var areaPrivateName = Game.Instance.CurrentlyLoadedArea.name;
                         if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }

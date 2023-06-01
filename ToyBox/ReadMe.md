@@ -70,10 +70,28 @@
   etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the
   children of the Etude. Etudes that have Elements will offer a second disclosure triangle next to the status that will
   show them to you.
-  WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up                                                                                                         
+  WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
+
+### Install & Setup (Rogue)
+
+1. Download the ToyBox mod file and unzip
+1. If the folder is not already named 0ToyBox0 please rename it to that
+1. Launch the game at least once.
+1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one.
+   **
+1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. You may want to copy your Settings.xml and UserSettings folder from the old `WH 4000 RT` folder
+1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
+1. Load a save or start a new game to get the most out of of the mod
+
+* Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
+* Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
+  possible
 
 ### Ver 1.5.4 Rogue (Coming Soon)
 **ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023d** for beta 0.2.1y
@@ -92,20 +110,6 @@
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
-### Ver 1.5.4 Wrath (Coming Soon)
-**ToyBox 1.5.4 Preview Version 1.5.3c May 31, 2023**
-* (***Narria***) Some Etude changes
-* (***BuckAMayzing***) Gestalt Companion fix
-* (***BuckAMayzing***) Mercenary Gestalt fix
-* (***ADDB***) Added toggle to disable traps
-* (***ADDB***) Small ToyBox Swarm GUI fix
-* (***ADDB***) Enchantment Tab Improvement
-  * Added paging to Inventory search for Improved Performance
-  * Improved Inventory Search Keys
-  * Exchanged old Enchant Browser for new Browser
-* (***ADDB*** and ***BuckAMayzing***) Changes to BuffExclusion behaviour
-  * Added ~100 Buffs to the default exclusions (every hidden buff that has Cooldown in its name)
-  * Separated buffs excluded by default and buffs excluded by the user into different categories
 ### Install & Setup (Rogue)
 
 1. Download the ToyBox mod file and unzip
@@ -116,17 +120,28 @@
 1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. You may want to copy your Settings.xml and UserSettings folder from the old `WH 4000 RT` folder
 1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
 1. Load a save or start a new game to get the most out of of the mod
 
-* Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
-* Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
-  possible
 ### Ver 1.5.4 Wrath (Coming Soon)
-***ToyBox 1.5.4 Wrath** - ***Sh0dan Preview*** **June 1, 2023c**
+**ToyBox 1.5.4 Preview Version 1.5.3c May 31, 2023**
+* (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
-### Install & Setup (Rogue)
+* (***BuckAMayzing***) Gestalt Companion fix
+* (***BuckAMayzing***) Mercenary Gestalt fix
+* (***ADDB***) Add new Bindable Action Buttons for Loot Revealers
+* (***ADDB***) Added toggle to disable traps
+* (***ADDB***) Small ToyBox Swarm GUI fix
+* (***ADDB***) Enchantment Tab Improvement
+  * Added paging to Inventory search for Improved Performance
+  * Improved Inventory Search Keys
+  * Exchanged old Enchant Browser for new Browser
+* (***ADDB*** and ***BuckAMayzing***) Changes to BuffExclusion behaviour
+  * Added ~100 Buffs to the default exclusions (every hidden buff that has Cooldown in its name)
+  * Separated buffs excluded by default and buffs excluded by the user into different categories
+
 ### Ver 1.5.3 Wrath - Sh0dan Unified Edition
 * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
     * Changed mod ID and title name in Mod Manager to make this clear.
