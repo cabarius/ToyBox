@@ -497,6 +497,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MiscRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\LocalMap.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\LootRT.cs" />

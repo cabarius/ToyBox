@@ -92,6 +92,20 @@
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
+### Ver 1.5.4 Wrath (Coming Soon)
+**ToyBox 1.5.4 Preview Version 1.5.3c May 31, 2023**
+* (***Narria***) Some Etude changes
+* (***BuckAMayzing***) Gestalt Companion fix
+* (***BuckAMayzing***) Mercenary Gestalt fix
+* (***ADDB***) Added toggle to disable traps
+* (***ADDB***) Small ToyBox Swarm GUI fix
+* (***ADDB***) Enchantment Tab Improvement
+  * Added paging to Inventory search for Improved Performance
+  * Improved Inventory Search Keys
+  * Exchanged old Enchant Browser for new Browser
+* (***ADDB*** and ***BuckAMayzing***) Changes to BuffExclusion behaviour
+  * Added ~100 Buffs to the default exclusions (every hidden buff that has Cooldown in its name)
+  * Separated buffs excluded by default and buffs excluded by the user into different categories
 ### Install & Setup (Rogue)
 
 1. Download the ToyBox mod file and unzip
