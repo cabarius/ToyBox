@@ -278,9 +278,15 @@ namespace ToyBox {
                         __result = GetFixedAnswerString(answer, bind, index);
                     }
                     if (!Main.Settings.previewDialogResults) return;
+                    var conditions = PreviewUtilities.FormatConditionsAsList(answer);
+                    var conditionsText = string.Join(" ", conditions);
                     var text = answer.ResultsText();
-                    if (!text.IsNullOrEmpty()) 
-                        __result += text;
+                    if (!text.IsNullOrEmpty() && conditions.Any())
+                        __result += $"<size=75%>[{conditionsText}]\n{text}</size>";
+                    else if (!text.IsNullOrEmpty())
+                        __result += $"<size=75%>{text}</size>";
+                    else if (conditions.Any())
+                        __result += $"<size=75%>[{conditionsText}]</size>";
                 }
                 catch (Exception ex) {
                     Mod.Error(ex);

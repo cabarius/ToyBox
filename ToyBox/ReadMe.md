@@ -76,7 +76,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023c** for beta 0.2.1y
+**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023d** for beta 0.2.1y
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -112,6 +112,8 @@
 ### Ver 1.5.4 Wrath (Coming Soon)
 ***ToyBox 1.5.4 Wrath** - ***Sh0dan Preview*** **June 1, 2023c**
 * (***Narria***) beginnings of a dialog browser
+* (***Narria***) dialog preview now shows conditions for answers too
+### Install & Setup (Rogue)
 ### Ver 1.5.3 Wrath - Sh0dan Unified Edition
 * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
     * Changed mod ID and title name in Mod Manager to make this clear.
