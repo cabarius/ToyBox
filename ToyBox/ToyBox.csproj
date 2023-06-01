@@ -268,6 +268,7 @@
         <Compile Include="classes\MonkeyPatchin\BagOfPatches\Settlement.cs"/>
         <Compile Include="classes\MonkeyPatchin\BagOfPatches\Spellbooks.cs"/>
         <Compile Include="classes\MonkeyPatchin\BagOfPatches\Summons.cs"/>
+		<Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
         <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksWrath.cs"/>
         <Compile Include="classes\MonkeyPatchin\BagOfPatches\zToDo.cs"/>
         <Compile Include="classes\MonkeyPatchin\Braaainz.cs"/>

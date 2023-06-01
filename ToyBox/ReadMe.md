@@ -110,6 +110,19 @@
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
+### Install & Setup (Rogue)
+
+1. Download the ToyBox mod file and unzip
+1. If the folder is not already named 0ToyBox0 please rename it to that
+1. Launch the game at least once.
+1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one.
+   **
+1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. You may want to copy your Settings.xml and UserSettings folder from the old `WH 4000 RT` folder
+1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
+1. Load a save or start a new game to get the most out of of the mod
 
 ### Ver 1.5.4 Wrath (Coming Soon)
 **ToyBox 1.5.4 Preview Version 1.5.3c May 31, 2023**
@@ -119,6 +132,7 @@
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
 * (***ADDB***) Add new Bindable Action Buttons for Loot Revealers
+* (***ADDB***) Added toggle to disable traps
 * (***ADDB***) Small ToyBox Swarm GUI fix
 * (***ADDB***) Enchantment Tab Improvement
   * Added paging to Inventory search for Improved Performance
