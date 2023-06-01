@@ -22,18 +22,18 @@ namespace ToyBox {
                             using (HorizontalScope()) {
                                 Slider("Build Points (Main)".localize(), ref Settings.characterCreationAbilityPointsPlayer, 1, 600, 20, "", 300.width());
                                 25.space();
-                                Toggle("Ignore Game Minimum".localize(), ref Settings.characterCreationAbilityPointsOverrideGameMinimums);
-                                25.space();
-                                HelpLabel("Tick this if you want these sliders to let you go below game specified minimum point value".localize());
-                                Space();
                             }
                         }
                         Toggle("Overwrite Default Game Build Points for Mercenaries".localize(), ref Settings.characterCreationAbilityPointsOverrideMerc);
                         if (Settings.characterCreationAbilityPointsOverrideMerc) {
                             using (HorizontalScope()) {
-                                Slider("Build Points (Mercenary)".localize(), ref Settings.characterCreationAbilityPointsMerc, 1, 600, 20, "", AutoWidth());
+                                Slider("Build Points (Mercenary)".localize(), ref Settings.characterCreationAbilityPointsMerc, 1, 600, 20, "", 300.width());
                             }
                         }
+                        Toggle("Ignore Game Minimum".localize(), ref Settings.characterCreationAbilityPointsOverrideGameMinimums);
+                        25.space();
+                        HelpLabel("Tick this if you want these sliders to let you go below game specified minimum point value".localize());
+                        Space();
                     }
                 },
                 () => Slider("Ability Max".localize(), ref Settings.characterCreationAbilityPointsMax, 0, 50, 18, "", AutoWidth()),
