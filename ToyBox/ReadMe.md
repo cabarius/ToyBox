@@ -91,7 +91,7 @@
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
 ### Ver 1.5.4 Wrath (Coming Soon)
-**ToyBox 1.5.4 Preview Version 1.5.3f May 31, 2023**
+**ToyBox 1.5.4 Wrath - Preview Version 1.5.3f June 1, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too

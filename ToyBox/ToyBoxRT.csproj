@@ -545,7 +545,7 @@
             xcopy /Y "$(ProjectDir)\Repository.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Repository.json*"
             xcopy /E /Y "$(ProjectDir)Localization\" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Localization\"
             cd "$(TargetDir)"
-            powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1"
+            powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1" Rogue
         </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
