@@ -101,7 +101,7 @@ namespace ModKit {
                 }
             }
         }
-        public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string?>? titleFormater = null, GUIStyle? style = null, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             options = options.AddDefaults();
             var names = Enum.GetNames(typeof(TEnum));
@@ -120,10 +120,10 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, titleFormater, null, options);
+        public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, Func<string, TEnum, string?>? titleFormater = null, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, titleFormater, null, options);
         public static bool EnumGrid<TEnum>(ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, xCols, null, options);
         public static bool EnumGrid<TEnum>(ref TEnum value, params GUILayoutOption[] options) where TEnum : struct => EnumGrid(ref value, 0, null, options);
-        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string? title, ref TEnum value, int xCols, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
@@ -132,7 +132,7 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool EnumGrid<TEnum>(string title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string? title, ref TEnum value, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
@@ -142,7 +142,7 @@ namespace ModKit {
             return changed;
         }
 
-        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, GUIStyle? style = null, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
@@ -152,7 +152,7 @@ namespace ModKit {
             return changed;
         }
 
-        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string?>? titleFormater = null, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
@@ -161,7 +161,7 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string> titleFormater = null, GUIStyle style = null, params GUILayoutOption[] options) where TEnum : struct {
+        public static bool EnumGrid<TEnum>(string title, ref TEnum value, int xCols, Func<string, TEnum, string?>? titleFormater = null, GUIStyle? style = null, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), Width(300));
@@ -186,11 +186,11 @@ namespace ModKit {
         // EnumerablePicker
 
         public static void EnumerablePicker<T>(
-                string title,
+                string? title,
                 ref int selected,
                 IEnumerable<T> range,
                 int xCols,
-                Func<T, string> titleFormater = null,
+                Func<T, string>? titleFormater = null,
                 params GUILayoutOption[] options
             ) {
             if (titleFormater == null)
@@ -207,7 +207,7 @@ namespace ModKit {
             Space(25);
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
-        public static NamedFunc<T> TypePicker<T>(string title, ref int selectedIndex, NamedFunc<T>[] items, bool shouldLocalize = false) where T : class {
+        public static NamedFunc<T> TypePicker<T>(string? title, ref int selectedIndex, NamedFunc<T>[] items, bool shouldLocalize = false) where T : class {
             var sel = selectedIndex;
             string[] titles;
             if (shouldLocalize) {
@@ -224,11 +224,11 @@ namespace ModKit {
         // GridPicker
 
         public static bool GridPicker<T>(
-                string title,
+                string? title,
                 ref T selected,
                 List<T> items,
                 string unselectedTitle,
-                Func<T, string> titler,
+                Func<T, string?> titler,
                 ref string searchText,
                 int xCols,
                 GUIStyle style,
@@ -282,20 +282,20 @@ namespace ModKit {
             return changed;
         }
         public static bool GridPicker<T>(
-                string title,
+                string? title,
                 ref T selected, List<T> items,
                 string unselectedTitle,
-                Func<T, string> titler,
+                Func<T, string?> titler,
                 ref string searchText,
                 int xCols,
                 params GUILayoutOption[] options
                 ) where T : class
             => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, xCols, buttonStyle, options);
         public static bool GridPicker<T>(
-                string title,
+                string? title,
                 ref T selected, List<T> items,
                 string unselectedTitle,
-                Func<T, string> titler,
+                Func<T, string?> titler,
                 ref string searchText,
                 params GUILayoutOption[] options
                 ) where T : class
@@ -303,10 +303,10 @@ namespace ModKit {
 
         // VPicker
         public static bool VPicker<T>(
-                string title,
+                string? title,
                 ref T selected, List<T> items,
                 string unselectedTitle,
-                Func<T, string> titler,
+                Func<T, string?> titler,
                 ref string searchText,
                 Action extras,
                 GUIStyle style,
@@ -323,20 +323,20 @@ namespace ModKit {
             return changed;
         }
         public static bool VPicker<T>(
-                string title,
+                string? title,
                 ref T selected, List<T> items,
                 string unselectedTitle,
-                Func<T, string> titler,
+                Func<T, string?> titler,
                 ref string searchText,
                 Action extras,
                 params GUILayoutOption[] options
                 ) where T : class
             => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, buttonStyle, options);
         public static bool VPicker<T>(
-                string title,
+                string? title,
                 ref T selected, List<T> items,
                 string unselectedTitle,
-                Func<T, string> titler,
+                Func<T, string?> titler,
                 ref string searchText,
                 params GUILayoutOption[] options
                 ) where T : class

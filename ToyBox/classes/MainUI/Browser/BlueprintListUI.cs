@@ -36,12 +36,12 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData unit,
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
-            Func<string, string> titleFormater = null,
-            NamedTypeFilter typeFilter = null,
-            NavigateTo navigateTo = null
+            Func<string, string?>? titleFormatter = null,
+            NamedTypeFilter? typeFilter = null,
+            NavigateTo? navigateTo = null
         ) {
             List<Action> todo = new();
-            if (titleFormater == null) titleFormater = (t) => t.orange().bold();
+            if (titleFormatter == null) titleFormatter = (t) => t.orange().bold();
             if (remainingWidth == 0) remainingWidth = ummWidth - indent;
             var index = 0;
             IEnumerable<SimpleBlueprint> simpleBlueprints = blueprints.ToList();
@@ -87,14 +87,14 @@ namespace ToyBox {
                     var titles = actions.Select(a => a.name);
                     var name = GetTitle(blueprint);
                     var displayName = blueprint.GetDisplayName();
-                    string title;
+                    string? title;
                     if (Settings.showDisplayAndInternalNames && displayName.Length > 0 && displayName != name) {
                         // FIXME - horrible perf bottleneck 
                         if (titles.Contains("Remove".localize()) || titles.Contains("Lock".localize())) {
                             title = displayName.cyan().bold();
                         }
                         else {
-                            title = titleFormater(displayName);
+                            title = titleFormatter(displayName);
                         }
                         title = $"{title} : {name.color(RGBA.darkgrey)}";
                     }
@@ -104,7 +104,7 @@ namespace ToyBox {
                             title = name.cyan().bold();
                         }
                         else {
-                            title = titleFormater(name);
+                            title = titleFormatter(name);
                         }
                     }
                     titleWidth = (remainingWidth / (IsWide ? 3 : 4)) - indent;

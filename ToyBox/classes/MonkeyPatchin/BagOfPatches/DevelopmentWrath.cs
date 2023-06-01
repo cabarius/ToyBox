@@ -32,7 +32,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(SmartConsole), nameof(SmartConsole.WriteLine))]
         private static class SmartConsole_WriteLine_Patch {
-            private static void Postfix(string message) {
+            private static void Postfix(string? message) {
                 if (settings.toggleDevopmentMode) {
                     Mod.Log(message);
                     var timestamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
@@ -113,7 +113,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(BlueprintConverter), nameof(BlueprintConverter.ReadJson))]
         private static class ForceSuccessfulLoad_Blueprints_Patch {
-            private static bool Prefix(ref object __result, JsonReader reader) {
+            private static bool Prefix(ref object? __result, JsonReader reader) {
                 if (!settings.enableLoadWithMissingBlueprints) return true;
                 var text = (string)reader.Value;
                 if (string.IsNullOrEmpty(text) || text == "null") {

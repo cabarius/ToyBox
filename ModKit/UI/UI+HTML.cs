@@ -7,7 +7,7 @@ namespace ModKit {
     public static partial class UI {
         private static GUIStyle linkStyle = null;
 
-        public static bool LinkButton(string title, string url, Action action = null, params GUILayoutOption[] options) {
+        public static bool LinkButton(string? title, string url, Action? action = null, params GUILayoutOption[] options) {
             if (options.Length == 0) { options = new GUILayoutOption[] { AutoWidth() }; }
             if (linkStyle == null) {
                 linkStyle = new GUIStyle(rarityStyle) {

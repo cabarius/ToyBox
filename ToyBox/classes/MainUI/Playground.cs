@@ -13,7 +13,7 @@ namespace ModKit {
 
         }
         public class View : IDisposable {
-            public View background { get; set; } = null;
+            public View? background { get; set; } = null;
             public Color color { get; set; } = Color.clear;
             public float height { get; set; } = Size.Automatic;
             public float width { get; set; } = Size.Automatic;
@@ -32,7 +32,7 @@ namespace ModKit {
 
         }
         public class List<ItemType> : Stack {
-            public IEnumerable<ItemType> items;
+            public IEnumerable<ItemType>? items;
             public void ForEach(Action<ItemType> action) { }
             public void ForEach(Action<ItemType, int> action) { }
         }

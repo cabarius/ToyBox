@@ -15,10 +15,10 @@ namespace ToyBox {
 
         public static void OnGUI(UnitEntityData ch, float indent = 100) {
             var targetString = ch == null
-                    ? ("creation of ".green() + "new characters" + "\nNote:".yellow().bold()
-                        + " This value applies to ".orange() + "all saves".yellow().bold() + " and in the main menu".orange()).localize()
-                   : "when leveling up ".localize().green() + ch.CharacterName.orange().bold() + ("\nNote:".yellow().bold()
-                        + " This applies only to the ".orange() + "current save.".yellow().bold()).localize();
+                                   ? ("creation of ".green() + "new characters" + "\nNote:".yellow().bold()
+                                      + " This value applies to ".orange() + "all saves".yellow().bold() + " and in the main menu".orange()).localize()
+                                   : "when leveling up ".localize().green() + ch.CharacterName.orange().bold() + ("\nNote:".yellow().bold()
+                                                                                                                  + " This applies only to the ".orange() + "current save.".yellow().bold()).localize();
             using (UI.HorizontalScope()) {
                 UI.Space(indent);
                 UI.Label("Configure multiclass classes and gestalt flags to use during ".localize() + $"{targetString}".green());

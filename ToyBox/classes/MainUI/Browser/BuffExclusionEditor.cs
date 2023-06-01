@@ -20,7 +20,7 @@ namespace ToyBox {
         private static IEnumerable<BlueprintBuff> _displayedBuffs;
         private static int _pageSize = 10;
         private static int _currentPage = 0;
-        private static string _paginationString;
+        private static string? _paginationString;
         private static string _goToPage = "1";
         private static bool _showCurrentExceptions = true;
         private static bool _showDefaultExceptions = false;
@@ -61,7 +61,7 @@ namespace ToyBox {
                     if (BlueprintLoader.Shared.IsLoading || _searchResults == null) return;
 
                     using (VerticalScope()) {
-                        Func<bool, string> hideOrShowString = (bool isShown) => isShown ? "Hide".localize() : "Show".localize();
+                        Func<bool, string?> hideOrShowString = (bool isShown) => isShown ? "Hide".localize() : "Show".localize();
 
                         DisclosureToggle($"{hideOrShowString(_showCurrentExceptions)} " + "custom exceptions".localize(), ref _showCurrentExceptions);
                         if (_showCurrentExceptions) {

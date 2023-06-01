@@ -15,7 +15,6 @@ using static ModKit.Utility.StringExtensions;
 using static ModKit.Utility.RichTextExtensions;
 
 namespace ModKit.DataViewer {
-
     /**
      * Strategy For Async Deep Search
      * 
@@ -70,37 +69,33 @@ namespace ModKit.DataViewer {
         public delegate void SearchProgress(int visitCount, int depth, int breadth);
         private CancellationTokenSource _cancellationTokenSource;
         public bool isSearching { get; private set; } = false;
-        private static HashSet<int> VisitedInstanceIDs = new HashSet<int> { };
+        private static HashSet<int> VisitedInstanceIDs = new() { };
         public static int SequenceNumber = 0;
         private static ReflectionSearch _shared;
         public static int maxSearchDepth = 1;
         private static Queue<Action> _updates = new();
         public static int ApplyUpdates() {
             lock (_updates) {
-                int count = _updates.Count;
+                var count = _updates.Count;
                 foreach (var update in _updates) update.Invoke();
                 _updates.Clear();
                 return count;
             }
         }
         public static void AddUpdate(Action update) {
-            lock (_updates) {
-                _updates.Enqueue(update);
-            }
+            lock (_updates) _updates.Enqueue(update);
         }
         public static void ClearUpdates() {
-            lock (_updates) {
-                _updates.Clear();
-            }
+            lock (_updates) _updates.Clear();
         }
+
         public static ReflectionSearch Shared {
             get {
-                if (_shared == null) {
-                    _shared = new ReflectionSearch();
-                }
+                if (_shared == null) _shared = new ReflectionSearch();
                 return _shared;
             }
         }
+
         // Task.Run(() => UpdateSearchResults(_searchText, definitions, searchKey, sortKey, search));
         public void StartSearch(Node node, string[] searchTerms, SearchProgress updater, ReflectionSearchResult resultRoot) {
             if (isSearching) {
@@ -112,7 +107,7 @@ namespace ModKit.DataViewer {
                 resultRoot.Clear();
                 resultRoot.Node = node;
             }
-            _cancellationTokenSource = new();
+            _cancellationTokenSource = new CancellationTokenSource();
             isSearching = true;
             AddUpdate(() => updater(0, 0, 1));
             if (node == null) return;
@@ -120,7 +115,7 @@ namespace ModKit.DataViewer {
             Mod.Log($"seq: {SequenceNumber} - search for: {searchTerms}");
             if (searchTerms.Length != 0) {
                 var todo = new List<Node> { node };
-                Task.Run(() => Search(searchTerms, todo , 0, 0, SequenceNumber, updater, resultRoot));
+                Task.Run(() => Search(searchTerms, todo, 0, 0, SequenceNumber, updater, resultRoot));
             }
         }
         public void Stop() {
@@ -148,15 +143,14 @@ namespace ModKit.DataViewer {
                     isSearching = false;
                     return;
                 }
-                bool foundMatch = false;
+                var foundMatch = false;
                 var instanceID = node.InstanceID;
-                bool alreadyVisted = false;
+                var alreadyVisted = false;
                 if (instanceID is int instID) {
                     if (VisitedInstanceIDs.Contains(instID))
                         alreadyVisted = true;
-                    else {
+                    else
                         VisitedInstanceIDs.Add(instID);
-                    }
                 }
                 visitCount++;
                 //Main.Log(depth, $"node: {node.Name} - {node.GetPath()}");
@@ -164,7 +158,7 @@ namespace ModKit.DataViewer {
                     var matchCount = 0;
                     foreach (var term in searchTerms) {
                         var nodeToCheck = node;
-                        bool found = false;
+                        var found = false;
                         while (nodeToCheck != null && !found) {
                             if (nodeToCheck.Name.Matches(term) || nodeToCheck.ValueText.Matches(term)) {
                                 found = true;
@@ -190,50 +184,45 @@ namespace ModKit.DataViewer {
                     Mod.Log(depth, $"caught - {e}");
                 }
                 node.Matches = foundMatch;
-                if (!foundMatch) {
+                if (!foundMatch)
                     //Main.Log(depth, $"NOT matched: {node.Name} - {node.ValueText}");
                     //if (node.Expanded == ToggleState.On && node.GetParent() != null) {
                     //    node.Expanded = ToggleState.Off;
                     //}
-                    if (visitCount % 100 == 0) AddUpdate(() => updater(visitCount, depth, breadth));
-
-                }
+                    if (visitCount % 100 == 0)
+                        AddUpdate(() => updater(visitCount, depth, breadth));
                 if (node.hasChildren && !alreadyVisted) {
                     //if (node.Name == "SyncRoot") break;
                     //if (node.Name == "normalized") break;
 
                     try {
-                        foreach (var child in node.GetItemNodes()) {
+                        foreach (var child in node.GetItemNodes())
                             //Main.Log(depth + 1, $"item: {child.Name}"); 
                             newTodo.Add(child);
-                        }
                     }
                     catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");
                     }
                     try {
-                        foreach (var child in node.GetComponentNodes()) {
+                        foreach (var child in node.GetComponentNodes())
                             //Main.Log(depth + 1, $"comp: {child.Name}"); 
                             newTodo.Add(child);
-                        }
                     }
                     catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");
                     }
                     try {
-                        foreach (var child in node.GetPropertyNodes()) {
+                        foreach (var child in node.GetPropertyNodes())
                             //Main.Log(depth + 1, $"prop: {child.Name}");
                             newTodo.Add(child);
-                        }
                     }
                     catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");
                     }
                     try {
-                        foreach (var child in node.GetFieldNodes()) {
+                        foreach (var child in node.GetFieldNodes())
                             //Main.Log(depth + 1, $"field: {child.Name}");
                             newTodo.Add(child);
-                        }
                     }
                     catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");

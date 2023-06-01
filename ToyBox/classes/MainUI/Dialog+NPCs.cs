@@ -101,7 +101,7 @@ namespace ToyBox {
 #endif
                                     ReflectionTreeView.OnDetailGUI(u);
                                     var entries = u.GetUnitInteractionConditions();
-                                    var checkerEntries = entries.Where(e => e.HasConditins && (ShowInactive || e.IsActive()));
+                                    var checkerEntries = entries.Where(e => e.HasConditions && (ShowInactive || e.IsActive()));
                                     var conditions =
                                         from entry in checkerEntries
                                         from condition in entry.checker.Conditions

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ModKit.Utility {
     public static class StringExtensions {
-        public static bool Matches(this string source, string query) {
+        public static bool Matches(this string? source, string query) {
             if (source == null || query == null)
                 return false;
 #if false
@@ -23,7 +23,7 @@ namespace ModKit.Utility {
             }
             return matchCount >= queryTerms.Length;
         }
-        public static string MarkedSubstringNoHTML(this string source, string sub) {
+        public static string? MarkedSubstringNoHTML(this string? source, string sub) {
             if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(sub))
                 return source;
             var index = source.IndexOf(sub, StringComparison.InvariantCultureIgnoreCase);
@@ -33,13 +33,13 @@ namespace ModKit.Utility {
             }
             return source;
         }
-        public static string MarkedSubstring(this string source, string[] queryTerms) {
+        public static string? MarkedSubstring(this string? source, string[] queryTerms) {
             foreach (var term in queryTerms) {
                 source = source.MarkedSubstring(term);
             }
             return source;
         }
-        public static string MarkedSubstring(this string source, string query) {
+        public static string? MarkedSubstring(this string? source, string query) {
             if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(query))
                 return source;
             var htmlStart = source.IndexOf('<');
@@ -133,7 +133,7 @@ namespace ModKit.Utility {
 
         public static string ToHtmlString(this RGBA color) => $"{color:X}";
 
-        public static string Bold(this string str) => $"<b>{str}</b>";
+        public static string? Bold(this string? str) => $"<b>{str}</b>";
 
         public static string Color(this string str, Color color) => $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{str}</color>";
 
@@ -141,17 +141,17 @@ namespace ModKit.Utility {
 
         public static string Color(this string str, string rrggbbaa) => $"<color=#{rrggbbaa}>{str}</color>";
 
-        public static string color(this string s, string color) => _ = $"<color={color}>{s}</color>";
+        public static string color(this string? s, string color) => _ = $"<color={color}>{s}</color>";
         public static string White(this string s) => _ = s.color("white");
         public static string Grey(this string s) => _ = s.color("#A0A0A0FF");
         public static string Red(this string s) => _ = s.color("#C04040E0");
         public static string Pink(this string s) => _ = s.color("#FFA0A0E0");
-        public static string Green(this string s) => _ = s.color("#00ff00ff");
+        public static string Green(this string? s) => _ = s.color("#00ff00ff");
         public static string Blue(this string s) => _ = s.color("blue");
-        public static string Cyan(this string s) => _ = s.color("cyan");
+        public static string? Cyan(this string? s) => _ = s.color("cyan");
         public static string Magenta(this string s) => _ = s.color("magenta");
-        public static string Yellow(this string s) => _ = s.color("yellow");
-        public static string Orange(this string s) => _ = s.color("orange");
+        public static string? Yellow(this string s) => _ = s.color("yellow");
+        public static string? Orange(this string? s) => _ = s.color("orange");
 
 
 

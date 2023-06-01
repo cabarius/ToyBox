@@ -19,8 +19,8 @@ namespace ToyBox {
         public static string searchText = "";
 
         //
-        private const string MassLootBox = "Open Mass Loot Window";
-        private const string OpenPlayerChest = "Open Player Chest";
+        private const string? MassLootBox = "Open Mass Loot Window";
+        private const string? OpenPlayerChest = "Open Player Chest";
         public static void ResetGUI() { }
 
         public static void OnLoad() {

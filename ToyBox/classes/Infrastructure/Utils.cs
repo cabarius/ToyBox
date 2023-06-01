@@ -1,15 +1,4 @@
-﻿using Kingmaker;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Items;
-using Kingmaker.Utility;
-using Kingmaker.Visual.LocalMap;
-using Kingmaker.Localization;
-using Kingmaker.Utility;
-using ModKit;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -17,13 +6,18 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Web.UI;
-using JetBrains.Annotations;
+using Kingmaker;
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Items;
+using Kingmaker.Items;
+using Kingmaker.Localization;
+using Kingmaker.Utility;
+using ModKit;
+using Newtonsoft.Json;
 using UnityEngine;
 using Attribute = System.Attribute;
+using LocalizationManager = Kingmaker.Localization.LocalizationManager;
 #if Wrath
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
 #endif
 
 namespace ToyBox {
@@ -40,7 +34,7 @@ namespace ToyBox {
             return result;
         }
 
-        public static void SaveToFile<T>(this T obj, string filename = null) {
+        public static void SaveToFile<T>(this T obj, string? filename = null) {
             if (filename == null) filename = $"{obj.GetType().Name}.json";
             var toyboxFolder = ToyBoxUserPath;
             Directory.CreateDirectory(toyboxFolder);
@@ -113,7 +107,7 @@ namespace ToyBox {
                 return new();
             }
         }
-        public static string ToKM(this float v, string units = "") {
+        public static string ToKM(this float v, string? units = "") {
             if (v < 1000) {
                 return $"{v:0}{units}";
             }
@@ -124,7 +118,7 @@ namespace ToyBox {
             v = Mathf.Floor(v / 1000000);
             return $"{v:0.#}m{units}";
         }
-        public static string ToBinString(this int v, string units = "", float binSize = 2f) {
+        public static string ToBinString(this int v, string? units = "", float binSize = 2f) {
             if (v < 0) return "< 0";
             binSize = Mathf.Clamp(binSize, 1.1f, 20f);
             var logv = Mathf.Log(v) / Mathf.Log(binSize);
@@ -136,7 +130,7 @@ namespace ToyBox {
             var maxStr = max.ToKM(units);
             return $"{minStr} - {maxStr}";
         }
-        public static string ToBinString(this float v, string units = "", float binSize = 2f) {
+        public static string ToBinString(this float v, string? units = "", float binSize = 2f) {
             if (v < 0) return "< 0";
             binSize = Mathf.Clamp(binSize, 1.1f, 20f);
             var logv = Mathf.Log(v) / Mathf.Log(binSize);
@@ -396,7 +390,7 @@ namespace ToyBox {
 
     public static class LocalizationUtils {
 #if Wrath
-        public static void AddLocalizedString(this string value) => Kingmaker.Localization.LocalizationManager.CurrentPack.PutString(value, value);
+        public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
 #elif RT
         public static void AddLocalizedString(this string value) => Kingmaker.Localization.LocalizationManager.Instance.CurrentPack.PutString(value, value);
 #endif

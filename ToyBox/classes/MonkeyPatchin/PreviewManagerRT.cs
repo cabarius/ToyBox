@@ -37,8 +37,8 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace ToyBox {
-    internal static class PreviewManager {
-        public static Settings settings = Main.Settings;
+    public static class PreviewManager {
+        public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
         private static GameDialogsSettings DialogSettings => SettingsRoot.Game.Dialogs;
 
@@ -52,13 +52,13 @@ namespace ToyBox {
                 toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(answer.NextCue.Cues[0], 1));
             }
             cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
-                null,
-                0,
-                answer.OnSelect.Actions,
-                answer.SoulMarkShift,
-                answer.SoulMarkRequirement
+                                   null,
+                                   0,
+                                   answer.OnSelect.Actions,
+                                   answer.SoulMarkShift,
+                                   answer.SoulMarkRequirement
 
-            ));
+                               ));
             while (toCheck.Count > 0) {
                 var item = toCheck.Dequeue();
                 var cueBase = item.Item1;
@@ -66,11 +66,11 @@ namespace ToyBox {
                 if (currentDepth > 20) break;
                 if (cueBase is BlueprintCue cue) {
                     cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
-                        cue,
-                        currentDepth,
-                        cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray(),
-                        cue.SoulMarkShift,
-                        cue.SoulMarkRequirement
+                                           cue,
+                                           currentDepth,
+                                           cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray(),
+                                           cue.SoulMarkShift,
+                                           cue.SoulMarkRequirement
                                        ));
                     if (cue.Answers.Count > 0) {
                         var subAnswer = cue.Answers[0].Get();
@@ -84,55 +84,58 @@ namespace ToyBox {
                         toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(cue.Continue.Cues[0], currentDepth + 1));
                     }
                 }
-                else if (cueBase is BlueprintBookPage page) {
-                    cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
-                        page,
-                        currentDepth,
-                        page.OnShow.Actions,
-                        null,
-                        null
-                    ));
-                    if (page.Answers.Count > 0) {
-                        var subAnswer = page.Answers[0].Get();
-                        if (visited.Contains(subAnswer)) {
-                            isRecursive = true;
-                            break;
-                        }
-                        visited.Add(subAnswer);
-                        if (page.Answers[0].Get() is BlueprintAnswersList) break;
-                    }
-                    if (page.Cues.Count > 0) {
-                        foreach (var c in page.Cues)
-                            if (c.Get().CanShow())
-                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
-                    }
-                }
-                else if (cueBase is BlueprintCheck check) {
-                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Success, currentDepth + 1));
-                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
-                }
-                else if (cueBase is BlueprintCueSequence sequence) {
-                    foreach (var c in sequence.Cues)
-                        if (c.Get().CanShow())
-                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
-                    if (sequence.Exit != null) {
-                        var exit = sequence.Exit;
-                        if (exit.Answers.Count > 0) {
-                            var subAnswer = exit.Answers[0];
+                else
+                    if (cueBase is BlueprintBookPage page) {
+                        cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
+                                               page,
+                                               currentDepth,
+                                               page.OnShow.Actions,
+                                               null,
+                                               null
+                                           ));
+                        if (page.Answers.Count > 0) {
+                            var subAnswer = page.Answers[0].Get();
                             if (visited.Contains(subAnswer)) {
                                 isRecursive = true;
                                 break;
                             }
                             visited.Add(subAnswer);
-                            if (exit.Continue.Cues.Count > 0) {
-                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
-                            }
+                            if (page.Answers[0].Get() is BlueprintAnswersList) break;
+                        }
+                        if (page.Cues.Count > 0) {
+                            foreach (var c in page.Cues)
+                                if (c.Get().CanShow())
+                                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
                         }
                     }
-                }
-                else {
-                    break;
-                }
+                    else
+                        if (cueBase is BlueprintCheck check) {
+                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Success, currentDepth + 1));
+                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
+                        }
+                        else
+                            if (cueBase is BlueprintCueSequence sequence) {
+                                foreach (var c in sequence.Cues)
+                                    if (c.Get().CanShow())
+                                        toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
+                                if (sequence.Exit != null) {
+                                    var exit = sequence.Exit;
+                                    if (exit.Answers.Count > 0) {
+                                        var subAnswer = exit.Answers[0];
+                                        if (visited.Contains(subAnswer)) {
+                                            isRecursive = true;
+                                            break;
+                                        }
+                                        visited.Add(subAnswer);
+                                        if (exit.Continue.Cues.Count > 0) {
+                                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                break;
+                            }
             }
             return cueResults;
         }
@@ -188,6 +191,55 @@ namespace ToyBox {
             return null;
         }
 
+        public static string ResultsText(this BlueprintCue cue) {
+            if (cue == null) return "";
+            var actions = cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray();
+            var alignment = cue.SoulMarkShift;
+            var text = "";
+            if (actions.Length > 0) {
+                var result = PreviewUtilities.FormatActions(actions);
+                if (result == "") result = "EmptyAction";
+                text += $" \n<size=75%>[{result}]</size>";
+            }
+            if (alignment != null && alignment.Value > 0) {
+                text += $" \n<size=75%>[SoulMarkShift {alignment.Direction} by {alignment.Value} - {alignment.Description.Text}]";
+            }
+            return text;
+        }
+
+        public static string ResultsText(this BlueprintAnswer answer) {
+            var text = "";
+            var answerData = CollateAnswerData(answer, out var isRecursive);
+            if (isRecursive) {
+                text += $" <size=75%>[Repeats]</size>";
+            }
+            var results = new List<string>();
+            foreach (var data in answerData) {
+                var cue = data.Item1;
+                var depth = data.Item2;
+                var actions = data.Item3;
+                var alignment = data.Item4;
+                var alignmentRequirement = data.Item5;
+                var line = new List<string>();
+                if (actions.Length > 0) {
+                    line.AddRange(actions.SelectMany(action => PreviewUtilities.FormatActionAsList(action)
+                                                                               .Select(actionText => actionText == "" ? "EmptyAction" : actionText)));
+                }
+                if (alignmentRequirement.FormatShift("SoulMarkRequired({0})") is { } soulMarkRequiredText) {
+                    line.Add(soulMarkRequiredText);
+                }
+                if (alignment.FormatShift("SoulMarkShift({0})") is { } soulMarkShiftText) {
+                    line.Add(soulMarkShiftText);
+                }
+                if (cue is BlueprintCheck check) {
+                    line.Add($"Check({check.Type}, DC {check.DC}, hidden {check.Hidden})");
+                }
+                if (line.Count > 0) results.Add($"{depth}: {line.Join()}");
+            }
+            if (results.Count > 0) text = $" \v<size=75%>[{results.Join()}]</size>";
+            return text;
+        }
+
         [HarmonyPatch(typeof(UIConstsExtensions), nameof(UIConstsExtensions.GetAnswerString))]
         private static class UIConsts_GetAnswerString_Patch {
             private static void Postfix(ref string __result, BlueprintAnswer answer, string bind, int index) {
@@ -197,34 +249,19 @@ namespace ToyBox {
                         __result = GetFixedAnswerString(answer, bind, index);
                     }
                     if (!Main.Settings.previewDialogResults) return;
-                    var answerData = CollateAnswerData(answer, out var isRecursive);
-                    if (isRecursive) {
-                        __result += $" <size=75%>[Repeats]</size>";
+                    var text = answer.ResultsText();
+                    if (Settings.previewDialogConditions) {
+                        var conditions = PreviewUtilities.FormatConditionsAsList(answer);
+                        var conditionsText = string.Join("\v", conditions);
+                        if (!text.IsNullOrEmpty() && conditions.Any())
+                            __result += $"<size=75%>\v{conditionsText}\n{text}</size>";
+                        else if (!text.IsNullOrEmpty())
+                            __result += $"<size=75%>{text}</size>";
+                        else if (conditions.Any())
+                            __result += $"<size=75%>\v{conditionsText}</size>";
                     }
-                    var results = new List<string>();
-                    foreach (var data in answerData) {
-                        var cue = data.Item1;
-                        var depth = data.Item2;
-                        var actions = data.Item3;
-                        var alignment = data.Item4;
-                        var alignmentRequirement = data.Item5;
-                        var line = new List<string>();
-                        if (actions.Length > 0) {
-                            line.AddRange(actions.SelectMany(action => PreviewUtilities.FormatActionAsList(action)
-                                .Select(actionText => actionText == "" ? "EmptyAction" : actionText)));
-                        }
-                        if (alignmentRequirement.FormatShift("SoulMarkRequired({0})") is { } soulMarkRequiredText) {
-                            line.Add(soulMarkRequiredText);
-                        }
-                        if (alignment.FormatShift("SoulMarkShift({0})") is { } soulMarkShiftText) {
-                            line.Add(soulMarkShiftText);
-                        }
-                        if (cue is BlueprintCheck check) {
-                            line.Add($"Check({check.Type}, DC {check.DC}, hidden {check.Hidden})");
-                        }
-                        if (line.Count > 0) results.Add($"{depth}: {line.Join()}");
-                    }
-                    if (results.Count > 0) __result += $" \v<size=75%>[{results.Join()}]</size>";
+                    else if (!text.IsNullOrEmpty())
+                        __result += $"<size=75%>{text}</size>";
                 }
                 catch (Exception ex) {
                     Mod.Error(ex);
@@ -240,17 +277,7 @@ namespace ToyBox {
                     if (!Main.Enabled) return;
                     if (!Main.Settings.previewDialogResults) return;
                     var cue = Game.Instance.DialogController.CurrentCue;
-                    var actions = cue.OnShow.Actions.Concat(cue.OnStop.Actions).ToArray();
-                    var alignment = cue.SoulMarkShift;
-                    var text = "";
-                    if (actions.Length > 0) {
-                        var result = PreviewUtilities.FormatActions(actions);
-                        if (result == "") result = "EmptyAction";
-                        text += $" \n<size=75%>[{result}]</size>";
-                    }
-                    if (alignment != null && alignment.Value > 0) {
-                        text += $" \n<size=75%>[SoulMarkShift {alignment.Direction} by {alignment.Value} - {alignment.Description.Text}]";
-                    }
+                    var text = cue.ResultsText();
                     __result += text;
                 }
                 catch (Exception ex) {
@@ -264,17 +291,18 @@ namespace ToyBox {
             [HarmonyPatch(nameof(DialogAnswerBaseView.SetAnswer))]
             [HarmonyPrefix]
             private static bool SetAnswer(DialogAnswerBaseView __instance, BlueprintAnswer answer) {
-                if (!settings.previewDialogResults && !settings.toggleShowAnswersForEachConditionalResponse && !settings.toggleMakePreviousAnswersMoreClear) return true;
+                if (!Settings.previewDialogResults && !Settings.toggleShowAnswersForEachConditionalResponse && !Settings.toggleMakePreviousAnswersMoreClear) return true;
                 var type = Game.Instance.DialogController.Dialog.Type;
                 var str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
                 var text = UIConstsExtensions.GetAnswerString(answer, str, __instance.ViewModel.Index);
                 var isAvail = answer.CanSelect();
                 if (answer.NextCue.Cues.Count == 1) {
                     var cue = answer.NextCue.Cues.Dereference<BlueprintCueBase>().FirstOrDefault();
-                    var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
+                    var conditionText = PreviewUtilities.FormatConditions(cue.Conditions);
+//                    var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
                     // the following is a kludge for toggleShowAnswersForEachConditionalResponse  to work around cases where there may be a next cue that doesn't get shown due it being already seen and the dialog being intended to fall through.  We assume that any singleton conditional nextCue (CueSelection) was generated by this feature.  We should look for edge cases to be sure.
                     isAvail = isAvail && (cue.CanShow()
-                                          || !settings.toggleShowAnswersForEachConditionalResponse
+                                          || !Settings.toggleShowAnswersForEachConditionalResponse
                                           || !answer.name.Contains("ToyBox")
                                           || conditionText.Length == 0
                                           );

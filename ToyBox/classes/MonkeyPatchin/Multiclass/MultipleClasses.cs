@@ -34,7 +34,6 @@ using Kingmaker.DLC;
 using Kingmaker.UI.MVVM._VM.Other.NestedSelectionGroup;
 using Kingmaker.Utility;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.MythicInfo;
-using Kingmaker.EntitySystem.Entities;
 
 namespace ToyBox.Multiclass {
     public static partial class MultipleClasses {

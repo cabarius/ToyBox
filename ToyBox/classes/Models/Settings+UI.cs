@@ -5,26 +5,25 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using ModKit;
 using static ModKit.UI;
 
 namespace ToyBox {
     public partial class SettingsUI {
         public static string cultureSearchText = "";
-        public static CultureInfo uiCulture;
+        public static CultureInfo? uiCulture;
         public static List<CultureInfo> cultures = new();
         public static void OnGUI() {
             HStack("Settings", 1, 
                    () => Label($"Mono Version: {Type.GetType("Mono.Runtime")?.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static)?.Invoke(null, null)?.ToString()}"),
                 () => {
-                    ActionButton("Reset UI", () => Main.SetNeedsResetGameUI());
+                    ActionButton("Reset UI", Main.SetNeedsResetGameUI);
                     25.space();
                     Label("Tells the game to reset the in game UI.".green() + " Warning".yellow() + " Using this in dialog or the book will dismiss that dialog which may break progress so use with care".orange());
                 },
                    () => {
                        Toggle("Enable Game Development Mode", ref Main.Settings.toggleDevopmentMode);
                        Space(25);
-                       HelpLabel($"This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc.\n{"Warning: ".yellow().bold()}{"You may need to resart the game for this to fully take effect".orange()}");
+                       HelpLabel($"This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc.\n{"Warning: ".yellow().bold()}{"You may need to restart the game for this to fully take effect".orange()}");
                 },
                 () => Label(""),
                 () => EnumGrid("Log Level", ref Main.Settings.loggingLevel, AutoWidth()),
@@ -38,7 +37,7 @@ namespace ToyBox {
             );
 #if true
             Div(0, 25);
-            HStack("Localizaton", 1,
+            HStack("Localization", 1,
                 () => {
                     if (Event.current.type != EventType.Repaint) {
                         uiCulture = CultureInfo.GetCultureInfo(Mod.ModKitSettings.uiCultureCode);
@@ -53,7 +52,7 @@ namespace ToyBox {
                     }
                     using (VerticalScope()) {
                         using (HorizontalScope()) {
-                            Label("Current Cultrue".cyan(), Width(275));
+                            Label("Current Culture".cyan(), Width(275));
                             Space(25);
                             Label($"{uiCulture.DisplayName}({uiCulture.Name})".orange());
                             Space(25);

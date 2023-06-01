@@ -27,10 +27,10 @@ namespace ModKit {
 
         // Labels
 
-        public static void Label(string title, params GUILayoutOption[] options) =>
+        public static void Label(string? title, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             GL.Label(title, options.AddDefaults());
-        public static void Label(string title, GUIStyle style, params GUILayoutOption[] options) =>
+        public static void Label(string? title, GUIStyle style, params GUILayoutOption[] options) =>
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(title, style, options.AddDefaults());
@@ -38,7 +38,7 @@ namespace ModKit {
             // var content = tooltip == null ? new GUIContent(title) : new GUIContent(title, tooltip);
             //  if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(150f) }; }
             GL.Label(content, options);
-        public static void TitleLabel(string title, params GUILayoutOption[] options) {
+        public static void TitleLabel(string? title, params GUILayoutOption[] options) {
             using (VerticalScope(options.AddDefaults())) {
                 Rect lastRect;
                 using (HorizontalScope(options.AddDefaults())) {
@@ -49,9 +49,9 @@ namespace ModKit {
             }
         }
         public static void ClipboardLabel(string title, params GUILayoutOption[] options) => GUILayout.TextArea(title, options);
-        public static void HelpLabel(string title, params GUILayoutOption[] options) => Label(title.green(), options);
+        public static void HelpLabel(string? title, params GUILayoutOption[] options) => Label(title.green(), options);
         public static void HelpLabel(string title, GUIStyle style, params GUILayoutOption[] options) => Label(title.green(), style, options);
-        public static void DescriptiveLabel(string title, string description, params GUILayoutOption[] options) {
+        public static void DescriptiveLabel(string? title, string? description, params GUILayoutOption[] options) {
             options = options.AddDefaults(Width(300));
             using (HorizontalScope()) {
                 Label(title, options);
@@ -59,7 +59,7 @@ namespace ModKit {
                 Label(description);
             }
         }
-        public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string> formatter = null, params GUILayoutOption[] options) {
+        public static bool EditableLabel(ref string? label, ref (string, string) editState, float minWidth, GUIStyle style, Func<string, string?>? formatter = null, params GUILayoutOption[] options) {
             var changed = false;
             if (editState.Item1 != label) {
                 using (HorizontalScope(options.AddDefaults())) {
@@ -91,16 +91,16 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool EditableLabel(ref string label, ref (string, string) editState, float minWidth, Func<string, string> formatter = null, params GUILayoutOption[] options) => EditableLabel(ref label, ref editState, minWidth, GUI.skin.label, formatter, options);
+        public static bool EditableLabel(ref string? label, ref (string, string) editState, float minWidth, Func<string, string?>? formatter = null, params GUILayoutOption[] options) => EditableLabel(ref label, ref editState, minWidth, GUI.skin.label, formatter, options);
 
         // Text Fields
 
-        public static string TextField(ref string text, string name = null, params GUILayoutOption[] options) {
+        public static string TextField(ref string text, string? name = null, params GUILayoutOption[] options) {
             if (name != null) { GUI.SetNextControlName(name); }
             text = GL.TextField(text, options.AddDefaults());
             return text;
         }
-        public static int IntTextField(ref int value, string name = null, params GUILayoutOption[] options) {
+        public static int IntTextField(ref int value, string? name = null, params GUILayoutOption[] options) {
             var text = $"{value}";
             TextField(ref text, name, options);
             if (int.TryParse(text, out var val)) {
@@ -111,7 +111,7 @@ namespace ModKit {
             }
             return value;
         }
-        public static float FloatTextField(ref float value, string name = null, params GUILayoutOption[] options) {
+        public static float FloatTextField(ref float value, string? name = null, params GUILayoutOption[] options) {
             var text = $"{value}";
             TextField(ref text, name, options);
             if (float.TryParse(text, out var val)) {
@@ -180,18 +180,18 @@ namespace ModKit {
 
         // Buttons
 
-        public static bool Button(string title, ref bool pressed, params GUILayoutOption[] options) {
+        public static bool Button(string? title, ref bool pressed, params GUILayoutOption[] options) {
             if (GL.Button(title, options.AddDefaults())) { pressed = true; }
             return pressed;
         }
-        public static bool Button(string title, ref bool pressed, GUIStyle style, params GUILayoutOption[] options) {
+        public static bool Button(string? title, ref bool pressed, GUIStyle style, params GUILayoutOption[] options) {
             if (GL.Button(title, style, options.AddDefaults())) { pressed = true; }
             return pressed;
         }
 
         // Action Buttons
 
-        public static bool ActionButton(string title, Action action, params GUILayoutOption[] options) {
+        public static bool ActionButton(string? title, Action action, params GUILayoutOption[] options) {
             if (!GL.Button(title, options.AddDefaults())) {
                 return false;
             }
@@ -201,7 +201,7 @@ namespace ModKit {
             return true;
         }
 
-        public static bool ActionButton(string title, Action action, GUIStyle style, params GUILayoutOption[] options) {
+        public static bool ActionButton(string? title, Action action, GUIStyle style, params GUILayoutOption[] options) {
             if (!GL.Button(title, style, options.AddDefaults())) {
                 return false;
             }
@@ -211,7 +211,7 @@ namespace ModKit {
             return true;
         }
 
-        public static void DangerousActionButton(string title, string warning, ref bool areYouSureState, Action action, params GUILayoutOption[] options) {
+        public static void DangerousActionButton(string? title, string? warning, ref bool areYouSureState, Action action, params GUILayoutOption[] options) {
             using (HorizontalScope()) {
                 var areYouSure = areYouSureState;
                 ActionButton(title, () => { areYouSure = !areYouSure; });
@@ -266,7 +266,7 @@ namespace ModKit {
             return changed;
         }
 
-        public static bool ValueAdjuster(string title, ref int value, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+        public static bool ValueAdjuster(string? title, ref int value, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             var changed = false;
             using (HorizontalScope(options)) {
                 Label(title);
@@ -286,7 +286,7 @@ namespace ModKit {
             }
             return changed;
         }
-        public static bool ValueAdjuster(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+        public static bool ValueAdjuster(string? title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), options);
@@ -301,7 +301,7 @@ namespace ModKit {
 
         // Value Editors 
 
-        public static bool ValueAdjustorEditable(string title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
+        public static bool ValueAdjustorEditable(string? title, Func<int> get, Action<int> set, int increment = 1, int min = 0, int max = int.MaxValue, params GUILayoutOption[] options) {
             var changed = false;
             using (HorizontalScope()) {
                 Label(title.cyan(), options);
@@ -360,7 +360,7 @@ namespace ModKit {
         private const int SliderTop = 3;
         private const int SliderBottom = -7;
 
-        public static bool Slider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+        public static bool Slider(string? title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string? units = "", params GUILayoutOption[] options) {
             value = Math.Max(min, Math.Min(max, value));    // clamp it
             var newValue = value;
             using (HorizontalScope(options)) {
@@ -395,20 +395,20 @@ namespace ModKit {
             value = newValue;
             return changed;
         }
-        public static bool Slider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+        public static bool Slider(string? title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string? units = "", params GUILayoutOption[] options) {
             var value = get();
             var changed = Slider(title, ref value, min, max, defaultValue, decimals, units, options);
             if (changed)
                 set(value);
             return changed;
         }
-        public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
+        public static bool Slider(string? title, ref int value, int min, int max, int defaultValue = 1, string? units = "", params GUILayoutOption[] options) {
             float floatValue = value;
             var changed = Slider(title, ref floatValue, min, max, (float)defaultValue, 0, units, options);
             value = (int)floatValue;
             return changed;
         }
-        public static bool Slider(string title, Func<int> get, Action<int> set, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
+        public static bool Slider(string? title, Func<int> get, Action<int> set, int min, int max, int defaultValue = 1, string? units = "", params GUILayoutOption[] options) {
             float floatValue = get();
             var changed = Slider(title, ref floatValue, min, max, (float)defaultValue, 0, units, options);
             if (changed)
@@ -421,7 +421,7 @@ namespace ModKit {
             value = (int)floatValue;
             return changed;
         }
-        public static bool LogSlider(string title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+        public static bool LogSlider(string? title, ref float value, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             if (min < 0)
                 throw new Exception("LogSlider - min value: {min} must be >= 0");
             BeginHorizontal(options);
@@ -464,7 +464,7 @@ namespace ModKit {
             return changed;
         }
 
-        public static bool LogSlider(string title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
+        public static bool LogSlider(string? title, Func<float> get, Action<float> set, float min, float max, float defaultValue = 1.0f, int decimals = 0, string units = "", params GUILayoutOption[] options) {
             var value = get();
             var changed = LogSlider(title, ref value, min, max, defaultValue, decimals, units, options);
             if (changed)

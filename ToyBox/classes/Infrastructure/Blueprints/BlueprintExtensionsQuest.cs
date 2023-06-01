@@ -42,10 +42,10 @@ namespace ToyBox {
             public UnitEntityData unit { get; set; }
             public object source { get; set; }
             public ConditionsChecker checker { get; set; }
-            public List<Element> elements { get; set; }
-            public bool HasConditins => checker?.Conditions.Length > 0;
+            public List<Element>? elements { get; set; }
+            public bool HasConditions => checker?.Conditions.Length > 0;
             public bool HasElements => elements?.Count > 0;
-            public IntrestingnessEntry(UnitEntityData unit, object source, ConditionsChecker checker, List<Element> elements = null) {
+            public IntrestingnessEntry(UnitEntityData unit, object source, ConditionsChecker checker, List<Element>? elements = null) {
                 this.unit = unit;
                 this.source = source;
                 this.checker = checker;
@@ -55,7 +55,7 @@ namespace ToyBox {
         public static bool IsActive(this IntrestingnessEntry entry) => 
             (entry.checker?.IsActive() ?? false)
             || (entry?.elements.Any(element => element.IsActive()) ?? false)
-            || (entry.elements?.Count > 0 && entry.source is ActionsHolder) // Kludge until we get more clever about analyzing dialog state.  This lets Lathimas show up as active
+            || (entry?.elements?.Count > 0 && entry.source is ActionsHolder) // Kludge until we get more clever about analyzing dialog state.  This lets Lathimas show up as active
             ;
         public static bool IsActive(this Element element) => element switch {
             Conditional conditional => conditional.ConditionsChecker.Check(),

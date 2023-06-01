@@ -10,14 +10,14 @@ namespace ModKit
 {
     public static class Utilities
     {
-        public static TValue GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default)
+        public static TValue? GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue? defaultValue = default)
         {
             if (dictionary == null) { throw new ArgumentNullException(nameof(dictionary)); } // using C# 6
             if (key == null) { throw new ArgumentNullException(nameof(key)); } //  using C# 6
 
             return dictionary.TryGetValue(key, out var value) ? value : defaultValue;
         }
-        public static Dictionary<TKey, TElement> ToDictionaryIgnoringDuplicates<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer = null) {
+        public static Dictionary<TKey, TElement> ToDictionaryIgnoringDuplicates<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? comparer = null) {
             if (source == null)
                 throw new ArgumentException("source");
             if (keySelector == null)
@@ -142,7 +142,7 @@ namespace ModKit
             }
             return new string[] { fields, methods, properties };
         }
-        public static string SubstringBetweenCharacters(this string input, char charFrom, char charTo)
+        public static string? SubstringBetweenCharacters(this string input, char charFrom, char charTo)
         {
             var posFrom = input.IndexOf(charFrom);
             if (posFrom != -1) //if found char

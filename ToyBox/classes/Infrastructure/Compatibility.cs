@@ -52,7 +52,6 @@ using Kingmaker.GameCommands;
 #elif Wrath
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
-using Kingmaker.Cheats;
 using Kingmaker.EntitySystem;
 #endif
 
@@ -109,17 +108,18 @@ namespace ToyBox {
         public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.State?.InGameSettings?.List;
 #elif Wrath
         public static string StringValue(this LocalizedString locStr) => locStr.ToString();
+        public static bool IsNullOrEmpty(this string str) => str == null || str.Length == 0;
         public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
         public static float GetCost(this BlueprintItem item) => item.Cost;
         public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;
         public static void SetCustomGender(this UnitDescriptor descriptor, Gender gender) => descriptor.CustomGender = gender;
-        public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.Player?.SettingsList;
+        public static Dictionary<string, object>? GetInGameSettingsList() => Game.Instance?.Player?.SettingsList;
 #endif
 
         // Unit Entity Utils
 #if RT
         public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Entity;
-        public static EntityPool<UnitEntityData> AllUnits => Game.Instance?.State?.AllUnits;
+        public static EntityPool<UnitEntityData>? AllUnits => Game.Instance?.State?.AllUnits;
         public static List<UnitEntityData> SelectedUnits => UIAccess.SelectionManager.SelectedUnits.ToList();
         public static ReactiveCollection<UnitEntityData> SelectedUnitsReactive() => UIAccess.SelectionManager.SelectedUnits;
         public static bool IsEnemy(UnitEntityData unit) => unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter())  && unit != GameHelper.GetPlayerCharacter();
@@ -131,7 +131,7 @@ namespace ToyBox {
 
 #elif Wrath
         public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Value;
-        public static EntityPool<UnitEntityData> AllUnits => Game.Instance?.State?.Units;
+        public static EntityPool<UnitEntityData>? AllUnits => Game.Instance?.State?.Units;
         public static List<UnitEntityData> SelectedUnits => Game.Instance.UI.SelectionManager.SelectedUnits;
         public static bool IsEnemy(UnitEntityData unit) => unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter();
         public static bool IsPlayerFaction(this UnitEntityData unit) => unit.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction);
