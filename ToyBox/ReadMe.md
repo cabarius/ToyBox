@@ -68,6 +68,7 @@ WARNING: this tool can both miraculously fix your broken progression or it can b
 * (***Narria***) Some Etude changes
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
+* (***ADDB***) Prevent Mod from overriding Build Points when not changed in the settings
 * (***ADDB***) Small ToyBox Swarm GUI fix
 * (***ADDB***) Enchantment Tab Improvement
   * Added paging to Inventory search for Improved Performance

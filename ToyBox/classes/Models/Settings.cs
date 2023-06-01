@@ -329,8 +329,10 @@ namespace ToyBox {
         public float travelSpeedMultiplier = 1;
         public int characterCreationAbilityPointsMax = 18;
         public int characterCreationAbilityPointsMin = 7;
-        public int characterCreationAbilityPointsPlayer = 25;
-        public int characterCreationAbilityPointsMerc = 25;
+        public int characterCreationAbilityPointsPlayer = 20;
+        public int characterCreationAbilityPointsMerc = 20;
+        public bool characterCreationAbilityPointsOverridePlayer = false;
+        public bool characterCreationAbilityPointsOverrideMerc = false;
         public bool characterCreationAbilityPointsOverrideGameMinimums = false;
         public float companionCostMultiplier = 1;
         public float kingdomBuildingTimeModifier = 0;
