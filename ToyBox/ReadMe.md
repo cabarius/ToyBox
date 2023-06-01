@@ -76,36 +76,21 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.5.4 Rogue (Coming Soon)
-
 **ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **May 30, 2023b** for beta 0.2.1y
-
-* Port for prelease versions of War Hammer 40000: Rogue Trader
-* This is a work in progress.
-* Please enjoy the parts of the mod that do work (which is more than one might expect)
-* Please be patient as I bring up more of the mod over time
-* (***Narria***) Fixed crasher that made saves disappear if you use custom portraits
-* (***Narria***) Added a toggle at the top of Bag of Tricks to enable ToyBox bug fixes like the one above
-* (***Narria***) Got character rename working in the party editor
-* (***Narria***) Add/Remove/Recruit/Uncrecruit now work
-* (***Narria***) You can now edit abilities in the party editor
-* (***Narria***) You can now edit your Starship in the party editor
-    * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat,
-      other talent)
-* (***Narria***) **Got this up on Beta 0.2.1y including fixing the dialog bug**
-* (***Narria***) show a little more info in dialog preview
-### Ver 1.5.4 Wrath (Coming Soon)
-**ToyBox 1.5.4 Preview Version 1.5.3c May 31, 2023**
-* (***Narria***) Some Etude changes
-* (***BuckAMayzing***) Gestalt Companion fix
-* (***BuckAMayzing***) Mercenary Gestalt fix
-* (***ADDB***) Small ToyBox Swarm GUI fix
-* (***ADDB***) Enchantment Tab Improvement
-  * Added paging to Inventory search for Improved Performance
-  * Improved Inventory Search Keys
-  * Exchanged old Enchant Browser for new Browser
-* (***ADDB*** and ***BuckAMayzing***) Changes to BuffExclusion behaviour
-  * Added ~100 Buffs to the default exclusions (every hidden buff that has Cooldown in its name)
-  * Separated buffs excluded by default and buffs excluded by the user into different categories
+ * Port for prelease versions of War Hammer 40000: Rogue Trader
+ * This is a work in progress. 
+ * Please enjoy the parts of the mod that do work (which is more than one might expect)
+ * Please be patient as I bring up more of the mod over time
+ * (***Narria***) Fixed crasher that made saves disappear if you use custom portraits
+ * (***Narria***) Added a toggle at the top of Bag of Tricks to enable ToyBox bug fixes like the one above
+ * (***Narria***) Got character rename working in the party editor
+ * (***Narria***) Add/Remove/Recruit/Uncrecruit now work
+ * (***Narria***) You can now edit abilities in the party editor
+ * (***Narria***) You can now edit your Starship in the party editor
+   * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
+ * (***Narria***) **Got this up on Beta 0.2.1y including fixing the dialog bug**
+ * (***Narria***) show a little more info in dialog preview
+ * (***Narria***) beginnings of a dialog browser
 ### Install & Setup (Rogue)
 
 1. Download the ToyBox mod file and unzip
@@ -123,10 +108,10 @@
 * Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
 * Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
   possible
-  **ToyBox 1.5.4 Wrath** - ***Sh0dan Preview*** **May 26, 2023m**
-
+### Ver 1.5.4 Wrath (Coming Soon)
+***ToyBox 1.5.4 Wrath** - ***Sh0dan Preview*** **May 26, 2023m**
+* (***Narria***) beginnings of a dialog browser
 ### Ver 1.5.3 Wrath - Sh0dan Unified Edition
-
 * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
     * Changed mod ID and title name in Mod Manager to make this clear.
     * Mod will appear a new folder, please disable old ToyBox once you are happy with this version

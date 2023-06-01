@@ -108,6 +108,7 @@ namespace ToyBox {
         public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.State?.InGameSettings?.List;
 #elif Wrath
         public static string StringValue(this LocalizedString locStr) => locStr.ToString();
+        public static bool IsNullOrEmpty(this string str) => str == null || str.Length == 0;
         public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
         public static float GetCost(this BlueprintItem item) => item.Cost;
         public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;
