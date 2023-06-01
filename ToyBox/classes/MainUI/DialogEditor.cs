@@ -49,7 +49,7 @@ namespace ToyBox {
             }
             dialogController.CurrentCue?.OnGUI("Cur Cue:");
             dialogController.Answers?.OnGUI("Answers:");
-            if (dialogController.m_ContinueCue is BlueprintCue cue) cue.OnGUI("Continue:");
+            //if (dialogController.m_ContinueCue is BlueprintCue cue) cue.OnGUI("Continue:");
             dialogController?.Dialog.OnGUI();
         }
         private static void OnGUI(this BlueprintDialog dialog) {
