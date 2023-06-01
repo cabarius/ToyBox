@@ -70,7 +70,7 @@
   etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the
   children of the Etude. Etudes that have Elements will offer a second disclosure triangle next to the status that will
   show them to you.
-  WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up
+  WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up                                                                                                         
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
@@ -102,7 +102,6 @@
 1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. Copy 0ToyBox0 into the UnityModManagerFolder
-1. You may want to copy your Settings.xml and UserSettings folder from the old `WH 4000 RT` folder
 1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
 1. Load a save or start a new game to get the most out of of the mod
 
