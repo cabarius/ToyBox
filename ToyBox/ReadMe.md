@@ -74,7 +74,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023e** for beta 0.2.1ad
+**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023f** for beta 0.2.1ad
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -91,7 +91,7 @@
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
 ### Ver 1.5.4 Wrath (Coming Soon)
-**ToyBox 1.5.4 Preview Version 1.5.3e May 31, 2023**
+**ToyBox 1.5.4 Preview Version 1.5.3f May 31, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
