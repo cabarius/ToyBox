@@ -20,6 +20,8 @@ using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using System.Security.AccessControl;
+using Kingmaker.Assets.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.Blueprints;
 using Kingmaker.Controllers.Dialog;
 using Kingmaker.DialogSystem;
 using Kingmaker.DialogSystem.Blueprints;
@@ -29,13 +31,15 @@ namespace ToyBox {
     public static class DialogEditor {
         public static Settings Settings => Main.Settings;
         public static Player player => Game.Instance.Player;
-        private const int Indent = 100;
+        private const int Indent = 50;
+        private static HashSet<BlueprintScriptableObject> Visited = new();
 
         public static void ResetGUI() { }
 
         public static void OnGUI() {
             if (!Main.IsInGame) return;
             if (Game.Instance?.DialogController is { } dialogController) {
+                Visited.Clear();
                 dialogController.OnGUI();
                 ReflectionTreeView.DetailToggle("Inspect Dialog Controller", dialogController);
                 ReflectionTreeView.OnDetailGUI(dialogController);
@@ -47,8 +51,8 @@ namespace ToyBox {
             if (dialogController.CurrentCue == null) {
                 Label("No Active Dialog".cyan());
             }
-            dialogController.CurrentCue?.OnGUI("Cur Cue:");
-            dialogController.Answers?.OnGUI("Answers:");
+            dialogController.CurrentCue?.OnGUI("Cur:");
+            dialogController.Answers?.OnGUI("Ans:");
             //if (dialogController.m_ContinueCue is BlueprintCue cue) cue.OnGUI("Continue:");
             dialogController?.Dialog.OnGUI();
         }
@@ -70,6 +74,17 @@ namespace ToyBox {
                             Label(resultsText.yellow());
                         }
                     }
+                    if (cue.Conditions?.Conditions?.Count() > 0) {
+                        using (HorizontalScope()) {
+                            Label("Cond".cyan(), Indent.width());
+                            Label(PreviewUtilities.FormatConditions(cue.Conditions));
+                        }
+                    }
+                    if (Visited.Contains(cue)) {
+                        Label($"[Repeat]".yellow());
+                        return;
+                    }
+                    Visited.Add(cue);
                     var index = 1;
                     foreach (var answerBaseRef in cue.Answers) {
                         var answerBase = answerBaseRef.Get();
@@ -93,14 +108,14 @@ namespace ToyBox {
                         }
                     }
                     if (cue.Continue is { } cueSelection) {
-                        cueSelection.OnGUI("Cue Sel:");
+                        cueSelection.OnGUI("Sel");
                     }
                 }
             }
         }
         private static void OnGUI(this CueSelection cueSelection, string? title = null) {
             var cues = cueSelection.Cues;
-            if (cues.Count <= 0) return;
+            if (cues.Count(cbr => cbr.Get() is BlueprintCue) <= 0) return;
             using (HorizontalScope()) {
                 OnTitleGUI((title));
                 using (VerticalScope()) {
@@ -119,12 +134,26 @@ namespace ToyBox {
                 OnTitleGUI(title);
                 using (VerticalScope()) {
                     Label($"{answer.GetDisplayName().yellow()} {answer.DisplayText}");
+                    if (answer.HasShowCheck && answer.ShowConditions.Conditions.Length > 0) {
+                        using (HorizontalScope()) {
+                            Label("Show Cond".cyan(), Indent.width());
+                            Label(PreviewUtilities.FormatConditions(answer.ShowConditions));
+                        }
+                    }
+                    if (answer.SelectConditions is ConditionsChecker selectChecker && selectChecker.Conditions.Count() > 0) {
+                        Label("Sel Cond".cyan(), Indent.width());
+                        Label(PreviewUtilities.FormatConditions(selectChecker));
+                        
+                    }
                     var resultsText = answer.ResultsText().StripHTML();
                     if (!resultsText.IsNullOrEmpty()) {
                         using (HorizontalScope()) {
                             Indent.space();
                             Label(resultsText.yellow());
                         }
+                    }
+                    if (answer.NextCue is CueSelection nextCueSelection && nextCueSelection.Cues.Any()) {
+                        nextCueSelection.OnGUI("Next");
                     }
                 }
             }
@@ -150,7 +179,7 @@ namespace ToyBox {
         }
         private static void OnTitleGUI(string? title) {
             if (title != null) {
-                Label(title.cyan(), Indent.width());
+                Label(title.cyan(),100.width());
             }
             else 
                 Indent.space();

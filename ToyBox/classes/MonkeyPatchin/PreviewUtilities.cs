@@ -10,6 +10,7 @@ using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Blueprints;
 using System.Diagnostics;
 using System;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using ModKit;
 
 namespace ToyBox {
@@ -84,7 +85,13 @@ namespace ToyBox {
                 .Select(actionText => actionText == "" ? "EmptyAction" : actionText)
                 .Join();
 
-        public static string FormatConditions(Condition[] conditions) => conditions.Join(c => c.GetCaption());
+        public static string FormatConditions(Condition[] conditions) => conditions.Join(c => {
+            if (c is CheckConditionsHolder holder) {
+                return $"Conditions Holder({FormatConditions(holder.ConditionsHolder.Get().Conditions)})";
+            }
+            else 
+                return c.GetCaption();
+        });
         public static string FormatConditions(ConditionsChecker conditions) => FormatConditions(conditions.Conditions);
 #if Wrath
         public static bool CausesGameOver(BlueprintKingdomEventBase blueprint) {
