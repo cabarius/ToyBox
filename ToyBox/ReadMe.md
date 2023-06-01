@@ -94,7 +94,7 @@
   possible
 
 ### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023d** for beta 0.2.1y
+**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023e** for beta 0.2.1y
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -117,7 +117,7 @@
 1. Launch the game at least once.
 1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one.
    **
-1. Navigate to $(User)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. Navigate to $(userprofile)\\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. Copy 0ToyBox0 into the UnityModManagerFolder
 1. You may want to copy your Settings.xml and UserSettings folder from the old `WH 4000 RT` folder
