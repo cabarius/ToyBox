@@ -10,7 +10,7 @@ namespace ToyBox {
         private static readonly BulkSellSettings _settings = Main.Settings.bulkSellSettings;
 
         public static void OnGUI() {
-            void BonusItemOptions(string itemTypeName, string bonusType, ref int enchantLevel, ref int stackSize, Action accessory = null) {
+            void BonusItemOptions(string? itemTypeName, string? bonusType, ref int enchantLevel, ref int stackSize, Action accessory = null) {
                 using (HorizontalScope()) {
                     Label($"{itemTypeName.Cyan()}:", 180.width());
                     Label($"{bonusType.orange()}", 150.width());
@@ -20,7 +20,7 @@ namespace ToyBox {
                 }
             }
 
-            void ConsumableOptions(string itemTypeName, ref bool sellToggle, ref int stackSize) {
+            void ConsumableOptions(string? itemTypeName, ref bool sellToggle, ref int stackSize) {
                 using (HorizontalScope()) {
                     Toggle("Sell".localize() + $" {itemTypeName}", ref sellToggle, 150.width());
                     Space(25);
@@ -29,7 +29,7 @@ namespace ToyBox {
                 }
             }
 
-            void DamageTypeOptions<T>(string title, SerializableDictionary<T, bool> settings) where T : Enum {
+            void DamageTypeOptions<T>(string? title, SerializableDictionary<T, bool> settings) where T : Enum {
                 using (HorizontalScope()) {
                     Label(title.orange(), 220.width());
                     using (VerticalScope()) {

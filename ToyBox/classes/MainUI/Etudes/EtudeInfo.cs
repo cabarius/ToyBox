@@ -22,7 +22,7 @@ namespace ToyBox {
             CompletionBlocked = 5
         }
 
-        public string Name;
+        public string? Name;
         public BlueprintEtude Blueprint;
         public BlueprintGuid ParentId;
         public List<BlueprintGuid> LinkedId = new();

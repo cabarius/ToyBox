@@ -24,7 +24,7 @@ namespace ModKit {
             Directory.CreateDirectory(userConfigFolder);
             var userPath = $"{userConfigFolder}{Path.DirectorySeparatorChar}{fileName}";
             try {
-                foreach (var res in assembly.GetManifestResourceNames()) {
+                foreach (var res in assembly.GetManifestResourceNames())
                     //Logger.Log("found resource: " + res);
                     if (res.Contains(fileName)) {
                         var stream = assembly.GetManifestResourceStream(res);
@@ -32,10 +32,8 @@ namespace ModKit {
                         var text = reader.ReadToEnd();
                         //Logger.Log($"read: {text}");
                         settings = JsonConvert.DeserializeObject<T>(text);
-
                         //Logger.Log($"read settings: {string.Join(Environment.NewLine, settings)}");
                     }
-                }
             }
             catch (Exception e) {
                 Mod.Error($"{fileName} resource is not present or is malformed. exception: {e}");
@@ -44,15 +42,17 @@ namespace ModKit {
                 using var reader = File.OpenText(userPath);
                 try {
                     var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-                    if (userSettings is IUpdatableSettings updatableSettings) {
-                        updatableSettings.AddMissingKeys((IUpdatableSettings)settings);
-                    }
+                    if (userSettings is IUpdatableSettings updatableSettings) updatableSettings.AddMissingKeys((IUpdatableSettings)settings);
                     settings = userSettings;
                 }
                 catch {
                     Mod.Error("Failed to load user settings. Settings will be rebuilt.");
-                    try { File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true); }
-                    catch { Mod.Error("Failed to archive broken settings."); }
+                    try {
+                        File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true);
+                    }
+                    catch {
+                        Mod.Error("Failed to archive broken settings.");
+                    }
                 }
             }
             File.WriteAllText(userPath, JsonConvert.SerializeObject(settings, Formatting.Indented));

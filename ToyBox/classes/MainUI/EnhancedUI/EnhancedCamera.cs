@@ -8,7 +8,7 @@ using ModKit.Utility;
 namespace ToyBox {
     public static class EnhancedCamera {
         public static Settings Settings => Main.Settings;
-        internal const string ResetAdditionalCameraAngles = "Fix Camera";
+        internal const string? ResetAdditionalCameraAngles = "Fix Camera";
         public static void OnLoad() {
             KeyBindings.RegisterAction(ResetAdditionalCameraAngles, () => {
                 Main.resetExtraCameraAngles = true;

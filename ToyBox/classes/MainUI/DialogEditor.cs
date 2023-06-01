@@ -21,10 +21,11 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using System.Security.AccessControl;
 using Kingmaker.Controllers.Dialog;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.UI;
 
 namespace ToyBox {
-    public class DialogEditor {
+    public static class DialogEditor {
         public static Settings Settings => Main.Settings;
         public static Player player => Game.Instance.Player;
 
@@ -33,9 +34,26 @@ namespace ToyBox {
         public static void OnGUI() {
             if (!Main.IsInGame) return;
             if (Game.Instance?.DialogController is { } dialogController) {
-                ReflectionTreeView.DetailToggle("Dialog Controller", dialogController);
+                ReflectionTreeView.DetailToggle("Inspect Dialog Controller", dialogController);
                 ReflectionTreeView.OnDetailGUI(dialogController);
+                dialogController.CurrentCue.OnGUI();
             }
+        }
+
+        public static void OnGUI(this Dialog dialog) {
+
+        }
+
+        public static void OnGUI(this BlueprintCueBase cue) {
+            
+        }
+
+        public static void OnGUI(this BlueprintAnswer answer) {
+            
+        }
+
+        public static void OnGUI(this BlueprintAnswersList answersList) {
+            
         }
     }
 }

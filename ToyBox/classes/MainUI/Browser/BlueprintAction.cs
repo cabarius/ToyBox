@@ -36,9 +36,9 @@ using Kingmaker.Crusade.GlobalMagic;
 #endif
 namespace ToyBox {
     public abstract class BlueprintAction {
-        public delegate void Perform(SimpleBlueprint bp, UnitEntityData ch = null, int count = 1, int listValue = 0);
+        public delegate void Perform(SimpleBlueprint bp, UnitEntityData? ch = null, int count = 1, int listValue = 0);
 
-        public delegate bool CanPerform(SimpleBlueprint bp, UnitEntityData ch = null, int listValue = 0);
+        public delegate bool CanPerform(SimpleBlueprint bp, UnitEntityData? ch = null, int listValue = 0);
 
         private static Dictionary<Type, BlueprintAction[]> actionsForType;
 
@@ -71,7 +71,7 @@ namespace ToyBox {
         }
 
         public static IEnumerable<BlueprintAction> ActionsForBlueprint(SimpleBlueprint bp) => ActionsForType(bp.GetType());
-        public static void Register<T>(string name, BlueprintAction<T>.Perform perform, BlueprintAction<T>.CanPerform canPerform = null, bool isRepeatable = false) where T : SimpleBlueprint {
+        public static void Register<T>(string? name, BlueprintAction<T>.Perform perform, BlueprintAction<T>.CanPerform? canPerform = null, bool isRepeatable = false) where T : SimpleBlueprint {
             var action = new BlueprintAction<T>(name, perform, canPerform, isRepeatable);
             var type = action.BlueprintType;
             actionsForType.TryGetValue(type, out var existing);
@@ -81,13 +81,13 @@ namespace ToyBox {
             actionsForType[type] = list.ToArray();
         }
 
-        public string name { get; protected set; }
+        public string? name { get; protected set; }
 
         public Perform action;
 
         public CanPerform canPerform;
 
-        protected BlueprintAction(string name, bool isRepeatable) {
+        protected BlueprintAction(string? name, bool isRepeatable) {
             this.name = name;
             this.isRepeatable = isRepeatable;
         }
@@ -102,7 +102,7 @@ namespace ToyBox {
 
         public new delegate bool CanPerform(BPType bp, UnitEntityData ch, int listValue = 0);
 
-        public BlueprintAction(string name, Perform action, CanPerform canPerform = null, bool isRepeatable = false) : base(name, isRepeatable) {
+        public BlueprintAction(string? name, Perform action, CanPerform? canPerform = null, bool isRepeatable = false) : base(name, isRepeatable) {
             this.action = (bp, ch, n, index) => action((BPType)bp, ch, n, index);
             this.canPerform = (bp, ch, index) => Main.IsInGame && bp is BPType bpt && (canPerform?.Invoke(bpt, ch, index) ?? true);
         }

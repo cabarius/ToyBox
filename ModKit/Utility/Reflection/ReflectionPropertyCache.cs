@@ -5,9 +5,9 @@ using System.Reflection.Emit;
 
 namespace ModKit.Utility {
     public static partial class ReflectionCache {
-        private static readonly DoubleDictionary<Type, string, WeakReference> _propertieCache = new();
+        private static readonly DoubleDictionary<Type, string?, WeakReference> _propertieCache = new();
 
-        private static CachedProperty<TProperty> GetPropertyCache<T, TProperty>(string name) {
+        private static CachedProperty<TProperty> GetPropertyCache<T, TProperty>(string? name) {
             object cache = null;
             if (_propertieCache.TryGetValue(typeof(T), name, out var weakRef))
                 cache = weakRef.Target;
@@ -22,7 +22,7 @@ namespace ModKit.Utility {
             return cache as CachedProperty<TProperty>;
         }
 
-        private static CachedProperty<TProperty> GetPropertyCache<TProperty>(Type type, string name) {
+        private static CachedProperty<TProperty> GetPropertyCache<TProperty>(Type type, string? name) {
             object cache = null;
             if (_propertieCache.TryGetValue(type, name, out var weakRef))
                 cache = weakRef.Target;
@@ -39,30 +39,30 @@ namespace ModKit.Utility {
             return cache as CachedProperty<TProperty>;
         }
 
-        public static PropertyInfo GetPropertyInfo<T, TProperty>(string name) => GetPropertyCache<T, TProperty>(name).Info;
+        public static PropertyInfo GetPropertyInfo<T, TProperty>(string? name) => GetPropertyCache<T, TProperty>(name).Info;
 
-        public static PropertyInfo GetPropertyInfo<TProperty>(this Type type, string name) => GetPropertyCache<TProperty>(type, name).Info;
+        public static PropertyInfo GetPropertyInfo<TProperty>(this Type type, string? name) => GetPropertyCache<TProperty>(type, name).Info;
 
-        public static TProperty GetPropertyValue<T, TProperty>(this ref T instance, string name) where T : struct => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfStruct<T, TProperty>).Get(ref instance);
+        public static TProperty GetPropertyValue<T, TProperty>(this ref T instance, string? name) where T : struct => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfStruct<T, TProperty>).Get(ref instance);
 
-        public static TProperty GetPropertyValue<T, TProperty>(this T instance, string name) where T : class => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfClass<T, TProperty>).Get(instance);
+        public static TProperty GetPropertyValue<T, TProperty>(this T instance, string? name) where T : class => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfClass<T, TProperty>).Get(instance);
 
-        public static TProperty GetPropertyValue<T, TProperty>(string name) => GetPropertyCache<T, TProperty>(name).Get();
+        public static TProperty GetPropertyValue<T, TProperty>(string? name) => GetPropertyCache<T, TProperty>(name).Get();
 
-        public static TProperty GetPropertyValue<TProperty>(this Type type, string name) => GetPropertyCache<TProperty>(type, name).Get();
+        public static TProperty GetPropertyValue<TProperty>(this Type type, string? name) => GetPropertyCache<TProperty>(type, name).Get();
 
-        public static void SetPropertyValue<T, TProperty>(this ref T instance, string name, TProperty value) where T : struct => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfStruct<T, TProperty>).Set(ref instance, value);
+        public static void SetPropertyValue<T, TProperty>(this ref T instance, string? name, TProperty value) where T : struct => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfStruct<T, TProperty>).Set(ref instance, value);
 
-        public static void SetPropertyValue<T, TProperty>(this T instance, string name, TProperty value) where T : class => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfClass<T, TProperty>).Set(instance, value);
+        public static void SetPropertyValue<T, TProperty>(this T instance, string? name, TProperty value) where T : class => (GetPropertyCache<T, TProperty>(name) as CachedPropertyOfClass<T, TProperty>).Set(instance, value);
 
-        public static void SetPropertyValue<T, TProperty>(string name, TProperty value) => GetPropertyCache<T, TProperty>(name).Set(value);
+        public static void SetPropertyValue<T, TProperty>(string? name, TProperty value) => GetPropertyCache<T, TProperty>(name).Set(value);
 
-        public static void SetPropertyValue<TProperty>(this Type type, string name, TProperty value) => GetPropertyCache<TProperty>(type, name).Set(value);
+        public static void SetPropertyValue<TProperty>(this Type type, string? name, TProperty value) => GetPropertyCache<TProperty>(type, name).Set(value);
 
         private abstract class CachedProperty<TProperty> {
             public readonly PropertyInfo Info;
 
-            protected CachedProperty(Type type, string name) {
+            protected CachedProperty(Type type, string? name) {
                 Info = type.GetProperties(ALL_FLAGS).FirstOrDefault(item => item.Name == name);
 
                 if (Info == null || Info.PropertyType != typeof(TProperty))
@@ -126,7 +126,7 @@ namespace ModKit.Utility {
             private Getter _getter;
             private Setter _setter;
 
-            public CachedPropertyOfStruct(string name) : base(typeof(T), name) { }
+            public CachedPropertyOfStruct(string? name) : base(typeof(T), name) { }
 
             public override TProperty Get() => (_getter ??= CreateGetter(typeof(Getter), Info.GetMethod, true) as Getter)(ref _dummy);
 
@@ -145,7 +145,7 @@ namespace ModKit.Utility {
             private Getter _getter;
             private Setter _setter;
 
-            public CachedPropertyOfClass(string name) : base(typeof(T), name) { }
+            public CachedPropertyOfClass(string? name) : base(typeof(T), name) { }
 
             public override TProperty Get() => (_getter ??= CreateGetter(typeof(Getter), Info.GetMethod, false) as Getter)(_dummy);
 
@@ -163,7 +163,7 @@ namespace ModKit.Utility {
             private Getter _getter;
             private Setter _setter;
 
-            public CachedPropertyOfStatic(Type type, string name) : base(type, name) {
+            public CachedPropertyOfStatic(Type type, string? name) : base(type, name) {
                 //if (!IsStatic(type))
                 //    throw new InvalidOperationException();
             }

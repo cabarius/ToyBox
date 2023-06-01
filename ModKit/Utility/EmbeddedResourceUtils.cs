@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ModKit {
     public static class EmbeddedResourceUtils {
-        public static Stream StreamForResourceFile(string endingFileName) {
+        public static Stream? StreamForResourceFile(string endingFileName) {
             var assembly = Assembly.GetExecutingAssembly();
             var manifestResourceNames = assembly.GetManifestResourceNames();
 

@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using ModKit;
 using static ModKit.UI;
 
 namespace ToyBox {
