@@ -80,6 +80,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using ToyBox;
 using UniRx;
+using UnityEngine;
 using Warhammer.SpaceCombat.Blueprints;
 using static Kingmaker.Sound.AkAudioService;
 using static Kingmaker.UnitLogic.Abilities.AbilityData;
@@ -376,7 +377,8 @@ namespace ToyBox.BagOfPatches {
                                 __result = true;
                             break;
                     }
-                } else if (Settings.toggleIgnoreAbilityAnyRestriction)
+                }
+                else if (Settings.toggleIgnoreAbilityAnyRestriction)
                     __result = true;
             }
         }
@@ -589,7 +591,8 @@ toggleIgnoreAbilityTargetTooClose
                         if (button != DialogMessageBoxBase.BoxButton.Yes || InventoryHelper.s_ItemSlot == null) return;
                         InventoryHelper.DropItemMechanicGlobalMap(InventoryHelper.s_ItemSlot);
                     }));
-                } else
+                }
+                else
                     InventoryHelper.DropItemMechanic(item);
                 return false;
             }
@@ -628,21 +631,26 @@ toggleIgnoreAbilityTargetTooClose
                         return false;
                     Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, slotVM2.ItemSlot.Owner, slotVM2.ToSlotRef());
                     Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
-                } else if (from.Group != to.Group && to is ShipComponentSlotVM slotVM1) {
+                }
+                else if (from.Group != to.Group && to is ShipComponentSlotVM slotVM1) {
                     Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, slotVM1.ItemSlot.Owner, slotVM1.ToSlotRef());
                     Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
-                } else if (from.Group != to.Group && (bool)(SimpleBlueprint)(to.Item?.Value?.Blueprint as BlueprintStarshipItem)) {
+                }
+                else if (from.Group != to.Group && (bool)(SimpleBlueprint)(to.Item?.Value?.Blueprint as BlueprintStarshipItem)) {
                     Game.Instance.GameCommandQueue.EquipItem(to.Item?.Value, from.ItemEntity?.Owner, from.ToSlotRef());
                     Game.Instance.GameCommandQueue.OrderCollection(to, to.Group);
-                } else if (from.Group != to.Group && from is EquipSlotVM equipSlotVm) {
+                }
+                else if (from.Group != to.Group && from is EquipSlotVM equipSlotVm) {
                     if (!(equipSlotVm.ItemSlot.Owner is BaseUnitEntity owner4) || !owner4.IsMyNetRole())
                         return false;
                     Game.Instance.GameCommandQueue.UnequipItem((MechanicEntity)owner4, equipSlotVm.ToSlotRef(), to.ToSlotRef());
                     Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)equipSlotVm, to.Group);
-                } else if (from.Group != to.Group && from is ShipComponentSlotVM shipComponentSlotVm) {
+                }
+                else if (from.Group != to.Group && from is ShipComponentSlotVM shipComponentSlotVm) {
                     Game.Instance.GameCommandQueue.UnequipItem(shipComponentSlotVm.ItemSlot.Owner, shipComponentSlotVm.ToSlotRef(), to.ToSlotRef());
                     Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)shipComponentSlotVm, to.Group);
-                } else {
+                }
+                else {
                     bool isLootOrCargo = owner1 != null || owner2 != null;
                     InventoryHelper.ProcessDragEnd(from, to, isLootOrCargo);
                 }
