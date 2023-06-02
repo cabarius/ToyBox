@@ -46,7 +46,7 @@ namespace ToyBox {
                         TextField(ref newPortraitName, null, MinWidth(200), AutoWidth());
                         ActionButton("Change Portrait", () => todo.Add(() => {
                             if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds().Contains(newPortraitName)) {
-                                ch.UISettings.SetPortraitUnsafe(null, new PortraitData(newPortraitName));
+                                ch.UISettings.SetPortrait(new PortraitData(newPortraitName));
                                 Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
                                 unknownID = false;
                             }
