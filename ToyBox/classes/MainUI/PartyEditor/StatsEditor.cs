@@ -26,9 +26,41 @@ namespace ToyBox {
 
         public static Dictionary<string, float> lastScaleSize = new();
         private static int _increase = 1;
+        private static bool listPortraits = false;
+        private static string newPortraitName = "";
         public static List<Action> OnStatsGUI(UnitEntityData ch) {
             List<Action> todo = new();
             Div(100, 20, 755);
+            if (ch.UISettings.Portrait.IsCustom) {
+                Label("Current Portrait ID: ".localize() + ch.UISettings.Portrait.CustomId);
+            }
+            else {
+                Label("No Custom Portrait used!".localize());
+            }
+            using (HorizontalScope()) {
+                Label("Enter the name of the new custom portrait you want to use: ".localize());
+                TextField(ref newPortraitName);
+            }
+            ActionButton("Change Portrait", () => todo.Add(() => {
+                if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds().Contains(newPortraitName)) {
+                    ch.UISettings.SetPortraitUnsafe(null, new PortraitData(newPortraitName));
+                    Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
+                }
+                else {
+                    Mod.Log($"No portrait with name {newPortraitName}");
+                }
+            }));
+            DisclosureToggle("List found Portraits", ref listPortraits);
+            using (HorizontalScope()) {
+                if (listPortraits) {
+                    Space(15);
+                    using (VerticalScope()) {
+                        foreach (var customId in CustomPortraitsManager.Instance.GetExistingCustomPortraitIds()) {
+                            Label(customId.ToString());
+                        }
+                    }
+                }
+            }
 #if Wrath
             var alignment = ch.Descriptor().Alignment.ValueRaw;
             using (HorizontalScope()) {
