@@ -1,27 +1,59 @@
 // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+using DG.Tweening;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Root.Strings;
+using Kingmaker.Cargo;
 using Kingmaker.Cheats;
+using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
+using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
+using Kingmaker.Code.UI.MVVM.View.MainMenu.PC;
+using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
+using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
+using Kingmaker.Code.UI.MVVM.VM.MainMenu;
+using Kingmaker.Code.UI.MVVM.VM.MessageBox;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.Inventory;
+using Kingmaker.Code.UI.MVVM.VM.ShipCustomization;
+using Kingmaker.Code.UI.MVVM.VM.Slots;
+using Kingmaker.Code.UI.MVVM.VM.WarningNotification;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers;
+using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
+using Kingmaker.GameCommands;
+using Kingmaker.Globalmap;
 using Kingmaker.Globalmap;
 using Kingmaker.Items;
+using Kingmaker.Items.Slots;
+using Kingmaker.Networking;
+using Kingmaker.Networking;
+using Kingmaker.Pathfinding;
+using Kingmaker.Pathfinding;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem.Rules;
 using Kingmaker.Tutorial;
-using Kingmaker.Code.UI.MVVM.VM.MainMenu;
+using Kingmaker.UI;
+using Kingmaker.UI;
+using Kingmaker.UI.Common;
+using Kingmaker.UI.Common;
+using Kingmaker.UI.Legacy.LoadingScreen;
+using Kingmaker.UI.PathRenderer;
+using Kingmaker.UI.PathRenderer;
+using Kingmaker.UI.Sound;
+using Kingmaker.UI.Sound;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -31,53 +63,32 @@ using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
+using Kingmaker.View.Covers;
+using Kingmaker.View.Covers;
 using Kingmaker.View.MapObjects;
 using Kingmaker.Visual.Sound;
 using ModKit;
 using Owlcat.Runtime.Core;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using Owlcat.Runtime.UI;
+using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using System;
+using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using DG.Tweening;
+using ToyBox;
+using UniRx;
 using UnityEngine;
+using Warhammer.SpaceCombat.Blueprints;
+using static Kingmaker.Sound.AkAudioService;
+using static Kingmaker.UnitLogic.Abilities.AbilityData;
 using static Kingmaker.Utility.MassLootHelper;
 using Object = UnityEngine.Object;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Code.UI.MVVM.View.MainMenu.PC;
-using Kingmaker.Globalmap;
-using Kingmaker.UI.Legacy.LoadingScreen;
-using ToyBox;
-using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.Inventory;
-using Kingmaker.Networking;
-using Kingmaker.UI.Sound;
-using UniRx;
-using Kingmaker.Designers;
-using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
-using Kingmaker.UI.Common;
-using System.Collections;
-using Kingmaker.Blueprints.Root.Strings;
-using Kingmaker.Cargo;
-using Kingmaker.Code.UI.MVVM.VM.MessageBox;
-using Kingmaker.Code.UI.MVVM.VM.ShipCustomization;
-using Kingmaker.Code.UI.MVVM.VM.Slots;
-using Kingmaker.Code.UI.MVVM.VM.WarningNotification;
-using Kingmaker.GameCommands;
-using Kingmaker.Items.Slots;
-using Kingmaker.UI;
-using Kingmaker.UI.PathRenderer;
-using static Kingmaker.Sound.AkAudioService;
-using Kingmaker.Pathfinding;
-using Kingmaker.View.Covers;
-using Warhammer.SpaceCombat.Blueprints;
-using static Kingmaker.UnitLogic.Abilities.AbilityData;
 
 namespace ToyBox.BagOfPatches {
-    internal static class Tweaks {
+    internal static partial class Tweaks {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
@@ -513,7 +524,7 @@ toggleIgnoreAbilityTargetTooClose
                 return unit.MovementAgent.Position.To2D() != unit.MovementAgent.m_PreviousPosition;
             }
         }
-        #if true // TODO: these don't work by themselves so figure out what to do
+#if true // TODO: these don't work by themselves so figure out what to do
         [HarmonyPatch(typeof(InventoryHelper))]
         public static class InventoryHelperPatch {
             [HarmonyPatch(nameof(InventoryHelper.CanChangeEquipment))]
@@ -531,7 +542,7 @@ toggleIgnoreAbilityTargetTooClose
                 __result = InventoryHelper.CanEquipItemInCombat(item);
                 return false;
             }
-            
+
             [HarmonyPatch(nameof(InventoryHelper.TryEquip))]
             [HarmonyPrefix]
             public static bool TryEquip(ItemSlotVM slot, BaseUnitEntity unit) {
@@ -539,7 +550,7 @@ toggleIgnoreAbilityTargetTooClose
                 if (unit == null || slot == null || !slot.HasItem || !unit.IsMyNetRole())
                     return false;
                 ItemEntity itemEntity = slot.ItemEntity;
-                Game.Instance.GameCommandQueue.EquipItem(itemEntity, (MechanicEntity) unit, (ItemSlotRef) null);
+                Game.Instance.GameCommandQueue.EquipItem(itemEntity, (MechanicEntity)unit, (ItemSlotRef)null);
                 Game.Instance.GameCommandQueue.OrderCollection(slot, slot.Group);
                 bool isNotable = itemEntity.Blueprint.IsNotable;
                 if (UIUtilityItem.GetEquipPosibility(itemEntity)[0] | isNotable || itemEntity is ItemEntitySimple)
@@ -554,10 +565,10 @@ toggleIgnoreAbilityTargetTooClose
             public static bool TryUnequip(EquipSlotVM slot) {
                 if (!Settings.toggleEquipItemsDuringCombat) return true;
                 ItemSlot itemSlot = slot.ItemSlot;
-                if (itemSlot == null 
-                    || !itemSlot.HasItem 
-                    || itemSlot.HasItem && !itemSlot.CanRemoveItem() 
-                    || !(itemSlot.Owner is BaseUnitEntity owner) 
+                if (itemSlot == null
+                    || !itemSlot.HasItem
+                    || itemSlot.HasItem && !itemSlot.CanRemoveItem()
+                    || !(itemSlot.Owner is BaseUnitEntity owner)
                     || !owner.IsMyNetRole())
                     return false;
                 Game.Instance.GameCommandQueue.UnequipItem((MechanicEntity)owner, slot.ToSlotRef(), (ItemSlotRef)null);
@@ -568,15 +579,15 @@ toggleIgnoreAbilityTargetTooClose
                 Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)slot, stashVm);
                 return false;
             }
-            
-            [HarmonyPatch(nameof(InventoryHelper.TryDrop), new Type[] {typeof(ItemEntity)})]
+
+            [HarmonyPatch(nameof(InventoryHelper.TryDrop), new Type[] { typeof(ItemEntity) })]
             [HarmonyPrefix]
             public static bool TryDrop(ItemEntity item) {
                 if (!Settings.toggleEquipItemsDuringCombat) return true;
                 if (UIUtility.IsGlobalMap()) {
                     InventoryHelper.s_Item = item;
-                    InventoryHelper.s_ItemCallback = (Action) (() => EventBus.RaiseEvent<IDropItemHandler>((Action<IDropItemHandler>) (h => h.HandleDropItem(item, false))));
-                    UIUtility.ShowMessageBox((string) UIStrings.Instance.CommonTexts.DropItemFromGlobalMap, DialogMessageBoxBase.BoxType.Dialog, (button => {
+                    InventoryHelper.s_ItemCallback = (Action)(() => EventBus.RaiseEvent<IDropItemHandler>((Action<IDropItemHandler>)(h => h.HandleDropItem(item, false))));
+                    UIUtility.ShowMessageBox((string)UIStrings.Instance.CommonTexts.DropItemFromGlobalMap, DialogMessageBoxBase.BoxType.Dialog, (button => {
                         if (button != DialogMessageBoxBase.BoxButton.Yes || InventoryHelper.s_ItemSlot == null) return;
                         InventoryHelper.DropItemMechanicGlobalMap(InventoryHelper.s_ItemSlot);
                     }));
@@ -585,7 +596,7 @@ toggleIgnoreAbilityTargetTooClose
                     InventoryHelper.DropItemMechanic(item);
                 return false;
             }
-            
+
             [HarmonyPatch(nameof(InventoryHelper.TryMoveSlotInInventory))]
             [HarmonyPrefix]
             public static bool TryMoveSlotInInventory(ItemSlotVM from, ItemSlotVM to) {
@@ -651,10 +662,10 @@ toggleIgnoreAbilityTargetTooClose
         public static class ItemSlotPatch {
             [HarmonyPatch(nameof(ItemSlot.IsPossibleInsertItems))]
             [HarmonyPrefix]
-            public static  bool IsPossibleInsertItems(ItemSlot __instance, ref bool __result) {
+            public static bool IsPossibleInsertItems(ItemSlot __instance, ref bool __result) {
                 if (!Settings.toggleEquipItemsDuringCombat) return true;
-                __result = !(bool) __instance.Lock 
-                           || (bool) (Kingmaker.ElementsSystem.ContextData.ContextData<ItemSlot.IgnoreLock>) Kingmaker.ElementsSystem.ContextData.ContextData<ItemSlot.IgnoreLock>.Current 
+                __result = !(bool)__instance.Lock
+                           || (bool)(Kingmaker.ElementsSystem.ContextData.ContextData<ItemSlot.IgnoreLock>)Kingmaker.ElementsSystem.ContextData.ContextData<ItemSlot.IgnoreLock>.Current
                            || __instance.IsBodyInitializing;
                 Mod.Log($"ItemSlot.IsPossibleInsertItems: {__result}");
 
@@ -670,7 +681,7 @@ toggleIgnoreAbilityTargetTooClose
                 return __instance.Blueprint is not BlueprintItemEquipmentUsable;
             }
         }
-        #endif
+#endif
 
         [HarmonyPatch(typeof(PartyAwarenessController))]
         public static class PartyAwarenessControllerPatch {
