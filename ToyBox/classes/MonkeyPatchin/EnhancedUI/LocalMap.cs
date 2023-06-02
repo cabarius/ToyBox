@@ -340,6 +340,7 @@ namespace ToyBox.BagOfPatches {
                             .gameObject.SetActive(value);
 #endif
                     }));
+#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (Settings.toggleShowInterestingNPCsOnLocalMap) {
                     if (__instance.ViewModel is LocalMapCommonMarkerVM markerVM
                         && markerVM.m_Marker is AddLocalMapMarker.Runtime marker) {
@@ -353,6 +354,7 @@ namespace ToyBox.BagOfPatches {
                         UpdateMarker(__instance, characterMarkerVM.m_Unit);
                     }
                 }
+#endif
             }
 
             // Helper Function - Not a Patch
@@ -380,6 +382,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void BindViewImplementation(UnitOvertipView __instance) {
                 if (!Settings.toggleShowInterestingNPCsOnLocalMap) return;
+#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
@@ -388,6 +391,7 @@ namespace ToyBox.BagOfPatches {
                     else
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
+#endif
             }
 #if Wrath
             [HarmonyPatch(nameof(UnitOvertipView.UpdateInternal))]
@@ -399,6 +403,7 @@ namespace ToyBox.BagOfPatches {
             public static void UpdateInternal(UnitOvertipView __instance) {
 #endif
                 if (!Settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
+#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
@@ -407,6 +412,7 @@ namespace ToyBox.BagOfPatches {
                     else
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
+#endif
             }
         }
         #if false
