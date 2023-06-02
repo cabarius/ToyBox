@@ -98,6 +98,7 @@
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
 * (***ADDB***) Add new Bindable Action Buttons for Loot Revealers
+* (***ADDB***) Prevent Mod from overriding Build Points when not changed in the settings
 * (***ADDB***) Added toggle to disable traps
 * (***ADDB***) Small ToyBox Swarm GUI fix
 * (***ADDB***) Enchantment Tab Improvement
