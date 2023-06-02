@@ -70,7 +70,7 @@ namespace ToyBox {
 
         private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(
-#if Wrath
+#if DEBUG
                 // Whatever is collated here results in roughly 14k Collation Keys in Wrath.
                 bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] {}
 #endif
