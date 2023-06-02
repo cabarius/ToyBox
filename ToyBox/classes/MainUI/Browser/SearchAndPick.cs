@@ -217,8 +217,9 @@ namespace ToyBox {
                 var count = SearchAndPickBrowser.collatedDefinitions.Keys.Count;
                 var tmp = new string[(int)(1.1 * count) + 10];
                 SearchAndPickBrowser.collatedDefinitions.Keys.CopyTo(tmp, 0);
-                collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s)).Prepend("All").ToList();
+                collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s)).ToList();
                 collationKeys.Sort();
+                collationKeys.Insert(0, "All");
             }
             if (blueprints == null) {
                 SearchAndPickBrowser.DisplayShowAllGUI = false;
