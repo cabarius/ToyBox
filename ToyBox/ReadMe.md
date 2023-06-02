@@ -74,7 +74,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.4** - ***Sh0dan Preview*** **June 2, 2023h** for beta 0.2.1af
+**ToyBox 1.5.4 Rogue - ***Sh0dan*** Preview Version 1.5.3h June 2, 2023** for beta 0.2.1af
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
