@@ -74,7 +74,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.4** - ***Sh0dan Experimental Preview*** **June 1, 2023f** for beta 0.2.1ad
+**ToyBox Rogue 1.5.4** - ***Sh0dan Preview*** **June 1, 2023f** for beta 0.2.1ad
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -98,6 +98,7 @@
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
 * (***ADDB***) Add new Bindable Action Buttons for Loot Revealers
+* (***ADDB***) Prevent Mod from overriding Build Points when not changed in the settings
 * (***ADDB***) Added toggle to disable traps
 * (***ADDB***) Small ToyBox Swarm GUI fix
 * (***ADDB***) Enchantment Tab Improvement
