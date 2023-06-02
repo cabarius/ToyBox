@@ -333,7 +333,6 @@ namespace ToyBox {
         public int characterCreationAbilityPointsMerc = 20;
         public bool characterCreationAbilityPointsOverridePlayer = false;
         public bool characterCreationAbilityPointsOverrideMerc = false;
-        public bool characterCreationAbilityPointsOverrideGameMinimums = false;
         public float companionCostMultiplier = 1;
         public float kingdomBuildingTimeModifier = 0;
         public float enemyBaseHitPointsMultiplier = 1;

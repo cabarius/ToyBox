@@ -27,17 +27,16 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPriority(Priority.Low)]
             public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance, bool isPregen) {
                 // Kludge - there is some weirdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
-                var isCustom = unit.Blueprint.ToString() == "CustomCompanion";
+                var isCustom = unit != Game.Instance.Player.MainCharacter.Value.Descriptor;
+                ModKit.Mod.Warn($"unit.isCustomCompanion(): {unit.IsCustomCompanion()}");
+                ModKit.Mod.Warn($"unit.Blueprint.ToString() == \"CustomCompanion\": {unit.Blueprint.ToString() == "CustomCompanion"}");
+                ModKit.Mod.Warn($"unit != Game.Instance.Player.MainCharacter.Value.Descriptor: {isCustom}");
                 if ((isCustom && settings.characterCreationAbilityPointsOverrideMerc) || (!isCustom && settings.characterCreationAbilityPointsOverridePlayer)) {
                     if (__instance.IsFirstCharacterLevel) {
                         if (!__instance.IsPregen) {
-                            var component = unit.Blueprint.GetComponent<StartingStatPointsComponent>();
-                            var minimumPoints = 0;
-                            if (!settings.characterCreationAbilityPointsOverrideGameMinimums)
-                                minimumPoints = component != null ? component.StartingStatPoints : 20;
                             //Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
                             //Logger.Log($"not pregen - isCust: {isCustom}");
-                            var pointCount = Math.Max(minimumPoints, isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+                            var pointCount = isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer;
 
                             //Logger.Log($"points: {pointCount}");
 
