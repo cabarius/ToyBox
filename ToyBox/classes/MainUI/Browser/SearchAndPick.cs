@@ -253,7 +253,6 @@ namespace ToyBox {
                             if (collationPickerPageSize > 1000) { collationPickerPageSize = 1000; }
                             if (collationKeys.Count > collationPickerPageSize) {
                                 string pageLabel = "Page: ".localize().orange() + collationPickerCurrentPage.ToString().cyan() + " / " + collationPickerPageCount.ToString().cyan();
-                                25.space();
                                 Label(pageLabel, ExpandWidth(false));
                                 ActionButton("-", () => {
                                     if (collationPickerCurrentPage >= 1) {
