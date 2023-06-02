@@ -217,7 +217,7 @@ namespace ToyBox {
                 var count = SearchAndPickBrowser.collatedDefinitions.Keys.Count;
                 var tmp = new string[(int)(1.1 * count) + 10];
                 SearchAndPickBrowser.collatedDefinitions.Keys.CopyTo(tmp, 0);
-                collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s)).ToList();
+                collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s)).Prepend("All").ToList();
                 collationKeys.Sort();
             }
             if (blueprints == null) {
@@ -275,7 +275,7 @@ namespace ToyBox {
                         }
                         var offset = Math.Min(collationKeys.Count, (collationPickerCurrentPage - 1) * collationPickerPageSize);
                         var limit = Math.Min(collationPickerPageSize, Math.Max(collationKeys.Count, collationKeys.Count - collationPickerPageSize));
-                        if (VPicker("Categories", ref SearchAndPickBrowser.collationKey, collationKeys.ToList().Skip(offset).Take(limit).Prepend("All").ToList(), null, s => s, ref collationSearchText, Width(300))) {
+                        if (VPicker("Categories", ref SearchAndPickBrowser.collationKey, collationKeys.ToList().Skip(offset).Take(limit).ToList(), null, s => s, ref collationSearchText, Width(300))) {
                             Mod.Debug($"collationKey: {SearchAndPickBrowser.collationKey}");
                         }
                     }
