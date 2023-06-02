@@ -261,6 +261,13 @@ namespace ModKit {
                             if (_finishedSearch && !searchQueryChanged) {
                                 filteredDefinitions = new List<Definition>();
                             }
+
+                            // If the search already finished we want to copy all results as fast as possible
+                            if (_finishedSearch && cachedSearchResults.Count > 0) {
+                                filteredDefinitions.AddRange(cachedSearchResults);
+                                cachedSearchResults.Clear();
+                            }
+
                             // Lock the search results
                             lock (cachedSearchResults) {
                                 // Go through every item in the queue
@@ -283,7 +290,7 @@ namespace ModKit {
                         _matchCount = filteredDefinitions.Count;
                         UpdatePageCount();
                         UpdatePaginatedResults();
-                        if (_finishedSearch) {
+                        if (_finishedSearch && cachedSearchResults?.Count == 0) {
                             isSearching = false;
                             _updatePages = false;
                             _finishedSearch = false;

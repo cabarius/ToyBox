@@ -244,10 +244,12 @@ namespace ToyBox {
                 remainingWidth -= 350;
                 if (collationKeys?.Count > 0) {
                     using (VerticalScope(GUI.skin.box)) {
+                        10.space();
                         using (HorizontalScope()) {
-                            10.space();
                             Label("Limit".localize(), ExpandWidth(false));
                             ActionIntTextField(ref collationPickerPageSize, "Search Limit".localize(), (i) => collationPickerPageSize = i < 1 ? 1 : i, null, 80.width());
+                        }
+                        using (HorizontalScope()) {
                             if (collationPickerPageSize > 1000) { collationPickerPageSize = 1000; }
                             if (collationKeys.Count > collationPickerPageSize) {
                                 string pageLabel = "Page: ".localize().orange() + collationPickerCurrentPage.ToString().cyan() + " / " + collationPickerPageCount.ToString().cyan();
