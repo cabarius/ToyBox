@@ -628,9 +628,13 @@ namespace ToyBox {
             Div(0, 25);
 #if Wrath
             HStack("Class Specific".localize(), 1,
-                () => Slider("Kineticist: Burn Reduction".localize(), ref Settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
+                        () => Slider("Kineticist: Burn Reduction".localize(), ref Settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
                         () => Slider("Arcanist: Spell Slot Multiplier".localize(), ref Settings.arcanistSpellslotMultiplier, 0.5f, 10f,
                                 1f, 1, "", AutoWidth()),
+                        () => Slider("Enduring Spells time needed for extension".localize(), ref Settings.enduringSpellsTimeThreshold,
+                                0f, 120f, 60f, 2, "min".localize(), AutoWidth()),
+                        () => Slider("Greater Enduring Spells time needed for extension".localize(), ref Settings.greaterEnduringSpellsTimeThreshold,
+                                0f, 120f, 5f, 2, "min".localize(), AutoWidth()),
                         () => {
                             Space(25);
                             Label("Please rest after adjusting to recalculate your spell slots.".localize().green());
