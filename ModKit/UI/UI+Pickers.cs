@@ -277,7 +277,7 @@ namespace ModKit {
                 //if (changed) Mod.Log($"sel index: {selectedItemIndex} sel: {selected}");
             }
             else {
-                Label("No Items".grey(), options);
+                Label("No Items".localize().grey(), options);
             }
             return changed;
         }

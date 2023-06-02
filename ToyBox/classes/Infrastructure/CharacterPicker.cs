@@ -82,7 +82,7 @@ namespace ToyBox {
                 ActionSelectionGrid(ref _selectedIndex,
                     characters.Select((ch) => ch.CharacterName).ToArray(),
                     8,
-                    (index) => { SearchAndPick.UpdateSearchResults(); },
+                    null,
                     AutoWidth());
             }
             var selectedCharacter = GetSelectedCharacter();

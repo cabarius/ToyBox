@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ToyBox;
 using UnityEngine;
 
 namespace ModKit {
@@ -155,11 +156,10 @@ namespace ModKit {
                                 }
                                 25.space();
                             }
-                            //                            if (isSearching && false) { // ADDB - Please add a delay timer before this appears because having it flash on very short searches is distracting or let's just get rid of it
-                            //                                                        // It was helpful for debugging but I don't think we need it anymore?
-                            //                                Label("Searching...", AutoWidth());
-                            //                                25.space();
-                            //                            }
+                            if (isCollating) {
+                                Label("Collating...".red().bold(), AutoWidth());
+                                25.space();
+                            }
                         }
                     }
                     else {
@@ -320,7 +320,7 @@ namespace ModKit {
                             _collationCancellationTokenSource.Cancel();
                         }
                     }
-                    if (needsReloadData && ((doCollation && _collationFinished) || !doCollation || collator != null)) {
+                    if (needsReloadData && !isCollating && ((doCollation && _collationFinished) || !doCollation || collator != null)) {
                         _currentDict = current.ToDictionaryIgnoringDuplicates(definition, c => c);
                         IEnumerable<Definition> definitions;
                         if (doCollation && !_collationKeyIsNullOrAllOrDoesNotExist) {
@@ -364,7 +364,6 @@ namespace ModKit {
                 return _pagedResults?.ToList();
             }
 
-            [UsedImplicitly]
             public void UpdateSearchResults(string searchTextParam,
                 IEnumerable<Definition> definitions,
                 Func<Definition, string>? searchKey,
@@ -375,7 +374,7 @@ namespace ModKit {
                 }
                 cachedSearchResults = new();
                 var terms = searchTextParam.Split(' ').Select(s => s.ToLower()).ToHashSet();
-                if (search) {
+                if (search && !string.IsNullOrEmpty(searchTextParam)) {
                     foreach (var def in definitions) {
                         if (_searchCancellationTokenSource.IsCancellationRequested) {
                             isSearching = false;

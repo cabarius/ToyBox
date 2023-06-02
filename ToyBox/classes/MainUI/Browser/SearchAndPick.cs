@@ -28,7 +28,7 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
-using Kingmaker.AreaLogic.QuestSystem;
+using Kingmaker;
 #if Wrath
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints.Classes.Selection;
@@ -46,26 +46,32 @@ namespace ToyBox {
     public static class SearchAndPick {
         public static Settings Settings => Main.Settings;
 
-        public static IEnumerable<SimpleBlueprint> unpagedBPs = null;
-        public static IEnumerable<SimpleBlueprint> filteredBPs = null;
-        public static Dictionary<string, List<SimpleBlueprint>> collatedBPs = null;
-        public static IEnumerable<SimpleBlueprint> selectedCollatedBPs = null;
-        public static List<string> collationKeys = null;
-        public static List<string?> collationTitles = null;
+        public static IEnumerable<SimpleBlueprint> bps = null;
+        public static bool hasRepeatableAction;
+        public static int maxActions = 0;
+        public static int collationPickerPageSize = 30;
+        // Need to cache the collators; if not then certain Category changes can lead to Cast Errors
+        // Example All -> Spellbooks
+        public static Dictionary<Type, Func<SimpleBlueprint, List<string>>> collatorCache = new();
+        public static int collationPickerPageCount => (int)Math.Ceiling((double)collationKeys?.Count / collationPickerPageSize);
+        public static int collationPickerCurrentPage = 1;
+        public static int repeatCount = 1;
         public static int selectedCollationIndex = 0;
-        private static bool firstSearch = true;
-        public static string[] filteredBPNames = null;
-        public static int uncolatedMatchCount = 0;
-        public static int matchCount = 0;
-        public static int pageCount = 0;
-        public static int currentPage = 0;
         public static string collationSearchText = "";
         public static string parameter = "";
-        private static readonly char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        public static List<string> collationKeys;
+        public static UnitReference selectedUnit;
+        public static Browser<SimpleBlueprint, SimpleBlueprint> SearchAndPickBrowser = new();
+        public static int[] ParamSelected = new int[1000];
+#if Wrath
+        public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
+#endif
+        public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
         private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
             new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(
-#if DEBUG
+#if Wrath
+                // Whatever is collated here results in roughly 14k Collation Keys in Wrath.
                 bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] {}
 #endif
                 )),
@@ -193,270 +199,386 @@ namespace ToyBox {
 
         public static IEnumerable<SimpleBlueprint> blueprints = null;
 
-        public static void ResetSearch() {
-            filteredBPs = null;
-            filteredBPNames = null;
-            collatedBPs = null;
-            ReflectionTreeView.ClearExpanded();
-            BlueprintListUI.needsLayout = true;
-        }
-        public static void ResetGUI() {
-            ResetSearch();
-            Settings.selectedBPTypeFilter = 1;
-        }
-        public static void UpdatePageCount() {
-            if (Settings.searchLimit > 0) {
-                pageCount = matchCount / Settings.searchLimit;
-                currentPage = Math.Min(currentPage, pageCount);
-            }
-            else {
-                pageCount = 1;
-                currentPage = 1;
-            }
-        }
-        public static void UpdatePaginatedResults() {
-            var limit = Settings.searchLimit;
-            var count = unpagedBPs.Count();
-            var offset = Math.Min(count, currentPage * limit);
-            limit = Math.Min(limit, Math.Max(count, count - limit));
-            Mod.Trace($"{currentPage} / {pageCount} count: {count} => offset: {offset} limit: {limit} ");
-            filteredBPs = unpagedBPs.Skip(offset).Take(limit).ToArray();
-            filteredBPNames = filteredBPs.Select(b => b.NameSafe()).ToArray();
-
-        }
-        public static void UpdateSearchResults() {
-            if (blueprints == null) return;
-            selectedCollationIndex = 0;
-            selectedCollatedBPs = null;
-            BlueprintListUI.needsLayout = true;
-            if (Settings.searchText.Trim().Length == 0) {
-                ResetSearch();
-            }
-            var searchText = Settings.searchText;
-            var terms = searchText.Split(' ').Select(s => s.ToLower()).ToHashSet();
-            selectedTypeFilter = blueprintTypeFilters[Settings.selectedBPTypeFilter];
-            var selectedType = selectedTypeFilter.type;
-            IEnumerable<SimpleBlueprint> bps = null;
-            if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
-            else bps = from bp in BlueprintExtensions.BlueprintsOfType(selectedType)
-                       where selectedTypeFilter.filter(bp)
-                       select bp;
-            var filtered = new List<SimpleBlueprint>();
+        public static void RedoLayout() {
+            if (bps == null) return;
             foreach (var blueprint in bps) {
-                if (blueprint.AssetGuid.ToString().Contains(searchText)
-                    || blueprint.GetType().ToString().Contains(searchText)) {
-                    filtered.Add(blueprint);
-                }
-                else {
-                    var name = GetTitle(blueprint);
-                    var displayName = blueprint.GetDisplayName();
-                    var description = blueprint.GetDescription() ?? "";
-                    if (terms.All(term => name.Matches(term))
-                        || terms.All(term => displayName.Matches(term))
-                        || Settings.searchDescriptions && 
-                            (  terms.All(term => description.Matches(term))
-                            || blueprint is BlueprintItem itemBP 
-                                && terms.All(term => {
-                                    try {
-                                        return itemBP.FlavorText.Matches(term);                                        
-                                    } catch (NullReferenceException e) {
-                                        return false;
-                                    }
-                                })
-                            )
-                        ) {
-                        filtered.Add(blueprint);
-                    }
+                var actions = blueprint.GetActions();
+                if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
+                if (selectedUnit != null) {
+                    // FIXME - perf bottleneck 
+                    var actionCount = actions.Sum(action => action.canPerform(blueprint, selectedUnit) ? 1 : 0);
+                    maxActions = Math.Max(actionCount, maxActions);
                 }
             }
-            filteredBPs = filtered.OrderBy(bp => bp.NameSafe());
-            matchCount = filtered.Count();
-            UpdatePageCount();
-            for (var i = 0; i < BlueprintListUI.ParamSelected.Length; i++) {
-                BlueprintListUI.ParamSelected[i] = 0;
-            }
-            uncolatedMatchCount = matchCount;
-            if (selectedTypeFilter.collator != null) {
-                collatedBPs = (from bp in filtered
-                    from key in selectedTypeFilter.collator(bp)
-                    //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
-                    group bp by key into g
-                    orderby g.Key.LongSortKey(), g.Key
-                    select g).ToDictionary(g => g.Key, g => g.ToList().Distinct().ToList());
-                _ = collatedBPs.Count();
-                var keys = collatedBPs.ToList().Select(cbp => cbp.Key).ToList();
-                collationKeys = new List<string> { "All" };
-                collationKeys.AddRange(keys);
-                var titles = collatedBPs.ToList().Select(cbp => $"{cbp.Key} ({cbp.Value.Count()})").ToList();
-                collationTitles = new List<string?> { $"All ({filtered.Count()})" };
-                collationTitles.AddRange(titles);
-            }
-            else {
-                collationKeys = null;
-                collationTitles = null;
-            }
+        }
 
-            unpagedBPs = filteredBPs;
-            UpdatePaginatedResults();
-            firstSearch = false;
-            UpdateCollation();
-        }
-        public static void UpdateCollation() {
-            if (collationKeys == null || collatedBPs == null) return;
-            var selectedKey = collationKeys.ElementAt(selectedCollationIndex);
-            foreach (var pair in collatedBPs) {
-                if (pair.Key == selectedKey) {
-                    matchCount = pair.Value.Count();
-                    selectedCollatedBPs = pair.Value.Take(Settings.searchLimit).Distinct().ToArray();
-                    UpdatePageCount();
+        public static void OnGUI() {
+            if (Event.current.type == EventType.Layout) {
+                var count = SearchAndPickBrowser.collatedDefinitions.Keys.Count;
+                var tmp = new string[(int)(1.1 * count) + 10];
+                SearchAndPickBrowser.collatedDefinitions.Keys.CopyTo(tmp, 0);
+                collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s)).ToList();
+                collationKeys.Sort();
+            }
+            if (blueprints == null) {
+                SearchAndPickBrowser.DisplayShowAllGUI = false;
+                SearchAndPickBrowser.doCollation = true;
+                blueprints = BlueprintLoader.Shared.GetBlueprints();
+                if (blueprints != null) {
+                    InitType();
                 }
             }
-            BlueprintListUI.needsLayout = true;
-        }
-        public static void OnGUI() {
-            if (blueprints == null) {
-                blueprints = BlueprintLoader.Shared.GetBlueprints();
-                if (blueprints != null) UpdateSearchResults();
-            }
-            // Stackable browser
             using (HorizontalScope(Width(350))) {
                 var remainingWidth = ummWidth;
-                // First column - Type Selection Grid
                 using (VerticalScope(GUI.skin.box)) {
                     ActionSelectionGrid(ref Settings.selectedBPTypeFilter,
-                        blueprintTypeFilters.Select(tf => tf.name).ToArray(),
+                        blueprintTypeFilters.Select(tf => tf.name.localize()).ToArray(),
                         1,
-                        (selected) => { UpdateSearchResults(); },
+                        (selected) => {
+                            InitType();
+                        },
                         buttonStyle,
                         Width(200));
                 }
                 remainingWidth -= 350;
-                var collationChanged = false;
-                if (collatedBPs != null && collationTitles != null) {
+                if (collationKeys?.Count > 0) {
                     using (VerticalScope(GUI.skin.box)) {
-                        var selectedKey = collationTitles.ElementAt(selectedCollationIndex);
-                        if (VPicker("Categories", ref selectedKey, collationTitles, null, s => s, ref collationSearchText, Width(300))) {
-                            collationChanged = true; BlueprintListUI.needsLayout = true;
+                        using (HorizontalScope()) {
+                            10.space();
+                            Label("Limit".localize(), ExpandWidth(false));
+                            ActionIntTextField(ref collationPickerPageSize, "Search Limit".localize(), (i) => collationPickerPageSize = i < 1 ? 1 : i, null, 80.width());
+                            if (collationPickerPageSize > 1000) { collationPickerPageSize = 1000; }
+                            if (collationKeys.Count > collationPickerPageSize) {
+                                string pageLabel = "Page: ".localize().orange() + collationPickerCurrentPage.ToString().cyan() + " / " + collationPickerPageCount.ToString().cyan();
+                                25.space();
+                                Label(pageLabel, ExpandWidth(false));
+                                ActionButton("-", () => {
+                                    if (collationPickerCurrentPage >= 1) {
+                                        if (collationPickerCurrentPage == 1) {
+                                            collationPickerCurrentPage = collationPickerPageCount;
+                                        }
+                                        else {
+                                            collationPickerCurrentPage -= 1;
+                                        }
+                                    }
+                                }, AutoWidth());
+                                ActionButton("+", () => {
+                                    if (collationPickerCurrentPage > collationPickerPageCount) collationPickerCurrentPage = 1;
+                                    if (collationPickerCurrentPage == collationPickerPageCount) {
+                                        collationPickerCurrentPage = 1;
+                                    }
+                                    else {
+                                        collationPickerCurrentPage += 1;
+                                    }
+                                }, AutoWidth());
+                            }
                         }
-                        if (selectedKey != null)
-                            selectedCollationIndex = collationTitles.IndexOf(selectedKey);
-
-#if false
-                        UI.ActionSelectionGrid(ref selectedCollationIndex, collationKeys.ToArray(),
-                            1,
-                            (selected) => { collationChanged = true; BlueprintListUI.needsLayout = true; },
-                            UI.buttonStyle,
-                            UI.Width(200));
-#endif
+                        var offset = Math.Min(collationKeys.Count, (collationPickerCurrentPage - 1) * collationPickerPageSize);
+                        var limit = Math.Min(collationPickerPageSize, Math.Max(collationKeys.Count, collationKeys.Count - collationPickerPageSize));
+                        if (VPicker("Categories", ref SearchAndPickBrowser.collationKey, collationKeys.ToList().Skip(offset).Take(limit).Prepend("All").ToList(), null, s => s, ref collationSearchText, Width(300))) {
+                            Mod.Debug($"collationKey: {SearchAndPickBrowser.collationKey}");
+                        }
                     }
                     remainingWidth -= 450;
                 }
-
-                // Section Column  - Main Area
                 using (VerticalScope(MinWidth(remainingWidth))) {
-                    // Search Field and modifiers
-                    using (HorizontalScope()) {
-                        ActionTextField(
-                            ref Settings.searchText,
-                            "searchText",
-                            (text) => { },
-                            () => UpdateSearchResults(),
-                            Width(400));
-                        50.space();
-                        Label("Limit", AutoWidth());
-                        15.space();
-                        ActionIntTextField(
-                            ref Settings.searchLimit,
-                            "searchLimit",
-                            (limit) => { },
-                            () => UpdateSearchResults(),
-                            Width(75));
-                        if (Settings.searchLimit > 1000) { Settings.searchLimit = 1000; }
-                        25.space();
-                        if (Toggle("Search Descriptions", ref Settings.searchDescriptions, AutoWidth())) UpdateSearchResults();
-                        25.space();
-                        if (Toggle("Attributes", ref Settings.showAttributes, AutoWidth())) UpdateSearchResults();
-                        25.space();
-                        Toggle("Show GUIDs", ref Settings.showAssetIDs, AutoWidth());
-                        25.space();
-                        Toggle("Components", ref Settings.showComponents, AutoWidth());
-                        25.space();
-                        Toggle("Elements", ref Settings.showElements, AutoWidth());
-                        25.space();
-                        Toggle("Show Display & Internal Names", ref Settings.showDisplayAndInternalNames, AutoWidth());
+                    List<Action> todo = new();
+                    int count = 0;
+                    if (selectedTypeFilter != null) {
+                        collatorCache[selectedTypeFilter.type] = selectedTypeFilter.collator;
                     }
-                    // Search Button and Results Summary
-                    using (HorizontalScope()) {
-                        ActionButton("Search", () => {
-                            UpdateSearchResults();
-                        }, AutoWidth());
-                        Space(25);
-                        if (firstSearch) {
-                            Label("please note the first search may take a few seconds.".green(), AutoWidth());
-                        }
-                        else if (matchCount > 0) {
-                            var title = "Matches: ".green().bold() + $"{matchCount}".orange().bold();
-                            if (matchCount > Settings.searchLimit) { title += " => ".cyan() + $"{Settings.searchLimit}".cyan().bold(); }
-                            Label(title, ExpandWidth(false));
-                        }
-                        Space(130);
-                        Label($"Page: ".green() + $"{Math.Min(currentPage + 1, pageCount + 1)}".orange() + " / " + $"{pageCount + 1}".cyan(), AutoWidth());
-                        ActionButton("-", () => {
-                            currentPage = Math.Max(currentPage -= 1, 0);
-                            UpdatePaginatedResults();
-                        }, AutoWidth());
-                        ActionButton("+", () => {
-                            currentPage = Math.Min(currentPage += 1, pageCount);
-                            UpdatePaginatedResults();
-                        }, AutoWidth());
-                        Space(25);
-                        var pageNum = currentPage + 1;
-                        if (Slider(ref pageNum, 1, pageCount + 1, 1)) UpdatePaginatedResults();
-                        currentPage = pageNum - 1;
-                    }
-                    Space(10);
-
-                    if (filteredBPs != null) {
-                        CharacterPicker.OnCharacterPickerGUI();
-                        UnitReference selected = CharacterPicker.GetSelectedCharacter();
-                        var bps = filteredBPs;
-                        if (selectedCollationIndex == 0) {
-                            selectedCollatedBPs = null;
-                            matchCount = uncolatedMatchCount;
-                            UpdatePageCount();
-                        }
-                        if (selectedCollationIndex > 0) {
-                            if (collationChanged) {
-                                UpdateCollation();
-                            }
-                            bps = selectedCollatedBPs;
-                        }
-                        BlueprintListUI.OnGUI(selected, bps, 0, remainingWidth, null, selectedTypeFilter, (keys) => {
-                            if (keys.Length > 0) {
-                                var changed = false;
-                                //var bpTypeName = keys[0];
-                                //var newTypeFilterIndex = blueprintTypeFilters.FindIndex(f => f.type.Name == bpTypeName);
-                                //if (newTypeFilterIndex >= 0) {
-                                //    settings.selectedBPTypeFilter = newTypeFilterIndex;
-                                //    changed = true;
-                                //}
-                                if (keys.Length > 1) {
-                                    var collationKey = keys[1];
-                                    var newCollationIndex = collationKeys.FindIndex(ck => ck == collationKey);
-                                    if (newCollationIndex >= 0) {
-                                        selectedCollationIndex = newCollationIndex;
-                                        UpdateCollation();
+                    SearchAndPickBrowser.OnGUI(bps, () => bps, bp => bp, bp => GetSearchKey(bp) + (Settings.searchDescriptions ? bp.GetDescription() : ""), bp => new[] { GetSortKey(bp) },
+                        () => {
+                            using (VerticalScope()) {
+                                using (HorizontalScope()) {
+                                    25.space();
+                                    if (Toggle("Search Descriptions".localize(), ref Settings.searchDescriptions, AutoWidth())) SearchAndPickBrowser.ReloadData();
+                                    25.space();
+                                    if (Toggle("Attributes".localize(), ref Settings.showAttributes, AutoWidth())) SearchAndPickBrowser.ReloadData();
+                                    25.space();
+                                    Toggle("Show GUIDs".localize(), ref Settings.showAssetIDs, AutoWidth());
+                                    25.space();
+                                    Toggle("Components".localize(), ref Settings.showComponents, AutoWidth());
+                                    25.space();
+                                    Toggle("Elements".localize(), ref Settings.showElements, AutoWidth());
+                                    25.space();
+                                    if (Toggle("Show Display & Internal Names".localize(), ref Settings.showDisplayAndInternalNames, AutoWidth())) SearchAndPickBrowser.ReloadData();
+                                }
+                                using (HorizontalScope()) {
+                                    CharacterPicker.OnCharacterPickerGUI();
+                                    var tmp = CharacterPicker.GetSelectedCharacter();
+                                    if (tmp != selectedUnit) {
+                                        selectedUnit = tmp;
+                                        RedoLayout();
+                                    }
+                                    if (hasRepeatableAction) {
+                                        using (HorizontalScope()) {
+                                            ActionIntTextField(
+                                                ref repeatCount,
+                                                "repeatCount",
+                                                (limit) => { },
+                                                () => { },
+                                                Width(160));
+                                            Space(40);
+                                            Label("Parameter".cyan() + ": " + $"{repeatCount}".orange(), ExpandWidth(false));
+                                            repeatCount = Math.Max(1, repeatCount);
+                                            repeatCount = Math.Min(100, repeatCount);
+                                        }
                                     }
                                 }
-                                if (changed) {
-                                    UpdateSearchResults();
+                            }
+                        },
+                        (bp, maybeBP) => {
+                            GetTitle(bp);
+                            Func<string, string> titleFormatter = (t) => t.orange().bold();
+                            if (remainingWidth == 0) remainingWidth = ummWidth;
+                            var description = bp.GetDescription().MarkedSubstring(Settings.searchText);
+                            if (bp is BlueprintItem itemBlueprint && itemBlueprint.FlavorText?.Length > 0)
+                                description = $"{itemBlueprint.FlavorText.StripHTML().color(RGBA.notable).MarkedSubstring(Settings.searchText)}\n{description}";
+                            float titleWidth = 0;
+                            var remWidth = remainingWidth;
+                            using (HorizontalScope()) {
+                                var actions = bp.GetActions()
+                                    .Where(action => action.canPerform(bp, selectedUnit));
+                                var titles = actions.Select(a => a.name);
+                                string title;
+                                // FIXME - horrible perf bottleneck 
+                                var removeIndex = titles.IndexOf("Remove".localize());
+                                var lockIndex = titles.IndexOf("Lock".localize());
+                                if (removeIndex > -1 || lockIndex > -1) {
+                                    title = GetTitle(bp, name => name.cyan().bold());
+                                }
+                                else {
+                                    title = GetTitle(bp, name => name.orange().bold());
+                                }
+
+                                titleWidth = (remainingWidth / (IsWide ? 3 : 4));
+                                Label(title.MarkedSubstring(Settings.searchText), Width(titleWidth));
+                                remWidth -= titleWidth;
+
+                                // FIXME - perf bottleneck 
+                                var actionCount = actions != null ? actions.Count() : 0;
+
+                                if (bp is BlueprintUnlockableFlag flagBP) {
+                                    // special case this for now
+                                    if (lockIndex >= 0) {
+                                        var flags = Game.Instance.Player.UnlockableFlags;
+                                        var lockAction = actions.ElementAt(lockIndex);
+                                        ActionButton("<", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) - 1); }, Width(50));
+                                        Space(25);
+                                        Label($"{flags.GetFlagValue(flagBP)}".orange().bold(), MinWidth(50));
+                                        ActionButton(">", () => { flags.SetFlagValue(flagBP, flags.GetFlagValue(flagBP) + 1); }, Width(50));
+                                        Space(50);
+                                        ActionButton(lockAction.name, () => { lockAction.action(bp, selectedUnit, repeatCount); }, Width(120));
+                                        Space(100);
+#if DEBUG
+                                        Label(flagBP.GetDescription().green());
+#endif
+                                    }
+                                    else {
+                                        // FIXME - perf bottleneck 
+                                        var unlockIndex = titles.IndexOf("Unlock".localize());
+                                        if (unlockIndex >= 0) {
+                                            var unlockAction = actions.ElementAt(unlockIndex);
+                                            Space(240);
+                                            ActionButton(unlockAction.name, () => { unlockAction.action(bp, selectedUnit, repeatCount); }, Width(120));
+                                            Space(100);
+                                        }
+                                    }
+                                    remWidth -= 300;
+                                }
+                                else {
+                                    for (var ii = 0; ii < maxActions; ii++) {
+                                        if (ii < actionCount) {
+                                            var action = actions.ElementAt(ii);
+                                            // TODO -don't show increase or decrease actions until we redo actions into a proper value editor that gives us Add/Remove and numeric item with the ability to show values.  For now users can edit ranks in the Facts Editor
+                                            if (action.name == "<" || action.name == ">") {
+                                                Space(174); continue;
+                                            }
+                                            var actionName = action.name;
+                                            float extraSpace = 0;
+                                            if (action.isRepeatable) {
+                                                actionName += action.isRepeatable ? $" {repeatCount}" : "";
+                                                extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
+                                            }
+                                            ActionButton(actionName, () => todo.Add(() => action.action(bp, selectedUnit, repeatCount)), Width(160 + extraSpace));
+                                            Space(10);
+                                            remWidth -= 174.0f + extraSpace;
+
+                                        }
+                                        else {
+                                            Space(174);
+                                        }
+                                    }
+                                }
+                                Space(10);
+                                var type = bp.GetType();
+                                var typeString = type.Name;
+                                Func<SimpleBlueprint, List<string>> collator;
+                                collatorCache.TryGetValue(type, out collator);
+                                if (collator != null) {
+                                    var names = collator(bp);
+                                    if (names.Count > 0) {
+                                        var collatorString = names.First();
+                                        if (bp is BlueprintItem itemBP) {
+                                            var rarity = itemBP.Rarity();
+                                            typeString = $"{typeString} - {rarity}".Rarity(rarity);
+                                        }
+                                        if (!typeString.Contains(collatorString)) {
+                                            typeString += $" : {collatorString}".yellow();
+                                        }
+                                    }
+                                }
+                                var attributes = "";
+                                if (Settings.showAttributes) {
+                                    var attr = string.Join(" ", bp.Attributes());
+                                    if (!typeString.Contains(attr))
+                                        attributes = attr;
+                                }
+
+                                if (attributes.Length > 1) typeString += $" - {attributes.orange()}";
+
+                                if (description != null && description.Length > 0) description = $"{description}";
+                                else description = "";
+                                if (bp is BlueprintScriptableObject bpso) {
+                                    if (Settings.showComponents && bpso.ComponentsArray?.Length > 0) {
+                                        var componentStr = string.Join<object>(", ", bpso.ComponentsArray).color(RGBA.brown);
+                                        if (description.Length == 0) description = componentStr;
+                                        else description = description + "\n" + componentStr;
+                                    }
+                                    if (Settings.showElements && bpso.ElementsArray?.Count > 0) {
+                                        var elementsStr = string.Join<object>("\n", bpso.ElementsArray.Select(e => $"{e.GetType().Name.cyan()} {e.GetCaption()}")).yellow();
+                                        if (description.Length == 0) description = elementsStr;
+                                        else description = description + "\n" + elementsStr;
+                                    }
+                                }
+                                using (VerticalScope(Width(remWidth))) {
+                                    using (HorizontalScope(Width(remWidth))) {
+                                        ReflectionTreeView.DetailToggle("", bp, bp, 0);
+                                        Space(-17);
+                                        if (Settings.showAssetIDs) {
+                                            Label(typeString, rarityButtonStyle);
+                                            ClipboardLabel(bp.AssetGuid.ToString(), ExpandWidth(false));
+                                        }
+                                        else Label(typeString, rarityButtonStyle);
+                                        Space(17);
+                                    }
+                                    if (description.Length > 0) Label(description.green(), Width(remWidth));
                                 }
                             }
-                        }).ForEach(action => action());
+#if Wrath
+                            if (bp is BlueprintParametrizedFeature paramBP) {
+                                using (HorizontalScope()) {
+                                    Space(titleWidth);
+                                    using (VerticalScope()) {
+                                        using (HorizontalScope(GUI.skin.button)) {
+                                            var content = new GUIContent($"{paramBP.Name.yellow()}");
+                                            var labelWidth = GUI.skin.label.CalcSize(content).x;
+                                            Label(content, Width(labelWidth));
+                                            Space(25);
+                                            var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
+                                            if (nameStrings == null) {
+                                                nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
+                                                paramBPValueNames[paramBP] = nameStrings;
+                                            }
+                                            ActionSelectionGrid(
+                                                ref ParamSelected[count],
+                                                nameStrings,
+                                                6,
+                                                (selected) => { },
+                                                GUI.skin.toggle,
+                                                Width(remWidth)
+                                            );
+                                            //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
+                                        }
+                                        Space(15);
+                                    }
+                                }
+                            }
+#endif
+                            if (bp is BlueprintFeatureSelection selectionBP) {
+                                using (HorizontalScope()) {
+                                    Space(titleWidth);
+                                    using (VerticalScope()) {
+                                        var needsSelection = false;
+                                        var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
+                                        if (nameStrings == null) {
+                                            needsSelection = true;
+                                            nameStrings = selectionBP.AllFeatures.Select(x => x.NameSafe()).OrderBy(x => x).ToArray().TrimCommonPrefix();
+                                            selectionBPValuesNames[selectionBP] = nameStrings;
+                                        }
+                                        using (HorizontalScope(GUI.skin.button)) {
+                                            var content = new GUIContent($"{selectionBP.Name.yellow()}");
+                                            var labelWidth = GUI.skin.label.CalcSize(content).x;
+                                            //UI.Space(indent + titleWidth - labelWidth - 25);
+                                            Label(content, Width(labelWidth));
+                                            Space(25);
+
+                                            ActionSelectionGrid(
+                                                ref ParamSelected[count],
+                                                nameStrings,
+                                                4,
+                                                (selected) => { },
+                                                GUI.skin.toggle,
+                                                Width(remWidth)
+                                            );
+                                            //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
+                                        }
+
+#if Wrath
+                                        if (selectedUnit != null) {
+                                        if (selectedUnit.Value.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
+                                                foreach (var entry in selectionData.SelectionsByLevel) {
+                                                    foreach (var selection in entry.Value) {
+                                                        if (needsSelection) {
+                                                            ParamSelected[count] = selectionBP.AllFeatures.IndexOf(selection);
+                                                            needsSelection = false;
+                                                        }
+                                                        using (HorizontalScope()) {
+                                                            ActionButton("Remove", () => {
+
+                                                            }, Width(160));
+                                                            Space(25);
+                                                            Label($"{entry.Key} ".yellow() + selection.Name.orange(), Width(250));
+                                                            Space(25);
+                                                            Label(selection.Description.StripHTML().green());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+#endif
+                                        Space(15);
+                                    }
+                                }
+                            }
+                            count++;
+                        },
+                        (bp, maybeBP) => {
+                            ReflectionTreeView.OnDetailGUI(bp);
+                        }, 50, true, true, 100, 300, "", false, selectedTypeFilter?.collator);
+                    foreach (var action in todo) {
+                        action();
                     }
-                    Space(25);
                 }
+                Space(25);
             }
+        }
+
+        public static void InitType() {
+            collationPickerCurrentPage = 1;
+            selectedTypeFilter = blueprintTypeFilters[Settings.selectedBPTypeFilter];
+            if (selectedTypeFilter.blueprintSource != null) bps = selectedTypeFilter.blueprintSource();
+            else bps = from bp in BlueprintsOfType(selectedTypeFilter.type)
+                       where selectedTypeFilter.filter(bp)
+                       select bp;
+            RedoLayout();
+            SearchAndPickBrowser.RedoCollation();
+        }
+
+        public static void ResetGUI() {
+            RedoLayout();
+            SearchAndPickBrowser.RedoCollation();
         }
     }
 }
