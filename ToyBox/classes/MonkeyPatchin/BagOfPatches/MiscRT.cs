@@ -9,16 +9,25 @@ using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.Inventory;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.Inventory.PC;
+using Kingmaker.Code.UI.MVVM.View.Slots;
+using Kingmaker.Code.UI.MVVM.View.Vendor;
+using Kingmaker.Code.UI.MVVM.VM.Common;
+using Kingmaker.Code.UI.MVVM.VM.CounterWindow;
 using Kingmaker.Controllers;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Enums.Damage;
+using Kingmaker.GameCommands;
 using Kingmaker.GameModes;
 using Kingmaker.Items;
+using Kingmaker.Modding;
 using Kingmaker.RuleSystem;
 using Kingmaker.Settings;
+using Kingmaker.Stores.DlcInterfaces;
 //using Kingmaker.UI._ConsoleUI.Models;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
@@ -34,22 +43,13 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Linq;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.Inventory.PC;
-using Kingmaker.Code.UI.MVVM.View.Slots;
-using Kingmaker.GameCommands;
-using Kingmaker.Modding;
-using Kingmaker.Stores.DlcInterfaces;
+using System.Runtime.Serialization;
+using UniRx;
 //using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
 using static ModKit.UI;
 using Utilities = Kingmaker.Cheats.Utilities;
-using UniRx;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.Inventory;
-using Kingmaker.Code.UI.MVVM.View.Vendor;
-using Kingmaker.Code.UI.MVVM.VM.Common;
-using Kingmaker.Code.UI.MVVM.VM.CounterWindow;
-using System.Runtime.Serialization;
 
 namespace ToyBox.BagOfPatches {
     internal static partial class Misc {
@@ -61,15 +61,15 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(PortraitData.OnDeserialized))]
             [HarmonyPrefix]
             private static bool OnDeserialized(PortraitData __instance, StreamingContext context) {
-                if (!Settings.toggleBugFixes) return true;
+                if (!Settings.toggleBugfixes) return true;
                 if (!__instance.IsCustom)
-                __instance.InitHandles();
+                    __instance.InitHandles();
                 //__instance.EnsureImages();
                 return false;
             }
         }
 
-                // Disables the lockout for reporting achievements
+        // Disables the lockout for reporting achievements
         [HarmonyPatch(typeof(AchievementEntity), nameof(AchievementEntity.IsDisabled), MethodType.Getter)]
         public static class AchievementEntity_IsDisabled_Patch {
             private static void Postfix(ref bool __result, AchievementEntity __instance) {
@@ -178,7 +178,7 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-                // Shift + Click Inventory Tweaks
+        // Shift + Click Inventory Tweaks
         [HarmonyPatch(typeof(CommonVM),
                       nameof(CommonVM.HandleOpen),
                       new Type[] {
