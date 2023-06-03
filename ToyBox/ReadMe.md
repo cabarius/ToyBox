@@ -73,8 +73,8 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox 1.5.4 Rogue -** ***Sh0dan*** **Preview Version 1.5.3i June 3, 2023** for beta 0.2.1af
+### ToyBox Rogue - Ver 1.5.4 (Coming Soon)
+**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3i June 3, 2023** for beta 0.2.1af
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -91,13 +91,15 @@
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
  * (***ADDB***) Added Faction Reputation Editor
-### Ver 1.5.4 Wrath (Coming Soon)
-**ToyBox 1.5.4 Wrath - Preview Version 1.5.3i June 3, 2023**
+ * (***ADDB***) Fixed QuestEditor Out of Bounds error
+### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
+**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3i June 3, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
+* (***ADDB***) Adjusted the logic of Recruit Multiplier 
 * (***ADDB***) Add new Bindable Action Buttons for Loot Revealers
 * (***ADDB***) Prevent Mod from overriding Build Points when not changed in the settings
 * (***ADDB***) Added toggle to disable traps

@@ -117,8 +117,8 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ArmyRecruitsManager), nameof(ArmyRecruitsManager.Increase))]
-        private static class ArmyRecruitsManager_Patch {
+        [HarmonyPatch(typeof(ArmyRecruitsManager), nameof(ArmyRecruitsManager.Recruit))]
+        private static class ArmyRecruitsManager_Recruit_Patch {
             private static void Prefix(ref int count) => count = Mathf.RoundToInt(count * Settings.recruitmentMultiplier);
         }
 
