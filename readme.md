@@ -11,6 +11,7 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
   - etc.
 
 Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8)
+
 There are preview builds available on the official [Owlcat Discord](https://discord.gg/Owlcat) pinned in the [#mod-user-general](https://discord.com/channels/645948717400064030/815735034514112512) channel
 
 # How to contribute
