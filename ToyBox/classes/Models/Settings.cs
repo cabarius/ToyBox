@@ -211,6 +211,8 @@ namespace ToyBox {
         public bool disableTraps = false;
         public bool togglekillOnEngage = false;
         public bool toggleDisableCorruption = false;
+        public float enduringSpellsTimeThreshold = 60f;
+        public float greaterEnduringSpellsTimeThreshold = 5f;
 
         // Loot 
         public bool toggleColorLootByRarity = false;

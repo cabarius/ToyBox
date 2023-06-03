@@ -14,6 +14,7 @@ using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
@@ -38,8 +39,10 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
 using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using Kingmaker.UnitLogic.ActivatableAbilities;
+using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
+using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
@@ -694,6 +697,27 @@ namespace ToyBox.BagOfPatches {
                     revealer.DefaultRadius = true;
                     revealer.UseDefaultFowBorder = true;
                     revealer.Radius = 1.0f;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(EnduringSpells), nameof(EnduringSpells.HandleBuffDidAdded))]
+        public static class EnduringSpells_HandleBuffDidAdded_Patch {
+            private static void Postfix(EnduringSpells __instance, Buff buff) {
+                if (buff.TimeLeft >= 23.Hours()) {
+                    return;
+                }
+                AbilityExecutionContext sourceAbilityContext = buff.Context.SourceAbilityContext;
+                AbilityData abilityData = ((sourceAbilityContext != null) ? sourceAbilityContext.Ability : null);
+                if (abilityData == null || abilityData.Spellbook == null || abilityData.SourceItem != null) {
+                    return;
+                }
+                bool hasGreater = __instance.Owner.HasFact(__instance.Greater);
+                MechanicsContext maybeContext = buff.MaybeContext;
+                if (((maybeContext != null) ? maybeContext.MaybeCaster : null) == __instance.Owner
+                    && (buff.TimeLeft >= Settings.enduringSpellsTimeThreshold.Minutes()
+                    || (buff.TimeLeft >= Settings.greaterEnduringSpellsTimeThreshold.Minutes() && __instance.Owner.HasFact(__instance.Greater)))
+                    && buff.TimeLeft <= 24.Hours()) {
+                    buff.SetEndTime(24.Hours() + buff.AttachTime);
                 }
             }
         }
