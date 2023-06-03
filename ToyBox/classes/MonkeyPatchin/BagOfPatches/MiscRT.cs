@@ -61,7 +61,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(PortraitData.OnDeserialized))]
             [HarmonyPrefix]
             private static bool OnDeserialized(PortraitData __instance, StreamingContext context) {
-                if (!Settings.toggleBugfixes) return true;
+                if (!Settings.toggleBugFixes) return true;
                 if (!__instance.IsCustom)
                     __instance.InitHandles();
                 //__instance.EnsureImages();

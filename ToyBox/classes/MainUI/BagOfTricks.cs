@@ -98,7 +98,7 @@ namespace ToyBox {
 #endif
 #if RT
             using (HorizontalScope()) {
-                Toggle("Apply Bug Fixes".localize(), ref Settings.toggleBugfixes, 400.width());
+                Toggle("Apply Bug Fixes".localize(), ref Settings.toggleBugFixes, 400.width());
                 using (VerticalScope()) {
                     HelpLabel("ToyBox can patch some critical bugs in Rogue Trader Beta, including the following:".localize());
                     using (HorizontalScope()) {
