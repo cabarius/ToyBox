@@ -482,6 +482,7 @@
     <Compile Include="classes\Infrastructure\CharacterPicker.cs" />
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
+    <Compile Include="classes\MainUI\RogueCheats.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
     <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
