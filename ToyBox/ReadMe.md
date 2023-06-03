@@ -73,8 +73,8 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### Ver 1.5.4 Rogue (Coming Soon)
-**ToyBox Rogue 1.5.4** - ***Sh0dan Preview*** **June 1, 2023f** for beta 0.2.1ad
+### ToyBox Rogue - Ver 1.5.4 (Coming Soon)
+**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3i June 3, 2023** for beta 0.2.1af
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -90,9 +90,10 @@
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
+ * (***ADDB***) Added Faction Reputation Editor
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
-### Ver 1.5.4 Wrath (Coming Soon)
-**ToyBox 1.5.4 Wrath - Preview Version 1.5.3f June 1, 2023**
+### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
+**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3i June 3, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
