@@ -90,6 +90,7 @@
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
+ * (***ADDB***) Added InGame Portrait Changer
  * (***ADDB***) Added Faction Reputation Editor
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
 ### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
@@ -111,6 +112,7 @@
 * (***ADDB*** and ***BuckAMayzing***) Changes to BuffExclusion behaviour
   * Added ~100 Buffs to the default exclusions (every hidden buff that has Cooldown in its name)
   * Separated buffs excluded by default and buffs excluded by the user into different categories
+* (***ADDB***) Added Ingame Portrait Changer
 
 ### Ver 1.5.3 Wrath - Sh0dan Unified Edition
 * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
