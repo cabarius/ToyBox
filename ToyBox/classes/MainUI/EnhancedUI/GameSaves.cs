@@ -16,13 +16,7 @@ namespace ToyBox {
         private static IEnumerable<SaveInfo> _currentSaves = null;
         public static string? SearchKey(this SaveInfo info) =>
 #if Wrath
-            $"{info.Name
-            }{info.Area.AreaName.ToString()
-            }{info.Campaign.Title
-            }{info.DlcCampaign.Campaign.Title
-            }{info.Description
-            }{info.FileName
-            }";
+            $"{info.Name}{info.Area.AreaName.ToString()}{info.Campaign.Title}{info.DlcCampaign.Campaign.Title}{info.Description}{info.FileName}";
 #elif RT
             $"{info.Name
             }{info.Area.AreaName.ToString()

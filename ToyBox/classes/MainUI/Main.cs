@@ -245,6 +245,9 @@ namespace ToyBox {
                     new NamedAction("Playground".localize(), () => Playground.OnGUI()),
 #endif
                     new NamedAction("Search 'n Pick".localize(), SearchAndPick.OnGUI),
+#if RT
+                    new NamedAction("Rogue Cheats".localize(), RogueCheats.OnGUI),    
+#endif
 #if Wrath
                     new NamedAction("Crusade".localize(), CrusadeEditor.OnGUI),
                     new NamedAction("Armies".localize(), ArmiesEditor.OnGUI),

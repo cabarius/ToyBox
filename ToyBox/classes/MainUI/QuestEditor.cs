@@ -4,36 +4,38 @@
 //   "Repository": "https://raw.githubusercontent.com/spacehamster/KingmakerKingdomResolutionMod/master/KingdomResolution/Repository.json"
 // Copyright < 2018 > Spacehamster 
 // Copyright < 2021 > Ported version - Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using HarmonyLib;
-using System;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.EntitySystem.Entities;
-using ModKit;
-using static ModKit.UI;
-using ModKit.DataViewer;
-using System.Collections.Generic;
 using Kingmaker.Blueprints.Quests;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.UnitLogic.Parts;
-using ModKit.Utility;
-using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-using static ToyBox.BlueprintExtensions;
 using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.ElementsSystem;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UnitLogic.Parts;
+using ModKit;
+using ModKit.DataViewer;
+using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.AccessControl;
+using UnityEngine;
+using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
+using static ModKit.UI;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
-    public static class QuestExensions {
+    public static class QuestExtensions {
         private static readonly RGBA[] titleColors = new RGBA[] {
             RGBA.brown,
             RGBA.cyan,
             RGBA.darkgrey,
+            
 #if RT
             RGBA.yellow,
+            RGBA.lime,
 #endif
             RGBA.red
         };
@@ -43,6 +45,7 @@ namespace ToyBox {
             "white",
 #if RT
             "yellow",
+            "lime",
 #endif
             "red"
         };
@@ -109,7 +112,7 @@ namespace ToyBox {
                             50.space();
                             Label(quest.Blueprint.Title.StringValue().orange().bold(), Width(600));
                             50.space();
-                            DisclosureToggle(quest.stateString(), ref _selectedQuests[index]); 
+                            DisclosureToggle(quest.stateString(), ref _selectedQuests[index]);
                             if (Settings.toggleQuestInspector)
                                 ReflectionTreeView.DetailToggle("Inspect", quest, quest, 0);
                             50.space();
@@ -169,7 +172,7 @@ namespace ToyBox {
                                         if (questObjective.State == QuestObjectiveState.Started) {
                                             var childIndex = 0;
                                             foreach (var childObjective in quest.Objectives) {
-                                                 if (Settings.toggleQuestsShowUnrevealedObjectives || childObjective.IsRevealed()) {
+                                                if (Settings.toggleQuestsShowUnrevealedObjectives || childObjective.IsRevealed()) {
                                                     if (childObjective.ParentObjective == questObjective) {
                                                         Div(100, 25);
                                                         using (HorizontalScope(AutoWidth())) {

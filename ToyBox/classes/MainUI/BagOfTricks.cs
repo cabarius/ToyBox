@@ -98,13 +98,14 @@ namespace ToyBox {
 #endif
 #if RT
             using (HorizontalScope()) {
-                Toggle("Apply Bug Fixes", ref Settings.toggleBugFixes, 400.width());
+                Toggle("Apply Bug Fixes".localize(), ref Settings.toggleBugFixes, 400.width());
                 using (VerticalScope()) {
-                    HelpLabel("ToyBox can patch some critical bugs in Rogue Trader Beta, including the following:");
+                    HelpLabel("ToyBox can patch some critical bugs in Rogue Trader Beta, including the following:".localize());
                     using (HorizontalScope()) {
-                        50.space();
+                        25.space();
                         using (VerticalScope()) {
-                            Label("Failure to load saves that reference custom portraits".localize().cyan());
+                            Label("- " + "Failure to load saves that reference custom portraits".localize().cyan() + "  -  " +
+                                "If you have a save that uses custom portraits and don't toggle this your game will crash when starting".localize().magenta());
                         }
                     }
                 }
@@ -321,7 +322,7 @@ namespace ToyBox {
                        Label(("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange()).localize());
                    },
 #endif
-#if Wrath                   
+#if Wrath
                    () => Toggle("Disable Dialog Restrictions (Alignment)".localize(), ref Settings.toggleDialogRestrictions),
                    () => Toggle("Disable Dialog Restrictions (Mythic Path)".localize(), ref Settings.toggleDialogRestrictionsMythic),
                    () => Toggle("Ignore Event Solution Restrictions".localize(), ref Settings.toggleIgnoreEventSolutionRestrictions),
