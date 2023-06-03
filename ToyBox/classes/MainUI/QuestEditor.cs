@@ -32,9 +32,10 @@ namespace ToyBox {
             RGBA.brown,
             RGBA.cyan,
             RGBA.darkgrey,
+            
 #if RT
             RGBA.yellow,
-            RGBA.lightgreen,
+            RGBA.lime,
 #endif
             RGBA.red
         };
@@ -44,7 +45,7 @@ namespace ToyBox {
             "white",
 #if RT
             "yellow",
-            "green",
+            "lime",
 #endif
             "red"
         };
