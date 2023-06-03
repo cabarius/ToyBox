@@ -90,6 +90,7 @@
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
+ * (***ADDB***) Fixed QuestEditor Out of Bounds error
 ### Ver 1.5.4 Wrath (Coming Soon)
 **ToyBox 1.5.4 Wrath - Preview Version 1.5.3f June 1, 2023**
 * (***Narria***) Some Etude changes
