@@ -54,6 +54,7 @@ namespace ModKit {
             private IEnumerable<Definition> _pagedResults = new List<Definition>();
             private Queue<Definition> cachedSearchResults;
             public List<Definition> filteredDefinitions = new();
+            public List<Definition> tempFilteredDefinitions;
             public Dictionary<string, List<Definition>> collatedDefinitions = new();
             private Dictionary<Definition, Item> _currentDict;
             public string prevCollationKey;
@@ -69,6 +70,8 @@ namespace ModKit {
             public bool ShowAll;
             public bool DisplayShowAllGUI = true;
             public bool IsDetailBrowser;
+            public bool _doCopyToEnd = false;
+            public bool _finishedCopyToEnd = false;
 
             public int SearchLimit {
                 get => IsDetailBrowser ? Settings.browserDetailSearchLimit : Settings.browserSearchLimit;
@@ -92,7 +95,13 @@ namespace ModKit {
             public bool needsReloadData = true;
             private bool _needsRedoCollation = true;
             private bool _collationFinished = false;
-            public void RedoCollation() { _needsRedoCollation = true; _collationFinished = false; ResetSearch(); }
+            public void RedoCollation() {
+                _needsRedoCollation = true;
+                _collationFinished = false;
+                _searchCancellationTokenSource?.Cancel();
+                _collationCancellationTokenSource?.Cancel();
+                ResetSearch();
+            }
             public void ReloadData() => needsReloadData = true;
             private bool _updatePages = false;
             private bool _finishedSearch = false;
@@ -157,7 +166,11 @@ namespace ModKit {
                                 25.space();
                             }
                             if (isCollating) {
-                                Label("Collating...".red().bold(), AutoWidth());
+                                Label("Collating...".localize().red().bold(), AutoWidth());
+                                25.space();
+                            }
+                            else if (_doCopyToEnd) {
+                                Label("Copying...".localize().red().bold(), AutoWidth());
                                 25.space();
                             }
                         }
@@ -258,25 +271,7 @@ namespace ModKit {
                         bool nothingToSearch = (!ShowAll && current.Count() == 0) || (ShowAll && (availableIsStatic ? _availableCache : available()).Count() == 0);
                         // If the search has at least one result
                         if ((cachedSearchResults.Count > 0 || nothingToSearch) && (searchQueryChanged || _finishedSearch)) {
-                            if (_finishedSearch && !searchQueryChanged) {
-                                filteredDefinitions = new List<Definition>();
-                            }
-
-                            // If the search already finished we want to copy all results as fast as possible
-                            if (_finishedSearch && cachedSearchResults.Count > 0) {
-                                filteredDefinitions.AddRange(cachedSearchResults);
-                                cachedSearchResults.Clear();
-                            }
-
-                            // Lock the search results
-                            lock (cachedSearchResults) {
-                                // Go through every item in the queue
-                                while (cachedSearchResults.Count > 0) {
-                                    // Add the item into the OrderedSet filteredDefinitions
-                                    filteredDefinitions.Add(cachedSearchResults.Dequeue());
-                                }
-                            }
-                            filteredDefinitions.Sort(Comparer<Definition>.Create((x, y) => {
+                            Comparer<Definition> comparer = Comparer<Definition>.Create((x, y) => {
                                 var xKeys = sortKeys(x);
                                 var yKeys = sortKeys(y);
                                 var zipped = xKeys.Zip(yKeys, (x, y) => (x: x, y: y));
@@ -285,7 +280,40 @@ namespace ModKit {
                                     if (compare != 0) return (int)SortDirection * compare;
                                 }
                                 return (int)SortDirection * (xKeys.Length > yKeys.Length ? -1 : 1);
-                            }));
+                            });
+                            if (_finishedSearch && !searchQueryChanged) {
+                                filteredDefinitions = new List<Definition>();
+                            }
+                            if (_doCopyToEnd && _finishedCopyToEnd) {
+                                _doCopyToEnd = false;
+                                _finishedCopyToEnd = false;
+                                cachedSearchResults.Clear();
+                                filteredDefinitions = tempFilteredDefinitions;
+                            }
+                            else {
+                                // If the search already finished we want to copy all results as fast as possible
+                                if (_finishedSearch && cachedSearchResults.Count < 1000) {
+                                    filteredDefinitions.AddRange(cachedSearchResults);
+                                    cachedSearchResults.Clear();
+                                    filteredDefinitions.Sort(comparer);
+                                } // If it's too much then even the above approach will take up to ~10 seconds on decent setups
+                                else if (_finishedSearch && !_doCopyToEnd) {
+                                    _doCopyToEnd = true;
+                                    _finishedCopyToEnd = false;
+                                    Task.Run(() => CopyToEnd(filteredDefinitions, cachedSearchResults, comparer));
+                                } // If it's not finished then we shouldn't have too many results anyway
+                                else if (!_doCopyToEnd) {
+                                    // Lock the search results
+                                    lock (cachedSearchResults) {
+                                        // Go through every item in the queue
+                                        while (cachedSearchResults.Count > 0) {
+                                            // Add the item into the OrderedSet filteredDefinitions
+                                            filteredDefinitions.Add(cachedSearchResults.Dequeue());
+                                        }
+                                    }
+                                    filteredDefinitions.Sort(comparer);
+                                }
+                            }
                         }
                         _matchCount = filteredDefinitions.Count;
                         UpdatePageCount();
@@ -369,6 +397,15 @@ namespace ModKit {
                     }
                 }
                 return _pagedResults?.ToList();
+            }
+
+            public void CopyToEnd(List<Definition> filteredDefinitions, Queue<Definition> cachedSearchResults, Comparer<Definition> comparer) {
+                tempFilteredDefinitions = filteredDefinitions.Concat(cachedSearchResults).ToList();
+                if ((_collationCancellationTokenSource?.IsCancellationRequested ?? false) || (_searchCancellationTokenSource?.IsCancellationRequested ?? false)) {
+                    tempFilteredDefinitions.Clear();
+                }
+                tempFilteredDefinitions.Sort(comparer);
+                _finishedCopyToEnd = true;
             }
 
             public void UpdateSearchResults(string searchTextParam,
