@@ -92,6 +92,7 @@
  * (***Narria***) dialog preview now shows conditions for answers too
  * (***Narria***) Made a GUI for the portrait picker
  * (***ADDB***) Added Navigator Resource Editor
+ * (***ADDB***) Added Scrap Resource Editor
  * (***ADDB***) Added InGame Portrait Changer
  * (***ADDB***) Added Faction Reputation Editor
  * (***ADDB***) Fixed QuestEditor Out of Bounds error

@@ -14,7 +14,8 @@ namespace ToyBox.classes.MainUI {
         private static int selectedFaction = 0;
         public static NamedFunc<FactionType>[] factionsToPick;
         private static int reputationAdjustment = 100;
-        private static int navigatorResourceAdjustment = 100;
+        private static int navigatorInsightAdjustment = 100;
+        private static int scrapAdjustment = 100;
         private static int startingWidth = 250;
         public static void OnGUI() {
             if (factionsToPick == null) {
@@ -54,18 +55,36 @@ namespace ToyBox.classes.MainUI {
             15.space();
             if (Game.Instance.Player.WarpTravelState?.IsInitialized ?? false) {
                 using (HorizontalScope()) {
-                    Label("Current Navigator Resource".localize().bold() + ": ", Width(startingWidth));
+                    Label("Current Navigator Insight".localize().bold() + ": ", Width(startingWidth));
                     using (VerticalScope()) {
                         Label(Game.Instance.Player.WarpTravelState.NavigatorResource.ToString());
                         using (HorizontalScope()) {
-                            Label("Adjust Navigator Resource by the following amount:".localize());
-                            IntTextField(ref navigatorResourceAdjustment, null, MinWidth(200), AutoWidth());
-                            navigatorResourceAdjustment = Math.Max(0, navigatorResourceAdjustment);
+                            Label("Adjust Navigator Insight by the following amount:".localize());
+                            IntTextField(ref navigatorInsightAdjustment, null, MinWidth(200), AutoWidth());
+                            navigatorInsightAdjustment = Math.Max(0, navigatorInsightAdjustment);
                             10.space();
-                            ActionButton("Add".localize(), () => { CheatsGlobalMap.AddNavigatorResource(navigatorResourceAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                            ActionButton("Add".localize(), () => { CheatsGlobalMap.AddNavigatorResource(navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
                             10.space();
-                            ActionButton("Remove".localize(), () => { CheatsGlobalMap.AddNavigatorResource(-navigatorResourceAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                            ActionButton("Remove".localize(), () => { CheatsGlobalMap.AddNavigatorResource(-navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
                         }
+                    }
+                }
+            }
+            15.space();
+            Div();
+            15.space();
+            using (HorizontalScope()) {
+                Label("Current Scrap".localize().bold() + ": ", Width(startingWidth));
+                using (VerticalScope()) {
+                    Label(Game.Instance.Player.Scrap.m_Value.ToString());
+                    using (HorizontalScope()) {
+                        Label("Adjust Scrap by the following amount:".localize());
+                        IntTextField(ref scrapAdjustment, null, MinWidth(200), AutoWidth());
+                        scrapAdjustment = Math.Max(0, scrapAdjustment);
+                        10.space();
+                        ActionButton("Add".localize(), () => Game.Instance.Player.Scrap.Receive(scrapAdjustment));
+                        10.space();
+                        ActionButton("Remove".localize(), () => Game.Instance.Player.Scrap.Receive(-scrapAdjustment));
                     }
                 }
             }
