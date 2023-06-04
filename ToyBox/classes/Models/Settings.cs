@@ -102,7 +102,7 @@ namespace ToyBox {
         public int selectedTab = 0;
         public int increment = 10000;
         public int alignmentIncrement = 5;
-        public bool toggleBugFixes = false;
+        public bool toggleBugFixes = true;
 
         // Quality of Life
         public bool toggleContinueAudioOnLostFocus = false;
@@ -211,6 +211,8 @@ namespace ToyBox {
         public bool disableTraps = false;
         public bool togglekillOnEngage = false;
         public bool toggleDisableCorruption = false;
+        public float enduringSpellsTimeThreshold = 60f;
+        public float greaterEnduringSpellsTimeThreshold = 5f;
 
         // Loot 
         public bool toggleColorLootByRarity = false;

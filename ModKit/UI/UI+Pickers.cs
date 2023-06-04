@@ -207,7 +207,7 @@ namespace ModKit {
             Space(25);
             selected = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
         }
-        public static NamedFunc<T> TypePicker<T>(string? title, ref int selectedIndex, NamedFunc<T>[] items, bool shouldLocalize = false) where T : class {
+        public static NamedFunc<T> TypePicker<T>(string? title, ref int selectedIndex, NamedFunc<T>[] items, bool shouldLocalize = false) {
             var sel = selectedIndex;
             string[] titles;
             if (shouldLocalize) {
