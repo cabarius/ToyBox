@@ -74,7 +74,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.4 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3i June 3, 2023** for beta 0.2.1af
+**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3l June 4, 2023** for beta 0.2.1af
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -91,12 +91,13 @@
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
  * (***Narria***) Made a GUI for the portrait picker
+ * (***ADDB***) Added Navigator Resource Editor
  * (***ADDB***) Added InGame Portrait Changer
  * (***ADDB***) Added Faction Reputation Editor
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
  * (***ADDB***) Reworked Search and Pick
 ### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
-**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3i June 3, 2023**
+**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3l June 4, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too

@@ -1,4 +1,7 @@
-﻿using Kingmaker.Controllers;
+﻿using Kingmaker;
+using Kingmaker.Cheats;
+using Kingmaker.Code.UI.MVVM.VM.NavigatorResource;
+using Kingmaker.Controllers;
 using Kingmaker.Enums;
 using ModKit;
 using System;
@@ -11,6 +14,8 @@ namespace ToyBox.classes.MainUI {
         private static int selectedFaction = 0;
         public static NamedFunc<FactionType>[] factionsToPick;
         private static int reputationAdjustment = 100;
+        private static int navigatorResourceAdjustment = 100;
+        private static int startingWidth = 250;
         public static void OnGUI() {
             if (factionsToPick == null) {
                 List<NamedFunc<FactionType>> tmp = new();
@@ -19,11 +24,11 @@ namespace ToyBox.classes.MainUI {
                 }
                 factionsToPick = tmp.ToArray();
             }
-            var selected = TypePicker("Faction Selector".localize(), ref selectedFaction, factionsToPick, true);
-            25.space();
+            var selected = TypePicker("Faction Selector".localize().bold(), ref selectedFaction, factionsToPick, true);
+            15.space();
             var faction = selected.func();
             using (HorizontalScope()) {
-                Label("Current Reputation".localize() + ": ");
+                Label("Current Reputation".localize().bold() + ": ", Width(startingWidth));
                 using (VerticalScope()) {
                     using (HorizontalScope()) {
                         Label("Level".localize() + ": ", Width(100));
@@ -41,6 +46,26 @@ namespace ToyBox.classes.MainUI {
                         ActionButton("Add".localize(), () => ReputationHelper.GainFactionReputation(faction, reputationAdjustment));
                         10.space();
                         ActionButton("Remove".localize(), () => ReputationHelper.GainFactionReputation(faction, -reputationAdjustment));
+                    }
+                }
+            }
+            15.space();
+            Div();
+            15.space();
+            if (Game.Instance.Player.WarpTravelState?.IsInitialized ?? false) {
+                using (HorizontalScope()) {
+                    Label("Current Navigator Resource".localize().bold() + ": ", Width(startingWidth));
+                    using (VerticalScope()) {
+                        Label(Game.Instance.Player.WarpTravelState.NavigatorResource.ToString());
+                        using (HorizontalScope()) {
+                            Label("Adjust Navigator Resource by the following amount:".localize());
+                            IntTextField(ref navigatorResourceAdjustment, null, MinWidth(200), AutoWidth());
+                            navigatorResourceAdjustment = Math.Max(0, navigatorResourceAdjustment);
+                            10.space();
+                            ActionButton("Add".localize(), () => { CheatsGlobalMap.AddNavigatorResource(navigatorResourceAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                            10.space();
+                            ActionButton("Remove".localize(), () => { CheatsGlobalMap.AddNavigatorResource(-navigatorResourceAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                        }
                     }
                 }
             }
