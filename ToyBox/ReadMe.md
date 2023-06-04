@@ -93,6 +93,7 @@
  * (***ADDB***) Added InGame Portrait Changer
  * (***ADDB***) Added Faction Reputation Editor
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
+ * (***ADDB***) Reworked Search and Pick
 ### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
 **ToyBox Wrath - 1.5.4 - Preview Version 1.5.3i June 3, 2023**
 * (***Narria***) Some Etude changes
@@ -114,6 +115,7 @@
   * Added ~100 Buffs to the default exclusions (every hidden buff that has Cooldown in its name)
   * Separated buffs excluded by default and buffs excluded by the user into different categories
 * (***ADDB***) Added Ingame Portrait Changer
+* (***ADDB***) Reworked Search and Pick
 
 ### Ver 1.5.3 Wrath - Sh0dan Unified Edition
 * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)

@@ -1,9 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using Kingmaker.Blueprints;
 using ModKit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Kingmaker.Blueprints;
+using UnityEngine;
 
 namespace ModKit {
     public static partial class ui {
@@ -48,16 +48,6 @@ namespace ToyBox {
     // A place to play...
     public static class Playground {
         public static void OnGUI() {
-            var blueprints = SearchAndPick.filteredBPs;
-            using var list = new ui.List<SimpleBlueprint> { items = blueprints, spacing = 5 }; using (new ui.VStack()) {
-                UI.Label("Blueprints");
-                list.ForEach((bp) => {
-                    using (new ui.HStack { spacing = 25 }) {
-                        new ui.Label(bp.name);
-                        new ui.Label(bp.GetDescription());
-                    }
-                });
-            }
         }
     }
 }
