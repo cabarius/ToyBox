@@ -19,6 +19,7 @@ namespace ModKit {
         public static GUILayoutOption[] Width(float min, float max) => new GUILayoutOption[] { GL.MinWidth(min), GL.MaxWidth(max) };
         public static GUILayoutOption[] Height(float min, float max) => new GUILayoutOption[] { GL.MinHeight(min), GL.MaxHeight(max) };
         public static GUILayoutOption Height(float v) => GL.Height(v);
+        public static GUILayoutOption height(this int v) => GL.Height(v);
         public static GUILayoutOption MaxWidth(float v) => GL.MaxWidth(v);
         public static GUILayoutOption MaxHeight(float v) => GL.MaxHeight(v);
         public static GUILayoutOption MinWidth(float v) => GL.MinWidth(v);
