@@ -90,6 +90,7 @@
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
+ * (***Narria***) Made a GUI for the portrait picker
  * (***ADDB***) Added InGame Portrait Changer
  * (***ADDB***) Added Faction Reputation Editor
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
@@ -99,6 +100,7 @@
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
+* (***Narria***) Made a GUI for the portrait picker
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
 * (***ADDB***) Added Sliders to modify the buff length needed for enduring spells to take effect
