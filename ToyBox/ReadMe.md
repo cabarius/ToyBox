@@ -74,7 +74,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.4 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3l June 4, 2023** for beta 0.2.1af
+**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3o June 5, 2023** for beta 0.2.1af
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -97,8 +97,9 @@
  * (***ADDB***) Added Faction Reputation Editor
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
  * (***ADDB***) Reworked Search and Pick
+ * (***ADDB***) Added temporary unstuck button for act 3 fight
 ### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
-**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3l June 4, 2023**
+**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3o June 5, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too

@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
-using UnityEditor;
-using UnityEngine;
-using Application = UnityEngine.Application;
-using System.Linq;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
-using ModKit;
-using static ModKit.UI;
-using Kingmaker;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.ElementsSystem;
-using ModKit.Utility;
-using System.Reflection;
+using ModKit;
 using ModKit.DataViewer;
+using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+using static ModKit.UI;
+using Application = UnityEngine.Application;
 
 namespace ToyBox {
     public static class EtudesEditor {
@@ -26,9 +26,9 @@ namespace ToyBox {
         private static BlueprintGuid _selected;
         private static Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes => EtudesTreeModel.Instance.loadedEtudes;
         private static Dictionary<BlueprintGuid, EtudeInfo> _filteredEtudes = new();
-        
+
         // TODO: is this still the right root etude?
-        internal static BlueprintGuid rootEtudeId = 
+        internal static BlueprintGuid rootEtudeId =
 #if Wrath
             BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
 
@@ -282,7 +282,7 @@ namespace ToyBox {
                             TextField(ref guid);
                         }
                         if (showComments && !Main.Settings.showAssetIDs && !string.IsNullOrEmpty(etude.Comment)) {
-                            Label(etude.Comment.green(),ExpandWidth(true));
+                            Label(etude.Comment.green(), ExpandWidth(true));
                         }
                         Label("", AutoWidth());
                     }
@@ -317,6 +317,8 @@ namespace ToyBox {
                                             }
                                             else
                                                 Label(element.GetCaption().yellow() ?? "?");
+                                            Space(25);
+                                            ReflectionTreeView.DetailToggle("Ins", element, element, 100);
                                             Space(0);
                                         }
                                         Space(25);
