@@ -106,7 +106,6 @@
 * (***Narria***) Made a GUI for the portrait picker
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
-* (***ADDB***) Fixed finish Settlement Building Button
 * (***ADDB***) Added replenish recruits button
 * (***ADDB***) Added Sliders to modify the buff length needed for enduring spells to take effect
 * (***ADDB***) Adjusted the logic of Recruit Multiplier 
