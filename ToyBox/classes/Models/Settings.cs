@@ -213,6 +213,9 @@ namespace ToyBox {
         public bool toggleDisableCorruption = false;
         public float enduringSpellsTimeThreshold = 60f;
         public float greaterEnduringSpellsTimeThreshold = 5f;
+#if RT
+        public bool disableWarpRandomEncounter = false;
+#endif
 
         // Loot 
         public bool toggleColorLootByRarity = false;
