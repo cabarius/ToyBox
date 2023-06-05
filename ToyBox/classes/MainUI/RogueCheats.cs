@@ -53,7 +53,8 @@ namespace ToyBox {
             15.space();
             Div();
             15.space();
-            if (Game.Instance.Player.WarpTravelState?.IsInitialized ?? false) {
+            bool warpInit = Game.Instance.Player.WarpTravelState?.IsInitialized ?? false;
+            if (warpInit) {
                 using (HorizontalScope()) {
                     Label("Current Navigator Insight".localize().bold() + ": ", Width(startingWidth));
                     using (VerticalScope()) {
@@ -69,10 +70,10 @@ namespace ToyBox {
                         }
                     }
                 }
+                15.space();
+                Div();
+                15.space();
             }
-            15.space();
-            Div();
-            15.space();
             using (HorizontalScope()) {
                 Label("Current Scrap".localize().bold() + ": ", Width(startingWidth));
                 using (VerticalScope()) {
@@ -88,6 +89,24 @@ namespace ToyBox {
                     }
                 }
             }
+            15.space();
+            Div();
+            15.space();
+            VStack("Tweaks".localize().bold(),
+                () => {
+                    using (HorizontalScope()) {
+                        if (Toggle("Disable Random Encounters in Warp".localize().bold(), ref Settings.disableWarpRandomEncounter, Width(startingWidth))) {
+                            if (warpInit && !Settings.disableWarpRandomEncounter) {
+                                CheatsRE.TurnOnRandomEncounters();
+                            }
+                        }
+                        if (warpInit && Settings.disableWarpRandomEncounter) {
+                            if (!Game.Instance.Player.WarpTravelState.ForbidRE.Value) {
+                                CheatsRE.TurnOffRandomEncounters();
+                            }
+                        }
+                    }
+                });
         }
     }
 }
