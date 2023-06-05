@@ -7,7 +7,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 
-namespace ToyBox.classes.MainUI {
+namespace ToyBox {
     // Made for Rogue Trader specific stuff which I have no idea where to put
     public static class RogueCheats {
         public static Settings Settings => Main.Settings;
