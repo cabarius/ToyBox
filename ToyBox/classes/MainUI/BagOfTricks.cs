@@ -118,31 +118,6 @@ namespace ToyBox {
                     }
                 }
             }
-            using (HorizontalScope()) {
-                using (HorizontalScope(400.width())) {
-                    ActionButton("End Dialog Loop", () => {
-                        if (Game.Instance.DialogController != null && Game.Instance.DialogController?.Dialog.name == "MarazhaiDefeated_dialogue") {
-                            Game.Instance.DialogController.StopDialog();
-                            Actions.ToggleModWindow();
-                            BlueprintEtude secondFight = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>("1e71168aa6d84d578663e8452e94eab2");
-                            foreach (var element in secondFight.ElementsArray) {
-                                if (element is GameAction gameAction) {
-                                    if (gameAction.GetCaption() == "Play scene 2ndFightEnd") {
-                                        todo1 = gameAction;
-                                    }
-                                    else if (gameAction.GetCaption() == "Show Object from scene 2ndAreaExit") {
-                                        todo2 = gameAction;
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-                using (VerticalScope()) {
-                    Label("After a certain fight in an arena in act 3 ends you are stuck in an infinite dialog bug.".green(), 700.width());
-                    Label("To get past this stage you can press this button (while the dialog is active):".green(), 700.width());
-                }
-            }
             15.space();
             Div();
             15.space();
