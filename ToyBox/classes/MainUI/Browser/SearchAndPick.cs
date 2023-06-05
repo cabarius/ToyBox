@@ -243,43 +243,8 @@ namespace ToyBox {
                 }
                 remainingWidth -= 350;
                 if (collationKeys?.Count > 0) {
-                    using (VerticalScope(GUI.skin.box)) {
-                        10.space();
-                        using (HorizontalScope()) {
-                            Label("Limit".localize(), ExpandWidth(false));
-                            ActionIntTextField(ref collationPickerPageSize, "Search Limit".localize(), (i) => collationPickerPageSize = i < 1 ? 1 : i, null, 80.width());
-                        }
-                        using (HorizontalScope()) {
-                            if (collationPickerPageSize > 1000) { collationPickerPageSize = 1000; }
-                            if (collationKeys.Count > collationPickerPageSize) {
-                                string pageLabel = "Page: ".localize().orange() + collationPickerCurrentPage.ToString().cyan() + " / " + collationPickerPageCount.ToString().cyan();
-                                Label(pageLabel, ExpandWidth(false));
-                                ActionButton("-", () => {
-                                    if (collationPickerCurrentPage >= 1) {
-                                        if (collationPickerCurrentPage == 1) {
-                                            collationPickerCurrentPage = collationPickerPageCount;
-                                        }
-                                        else {
-                                            collationPickerCurrentPage -= 1;
-                                        }
-                                    }
-                                }, AutoWidth());
-                                ActionButton("+", () => {
-                                    if (collationPickerCurrentPage > collationPickerPageCount) collationPickerCurrentPage = 1;
-                                    if (collationPickerCurrentPage == collationPickerPageCount) {
-                                        collationPickerCurrentPage = 1;
-                                    }
-                                    else {
-                                        collationPickerCurrentPage += 1;
-                                    }
-                                }, AutoWidth());
-                            }
-                        }
-                        var offset = Math.Min(collationKeys.Count, (collationPickerCurrentPage - 1) * collationPickerPageSize);
-                        var limit = Math.Min(collationPickerPageSize, Math.Max(collationKeys.Count, collationKeys.Count - collationPickerPageSize));
-                        if (VPicker("Categories", ref SearchAndPickBrowser.collationKey, collationKeys.ToList().Skip(offset).Take(limit).ToList(), null, s => s, ref collationSearchText, Width(300))) {
-                            Mod.Debug($"collationKey: {SearchAndPickBrowser.collationKey}");
-                        }
+                    if (PagedVPicker("Categories".localize(), ref SearchAndPickBrowser.collationKey, collationKeys.ToList(), null, s => s, ref collationSearchText, ref collationPickerPageSize, ref collationPickerCurrentPage, Width(300))) {
+                        Mod.Debug($"collationKey: {SearchAndPickBrowser.collationKey}");
                     }
                     remainingWidth -= 450;
                 }
