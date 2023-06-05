@@ -70,10 +70,10 @@ namespace ToyBox.classes.MainUI {
                         }
                     }
                 }
+                15.space();
+                Div();
+                15.space();
             }
-            15.space();
-            Div();
-            15.space();
             using (HorizontalScope()) {
                 Label("Current Scrap".localize().bold() + ": ", Width(startingWidth));
                 using (VerticalScope()) {
