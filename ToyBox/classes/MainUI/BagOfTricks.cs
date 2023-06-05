@@ -97,8 +97,6 @@ namespace ToyBox {
                                        );
         }
         public static void ResetGUI() { }
-        static GameAction todo1 = null;
-        static GameAction todo2 = null;
 
         public static void OnGUI() {
 #if BUILD_CRUI
@@ -118,18 +116,7 @@ namespace ToyBox {
                     }
                 }
             }
-            15.space();
-            Div();
-            15.space();
-            bool isInCutScene = (Game.Instance.CurrentMode == GameModeType.Cutscene);
-            if (todo1 != null && !isInCutScene) {
-                todo1.RunAction();
-                todo1 = null;
-            }
-            if (todo2 != null && !isInCutScene) {
-                todo2.RunAction();
-                todo2 = null;
-            }
+            Div(0, 25);
 #endif
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
@@ -176,8 +163,8 @@ namespace ToyBox {
 #endif
                        () => { }
                     );
+                Div(0, 25);
             }
-            Div(0, 25);
             HStack("Combat".localize(),
                    2,
                    () => BindableActionButton(RestAll, true),
