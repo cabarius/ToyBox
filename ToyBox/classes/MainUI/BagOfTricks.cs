@@ -543,6 +543,18 @@ namespace ToyBox {
 #endif
                    () => { }
                 );
+
+#if RT
+            Div(0, 25);
+            HStack("RT Specific".localize(),
+                   1,
+                   () => {
+                       using (VerticalScope()) {
+                           RogueCheats.OnGUI();
+                       }
+                   }
+                );
+#endif            
             Div(0, 25);
             EnhancedCamera.OnGUI();
 #if Wrath
@@ -634,17 +646,6 @@ namespace ToyBox {
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
 #endif
                 );
-#if RT            
-            Div(0, 25);
-            HStack("RT Specific".localize(),
-                   1,
-                   () => {
-                       using (VerticalScope()) {
-                           RogueCheats.OnGUI();
-                       }
-                   }
-                );
-#endif            
 #if Wrath
             HStack("Class Specific".localize(), 1,
                         () => Slider("Kineticist: Burn Reduction".localize(), ref Settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
@@ -667,7 +668,7 @@ namespace ToyBox {
                         () => { }
                         );
 #endif
-                   Div(0, 25);
+            Div(0, 25);
             HStack("Experience Multipliers".localize(), 1,
                 () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
                 () => {
