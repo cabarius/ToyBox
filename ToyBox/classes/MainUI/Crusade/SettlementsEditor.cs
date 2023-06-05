@@ -1,13 +1,13 @@
 ﻿
+using Kingmaker;
+using Kingmaker.Kingdom;
 using ModKit;
-using static ModKit.UI;
 using ModKit.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
-using Kingmaker;
-using Kingmaker.Kingdom;
+using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
     public static class SettlementsEditor {
@@ -55,6 +55,8 @@ namespace ToyBox.classes.MainUI {
                                         Label(building.Blueprint.name.cyan(), 350.width());
                                         ActionButton("Finish", () => {
                                             building.IsFinished = true;
+                                            building.FinishedOn = kingdom.CurrentDay;
+                                            settlement.Update();
                                         }, AutoWidth());
                                         25.space();
                                         Label(building.IsFinished.ToString(), 200.width());

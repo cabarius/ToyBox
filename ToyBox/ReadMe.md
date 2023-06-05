@@ -107,6 +107,7 @@
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
 * (***ADDB***) Added replenish recruits button
+* (***ADDB***) Fixed finish Settlement Building Button
 * (***ADDB***) Added Sliders to modify the buff length needed for enduring spells to take effect
 * (***ADDB***) Adjusted the logic of Recruit Multiplier 
 * (***ADDB***) Add new Bindable Action Buttons for Loot Revealers
