@@ -395,7 +395,8 @@ namespace ModKit {
                 }
                 var offset = Math.Min(itemCount, (currentPage - 1) * pageSize);
                 var limit = Math.Min(pageSize, Math.Max(itemCount, itemCount - pageSize));
-                return VPicker(title, ref selected, fittingItems.ToList().Skip(offset).Take(limit).ToList(), unselectedTitle, titler, ref searchText, options);
+                var empty = String.Empty;
+                return VPicker(title, ref selected, fittingItems.ToList().Skip(offset).Take(limit).ToList(), unselectedTitle, titler, ref empty, options);
             }
         }
     }
