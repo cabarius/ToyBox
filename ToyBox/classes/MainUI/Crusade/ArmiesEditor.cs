@@ -95,7 +95,8 @@ namespace ToyBox.classes.MainUI {
             }
         }
         public static bool discloseMercenaryUnits = false;
-        private const string? RerollAll = "Reroll Mercs";
+        private const string RerollAll = "Reroll Mercs";
+        private const string ApplyRecruitGrowth = "Add new recruits";
 
         public static void OnLoad() {
             KeyBindings.RegisterAction(RerollAll, () => {
@@ -105,6 +106,9 @@ namespace ToyBox.classes.MainUI {
                 EventBus.RaiseEvent<IArmyMercenarySlotsHandler>(delegate (IArmyMercenarySlotsHandler h) {
                     h.HandleSlotsRerolled();
                 });
+            });
+            KeyBindings.RegisterAction(ApplyRecruitGrowth, () => {
+                KingdomState.Instance.RecruitsManager.ApplyGrowth();
             });
         }
         public static void OnGUI() {
@@ -128,7 +132,7 @@ namespace ToyBox.classes.MainUI {
                     }
                 },
                 () => Slider("Recruitment Cost", ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", AutoWidth()),
-                () => LogSlider("Number of Recruits", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
+                () => LogSlider("Number of Recruits at Refresh", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
                     AutoWidth()),
                 () => LogSlider("Army Experience Multiplier", ref settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
                     AutoWidth()),
@@ -168,6 +172,11 @@ namespace ToyBox.classes.MainUI {
                        Label("Rerolls Mercenary Units for free.".green());
                    },
                    () => {
+                       BindableActionButton(ApplyRecruitGrowth, 200.width());
+                       Space(-93);
+                       Label("Applies the regular recruits growth directly.".green());
+                   },
+                   () => {
                        ValueAdjustorEditable("Mercenary Slots",
                                              () => mercenaryManager.MaxAllowedSlots,
                                              v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots),
@@ -197,7 +206,7 @@ namespace ToyBox.classes.MainUI {
                                    },
                                    (unit) => unit,
                                    (unit) => IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), false) ? unit.GetDisplayName().orange().bold() : unit.GetDisplayName(),
-                                   (unit) =>  new[] { $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}" },
+                                   (unit) => new[] { $"{unit.NameSafe()} {unit.GetDisplayName()} {unit.Description}" },
                                    () => {
                                        var bluh = ummWidth - 50;
                                        var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;

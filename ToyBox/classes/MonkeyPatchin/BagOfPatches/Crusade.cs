@@ -15,6 +15,7 @@ using Kingmaker.Kingdom.Buffs;
 using Kingmaker.Kingdom.Flags;
 using Kingmaker.Kingdom.Rules;
 using Kingmaker.Kingdom.Tasks;
+using Kingmaker.PubSubSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,9 +118,26 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(ArmyRecruitsManager), nameof(ArmyRecruitsManager.Recruit))]
-        private static class ArmyRecruitsManager_Recruit_Patch {
-            private static void Prefix(ref int count) => count = Mathf.RoundToInt(count * Settings.recruitmentMultiplier);
+        [HarmonyPatch(typeof(ArmyRecruitsManager))]
+        private static class ArmyRecruitsManager_Patch {
+            private static int unitsBefore;
+            private static int originalCount;
+            [HarmonyPatch(nameof(ArmyRecruitsManager.Recruit))]
+            [HarmonyPrefix]
+            private static void Recruit_Prefix(ArmyRecruitsManager __instance, BlueprintUnit unit, ref int count) {
+                unitsBefore = __instance.GetCountInPool(unit);
+                originalCount = count;
+                count = Mathf.RoundToInt(count * Settings.recruitmentMultiplier);
+                __instance.IncreasePool(unit, count - originalCount);
+            }
+            [HarmonyPatch(nameof(ArmyRecruitsManager.Recruit))]
+            [HarmonyPostfix]
+            private static void Recruit_Postfix(ArmyRecruitsManager __instance, BlueprintUnit unit, int count) {
+                // Couldn't recruit units
+                if (unitsBefore < __instance.GetCountInPool(unit)) {
+                    __instance.DecreasePool(unit, count - originalCount);
+                }
+            }
         }
 
         [HarmonyPatch(typeof(ArmyMercenariesManager), nameof(ArmyMercenariesManager.Recruit))]
