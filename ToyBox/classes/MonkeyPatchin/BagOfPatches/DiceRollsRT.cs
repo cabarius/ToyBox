@@ -5,19 +5,18 @@ using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
-using ModKit;
+using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
+using System.Linq;
 
 namespace ToyBox.BagOfPatches {
     public static class DiceRollsRT {
-        //TODO: For each Dice Type; for Skillchecks, incombat, outofcombat etc.
+        public static Dictionary<BaseUnitEntity, Dictionary<RollSituation, Roll>> rollCache = new();
         [Serializable]
         public class RollSaveEntry {
-            public Roll roll;
+            private Roll roll;
             public RollSetup setup;
             internal RollSaveEntry() { }
             public RollSaveEntry(RollSetup setup) {
@@ -27,6 +26,12 @@ namespace ToyBox.BagOfPatches {
             public void setSetup(RollSetup setup) {
                 this.setup = setup;
                 roll = setup.CreateRoll();
+            }
+            public Roll GetRoll() {
+                if (roll == null) {
+                    roll = setup.CreateRoll();
+                }
+                return roll;
             }
             public static RollSaveEntry example() {
                 var tmpSetup = new RollSetup(DiceType.D100);
@@ -50,7 +55,12 @@ namespace ToyBox.BagOfPatches {
                 this.takeBetter = takeBetter;
                 this.takeWorse = takeWorse;
             }
-
+            public Roll(Roll toCopy) {
+                possible = toCopy.possible;
+                reroll = toCopy.reroll;
+                takeBetter = toCopy.takeBetter;
+                takeWorse = toCopy.takeWorse;
+            }
             public int doRoll() {
                 int result = UnityEngine.Random.Range(1, possible.Count);
                 if (reroll) {
@@ -63,6 +73,22 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
                 return possible.Get(result - 1);
+            }
+            public Roll combineWith(Roll other) {
+                var result = possible.Intersect(other.possible).ToList();
+                if (result.Count > 0) {
+                    if (!((takeBetter && other.takeWorse) || (takeWorse && other.takeBetter))) {
+                        return new Roll(result, reroll || other.reroll, takeBetter || other.takeBetter, takeWorse || other.takeWorse);
+                    }
+                }
+                return new(this);
+            }
+            public static Roll DefaultRoll(DiceType dice) {
+                List<int> possible = new();
+                for (int i = 1; i <= (int)dice; i++) {
+                    possible.Add(i);
+                }
+                return new Roll(possible, false, false, false);
             }
         }
         [Serializable]
@@ -89,17 +115,17 @@ namespace ToyBox.BagOfPatches {
                 }
                 switch (ruletype) {
                     case RuleType.RollAdvantage:
-                        return (toCompareType == RuleType.RollDisadvantage || toCompareType == RuleType.RollAlways);
+                        return toCompareType == RuleType.RollDisadvantage || toCompareType == RuleType.RollAlways;
                     case RuleType.RollDisadvantage:
-                        return (toCompareType == RuleType.RollAdvantage || toCompareType == RuleType.RollAlways);
+                        return toCompareType == RuleType.RollAdvantage || toCompareType == RuleType.RollAlways;
                     case RuleType.RollAlways:
                         return true;
                     case RuleType.RollNever:
-                        return (toCompareType == RuleType.RollAlways);
+                        return toCompareType == RuleType.RollAlways;
                     case RuleType.RollAtMost:
-                        return (toCompareType == RuleType.RollAlways);
+                        return toCompareType == RuleType.RollAlways;
                     case RuleType.RollAtLeast:
-                        return (toCompareType == RuleType.RollAlways);
+                        return toCompareType == RuleType.RollAlways;
                     default:
                         return false;
                 }
@@ -167,12 +193,36 @@ namespace ToyBox.BagOfPatches {
                 return new Roll(valid, reroll, takeBetter, takeWorse);
             }
         }
+        public enum RollSituation {
+            [Description("For Everything")]
+            All,
+            [Description("In Combat")]
+            InCombat,
+            [Description("Out of Combat")]
+            OutOfCombat /*,
+            [Description("For SkillChecks")]
+            SkillChecks,
+            [Description("For initiative")]
+            Initiative */
+        }
         public enum RollNum {
+            [Description("")]
             None = -1,
+            [Description("Enter a custom value")]
             Custom = 0,
+            [Description("1")]
             Roll1 = 1,
+            [Description("10")]
+            Roll10 = 10,
+            [Description("20")]
+            Roll20 = 20,
+            [Description("25")]
             Roll25 = 25,
+            [Description("50")]
             Roll50 = 50,
+            [Description("75")]
+            Roll75 = 75,
+            [Description("100")]
             Roll100 = 100,
         }
         public enum RuleType {
@@ -225,6 +275,67 @@ namespace ToyBox.BagOfPatches {
                 if (changePolicy) {
                     __result = AttackHitPolicyType.AutoHit;
                     changePolicy = false;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(RuleRollDice))]
+        public static class RuleRollDicePatch {
+            [HarmonyPatch(nameof(RuleRollDice.Roll))]
+            [HarmonyPostfix]
+            private static void Roll(RuleRollDice __instance) {
+                SerializableDictionary<RollSituation, SerializableDictionary<UnitSelectType, RollSaveEntry>> diceSpecificRollRules;
+                if (settings.diceRules.TryGetValue(__instance.DiceFormula.Dice, out diceSpecificRollRules)) {
+                    RollSituation combatSituation = __instance.InitiatorUnit.IsInCombat ? RollSituation.InCombat : RollSituation.OutOfCombat;
+                    Dictionary<RollSituation, Roll> unitCache;
+                    if (rollCache.TryGetValue(__instance.InitiatorUnit, out unitCache)) {
+                        Roll cachedRoll;
+                        if (unitCache.TryGetValue(combatSituation, out cachedRoll)) {
+                            int num = 0;
+                            for (int times = 0; times < __instance.DiceFormula.Rolls; times++) {
+                                num += cachedRoll.doRoll();
+                            }
+                            __instance.m_Result = num;
+                            return;
+                        }
+                    }
+                    SerializableDictionary<UnitSelectType, RollSaveEntry> tmp1 = null;
+                    SerializableDictionary<UnitSelectType, RollSaveEntry> tmp2 = null;
+                    if (diceSpecificRollRules.TryGetValue(combatSituation, out tmp1) || diceSpecificRollRules.TryGetValue(RollSituation.All, out tmp2)) {
+                        var fittingTypes = UnitEntityDataUtils.getSelectTypes(__instance.InitiatorUnit);
+                        List<RollSaveEntry> tmp1s = new(), tmp2s = new();
+                        foreach (var type in fittingTypes) {
+                            RollSaveEntry tmp;
+                            if (tmp1 != null) {
+                                if (tmp1.TryGetValue(type, out tmp)) {
+                                    tmp1s.Add(tmp);
+                                }
+                            }
+                            if (tmp2 != null) {
+                                if (tmp2.TryGetValue(type, out tmp)) {
+                                    tmp2s.Add(tmp);
+                                }
+                            }
+                        }
+                        Roll roll = DiceRollsRT.Roll.DefaultRoll(__instance.DiceFormula.Dice);
+                        foreach (var s in tmp1s) {
+                            roll = roll.combineWith(s.GetRoll());
+                        }
+                        foreach (var s in tmp2s) {
+                            roll = roll.combineWith(s.GetRoll());
+                        }
+                        var num = 0;
+                        for (var times = 0; times < __instance.DiceFormula.Rolls; times++) {
+                            num += roll.doRoll();
+                        }
+                        if (unitCache == null) {
+                            unitCache = new() { { combatSituation, roll } };
+                        }
+                        else {
+                            unitCache[combatSituation] = roll;
+                        }
+                        rollCache[__instance.InitiatorUnit] = unitCache;
+                        __instance.m_Result = num;
+                    }
                 }
             }
         }

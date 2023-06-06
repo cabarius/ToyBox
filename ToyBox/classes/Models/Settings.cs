@@ -2,6 +2,7 @@
 using Kingmaker;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.RuleSystem;
 using ModKit;
 using ModKit.Utility;
 using Newtonsoft.Json;
@@ -352,7 +353,9 @@ namespace ToyBox {
 
         // Dice Rolls
 #if RT
-        public SerializableDictionary<UnitSelectType, BagOfPatches.DiceRollsRT.RollSaveEntry> diceRules = new();
+        public SerializableDictionary<DiceType,
+            SerializableDictionary<BagOfPatches.DiceRollsRT.RollSituation,
+            SerializableDictionary<UnitSelectType, BagOfPatches.DiceRollsRT.RollSaveEntry>>> diceRules = new();
 #endif
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
         public UnitSelectType allHitsCritical = UnitSelectType.Off;
