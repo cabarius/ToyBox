@@ -795,15 +795,6 @@ namespace ToyBox {
                 () => { 330.space(); Label("The following skill check adjustments apply only out of combat".localize().green()); },
                 () => EnumGrid("Skill Checks: Take 10".localize(), ref Settings.skillsTake10, AutoWidth()),
                 () => EnumGrid("Skill Checks: Take 20".localize(), ref Settings.skillsTake20, AutoWidth()),
-#elif RT
-                () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll20, AutoWidth()),
-                () => EnumGrid("Always Roll 25".localize(), ref Settings.alwaysRoll20, AutoWidth()),
-                () => EnumGrid("Always Roll 50".localize(), ref Settings.alwaysRoll1, AutoWidth()),
-                () => EnumGrid("Always Roll 100".localize(), ref Settings.alwaysRoll1, AutoWidth()),
-                () => EnumGrid("Never Roll 1".localize(), ref Settings.neverRoll20, AutoWidth()),
-                () => EnumGrid("Never Roll 25".localize(), ref Settings.neverRoll1, AutoWidth()),
-                () => EnumGrid("Never Roll 50".localize(), ref Settings.neverRoll20, AutoWidth()),
-                () => EnumGrid("Never Roll 100".localize(), ref Settings.neverRoll1, AutoWidth()),
 #endif
                 () => { }
                 );
