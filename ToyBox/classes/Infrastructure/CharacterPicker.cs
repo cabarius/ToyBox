@@ -17,30 +17,30 @@ namespace ToyBox {
             if (partyFilterPlayer != Game.Instance.Player) PartyFilterChoices = null;
             if (Game.Instance.Player != null && PartyFilterChoices == null) {
                 PartyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
-                    new NamedFunc<List<UnitEntityData>>("Party", () => Game.Instance.Player.Party),
-                    new NamedFunc<List<UnitEntityData>>("Party & Pets", () => Game.Instance.Player.m_PartyAndPets),
+                    new NamedFunc<List<UnitEntityData>>("Party".localize(), () => Game.Instance.Player.Party),
+                    new NamedFunc<List<UnitEntityData>>("Party & Pets".localize(), () => Game.Instance.Player.m_PartyAndPets),
 #if Wrath
-                    new NamedFunc<List<UnitEntityData>>("All", () => Game.Instance.Player.AllCharacters),
+                    new NamedFunc<List<UnitEntityData>>("All".localize(), () => Game.Instance.Player.AllCharacters),
 #elif RT
-                    new NamedFunc<List<UnitEntityData>>("All", () => Game.Instance.Player.AllCharactersAndStarships.ToList()),
+                    new NamedFunc<List<UnitEntityData>>("All".localize(), () => Game.Instance.Player.AllCharactersAndStarships.ToList()),
 #endif
-                    new NamedFunc<List<UnitEntityData>>("Active", () => Game.Instance.Player.ActiveCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Remote", () => Game.Instance.Player.m_RemoteCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Custom", PartyUtils.GetCustomCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Pets", PartyUtils.GetPets),
+                    new NamedFunc<List<UnitEntityData>>("Active".localize(), () => Game.Instance.Player.ActiveCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Remote".localize(), () => Game.Instance.Player.m_RemoteCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Custom".localize(), PartyUtils.GetCustomCompanions),
+                    new NamedFunc<List<UnitEntityData>>("Pets".localize(), PartyUtils.GetPets),
 #if RT
-                    new NamedFunc<List<UnitEntityData>>("Starships", () => Game.Instance.Player.AllStarships.ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Starships".localize(), () => Game.Instance.Player.AllStarships.ToList()),
 #endif
                     //new NamedFunc<List<UnitEntityData>>("Familiars", Game.Instance.Player.Party.SelectMany(ch => ch.Familiars),
-                    new NamedFunc<List<UnitEntityData>>("Nearby", () => {
+                    new NamedFunc<List<UnitEntityData>>("Nearby".localize(), () => {
                         var player = GameHelper.GetPlayerCharacter();
                         return player == null
                                    ? new List<UnitEntityData> ()
                                    : GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, (int)nearbyRange , false, false).ToList();
                     }),
-                    new NamedFunc<List<UnitEntityData>>("Friendly", () => Shodan.AllUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies", () => Shodan.AllUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("All Units", () => Shodan.AllUnits.ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Friendly".localize(), () => Shodan.AllUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Enemies".localize(), () => Shodan.AllUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("All Units".localize(), () => Shodan.AllUnits.ToList()),
                };
             }
             return PartyFilterChoices;
@@ -89,9 +89,9 @@ namespace ToyBox {
             if (selectedCharacter != null) {
                 using (HorizontalScope(AutoWidth())) {
                     Space(indent);
-                    Label($"{GetSelectedCharacter().CharacterName}".orange().bold(), AutoWidth());
+                    Label($"{selectedCharacter.CharacterName}".orange().bold(), AutoWidth());
                     Space(5);
-                    Label("will be used for editing ".green());
+                    Label("will be used for editing ".localize().green());
                 }
             }
         }
