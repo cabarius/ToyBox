@@ -154,6 +154,7 @@ namespace ToyBox.BagOfPatches {
             [Description("Roll with Disadvantage")]
             RollDisadvantage
         }
+
         private static bool changePolicy = true;
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
@@ -190,90 +191,6 @@ namespace ToyBox.BagOfPatches {
                     __return = AttackHitPolicyType.AutoHit;
                     changePolicy = false;
                 }
-            }
-        }
-
-        [HarmonyPatch(typeof(RuleRollDice))]
-        public static class RuleRollDicePatch {
-            [HarmonyPatch(nameof(RuleRollDice.Roll))]
-            [HarmonyPostfix]
-            private static void Roll(RuleRollDice __instance) {
-                if (__instance.DiceFormula.Dice != DiceType.D100) return;
-                var initiator = __instance.Initiator as BaseUnitEntity;
-                if (initiator == null) return;
-                var result = __instance.m_Result;
-                if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)
-                   || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat)
-                           && !initiator.IsInCombat
-                       )
-                   ) {
-                    result = 20;
-                }
-                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)) {
-                    result = 1;
-                }
-                else {
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
-                        result = Math.Max(result, UnityEngine.Random.Range(1, 21));
-                    }
-                    else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
-                        result = Math.Min(result, UnityEngine.Random.Range(1, 21));
-                    }
-                    var min = 1;
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
-                        result = UnityEngine.Random.Range(2, 21);
-                        min = 2;
-                    }
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10always) && result < 10 && !initiator.IsInCombat) {
-                        result = 10;
-                        min = 10;
-                    }
-#if false
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10minimum) && result < 10 && !initiator.IsInCombat) {
-                        result = UnityEngine.Random.Range(10, 21);
-                        min = 10;
-                    }
-#endif
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll20) && result == 20) {
-                        result = UnityEngine.Random.Range(min, 20);
-                    }
-                }
-                //Mod.Debug("Modified D20Roll: " + result);
-                __instance.m_Result = result;
-            }
-        }
-
-        [HarmonyPatch(typeof(RuleInitiativeRoll), nameof(RuleInitiativeRoll.Result), MethodType.Getter)]
-        public static class RuleInitiativeRoll_OnTrigger_Patch {
-            private static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
-                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
-                    __result = 1 + __instance.Modifier;
-                    Mod.Trace("Modified InitiativeRoll: " + __result);
-                }
-                else if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
-                    __result = 20 + __instance.Modifier;
-                    Mod.Trace("Modified InitiativeRoll: " + __result);
-                }
-            }
-        }
-
-        // Thanks AlterAsc - https://github.com/alterasc/CombatRelief/blob/main/CombatRelief/SkillRolls.cs
-        [HarmonyPatch(typeof(RuleSkillCheck), nameof(RuleSkillCheck.RollD20))]
-        public static class RuleSkillCheck_RollD20_Patch {
-            [HarmonyPrefix]
-            private static bool Prefix(ref RuleRollD20 __result, RuleSkillCheck __instance) {
-                if (__instance.Initiator.IsInCombat) {
-                    return true;
-                }
-                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.skillsTake20)) {
-                    __result = RuleRollD20.FromInt(__instance.Initiator, 20);
-                    return false;
-                }
-                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.skillsTake10)) {
-                    __result = RuleRollD20.FromInt(__instance.Initiator, 10);
-                    return false;
-                }
-                return true;
             }
         }
     }
