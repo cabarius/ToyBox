@@ -9,14 +9,41 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace ToyBox.BagOfPatches {
     public static class DiceRollsRT {
+        public class RollSaveEntry {
+            private Roll roll;
+            private RollSetup setup;
+            internal RollSaveEntry() { }
+            public RollSaveEntry(RollSetup setup) {
+                this.setup = setup;
+                roll = setup.CreateRoll();
+            }
+            public Roll getRole() {
+                return roll;
+            }
+            public void setSetup(RollSetup setup) {
+                this.setup = setup;
+                roll = setup.CreateRoll();
+            }
+            public static RollSaveEntry example() {
+                var tmpSetup = new RollSetup(DiceType.D100);
+                var tmpRule1 = new RollRule(RollNum.Roll50, RuleType.RollAtMost, DiceType.D100);
+                var tmpRule2 = new RollRule(RollNum.Roll1, RuleType.RollNever, DiceType.D100);
+                tmpSetup.AddRule(tmpRule1);
+                tmpSetup.AddRule(tmpRule2);
+                return new RollSaveEntry(tmpSetup);
+            }
+        }
         public class Roll {
             public List<int> possible;
             public bool reroll;
             public bool takeBetter;
             public bool takeWorse;
+            internal Roll() { }
             public Roll(List<int> possible, bool reroll, bool takeBetter, bool takeWorse) {
                 this.possible = possible;
                 this.reroll = reroll;
@@ -42,10 +69,15 @@ namespace ToyBox.BagOfPatches {
             public RollNum targetRoll;
             public RuleType ruletype;
             public DiceType dice;
-            public RollRule(RollNum targetRoll, RuleType ruletype, DiceType dice) {
+            public int customRollValue;
+            internal RollRule() { }
+            public RollRule(RollNum targetRoll, RuleType ruletype, DiceType dice, int customRollValue = 0) {
                 this.targetRoll = targetRoll;
                 this.ruletype = ruletype;
                 this.dice = dice;
+                if (0 < customRollValue && customRollValue <= (int)dice) {
+                    this.customRollValue = customRollValue;
+                }
             }
             public bool IsIncompatibleWith(RollRule toCompare) {
                 var toCompareType = toCompare.ruletype;
@@ -71,65 +103,65 @@ namespace ToyBox.BagOfPatches {
                         return false;
                 }
             }
-            public class RollSetup {
-                public List<RollRule> activeRules;
-                public DiceType dice;
-                public RollSetup(DiceType dice) {
-                    activeRules = new();
-                    this.dice = dice;
+        }
+        public class RollSetup {
+            public List<RollRule> activeRules;
+            public DiceType dice;
+            public RollSetup(DiceType dice) {
+                activeRules = new();
+                this.dice = dice;
+            }
+            public bool AddRule(RollRule newRule) {
+                if (newRule.dice != dice) return false;
+                if (activeRules.Any(rule => rule.IsIncompatibleWith(newRule))) return false;
+                var backup = new List<RollRule>(activeRules);
+                activeRules.Add(newRule);
+                bool canRoll = CreateRoll().possible.Count > 0;
+                if (!canRoll) {
+                    activeRules = backup;
                 }
-                public bool AddRule(RollRule newRule) {
-                    if (newRule.dice != dice) return false;
-                    if (activeRules.Any(rule => rule.IsIncompatibleWith(newRule))) return false;
-                    var tmp = new List<RollRule>(activeRules) { newRule };
-                    bool canRoll = CreateRoll(tmp).possible.Count > 0;
-                    if (canRoll) {
-                        activeRules.Add(newRule);
+                return canRoll;
+            }
+            public Roll CreateRoll() {
+                bool reroll = false;
+                bool takeBetter = false;
+                bool takeWorse = false;
+                int rollResult = -1;
+                int rollNum;
+                List<int> exclusions = new();
+                foreach (var rule in activeRules) {
+                    switch (rule.targetRoll) {
+                        case RollNum.None: rollNum = 0; break;
+                        case RollNum.Custom: rollNum = rule.customRollValue; break;
+                        default: rollNum = (int)rule.targetRoll; break;
                     }
-                    return canRoll;
+                    switch (rule.ruletype) {
+                        case RuleType.RollAdvantage: reroll = true; takeBetter = true; break;
+                        case RuleType.RollDisadvantage: reroll = true; takeWorse = true; break;
+                        case RuleType.RollAlways: rollResult = rollNum; break;
+                        case RuleType.RollNever: exclusions.Add(rollNum); break;
+                        case RuleType.RollAtLeast: {
+                                for (var i = 1; i < rollNum; i++) {
+                                    exclusions.Add(i);
+                                }
+                            }; break;
+                        case RuleType.RollAtMost: {
+                                for (var i = 1 + rollNum; i <= (int)dice; i++) {
+                                    exclusions.Add(i);
+                                }
+                            }; break;
+                    }
                 }
-                public Roll CreateRoll(List<RollRule> rules) {
-                    bool reroll = false;
-                    bool takeBetter = false;
-                    bool takeWorse = false;
-                    int rollResult = -1;
-                    int rollNum;
-                    List<int> exclusions = new();
-                    foreach (var rule in rules) {
-                        switch (rule.targetRoll) {
-                            case RollNum.None: rollNum = 0; break;
-                            //TODO: Take this number from some setting!
-                            case RollNum.Custom: rollNum = 0; break;
-                            default: rollNum = (int)rule.targetRoll; break;
-                        }
-                        switch (rule.ruletype) {
-                            case RuleType.RollAdvantage: reroll = true; takeBetter = true; break;
-                            case RuleType.RollDisadvantage: reroll = true; takeWorse = true; break;
-                            case RuleType.RollAlways: rollResult = rollNum; break;
-                            case RuleType.RollNever: exclusions.Add(rollNum); break;
-                            case RuleType.RollAtLeast: {
-                                    for (var i = 1; i < rollNum; i++) {
-                                        exclusions.Add(i);
-                                    }
-                                }; break;
-                            case RuleType.RollAtMost: {
-                                    for (var i = 1 + rollNum; i <= (int)dice; i++) {
-                                        exclusions.Add(i);
-                                    }
-                                }; break;
-                        }
+                List<int> valid = new();
+                for (int i = 1; i <= (int)dice; i++) {
+                    if (!exclusions.Contains(i)) {
+                        valid.Add(i);
                     }
-                    List<int> valid = new();
-                    for (int i = 1; i <= (int)dice; i++) {
-                        if (!exclusions.Contains(i)) {
-                            valid.Add(i);
-                        }
-                    }
-                    if (rollResult != -1) {
-                        valid = new() { rollResult };
-                    }
-                    return new Roll(valid, reroll, takeBetter, takeWorse);
                 }
+                if (rollResult != -1) {
+                    valid = new() { rollResult };
+                }
+                return new Roll(valid, reroll, takeBetter, takeWorse);
             }
         }
         public enum RollNum {
@@ -186,9 +218,9 @@ namespace ToyBox.BagOfPatches {
         private static class AttackHitPolicyPatch {
             [HarmonyPatch(nameof(AttackHitPolicyContextData.Current), MethodType.Getter)]
             [HarmonyPostfix]
-            private static void GetCurrent(ref AttackHitPolicyType __return) {
+            private static void GetCurrent(ref AttackHitPolicyType __result) {
                 if (changePolicy) {
-                    __return = AttackHitPolicyType.AutoHit;
+                    __result = AttackHitPolicyType.AutoHit;
                     changePolicy = false;
                 }
             }

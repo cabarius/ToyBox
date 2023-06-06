@@ -351,6 +351,9 @@ namespace ToyBox {
         public float turnBasedCombatStartDelay = 4;
 
         // Dice Rolls
+#if RT
+        public SerializableDictionary<UnitSelectType, BagOfPatches.DiceRollsRT.RollSaveEntry> diceRules = new();
+#endif
         public UnitSelectType allAttacksHit = UnitSelectType.Off;
         public UnitSelectType allHitsCritical = UnitSelectType.Off;
         public UnitSelectType rollWithAdvantage = UnitSelectType.Off;
