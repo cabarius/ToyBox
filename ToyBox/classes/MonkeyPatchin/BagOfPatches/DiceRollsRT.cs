@@ -15,6 +15,7 @@ using System.Xml.Serialization;
 namespace ToyBox.BagOfPatches {
     public static class DiceRollsRT {
         //TODO: For each Dice Type; for Skillchecks, incombat, outofcombat etc.
+        [Serializable]
         public class RollSaveEntry {
             public Roll roll;
             public RollSetup setup;
@@ -36,6 +37,7 @@ namespace ToyBox.BagOfPatches {
                 return new RollSaveEntry(tmpSetup);
             }
         }
+        [Serializable]
         public class Roll {
             public List<int> possible;
             public bool reroll;
@@ -63,6 +65,7 @@ namespace ToyBox.BagOfPatches {
                 return possible.Get(result - 1);
             }
         }
+        [Serializable]
         public class RollRule {
             public RollNum targetRoll;
             public RuleType ruletype;
@@ -102,6 +105,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
+        [Serializable]
         public class RollSetup {
             public List<RollRule> activeRules;
             public DiceType dice;
