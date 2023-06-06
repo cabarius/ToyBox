@@ -109,6 +109,7 @@ namespace ToyBox.BagOfPatches {
         public class RollSetup {
             public List<RollRule> activeRules;
             public DiceType dice;
+            internal RollSetup() { }
             public RollSetup(DiceType dice) {
                 activeRules = new();
                 this.dice = dice;
