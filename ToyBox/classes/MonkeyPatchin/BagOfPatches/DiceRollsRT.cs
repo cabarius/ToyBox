@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace ToyBox.BagOfPatches {
     public static class DiceRollsRT {
-        public static Dictionary<BaseUnitEntity, Dictionary<RollSituation, Roll>> rollCache = new();
+        public static Dictionary<BaseUnitEntity, Dictionary<DiceType, Dictionary<RollSituation, Roll>>> rollCache = new();
         [Serializable]
         public class RollSaveEntry {
             private Roll roll;
@@ -286,16 +286,19 @@ namespace ToyBox.BagOfPatches {
                 SerializableDictionary<RollSituation, SerializableDictionary<UnitSelectType, RollSaveEntry>> diceSpecificRollRules;
                 if (settings.diceRules.TryGetValue(__instance.DiceFormula.Dice, out diceSpecificRollRules)) {
                     RollSituation combatSituation = __instance.InitiatorUnit.IsInCombat ? RollSituation.InCombat : RollSituation.OutOfCombat;
-                    Dictionary<RollSituation, Roll> unitCache;
+                    Dictionary<DiceType, Dictionary<RollSituation, Roll>> unitCache;
                     if (rollCache.TryGetValue(__instance.InitiatorUnit, out unitCache)) {
-                        Roll cachedRoll;
-                        if (unitCache.TryGetValue(combatSituation, out cachedRoll)) {
-                            int num = 0;
-                            for (int times = 0; times < __instance.DiceFormula.Rolls; times++) {
-                                num += cachedRoll.doRoll();
+                        Dictionary<RollSituation, Roll> unitDiceCache;
+                        if (unitCache.TryGetValue(__instance.DiceFormula.Dice, out unitDiceCache)) {
+                            Roll cachedRoll;
+                            if (unitDiceCache.TryGetValue(combatSituation, out cachedRoll)) {
+                                int num = 0;
+                                for (int times = 0; times < __instance.DiceFormula.Rolls; times++) {
+                                    num += cachedRoll.doRoll();
+                                }
+                                __instance.m_Result = num;
+                                return;
                             }
-                            __instance.m_Result = num;
-                            return;
                         }
                     }
                     SerializableDictionary<UnitSelectType, RollSaveEntry> tmp1 = null;
@@ -327,12 +330,17 @@ namespace ToyBox.BagOfPatches {
                         for (var times = 0; times < __instance.DiceFormula.Rolls; times++) {
                             num += roll.doRoll();
                         }
+                        Dictionary<RollSituation, Roll> unitDiceCache;
                         if (unitCache == null) {
-                            unitCache = new() { { combatSituation, roll } };
+                            unitCache = new();
+                            unitDiceCache = new();
                         }
                         else {
-                            unitCache[combatSituation] = roll;
+                            unitCache.TryGetValue(__instance.DiceFormula.Dice, out unitDiceCache);
+
                         }
+                        unitDiceCache[combatSituation] = roll;
+                        unitCache[__instance.DiceFormula.Dice] = unitDiceCache;
                         rollCache[__instance.InitiatorUnit] = unitCache;
                         __instance.m_Result = num;
                     }
