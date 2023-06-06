@@ -1,6 +1,7 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using UnityEngine;
 using GL = UnityEngine.GUILayout;
@@ -74,7 +75,12 @@ namespace ModKit {
             sel = GL.SelectionGrid(selected, titles.ToArray(), xCols, options);
             if (selected != sel) {
                 selected = sel;
-                action(selected);
+                try {
+                    action(selected);
+                }
+                catch (NullReferenceException) {
+                    //Needed for CharacterPicker.OnCharacterPickerGUI for whatever reason
+                }
             }
         }
         public static void ActionSelectionGrid(ref int selected, string[] texts, int xCols, Action<int> action, GUIStyle style, params GUILayoutOption[] options) {
@@ -351,53 +357,59 @@ namespace ModKit {
         params GUILayoutOption[] options
         ) where T : class {
             var text = searchText;
-            var fittingItems = items.Where(i => i.ToString().ToLower().Contains(text.ToLower()));
-            var itemCount = fittingItems.Count();
-            var totalPages = (int)Math.Ceiling((double)itemCount / pageSize);
             using (VerticalScope(GUI.skin.box)) {
                 10.space();
-                using (HorizontalScope()) {
-                    Label("Limit".localize(), ExpandWidth(false));
-                    ActionIntTextField(ref pageSize, "Search Limit".localize(), null, null, 80.width());
-                }
-                using (HorizontalScope()) {
-                    if (pageSize < 1) {
-                        pageSize = 1;
+                if (items != null) {
+                    var fittingItems = items.Where(i => i.ToString().ToLower().Contains(text.ToLower()));
+                    var itemCount = fittingItems.Count();
+                    var totalPages = (int)Math.Ceiling((double)itemCount / pageSize);
+                    using (HorizontalScope()) {
+                        Label("Limit".localize(), ExpandWidth(false));
+                        ActionIntTextField(ref pageSize, "Search Limit".localize(), null, null, 80.width());
                     }
-                    else if (pageSize > 1000) {
-                        pageSize = 1000;
-                    }
-                    if (itemCount > pageSize) {
-                        if (currentPage > totalPages || currentPage < 1) currentPage = 1;
-                        string pageLabel = "Page: ".localize().orange() + currentPage.ToString().cyan() + " / " + totalPages.ToString().cyan();
-                        Label(pageLabel, ExpandWidth(false));
-                        var maybeNewPage = currentPage;
-                        ActionButton("-", () => {
-                            if (maybeNewPage >= 1) {
-                                if (maybeNewPage == 1) {
-                                    maybeNewPage = totalPages;
+                    using (HorizontalScope()) {
+                        if (pageSize < 1) {
+                            pageSize = 1;
+                        }
+                        else if (pageSize > 1000) {
+                            pageSize = 1000;
+                        }
+                        if (itemCount > pageSize) {
+                            if (currentPage > totalPages || currentPage < 1) currentPage = 1;
+                            string pageLabel = "Page: ".localize().orange() + currentPage.ToString().cyan() + " / " + totalPages.ToString().cyan();
+                            Label(pageLabel, ExpandWidth(false));
+                            var maybeNewPage = currentPage;
+                            ActionButton("-", () => {
+                                if (maybeNewPage >= 1) {
+                                    if (maybeNewPage == 1) {
+                                        maybeNewPage = totalPages;
+                                    }
+                                    else {
+                                        maybeNewPage -= 1;
+                                    }
+                                }
+                            }, AutoWidth());
+                            ActionButton("+", () => {
+                                if (maybeNewPage >= totalPages) {
+                                    maybeNewPage = 1;
                                 }
                                 else {
-                                    maybeNewPage -= 1;
+                                    maybeNewPage += 1;
                                 }
-                            }
-                        }, AutoWidth());
-                        ActionButton("+", () => {
-                            if (maybeNewPage >= totalPages) {
-                                maybeNewPage = 1;
-                            }
-                            else {
-                                maybeNewPage += 1;
-                            }
-                        }, AutoWidth());
-                        currentPage = maybeNewPage;
+                            }, AutoWidth());
+                            currentPage = maybeNewPage;
+                        }
                     }
+                    var offset = Math.Min(itemCount, (currentPage - 1) * pageSize);
+                    var limit = Math.Min(pageSize, Math.Max(itemCount, itemCount - pageSize));
+                    var empty = string.Empty;
+                    return VPicker(title, ref selected, fittingItems.ToList().Skip(offset).Take(limit).ToList(), unselectedTitle, titler, ref empty, options);
                 }
-                var offset = Math.Min(itemCount, (currentPage - 1) * pageSize);
-                var limit = Math.Min(pageSize, Math.Max(itemCount, itemCount - pageSize));
-                var empty = String.Empty;
-                return VPicker(title, ref selected, fittingItems.ToList().Skip(offset).Take(limit).ToList(), unselectedTitle, titler, ref empty, options);
+                else {
+                    return VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, options);
+                }
             }
+
         }
     }
 }
