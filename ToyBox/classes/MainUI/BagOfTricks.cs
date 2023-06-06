@@ -782,6 +782,7 @@ namespace ToyBox {
                 () => EnumGrid("All Hits Critical".localize(), ref Settings.allHitsCritical, AutoWidth()),
                 () => EnumGrid("Roll With Avantage".localize(), ref Settings.rollWithAdvantage, AutoWidth()),
                 () => EnumGrid("Roll With Disavantage".localize(), ref Settings.rollWithDisadvantage, AutoWidth()),
+#if Wrath
                 () => EnumGrid("Always Roll 20".localize(), ref Settings.alwaysRoll20, AutoWidth()),
                 () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll1, AutoWidth()),
                 () => EnumGrid("Never Roll 20".localize(), ref Settings.neverRoll20, AutoWidth()),
@@ -794,6 +795,16 @@ namespace ToyBox {
                 () => { 330.space(); Label("The following skill check adjustments apply only out of combat".localize().green()); },
                 () => EnumGrid("Skill Checks: Take 10".localize(), ref Settings.skillsTake10, AutoWidth()),
                 () => EnumGrid("Skill Checks: Take 20".localize(), ref Settings.skillsTake20, AutoWidth()),
+#elif RT
+                () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll20, AutoWidth()),
+                () => EnumGrid("Always Roll 25".localize(), ref Settings.alwaysRoll20, AutoWidth()),
+                () => EnumGrid("Always Roll 50".localize(), ref Settings.alwaysRoll1, AutoWidth()),
+                () => EnumGrid("Always Roll 100".localize(), ref Settings.alwaysRoll1, AutoWidth()),
+                () => EnumGrid("Never Roll 1".localize(), ref Settings.neverRoll20, AutoWidth()),
+                () => EnumGrid("Never Roll 25".localize(), ref Settings.neverRoll1, AutoWidth()),
+                () => EnumGrid("Never Roll 50".localize(), ref Settings.neverRoll20, AutoWidth()),
+                () => EnumGrid("Never Roll 100".localize(), ref Settings.neverRoll1, AutoWidth()),
+#endif
                 () => { }
                 );
             Div(0, 25);

@@ -1,0 +1,280 @@
+﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+
+using HarmonyLib;
+using Kingmaker;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules;
+using ModKit;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace ToyBox.BagOfPatches {
+    public static class DiceRollsRT {
+        public class Roll {
+            public List<int> possible;
+            public bool reroll;
+            public bool takeBetter;
+            public bool takeWorse;
+            public Roll(List<int> possible, bool reroll, bool takeBetter, bool takeWorse) {
+                this.possible = possible;
+                this.reroll = reroll;
+                this.takeBetter = takeBetter;
+                this.takeWorse = takeWorse;
+            }
+
+            public int doRoll() {
+                int result = UnityEngine.Random.Range(1, possible.Count);
+                if (reroll) {
+                    int tmp = UnityEngine.Random.Range(1, possible.Count);
+                    if (takeBetter) {
+                        result = Math.Max(result, tmp);
+                    } // Should be useless but who knows
+                    else if (takeWorse) {
+                        result = Math.Min(result, tmp);
+                    }
+                }
+                return possible.Get(result - 1);
+            }
+        }
+        public class RollRule {
+            public RollNum targetRoll;
+            public RuleType ruletype;
+            public DiceType dice;
+            public RollRule(RollNum targetRoll, RuleType ruletype, DiceType dice) {
+                this.targetRoll = targetRoll;
+                this.ruletype = ruletype;
+                this.dice = dice;
+            }
+            public bool IsIncompatibleWith(RollRule toCompare) {
+                var toCompareType = toCompare.ruletype;
+                if (toCompareType != RuleType.RollNever) {
+                    if (ruletype == toCompareType) {
+                        return true;
+                    }
+                }
+                switch (ruletype) {
+                    case RuleType.RollAdvantage:
+                        return (toCompareType == RuleType.RollDisadvantage || toCompareType == RuleType.RollAlways);
+                    case RuleType.RollDisadvantage:
+                        return (toCompareType == RuleType.RollAdvantage || toCompareType == RuleType.RollAlways);
+                    case RuleType.RollAlways:
+                        return true;
+                    case RuleType.RollNever:
+                        return (toCompareType == RuleType.RollAlways);
+                    case RuleType.RollAtMost:
+                        return (toCompareType == RuleType.RollAlways);
+                    case RuleType.RollAtLeast:
+                        return (toCompareType == RuleType.RollAlways);
+                    default:
+                        return false;
+                }
+            }
+            public class RollSetup {
+                public List<RollRule> activeRules;
+                public DiceType dice;
+                public RollSetup(DiceType dice) {
+                    activeRules = new();
+                    this.dice = dice;
+                }
+                public bool AddRule(RollRule newRule) {
+                    if (newRule.dice != dice) return false;
+                    if (activeRules.Any(rule => rule.IsIncompatibleWith(newRule))) return false;
+                    var tmp = new List<RollRule>(activeRules) { newRule };
+                    bool canRoll = CreateRoll(tmp).possible.Count > 0;
+                    if (canRoll) {
+                        activeRules.Add(newRule);
+                    }
+                    return canRoll;
+                }
+                public Roll CreateRoll(List<RollRule> rules) {
+                    bool reroll = false;
+                    bool takeBetter = false;
+                    bool takeWorse = false;
+                    int rollResult = -1;
+                    int rollNum;
+                    List<int> exclusions = new();
+                    foreach (var rule in rules) {
+                        switch (rule.targetRoll) {
+                            case RollNum.None: rollNum = 0; break;
+                            //TODO: Take this number from some setting!
+                            case RollNum.Custom: rollNum = 0; break;
+                            default: rollNum = (int)rule.targetRoll; break;
+                        }
+                        switch (rule.ruletype) {
+                            case RuleType.RollAdvantage: reroll = true; takeBetter = true; break;
+                            case RuleType.RollDisadvantage: reroll = true; takeWorse = true; break;
+                            case RuleType.RollAlways: rollResult = rollNum; break;
+                            case RuleType.RollNever: exclusions.Add(rollNum); break;
+                            case RuleType.RollAtLeast: {
+                                    for (var i = 1; i < rollNum; i++) {
+                                        exclusions.Add(i);
+                                    }
+                                }; break;
+                            case RuleType.RollAtMost: {
+                                    for (var i = 1 + rollNum; i <= (int)dice; i++) {
+                                        exclusions.Add(i);
+                                    }
+                                }; break;
+                        }
+                    }
+                    List<int> valid = new();
+                    for (int i = 1; i <= (int)dice; i++) {
+                        if (!exclusions.Contains(i)) {
+                            valid.Add(i);
+                        }
+                    }
+                    if (rollResult != -1) {
+                        valid = new() { rollResult };
+                    }
+                    return new Roll(valid, reroll, takeBetter, takeWorse);
+                }
+            }
+        }
+        public enum RollNum {
+            None = -1,
+            Custom = 0,
+            Roll1 = 1,
+            Roll25 = 25,
+            Roll50 = 50,
+            Roll100 = 100,
+        }
+        public enum RuleType {
+            [Description("Role at least")]
+            RollAtLeast,
+            [Description("Role at most")]
+            RollAtMost,
+            [Description("Always role")]
+            RollAlways,
+            [Description("Never role")]
+            RollNever,
+            [Description("Roll with Advantage")]
+            RollAdvantage,
+            [Description("Roll with Disadvantage")]
+            RollDisadvantage
+        }
+        private static bool changePolicy = true;
+        public static Settings settings = Main.Settings;
+        public static Player player = Game.Instance.Player;
+        [HarmonyPatch(typeof(RulePerformAttackRoll))]
+        private static class RulePerformAttackRollPatch {
+            private static bool forceHit;
+            private static bool forceCrit;
+            [HarmonyPatch(nameof(RulePerformAttackRoll.OnTrigger))]
+            [HarmonyPrefix]
+            private static void OnTriggerPrefix(RulebookEventContext context) {
+                if (context.Current.Initiator is BaseUnitEntity unit) {
+                    forceCrit = UnitEntityDataUtils.CheckUnitEntityData(unit, settings.allHitsCritical);
+                    forceHit = UnitEntityDataUtils.CheckUnitEntityData(unit, settings.allAttacksHit);
+                    if (forceCrit || forceHit) {
+                        changePolicy = true;
+                    }
+                }
+            }
+            [HarmonyPatch(nameof(RulePerformAttackRoll.OnTrigger))]
+            [HarmonyPostfix]
+            private static void OnTriggerPostfix(ref RulePerformAttackRoll __instance) {
+                if (forceCrit) {
+                    __instance.ResultIsRighteousFury = true;
+                    __instance.Result = AttackResult.RighteousFury;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(AttackHitPolicyContextData))]
+        private static class AttackHitPolicyPatch {
+            [HarmonyPatch(nameof(AttackHitPolicyContextData.Current), MethodType.Getter)]
+            [HarmonyPostfix]
+            private static void GetCurrent(ref AttackHitPolicyType __return) {
+                if (changePolicy) {
+                    __return = AttackHitPolicyType.AutoHit;
+                    changePolicy = false;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleRollDice))]
+        public static class RuleRollDicePatch {
+            [HarmonyPatch(nameof(RuleRollDice.Roll))]
+            [HarmonyPostfix]
+            private static void Roll(RuleRollDice __instance) {
+                if (__instance.DiceFormula.Dice != DiceType.D100) return;
+                var initiator = __instance.Initiator as BaseUnitEntity;
+                if (initiator == null) return;
+                var result = __instance.m_Result;
+                if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)
+                   || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat)
+                           && !initiator.IsInCombat
+                       )
+                   ) {
+                    result = 20;
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)) {
+                    result = 1;
+                }
+                else {
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
+                        result = Math.Max(result, UnityEngine.Random.Range(1, 21));
+                    }
+                    else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
+                        result = Math.Min(result, UnityEngine.Random.Range(1, 21));
+                    }
+                    var min = 1;
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
+                        result = UnityEngine.Random.Range(2, 21);
+                        min = 2;
+                    }
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10always) && result < 10 && !initiator.IsInCombat) {
+                        result = 10;
+                        min = 10;
+                    }
+#if false
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10minimum) && result < 10 && !initiator.IsInCombat) {
+                        result = UnityEngine.Random.Range(10, 21);
+                        min = 10;
+                    }
+#endif
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll20) && result == 20) {
+                        result = UnityEngine.Random.Range(min, 20);
+                    }
+                }
+                //Mod.Debug("Modified D20Roll: " + result);
+                __instance.m_Result = result;
+            }
+        }
+
+        [HarmonyPatch(typeof(RuleInitiativeRoll), nameof(RuleInitiativeRoll.Result), MethodType.Getter)]
+        public static class RuleInitiativeRoll_OnTrigger_Patch {
+            private static void Postfix(RuleInitiativeRoll __instance, ref int __result) {
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
+                    __result = 1 + __instance.Modifier;
+                    Mod.Trace("Modified InitiativeRoll: " + __result);
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
+                    __result = 20 + __instance.Modifier;
+                    Mod.Trace("Modified InitiativeRoll: " + __result);
+                }
+            }
+        }
+
+        // Thanks AlterAsc - https://github.com/alterasc/CombatRelief/blob/main/CombatRelief/SkillRolls.cs
+        [HarmonyPatch(typeof(RuleSkillCheck), nameof(RuleSkillCheck.RollD20))]
+        public static class RuleSkillCheck_RollD20_Patch {
+            [HarmonyPrefix]
+            private static bool Prefix(ref RuleRollD20 __result, RuleSkillCheck __instance) {
+                if (__instance.Initiator.IsInCombat) {
+                    return true;
+                }
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.skillsTake20)) {
+                    __result = RuleRollD20.FromInt(__instance.Initiator, 20);
+                    return false;
+                }
+                if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.skillsTake10)) {
+                    __result = RuleRollD20.FromInt(__instance.Initiator, 10);
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+}

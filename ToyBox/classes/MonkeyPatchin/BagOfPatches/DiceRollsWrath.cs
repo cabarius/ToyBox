@@ -2,18 +2,18 @@
 
 using HarmonyLib;
 using Kingmaker;
-//using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
 using ModKit;
-//using Kingmaker.UI._ConsoleUI.Models;
-//using Kingmaker.UI.RestCamp;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
-    internal static class DiceRolls {
+    public static class DiceRollsWrath {
+        public enum Rolls {
+            Roll1 = 1,
+            Rool10 = 10,
+            Roll20 = 20,
+        }
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
