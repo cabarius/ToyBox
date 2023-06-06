@@ -9,11 +9,6 @@ using System;
 
 namespace ToyBox.BagOfPatches {
     public static class DiceRollsWrath {
-        public enum Rolls {
-            Roll1 = 1,
-            Rool10 = 10,
-            Roll20 = 20,
-        }
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
