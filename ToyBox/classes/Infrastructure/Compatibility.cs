@@ -73,7 +73,7 @@ using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.UI;
 using RewiredConsts;
-
+using Kingmaker.Blueprints.Root;
 
 namespace ToyBox {
     public static partial class Shodan {
@@ -97,7 +97,7 @@ namespace ToyBox {
             try {
                 var etudesTree = Game.Instance.Player.EtudesSystem.Etudes;
                 var etude = etudesTree.Get(etudeBP);
-                if (etude != null) 
+                if (etude != null)
                     return etudesTree.EtudeCanPlay(etude);
             }
             catch (Exception ex) {
@@ -122,8 +122,14 @@ namespace ToyBox {
         public static EntityPool<UnitEntityData>? AllUnits => Game.Instance?.State?.AllUnits;
         public static List<UnitEntityData> SelectedUnits => UIAccess.SelectionManager.SelectedUnits.ToList();
         public static ReactiveCollection<UnitEntityData> SelectedUnitsReactive() => UIAccess.SelectionManager.SelectedUnits;
-        public static bool IsEnemy(UnitEntityData unit) => unit.CombatGroup.IsEnemy(GameHelper.GetPlayerCharacter())  && unit != GameHelper.GetPlayerCharacter();
-        public static bool IsPlayerFaction(this UnitEntityData unit) => unit.Faction == Game.Instance.BlueprintRoot.PlayerFaction;
+        public static bool IsEnemy(this UnitEntityData unit) {
+            PartFaction factionOptional = unit.GetFactionOptional();
+            return factionOptional != null && factionOptional.IsPlayerEnemy;
+        }
+        public static bool IsPlayerFaction(this UnitEntityData unit) {
+            PartFaction factionOptional = unit.GetFactionOptional();
+            return factionOptional != null && factionOptional.IsPlayer;
+        }
         public static void KillUnit(UnitEntityData unit) => CheatsCombat.KillUnit(unit);
         public static bool ToyBoxIsPartyOrPet(this MechanicEntity entity) => Game.Instance.Player.PartyAndPets.Contains(entity);
         public static bool HasBonusForLevel(this BlueprintStatProgression xpTable, int level) => level >= 0 && level < xpTable.Bonuses.Length;
@@ -133,8 +139,17 @@ namespace ToyBox {
         public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Value;
         public static EntityPool<UnitEntityData>? AllUnits => Game.Instance?.State?.Units;
         public static List<UnitEntityData> SelectedUnits => Game.Instance.UI.SelectionManager.SelectedUnits;
-        public static bool IsEnemy(UnitEntityData unit) => unit.IsPlayersEnemy && unit != GameHelper.GetPlayerCharacter();
-        public static bool IsPlayerFaction(this UnitEntityData unit) => unit.Descriptor.AttackFactions.Contains(Game.Instance.BlueprintRoot.PlayerFaction);
+        public static bool IsEnemy(this UnitEntityData unit) {
+            UnitAttackFactions uaf = unit.Descriptor.AttackFactions;
+            return uaf.m_Owner.Faction.EnemyForEveryone || uaf.m_Factions.Contains(BlueprintRoot.Instance.PlayerFaction);
+        }
+        public static bool IsPlayerFaction(this UnitEntityData unit) {
+            UnitDescriptor ud = unit.Descriptor;
+            if (ud.m_IsPlayerFactionCached == null) {
+                ud.m_IsPlayerFactionCached = new bool?(ud.Faction == BlueprintRoot.Instance.PlayerFaction);
+            }
+            return ud.m_IsPlayerFactionCached.Value && !ud.AttackFactions.IsPlayerEnemy;
+        }
         public static void KillUnit(UnitEntityData unit) => GameHelper.KillUnit(unit);
         public static bool IsPartyOrPet(this UnitEntityData entity) => entity.Descriptor.IsPartyOrPet();
         public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.ModifiedSpeedMps).Max();
