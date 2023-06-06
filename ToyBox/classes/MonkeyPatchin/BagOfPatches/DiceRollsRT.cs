@@ -14,16 +14,14 @@ using System.Xml.Serialization;
 
 namespace ToyBox.BagOfPatches {
     public static class DiceRollsRT {
+        //TODO: For each Dice Type; for Skillchecks, incombat, outofcombat etc.
         public class RollSaveEntry {
-            private Roll roll;
-            private RollSetup setup;
+            public Roll roll;
+            public RollSetup setup;
             internal RollSaveEntry() { }
             public RollSaveEntry(RollSetup setup) {
                 this.setup = setup;
                 roll = setup.CreateRoll();
-            }
-            public Roll getRole() {
-                return roll;
             }
             public void setSetup(RollSetup setup) {
                 this.setup = setup;
