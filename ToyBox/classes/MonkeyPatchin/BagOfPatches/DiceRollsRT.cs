@@ -5,6 +5,8 @@ using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
+using Kingmaker.UI.Models.Log.Events;
+using Kingmaker.Utility.Random;
 using ModKit.Utility;
 using System;
 using System.Collections.Generic;
@@ -13,233 +15,6 @@ using System.Linq;
 
 namespace ToyBox.BagOfPatches {
     public static class DiceRollsRT {
-        public static Dictionary<BaseUnitEntity, Dictionary<DiceType, Dictionary<RollSituation, Roll>>> rollCache = new();
-        [Serializable]
-        public class RollSaveEntry {
-            private Roll roll;
-            public RollSetup setup;
-            internal RollSaveEntry() { }
-            public RollSaveEntry(RollSetup setup) {
-                this.setup = setup;
-                roll = setup.CreateRoll();
-            }
-            public void setSetup(RollSetup setup) {
-                this.setup = setup;
-                roll = setup.CreateRoll();
-            }
-            public Roll GetRoll() {
-                if (roll == null) {
-                    roll = setup.CreateRoll();
-                }
-                return roll;
-            }
-            public static RollSaveEntry example() {
-                var tmpSetup = new RollSetup(DiceType.D100);
-                var tmpRule1 = new RollRule(RollNum.Roll50, RuleType.RollAtMost, DiceType.D100);
-                var tmpRule2 = new RollRule(RollNum.Roll1, RuleType.RollNever, DiceType.D100);
-                tmpSetup.AddRule(tmpRule1);
-                tmpSetup.AddRule(tmpRule2);
-                return new RollSaveEntry(tmpSetup);
-            }
-        }
-        [Serializable]
-        public class Roll {
-            public List<int> possible;
-            public bool reroll;
-            public bool takeBetter;
-            public bool takeWorse;
-            internal Roll() { }
-            public Roll(List<int> possible, bool reroll, bool takeBetter, bool takeWorse) {
-                this.possible = possible;
-                this.reroll = reroll;
-                this.takeBetter = takeBetter;
-                this.takeWorse = takeWorse;
-            }
-            public Roll(Roll toCopy) {
-                possible = toCopy.possible;
-                reroll = toCopy.reroll;
-                takeBetter = toCopy.takeBetter;
-                takeWorse = toCopy.takeWorse;
-            }
-            public int doRoll() {
-                int result = UnityEngine.Random.Range(1, possible.Count);
-                if (reroll) {
-                    int tmp = UnityEngine.Random.Range(1, possible.Count);
-                    if (takeBetter) {
-                        result = Math.Max(result, tmp);
-                    } // Should be useless but who knows
-                    else if (takeWorse) {
-                        result = Math.Min(result, tmp);
-                    }
-                }
-                return possible.Get(result - 1);
-            }
-            public Roll combineWith(Roll other) {
-                var result = possible.Intersect(other.possible).ToList();
-                if (result.Count > 0) {
-                    if (!((takeBetter && other.takeWorse) || (takeWorse && other.takeBetter))) {
-                        return new Roll(result, reroll || other.reroll, takeBetter || other.takeBetter, takeWorse || other.takeWorse);
-                    }
-                }
-                return new(this);
-            }
-            public static Roll DefaultRoll(DiceType dice) {
-                List<int> possible = new();
-                for (int i = 1; i <= (int)dice; i++) {
-                    possible.Add(i);
-                }
-                return new Roll(possible, false, false, false);
-            }
-        }
-        [Serializable]
-        public class RollRule {
-            public RollNum targetRoll;
-            public RuleType ruletype;
-            public DiceType dice;
-            public int customRollValue;
-            internal RollRule() { }
-            public RollRule(RollNum targetRoll, RuleType ruletype, DiceType dice, int customRollValue = 0) {
-                this.targetRoll = targetRoll;
-                this.ruletype = ruletype;
-                this.dice = dice;
-                if (0 < customRollValue && customRollValue <= (int)dice) {
-                    this.customRollValue = customRollValue;
-                }
-            }
-            public bool IsIncompatibleWith(RollRule toCompare) {
-                var toCompareType = toCompare.ruletype;
-                if (toCompareType != RuleType.RollNever) {
-                    if (ruletype == toCompareType) {
-                        return true;
-                    }
-                }
-                switch (ruletype) {
-                    case RuleType.RollAdvantage:
-                        return toCompareType == RuleType.RollDisadvantage || toCompareType == RuleType.RollAlways;
-                    case RuleType.RollDisadvantage:
-                        return toCompareType == RuleType.RollAdvantage || toCompareType == RuleType.RollAlways;
-                    case RuleType.RollAlways:
-                        return true;
-                    case RuleType.RollNever:
-                        return toCompareType == RuleType.RollAlways;
-                    case RuleType.RollAtMost:
-                        return toCompareType == RuleType.RollAlways;
-                    case RuleType.RollAtLeast:
-                        return toCompareType == RuleType.RollAlways;
-                    default:
-                        return false;
-                }
-            }
-        }
-        [Serializable]
-        public class RollSetup {
-            public List<RollRule> activeRules;
-            public DiceType dice;
-            internal RollSetup() { }
-            public RollSetup(DiceType dice) {
-                activeRules = new();
-                this.dice = dice;
-            }
-            public bool AddRule(RollRule newRule) {
-                if (newRule.dice != dice) return false;
-                if (activeRules.Any(rule => rule.IsIncompatibleWith(newRule))) return false;
-                var backup = new List<RollRule>(activeRules);
-                activeRules.Add(newRule);
-                bool canRoll = CreateRoll().possible.Count > 0;
-                if (!canRoll) {
-                    activeRules = backup;
-                }
-                return canRoll;
-            }
-            public Roll CreateRoll() {
-                bool reroll = false;
-                bool takeBetter = false;
-                bool takeWorse = false;
-                int rollResult = -1;
-                int rollNum;
-                List<int> exclusions = new();
-                foreach (var rule in activeRules) {
-                    switch (rule.targetRoll) {
-                        case RollNum.None: rollNum = 0; break;
-                        case RollNum.Custom: rollNum = rule.customRollValue; break;
-                        default: rollNum = (int)rule.targetRoll; break;
-                    }
-                    switch (rule.ruletype) {
-                        case RuleType.RollAdvantage: reroll = true; takeBetter = true; break;
-                        case RuleType.RollDisadvantage: reroll = true; takeWorse = true; break;
-                        case RuleType.RollAlways: rollResult = rollNum; break;
-                        case RuleType.RollNever: exclusions.Add(rollNum); break;
-                        case RuleType.RollAtLeast: {
-                                for (var i = 1; i < rollNum; i++) {
-                                    exclusions.Add(i);
-                                }
-                            }; break;
-                        case RuleType.RollAtMost: {
-                                for (var i = 1 + rollNum; i <= (int)dice; i++) {
-                                    exclusions.Add(i);
-                                }
-                            }; break;
-                    }
-                }
-                List<int> valid = new();
-                for (int i = 1; i <= (int)dice; i++) {
-                    if (!exclusions.Contains(i)) {
-                        valid.Add(i);
-                    }
-                }
-                if (rollResult != -1) {
-                    valid = new() { rollResult };
-                }
-                return new Roll(valid, reroll, takeBetter, takeWorse);
-            }
-        }
-        public enum RollSituation {
-            [Description("For Everything")]
-            All,
-            [Description("In Combat")]
-            InCombat,
-            [Description("Out of Combat")]
-            OutOfCombat /*,
-            [Description("For SkillChecks")]
-            SkillChecks,
-            [Description("For initiative")]
-            Initiative */
-        }
-        public enum RollNum {
-            [Description("")]
-            None = -1,
-            [Description("Enter a custom value")]
-            Custom = 0,
-            [Description("1")]
-            Roll1 = 1,
-            [Description("10")]
-            Roll10 = 10,
-            [Description("20")]
-            Roll20 = 20,
-            [Description("25")]
-            Roll25 = 25,
-            [Description("50")]
-            Roll50 = 50,
-            [Description("75")]
-            Roll75 = 75,
-            [Description("100")]
-            Roll100 = 100,
-        }
-        public enum RuleType {
-            [Description("Role at least")]
-            RollAtLeast,
-            [Description("Role at most")]
-            RollAtMost,
-            [Description("Always role")]
-            RollAlways,
-            [Description("Never role")]
-            RollNever,
-            [Description("Roll with Advantage")]
-            RollAdvantage,
-            [Description("Roll with Disadvantage")]
-            RollDisadvantage
-        }
-
         private static bool changePolicy = true;
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
@@ -279,71 +54,76 @@ namespace ToyBox.BagOfPatches {
             }
         }
         [HarmonyPatch(typeof(RuleRollDice))]
-        public static class RuleRollDicePatch {
+        private static class RuleRollDicePatch {
             [HarmonyPatch(nameof(RuleRollDice.Roll))]
             [HarmonyPostfix]
             private static void Roll(RuleRollDice __instance) {
-                SerializableDictionary<RollSituation, SerializableDictionary<UnitSelectType, RollSaveEntry>> diceSpecificRollRules;
-                if (settings.diceRules.TryGetValue(__instance.DiceFormula.Dice, out diceSpecificRollRules)) {
-                    RollSituation combatSituation = __instance.InitiatorUnit.IsInCombat ? RollSituation.InCombat : RollSituation.OutOfCombat;
-                    Dictionary<DiceType, Dictionary<RollSituation, Roll>> unitCache;
-                    if (rollCache.TryGetValue(__instance.InitiatorUnit, out unitCache)) {
-                        Dictionary<RollSituation, Roll> unitDiceCache;
-                        if (unitCache.TryGetValue(__instance.DiceFormula.Dice, out unitDiceCache)) {
-                            Roll cachedRoll;
-                            if (unitDiceCache.TryGetValue(combatSituation, out cachedRoll)) {
-                                int num = 0;
-                                for (int times = 0; times < __instance.DiceFormula.Rolls; times++) {
-                                    num += cachedRoll.doRoll();
-                                }
-                                __instance.m_Result = num;
-                                return;
-                            }
-                        }
+                if (Rulebook.CurrentContext.Current is RuleRollChance chanceRoll) {
+                    if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake1)) {
+                        __instance.m_Result = 1;
                     }
-                    SerializableDictionary<UnitSelectType, RollSaveEntry> tmp1 = null;
-                    SerializableDictionary<UnitSelectType, RollSaveEntry> tmp2 = null;
-                    if (diceSpecificRollRules.TryGetValue(combatSituation, out tmp1) || diceSpecificRollRules.TryGetValue(RollSituation.All, out tmp2)) {
-                        var fittingTypes = UnitEntityDataUtils.getSelectTypes(__instance.InitiatorUnit);
-                        List<RollSaveEntry> tmp1s = new(), tmp2s = new();
-                        foreach (var type in fittingTypes) {
-                            RollSaveEntry tmp;
-                            if (tmp1 != null) {
-                                if (tmp1.TryGetValue(type, out tmp)) {
-                                    tmp1s.Add(tmp);
-                                }
-                            }
-                            if (tmp2 != null) {
-                                if (tmp2.TryGetValue(type, out tmp)) {
-                                    tmp2s.Add(tmp);
-                                }
-                            }
-                        }
-                        Roll roll = DiceRollsRT.Roll.DefaultRoll(__instance.DiceFormula.Dice);
-                        foreach (var s in tmp1s) {
-                            roll = roll.combineWith(s.GetRoll());
-                        }
-                        foreach (var s in tmp2s) {
-                            roll = roll.combineWith(s.GetRoll());
-                        }
-                        var num = 0;
-                        for (var times = 0; times < __instance.DiceFormula.Rolls; times++) {
-                            num += roll.doRoll();
-                        }
-                        Dictionary<RollSituation, Roll> unitDiceCache;
-                        if (unitCache == null) {
-                            unitCache = new();
-                            unitDiceCache = new();
-                        }
-                        else {
-                            unitCache.TryGetValue(__instance.DiceFormula.Dice, out unitDiceCache);
-
-                        }
-                        unitDiceCache[combatSituation] = roll;
-                        unitCache[__instance.DiceFormula.Dice] = unitDiceCache;
-                        rollCache[__instance.InitiatorUnit] = unitCache;
-                        __instance.m_Result = num;
+                    else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake25)) {
+                        __instance.m_Result = 25;
                     }
+                    else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake50)) {
+                        __instance.m_Result = 50;
+                    }
+                }
+            }
+        }
+        [HarmonyPatch(typeof(RuleRollDice))]
+        private static class RuleRoleDicePatch {
+            [HarmonyPatch(nameof(RuleRollDice.Roll))]
+            [HarmonyPostfix]
+            private static void Roll(RuleRollDice __instance) {
+                if (__instance.DiceFormula.Dice != DiceType.D100) return;
+                if (__instance.DiceFormula.Rolls > 1) return;
+                var initiator = __instance.InitiatorUnit;
+                var result = __instance.m_Result;
+                if (initiator == null) return;
+                if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)
+                   || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1OutOfCombat) && !initiator.IsInCombat)) {
+                    result = 1;
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll50)) {
+                    result = 50;
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll100)) {
+                    result = 100;
+                }
+                else {
+                    var min = 1;
+                    var max = 101;
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
+                        result = Math.Max(result, PFStatefulRandom.RuleSystem.Range(min, max));
+                    }
+                    else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
+                        result = Math.Min(result, PFStatefulRandom.RuleSystem.Range(min, max));
+                    }
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
+                        min = 2;
+                        result = PFStatefulRandom.RuleSystem.Range(min, max);
+                    }
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll100) && result == 100) {
+                        max = 100;
+                        result = UnityEngine.Random.Range(min, max);
+                    }
+                }
+                __instance.m_Result = result;
+            }
+        }
+        [HarmonyPatch(nameof(RulebookEvent.Dice.D10), MethodType.Getter)]
+        [HarmonyPostfix]
+        private static void GetDice(ref RuleRollD10 __result) {
+            if (Rulebook.CurrentContext.Current is RuleRollInitiative initiativeEvent) {
+                if (UnitEntityDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll1Initiative)) {
+                    __result.m_Result = 1;
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll5Initiative)) {
+                    __result.m_Result = 5;
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll10Initiative)) {
+                    __result.m_Result = 10;
                 }
             }
         }

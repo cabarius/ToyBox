@@ -55,11 +55,11 @@ namespace ToyBox.BagOfPatches {
                 //modLogger.Log($"initiator: {initiator.CharacterName} isInCombat: {initiator.IsInCombat} alwaysRole20OutOfCombat: {settings.alwaysRoll20OutOfCombat}");
                 //Mod.Debug($"initiator: {initiator.CharacterName} Initial D20Roll: " + result);
                 if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20)
-                   || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat)
-                           && !initiator.IsInCombat
-                       )
-                   ) {
+                   || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll20OutOfCombat) && !initiator.IsInCombat)) {
                     result = 20;
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll10)) {
+                    result = 10;
                 }
                 else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)) {
                     result = 1;
@@ -72,22 +72,14 @@ namespace ToyBox.BagOfPatches {
                         result = Math.Min(result, UnityEngine.Random.Range(1, 21));
                     }
                     var min = 1;
+                    var max = 21;
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
                         result = UnityEngine.Random.Range(2, 21);
                         min = 2;
                     }
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10always) && result < 10 && !initiator.IsInCombat) {
-                        result = 10;
-                        min = 10;
-                    }
-#if false
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.take10minimum) && result < 10 && !initiator.IsInCombat) {
-                        result = UnityEngine.Random.Range(10, 21);
-                        min = 10;
-                    }
-#endif
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll20) && result == 20) {
-                        result = UnityEngine.Random.Range(min, 20);
+                        max = 20;
+                        result = UnityEngine.Random.Range(min, max);
                     }
                 }
                 //Mod.Debug("Modified D20Roll: " + result);
@@ -101,6 +93,9 @@ namespace ToyBox.BagOfPatches {
                 if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll1Initiative)) {
                     __result = 1 + __instance.Modifier;
                     Mod.Trace("Modified InitiativeRoll: " + __result);
+                }
+                else if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll10Initiative)) {
+                    __result = 10 + __instance.Modifier;
                 }
                 else if (UnitEntityDataUtils.CheckUnitEntityData(__instance.Initiator, settings.roll20Initiative)) {
                     __result = 20 + __instance.Modifier;

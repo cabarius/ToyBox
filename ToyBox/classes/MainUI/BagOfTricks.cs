@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI.WebControls;
+using ToyBox.BagOfPatches;
 using ToyBox.classes.MainUI;
 using UnityEngine;
 using UnityModManagerNet;
@@ -777,25 +778,7 @@ namespace ToyBox {
                 );
             Actions.ApplyTimeScale();
             Div(0, 25);
-            HStack("Dice Rolls".localize(), 1,
-                () => EnumGrid("All Attacks Hit".localize(), ref Settings.allAttacksHit, AutoWidth()),
-                () => EnumGrid("All Hits Critical".localize(), ref Settings.allHitsCritical, AutoWidth()),
-                () => EnumGrid("Roll With Avantage".localize(), ref Settings.rollWithAdvantage, AutoWidth()),
-                () => EnumGrid("Roll With Disavantage".localize(), ref Settings.rollWithDisadvantage, AutoWidth()),
-                () => EnumGrid("Always Roll 20".localize(), ref Settings.alwaysRoll20, AutoWidth()),
-                () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll1, AutoWidth()),
-                () => EnumGrid("Never Roll 20".localize(), ref Settings.neverRoll20, AutoWidth()),
-                () => EnumGrid("Never Roll 1".localize(), ref Settings.neverRoll1, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 20".localize(), ref Settings.roll20Initiative, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 1".localize(), ref Settings.roll1Initiative, AutoWidth()),
-                () => EnumGrid("Non Combat: Take 10".localize(), ref Settings.take10always, AutoWidth()),
-                //                () => EnumGrid("Non Combat: Take 10 (Min)", ref settings.take10minimum, AutoWidth()),
-                () => EnumGrid("Non Combat: Take 20".localize(), ref Settings.alwaysRoll20OutOfCombat, AutoWidth()),
-                () => { 330.space(); Label("The following skill check adjustments apply only out of combat".localize().green()); },
-                () => EnumGrid("Skill Checks: Take 10".localize(), ref Settings.skillsTake10, AutoWidth()),
-                () => EnumGrid("Skill Checks: Take 20".localize(), ref Settings.skillsTake20, AutoWidth()),
-                () => { }
-                );
+            DiceRollsGUI.OnGUI();
             Div(0, 25);
             HStack("Summons".localize(), 1,
                 () => Toggle("Make Controllable".localize(), ref Settings.toggleMakeSummmonsControllable),
