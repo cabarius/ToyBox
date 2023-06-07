@@ -67,20 +67,6 @@ namespace ToyBox {
                     return false;
             }
         }
-        public static List<UnitSelectType> getSelectTypes(UnitEntityData unitEntityData) {
-            List<UnitSelectType> types = new();
-            if (unitEntityData == null) return types;
-            if (unitEntityData.IsMainCharacter) types.Add(UnitSelectType.You);
-            if (unitEntityData.IsPlayerFaction) types.Add(UnitSelectType.Party);
-            if (!unitEntityData.IsEnemy()) {
-                types.Add(UnitSelectType.Friendly);
-            }
-            else {
-                types.Add(UnitSelectType.Enemies);
-            }
-            types.Add(UnitSelectType.Everyone);
-            return types;
-        }
 
 #if Wrath
         public static void Kill(UnitEntityData unit) => unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue + unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
