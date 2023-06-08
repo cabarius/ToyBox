@@ -102,7 +102,7 @@
  * (***ADDB***) Reworked Search and Pick
 ### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
 **ToyBox Wrath - 1.5.5 - Preview Version 1.5.3a**
-### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
+### ToyBox Wrath - Ver 1.5.4
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
