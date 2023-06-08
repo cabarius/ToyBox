@@ -74,7 +74,12 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.5 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.3a**
+**ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5a** built for 0.2.1ah
+ * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
+ * (***ADDB***) Fixed EnchantmentEditor adding/removing not working
+### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
+**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5a** built for 2.1.4v
+ * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
 ### ToyBox Rogue - Ver 1.5.4
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
@@ -100,8 +105,6 @@
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
  * (***ADDB***) Added Toggle to disable random warp encounter
  * (***ADDB***) Reworked Search and Pick
-### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
-**ToyBox Wrath - 1.5.5 - Preview Version 1.5.3a**
 ### ToyBox Wrath - Ver 1.5.4
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
