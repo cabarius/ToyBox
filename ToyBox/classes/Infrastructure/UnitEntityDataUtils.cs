@@ -60,13 +60,9 @@ namespace ToyBox {
                     }
                     return false;
                 case UnitSelectType.Friendly:
-                    return !unitEntityData.IsEnemy(GameHelper.GetPlayerCharacter());
+                    return !unitEntityData.IsEnemy();
                 case UnitSelectType.Enemies:
-                    // TODO - should this be IsEnemy instead?
-                    if (!unitEntityData.IsPlayerFaction && unitEntityData.IsPlayerFaction()) {
-                        return true;
-                    }
-                    return false;
+                    return unitEntityData.IsEnemy();
                 default:
                     return false;
             }
@@ -74,7 +70,7 @@ namespace ToyBox {
 
 #if Wrath
         public static void Kill(UnitEntityData unit) => unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue + unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
-                   
+
         public static void ForceKill(UnitEntityData unit) => unit.Descriptor.State.ForceKill = true;
 
         public static void ResurrectAndFullRestore(UnitEntityData unit) => unit.Descriptor.ResurrectAndFullRestore();
@@ -184,7 +180,7 @@ namespace ToyBox {
             }
 
             return Game.Instance.Player.AllCharacters
-                       .Any(x => x.OriginalBlueprint                                 == unit
+                       .Any(x => x.OriginalBlueprint == unit
 #if Wrath
                                                         .Unit
 #endif

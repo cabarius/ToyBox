@@ -2,6 +2,7 @@
 using Kingmaker;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.RuleSystem;
 using ModKit;
 using ModKit.Utility;
 using Newtonsoft.Json;
@@ -355,17 +356,30 @@ namespace ToyBox {
         public UnitSelectType allHitsCritical = UnitSelectType.Off;
         public UnitSelectType rollWithAdvantage = UnitSelectType.Off;
         public UnitSelectType rollWithDisadvantage = UnitSelectType.Off;
+        public UnitSelectType alwaysRoll1 = UnitSelectType.Off;
+        public UnitSelectType neverRoll1 = UnitSelectType.Off;
+#if Wrath
+        public UnitSelectType alwaysRoll10 = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20 = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20OutOfCombat = UnitSelectType.Off;
         public UnitSelectType neverRoll20 = UnitSelectType.Off;
-        public UnitSelectType alwaysRoll1 = UnitSelectType.Off;
-        public UnitSelectType neverRoll1 = UnitSelectType.Off;
-        public UnitSelectType roll20Initiative = UnitSelectType.Off;
         public UnitSelectType roll1Initiative = UnitSelectType.Off;
-        public UnitSelectType take10always = UnitSelectType.Off;
-        public UnitSelectType take10minimum = UnitSelectType.Off;
+        public UnitSelectType roll10Initiative = UnitSelectType.Off;
+        public UnitSelectType roll20Initiative = UnitSelectType.Off;
         public UnitSelectType skillsTake10 = UnitSelectType.Off;
         public UnitSelectType skillsTake20 = UnitSelectType.Off;
+#elif RT
+        public UnitSelectType alwaysRoll1OutOfCombat = UnitSelectType.Off;
+        public UnitSelectType alwaysRoll50 = UnitSelectType.Off;
+        public UnitSelectType alwaysRoll100 = UnitSelectType.Off;
+        public UnitSelectType neverRoll100 = UnitSelectType.Off;
+        public UnitSelectType roll1Initiative = UnitSelectType.Off;
+        public UnitSelectType roll5Initiative = UnitSelectType.Off;
+        public UnitSelectType roll10Initiative = UnitSelectType.Off;
+        public UnitSelectType skillsTake1 = UnitSelectType.Off;
+        public UnitSelectType skillsTake25 = UnitSelectType.Off;
+        public UnitSelectType skillsTake50 = UnitSelectType.Off;
+#endif
 
         // Summons
         public bool toggleMakeSummmonsControllable = false;

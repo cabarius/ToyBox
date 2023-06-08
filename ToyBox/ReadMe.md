@@ -74,7 +74,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.4 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3p June 5, 2023** for beta 0.2.1ag
+**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3q June 8, 2023** for beta 0.2.1ah
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -91,6 +91,7 @@
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
  * (***Narria***) dialog preview now shows conditions for answers too
  * (***Narria***) Made a GUI for the portrait picker
+ * (***ADDB***) Dice cheats port
  * (***ADDB***) Added Navigator Resource Editor
  * (***ADDB***) Added Scrap Resource Editor
  * (***ADDB***) Added InGame Portrait Changer
@@ -99,13 +100,14 @@
  * (***ADDB***) Added Toggle to disable random warp encounter
  * (***ADDB***) Reworked Search and Pick
 ### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
-**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3p June 5, 2023**
+**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3q June 8, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
 * (***Narria***) Made a GUI for the portrait picker
 * (***BuckAMayzing***) Gestalt Companion fix
 * (***BuckAMayzing***) Mercenary Gestalt fix
+* (***ADDB***) Dice cheats small changes
 * (***ADDB***) Added replenish recruits button
 * (***ADDB***) Fixed finish Settlement Building Button
 * (***ADDB***) Added Sliders to modify the buff length needed for enduring spells to take effect
