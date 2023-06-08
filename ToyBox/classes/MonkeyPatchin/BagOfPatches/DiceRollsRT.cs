@@ -59,14 +59,16 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             private static void Roll(RuleRollDice __instance) {
                 if (Rulebook.CurrentContext.Current is RuleRollChance chanceRoll) {
-                    if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake1)) {
-                        __instance.m_Result = 1;
-                    }
-                    else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake25)) {
-                        __instance.m_Result = 25;
-                    }
-                    else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake50)) {
-                        __instance.m_Result = 50;
+                    if (chanceRoll.RollTypeValue == RollType.Skill) {
+                        if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake1)) {
+                            __instance.m_Result = 1;
+                        }
+                        else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake25)) {
+                            __instance.m_Result = 25;
+                        }
+                        else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake50)) {
+                            __instance.m_Result = 50;
+                        }
                     }
                 }
             }
