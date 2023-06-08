@@ -74,11 +74,18 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.5 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5a** built for 0.2.1ah
+**ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5c** built for 0.2.1ah
  * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
  * (***ADDB***) Fixed EnchantmentEditor adding/removing not working
+ * (***ADDB***) Profit Factor Editor
+ * (***ADDB***) WIP Added Colony Tab
+   * Add/Remove a specified amount from Colony Resources (like Adamantium)
+   * For each colony:
+     * Finish ongoing Projects (untested)
+     * Modify Colony Stats (like Security)
+     * Add/Remove traits to/from a colony
 ### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
-**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5a** built for 2.1.4v
+**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5c** built for 2.1.4v
  * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
 ### ToyBox Rogue - Ver 1.5.4
  * Port for prelease versions of War Hammer 40000: Rogue Trader
