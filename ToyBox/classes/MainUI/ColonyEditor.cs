@@ -20,7 +20,7 @@ namespace ToyBox.classes.MainUI {
         public static List<BlueprintResource> ColonyResources;
         public static string selectedStat = "None";
         public static string statSearchText = "";
-        public static List<string> selections = new List<string>() { "None", "contentment", "efficiency", "security" };
+        public static List<string> selections = new List<string>() { "None", "Contentment", "Efficiency", "Security" };
         public static int statAdjustment = 1;
         public static void OnGUI() {
             if (ColonyResources == null) {
@@ -71,7 +71,7 @@ namespace ToyBox.classes.MainUI {
             if (colonies != null) {
                 foreach (var colonyData in colonies) {
                     var colony = colonyData.Colony;
-                    Label("Ongoing Events:");
+                    Label("Ongoing Events:".localize());
                     using (HorizontalScope()) {
                         25.space();
                         using (VerticalScope()) {
@@ -80,7 +80,7 @@ namespace ToyBox.classes.MainUI {
                             }
                         }
                     }
-                    Label("Started Projects:");
+                    Label("Started Projects:".localize());
                     using (HorizontalScope()) {
                         25.space();
                         using (VerticalScope()) {
@@ -98,19 +98,19 @@ namespace ToyBox.classes.MainUI {
                             }
                         }
                     }
-                    GridPicker("Change Colony Stat", ref selectedStat, selections, "", t => t.localize(), ref statSearchText);
-                    Label("Contentment" + $": {colony.Contentment.Value}");
-                    Label("Efficiency" + $": {colony.Efficiency.Value}");
-                    Label("Security" + $": {colony.Security.Value}");
+                    GridPicker("Change Colony Stat".localize(), ref selectedStat, selections, "", t => t.localize(), ref statSearchText);
+                    Label("Contentment".localize() + $": {colony.Contentment.Value}");
+                    Label("Efficiency".localize() + $": {colony.Efficiency.Value}");
+                    Label("Security".localize() + $": {colony.Security.Value}");
                     if (selectedStat != null) {
                         using (HorizontalScope()) {
                             Label("Adjust " + selectedStat.localize() + " by the following amount:".localize());
                             IntTextField(ref statAdjustment, null, MinWidth(200), AutoWidth());
                             statAdjustment = Math.Max(0, statAdjustment);
                             10.space();
-                            ActionButton("Add".localize(), () => CheatsColonization.AddColonyStat(colony.Blueprint, selectedStat, statAdjustment));
+                            ActionButton("Add".localize(), () => CheatsColonization.AddColonyStat(colony.Blueprint, selectedStat.ToLower(), statAdjustment));
                             10.space();
-                            ActionButton("Remove".localize(), () => CheatsColonization.AddColonyStat(colony.Blueprint, selectedStat, statAdjustment));
+                            ActionButton("Remove".localize(), () => CheatsColonization.AddColonyStat(colony.Blueprint, selectedStat.ToLower(), statAdjustment));
                         }
                     }
                     if (!colonyTraitBrowser.ContainsKey(colony)) {
@@ -153,10 +153,10 @@ namespace ToyBox.classes.MainUI {
                             Space(190);
                             remainingWidth -= 190;
                             if (isAdded) {
-                                ActionButton("Remove", () => colony.RemoveTrait(trait), Width(150));
+                                ActionButton("Remove".localize(), () => colony.RemoveTrait(trait), Width(150));
                             }
                             else {
-                                ActionButton("Add", () => colony.AddTrait(trait), Width(150));
+                                ActionButton("Add".localize(), () => colony.AddTrait(trait), Width(150));
                             }
                             remainingWidth -= 178;
                             Space(20); remainingWidth -= 20;
