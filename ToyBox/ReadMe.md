@@ -73,8 +73,9 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Rogue - Ver 1.5.4 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.4 -** ***Sh0dan*** **Preview Version 1.5.3r June 8, 2023** for beta 0.2.1ah
+### ToyBox Rogue - Ver 1.5.5 (Coming Soon)
+**ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.3a**
+### ToyBox Rogue - Ver 1.5.4
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -99,8 +100,9 @@
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
  * (***ADDB***) Added Toggle to disable random warp encounter
  * (***ADDB***) Reworked Search and Pick
+### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
+**ToyBox Wrath - 1.5.5 - Preview Version 1.5.3a**
 ### ToyBox Wrath - Ver 1.5.4 (Coming Soon)
-**ToyBox Wrath - 1.5.4 - Preview Version 1.5.3r June 8, 2023**
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
