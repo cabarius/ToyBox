@@ -118,6 +118,10 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\DOTweenPro.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="EntitySystem.Persistence.JsonUtility">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\EntitySystem.Persistence.JsonUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Kingmaker.AreaLogic.TimeOfDay">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.AreaLogic.TimeOfDay.dll</HintPath>
       <Private>False</Private>
