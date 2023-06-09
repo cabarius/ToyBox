@@ -1,12 +1,12 @@
-name: Bug
-description: Create a report to help us improve Toybox
+name: Crashes or Data Loss
+description: Create a report if Toybox is crashing or lossing data
 title: "<title>"
 labels: "bug"
 body:
 - type: textarea
   id: bugdescription
   attributes:
-    label: Description of Bug
+    label: Description of the bug
     description: Please give a clear and consise description of the bug you are experiencing
   validations:
     required: true
@@ -27,6 +27,14 @@ body:
   attributes:
     label: Expected Behavior
     description: A concise description of what you expected to happen.
+  validations:
+    required: false
+- type: textarea
+  id: logfiles
+  attributes:
+    label: Log Files
+    description: Find your log files from the FAQ here: https://github.com/cabarius/ToyBox/wiki/Frequently-Asked-Questions
+    placeholder: Drag and drop your log files here!
   validations:
     required: false
 - type: textarea
