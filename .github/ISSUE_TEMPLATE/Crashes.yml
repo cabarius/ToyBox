@@ -1,7 +1,7 @@
 name: Crashes or Data Loss
 description: Create a report if Toybox is crashing or lossing data
 title: "<title>"
-labels: "bug"
+labels: ["bug", "crashes"]
 body:
 - type: textarea
   id: bugdescription
