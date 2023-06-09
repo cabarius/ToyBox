@@ -3,7 +3,7 @@ description: Suggest an idea for this project
 title: ''
 labels: enhancement
 body:
-  - type: textarea
+- type: textarea
   id: relatedtobug
   attributes:
     label: Is your feature request related to a problem?
