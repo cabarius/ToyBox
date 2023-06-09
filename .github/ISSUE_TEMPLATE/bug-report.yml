@@ -60,7 +60,7 @@ body:
   attributes:
     label: Toybox Version
     description: Please provide the version of Toybox you are using
-    placeholder: Example: 1.5.4c
+    placeholder: Example - 1.5.4c
   validations:
     required: true
 - type: input
@@ -68,7 +68,7 @@ body:
   attributes:
     label: Operating System
     description: Please provide what operating system you use
-    placeholder: Examples: Windows, MacOS
+    placeholder: Examples - Windows, MacOS
   validations:
     required: false
 - type: dropdown
@@ -85,7 +85,7 @@ body:
   attributes:
     label: Game Version
     description: Please provide what version of the game you are on
-    placeholder: Example: 2.1.4w
+    placeholder: Example - 2.1.4w
   validations:
     required: false
 - type: textarea
