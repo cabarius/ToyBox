@@ -75,19 +75,9 @@
 
 ### ToyBox Rogue - Ver 1.5.5 (Coming Soon)
 **ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5c** built for 0.2.1ah
- * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
- * (***ADDB***) Fixed EnchantmentEditor adding/removing not working
- * (***ADDB***) Profit Factor Editor
- * (***ADDB***) WIP Added Colony Tab
-   * Add/Remove a specified amount from Colony Resources (like Adamantium)
-   * For each colony:
-     * Finish ongoing Projects (untested)
-     * Modify Colony Stats (like Security)
-     * Add/Remove traits to/from a colony
 ### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
 **ToyBox Wrath - 1.5.5 - Preview Version 1.5.5c** built for 2.1.4v
- * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
-### ToyBox Rogue - Ver 1.5.4c
+ ## ToyBox Rogue - Ver 1.5.4c
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
@@ -98,7 +88,7 @@
  * (***Narria***) Add/Remove/Recruit/Uncrecruit now work
  * (***Narria***) You can now edit abilities in the party editor
  * (***Narria***) You can now edit your Starship in the party editor
-   * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
+ * (***Narria***) Got some basic level up optiosn working for ignoring various Talent restructions (level, stat, other talent)
  * (***Narria***) **Got this up on Beta 0.2.1y including fixing the dialog bug**
  * (***Narria***) show a little more info in dialog preview
  * (***Narria***) basic dialog browser that lets you look through the dialog tree
@@ -112,7 +102,16 @@
  * (***ADDB***) Fixed QuestEditor Out of Bounds error
  * (***ADDB***) Added Toggle to disable random warp encounter
  * (***ADDB***) Reworked Search and Pick
-### ToyBox Wrath - Ver 1.5.4
+ * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
+ * (***ADDB***) Fixed EnchantmentEditor adding/removing not working
+ * (***ADDB***) Profit Factor Editor
+ * (***ADDB***) WIP Added Colony Tab
+    * Add/Remove a specified amount from Colony Resources (like Adamantium)
+    * For each colony:
+        * Finish ongoing Projects (untested)
+        * Modify Colony Stats (like Security)
+        * Add/Remove traits to/from a colony
+### ToyBox Wrath - Ver 1.5.4c
 * (***Narria***) Some Etude changes
 * (***Narria***) beginnings of a dialog browser
 * (***Narria***) dialog preview now shows conditions for answers too
@@ -137,7 +136,7 @@
   * Separated buffs excluded by default and buffs excluded by the user into different categories
 * (***ADDB***) Added Ingame Portrait Changer
 * (***ADDB***) Reworked Search and Pick
-
+* (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
 ### Ver 1.5.3 Wrath - Sh0dan Unified Edition
 * (***Narria***) Massive internal rework to accomodate both Wrath and Rogue Trader (codename: Shodan)
     * Changed mod ID and title name in Mod Manager to make this clear.
