@@ -1,7 +1,7 @@
-name: Crashes or Data Loss
-description: Create a report if Toybox is crashing or lossing data
+name: UI Issue
+description: Create a report if Toybox UI is messed up
 title: "<title>"
-labels: "bug"
+labels: ["bug", "ui issues"]
 body:
 - type: textarea
   id: bugdescription
