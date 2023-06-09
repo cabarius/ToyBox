@@ -33,7 +33,7 @@ body:
   id: logfiles
   attributes:
     label: Log Files
-    description: Find your log files from the FAQ here: https://github.com/cabarius/ToyBox/wiki/Frequently-Asked-Questions
+    description: Find your log files from the FAQ in the wiki
     placeholder: Drag and drop your log files here!
   validations:
     required: false
