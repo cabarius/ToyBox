@@ -1,6 +1,6 @@
 name: Enhancement Request
 description: Suggest an idea for this project
-title: ''
+title: '<title>'
 labels: enhancement
 body:
 - type: textarea
