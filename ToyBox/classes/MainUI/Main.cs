@@ -198,7 +198,7 @@ namespace ToyBox {
             IsModGUIShown = true;
 #if RT
             if (!IsInGame) {
-                Label(("Warning: ".magenta().bold()+  $"This is an experimental preview of ToyBox ({"Sh0dan".cyan()}) for Rogue Trader Beta.".orange() +" Save early and often.\r\n".yellow().bold() +"Note:".magenta().bold() +" Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible".orange()).localize());
+                Label(("Warning: ".magenta().bold() + $"This is an experimental preview of ToyBox ({"Sh0dan".cyan()}) for Rogue Trader Beta.".orange() + " Save early and often.\r\n".yellow().bold() + "Note:".magenta().bold() + " Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible".orange()).localize());
             }
 #endif
             if (!IsInGame) {
@@ -252,6 +252,8 @@ namespace ToyBox {
 #if DEBUG
                     new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
 #endif
+#elif RT
+                    new NamedAction("Colonies".localize(), ColonyEditor.OnGUI),
 #endif
                     new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
                     new NamedAction("Quests".localize(), QuestEditor.OnGUI),

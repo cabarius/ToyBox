@@ -16,6 +16,7 @@ using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.Blueprints.SectorMap;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
@@ -25,7 +26,6 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.Globalmap.Blueprints.SectorMap;
 
 namespace ToyBox {
 

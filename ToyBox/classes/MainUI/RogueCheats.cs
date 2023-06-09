@@ -16,6 +16,7 @@ namespace ToyBox {
         private static int reputationAdjustment = 100;
         private static int navigatorInsightAdjustment = 100;
         private static int scrapAdjustment = 100;
+        private static int profitFactorAdjustment = 1;
         private static int startingWidth = 250;
         public static void OnGUI() {
             if (factionsToPick == null) {
@@ -54,44 +55,60 @@ namespace ToyBox {
             Div();
             15.space();
             bool warpInit = Game.Instance.Player.WarpTravelState?.IsInitialized ?? false;
-            if (warpInit) {
-                using (HorizontalScope()) {
-                    Label("Current Navigator Insight".localize().bold() + ": ", Width(startingWidth));
-                    using (VerticalScope()) {
-                        Label(Game.Instance.Player.WarpTravelState.NavigatorResource.ToString());
+            VStack("Resources".localize().bold(),
+                () => {
+                    if (warpInit) {
                         using (HorizontalScope()) {
-                            Label("Adjust Navigator Insight by the following amount:".localize());
-                            IntTextField(ref navigatorInsightAdjustment, null, MinWidth(200), AutoWidth());
-                            navigatorInsightAdjustment = Math.Max(0, navigatorInsightAdjustment);
+                            Label("Current Navigator Insight".localize().bold() + ": ", Width(startingWidth));
+                            using (VerticalScope()) {
+                                Label(Game.Instance.Player.WarpTravelState.NavigatorResource.ToString());
+                                using (HorizontalScope()) {
+                                    Label("Adjust Navigator Insight by the following amount:".localize());
+                                    IntTextField(ref navigatorInsightAdjustment, null, MinWidth(200), AutoWidth());
+                                    navigatorInsightAdjustment = Math.Max(0, navigatorInsightAdjustment);
+                                    10.space();
+                                    ActionButton("Add".localize(), () => { CheatsGlobalMap.AddNavigatorResource(navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                                    10.space();
+                                    ActionButton("Remove".localize(), () => { CheatsGlobalMap.AddNavigatorResource(-navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                                }
+                            }
+                        }
+                    }
+                },
+            () => {
+                using (HorizontalScope()) {
+                    Label("Current Scrap".localize().bold() + ": ", Width(startingWidth));
+                    using (VerticalScope()) {
+                        Label(Game.Instance.Player.Scrap.m_Value.ToString());
+                        using (HorizontalScope()) {
+                            Label("Adjust Scrap by the following amount:".localize());
+                            IntTextField(ref scrapAdjustment, null, MinWidth(200), AutoWidth());
+                            scrapAdjustment = Math.Max(0, scrapAdjustment);
                             10.space();
-                            ActionButton("Add".localize(), () => { CheatsGlobalMap.AddNavigatorResource(navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                            ActionButton("Add".localize(), () => Game.Instance.Player.Scrap.Receive(scrapAdjustment));
                             10.space();
-                            ActionButton("Remove".localize(), () => { CheatsGlobalMap.AddNavigatorResource(-navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                            ActionButton("Remove".localize(), () => Game.Instance.Player.Scrap.Receive(-scrapAdjustment));
                         }
                     }
                 }
-                15.space();
-                Div();
-                15.space();
-            }
-            using (HorizontalScope()) {
-                Label("Current Scrap".localize().bold() + ": ", Width(startingWidth));
-                using (VerticalScope()) {
-                    Label(Game.Instance.Player.Scrap.m_Value.ToString());
-                    using (HorizontalScope()) {
-                        Label("Adjust Scrap by the following amount:".localize());
-                        IntTextField(ref scrapAdjustment, null, MinWidth(200), AutoWidth());
-                        scrapAdjustment = Math.Max(0, scrapAdjustment);
-                        10.space();
-                        ActionButton("Add".localize(), () => Game.Instance.Player.Scrap.Receive(scrapAdjustment));
-                        10.space();
-                        ActionButton("Remove".localize(), () => Game.Instance.Player.Scrap.Receive(-scrapAdjustment));
+            },
+            () => {
+                using (HorizontalScope()) {
+                    Label("Current Profit Factor".localize().bold() + ": ", Width(startingWidth));
+                    using (VerticalScope()) {
+                        Label(Game.Instance.Player.ProfitFactor.Current.ToString());
+                        using (HorizontalScope()) {
+                            Label("Adjust Profit Factor by the following amount:".localize());
+                            IntTextField(ref profitFactorAdjustment, null, MinWidth(200), AutoWidth());
+                            profitFactorAdjustment = Math.Max(0, profitFactorAdjustment);
+                            10.space();
+                            ActionButton("Add".localize(), () => CheatsColonization.AddPF(profitFactorAdjustment));
+                            10.space();
+                            ActionButton("Remove".localize(), () => CheatsColonization.AddPF(-profitFactorAdjustment));
+                        }
                     }
                 }
-            }
-            15.space();
-            Div();
-            15.space();
+            });
             VStack("Tweaks".localize().bold(),
                 () => {
                     using (HorizontalScope()) {

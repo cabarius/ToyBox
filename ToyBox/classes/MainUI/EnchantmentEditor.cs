@@ -32,6 +32,7 @@ namespace ToyBox.classes.MainUI {
         public static int selectedItemType;
         public static int selectedItemIndex;
         public static int selectedEnchantIndex;
+        public static int selectedPageItemIndex;
         public static string itemSearchText = "";
         public static (string, string) renameState = (null, null);
         public static ItemEntity selectedItem = null;
@@ -130,7 +131,8 @@ namespace ToyBox.classes.MainUI {
                                     }
                                 }
                                 var offset = Math.Min(inventory.Count, (_currentPage - 1) * searchLimit);
-                                selectedItem = inventory[offset + selectedItemIndex];
+                                selectedItemIndex = offset + selectedPageItemIndex;
+                                selectedItem = inventory[selectedItemIndex];
                             }, AutoWidth());
                             ActionButton("+", () => {
                                 if (_currentPage > _pageCount) _currentPage = 1;
@@ -141,7 +143,8 @@ namespace ToyBox.classes.MainUI {
                                     _currentPage += 1;
                                 }
                                 var offset = Math.Min(inventory.Count, (_currentPage - 1) * searchLimit);
-                                selectedItem = inventory[offset + selectedItemIndex];
+                                selectedItemIndex = offset + selectedPageItemIndex;
+                                selectedItem = inventory[selectedItemIndex];
                             }, AutoWidth());
                         }
                     }
@@ -159,10 +162,13 @@ namespace ToyBox.classes.MainUI {
                         var offset = Math.Min(inventory.Count, (_currentPage - 1) * searchLimit);
                         var limit = Math.Min(searchLimit, Math.Max(inventory.Count, inventory.Count - searchLimit));
                         ActionSelectionGrid(
-                            ref selectedItemIndex,
+                            ref selectedPageItemIndex,
                             inventory.Select(item => item.NameAndOwner(true)).Skip(offset).Take(limit).ToArray(),
                             1,
-                            index => selectedItem = inventory[offset + selectedItemIndex],
+                            index => {
+                                selectedItemIndex = offset + selectedPageItemIndex;
+                                selectedItem = inventory[selectedItemIndex];
+                            },
                             rarityButtonStyle,
                             Width(375));
                     }
@@ -486,11 +492,8 @@ namespace ToyBox.classes.MainUI {
         public static void AddEnchantment(ItemEntity item, BlueprintItemEnchantment enchantment, Rounds? duration = null) {
             if (item?.m_Enchantments == null)
                 Mod.Trace("item.m_Enchantments is null");
-#if Wrath
+
             var fake_context = new MechanicsContext(default); // if context is null, items may stack which could cause bugs
-#elif RT
-            var fake_context = new MechanicsContext(null, null, enchantment, null, null); // if context is null, items may stack which could cause bugs
-#endif
 
             //var fi = AccessTools.Field(typeof(MechanicsContext), nameof(MechanicsContext.AssociatedBlueprint));
             //fi.SetValue(fake_context, enchantment);  // check if AssociatedBlueprint must be set; I think not
