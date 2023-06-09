@@ -87,7 +87,7 @@
 ### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
 **ToyBox Wrath - 1.5.5 - Preview Version 1.5.5c** built for 2.1.4v
  * (***ADDB***) Fixed EnchantmentEditor paging selection add stuff
-### ToyBox Rogue - Ver 1.5.4
+### ToyBox Rogue - Ver 1.5.4c
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
  * Please enjoy the parts of the mod that do work (which is more than one might expect)
