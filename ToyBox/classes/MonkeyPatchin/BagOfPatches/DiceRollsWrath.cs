@@ -73,6 +73,10 @@ namespace ToyBox.BagOfPatches {
                     }
                     var min = 1;
                     var max = 21;
+                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollAtLeast10OutOfCombat) && result < 10 && !initiator.IsInCombat) {
+                        min = 10;
+                        result = UnityEngine.Random.Range(min, max);
+                    }
                     if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
                         result = UnityEngine.Random.Range(2, 21);
                         min = 2;

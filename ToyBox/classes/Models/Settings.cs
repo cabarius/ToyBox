@@ -362,6 +362,7 @@ namespace ToyBox {
         public UnitSelectType alwaysRoll10 = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20 = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20OutOfCombat = UnitSelectType.Off;
+        public UnitSelectType rollAtLeast10OutOfCombat = UnitSelectType.Off;
         public UnitSelectType neverRoll20 = UnitSelectType.Off;
         public UnitSelectType roll1Initiative = UnitSelectType.Off;
         public UnitSelectType roll10Initiative = UnitSelectType.Off;
