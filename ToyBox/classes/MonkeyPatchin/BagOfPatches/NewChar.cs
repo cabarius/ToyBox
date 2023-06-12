@@ -27,7 +27,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPriority(Priority.Low)]
             public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance, bool isPregen) {
                 // Kludge - there is some weirdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
-                var mainDescriptor = Game.Instance?.Player?.MainCharacter.Value?.Descriptor ?? null;
+                var mainDescriptor = Game.Instance?.Player?.MainCharacter.Value?.Descriptor;
                 if (mainDescriptor == null) return;
                 var isCustom = unit != mainDescriptor;
                 if ((isCustom && settings.characterCreationAbilityPointsOverrideMerc) || (!isCustom && settings.characterCreationAbilityPointsOverridePlayer)) {
