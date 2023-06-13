@@ -38,11 +38,8 @@ namespace ToyBox {
                     ?.ToList();
                 _allBuffs = BlueprintLoader.Shared.GetBlueprints<BlueprintBuff>()
                     ?.Where(bp => !bp.IsHiddenInUI
-#if Wrath
-                                  && !bp.HiddenInInspector
-#endif
-                                  && !bp.GetDisplayName().StartsWith("[unknown key")
-                                  && !bp.IsClassFeature && !bp.Harmful)
+                                  && !bp.IsClassFeature
+                                  && !bp.Harmful)
                     ?.OrderBy(b => b.GetDisplayName())
                     ?.ToList();
                 _searchResults = GetValidBuffsToAdd();
@@ -114,7 +111,7 @@ namespace ToyBox {
                 ? buffList
                 : buffList.Where(b =>
                     b.AssetGuidThreadSafe.ToLowerInvariant() == searchLower ||
-                    b.GetDisplayName().ToLowerInvariant().Contains(searchLower) ||
+                    BlueprintExtensions.GetSearchKey(b, true).ToLowerInvariant().Contains(searchLower) ||
                     b.NameSafe().ToLowerInvariant().Contains(searchLower));
             _displayedBuffs = GetPaginatedBuffs();
             SetPaginationString();
@@ -152,9 +149,9 @@ namespace ToyBox {
             var complexNameWidth = ummWidth / divisor;
             var guidWidth = ummWidth / divisor / 2;
             VStack(null, buffs?.Where(bp => showDefaults || !SettingsDefaults.DefaultBuffsToIgnoreForDurationMultiplier.Contains(bp.AssetGuidThreadSafe))
-                ?.OrderBy(b => b.GetDisplayName()).Select<BlueprintBuff, Action>(bp => () => {
+                ?.OrderBy(BlueprintExtensions.GetSortKey).Select<BlueprintBuff, Action>(bp => () => {
                     using (HorizontalScope()) {
-                        Label(bp.GetDisplayName().cyan().bold(), Width(titleWidth));
+                        Label(BlueprintExtensions.GetTitle(bp).cyan().bold(), Width(titleWidth));
                         Label(bp.NameSafe().orange().bold(), Width(complexNameWidth));
                         if (settings.showAssetIDs) {
                             ClipboardLabel(bp.AssetGuidThreadSafe, ExpandWidth(false), Width(guidWidth));
