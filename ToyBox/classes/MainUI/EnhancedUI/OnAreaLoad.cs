@@ -21,6 +21,7 @@ namespace ToyBox {
             SelectedCharacterObserver.Shared.Notifiers += SelectedCharacterDidChange;
             Mod.Log("OnAreaDidLoad");
             EnhancedInventory.RefreshRemappers();
+            BagOfPatches.Tweaks.NoWeight_Patch1.Refresh(Settings.toggleEquipmentNoWeight);
             if (Settings.toggleEnhancedSpellbook) {
                 LoadSpellbookSearchBar();
             }
@@ -89,7 +90,7 @@ namespace ToyBox {
                 Transform spellbook = Game.Instance.UI.MainCanvas.transform.Find(path);
                 if (spellbook != null) {
                     var controller = spellbook.gameObject.AddComponent<EnhancedSpellbookController>();
-//                    controller.Awake(); // FIXME - why do I have to call this? What is the proper way to get this controller installed and get awake called by the framework and not by Marria
+                    //                    controller.Awake(); // FIXME - why do I have to call this? What is the proper way to get this controller installed and get awake called by the framework and not by Marria
                 }
             }
         }

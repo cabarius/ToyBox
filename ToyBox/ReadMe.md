@@ -80,6 +80,7 @@
 **ToyBox Wrath - 1.5.5 - Preview Version 1.5.5d** built for 2.1.4v
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 * (***ADDB***) (Hopefuly) removed NullReferenceException in log for levelup stuff.
+* (***ADDB***) Equipment No Weight will now be applied when loading a save
  ## ToyBox Rogue - Ver 1.5.4c
  * Port for prelease versions of War Hammer 40000: Rogue Trader
  * This is a work in progress. 
