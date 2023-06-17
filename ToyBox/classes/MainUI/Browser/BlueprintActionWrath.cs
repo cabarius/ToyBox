@@ -1,21 +1,28 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using Kingmaker;
+using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.AreaLogic.QuestSystem;
+using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Quests;
+using Kingmaker.Crusade.GlobalMagic;
 using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.ContextData;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Kingdom;
+using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
@@ -25,19 +32,12 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.AI.Blueprints.Considerations;
-using Kingmaker.Armies.Blueprints;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Kingdom;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Crusade.GlobalMagic;
 
 namespace ToyBox {
-        public static partial class BlueprintActions {
+    public static partial class BlueprintActions {
         private static Dictionary<BlueprintParametrizedFeature, IFeatureSelectionItem[]> parametrizedSelectionItems = new();
         public static IFeatureSelectionItem ParametrizedSelectionItems(this BlueprintParametrizedFeature feature, int index) {
-            if (parametrizedSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null ;
+            if (parametrizedSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null;
             value = feature.Items.OrderBy(x => x.Name).ToArray();
             if (value == null) return null;
             parametrizedSelectionItems[feature] = value;
@@ -217,7 +217,6 @@ namespace ToyBox {
                                                     (bp, ch, n, index) => ch.Descriptor().Buffs.GetFact(bp)?.RemoveRank(),
                                                     (bp, ch, index) => {
                                                         var buff = ch.Descriptor().Buffs.GetFact(bp);
-
                                                         return buff?.GetRank() > 1;
                                                     });
 
@@ -225,8 +224,7 @@ namespace ToyBox {
                                                     (bp, ch, n, index) => ch.Descriptor().Buffs.GetFact(bp)?.AddRank(),
                                                     (bp, ch, index) => {
                                                         var buff = ch.Descriptor().Buffs.GetFact(bp);
-
-                                                        return buff != null && buff.GetRank() < buff.Blueprint.Ranks - 1;
+                                                        return buff != null && buff?.GetRank() < buff.Blueprint.Ranks - 1;
                                                     });
             // Kingdom Bufs
             BlueprintAction.Register<BlueprintKingdomBuff>("Add",
@@ -272,10 +270,10 @@ namespace ToyBox {
 
             // Army
             BlueprintAction.Register<BlueprintArmyPreset>("Add Friendly", (bp, ch, n, l) => {
-                Actions.CreateArmy(bp,true);
+                Actions.CreateArmy(bp, true);
             });
             BlueprintAction.Register<BlueprintArmyPreset>("Add Hostile", (bp, ch, n, l) => {
-                Actions.CreateArmy(bp,false);
+                Actions.CreateArmy(bp, false);
             });
 
             // ArmyGeneral
