@@ -73,11 +73,14 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
+### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
+**ToyBox Wrath - 1.5.6 - Preview Version 1.5.5f
+* ** built for 2.1.4w
 ### ToyBox Rogue - Ver 1.5.5 (Coming Soon)
 **ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5f** built for 0.2.1ah
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
-### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
-**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5f** built for 2.1.4w
+### ToyBox Wrath - Ver 1.5.5
+* (***ADDB***) updated game version 2.1.4m
 * (***ADDB***) Achievements unlocking stuff
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 * (***ADDB***) (Hopefuly) removed NullReferenceException in log for levelup stuff.
