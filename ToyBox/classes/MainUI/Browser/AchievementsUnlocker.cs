@@ -67,7 +67,12 @@ namespace ToyBox {
                     Label(text, Width((int)titleWidth));
 
                     if (maybeAchievement == null) {
-                        ActionButton("Unlock".localize(), () => achievement.Unlock(), Width(116));
+                        ActionButton("Unlock".localize(), () => {
+                        if (!achievement.IsUnlocked) {
+                            achievement.IsUnlocked = true;
+                            achievement.NeedCommit = true;
+                            Game.Instance?.Player?.Achievements.OnAchievementUnlocked(achievement);
+                        }, Width(116));
                         Space(70);
                     }
                     else {
