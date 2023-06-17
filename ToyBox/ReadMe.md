@@ -76,6 +76,7 @@
 ### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
 **ToyBox Wrath - 1.5.6 - **Preview Version 1.5.5a** built for 2.1.4w
 * (***ADDB***) Fix Equipment load being multiplied when entering a new area
+* (***ADDB***) Maybe fix stuck at collation... (probably not)
 ### ToyBox Rogue - Ver 1.5.5 (Coming Soon)
 **ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5a** built for 0.2.1ah
 * (***ADDB***) Made more Buffs visible in the exclusion editor.

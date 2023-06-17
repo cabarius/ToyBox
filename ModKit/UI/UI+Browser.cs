@@ -347,9 +347,9 @@ namespace ModKit {
                         if (!isCollating) {
                             _collationCancellationTokenSource = new();
                             _searchCancellationTokenSource?.Cancel();
-                            Task.Run(() => Collate(definitions, collator, sortKeys));
                             isCollating = true;
                             _needsRedoCollation = false;
+                            Task.Run(() => Collate(definitions, collator, sortKeys));
                         }
                         else {
                             _collationCancellationTokenSource.Cancel();
