@@ -74,10 +74,11 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.5 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5d** built for 0.2.1ah
+**ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5f** built for 0.2.1ah
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 ### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
-**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5d** built for 2.1.4v
+**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5f** built for 2.1.4w
+* (***ADDB***) Achievements unlocking stuff
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 * (***ADDB***) (Hopefuly) removed NullReferenceException in log for levelup stuff.
 * (***ADDB***) Equipment No Weight will now be applied when loading a save

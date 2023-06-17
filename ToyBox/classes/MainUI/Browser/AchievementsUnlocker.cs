@@ -16,7 +16,7 @@ namespace ToyBox {
         //TODO: Check in RT release version whether there is a good heuristic to check if an achievement is blocked on the platform
         public static void OnGUI() {
             bool justInit = false;
-            if (availableAchievements == null || availableAchievements?.Count == 0) {
+            if (availableAchievements == null || availableAchievements?.Count == 0 || justInit) {
                 UI.Label("Achievements not available until you load a save.".localize().yellow().bold());
                 availableAchievements = Game.Instance?.Player?
                     .Achievements?
@@ -67,7 +67,13 @@ namespace ToyBox {
                     Label(text, Width((int)titleWidth));
 
                     if (maybeAchievement == null) {
-                        ActionButton("Unlock".localize(), () => achievement.Unlock(), Width(116));
+                        ActionButton("Unlock".localize(), () => {
+                            if (!achievement.IsUnlocked) {
+                                achievement.IsUnlocked = true;
+                                achievement.NeedCommit = true;
+                                Game.Instance?.Player?.Achievements.OnAchievementUnlocked(achievement);
+                            }
+                        }, Width(116));
                         Space(70);
                     }
                     else {
