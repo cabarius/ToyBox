@@ -463,10 +463,9 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(ItemsCollection), nameof(ItemsCollection.DeltaWeight))]
         public static class NoWeight_Patch1 {
-            public static void Refresh(bool value) {
-                if (value)
-                    Game.Instance.Player.Inventory.Weight = 0f;
-                else
+            public static void Refresh(bool SetEquipmentWeightZero) {
+                Game.Instance.Player.Inventory.Weight = 0f;
+                if (!SetEquipmentWeightZero)
                     Game.Instance.Player.Inventory.UpdateWeight();
             }
 
