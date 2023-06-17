@@ -77,7 +77,7 @@
 **ToyBox Rogue - Ver 1.5.5 -** ***Sh0dan*** **Preview Version 1.5.5f** built for 0.2.1ah
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 ### ToyBox Wrath - Ver 1.5.5 (Coming Soon)
-**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5f** built for 2.1.4v
+**ToyBox Wrath - 1.5.5 - Preview Version 1.5.5f** built for 2.1.4w
 * (***ADDB***) Achievements unlocking stuff
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 * (***ADDB***) (Hopefuly) removed NullReferenceException in log for levelup stuff.
