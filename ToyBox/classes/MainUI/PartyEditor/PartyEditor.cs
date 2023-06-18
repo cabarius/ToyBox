@@ -172,7 +172,11 @@ namespace ToyBox {
                 var isOnTeam = player.AllCharacters.Contains(ch);
                 using (HorizontalScope()) {
                     var name = ch.CharacterName;
-                    if (Game.Instance.Player.AllCharacters.Contains(ch)) {
+                    if (Game.Instance.Player.AllCharacters.Contains(ch)
+#if RT
+                        || Game.Instance.Player.m_AllCharactersAndStarships.Contains(ch)
+#endif
+                        ) {
                         var oldEditState = nameEditState;
                         if (isWide) {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
@@ -189,7 +193,7 @@ namespace ToyBox {
 #if Wrath
                             ch.Descriptor().CustomName = name;
 #elif RT
-                                ch.Description.CustomName = name;
+                            ch.Description.CustomName = name;
 #endif
                             Main.SetNeedsResetGameUI();
                         }
