@@ -77,6 +77,7 @@
 **ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5b** built for 0.2.1ah
 ### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
 **ToyBox Wrath - 1.5.6 - Preview Version 1.5.5b** built for 2.1.4w
+* (***ADDB***) Stats Editor now also takes into account modifiers (e.g. items) when displaying stats; Changes done to Stats using ToyBox after this update will be listed under "Other" category.
 ### ToyBox Rogue - Ver 1.5.5a
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 * (***ADDB***) Fixed Stats Editor (stats not shown correctly and modifying was weird).
