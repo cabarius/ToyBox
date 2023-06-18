@@ -1,5 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
@@ -191,7 +192,7 @@ namespace ToyBox {
             }
             using (HorizontalScope()) {
                 528.space();
-//                AlignmentGrid(alignment, (a) => ch.Descriptor().Alignment.Set(a));
+                //                AlignmentGrid(alignment, (a) => ch.Descriptor().Alignment.Set(a));
             }
             Div(100, 20, 755);
 #endif
@@ -354,7 +355,20 @@ namespace ToyBox {
                     }
 
                     var key = $"{ch.CharacterName}-{statType}";
-                    var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
+                    var ToyBoxMod = modifiableValue.Modifiers.Where(m => m.SourceComponent == "ToyBox").FirstOrDefault();
+                    if (ToyBoxMod == default(ModifiableValue.Modifier)) {
+                        ToyBoxMod = new ModifiableValue.Modifier() {
+#if Wrath
+                            ModDescriptor = ModifierDescriptor.None,
+#elif RT
+                            ModDescriptor = ModifierDescriptor.OtherAdvancement,
+#endif
+                            StackMode = ModifiableValue.StackMode.ForceStack,
+                            SourceComponent = "ToyBox"
+                        };
+                        modifiableValue.AddModifier(ToyBoxMod);
+                    }
+                    var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.ModifiedValue;
                     var statName = statType.ToString();
                     if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
                         Div(100, 20, 755);
@@ -365,22 +379,27 @@ namespace ToyBox {
                         Space(25);
                         ActionButton(" < ",
                                      () => {
-                                         modifiableValue.BaseValue -= 1;
-                                         storedValue = modifiableValue.BaseValue;
+                                         ToyBoxMod.ModValue -= 1;
+                                         modifiableValue.UpdateValue();
+                                         storedValue = modifiableValue.ModifiedValue;
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(20);
-                        Label($"{modifiableValue.BaseValue}".orange().bold(), Width(50f));
+                        Label($"{modifiableValue.ModifiedValue}".orange().bold(), Width(50f));
                         ActionButton(" > ",
                                      () => {
-                                         modifiableValue.BaseValue += 1;
-                                         storedValue = modifiableValue.BaseValue;
+                                         ToyBoxMod.ModValue += 1;
+                                         modifiableValue.UpdateValue();
+                                         storedValue = modifiableValue.ModifiedValue;
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(25);
-                        ActionIntTextField(ref storedValue, (v) => { modifiableValue.BaseValue = v; }, Width(75));
+                        ActionIntTextField(ref storedValue, (v) => {
+                            ToyBoxMod.ModValue += v - modifiableValue.ModifiedValue;
+                            modifiableValue.UpdateValue();
+                        }, Width(75));
                         statEditorStorage[key] = storedValue;
                     }
                 }
