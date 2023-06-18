@@ -104,7 +104,7 @@ namespace ToyBox {
                         if (casterLevel > 0) {
                             ActionButton("-1 CL", () => CasterHelpers.LowerCasterLevel(spellbook), AutoWidth());
                         }
-                        if (casterLevel < 40) {
+                        if (casterLevel < 80) {
                             ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), AutoWidth());
                         }
                         // removes opposition schools; these are not cleared when removing facts; to add new opposition schools, simply add the corresponding fact again
