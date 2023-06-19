@@ -103,94 +103,108 @@ namespace ToyBox {
             return formatter(blueprint.name);
         }
         public static string GetSearchKey(SimpleBlueprint blueprint, bool forceDisplayInternalName = false) {
-            if (blueprint is IUIDataProvider uiDataProvider) {
-                string name;
-                bool isEmpty = true;
-                try {
-                    isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                }
-                catch (NullReferenceException) {
-                    Mod.Debug($"Error while getting name for {uiDataProvider}");
-                }
-                if (isEmpty) {
-                    name = blueprint.name;
-                }
-                else {
-                    if (uiDataProvider is BlueprintSpellbook spellbook)
-                        return $"{spellbook.Name} {spellbook.name}";
-                    name = uiDataProvider.Name;
-                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+            try {
+                if (blueprint is IUIDataProvider uiDataProvider) {
+                    string name;
+                    bool isEmpty = true;
+                    try {
+                        isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
+                    }
+                    catch (NullReferenceException) {
+                        Mod.Debug($"Error while getting name for {uiDataProvider}");
+                    }
+                    if (isEmpty) {
                         name = blueprint.name;
                     }
-                    else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
-                        name += $" : {blueprint.name}";
+                    else {
+                        if (uiDataProvider is BlueprintSpellbook spellbook)
+                            return $"{spellbook.Name} {spellbook.name}";
+                        name = uiDataProvider.Name;
+                        if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                            name = blueprint.name;
+                        }
+                        else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
+                            name += $" : {blueprint.name}";
+                        }
                     }
+                    return name.StripHTML();
                 }
-                return name.StripHTML();
-            }
-            else if (blueprint is BlueprintItemEnchantment enchantment) {
-                string name;
-                var isEmpty = string.IsNullOrEmpty(enchantment.Name);
-                if (isEmpty) {
-                    name = blueprint.name;
-                }
-                else {
-                    name = enchantment.Name;
-                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                    string name;
+                    var isEmpty = string.IsNullOrEmpty(enchantment.Name);
+                    if (isEmpty) {
                         name = blueprint.name;
                     }
-                    else if (Settings.showDisplayAndInternalNames) {
-                        name += $" : {blueprint.name}";
+                    else {
+                        name = enchantment.Name;
+                        if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                            name = blueprint.name;
+                        }
+                        else if (Settings.showDisplayAndInternalNames) {
+                            name += $" : {blueprint.name}";
+                        }
                     }
+                    return name.StripHTML();
                 }
-                return name.StripHTML();
+                return blueprint.name.StripHTML(); // can we get rid of this?
             }
-            return blueprint.name.StripHTML(); // can we get rid of this?
+            catch (Exception ex) {
+                Mod.Debug(ex.ToString());
+                Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
+                return "";
+            }
         }
         public static string GetSortKey(SimpleBlueprint blueprint) {
-            if (blueprint is IUIDataProvider uiDataProvider) {
-                string name;
-                bool isEmpty = true;
-                try {
-                    isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                }
-                catch (NullReferenceException) {
-                    Mod.Debug($"Error while getting name for {uiDataProvider}");
-                }
-                if (isEmpty) {
-                    name = blueprint.name;
-                }
-                else {
-                    if (blueprint is BlueprintSpellbook spellbook)
-                        return $"{spellbook.Name} - {spellbook.name}";
-                    name = uiDataProvider.Name;
-                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+            try {
+                if (blueprint is IUIDataProvider uiDataProvider) {
+                    string name;
+                    bool isEmpty = true;
+                    try {
+                        isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
+                    }
+                    catch (NullReferenceException) {
+                        Mod.Debug($"Error while getting name for {uiDataProvider}");
+                    }
+                    if (isEmpty) {
                         name = blueprint.name;
                     }
-                    else if (Settings.showDisplayAndInternalNames) {
-                        name += blueprint.name;
+                    else {
+                        if (blueprint is BlueprintSpellbook spellbook)
+                            return $"{spellbook.Name} - {spellbook.name}";
+                        name = uiDataProvider.Name;
+                        if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                            name = blueprint.name;
+                        }
+                        else if (Settings.showDisplayAndInternalNames) {
+                            name += blueprint.name;
+                        }
                     }
+                    return name;
                 }
-                return name;
-            }
-            else if (blueprint is BlueprintItemEnchantment enchantment) {
-                string name;
-                var isEmpty = string.IsNullOrEmpty(enchantment.Name);
-                if (isEmpty) {
-                    name = blueprint.name;
-                }
-                else {
-                    name = enchantment.Name;
-                    if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                    string name;
+                    var isEmpty = string.IsNullOrEmpty(enchantment.Name);
+                    if (isEmpty) {
                         name = blueprint.name;
                     }
-                    else if (Settings.showDisplayAndInternalNames) {
-                        name += blueprint.name;
+                    else {
+                        name = enchantment.Name;
+                        if (name == "<null>" || name.StartsWith("[unknown key: ")) {
+                            name = blueprint.name;
+                        }
+                        else if (Settings.showDisplayAndInternalNames) {
+                            name += blueprint.name;
+                        }
                     }
+                    return name;
                 }
-                return name;
+                return blueprint.name;
             }
-            return blueprint.name;
+            catch (Exception ex) {
+                Mod.Debug(ex.ToString());
+                Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
+                return "";
+            }
         }
         public static IEnumerable<string> Attributes(this SimpleBlueprint bp) {
             List<string> modifiers = new();

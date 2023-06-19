@@ -1,18 +1,18 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Facts;
 using Kingmaker.BundlesLoading;
 using ModKit;
 using System;
-using Kingmaker.Blueprints.Facts;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {
         public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
-        
+
         private LoadBlueprintsCallback callback;
         private List<SimpleBlueprint> _blueprintsInProcess;
         private List<SimpleBlueprint> blueprints;
@@ -37,7 +37,8 @@ namespace ToyBox {
             progress = (float)loaded / (float)total;
         }
 
-        internal readonly HashSet<string> badBlueprints = new() { "ce0842546b73aa34b8fcf40a970ede68", "2e3280bf21ec832418f51bee5136ec7a", "b60252a8ae028ba498340199f48ead67", "fb379e61500421143b52c739823b4082" };
+        internal readonly HashSet<string> badBlueprints = new() { "ce0842546b73aa34b8fcf40a970ede68", "2e3280bf21ec832418f51bee5136ec7a",
+            "b60252a8ae028ba498340199f48ead67", "fb379e61500421143b52c739823b4082", "5d2b9742ce82457a9ae7209dce770071" };
 
         private IEnumerator LoadBlueprints() {
             yield return null;
@@ -125,12 +126,12 @@ namespace ToyBox {
             var bps = GetBlueprints();
             return bps?.OfType<BPType>().ToList() ?? null;
         }
-        internal IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<BlueprintGuid> guids) where BPType: BlueprintFact {
+        internal IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<BlueprintGuid> guids) where BPType : BlueprintFact {
             var bps = GetBlueprints<BPType>();
             return bps?.Where(bp => guids.Contains(bp.AssetGuid));
         }
 #if Wrath        
-        public IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<string> guids) where BPType: BlueprintFact => GetBlueprintsByGuids<BPType>(guids.Select(g => BlueprintGuid.Parse(g)));
+        public IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<string> guids) where BPType : BlueprintFact => GetBlueprintsByGuids<BPType>(guids.Select(g => BlueprintGuid.Parse(g)));
 #endif        
     }
 
