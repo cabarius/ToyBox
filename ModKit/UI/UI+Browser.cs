@@ -139,7 +139,7 @@ namespace ModKit {
                 current ??= new List<Item>();
                 if (collationKey != prevCollationKey) {
                     prevCollationKey = collationKey;
-                    needsReloadData = true;
+                    ResetSearch();
                 }
                 List<Definition> definitions = Update(current, available, search, searchKey, sortKeys, definition, collator);
                 if (search || SearchLimit < _matchCount) {
