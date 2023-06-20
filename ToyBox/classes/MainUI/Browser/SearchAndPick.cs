@@ -431,91 +431,89 @@ namespace ToyBox {
                                         Space(17);
                                     }
                                     if (description.Length > 0) Label(description.green(), Width(remWidth));
-                                }
-                            }
 #if Wrath
-                            if (bp is BlueprintParametrizedFeature paramBP) {
-                                using (HorizontalScope()) {
-                                    Space(titleWidth);
-                                    using (VerticalScope()) {
-                                        using (HorizontalScope(GUI.skin.button)) {
-                                            var content = new GUIContent($"{paramBP.Name.yellow()}");
-                                            var labelWidth = GUI.skin.label.CalcSize(content).x;
-                                            Label(content, Width(labelWidth));
-                                            Space(25);
-                                            var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
-                                            if (nameStrings == null) {
-                                                nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
-                                                paramBPValueNames[paramBP] = nameStrings;
+                                    if (bp is BlueprintParametrizedFeature paramBP) {
+                                        using (HorizontalScope()) {
+                                            using (VerticalScope()) {
+                                                using (HorizontalScope(GUI.skin.button)) {
+                                                    var content = new GUIContent($"{paramBP.Name.yellow()}");
+                                                    var labelWidth = GUI.skin.label.CalcSize(content).x;
+                                                    Label(content, Width(labelWidth));
+                                                    Space(25);
+                                                    var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
+                                                    if (nameStrings == null) {
+                                                        nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
+                                                        paramBPValueNames[paramBP] = nameStrings;
+                                                    }
+                                                    ActionSelectionGrid(
+                                                        ref ParamSelected[count],
+                                                        nameStrings,
+                                                        6,
+                                                        (selected) => { },
+                                                        GUI.skin.toggle,
+                                                        Width(remWidth)
+                                                    );
+                                                    //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
+                                                }
+                                                Space(15);
                                             }
-                                            ActionSelectionGrid(
-                                                ref ParamSelected[count],
-                                                nameStrings,
-                                                6,
-                                                (selected) => { },
-                                                GUI.skin.toggle,
-                                                Width(remWidth)
-                                            );
-                                            //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                                         }
-                                        Space(15);
                                     }
-                                }
-                            }
 #endif
-                            if (bp is BlueprintFeatureSelection selectionBP) {
-                                using (HorizontalScope()) {
-                                    Space(titleWidth);
-                                    using (VerticalScope()) {
-                                        var needsSelection = false;
-                                        var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
-                                        if (nameStrings == null) {
-                                            needsSelection = true;
-                                            nameStrings = selectionBP.AllFeatures.Select(x => x.NameSafe()).OrderBy(x => x).ToArray().TrimCommonPrefix();
-                                            selectionBPValuesNames[selectionBP] = nameStrings;
-                                        }
-                                        using (HorizontalScope(GUI.skin.button)) {
-                                            var content = new GUIContent($"{selectionBP.Name.yellow()}");
-                                            var labelWidth = GUI.skin.label.CalcSize(content).x;
-                                            //UI.Space(indent + titleWidth - labelWidth - 25);
-                                            Label(content, Width(labelWidth));
-                                            Space(25);
+                                    if (bp is BlueprintFeatureSelection selectionBP) {
+                                        using (HorizontalScope()) {
+                                            using (VerticalScope()) {
+                                                var needsSelection = false;
+                                                var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
+                                                if (nameStrings == null) {
+                                                    needsSelection = true;
+                                                    nameStrings = selectionBP.AllFeatures.Select(x => x.NameSafe()).OrderBy(x => x).ToArray().TrimCommonPrefix();
+                                                    selectionBPValuesNames[selectionBP] = nameStrings;
+                                                }
+                                                using (HorizontalScope(GUI.skin.button)) {
+                                                    var content = new GUIContent($"{selectionBP.Name.yellow()}");
+                                                    var labelWidth = GUI.skin.label.CalcSize(content).x;
+                                                    //UI.Space(indent + titleWidth - labelWidth - 25);
+                                                    Label(content, Width(labelWidth));
+                                                    Space(25);
 
-                                            ActionSelectionGrid(
-                                                ref ParamSelected[count],
-                                                nameStrings,
-                                                4,
-                                                (selected) => { },
-                                                GUI.skin.toggle,
-                                                Width(remWidth)
-                                            );
-                                            //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
-                                        }
+                                                    ActionSelectionGrid(
+                                                        ref ParamSelected[count],
+                                                        nameStrings,
+                                                        4,
+                                                        (selected) => { },
+                                                        GUI.skin.toggle,
+                                                        Width(remWidth)
+                                                    );
+                                                    //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
+                                                }
 
 #if Wrath
-                                        if (selectedUnit != null) {
-                                        if (selectedUnit.Value.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
-                                                foreach (var entry in selectionData.SelectionsByLevel) {
-                                                    foreach (var selection in entry.Value) {
-                                                        if (needsSelection) {
-                                                            ParamSelected[count] = selectionBP.AllFeatures.IndexOf(selection);
-                                                            needsSelection = false;
-                                                        }
-                                                        using (HorizontalScope()) {
-                                                            ActionButton("Remove", () => {
+                                                if (selectedUnit != null) {
+                                                    if (selectedUnit.Value.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
+                                                        foreach (var entry in selectionData.SelectionsByLevel) {
+                                                            foreach (var selection in entry.Value) {
+                                                                if (needsSelection) {
+                                                                    ParamSelected[count] = selectionBP.AllFeatures.IndexOf(selection);
+                                                                    needsSelection = false;
+                                                                }
+                                                                using (HorizontalScope()) {
+                                                                    ActionButton("Remove", () => {
 
-                                                            }, Width(160));
-                                                            Space(25);
-                                                            Label($"{entry.Key} ".yellow() + selection.Name.orange(), Width(250));
-                                                            Space(25);
-                                                            Label(selection.Description.StripHTML().green());
+                                                                    }, Width(160));
+                                                                    Space(25);
+                                                                    Label($"{entry.Key} ".yellow() + selection.Name.orange(), Width(250));
+                                                                    Space(25);
+                                                                    Label(selection.Description.StripHTML().green());
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
+#endif
+                                                Space(15);
                                             }
                                         }
-#endif
-                                        Space(15);
                                     }
                                 }
                             }
