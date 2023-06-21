@@ -1,5 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.EntitySystem.Entities;
@@ -11,6 +12,7 @@ using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Visual.LightSelector;
 using ModKit;
 using ModKit.Utility;
+using Owlcat.Runtime.Core.Physics.PositionBasedDynamics.Bodies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -184,7 +186,6 @@ namespace ToyBox {
 
                                     }
                                 }, 1, 0, 120);
-
                         }
                         index++;
                     }
@@ -349,26 +350,17 @@ namespace ToyBox {
                     var modifiableValue = ch.Stats.GetStat(statType);
 #elif RT
                     var modifiableValue = ch.Stats.GetStatOptional(statType);
-#endif                    
+#endif
                     if (modifiableValue == null) {
                         continue;
                     }
 
                     var key = $"{ch.CharacterName}-{statType}";
-                    var ToyBoxMod = modifiableValue.Modifiers.Where(m => m.SourceComponent == "ToyBox").FirstOrDefault();
-                    if (ToyBoxMod == default(ModifiableValue.Modifier)) {
-                        ToyBoxMod = new ModifiableValue.Modifier() {
 #if Wrath
-                            ModDescriptor = ModifierDescriptor.None,
+                    var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
 #elif RT
-                            ModDescriptor = ModifierDescriptor.OtherAdvancement,
-#endif
-                            StackMode = ModifiableValue.StackMode.ForceStack,
-                            SourceComponent = "ToyBox"
-                        };
-                        modifiableValue.AddModifier(ToyBoxMod);
-                    }
                     var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.ModifiedValue;
+#endif
                     var statName = statType.ToString();
                     if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
                         Div(100, 20, 755);
@@ -379,32 +371,45 @@ namespace ToyBox {
                         Space(25);
                         ActionButton(" < ",
                                      () => {
-                                         ToyBoxMod.ModValue -= 1;
+                                         modifiableValue.BaseValue -= 1;
                                          modifiableValue.UpdateValue();
+#if Wrath
+                                         storedValue = modifiableValue.BaseValue;
+#elif RT
                                          storedValue = modifiableValue.ModifiedValue;
+#endif
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(20);
-                        Label($"{modifiableValue.ModifiedValue}".orange().bold(), Width(50f));
+#if Wrath
+                        var val = modifiableValue.BaseValue;
+#elif RT
+                        var val = modifiableValue.ModifiedValue;
+#endif
+                        Label($"{val}".orange().bold(), Width(50f));
                         ActionButton(" > ",
                                      () => {
-                                         ToyBoxMod.ModValue += 1;
+                                         modifiableValue.BaseValue += 1;
                                          modifiableValue.UpdateValue();
+#if Wrath
+                                         storedValue = modifiableValue.BaseValue;
+#elif RT
                                          storedValue = modifiableValue.ModifiedValue;
+#endif
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(25);
                         ActionIntTextField(ref storedValue, (v) => {
-                            ToyBoxMod.ModValue += v - modifiableValue.ModifiedValue;
+                            modifiableValue.BaseValue += v - modifiableValue.ModifiedValue;
                             modifiableValue.UpdateValue();
                         }, Width(75));
                         statEditorStorage[key] = storedValue;
                     }
                 }
                 catch (Exception ex) {
-                    //Mod.Error(ex);
+                    // Mod.Error(ex);
                 }
             }
             return todo;

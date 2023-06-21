@@ -74,13 +74,13 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.6 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5c** built for 0.2.1ah
+**ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5d** built for 0.2.1ah
 * (***ADDB***) Fixed Search 'n Pick Category Switching not doing anything when a search query is already entered.
+* (***ADDB***) Fixed changing stats not persisting through save+load.
 ### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5c** built for 2.1.4w
+**ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5d** built for 2.1.4w
 * (***ADDB***) Fixed Search 'n Pick Category Switching not doing anything when a search query is already entered.
 * (***ADDB***) Adjusted Search 'n Pick Parameterized Blueprints Layout.
-* (***ADDB***) Stats Editor now also takes into account modifiers (e.g. items) when displaying stats; Changes done to Stats using ToyBox after this update will be listed under "Other" category.
 * (***ADDB***) Search 'n Pick is now no longer stuck at Collating... when using Path of Rage.
 * (***ADDB***) Search 'n Pick is now no longer stuck at Collating... in some cases. If you still encounter this bug please report it on Discord.
 ### ToyBox Rogue - Ver 1.5.5a
