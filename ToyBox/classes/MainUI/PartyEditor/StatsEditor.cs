@@ -31,30 +31,46 @@ namespace ToyBox {
         private static readonly Dictionary<string, PortraitData> _portraitsByID = new();
         private static bool _portraitsLoaded = false;
         private static int _increase = 1;
+        private static Browser<string, string> portraitBrowser;
         private static bool listPortraits = false;
         private static string newPortraitName = "";
         private static bool unknownID = false;
 
-        public static void OnPortraitGUI(string customID, float scaling = 0.5f) {
+        public static void UnloadPortraits(bool force = false) {
+            if (!force && !_portraitsLoaded) return;
+            _portraitsByID.Clear();
+            _portraitsLoaded = false;
+            portraitBrowser = null;
+            CustomPortraitsManager.Instance.Cleanup();
+        }
+
+        public static void OnPortraitGUI(string customID, float scaling = 0.4f) {
             PortraitData portraitData = null;
-            if (!_portraitsByID.TryGetValue(customID, out portraitData)) return;
-            using (VerticalScope(400.width())) {
+            bool loaded = true;
+            if (!_portraitsByID.TryGetValue(customID, out portraitData)) {
+                portraitData = new PortraitData(customID);
+                if (portraitData.DirectoryExists()) {
+                    _portraitsByID[customID] = CustomPortraitsManager.CreatePortraitData(customID);
+                }
+                else {
+                    loaded = false;
+                }
+            }
+            if (loaded) {
                 var sprite = portraitData.FullLengthPortrait;
                 var w = (int)(sprite.rect.width * scaling);
                 var h = (int)(sprite.rect.height * scaling);
-                if (GUILayout.Button(portraitData.FullLengthPortrait.texture, rarityStyle, w.width(), h.height())) {
-                    newPortraitName = customID;
+                using (VerticalScope((w + 10).width())) {
+                    if (GUILayout.Button(portraitData.FullLengthPortrait.texture, rarityStyle, w.width(), h.height())) {
+                        newPortraitName = customID;
+                    }
+                    Label(customID);
                 }
-                Label(customID);
             }
         }
         public static List<Action> OnStatsGUI(UnitEntityData ch) {
             List<Action> todo = new();
             Div(100, 20, 755);
-            if (!_portraitsLoaded) {
-                CustomPortraitsManager.Instance.LoadAllPortraitsSmoothly(pd => _portraitsByID[pd.CustomId] = pd);
-                _portraitsLoaded = true;
-            }
             using (HorizontalScope()) {
                 100.space();
                 using (VerticalScope()) {
@@ -68,7 +84,7 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         Label("Enter the name of the new custom portrait you want to use: ".localize(), Width(425));
                         TextField(ref newPortraitName, null, MinWidth(200), AutoWidth());
-                        ActionButton("Change Portrait", () => todo.Add(() => {
+                        ActionButton("Change Portrait".localize(), () => todo.Add(() => {
                             if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds().Contains(newPortraitName)) {
                                 ch.UISettings.SetPortrait(new PortraitData(newPortraitName));
                                 Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
@@ -84,23 +100,29 @@ namespace ToyBox {
                             Label("Unknown ID!".localize().Red());
                         }
                     }
-                    DisclosureToggle("Show Portrait Picker", ref listPortraits);
-                    using (HorizontalScope()) {
-                        if (listPortraits) {
-                            Space(15);
-                            if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds() is string[] customIDs) {
-                                var count = customIDs.Length;
-                                using (VerticalScope()) {
-                                    for (var ii = 0; ii < count; ii++) {
-                                        using (HorizontalScope()) {
-                                            for (var jj = ii; jj < Math.Min(ii + 6, count); jj++) {
-                                                var customID = customIDs[jj];
-                                                OnPortraitGUI(customID);
+                    DisclosureToggle("Show Portrait Picker".localize(), ref listPortraits);
+                    if (listPortraits) {
+                        if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds() is string[] customIDs) {
+                            if (portraitBrowser == null) {
+                                portraitBrowser = new(true, true, false, true);
+                                _portraitsLoaded = true;
+                                portraitBrowser.DisplayShowAllGUI = false;
+                            }
+                            portraitBrowser.OnGUI(customIDs, () => customIDs, ID => ID, ID => ID, ID => new[] { ID }, null, null, null, 50, true, true, 100, 300, "", false, null,
+                                (definitions, _currentDict) => {
+                                    var count = definitions.Count;
+                                    using (VerticalScope()) {
+                                        for (var ii = 0; ii < count; ii++) {
+                                            var tmp = ii;
+                                            using (HorizontalScope()) {
+                                                for (; ii < Math.Min(tmp + 6, count); ii++) {
+                                                    var customID = definitions[ii];
+                                                    OnPortraitGUI(customID);
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            }
+                                });
                         }
                     }
                 }
