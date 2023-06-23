@@ -106,13 +106,14 @@ namespace ToyBox {
                             if (portraitBrowser == null) {
                                 portraitBrowser = new(true, true, false, true);
                                 _portraitsLoaded = true;
+                                portraitBrowser.SearchLimit = 18;
                                 portraitBrowser.DisplayShowAllGUI = false;
                             }
                             portraitBrowser.OnGUI(customIDs, () => customIDs, ID => ID, ID => ID, ID => new[] { ID }, null, null, null, 50, true, true, 100, 300, "", false, null,
                                 (definitions, _currentDict) => {
                                     var count = definitions.Count;
                                     using (VerticalScope()) {
-                                        for (var ii = 0; ii < count; ii++) {
+                                        for (var ii = 0; ii < count;) {
                                             var tmp = ii;
                                             using (HorizontalScope()) {
                                                 for (; ii < Math.Min(tmp + 6, count); ii++) {
