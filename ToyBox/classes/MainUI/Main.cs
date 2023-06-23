@@ -3,10 +3,8 @@
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.GameModes;
-using Kingmaker.UI.Common;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
-using Kingmaker.Utility;
 using ModKit;
 using ModKit.DataViewer;
 using Owlcat.Runtime.Core.Logging;
@@ -16,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Kingmaker.Items;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using UniRx;
@@ -24,18 +21,14 @@ using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
 using LocalizationManager = ModKit.LocalizationManager;
+using Kingmaker.UI.Common;
 #if RT
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.LifeEvents;
-using Kingmaker.UI.Models.Log.GameLogCntxt;
-using Kingmaker.Code.UI.MVVM.VM.Tooltip.Templates;
-using Owlcat.Runtime.UniRx;
 #endif
 #if Wrath
 using ToyBox.Multiclass;
 #elif RT
-using Kingmaker.Blueprints.Root.Strings.GameLog;
 using Kingmaker.UI.Models.Log.Enums;
-using System.Web.UI.WebControls;
 #endif
 
 namespace ToyBox {
