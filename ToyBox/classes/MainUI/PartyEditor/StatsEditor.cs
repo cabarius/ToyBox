@@ -32,8 +32,12 @@ namespace ToyBox {
         private static bool _portraitsLoaded = false;
         private static int _increase = 1;
         private static Browser<string, string> portraitBrowser;
-        private static bool listPortraits = false;
+        private static Browser<BlueprintPortrait, BlueprintPortrait> blueprintPortraitBrowser;
+        private static bool listCustomPortraits = false;
+        private static bool listBlueprintPortraits = false;
+        private static List<BlueprintPortrait> blueprintBps = null;
         private static string newPortraitName = "";
+        private static BlueprintPortrait newBlueprintPortrait = null;
         private static bool unknownID = false;
 
         public static void UnloadPortraits(bool force = false) {
@@ -43,8 +47,7 @@ namespace ToyBox {
             portraitBrowser = null;
             CustomPortraitsManager.Instance.Cleanup();
         }
-
-        public static void OnPortraitGUI(string customID, float scaling = 0.4f) {
+        public static void OnPortraitGUI(string customID, float scaling = 0.5f, bool isButton = true, int targetWidth = 0) {
             PortraitData portraitData = null;
             bool loaded = true;
             if (!_portraitsByID.TryGetValue(customID, out portraitData)) {
@@ -58,50 +61,89 @@ namespace ToyBox {
             }
             if (loaded) {
                 var sprite = portraitData.FullLengthPortrait;
-                var w = (int)(sprite.rect.width * scaling);
-                var h = (int)(sprite.rect.height * scaling);
+                int w, h;
+                if (targetWidth == 0) {
+                    w = (int)(sprite.rect.width * scaling);
+                    h = (int)(sprite.rect.height * scaling);
+                }
+                else {
+                    w = targetWidth;
+                    h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
+                }
                 using (VerticalScope((w + 10).width())) {
-                    if (GUILayout.Button(portraitData.FullLengthPortrait.texture, rarityStyle, w.width(), h.height())) {
-                        newPortraitName = customID;
+                    if (isButton) {
+                        if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
+                            newPortraitName = customID;
+                        }
+                    }
+                    else {
+                        GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
                     Label(customID);
                 }
             }
         }
+        public static void OnPortraitGUI(BlueprintPortrait portrait, float scaling = 0.5f, bool isButton = true, int targetWidth = 0) {
+            if (portrait != null) {
+                var sprite = portrait.FullLengthPortrait;
+                if (sprite == null) return;
+                int w, h;
+                if (targetWidth == 0) {
+                    w = (int)(sprite.rect.width * scaling);
+                    h = (int)(sprite.rect.height * scaling);
+                }
+                else {
+                    w = targetWidth;
+                    h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
+                }
+                using (VerticalScope((w + 10).width())) {
+                    if (isButton) {
+                        if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
+                            newBlueprintPortrait = portrait;
+                        }
+                    }
+                    else {
+                        GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
+                    }
+                    Label(BlueprintExtensions.GetTitle(portrait));
+                }
+            }
+        }
         public static List<Action> OnStatsGUI(UnitEntityData ch) {
             List<Action> todo = new();
-            Div(100, 20, 755);
             using (HorizontalScope()) {
                 100.space();
                 using (VerticalScope()) {
                     if (ch.UISettings.Portrait.IsCustom) {
                         Label("Current Custom Portrait".localize());
-                        OnPortraitGUI(ch.UISettings.Portrait.CustomId, 0.25f);
+                        OnPortraitGUI(ch.UISettings.Portrait.CustomId, 0.25f, false);
                     }
                     else {
-                        Label("No Custom Portrait used!".localize());
+                        Label("Current Blueprint Portrait".localize());
+                        OnPortraitGUI(ch.UISettings.PortraitBlueprint, 0.25f, false, (int)(0.25f * 692));
                     }
-                    using (HorizontalScope()) {
-                        Label("Enter the name of the new custom portrait you want to use: ".localize(), Width(425));
-                        TextField(ref newPortraitName, null, MinWidth(200), AutoWidth());
-                        ActionButton("Change Portrait".localize(), () => todo.Add(() => {
-                            if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds().Contains(newPortraitName)) {
-                                ch.UISettings.SetPortrait(new PortraitData(newPortraitName));
-                                Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
-                                unknownID = false;
+                    Div(0, 20, 755);
+                    DisclosureToggle("Show Custom Portrait Picker".localize(), ref listCustomPortraits);
+                    if (listCustomPortraits) {
+                        using (HorizontalScope()) {
+                            Label("Name of the new Custom Portrait: ".localize(), Width(425));
+                            TextField(ref newPortraitName, null, MinWidth(200), AutoWidth());
+                            ActionButton("Change Portrait".localize(), () => todo.Add(() => {
+                                if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds().Contains(newPortraitName)) {
+                                    ch.UISettings.SetPortrait(new PortraitData(newPortraitName));
+                                    Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
+                                    unknownID = false;
+                                }
+                                else {
+                                    Mod.Warn($"No portrait with name {newPortraitName}");
+                                    unknownID = true;
+                                }
+                            }));
+                            if (unknownID) {
+                                25.space();
+                                Label("Unknown ID!".localize().Red());
                             }
-                            else {
-                                Mod.Warn($"No portrait with name {newPortraitName}");
-                                unknownID = true;
-                            }
-                        }));
-                        if (unknownID) {
-                            25.space();
-                            Label("Unknown ID!".localize().Red());
                         }
-                    }
-                    DisclosureToggle("Show Portrait Picker".localize(), ref listPortraits);
-                    if (listPortraits) {
                         if (CustomPortraitsManager.Instance.GetExistingCustomPortraitIds() is string[] customIDs) {
                             if (portraitBrowser == null) {
                                 portraitBrowser = new(true, true, false, true);
@@ -109,7 +151,7 @@ namespace ToyBox {
                                 portraitBrowser.SearchLimit = 18;
                                 portraitBrowser.DisplayShowAllGUI = false;
                             }
-                            portraitBrowser.OnGUI(customIDs, () => customIDs, ID => ID, ID => ID, ID => new[] { ID }, null, null, null, 50, true, true, 100, 300, "", false, null,
+                            portraitBrowser.OnGUI(customIDs, () => customIDs, ID => ID, ID => ID, ID => new[] { ID }, null, null, null, 0, true, true, 100, 300, "", false, null,
                                 (definitions, _currentDict) => {
                                     var count = definitions.Count;
                                     using (VerticalScope()) {
@@ -118,7 +160,49 @@ namespace ToyBox {
                                             using (HorizontalScope()) {
                                                 for (; ii < Math.Min(tmp + 6, count); ii++) {
                                                     var customID = definitions[ii];
-                                                    OnPortraitGUI(customID);
+                                                    // 6 Portraits per row; 692px per image + buffer
+                                                    OnPortraitGUI(customID, (ummWidth - 100) / (6 * 780));
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                    }
+                    DisclosureToggle("Show Blueprint Portrait Picker".localize(), ref listBlueprintPortraits);
+                    if (listBlueprintPortraits) {
+                        using (HorizontalScope()) {
+                            Label("Name of the new Blueprintportrait: ".localize(), Width(425));
+                            if (newBlueprintPortrait != null)
+                                Label(BlueprintExtensions.GetTitle(newBlueprintPortrait), MinWidth(200), AutoWidth());
+                            else
+                                200.space();
+                            ActionButton("Change Portrait".localize(), () => todo.Add(() => {
+                                if (newBlueprintPortrait != null) {
+                                    ch.UISettings.SetPortrait(newBlueprintPortrait);
+                                    Mod.Debug($"Changed portrait of {ch.CharacterName} to {BlueprintExtensions.GetTitle(newBlueprintPortrait)}");
+                                }
+                            }));
+                        }
+                        if (Event.current.type == EventType.Layout && blueprintBps == null) {
+                            blueprintBps = BlueprintLoader.Shared.GetBlueprints<BlueprintPortrait>();
+                        }
+                        if (blueprintBps != null) {
+                            if (blueprintPortraitBrowser == null) {
+                                blueprintPortraitBrowser = new(true, true, false, true);
+                                blueprintPortraitBrowser.SearchLimit = 18;
+                                blueprintPortraitBrowser.DisplayShowAllGUI = false;
+                            }
+                            blueprintPortraitBrowser.OnGUI(blueprintBps, () => blueprintBps, ID => ID, ID => BlueprintExtensions.GetSearchKey(ID), ID => new[] { BlueprintExtensions.GetSortKey(ID) }, null, null, null, 0, true, true, 100, 300, "", false, null,
+                                (definitions, _currentDict) => {
+                                    var count = definitions.Count;
+                                    using (VerticalScope()) {
+                                        for (var ii = 0; ii < count;) {
+                                            var tmp = ii;
+                                            using (HorizontalScope()) {
+                                                for (; ii < Math.Min(tmp + 6, count); ii++) {
+                                                    // 6 Portraits per row; 692px per image + buffer
+                                                    OnPortraitGUI(definitions[ii], 3.76f * ((ummWidth - 100) / (6 * 780)), true, (int)(692 * (ummWidth - 100) / (6 * 780)));
                                                 }
                                             }
                                         }
