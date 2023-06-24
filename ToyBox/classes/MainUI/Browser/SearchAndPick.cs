@@ -53,12 +53,15 @@ namespace ToyBox {
         // Need to cache the collators; if not then certain Category changes can lead to Cast Errors
         // Example All -> Spellbooks
         public static Dictionary<Type, Func<SimpleBlueprint, List<string>>> collatorCache = new();
+        public static Dictionary<string, string> keyToDisplayName = new();
         public static int collationPickerPageCount => (int)Math.Ceiling((double)collationKeys?.Count / collationPickerPageSize);
         public static int collationPickerCurrentPage = 1;
         public static int repeatCount = 1;
         public static int selectedCollationIndex = 0;
         public static string collationSearchText = "";
         public static string parameter = "";
+        public static bool needsRedoKeys = true;
+        public static int bpCount = 0;
         public static List<string> collationKeys;
         public static UnitReference selectedUnit;
         public static Browser<SimpleBlueprint, SimpleBlueprint> SearchAndPickBrowser = new();
@@ -213,13 +216,19 @@ namespace ToyBox {
         }
 
         public static void OnGUI() {
-            if (Event.current.type == EventType.Layout) {
+            if (Event.current.type == EventType.Layout && (SearchAndPickBrowser.isCollating || needsRedoKeys)) {
+                needsRedoKeys = SearchAndPickBrowser.isCollating;
                 var count = SearchAndPickBrowser.collatedDefinitions.Keys.Count;
                 var tmp = new string[(int)(1.1 * count) + 10];
                 SearchAndPickBrowser.collatedDefinitions.Keys.CopyTo(tmp, 0);
-                collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s)).ToList();
-                collationKeys.Sort();
+                collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s) && SearchAndPickBrowser.collatedDefinitions[s].Count > 0).ToList();
+                collationKeys.Sort(Comparer<string>.Create((x, y) => {
+                    return SearchAndPickBrowser.collatedDefinitions[y].Count.CompareTo(SearchAndPickBrowser.collatedDefinitions[x].Count);
+                }));
+                keyToDisplayName.Clear();
+                collationKeys.ForEach(s => keyToDisplayName[s] = $"{s} ({SearchAndPickBrowser.collatedDefinitions[s]?.Count})");
                 collationKeys.Insert(0, "All");
+                keyToDisplayName["All"] = $"All ({bpCount})";
             }
             if (blueprints == null) {
                 SearchAndPickBrowser.DisplayShowAllGUI = false;
@@ -243,7 +252,7 @@ namespace ToyBox {
                 }
                 remainingWidth -= 350;
                 if (collationKeys?.Count > 0) {
-                    if (PagedVPicker("Categories".localize(), ref SearchAndPickBrowser.collationKey, collationKeys.ToList(), null, s => s, ref collationSearchText, ref collationPickerPageSize, ref collationPickerCurrentPage, Width(300))) {
+                    if (PagedVPicker("Categories".localize(), ref SearchAndPickBrowser.collationKey, collationKeys.ToList(), null, s => keyToDisplayName[s], ref collationSearchText, ref collationPickerPageSize, ref collationPickerCurrentPage, Width(300))) {
                         Mod.Debug($"collationKey: {SearchAndPickBrowser.collationKey}");
                     }
                     remainingWidth -= 450;
@@ -538,6 +547,7 @@ namespace ToyBox {
                        where selectedTypeFilter.filter(bp)
                        select bp;
             RedoLayout();
+            bpCount = bps.Count();
             SearchAndPickBrowser.RedoCollation();
         }
 
