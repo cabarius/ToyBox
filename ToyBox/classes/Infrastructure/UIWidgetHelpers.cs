@@ -37,9 +37,7 @@ namespace ToyBox {
         // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig
 #if Wrath
         public static Transform SearchViewPrototype
-            => Main.IsInGame
-                   ? Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView")
-                   : Game.Instance.UI.MainMenu.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
+            => Game.Instance?.UI?.MainCanvas?.transform?.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView") ?? Game.Instance?.UI?.MainMenu?.transform?.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
 #elif RT
         public static Transform SearchViewPrototype => throw new NotImplementedException();
 #endif
@@ -63,8 +61,8 @@ namespace ToyBox {
 
             public virtual string CharacterScreen => "CharacterInfoView/CharacterScreen";
             // If we ever need to support old stuff then put something for the following
-            public virtual string InventoryScreen => throw new NotImplementedException(); 
-            public virtual string LocalMapScreen => throw new NotImplementedException(); 
+            public virtual string InventoryScreen => throw new NotImplementedException();
+            public virtual string LocalMapScreen => throw new NotImplementedException();
         }
 
         class WidgetPaths_1_1 : WidgetPaths_1_0 {
