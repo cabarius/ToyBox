@@ -74,13 +74,19 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.6 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5d** built for 0.2.1ah
+**ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5e** built for 0.2.1ah
+* (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
+* (***ADDB***) Portrait Picker is now implemented as a Browser to save RAM; portraits are now unloaded when changing away from the Stats tab.
 * (***ADDB***) Fixed Search 'n Pick Category Switching not doing anything when a search query is already entered.
+* (***ADDB***) Search 'n Pick Collation Categories are now sorted by the number of entries (again).
 * (***ADDB***) Fixed changing stats not persisting through save+load.
 ### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5d** built for 2.1.4w
+**ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5e** built for 2.1.4w
+* (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
+* (***ADDB***) Portrait Picker is now implemented as a Browser to save RAM; portraits are now unloaded when changing away from the Stats tab.
 * (***ADDB***) Fixed Search 'n Pick Category Switching not doing anything when a search query is already entered.
 * (***ADDB***) Adjusted Search 'n Pick Parameterized Blueprints Layout.
+* (***ADDB***) Search 'n Pick Collation Categories are now sorted by the number of entries (again).
 * (***ADDB***) Search 'n Pick is now no longer stuck at Collating... when using Path of Rage.
 * (***ADDB***) Search 'n Pick is now no longer stuck at Collating... in some cases. If you still encounter this bug please report it on Discord.
 ### ToyBox Rogue - Ver 1.5.5a

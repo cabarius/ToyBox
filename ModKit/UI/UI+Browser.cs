@@ -109,12 +109,14 @@ namespace ModKit {
             public bool isSearching = false;
             public bool startedLoadingAvailable = false;
             public bool availableIsStatic { get; private set; }
+            public bool useCustomNotRowGUI;
             private List<Definition> _availableCache;
             public void OnShowGUI() => RedoCollation();
-            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false) {
+            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false, bool useCustomNotRowGUI = false) {
                 SearchAsYouType = searchAsYouType;
                 this.availableIsStatic = availableIsStatic;
                 IsDetailBrowser = isDetailBrowser;
+                this.useCustomNotRowGUI = useCustomNotRowGUI;
                 Mod.NotifyOnShowGUI += OnShowGUI;
             }
 
@@ -134,7 +136,8 @@ namespace ModKit {
                 float titleMaxWidth = 300,
                 string searchTextPassedFromParent = "",
                 bool showItemDiv = false,
-                Func<Definition, IEnumerable<string>> collator = null
+                Func<Definition, IEnumerable<string>> collator = null,
+                Action<List<Definition>, Dictionary<Definition, Item>> customNotRowGUI = null
                 ) {
                 current ??= new List<Item>();
                 if (collationKey != prevCollationKey) {
@@ -232,18 +235,23 @@ namespace ModKit {
                         onHeaderGUI();
                     }
                 }
-                foreach (var def in definitions) {
-                    if (showItemDiv) {
-                        Div(indent);
-                    }
-                    _currentDict.TryGetValue(def, out var item);
-                    if (onRowGUI != null) {
-                        using (HorizontalScope(AutoWidth())) {
-                            space(indent);
-                            onRowGUI(def, item);
+                if (useCustomNotRowGUI) {
+                    customNotRowGUI(definitions, _currentDict);
+                }
+                else {
+                    foreach (var def in definitions) {
+                        if (showItemDiv) {
+                            Div(indent);
                         }
+                        _currentDict.TryGetValue(def, out var item);
+                        if (onRowGUI != null) {
+                            using (HorizontalScope(AutoWidth())) {
+                                space(indent);
+                                onRowGUI(def, item);
+                            }
+                        }
+                        onDetailGUI?.Invoke(def, item);
                     }
-                    onDetailGUI?.Invoke(def, item);
                 }
             }
 

@@ -3,10 +3,8 @@
 using HarmonyLib;
 using Kingmaker;
 using Kingmaker.GameModes;
-using Kingmaker.UI.Common;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.Common;
-using Kingmaker.Utility;
 using ModKit;
 using ModKit.DataViewer;
 using Owlcat.Runtime.Core.Logging;
@@ -16,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Kingmaker.Items;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using UniRx;
@@ -24,16 +21,13 @@ using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
 using LocalizationManager = ModKit.LocalizationManager;
+using Kingmaker.UI.Common;
 #if RT
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.LifeEvents;
-using Kingmaker.UI.Models.Log.GameLogCntxt;
-using Kingmaker.Code.UI.MVVM.VM.Tooltip.Templates;
-using Owlcat.Runtime.UniRx;
 #endif
 #if Wrath
 using ToyBox.Multiclass;
 #elif RT
-using Kingmaker.Blueprints.Root.Strings.GameLog;
 using Kingmaker.UI.Models.Log.Enums;
 #endif
 
@@ -49,6 +43,34 @@ namespace ToyBox {
 #if Wrath
         public static MulticlassMod multiclassMod;
 #endif
+        public static NamedAction[] tabs = {
+                    new NamedAction("Bag of Tricks".localize(), BagOfTricks.OnGUI),
+                    new NamedAction("Enhanced UI".localize(), EnhancedUI.OnGUI),
+                    new NamedAction("Level Up".localize(), LevelUp.OnGUI),
+                    new NamedAction("Party".localize(), PartyEditor.OnGUI),
+                    new NamedAction("Loot".localize(), PhatLoot.OnGUI),
+                    new NamedAction("Enchantment".localize(), EnchantmentEditor.OnGUI),
+#if false
+                    new NamedAction("Playground".localize(), () => Playground.OnGUI()),
+#endif
+                    new NamedAction("Search 'n Pick".localize(), SearchAndPick.OnGUI),
+#if Wrath
+                    new NamedAction("Crusade".localize(), CrusadeEditor.OnGUI),
+                    new NamedAction("Armies".localize(), ArmiesEditor.OnGUI),
+                    new NamedAction("Events/Decrees".localize(), EventEditor.OnGUI),
+#if DEBUG
+                    new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
+#endif
+#elif RT
+                    new NamedAction("Colonies".localize(), ColonyEditor.OnGUI),
+#endif
+                    new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
+                    new NamedAction("Quests".localize(), QuestEditor.OnGUI),
+                    new NamedAction("Dialog & NPCs", DialogAndNPCs.OnGUI),
+                    new NamedAction("Saves".localize(), GameSavesBrowser.OnGUI),
+                    new NamedAction("Achievements".localize(), AchievementsUnlocker.OnGUI),
+                    new NamedAction("Settings".localize(), SettingsUI.OnGUI)};
+        private static int partyTabID = -1;
         public static bool Enabled;
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
@@ -141,7 +163,7 @@ namespace ToyBox {
                     var otherToyBoxPath = Path.Combine(UnityModManager.modsPath, "ToyBox");
 #elif RT
                     var otherToyBoxPath = Path.Combine(UnityModManager.ModsPath, "ToyBox");
-#endif                    
+#endif
                     Mod.Log($"Checking {otherToyBoxPath}");
                     if (Directory.Exists(otherToyBoxPath)) {
                         Mod.Log($"    Found older ToyBox at {otherToyBoxPath} migrating all settings");
@@ -235,32 +257,22 @@ namespace ToyBox {
                         }
                         else Space(25);
                     },
-                    new NamedAction("Bag of Tricks".localize(), BagOfTricks.OnGUI),
-                    new NamedAction("Enhanced UI".localize(), EnhancedUI.OnGUI),
-                    new NamedAction("Level Up".localize(), LevelUp.OnGUI),
-                    new NamedAction("Party".localize(), PartyEditor.OnGUI),
-                    new NamedAction("Loot".localize(), PhatLoot.OnGUI),
-                    new NamedAction("Enchantment".localize(), EnchantmentEditor.OnGUI),
-#if false
-                    new NamedAction("Playground".localize(), () => Playground.OnGUI()),
-#endif
-                    new NamedAction("Search 'n Pick".localize(), SearchAndPick.OnGUI),
-#if Wrath
-                    new NamedAction("Crusade".localize(), CrusadeEditor.OnGUI),
-                    new NamedAction("Armies".localize(), ArmiesEditor.OnGUI),
-                    new NamedAction("Events/Decrees".localize(), EventEditor.OnGUI),
-#if DEBUG
-                    new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
-#endif
-#elif RT
-                    new NamedAction("Colonies".localize(), ColonyEditor.OnGUI),
-#endif
-                    new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
-                    new NamedAction("Quests".localize(), QuestEditor.OnGUI),
-                    new NamedAction("Dialog & NPCs", DialogAndNPCs.OnGUI),
-                    new NamedAction("Saves".localize(), GameSavesBrowser.OnGUI),
-                    new NamedAction("Achievements".localize(), AchievementsUnlocker.OnGUI),
-                    new NamedAction("Settings".localize(), SettingsUI.OnGUI)
+                    (oldTab, newTab) => {
+                        if (partyTabID == -1) {
+                            for (int i = 0; i < tabs.Length; i++) {
+                                if (tabs[i].action == PartyEditor.OnGUI) {
+                                    partyTabID = i;
+                                    break;
+                                }
+                            }
+                        }
+                        if (partyTabID != -1) {
+                            if (oldTab == partyTabID) {
+                                PartyEditor.UnloadPortraits();
+                            }
+                        }
+                    },
+                    tabs
                     );
             }
             catch (Exception e) {
@@ -281,7 +293,10 @@ namespace ToyBox {
             Mod.OnShowGUI();
         }
 
-        private static void OnHideGUI(UnityModManager.ModEntry modEntry) => IsModGUIShown = false;
+        private static void OnHideGUI(UnityModManager.ModEntry modEntry) {
+            IsModGUIShown = false;
+            PartyEditor.UnloadPortraits();
+        }
         private static IEnumerator ResetGUI() {
             _needsResetGameUI = false;
             Game.ResetUI();

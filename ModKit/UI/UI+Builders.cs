@@ -150,5 +150,17 @@ namespace ModKit {
             actions[selected].action();
             GL.EndVertical();
         }
+
+        public static void TabBar(ref int selected, Action? header = null, Action<int, int> onChangeTab = null, params NamedAction[] actions) {
+            if (selected >= actions.Count())
+                selected = 0;
+            var sel = selected;
+            var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
+            if (SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60))) onChangeTab(sel, selected);
+            GL.BeginVertical("box");
+            header?.Invoke();
+            actions[selected].action();
+            GL.EndVertical();
+        }
     }
 }
