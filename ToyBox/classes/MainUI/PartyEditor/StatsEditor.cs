@@ -45,6 +45,7 @@ namespace ToyBox {
             _portraitsByID.Clear();
             _portraitsLoaded = false;
             portraitBrowser = null;
+            blueprintPortraitBrowser = null;
             CustomPortraitsManager.Instance.Cleanup();
         }
         public static void OnPortraitGUI(string customID, float scaling = 0.5f, bool isButton = true, int targetWidth = 0) {
