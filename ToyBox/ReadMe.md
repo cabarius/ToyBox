@@ -80,6 +80,8 @@
 * (***ADDB***) Fixed Search 'n Pick Category Switching not doing anything when a search query is already entered.
 * (***ADDB***) Search 'n Pick Collation Categories are now sorted by the number of entries (again).
 * (***ADDB***) Fixed changing stats not persisting through save+load.
+* (***ADDB***) Collation Category Search now works.
+* (***ADDB***) Added a toggle to either sort collation categories by name or by amount of entries.
 ### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
 **ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5f** built for 2.1.4w
 * (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
@@ -90,6 +92,8 @@
 * (***ADDB***) Search 'n Pick is now no longer stuck at Collating... when using Path of Rage.
 * (***ADDB***) Search 'n Pick is now no longer stuck at Collating... in some cases. If you still encounter this bug please report it on Discord.
 * (***ADDB***) Fixed enhanced save/load NullError in MainMenu.
+* (***ADDB***) Collation Category Search now works.
+* (***ADDB***) Added a toggle to either sort collation categories by name or by amount of entries.
 ### ToyBox Rogue - Ver 1.5.5a
 * (***ADDB***) Made more Buffs visible in the exclusion editor.
 * (***ADDB***) Made Spaceships renamable.

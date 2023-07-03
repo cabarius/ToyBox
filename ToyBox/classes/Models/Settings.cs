@@ -414,6 +414,7 @@ namespace ToyBox {
         public bool showFromAllSpellbooks = false;
         public bool showDisplayAndInternalNames = false;
         public bool factEditorShowInspector = true;
+        public bool sortCollationByEntries = false;
 
         // Enchantment (Sandal)
         public string searchTextEnchantments = "";

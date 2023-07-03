@@ -222,9 +222,14 @@ namespace ToyBox {
                 var tmp = new string[(int)(1.1 * count) + 10];
                 SearchAndPickBrowser.collatedDefinitions.Keys.CopyTo(tmp, 0);
                 collationKeys = tmp.Where(s => !string.IsNullOrEmpty(s) && SearchAndPickBrowser.collatedDefinitions[s].Count > 0).ToList();
-                collationKeys.Sort(Comparer<string>.Create((x, y) => {
-                    return SearchAndPickBrowser.collatedDefinitions[y].Count.CompareTo(SearchAndPickBrowser.collatedDefinitions[x].Count);
-                }));
+                if (Settings.sortCollationByEntries) {
+                    collationKeys.Sort(Comparer<string>.Create((x, y) => {
+                        return SearchAndPickBrowser.collatedDefinitions[y].Count.CompareTo(SearchAndPickBrowser.collatedDefinitions[x].Count);
+                    }));
+                }
+                else {
+                    collationKeys.Sort();
+                }
                 keyToDisplayName.Clear();
                 collationKeys.ForEach(s => keyToDisplayName[s] = $"{s} ({SearchAndPickBrowser.collatedDefinitions[s]?.Count})");
                 collationKeys.Insert(0, "All");
@@ -251,11 +256,16 @@ namespace ToyBox {
                         Width(200));
                 }
                 remainingWidth -= 350;
-                if (collationKeys?.Count > 0) {
-                    if (PagedVPicker("Categories".localize(), ref SearchAndPickBrowser.collationKey, collationKeys.ToList(), null, s => keyToDisplayName[s], ref collationSearchText, ref collationPickerPageSize, ref collationPickerCurrentPage, Width(300))) {
-                        Mod.Debug($"collationKey: {SearchAndPickBrowser.collationKey}");
+                using (VerticalScope()) {
+                    if (Toggle("Sort by amount of entries".localize(), ref Settings.sortCollationByEntries)) {
+                        needsRedoKeys = true;
                     }
-                    remainingWidth -= 450;
+                    if (collationKeys?.Count > 0) {
+                        if (PagedVPicker("Categories".localize(), ref SearchAndPickBrowser.collationKey, collationKeys.ToList(), null, s => keyToDisplayName[s], ref collationSearchText, ref collationPickerPageSize, ref collationPickerCurrentPage, Width(300))) {
+                            Mod.Debug($"collationKey: {SearchAndPickBrowser.collationKey}");
+                        }
+                        remainingWidth -= 450;
+                    }
                 }
                 using (VerticalScope(MinWidth(remainingWidth))) {
                     List<Action> todo = new();

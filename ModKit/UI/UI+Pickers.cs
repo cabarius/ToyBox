@@ -374,36 +374,34 @@ namespace ModKit {
                         else if (pageSize > 1000) {
                             pageSize = 1000;
                         }
-                        if (itemCount > pageSize) {
-                            if (currentPage > totalPages || currentPage < 1) currentPage = 1;
-                            string pageLabel = "Page: ".localize().orange() + currentPage.ToString().cyan() + " / " + totalPages.ToString().cyan();
-                            Label(pageLabel, ExpandWidth(false));
-                            var maybeNewPage = currentPage;
-                            ActionButton("-", () => {
-                                if (maybeNewPage >= 1) {
-                                    if (maybeNewPage == 1) {
-                                        maybeNewPage = totalPages;
-                                    }
-                                    else {
-                                        maybeNewPage -= 1;
-                                    }
-                                }
-                            }, AutoWidth());
-                            ActionButton("+", () => {
-                                if (maybeNewPage >= totalPages) {
-                                    maybeNewPage = 1;
+                        if (currentPage > totalPages || currentPage < 1) currentPage = 1;
+                        string pageLabel = "Page: ".localize().orange() + currentPage.ToString().cyan() + " / " + totalPages.ToString().cyan();
+                        Label(pageLabel, ExpandWidth(false));
+                        var maybeNewPage = currentPage;
+                        ActionButton("-", () => {
+                            if (maybeNewPage >= 1) {
+                                if (maybeNewPage == 1) {
+                                    maybeNewPage = totalPages;
                                 }
                                 else {
-                                    maybeNewPage += 1;
+                                    maybeNewPage -= 1;
                                 }
-                            }, AutoWidth());
-                            currentPage = maybeNewPage;
-                        }
+                            }
+                        }, AutoWidth());
+                        ActionButton("+", () => {
+                            if (maybeNewPage >= totalPages) {
+                                maybeNewPage = 1;
+                            }
+                            else {
+                                maybeNewPage += 1;
+                            }
+                        }, AutoWidth());
+                        currentPage = maybeNewPage;
                     }
                     var offset = Math.Min(itemCount, (currentPage - 1) * pageSize);
                     var limit = Math.Min(pageSize, Math.Max(itemCount, itemCount - pageSize));
                     var empty = string.Empty;
-                    return VPicker(title, ref selected, fittingItems.ToList().Skip(offset).Take(limit).ToList(), unselectedTitle, titler, ref empty, options);
+                    return VPicker(title, ref selected, fittingItems.ToList().Skip(offset).Take(limit).ToList(), unselectedTitle, titler, ref searchText, options);
                 }
                 else {
                     return VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, options);
