@@ -9,6 +9,7 @@ using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.Cheats;
 #if RT
 using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.Levelup.Components;
@@ -119,6 +120,7 @@ namespace ToyBox {
             ActionButton("Log Caster Info", () => CasterHelpers.GetOriginalCasterLevel(ch.Descriptor()),
                 AutoWidth());
 #endif
+            ActionButton("Kill".localize().cyan(), () => CheatsCombat.KillUnit(ch));
             Label("", AutoWidth());
         }
         public static void OnGUI() {
