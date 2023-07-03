@@ -29,6 +29,7 @@ using Kingmaker.ElementsSystem;
 using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
 using Kingmaker;
+using ModKit.Utility.Extensions;
 #if Wrath
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints.Classes.Selection;
@@ -228,7 +229,33 @@ namespace ToyBox {
                     }));
                 }
                 else {
-                    collationKeys.Sort();
+                    collationKeys.Sort(Comparer<string>.Create((x, y) => {
+                        if (char.IsNumber(x[x.Length - 1]) && char.IsNumber(y[y.Length - 1])) {
+                            int numberOfDigitsAtEndx = 0;
+                            int numberOfDigitsAtEndy = 0;
+                            for (var i = x.Length - 1; i >= 0; i--) {
+                                if (!char.IsNumber(x[i])) {
+                                    break;
+                                }
+
+                                numberOfDigitsAtEndx++;
+                            }
+                            for (var i = y.Length - 1; i >= 0; i--) {
+                                if (!char.IsNumber(y[i])) {
+                                    break;
+                                }
+
+                                numberOfDigitsAtEndy++;
+                            }
+                            var result = x.Take(x.Length - numberOfDigitsAtEndx).ToString().CompareTo(y.Take(y.Length - numberOfDigitsAtEndy).ToString());
+                            if (result != 0) return result;
+                            var resultx = int.Parse(string.Join("", x.TakeLast(numberOfDigitsAtEndx)));
+                            var resulty = int.Parse(string.Join("", y.TakeLast(numberOfDigitsAtEndy)));
+                            return resultx.CompareTo(resulty);
+
+                        }
+                        return x.CompareTo(y);
+                    }));
                 }
                 keyToDisplayName.Clear();
                 collationKeys.ForEach(s => keyToDisplayName[s] = $"{s} ({SearchAndPickBrowser.collatedDefinitions[s]?.Count})");
