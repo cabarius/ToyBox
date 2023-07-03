@@ -66,5 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)UI\KeyBindings\" />
+	<Folder Include="$(MSBuildThisFileDirectory)Utility\Extensions\" />
   </ItemGroup>
 </Project>
