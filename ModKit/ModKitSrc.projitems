@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\CodeInstructionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Dictionary\DoubleDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)utility\extensions\EnumExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\MiscExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\RichTextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\GUISubScope.cs" />
@@ -65,6 +66,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)UI\KeyBindings\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Utility\Extensions\" />
   </ItemGroup>
 </Project>
