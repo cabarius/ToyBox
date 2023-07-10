@@ -74,7 +74,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.6 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5h** built for 0.2.1ah
+**ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5i** built for 0.2.1ah
 * (***ADDB***) Added Kill Button to Party Editor.
 * (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
 * (***ADDB***) Portrait Picker is now implemented as a Browser to save RAM; portraits are now unloaded when changing away from the Stats tab.
@@ -84,7 +84,8 @@
 * (***ADDB***) Collation Category Search now works.
 * (***ADDB***) Added a toggle to either sort collation categories by name or by amount of entries.
 ### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5h** built for 2.1.4w
+**ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5i** built for 2.1.4w
+* (***ADDB***) Search 'n Pick changes related to Parameterized Features and Feature Selectiosn (ported Party Editor GUI to Search 'n Pick).
 * (***ADDB***) Override Ability Points can now finally correctly decide between Mercenary and Player character.
 * (***ADDB***) Added Kill Button to Party Editor.
 * (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
