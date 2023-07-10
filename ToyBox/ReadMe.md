@@ -85,7 +85,7 @@
 * (***ADDB***) Added a toggle to either sort collation categories by name or by amount of entries.
 ### ToyBox Wrath - Ver 1.5.6 (Coming Soon)
 **ToyBox Wrath - Ver 1.5.6 - Preview Version 1.5.5i** built for 2.1.4w
-* (***ADDB***) Search 'n Pick changes related to Parameterized Features and Feature Selectiosn (ported Party Editor GUI to Search 'n Pick).
+* (***ADDB***) Search 'n Pick changes related to Parameterized Features and Feature Selections (ported Party Editor GUI to Search 'n Pick).
 * (***ADDB***) Override Ability Points can now finally correctly decide between Mercenary and Player character.
 * (***ADDB***) Added Kill Button to Party Editor.
 * (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
