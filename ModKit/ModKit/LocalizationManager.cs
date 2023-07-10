@@ -53,7 +53,7 @@ namespace ModKit {
             FilePath = _localFolderPath + chosenLangauge;
             if (chosenLangauge != "en") {
                 _local = Import();
-                IsDefault = _local != null;
+                IsDefault = _local == null;
             }
         }
         public static void Update() {
