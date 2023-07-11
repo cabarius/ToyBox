@@ -169,8 +169,9 @@ namespace ToyBox {
                         f => new[] { GetTitle(f) },
                         null,
                         (f, selectionEntry) => {
+                            bool characterHasEntry = ch?.HasFeatureSelection(featureSelection, f) ?? false;
                             var title = GetTitle(f).MarkedSubstring(FeatureSelectionBrowser.SearchText);
-                            if (selectionEntry != null) title = title.Cyan().Bold();
+                            if (characterHasEntry) title = title.Cyan().Bold();
                             var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f)) - 200;
                             Label(title, Width(titleWidth));
                             78.space();
@@ -199,7 +200,7 @@ namespace ToyBox {
                             else
                                 354.space();
                             if (ch != null) {
-                                if (ch.HasFeatureSelection(featureSelection, f))
+                                if (characterHasEntry)
                                     ActionButton("Remove".localize(),
                                                  () => {
                                                      if (selectionEntry == null) return;
@@ -235,15 +236,16 @@ namespace ToyBox {
                           i => new[] { i.Name },
                           null,
                           (def, item) => {
+                              bool characterHasEntry = ch?.HasParameterizedFeatureItem(parametrizedFeature, def) ?? false;
                               var title = def.Name.MarkedSubstring(ParameterizedFeatureBrowser.SearchText);
                               // make the title cyan if we have the item
-                              if (item != null) title = title.Cyan().Bold();
+                              if (characterHasEntry) title = title.Cyan().Bold();
 
                               var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f));
                               Label(title, Width(titleWidth));
                               25.space();
                               if (ch != null) {
-                                  if (ch.HasParameterizedFeatureItem(parametrizedFeature, def))
+                                  if (characterHasEntry)
                                       ActionButton("Remove".localize(), () => {
                                           ch.RemoveParameterizedFeatureItem(parametrizedFeature, def);
                                           ParameterizedFeatureBrowser.needsReloadData = true;
