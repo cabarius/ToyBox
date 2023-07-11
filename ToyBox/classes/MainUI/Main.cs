@@ -282,7 +282,10 @@ namespace ToyBox {
             }
         }
 
-        private static void OnSaveGUI(UnityModManager.ModEntry modEntry) => Settings.Save(modEntry);
+        private static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
+            Settings.Save(modEntry);
+            ModKitSettings.Save();
+        }
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
