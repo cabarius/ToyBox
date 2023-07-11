@@ -158,9 +158,8 @@ namespace ToyBox {
                     Browser.OnDetailGUI(blueprint, bp => {
                         FeatureSelectionBrowser.needsReloadData |= browser.needsReloadData;
                         FeatureSelectionBrowser.OnGUI(
-                        ch.FeatureSelectionEntries(featureSelection),
-                        () =>
-                          featureSelection.AllFeatures.OrderBy(f => f.Name),
+                        ch?.FeatureSelectionEntries(featureSelection),
+                        () => featureSelection.AllFeatures.OrderBy(f => f.Name),
                         e => e.feature,
                         f => $"{GetSearchKey(f)} " + (Settings.searchDescriptions ? f.Description : ""),
                         f => new[] { GetTitle(f) },
@@ -176,14 +175,16 @@ namespace ToyBox {
                                 Space(-25);
                                 using (VerticalScope(125)) {
                                     using (HorizontalScope(125)) {
-                                        Label("sel lvl", 50.width());
-                                        if (ValueAdjuster(ref level, 1, 0, 20, false)) {
-                                            ch.RemoveFeatureSelection(featureSelection,
-                                                selectionEntry.data,
-                                                f);
-                                            ch.AddFeatureSelection(featureSelection, f, level);
-                                            FeatureSelectionBrowser.ReloadData();
-                                            browser.ReloadData();
+                                        if (ch != null) {
+                                            Label("sel lvl", 50.width());
+                                            if (ValueAdjuster(ref level, 1, 0, 20, false)) {
+                                                ch.RemoveFeatureSelection(featureSelection,
+                                                    selectionEntry.data,
+                                                    f);
+                                                ch.AddFeatureSelection(featureSelection, f, level);
+                                                FeatureSelectionBrowser.ReloadData();
+                                                browser.ReloadData();
+                                            }
                                         }
                                     }
                                 }
@@ -193,24 +194,26 @@ namespace ToyBox {
                             }
                             else
                                 354.space();
-                            if (ch.HasFeatureSelection(featureSelection, f))
-                                ActionButton("Remove".localize(),
-                                             () => {
-                                                 if (selectionEntry == null) return;
-                                                 ch.RemoveFeatureSelection(featureSelection, selectionEntry.data, f);
-                                                 FeatureSelectionBrowser.needsReloadData = true;
-                                                 browser.needsReloadData = true;
-                                             },
-                                             150.width());
-                            else
-                                ActionButton("Add".localize(),
-                                             () => {
-                                                 ch.AddFeatureSelection(featureSelection, f);
-                                                 FeatureSelectionBrowser.needsReloadData = true;
-                                                 browser.needsReloadData = true;
-                                             },
-                                             150.width());
-                            15.space();
+                            if (ch != null) {
+                                if (ch.HasFeatureSelection(featureSelection, f))
+                                    ActionButton("Remove".localize(),
+                                                 () => {
+                                                     if (selectionEntry == null) return;
+                                                     ch.RemoveFeatureSelection(featureSelection, selectionEntry.data, f);
+                                                     FeatureSelectionBrowser.needsReloadData = true;
+                                                     browser.needsReloadData = true;
+                                                 },
+                                                 150.width());
+                                else
+                                    ActionButton("Add".localize(),
+                                                 () => {
+                                                     ch.AddFeatureSelection(featureSelection, f);
+                                                     FeatureSelectionBrowser.needsReloadData = true;
+                                                     browser.needsReloadData = true;
+                                                 },
+                                                 150.width());
+                                15.space();
+                            }
                             Label(f.GetDescription().StripHTML().MarkedSubstring(FeatureSelectionBrowser.SearchText).green());
                         },
                         null,
@@ -221,7 +224,7 @@ namespace ToyBox {
                     Browser.OnDetailGUI(blueprint, bp => {
                         ParameterizedFeatureBrowser.needsReloadData |= browser.needsReloadData;
                         ParameterizedFeatureBrowser.OnGUI(
-                          ch.ParameterizedFeatureItems(parametrizedFeature),
+                          ch?.ParameterizedFeatureItems(parametrizedFeature),
                           () => parametrizedFeature.Items.OrderBy(i => i.Name),
                           i => i,
                           i => $"{i.Name} " + (Settings.searchDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
@@ -235,19 +238,21 @@ namespace ToyBox {
                               var titleWidth = (ummWidth / (IsWide ? 3.5f : 4.0f));
                               Label(title, Width(titleWidth));
                               25.space();
-                              if (ch.HasParameterizedFeatureItem(parametrizedFeature, def))
-                                  ActionButton("Remove".localize(), () => {
-                                      ch.RemoveParameterizedFeatureItem(parametrizedFeature, def);
-                                      ParameterizedFeatureBrowser.needsReloadData = true;
-                                      browser.needsReloadData = true;
-                                  }, 150.width());
-                              else
-                                  ActionButton("Add".localize(), () => {
-                                      ch.AddParameterizedFeatureItem(parametrizedFeature, def);
-                                      ParameterizedFeatureBrowser.needsReloadData = true;
-                                      browser.needsReloadData = true;
-                                  }, 150.width());
-                              15.space();
+                              if (ch != null) {
+                                  if (ch.HasParameterizedFeatureItem(parametrizedFeature, def))
+                                      ActionButton("Remove".localize(), () => {
+                                          ch.RemoveParameterizedFeatureItem(parametrizedFeature, def);
+                                          ParameterizedFeatureBrowser.needsReloadData = true;
+                                          browser.needsReloadData = true;
+                                      }, 150.width());
+                                  else
+                                      ActionButton("Add".localize(), () => {
+                                          ch.AddParameterizedFeatureItem(parametrizedFeature, def);
+                                          ParameterizedFeatureBrowser.needsReloadData = true;
+                                          browser.needsReloadData = true;
+                                      }, 150.width());
+                                  15.space();
+                              }
                               Label(def.Param?.Blueprint?.GetDescription().StripHTML().MarkedSubstring(ParameterizedFeatureBrowser.SearchText).green());
                           }, null, 100);
                     });

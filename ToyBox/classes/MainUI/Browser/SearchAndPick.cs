@@ -382,7 +382,17 @@ namespace ToyBox {
                                     title = GetTitle(bp, name => name.orange().bold());
                                 }
                                 titleWidth = (remainingWidth / (IsWide ? 3 : 4));
-                                Label(title.MarkedSubstring(Settings.searchText), Width(titleWidth));
+                                var text = title.MarkedSubstring(Settings.searchText);
+                                if (bp is BlueprintFeatureSelection featureSelection
+#if Wrath
+                                || bp is BlueprintParametrizedFeature parametrizedFeature
+#endif
+    ) {
+                                    if (Browser.DetailToggle(text, bp, bp, (int)titleWidth))
+                                        SearchAndPickBrowser.ReloadData();
+                                }
+                                else
+                                    Label(text, Width((int)titleWidth));
                                 remWidth -= titleWidth;
 
                                 if (bp is BlueprintUnlockableFlag flagBP) {
@@ -496,10 +506,8 @@ namespace ToyBox {
                         },
                         (bp, maybeBP) => {
                             ReflectionTreeView.OnDetailGUI(bp);
-                            if (selectedUnit != null) {
-                                if (bp is BlueprintUnitFact buf) {
-                                    FactsEditor.BlueprintDetailGUI<UnitFact, BlueprintUnitFact, SimpleBlueprint, SimpleBlueprint>(buf, null, selectedUnit, SearchAndPickBrowser);
-                                }
+                            if (bp is BlueprintUnitFact buf) {
+                                FactsEditor.BlueprintDetailGUI<UnitFact, BlueprintUnitFact, SimpleBlueprint, SimpleBlueprint>(buf, null, selectedUnit, SearchAndPickBrowser);
                             }
                         }, 50, true, true, 100, 300, "", false, selectedTypeFilter?.collator);
                     foreach (var action in todo) {
