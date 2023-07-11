@@ -152,7 +152,12 @@ namespace ToyBox {
 #endif
             where Definition : BlueprintUnitFact {
             // TODO: RT
+            if (ch == null) {
+            }
 #if Wrath
+
+            FeatureSelectionBrowser.ShowAll = true;
+            ParameterizedFeatureBrowser.ShowAll = true;
             switch (blueprint) {
                 case BlueprintFeatureSelection featureSelection:
                     Browser.OnDetailGUI(blueprint, bp => {
