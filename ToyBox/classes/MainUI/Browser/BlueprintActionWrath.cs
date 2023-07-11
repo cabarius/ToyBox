@@ -132,9 +132,7 @@ namespace ToyBox {
                          itemIndex = BlueprintListUI.ParamSelected[index];
                      }
                      var value = bp.FeatureSelectionItems(itemIndex);
-                     var source = new FeatureSource();
-                     ch?.Descriptor()?.Progression.Features.AddFeature(bp).SetSource(source, 1);
-                     ch?.Progression?.AddSelection(bp, source, 0, value);
+                     BlueprintExtensions.AddFeatureSelection(ch, bp, value);
 
                  },
                 (bp, ch, index) => {
@@ -183,7 +181,10 @@ namespace ToyBox {
                         if (level >= 0)
                             break;
                     }
+                    featureSelectionData.SelectionsByLevel.ForEach((level, feats) => feats.ForEach(feat => progression.Features.RemoveFact(feat)));
+                    /*
                     featureSelectionData?.RemoveSelection(level, value);
+                    */
                     progression.Features.RemoveFact(bp);
                 },
                 (bp, ch, index) => {
