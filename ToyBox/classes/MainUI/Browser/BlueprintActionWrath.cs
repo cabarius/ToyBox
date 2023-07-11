@@ -32,6 +32,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToyBox.BagOfPatches;
 
 namespace ToyBox {
     public static partial class BlueprintActions {
@@ -131,24 +132,24 @@ namespace ToyBox {
                      else {
                          itemIndex = BlueprintListUI.ParamSelected[index];
                      }
+                     var source = new FeatureSource();
+                     ch?.Descriptor()?.Progression.Features.AddFeature(bp).SetSource(source, 1);
                      var value = bp.FeatureSelectionItems(itemIndex);
-                     BlueprintExtensions.AddFeatureSelection(ch, bp, value);
-
+                     ch.AddFeatureSelection(bp, value, 1);
                  },
                 (bp, ch, index) => {
                     var progression = ch?.Descriptor()?.Progression;
                     if (progression == null) return false;
-                    if (!progression.Features.HasFact(bp)) return true;
-                    int itemIndex;
-                    if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
-                        itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
-                        itemIndex = BlueprintListUI.ParamSelected[index];
-                    }
-                    var value = bp.FeatureSelectionItems(itemIndex);
-                    if (progression.Selections.TryGetValue(bp, out var selection)) {
-                        if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == value))) return false;
+                    if (progression.Features.HasFact(bp)) return false;
+                    var selections = ch?.Descriptor?.Progression.Selections;
+                    foreach (var selection in selections) {
+                        if (selection.Key == bp) {
+                            foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                foreach (var feat in keyValuePair.Value.ToList()) {
+                                    return false;
+                                }
+                            }
+                        }
                     }
                     return true;
                 });
@@ -168,39 +169,30 @@ namespace ToyBox {
                     var selections = ch?.Descriptor?.Progression.Selections;
                     BlueprintFeatureSelection featureSelection = null;
                     FeatureSelectionData featureSelectionData = null;
-                    var level = -1;
                     foreach (var selection in selections) {
-                        foreach (var keyValuePair in selection.Value.SelectionsByLevel) {
-                            if (keyValuePair.Value.HasItem<BlueprintFeature>(bp)) {
-                                featureSelection = selection.Key;
-                                featureSelectionData = selection.Value;
-                                level = keyValuePair.Key;
-                                break;
+                        if (selection.Key == bp) {
+                            foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                foreach (var feat in keyValuePair.Value.ToList()) {
+                                    ch.RemoveFeatureSelection(bp, selection.Value, feat);
+                                }
                             }
                         }
-                        if (level >= 0)
-                            break;
                     }
-                    featureSelectionData.SelectionsByLevel.ForEach((level, feats) => feats.ForEach(feat => progression.Features.RemoveFact(feat)));
-                    /*
-                    featureSelectionData?.RemoveSelection(level, value);
-                    */
                     progression.Features.RemoveFact(bp);
                 },
                 (bp, ch, index) => {
-                    var progression = ch?.Descriptor?.Progression;
+                    var progression = ch?.Descriptor()?.Progression;
                     if (progression == null) return false;
-                    if (!progression.Features.HasFact(bp)) return false;
-                    int itemIndex;
-                    if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
-                        itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
-                        itemIndex = BlueprintListUI.ParamSelected[index];
-                    }
-                    var value = bp.FeatureSelectionItems(itemIndex);
-                    if (progression.Selections.TryGetValue(bp, out var selection)) {
-                        if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == value))) return true;
+                    if (progression.Features.HasFact(bp)) return true;
+                    var selections = ch?.Descriptor?.Progression.Selections;
+                    foreach (var selection in selections) {
+                        if (selection.Key == bp) {
+                            foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                foreach (var feat in keyValuePair.Value.ToList()) {
+                                    return true;
+                                }
+                            }
+                        }
                     }
                     return false;
                 });

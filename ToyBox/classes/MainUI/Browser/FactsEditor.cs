@@ -21,6 +21,7 @@ using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
+using ToyBox.BagOfPatches;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -205,13 +206,46 @@ namespace ToyBox {
                                                  () => {
                                                      if (selectionEntry == null) return;
                                                      ch.RemoveFeatureSelection(featureSelection, selectionEntry.data, f);
+                                                     bool isLast = true;
+                                                     foreach (var selection in ch.Progression.Selections) {
+                                                         if (selection.Key == featureSelection) {
+                                                             foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                                                 foreach (var feat in keyValuePair.Value.ToList()) {
+                                                                     isLast = false;
+                                                                 }
+                                                             }
+                                                         }
+                                                     }
+                                                     if (isLast) {
+                                                         ch.Progression.Features.RemoveFact(featureSelection);
+                                                     }
                                                      FeatureSelectionBrowser.needsReloadData = true;
                                                      browser.needsReloadData = true;
                                                  },
-                                                 150.width());
+                                                     150.width());
                                 else
                                     ActionButton("Add".localize(),
                                                  () => {
+                                                     bool needsAddSelection = true;
+                                                     var progression = ch?.Descriptor()?.Progression;
+                                                     if (progression == null) needsAddSelection = false;
+                                                     if (progression.Features.HasFact(featureSelection)) needsAddSelection = false;
+                                                     var selections = ch?.Descriptor?.Progression.Selections;
+                                                     if (needsAddSelection) {
+                                                         foreach (var selection in selections) {
+                                                             if (selection.Key == featureSelection) {
+                                                                 foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                                                     foreach (var feat in keyValuePair.Value.ToList()) {
+                                                                         needsAddSelection = false;
+                                                                     }
+                                                                 }
+                                                             }
+                                                         }
+                                                     }
+                                                     if (needsAddSelection) {
+                                                         var source = new FeatureSource();
+                                                         ch?.Descriptor()?.Progression.Features.AddFeature(featureSelection).SetSource(source, 1);
+                                                     }
                                                      ch.AddFeatureSelection(featureSelection, f);
                                                      FeatureSelectionBrowser.needsReloadData = true;
                                                      browser.needsReloadData = true;
@@ -233,7 +267,8 @@ namespace ToyBox {
                           () => parametrizedFeature.Items.OrderBy(i => i.Name),
                           i => i,
                           i => $"{i.Name} " + (Settings.searchDescriptions ? i.Param?.Blueprint?.GetDescription() : ""),
-                          i => new[] { i.Name },
+                          i => new[] { i.Name
+    },
                           null,
                           (def, item) => {
                               bool characterHasEntry = ch?.HasParameterizedFeatureItem(parametrizedFeature, def) ?? false;
