@@ -11,6 +11,7 @@ using Kingmaker.EntitySystem.Stats;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
+using ModKit;
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
@@ -26,20 +27,19 @@ namespace ToyBox.BagOfPatches {
         public static class LevelUpState_Patch {
             [HarmonyPriority(Priority.Low)]
             public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance, bool isPregen) {
-                // Kludge - there is some weirdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
-                var isCustom = __instance.IsEmployee || __instance.IsLoreCompanion;
-                if ((isCustom && settings.characterCreationAbilityPointsOverrideMerc) || (!isCustom && settings.characterCreationAbilityPointsOverridePlayer)) {
-                    if (__instance.IsFirstCharacterLevel) {
-                        if (!__instance.IsPregen) {
-                            //Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
-                            //Logger.Log($"not pregen - isCust: {isCustom}");
-                            var pointCount = isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer;
-
-                            //Logger.Log($"points: {pointCount}");
-
-                            __instance.StatsDistribution?.Start(pointCount);
+                try {
+                    var isCustom = (__instance?.IsEmployee ?? false) || (__instance?.IsLoreCompanion ?? false);
+                    if ((isCustom && settings.characterCreationAbilityPointsOverrideMerc) || (!isCustom && settings.characterCreationAbilityPointsOverridePlayer)) {
+                        if (__instance.IsFirstCharacterLevel) {
+                            if (!__instance.IsPregen) {
+                                var pointCount = isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer;
+                                __instance.StatsDistribution?.Start(pointCount);
+                            }
                         }
                     }
+                } // ???
+                catch (Exception e) {
+                    Mod.Warn(e.Message);
                 }
             }
         }
