@@ -30,6 +30,7 @@ using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
 using Kingmaker;
 using ModKit.Utility.Extensions;
+using Kingmaker.UnitLogic;
 #if Wrath
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints.Classes.Selection;
@@ -354,23 +355,45 @@ namespace ToyBox {
                                 var actions = bp.GetActions()
                                     .Where(action => action.canPerform(bp, selectedUnit));
                                 var titles = actions.Select(a => a.name);
-                                string title;
+                                string title = null;
+
+                                // FIXME - perf bottleneck 
+                                var actionCount = actions != null ? actions.Count() : 0;
                                 // FIXME - horrible perf bottleneck 
-                                var removeIndex = titles.IndexOf("Remove".localize());
-                                var lockIndex = titles.IndexOf("Lock".localize());
+                                // I mean it's an improvement?
+                                int removeIndex = -1;
+                                int lockIndex = -1;
+                                int actionIndex = 0;
+                                foreach (var action in titles) {
+                                    if (action == "Remove".localize()) {
+                                        removeIndex = actionIndex;
+                                    }
+                                    if (action == "Lock".localize()) {
+                                        lockIndex = actionIndex;
+                                    }
+                                    actionIndex++;
+                                }
+                                // var removeIndex = titles.IndexOf("Remove".localize());
+                                // var lockIndex = titles.IndexOf("Lock".localize());
                                 if (removeIndex > -1 || lockIndex > -1) {
                                     title = GetTitle(bp, name => name.cyan().bold());
                                 }
                                 else {
                                     title = GetTitle(bp, name => name.orange().bold());
                                 }
-
                                 titleWidth = (remainingWidth / (IsWide ? 3 : 4));
-                                Label(title.MarkedSubstring(Settings.searchText), Width(titleWidth));
+                                var text = title.MarkedSubstring(Settings.searchText);
+                                if (bp is BlueprintFeatureSelection featureSelection
+#if Wrath
+                                || bp is BlueprintParametrizedFeature parametrizedFeature
+#endif
+    ) {
+                                    if (Browser.DetailToggle(text, bp, bp, (int)titleWidth))
+                                        SearchAndPickBrowser.ReloadData();
+                                }
+                                else
+                                    Label(text, Width((int)titleWidth));
                                 remWidth -= titleWidth;
-
-                                // FIXME - perf bottleneck 
-                                var actionCount = actions != null ? actions.Count() : 0;
 
                                 if (bp is BlueprintUnlockableFlag flagBP) {
                                     // special case this for now
@@ -477,96 +500,15 @@ namespace ToyBox {
                                         Space(17);
                                     }
                                     if (description.Length > 0) Label(description.green(), Width(remWidth));
-#if Wrath
-                                    if (bp is BlueprintParametrizedFeature paramBP) {
-                                        using (HorizontalScope()) {
-                                            using (VerticalScope()) {
-                                                using (HorizontalScope(GUI.skin.button)) {
-                                                    var content = new GUIContent($"{paramBP.Name.yellow()}");
-                                                    var labelWidth = GUI.skin.label.CalcSize(content).x;
-                                                    Label(content, Width(labelWidth));
-                                                    Space(25);
-                                                    var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
-                                                    if (nameStrings == null) {
-                                                        nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
-                                                        paramBPValueNames[paramBP] = nameStrings;
-                                                    }
-                                                    ActionSelectionGrid(
-                                                        ref ParamSelected[count],
-                                                        nameStrings,
-                                                        6,
-                                                        (selected) => { },
-                                                        GUI.skin.toggle,
-                                                        Width(remWidth)
-                                                    );
-                                                    //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
-                                                }
-                                                Space(15);
-                                            }
-                                        }
-                                    }
-#endif
-                                    if (bp is BlueprintFeatureSelection selectionBP) {
-                                        using (HorizontalScope()) {
-                                            using (VerticalScope()) {
-                                                var needsSelection = false;
-                                                var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
-                                                if (nameStrings == null) {
-                                                    needsSelection = true;
-                                                    nameStrings = selectionBP.AllFeatures.Select(x => x.NameSafe()).OrderBy(x => x).ToArray().TrimCommonPrefix();
-                                                    selectionBPValuesNames[selectionBP] = nameStrings;
-                                                }
-                                                using (HorizontalScope(GUI.skin.button)) {
-                                                    var content = new GUIContent($"{selectionBP.Name.yellow()}");
-                                                    var labelWidth = GUI.skin.label.CalcSize(content).x;
-                                                    //UI.Space(indent + titleWidth - labelWidth - 25);
-                                                    Label(content, Width(labelWidth));
-                                                    Space(25);
-
-                                                    ActionSelectionGrid(
-                                                        ref ParamSelected[count],
-                                                        nameStrings,
-                                                        4,
-                                                        (selected) => { },
-                                                        GUI.skin.toggle,
-                                                        Width(remWidth)
-                                                    );
-                                                    //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
-                                                }
-
-#if Wrath
-                                                if (selectedUnit != null) {
-                                                    if (selectedUnit.Value.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
-                                                        foreach (var entry in selectionData.SelectionsByLevel) {
-                                                            foreach (var selection in entry.Value) {
-                                                                if (needsSelection) {
-                                                                    ParamSelected[count] = selectionBP.AllFeatures.IndexOf(selection);
-                                                                    needsSelection = false;
-                                                                }
-                                                                using (HorizontalScope()) {
-                                                                    ActionButton("Remove", () => {
-
-                                                                    }, Width(160));
-                                                                    Space(25);
-                                                                    Label($"{entry.Key} ".yellow() + selection.Name.orange(), Width(250));
-                                                                    Space(25);
-                                                                    Label(selection.Description.StripHTML().green());
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-#endif
-                                                Space(15);
-                                            }
-                                        }
-                                    }
                                 }
                             }
                             count++;
                         },
                         (bp, maybeBP) => {
                             ReflectionTreeView.OnDetailGUI(bp);
+                            if (bp is BlueprintUnitFact buf) {
+                                FactsEditor.BlueprintDetailGUI<UnitFact, BlueprintUnitFact, SimpleBlueprint, SimpleBlueprint>(buf, null, selectedUnit, SearchAndPickBrowser);
+                            }
                         }, 50, true, true, 100, 300, "", false, selectedTypeFilter?.collator);
                     foreach (var action in todo) {
                         action();

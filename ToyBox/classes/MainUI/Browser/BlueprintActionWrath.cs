@@ -32,6 +32,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToyBox.BagOfPatches;
 
 namespace ToyBox {
     public static partial class BlueprintActions {
@@ -72,23 +73,51 @@ namespace ToyBox {
             // Paramaterized Feature
             BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
                  (bp, ch, n, index) => {
-                     var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
+                     int itemIndex;
+                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
+                         itemIndex = SearchAndPick.ParamSelected[index];
+                     }
+                     else {
+                         itemIndex = BlueprintListUI.ParamSelected[index];
+                     }
+                     var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
                      ch?.Descriptor?.AddFact<UnitFact>(bp, null, value);
                  },
                 (bp, ch, index) => {
-                    var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
+                    int itemIndex;
+                    if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
+                        itemIndex = SearchAndPick.ParamSelected[index];
+                    }
+                    else {
+                        itemIndex = BlueprintListUI.ParamSelected[index];
+                    }
+                    var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing == null;
                 });
             BlueprintAction.Register<BlueprintParametrizedFeature>("Remove",
                 (bp, ch, n, index) => {
-                    var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
+                    int itemIndex;
+                    if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
+                        itemIndex = SearchAndPick.ParamSelected[index];
+                    }
+                    else {
+                        itemIndex = BlueprintListUI.ParamSelected[index];
+                    }
+                    var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
                     var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     ch?.Progression?.Features?.RemoveFact(fact);
                 },
                 (bp, ch, index) => {
                     if (bp.Items.Count() == 0) return false;
-                    var value = bp.ParametrizedSelectionItems(BlueprintListUI.ParamSelected[index])?.Param;
+                    int itemIndex;
+                    if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
+                        itemIndex = SearchAndPick.ParamSelected[index];
+                    }
+                    else {
+                        itemIndex = BlueprintListUI.ParamSelected[index];
+                    }
+                    var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing != null;
                 });
@@ -96,54 +125,74 @@ namespace ToyBox {
             // Feature Selection
             BlueprintAction.Register<BlueprintFeatureSelection>("Add",
                  (bp, ch, n, index) => {
-                     var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
+                     int itemIndex;
+                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
+                         itemIndex = SearchAndPick.ParamSelected[index];
+                     }
+                     else {
+                         itemIndex = BlueprintListUI.ParamSelected[index];
+                     }
                      var source = new FeatureSource();
                      ch?.Descriptor()?.Progression.Features.AddFeature(bp).SetSource(source, 1);
-                     ch?.Progression?.AddSelection(bp, source, 0, value);
-
+                     var value = bp.FeatureSelectionItems(itemIndex);
+                     ch.AddFeatureSelection(bp, value, 1);
                  },
                 (bp, ch, index) => {
                     var progression = ch?.Descriptor()?.Progression;
                     if (progression == null) return false;
-                    if (!progression.Features.HasFact(bp)) return true;
-                    var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
-                    if (progression.Selections.TryGetValue(bp, out var selection)) {
-                        if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == value))) return false;
+                    if (progression.Features.HasFact(bp)) return false;
+                    var selections = ch?.Descriptor?.Progression.Selections;
+                    foreach (var selection in selections) {
+                        if (selection.Key == bp) {
+                            foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                foreach (var feat in keyValuePair.Value.ToList()) {
+                                    return false;
+                                }
+                            }
+                        }
                     }
                     return true;
                 });
             BlueprintAction.Register<BlueprintFeatureSelection>("Rem. All",
                 (bp, ch, n, index) => {
                     var progression = ch?.Descriptor?.Progression;
-                    var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
+                    int itemIndex;
+                    if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
+                        itemIndex = SearchAndPick.ParamSelected[index];
+                    }
+                    else {
+                        itemIndex = BlueprintListUI.ParamSelected[index];
+                    }
+                    var value = bp.FeatureSelectionItems(itemIndex);
                     //Feature fact = progression.Features.GetFact(bp);
                     var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     var selections = ch?.Descriptor?.Progression.Selections;
                     BlueprintFeatureSelection featureSelection = null;
                     FeatureSelectionData featureSelectionData = null;
-                    var level = -1;
                     foreach (var selection in selections) {
-                        foreach (var keyValuePair in selection.Value.SelectionsByLevel) {
-                            if (keyValuePair.Value.HasItem<BlueprintFeature>(bp)) {
-                                featureSelection = selection.Key;
-                                featureSelectionData = selection.Value;
-                                level = keyValuePair.Key;
-                                break;
+                        if (selection.Key == bp) {
+                            foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                foreach (var feat in keyValuePair.Value.ToList()) {
+                                    ch.RemoveFeatureSelection(bp, selection.Value, feat);
+                                }
                             }
                         }
-                        if (level >= 0)
-                            break;
                     }
-                    featureSelectionData?.RemoveSelection(level, value);
                     progression.Features.RemoveFact(bp);
                 },
                 (bp, ch, index) => {
-                    var progression = ch?.Descriptor?.Progression;
+                    var progression = ch?.Descriptor()?.Progression;
                     if (progression == null) return false;
-                    if (!progression.Features.HasFact(bp)) return false;
-                    var value = bp.FeatureSelectionItems(BlueprintListUI.ParamSelected[index]);
-                    if (progression.Selections.TryGetValue(bp, out var selection)) {
-                        if (selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == value))) return true;
+                    if (progression.Features.HasFact(bp)) return true;
+                    var selections = ch?.Descriptor?.Progression.Selections;
+                    foreach (var selection in selections) {
+                        if (selection.Key == bp) {
+                            foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
+                                foreach (var feat in keyValuePair.Value.ToList()) {
+                                    return true;
+                                }
+                            }
+                        }
                     }
                     return false;
                 });
