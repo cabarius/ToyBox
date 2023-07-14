@@ -169,11 +169,11 @@ namespace ModKit {
                                 25.space();
                             }
                             if (isCollating) {
-                                Label("Collating...".localize().red().bold(), AutoWidth());
+                                Label("Collating...".localize().cyan().bold(), AutoWidth());
                                 25.space();
                             }
                             else if (_doCopyToEnd) {
-                                Label("Copying...".localize().red().bold(), AutoWidth());
+                                Label("Copying...".localize().cyan().bold(), AutoWidth());
                                 25.space();
                             }
                         }

@@ -285,7 +285,7 @@ namespace ToyBox {
                 }
                 remainingWidth -= 350;
                 using (VerticalScope()) {
-                    if (Toggle("Sort by amount of entries".localize(), ref Settings.sortCollationByEntries)) {
+                    if (Toggle("Sort By Count".localize(), ref Settings.sortCollationByEntries)) {
                         needsRedoKeys = true;
                     }
                     if (collationKeys?.Count > 0) {
@@ -301,10 +301,33 @@ namespace ToyBox {
                     if (selectedTypeFilter != null) {
                         collatorCache[selectedTypeFilter.type] = selectedTypeFilter.collator;
                     }
+                    using (HorizontalScope()) {
+                        50.space();
+                        using (VerticalScope()) {
+                            CharacterPicker.OnCharacterPickerGUI();
+                            var tmp = CharacterPicker.GetSelectedCharacter();
+                            if (tmp != selectedUnit) {
+                                selectedUnit = tmp;
+                                RedoLayout();
+                            }
+                        }
+                    }
                     SearchAndPickBrowser.OnGUI(bps, () => bps, bp => bp, bp => GetSearchKey(bp) + (Settings.searchDescriptions ? bp.GetDescription() : ""), bp => new[] { GetSortKey(bp) },
                         () => {
                             using (VerticalScope()) {
                                 using (HorizontalScope()) {
+                                    if (hasRepeatableAction) {
+                                        Label("Parameter".cyan() + ": ", ExpandWidth(false));
+                                        ActionIntTextField(
+                                            ref repeatCount,
+                                            "repeatCount",
+                                            (limit) => { },
+                                            () => { },
+                                            Width(100));
+                                        Space(40);
+                                        repeatCount = Math.Max(1, repeatCount);
+                                        repeatCount = Math.Min(100, repeatCount);
+                                    }
                                     25.space();
                                     if (Toggle("Search Descriptions".localize(), ref Settings.searchDescriptions, AutoWidth())) SearchAndPickBrowser.ReloadData();
                                     25.space();
@@ -317,28 +340,6 @@ namespace ToyBox {
                                     Toggle("Elements".localize(), ref Settings.showElements, AutoWidth());
                                     25.space();
                                     if (Toggle("Show Display & Internal Names".localize(), ref Settings.showDisplayAndInternalNames, AutoWidth())) SearchAndPickBrowser.ReloadData();
-                                }
-                                using (HorizontalScope()) {
-                                    CharacterPicker.OnCharacterPickerGUI();
-                                    var tmp = CharacterPicker.GetSelectedCharacter();
-                                    if (tmp != selectedUnit) {
-                                        selectedUnit = tmp;
-                                        RedoLayout();
-                                    }
-                                    if (hasRepeatableAction) {
-                                        using (HorizontalScope()) {
-                                            ActionIntTextField(
-                                                ref repeatCount,
-                                                "repeatCount",
-                                                (limit) => { },
-                                                () => { },
-                                                Width(160));
-                                            Space(40);
-                                            Label("Parameter".cyan() + ": " + $"{repeatCount}".orange(), ExpandWidth(false));
-                                            repeatCount = Math.Max(1, repeatCount);
-                                            repeatCount = Math.Min(100, repeatCount);
-                                        }
-                                    }
                                 }
                             }
                         },
