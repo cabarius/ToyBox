@@ -61,7 +61,11 @@ namespace ToyBox {
                     }
 
                     if (buff.Blueprint.IsFromSpell) {
-                        target.Descriptor().Facts.Remove(buff); // Always remove spell effects, even if they'd persist
+#if Wrath
+                        target.Descriptor().Buffs.RemoveFact(buff); // Always remove spell effects, even if they'd persist
+#elif RT
+                        target.Descriptor().Buffs.Remove(buff); // Always remove spell effects, even if they'd persist
+#endif
                         continue;
                     }
 
@@ -69,7 +73,11 @@ namespace ToyBox {
                         continue;
                     }
 
-                    target.Descriptor().Facts.Remove(buff);
+#if Wrath
+                    target.Descriptor().Buffs.RemoveFact(buff);
+#elif RT
+                        target.Descriptor().Buffs.Remove(buff);
+#endif
                 }
             }
         }
