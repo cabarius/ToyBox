@@ -1,27 +1,27 @@
 ﻿// Copyright < 2023 >  - Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using HarmonyLib;
-using System;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.EntitySystem.Entities;
-using ModKit;
-using static ModKit.UI;
-using ModKit.DataViewer;
-using System.Collections.Generic;
 using Kingmaker.Blueprints.Quests;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.UnitLogic.Parts;
-using ModKit.Utility;
-using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-using static ToyBox.BlueprintExtensions;
+using Kingmaker.Controllers.Dialog;
 using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.ElementsSystem;
-using System.Security.AccessControl;
-using Kingmaker.Controllers.Dialog;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI;
+using Kingmaker.UnitLogic.Parts;
+using ModKit;
+using ModKit.DataViewer;
+using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.AccessControl;
+using UnityEngine;
+using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
+using static ModKit.UI;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
 
@@ -40,13 +40,13 @@ namespace ToyBox {
             Div();
             10.space();
             using (HorizontalScope()) {
-                Toggle("Mark Interesting NPCs on Map", ref Settings.toggleShowInterestingNPCsOnLocalMap, 375.width());
-                HelpLabel("This will change the color of NPC names on the highlight makers and change the color map markers to indicate that they have interesting or conditional interactions");
+                Toggle("Mark Interesting NPCs on Map".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 375.width());
+                HelpLabel("This will change the color of NPC names on the highlight makers and change the color map markers to indicate that they have interesting or conditional interactions".localize());
             }
             using (HorizontalScope()) {
-                DisclosureToggle("Interesting NPCs in the local area".cyan(), ref Settings.toogleShowInterestingNPCsOnQuestTab);
+                DisclosureToggle("Interesting NPCs in the local area".localize().cyan(), ref Settings.toogleShowInterestingNPCsOnQuestTab);
                 200.space();
-                HelpLabel("Show a list of NPCs that may have quest objectives or other interesting features " + "(Warning: Spoilers)".yellow());
+                HelpLabel(("Show a list of NPCs that may have quest objectives or other interesting features " + "(Warning: Spoilers)".yellow()).localize());
             }
             if (Settings.toogleShowInterestingNPCsOnQuestTab) {
                 using (HorizontalScope()) {
@@ -84,13 +84,13 @@ namespace ToyBox {
                                     Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(coefficient.ToString()));
                                     50.space();
 #if Wrath
-                                    ReflectionTreeView.DetailToggle("Unit", u.Parts.Parts, u.Parts.Parts,100);
+                                    ReflectionTreeView.DetailToggle("Unit", u.Parts.Parts, u.Parts.Parts, 100);
 #elif RT
                                     ReflectionTreeView.DetailToggle("Unit", u.Parts.m_Parts, u.Parts.m_Parts,100);
 #endif
                                     25.space();
                                     var dialogs = u.GetDialog();
-                                    if (dialogs.Any()) 
+                                    if (dialogs.Any())
                                         ReflectionTreeView.DetailToggle("Dialog", u, dialogs.Count == 1 ? dialogs.First() : dialogs, 100);
                                 },
                                 (u, _) => {
@@ -187,7 +187,7 @@ namespace ToyBox {
         }
         public static void OnGUI(Conditional conditional, object source) {
             if (conditional.ConditionsChecker.Conditions.Any()) {
-                Label("Conditional:".cyan(), 150.width());
+                Label("Conditional:".localize().cyan(), 150.width());
                 //Label(string.Join(", ", conditional.ConditionsChecker.Conditions.Select(c => c.GetCaption())));
                 Label(conditional.Comment, 375.width());
                 using (VerticalScope()) {
@@ -196,7 +196,7 @@ namespace ToyBox {
             }
         }
         public static void OnGUI(QuestStatus questStatus, object source) {
-            Label("Quest Status: ".cyan(), 150.width());
+            Label("Quest Status: ".localize().cyan(), 150.width());
             var quest = questStatus.Quest;
             var state = GameHelper.Quests.GetQuestState(quest);
             var title = $"{quest.Title.StringValue().orange().bold()}";
@@ -204,13 +204,13 @@ namespace ToyBox {
             22.space();
             using (VerticalScope()) {
                 HelpLabel(quest.Description);
-                Label($"status: ".cyan() + state.ToString());
-                Label("condition: ".cyan() + questStatus.CaptionString());
-                Label("source: ".cyan() + source.ToString().yellow());
+                Label($"status: ".localize().cyan() + state.ToString());
+                Label("condition: ".localize().cyan() + questStatus.CaptionString());
+                Label("source: ".localize().cyan() + source.ToString().yellow());
             }
         }
         public static void OnGUI(ObjectiveStatus objectiveStatus, object source) {
-            Label("Objective Status: ".cyan(), 150.width());
+            Label("Objective Status: ".localize().cyan(), 150.width());
 
             var objectiveBP = objectiveStatus.QuestObjective;
             var objective = Game.Instance.Player.QuestBook.GetObjective(objectiveBP);
@@ -221,13 +221,13 @@ namespace ToyBox {
             22.space();
             using (VerticalScope()) {
                 HelpLabel(objectiveBP.Description);
-                Label($"status: ".cyan() + state.ToString().titleColored(state));
-                Label("condition: ".cyan() + objectiveStatus.CaptionString());
-                Label("source: ".cyan() + source.ToString().yellow());
+                Label($"status: ".localize().cyan() + state.ToString().titleColored(state));
+                Label("condition: ".localize().cyan() + objectiveStatus.CaptionString());
+                Label("source: ".localize().cyan() + source.ToString().yellow());
             }
         }
         public static void OnGUI(EtudeStatus etudeStatus, object source) {
-            Label("Etude Status: ".cyan(), 150.width());
+            Label("Etude Status: ".localize().cyan(), 150.width());
             var etudeBP = etudeStatus.Etude;
             Label(etudeBP.name.orange(), 500.width());
             var etudeState = Game.Instance.Player.EtudesSystem.GetSavedState(etudeBP);
@@ -235,9 +235,9 @@ namespace ToyBox {
             22.space();
             using (VerticalScope()) {
                 HelpLabel(debugInfo);
-                Label($"status: ".cyan() + etudeState.ToString());
-                Label("condition: ".cyan() + etudeStatus.CaptionString());
-                Label("source: ".cyan() + source.ToString().yellow());
+                Label($"status: ".localize().cyan() + etudeState.ToString());
+                Label("condition: ".localize().cyan() + etudeStatus.CaptionString());
+                Label("source: ".localize().cyan() + source.ToString().yellow());
             }
         }
         public static void OnGUI(Condition condition, object source) {
@@ -245,7 +245,7 @@ namespace ToyBox {
             Label(source.ToString().yellow(), 500.width());
             22.space();
             using (VerticalScope()) {
-                Label("condition: ".cyan() + condition.CaptionString());
+                Label("condition: ".localize().cyan() + condition.CaptionString());
             }
         }
         public static void OnOtherElementGUI(Element element, object source) {
@@ -253,7 +253,7 @@ namespace ToyBox {
             Label(source.ToString().yellow(), 500.width());
             22.space();
             using (VerticalScope()) {
-                Label("caption: ".cyan() + element.CaptionString());
+                Label("caption: ".localize().cyan() + element.CaptionString());
             }
         }
     }

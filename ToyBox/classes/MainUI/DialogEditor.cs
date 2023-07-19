@@ -1,32 +1,32 @@
 ﻿// Copyright < 2023 >  - Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using HarmonyLib;
-using System;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.EntitySystem.Entities;
-using ModKit;
-using static ModKit.UI;
-using ModKit.DataViewer;
-using System.Collections.Generic;
-using Kingmaker.Blueprints.Quests;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.UnitLogic.Parts;
-using ModKit.Utility;
-using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-using static ToyBox.BlueprintExtensions;
-using Kingmaker.Designers;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.ElementsSystem;
-using System.Security.AccessControl;
 using Kingmaker.Assets.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Quests;
 using Kingmaker.Controllers.Dialog;
+using Kingmaker.Designers;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.DialogSystem;
 using Kingmaker.DialogSystem.Blueprints;
+using Kingmaker.ElementsSystem;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI;
+using Kingmaker.UnitLogic.Parts;
+using ModKit;
+using ModKit.DataViewer;
 using ModKit.Utility;
+using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.AccessControl;
+using UnityEngine;
+using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
+using static ModKit.UI;
+using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
     public static class DialogEditor {
@@ -42,7 +42,7 @@ namespace ToyBox {
             if (Game.Instance?.DialogController is { } dialogController) {
                 Visited.Clear();
                 dialogController.OnGUI();
-                ReflectionTreeView.DetailToggle("Inspect Dialog Controller", dialogController);
+                ReflectionTreeView.DetailToggle("Inspect Dialog Controller".localize(), dialogController);
                 ReflectionTreeView.OnDetailGUI(dialogController);
                 25.space();
             }
@@ -50,10 +50,10 @@ namespace ToyBox {
 
         public static void OnGUI(this DialogController dialogController) {
             if (dialogController.CurrentCue == null) {
-                Label("No Active Dialog".cyan());
+                Label("No Active Dialog".localize().cyan());
             }
-            dialogController.CurrentCue?.OnGUI("Current");
-            dialogController.Answers?.OnGUI("Answer");
+            dialogController.CurrentCue?.OnGUI("Current".localize());
+            dialogController.Answers?.OnGUI("Answer".localize());
             //if (dialogController.m_ContinueCue is BlueprintCue cue) cue.OnGUI("Continue:");
             dialogController?.Dialog.OnGUI();
         }
@@ -81,12 +81,12 @@ namespace ToyBox {
                     }
                     if (cue.Conditions?.Conditions?.Count() > 0) {
                         using (HorizontalScope()) {
-                            Label("Cond".color(RGBA.teal), Indent.width());
+                            Label("Cond".localize().color(RGBA.teal), Indent.width());
                             Label(PreviewUtilities.FormatConditions(cue.Conditions).color(RGBA.teal));
                         }
                     }
                     if (visited) {
-                        Label($"[Repeat]".yellow());
+                        Label($"[Repeat]".localize().yellow());
                         return;
                     }
                     Visited.Add(cue);
@@ -95,25 +95,25 @@ namespace ToyBox {
                         var answerBase = answerBaseRef.Get();
                         switch (answerBase) {
                             case BlueprintAnswer answer:
-                                answer.OnGUI($"answer {index}");
+                                answer.OnGUI("Answer".localize() + $" {index}");
                                 index++;
                                 break;
                             case BlueprintAnswersList answersList: {
-                                var subIndex = 1;
-                                foreach (var subAnswerBaseRef in answersList.Answers) {
-                                    var subAnswerBase = subAnswerBaseRef.Get();
-                                    if (subAnswerBase is BlueprintAnswer subAnswer) {
-                                        subAnswer.OnGUI($"{index}-{subIndex}");
-                                        subIndex++;
+                                    var subIndex = 1;
+                                    foreach (var subAnswerBaseRef in answersList.Answers) {
+                                        var subAnswerBase = subAnswerBaseRef.Get();
+                                        if (subAnswerBase is BlueprintAnswer subAnswer) {
+                                            subAnswer.OnGUI($"{index}-{subIndex}");
+                                            subIndex++;
+                                        }
                                     }
+                                    index++;
+                                    break;
                                 }
-                                index++;
-                                break;
-                            }
                         }
                     }
                     if (cue.Continue is { } cueSelection) {
-                        cueSelection.OnGUI("Sel");
+                        cueSelection.OnGUI("Selection".localize());
                     }
                 }
             }
@@ -127,7 +127,7 @@ namespace ToyBox {
                     foreach (var cueBaseRef in cues) {
                         var index = 1;
                         if (cueBaseRef.Get() is BlueprintCue cue) {
-                            cue.OnGUI($"cue {index}");
+                            cue.OnGUI("Cue".localize() + $" {index}");
                             index++;
                         }
                     }
@@ -141,7 +141,7 @@ namespace ToyBox {
                     var text = $"{answer.GetDisplayName().yellow()} {answer.DisplayText}";
                     if (answer.NextCue is CueSelection nextCueSelection && nextCueSelection.Cues.Any()) {
                         Browser.DetailToggle(text, nextCueSelection, nextCueSelection);
-                        Browser.OnDetailGUI(nextCueSelection,(_) => nextCueSelection.OnGUI("Next"));
+                        Browser.OnDetailGUI(nextCueSelection, (_) => nextCueSelection.OnGUI("Next".localize()));
                     }
                     else
                         Label(text);
@@ -198,9 +198,9 @@ namespace ToyBox {
         }
         private static void OnTitleGUI(string? title) {
             if (title != null) {
-                Label(title.cyan(),Indent.width());
+                Label(title.cyan(), Indent.width());
             }
-            else 
+            else
                 Indent.space();
         }
     }
