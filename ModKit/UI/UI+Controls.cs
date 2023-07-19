@@ -237,7 +237,7 @@ namespace ModKit {
                 ActionButton(" < ", () => { v = Math.Max(v - increment, min); }, textBoxStyle, AutoWidth());
             else if (showMinMax) {
                 Space(-21);
-                ActionButton("min ".cyan(), () => { }, textBoxStyle, AutoWidth());
+                ActionButton("min".localize().cyan() + " ", () => { }, textBoxStyle, AutoWidth());
             }
             else {
                 34.space();
@@ -247,7 +247,7 @@ namespace ModKit {
             if (v < max)
                 ActionButton(" > ", () => { v = Math.Min(v + increment, max); }, textBoxStyle, AutoWidth());
             else if (showMinMax) {
-                ActionButton(" max".cyan(), () => { }, textBoxStyle, AutoWidth());
+                ActionButton(" " + "max".localize().cyan(), () => { }, textBoxStyle, AutoWidth());
                 Space(-27);
             }
             else

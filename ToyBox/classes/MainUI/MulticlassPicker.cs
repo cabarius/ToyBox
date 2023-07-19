@@ -111,7 +111,7 @@ namespace ToyBox {
                     if (!canSelectClass)
                         UI.Label("to select this class you must unselect at least one of your other existing classes".localize().orange());
                     if (optionsHasClass && chArchetype != null && archetypeOptions.Empty()) {
-                        UI.Label("due to existing archetype, ".localize() + $"{chArchetype.Name.yellow()}" + ",  this multiclass option will only be applied during respec.".localize().orange());
+                        UI.Label("due to existing archetype".localize() + ", " + $"{chArchetype.Name.yellow()}" + ", " + "this multiclass option will only be applied during respec.".localize().orange());
                     }
                     if (showGestaltToggle && chArchetype == null) {
                         using (UI.HorizontalScope()) {
@@ -163,9 +163,9 @@ namespace ToyBox {
 
                                     if (hasArch && archetype != chArchetype && (chArchetype != null || charHasClass)) {
                                         if (chArchetype != null)
-                                            UI.Label($"due to existing archetype, ".localize() + $"{chArchetype.Name.yellow()}" + ", this multiclass archetype will only be applied during respec.".localize().orange());
+                                            UI.Label("due to existing archetype".localize() + ", " + $"{chArchetype.Name.yellow()}" + ", " + "this multiclass option will only be applied during respec.".localize().orange());
                                         else
-                                            UI.Label($"due to existing class, ".localize() + $"{cd.CharacterClass.Name.yellow()}" + ", this multiclass archetype will only be applied during respec.".localize().orange());
+                                            UI.Label($"due to existing class".localize() + ", " + $"{cd.CharacterClass.Name.yellow()}" + ", " + "this multiclass option will only be applied during respec.".localize().orange());
                                     }
                                     else if (showGestaltToggle && archetype == chArchetype) {
                                         using (UI.HorizontalScope()) {

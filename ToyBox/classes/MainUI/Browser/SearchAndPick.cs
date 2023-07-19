@@ -317,7 +317,7 @@ namespace ToyBox {
                             using (VerticalScope()) {
                                 using (HorizontalScope()) {
                                     if (hasRepeatableAction) {
-                                        Label("Parameter".cyan() + ": ", ExpandWidth(false));
+                                        Label("Parameter".localize().cyan() + ": ", ExpandWidth(false));
                                         ActionIntTextField(
                                             ref repeatCount,
                                             "repeatCount",

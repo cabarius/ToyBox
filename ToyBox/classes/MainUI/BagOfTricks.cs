@@ -285,12 +285,12 @@ namespace ToyBox {
                    () => {
                        Toggle("Friendship is Magic".localize().bold(), ref Settings.toggleFriendshipIsMagic, 300.width());
                        25.space();
-                       Label("Experimental ".localize().orange() + " your friends forgive even your most vile choices.".localize().green());
+                       Label(("Experimental".orange() + " your friends forgive even your most vile choices.").localize().green());
                    },
                    () => {
                        Toggle("Disallow Companions Leaving Party".localize(), ref Settings.toggleBlockUnrecruit, 300.width());
                        200.space();
-                       Label("Warning: ".localize().color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can  otherwise break your save".localize().orange());
+                       Label(("Warning: ".color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can otherwise break your save").localize().orange());
                    },
 #endif
                    () => {
@@ -301,7 +301,7 @@ namespace ToyBox {
                    () => {
                        Toggle("Expand Dialog To Include Remote Companions".localize().bold(), ref Settings.toggleRemoteCompanionDialog, 300.width());
                        200.space();
-                       Label("Experimental".localize().orange() + " Allow remote companions to make comments on dialog you are having.".localize().green());
+                       Label(("Experimental".orange() + " Allow remote companions to make comments on dialog you are having.").localize().green());
                    },
                    () => {
                        if (Settings.toggleRemoteCompanionDialog) {
@@ -449,8 +449,7 @@ namespace ToyBox {
                                                                    .ToList();
                                           if (probablyPlayer is { Count: 1 }) {
                                               var newMainCharacter = probablyPlayer.First();
-                                              var text = "Promoting % to main character!".localize().Split('%');
-                                              Mod.Warn($"{text[0]}{newMainCharacter.CharacterName}{text[1]}");
+                                              Mod.Warn($"Promoting {newMainCharacter.CharacterName} to main character!");
                                               if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
                                           }
                                       },
@@ -521,10 +520,10 @@ namespace ToyBox {
                                        var suffix = Math.Abs(brutaltiy - Math.Floor(brutaltiy)) <= float.Epsilon ? "" : "+";
                                        switch (brutaltiy) {
                                            case float level when level < 2.0:
-                                               label = $"Unfair{suffix}".Rarity(RarityType.Common);
+                                               label = ("Unfair".localize() + suffix).Rarity(RarityType.Common);
                                                break;
                                            case float level when level < 3.0:
-                                               label = $"Brutal{suffix}";
+                                               label = "Brutal".localize() + suffix;
                                                break;
                                            default:
                                                var rarity = (RarityType)brutaltiy;

@@ -358,17 +358,17 @@ namespace ToyBox.classes.MainUI {
                                 if (selectedItem is ItemEntityShield shield) {
                                     using (VerticalScope(Width(260))) {
                                         using (HorizontalScope()) {
-                                            ActionButton("+ " + "Armor".orange(), () => AddClicked(enchant), Width(130));
+                                            ActionButton("+ " + "Armor".localize().orange(), () => AddClicked(enchant), Width(130));
                                             if (shield.ArmorComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                                                ActionButton("- " + "Armor".orange(), () => RemoveClicked(enchant), Width(130));
+                                                ActionButton("- " + "Armor".localize().orange(), () => RemoveClicked(enchant), Width(130));
                                             else
                                                 Space(130);
                                         }
                                         if (shield.WeaponComponent != null) {
                                             using (HorizontalScope()) {
-                                                ActionButton("+ " + "Spikes".orange(), () => AddClicked(enchant, true), Width(130));
+                                                ActionButton("+ " + "Spikes".localize().orange(), () => AddClicked(enchant, true), Width(130));
                                                 if (shield.WeaponComponent.Enchantments.Any(e => e.Blueprint == enchant))
-                                                    ActionButton("- " + "Spikes".orange(), () => RemoveClicked(enchant, true), Width(130));
+                                                    ActionButton("- " + "Spikes".localize().orange(), () => RemoveClicked(enchant, true), Width(130));
                                                 else
                                                     Space(130);
                                             }
@@ -378,25 +378,25 @@ namespace ToyBox.classes.MainUI {
                                 else if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
                                     using (VerticalScope()) {
                                         using (HorizontalScope()) {
-                                            ActionButton("+ " + "Main".orange(), () => AddClicked(enchant), Width(130));
+                                            ActionButton("+ " + "Main".localize().orange(), () => AddClicked(enchant), Width(130));
                                             if (weapon.Enchantments.Any(e => e.Blueprint == enchant))
-                                                ActionButton("- " + "Main".orange(), () => RemoveClicked(enchant), Width(130));
+                                                ActionButton("- " + "Main".localize().orange(), () => RemoveClicked(enchant), Width(130));
                                             else
                                                 Space(130);
                                         }
                                         using (HorizontalScope()) {
-                                            ActionButton("+ " + "2nd".orange(), () => AddClicked(enchant, true), Width(130));
+                                            ActionButton("+ " + "Offhand".localize().orange(), () => AddClicked(enchant, true), Width(130));
                                             if (weapon.Second.Enchantments.Any(e => e.Blueprint == enchant))
-                                                ActionButton("- " + "2nd".orange(), () => RemoveClicked(enchant, true), Width(130));
+                                                ActionButton("- " + "Offhand".localize().orange(), () => RemoveClicked(enchant, true), Width(130));
                                             else
                                                 Space(130);
                                         }
                                     }
                                 }
                                 else {
-                                    ActionButton("Add", () => AddClicked(enchant), Width(130));
+                                    ActionButton("Add".localize(), () => AddClicked(enchant), Width(130));
                                     if (selectedItem?.Enchantments.Any(e => e.Blueprint == enchant) ?? false)
-                                        ActionButton("Remove", () => RemoveClicked(enchant), Width(130));
+                                        ActionButton("Remove".localize(), () => RemoveClicked(enchant), Width(130));
                                     else
                                         Space(133);
                                 }

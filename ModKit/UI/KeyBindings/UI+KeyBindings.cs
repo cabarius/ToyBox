@@ -15,7 +15,7 @@ namespace ModKit {
             var keyBind = KeyBindings.GetBinding(identifier);
             var isEditing = identifier == selectedIdentifier;
             var isEditingOther = selectedIdentifier != null && identifier != selectedIdentifier && oldValue != null;
-            var label = keyBind.IsEmpty ? isEditing ? "Cancel" : "Bind" : keyBind.ToString().orange().bold();
+            var label = keyBind.IsEmpty ? isEditing ? "Cancel".localize() : "Bind".localize() : keyBind.ToString().orange().bold();
             showHint = showHint && isEditing;
             var conflicts = keyBind.Conflicts();
             using (VerticalScope(options)) {
@@ -36,17 +36,17 @@ namespace ModKit {
                 }
                 var bind = keyBind;
                 if (conflicts.Count() > 0) {
-                    ActionButton("Replace", () => { bind.RemoveConflicts(); });
-                    ActionButton("Clear", () => { KeyBindings.ClearBinding(bind.ID); });
-                    Label("conflicts".orange().bold() + "\n" + string.Join("\n", conflicts));
+                    ActionButton("Replace".localize(), () => { bind.RemoveConflicts(); });
+                    ActionButton("Clear".localize(), () => { KeyBindings.ClearBinding(bind.ID); });
+                    Label("conflicts".localize().orange().bold() + "\n" + string.Join("\n", conflicts));
                 }
                 if (showHint) {
                     var hint = "";
                     if (keyBind.IsEmpty)
-                        hint = oldValue == null ? "set key binding".green() : "press key".green();
+                        hint = oldValue == null ? "set key binding".localize().green() : "press key".localize().green();
                     Label(hint);
                     if (oldValue != null)
-                        ActionButton("Clear",
+                        ActionButton("Clear".localize(),
                                      () => {
                                          KeyBindings.ClearBinding(oldValue.ID);
                                          selectedIdentifier = null;

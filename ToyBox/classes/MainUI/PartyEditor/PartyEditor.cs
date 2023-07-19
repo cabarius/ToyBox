@@ -226,7 +226,7 @@ namespace ToyBox {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(nextLevel + 1), true);
                             }, Width(63));
                         }
-                        else { Label("max", Width(63)); }
+                        else { Label("max".localize(), Width(63)); }
                     }
                     else { Space(66); }
 #if Wrath
@@ -242,7 +242,7 @@ namespace ToyBox {
                                 progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
                             }, Width(63));
                         }
-                        else { Label("max", Width(63)); }
+                        else { Label("max".localize(), Width(63)); }
                     }
                     else { Space(66); }
 #endif

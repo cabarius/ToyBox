@@ -1,10 +1,10 @@
-﻿using ModKit.Utility;
+﻿using JetBrains.Annotations;
+using Kingmaker.Blueprints;
+using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using Kingmaker.Blueprints;
 using UnityEngine;
 using static ModKit.UI;
 using static ModKit.Utility.StringExtensions;
@@ -38,7 +38,7 @@ namespace ModKit.DataViewer {
                 reflectionTreeView.Indent = indent;
                 using (HorizontalScope()) {
                     Space(indent);
-                    Label("Inspecting: ".grey() + reflectionTreeView.Root.ToString().orange().bold());
+                    Label("Inspecting: ".localize().grey() + reflectionTreeView.Root.ToString().orange().bold());
                 }
                 reflectionTreeView.OnGUI(false);
                 return true;
@@ -107,8 +107,7 @@ namespace ModKit.DataViewer {
             if (_tree == null)
                 return;
             if (_buttonStyle == null)
-                _buttonStyle = new GUIStyle(GUI.skin.button)
-                    { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
+                _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
             if (_valueStyle == null)
                 _valueStyle = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
             if (Event.current.type == EventType.Layout) {
@@ -239,23 +238,23 @@ namespace ModKit.DataViewer {
                                         Div();
                                         lock (_searchResults)
                                             _searchResults.Traverse((node, depth) => {
-                                                                        if (node.Node == null) return true;
-                                                                        var toggleState = node.ToggleState;
-                                                                        if (!node.Node.hasChildren)
-                                                                            toggleState = ToggleState.None;
-                                                                        else if (node.ToggleState == ToggleState.None)
-                                                                            toggleState = ToggleState.Off;
-                                                                        if (node.Node.NodeType == NodeType.Root) {
-                                                                            if (node.matches.Count == 0) return false;
-                                                                            Label("Search Results".Cyan().Bold());
-                                                                        }
-                                                                        else
-                                                                            DrawNodePrivate(node.Node, depth, ref toggleState);
-                                                                        if (node.ToggleState != toggleState) Mod.Log(node.ToString());
-                                                                        node.ToggleState = toggleState;
-                                                                        if (toggleState.IsOn()) DrawChildren(node.Node, depth + 1, collapse);
-                                                                        return true; // toggleState == ToggleState.On;
-                                                                    },
+                                                if (node.Node == null) return true;
+                                                var toggleState = node.ToggleState;
+                                                if (!node.Node.hasChildren)
+                                                    toggleState = ToggleState.None;
+                                                else if (node.ToggleState == ToggleState.None)
+                                                    toggleState = ToggleState.Off;
+                                                if (node.Node.NodeType == NodeType.Root) {
+                                                    if (node.matches.Count == 0) return false;
+                                                    Label("Search Results".Cyan().Bold());
+                                                }
+                                                else
+                                                    DrawNodePrivate(node.Node, depth, ref toggleState);
+                                                if (node.ToggleState != toggleState) Mod.Log(node.ToString());
+                                                node.ToggleState = toggleState;
+                                                if (toggleState.IsOn()) DrawChildren(node.Node, depth + 1, collapse);
+                                                return true; // toggleState == ToggleState.On;
+                                            },
                                                                     0);
                                         Div();
                                     }
