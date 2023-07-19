@@ -44,32 +44,32 @@ namespace ToyBox {
         public static MulticlassMod multiclassMod;
 #endif
         public static NamedAction[] tabs = {
-                    new NamedAction("Bag of Tricks".localize(), BagOfTricks.OnGUI),
-                    new NamedAction("Enhanced UI".localize(), EnhancedUI.OnGUI),
-                    new NamedAction("Level Up".localize(), LevelUp.OnGUI),
-                    new NamedAction("Party".localize(), PartyEditor.OnGUI),
-                    new NamedAction("Loot".localize(), PhatLoot.OnGUI),
-                    new NamedAction("Enchantment".localize(), EnchantmentEditor.OnGUI),
+                    new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
+                    new NamedAction("Enhanced UI", EnhancedUI.OnGUI),
+                    new NamedAction("Level Up", LevelUp.OnGUI),
+                    new NamedAction("Party", PartyEditor.OnGUI),
+                    new NamedAction("Loot", PhatLoot.OnGUI),
+                    new NamedAction("Enchantment", EnchantmentEditor.OnGUI),
 #if false
-                    new NamedAction("Playground".localize(), () => Playground.OnGUI()),
+                    new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
-                    new NamedAction("Search 'n Pick".localize(), SearchAndPick.OnGUI),
+                    new NamedAction("Search 'n Pick", SearchAndPick.OnGUI),
 #if Wrath
-                    new NamedAction("Crusade".localize(), CrusadeEditor.OnGUI),
-                    new NamedAction("Armies".localize(), ArmiesEditor.OnGUI),
-                    new NamedAction("Events/Decrees".localize(), EventEditor.OnGUI),
+                    new NamedAction("Crusade", CrusadeEditor.OnGUI),
+                    new NamedAction("Armies", ArmiesEditor.OnGUI),
+                    new NamedAction("Events/Decrees", EventEditor.OnGUI),
 #if DEBUG
-                    new NamedAction("Gambits (AI)".localize(), BraaainzEditor.OnGUI),
+                    new NamedAction("Gambits (AI)", BraaainzEditor.OnGUI),
 #endif
 #elif RT
-                    new NamedAction("Colonies".localize(), ColonyEditor.OnGUI),
+                    new NamedAction("Colonies", ColonyEditor.OnGUI),
 #endif
-                    new NamedAction("Etudes".localize(), EtudesEditor.OnGUI),
-                    new NamedAction("Quests".localize(), QuestEditor.OnGUI),
+                    new NamedAction("Etudes", EtudesEditor.OnGUI),
+                    new NamedAction("Quests", QuestEditor.OnGUI),
                     new NamedAction("Dialog & NPCs", DialogAndNPCs.OnGUI),
-                    new NamedAction("Saves".localize(), GameSavesBrowser.OnGUI),
-                    new NamedAction("Achievements".localize(), AchievementsUnlocker.OnGUI),
-                    new NamedAction("Settings".localize(), SettingsUI.OnGUI)};
+                    new NamedAction("Saves", GameSavesBrowser.OnGUI),
+                    new NamedAction("Achievements", AchievementsUnlocker.OnGUI),
+                    new NamedAction("Settings", SettingsUI.OnGUI)};
         private static int partyTabID = -1;
         public static bool Enabled;
         public static bool IsModGUIShown = false;
@@ -272,6 +272,7 @@ namespace ToyBox {
                             }
                         }
                     },
+                    s => s.localize(),
                     tabs
                     );
             }

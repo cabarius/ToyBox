@@ -60,7 +60,7 @@ namespace ToyBox {
             var title = blueprint.Title.StringValue();
             if (title.Length == 0) title = blueprint.ToString();
             if (blueprint.IsAddendum)
-                title = "Addendum: ".color(RGBA.white) + title;
+                title = "Addendum: ".localize().color(RGBA.white) + title;
             if (blueprint.name.Contains("_Fail"))
                 return title.red();
             else
@@ -85,18 +85,18 @@ namespace ToyBox {
             var index = 0;
             var contentColor = GUI.contentColor;
             using (HorizontalScope()) {
-                Label("Quests".cyan());
+                Label("Quests".localize().cyan());
             }
             var split = quests.GroupBy(q => q.State == QuestState.Completed).OrderBy(g => g.Key);
             using (HorizontalScope()) {
-                Toggle("Hide Completed", ref Settings.toggleQuestHideCompleted);
+                Toggle("Hide Completed".localize(), ref Settings.toggleQuestHideCompleted);
                 25.space();
-                Toggle("Show Unrevealed Steps", ref Settings.toggleQuestsShowUnrevealedObjectives);
+                Toggle("Show Unrevealed Steps".localize(), ref Settings.toggleQuestsShowUnrevealedObjectives);
                 25.space();
-                Toggle("Inspect Quests and Objectives", ref Settings.toggleQuestInspector);
+                Toggle("Inspect Quests and Objectives".localize(), ref Settings.toggleQuestInspector);
                 if (Settings.toggleQuestInspector) {
                     25.space();
-                    ReflectionTreeView.DetailToggle("Inspect", _selectedQuests, split, 0);
+                    ReflectionTreeView.DetailToggle("Inspect".localize(), _selectedQuests, split, 0);
                 }
             }
             if (Settings.toggleQuestInspector) {
@@ -114,7 +114,7 @@ namespace ToyBox {
                             50.space();
                             DisclosureToggle(quest.stateString(), ref _selectedQuests[index]);
                             if (Settings.toggleQuestInspector)
-                                ReflectionTreeView.DetailToggle("Inspect", quest, quest, 0);
+                                ReflectionTreeView.DetailToggle("Inspect".localize(), quest, quest, 0);
                             50.space();
                             Label(quest.Blueprint.Description.StringValue().StripHTML().green());
                         }
@@ -135,25 +135,25 @@ namespace ToyBox {
                                             25.space();
                                             Label(questObjective.stateString(), Width(150));
                                             if (Settings.toggleQuestInspector)
-                                                ReflectionTreeView.DetailToggle("Inspect", questObjective, questObjective, 0);
+                                                ReflectionTreeView.DetailToggle("Inspect".localize(), questObjective, questObjective, 0);
                                             Space(25);
                                             using (HorizontalScope(300)) {
                                                 Space(0);
                                                 if (questObjective.State == QuestObjectiveState.None && quest.State == QuestState.Started) {
-                                                    ActionButton("Start", () => { questObjective.Start(); }, Width(150));
+                                                    ActionButton("Start".localize(), () => { questObjective.Start(); }, Width(150));
                                                 }
                                                 else if (questObjective.State == QuestObjectiveState.Started) {
-                                                    ActionButton(questObjective.Blueprint.IsFinishParent ? "Finish" : "Complete", () => {
+                                                    ActionButton(questObjective.Blueprint.IsFinishParent ? "Finish".localize() : "Complete".localize(), () => {
                                                         questObjective.Complete();
                                                     }, Width(150));
                                                     if (questObjective.Blueprint.AutoFailDays > 0) {
-                                                        ActionButton("Reset Time", () => {
+                                                        ActionButton("Reset Time".localize(), () => {
                                                             Traverse.Create(questObjective).Field("m_ObjectiveStartTime").SetValue(Game.Instance.Player.GameTime);
                                                         }, Width(150));
                                                     }
                                                 }
                                                 else if (questObjective.State == QuestObjectiveState.Failed && (questObjective.Blueprint.IsFinishParent || quest.State == QuestState.Started)) {
-                                                    ActionButton("Restart", () => {
+                                                    ActionButton("Restart".localize(), () => {
                                                         if (quest.State == QuestState.Completed || quest.State == QuestState.Failed) {
                                                             Traverse.Create(quest).Field("m_State").SetValue(QuestState.Started);
                                                         }
@@ -184,14 +184,14 @@ namespace ToyBox {
                                                             25.space();
                                                             Label(childObjective.stateString(), Width(150));
                                                             if (Settings.toggleQuestInspector)
-                                                                ReflectionTreeView.DetailToggle("Inspect", questObjective, questObjective, 0);
+                                                                ReflectionTreeView.DetailToggle("Inspect".localize(), questObjective, questObjective, 0);
                                                             Space(25);
                                                             using (HorizontalScope(300)) {
                                                                 if (childObjective.State == QuestObjectiveState.None) {
-                                                                    ActionButton("Start", () => { childObjective.Start(); }, Width(150));
+                                                                    ActionButton("Start".localize(), () => { childObjective.Start(); }, Width(150));
                                                                 }
                                                                 else if (childObjective.State == QuestObjectiveState.Started) {
-                                                                    ActionButton(childObjective.Blueprint.IsFinishParent ? "Complete (Final)" : "Complete", () => {
+                                                                    ActionButton(childObjective.Blueprint.IsFinishParent ? "Complete (Final)".localize() : "Complete".localize(), () => {
                                                                         childObjective.Complete();
                                                                     }, Width(150));
                                                                 }
@@ -226,7 +226,7 @@ namespace ToyBox {
                 var locations = objective.Blueprint.Locations;
                 if (areas.Count > 0 || locations.Count > 0) {
                     if (locations.Count > 0) {
-                        Label("TP");
+                        Label("Teleport".localize() + ":");
                         25.space();
                         using (VerticalScope(MaxWidth(600))) {
                             foreach (var location in locations) {

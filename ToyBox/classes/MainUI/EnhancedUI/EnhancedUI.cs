@@ -1,17 +1,17 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-using Kingmaker;
+﻿using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
-using ModKit;
-using static ModKit.UI;
-using Kingmaker.View.MapObjects;
-using Kingmaker.View.MapObjects.InteractionRestrictions;
-using ModKit.Utility;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
+using Kingmaker.View.MapObjects;
+using Kingmaker.View.MapObjects.InteractionRestrictions;
+using ModKit;
+using ModKit.Utility;
+using System;
+using System.Linq;
+using UnityEngine;
 using UnityModManagerNet;
+using static ModKit.UI;
 #if Wrath
 using ToyBox.Multiclass;
 #endif
@@ -99,8 +99,7 @@ namespace ToyBox {
                                                                    .Where(x => !x.IsStoryCompanion()).ToList();
                                           if (probablyPlayer is { Count: 1 }) {
                                               var newMainCharacter = probablyPlayer.First();
-                                              var text = "Promoting % to main character!".localize().Split('%');
-                                              Mod.Warn($"{text[0]}{newMainCharacter.CharacterName}{text[1]}");
+                                              Mod.Warn($"Promoting {newMainCharacter.CharacterName} to main character!");
                                               if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
                                           }
                                       },
@@ -150,6 +149,8 @@ namespace ToyBox {
             Div(0, 25);
             EnhancedCamera.OnGUI();
             Div(0, 25);
+            // TODO: Update EnumHelper.ValidFilterCategories for RT
+#if Wrath
             HStack("Enhanced Inventory".localize(),
                    1,
                    () => {
@@ -292,6 +293,7 @@ namespace ToyBox {
                        }
                    },
                    () => { });
+#endif
         }
     }
 

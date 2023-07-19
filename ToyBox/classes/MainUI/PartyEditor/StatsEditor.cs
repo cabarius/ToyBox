@@ -241,7 +241,7 @@ namespace ToyBox {
                 var maskIndex = -1;
                 20.space();
                 var titles = AlignmentShiftDirections.Select(
-                    a => $"{increment.ToString("+0;-#").orange()} {a.ToString().color(a.Color()).bold()}").ToArray();
+                    a => $"{increment.ToString("+0;-#").orange()} {a.ToString().localize().color(a.Color()).bold()}").ToArray();
                 if (SelectionGrid(ref maskIndex, titles, 3, 650.width())) {
                     charAlignment.Shift(AlignmentShiftDirections[maskIndex], increment, ToyboxAlignmentProvider);
                 }
@@ -258,7 +258,7 @@ namespace ToyBox {
                 528.space();
                 var maskIndex = Array.IndexOf(AlignmentMasks, alignmentMask);
                 var titles = AlignmentMasks.Select(
-                    a => a.ToString().color(a.Color()).bold()).ToArray();
+                    a => a.ToString().localize().color(a.Color()).bold()).ToArray();
                 if (SelectionGrid(ref maskIndex, titles, 3, 650.width())) {
                     ch.Descriptor().Alignment.LockAlignment(AlignmentMasks[maskIndex], new Alignment?());
                 }
@@ -417,9 +417,8 @@ namespace ToyBox {
                                     Game.Instance.Player.DismissCompanion(clone.Value);
                                     Game.Instance.Player.DetachPartyMember(clone.Value);
                                     Game.Instance.Player.CrossSceneState.RemoveEntityData(clone.Value);
-
                                 }
-
+                                ch.Remove<UnitPartLocustClonePets>();
                                 foreach (var buff in ch.Buffs.Enumerable.ToList()) {
                                     if (BlueprintExtensions.GetTitle(buff.Blueprint).ToLower().Contains("locustclone")) {
                                         ch.Buffs.RemoveFact(buff);

@@ -91,7 +91,7 @@ namespace ToyBox {
                                     return levelText + countText;
                                 }
                                 else {
-                                    return "All Spells";
+                                    return "All Spells".localize();
                                 }
                             },
                             AutoWidth()

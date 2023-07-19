@@ -5,6 +5,7 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Utility;
 using ModKit;
 using System.Linq;
+using System.Linq.Expressions;
 #if Wrath
 using ToyBox.Multiclass;
 #endif
@@ -111,7 +112,13 @@ namespace ToyBox {
                     if (!canSelectClass)
                         UI.Label("to select this class you must unselect at least one of your other existing classes".localize().orange());
                     if (optionsHasClass && chArchetype != null && archetypeOptions.Empty()) {
-                        UI.Label("due to existing archetype, ".localize() + $"{chArchetype.Name.yellow()}" + ",  this multiclass option will only be applied during respec.".localize().orange());
+                        try {
+                            var text = "due to existing archetype, %, this multiclass option will only be applied during respec.".localize().Split('%');
+                            UI.Label($"{text[0]}{chArchetype.Name.yellow()}{text[1]}".orange());
+                        }
+                        catch {
+                            UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
+                        }
                     }
                     if (showGestaltToggle && chArchetype == null) {
                         using (UI.HorizontalScope()) {
@@ -162,10 +169,24 @@ namespace ToyBox {
                                 using (UI.VerticalScope()) {
 
                                     if (hasArch && archetype != chArchetype && (chArchetype != null || charHasClass)) {
-                                        if (chArchetype != null)
-                                            UI.Label($"due to existing archetype, ".localize() + $"{chArchetype.Name.yellow()}" + ", this multiclass archetype will only be applied during respec.".localize().orange());
-                                        else
-                                            UI.Label($"due to existing class, ".localize() + $"{cd.CharacterClass.Name.yellow()}" + ", this multiclass archetype will only be applied during respec.".localize().orange());
+                                        if (chArchetype != null) {
+                                            try {
+                                                var text = "due to existing archetype, %, this multiclass option will only be applied during respec.".localize().Split('%');
+                                                UI.Label($"{text[0]}{chArchetype.Name.yellow()}{text[1]}".orange());
+                                            }
+                                            catch {
+                                                UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
+                                            }
+                                        }
+                                        else {
+                                            try {
+                                                var text = "due to existing class, %, this multiclass option will only be applied during respec.".localize().Split('%');
+                                                UI.Label($"{text[0]}{cd.CharacterClass.Name.yellow()}{text[1]}".orange());
+                                            }
+                                            catch {
+                                                UI.Label($"due to existing class, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
+                                            }
+                                        }
                                     }
                                     else if (showGestaltToggle && archetype == chArchetype) {
                                         using (UI.HorizontalScope()) {

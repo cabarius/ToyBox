@@ -115,13 +115,13 @@ namespace ToyBox.classes.MainUI {
             if (Game.Instance?.Player == null) return;
             var kingdom = KingdomState.Instance;
             if (kingdom == null) {
-                Label("You must unlock the crusade before you can access these toys.".yellow().bold());
+                Label("You must unlock the crusade before you can access these toys.".localize().yellow().bold());
                 return;
             }
-            HStack("Tweaks", 1,
-                () => Toggle("Infinite Mercenary Rerolls", ref settings.toggleInfiniteArmyRerolls),
+            HStack("Tweaks".localize(), 1,
+                () => Toggle("Infinite Mercenary Rerolls".localize(), ref settings.toggleInfiniteArmyRerolls),
                 () => {
-                    Toggle("Experimental - Enable Large Player Armies", ref settings.toggleLargeArmies);
+                    Toggle("Experimental - Enable Large Player Armies".localize(), ref settings.toggleLargeArmies);
                     if (settings.toggleLargeArmies) {
                         BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
@@ -131,15 +131,15 @@ namespace ToyBox.classes.MainUI {
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
                     }
                 },
-                () => Slider("Recruitment Cost", ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", AutoWidth()),
-                () => LogSlider("Number of Recruits at Refresh", ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
+                () => Slider("Recruitment Cost".localize(), ref settings.recruitmentCost, 0f, 1f, 1f, 2, "", AutoWidth()),
+                () => LogSlider("Number of Recruits at Refresh".localize(), ref settings.recruitmentMultiplier, 0f, 100, 1, 1, "",
                     AutoWidth()),
-                () => LogSlider("Army Experience Multiplier", ref settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
+                () => LogSlider("Army Experience Multiplier".localize(), ref settings.armyExperienceMultiplier, 0f, 100, 1, 1, "",
                     AutoWidth()),
-                () => LogSlider("After Army Battle Raise Multiplier", ref settings.postBattleSummonMultiplier, 0f, 100,
+                () => LogSlider("After Army Battle Raise Multiplier".localize(), ref settings.postBattleSummonMultiplier, 0f, 100,
                     1, 1, "", AutoWidth()),
-                () => Slider("Player Leader Ability Strength", ref settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", AutoWidth()),
-                () => Slider("Enemy Leader Ability Strength", ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", AutoWidth())
+                () => Slider("Player Leader Ability Strength".localize(), ref settings.playerLeaderPowerMultiplier, 0f, 10f, 1f, 2, "", AutoWidth()),
+                () => Slider("Enemy Leader Ability Strength".localize(), ref settings.enemyLeaderPowerMultiplier, 0f, 5f, 1f, 2, "", AutoWidth())
             );
             Div(0, 25);
             var mercenaryManager = KingdomState.Instance.MercenariesManager;
@@ -152,32 +152,32 @@ namespace ToyBox.classes.MainUI {
                 recruitPool = KingdomState.Instance.RecruitsManager.Pool.Select((r) => r.Unit);
                 mercenaryUnits.AddRange(recruitPool);
             }
-            HStack("Mercenaries",
+            HStack("Mercenaries".localize(),
                    1,
                    () => {
                        if (playerArmies != null) {
-                           ActionButton("Add All Current Units", () => AddAllCurrentUnits(), 200.width());
+                           ActionButton("Add All Current Units".localize(), () => AddAllCurrentUnits(), 200.width());
                            110.space();
-                           Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units.".green());
+                           Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units.".localize().green());
                        }
                        else {
-                           Label("Need Armies To Add All Current Units".yellow());
+                           Label("Need Armies To Add All Current Units".localize().yellow());
                            25.space();
-                           HelpLabel("You should be on the global map and have the Crusade active");
+                           HelpLabel("You should be on the global map and have the Crusade active".localize());
                        }
                    },
                    () => {
-                       BindableActionButton(RerollAll, 200.width());
+                       BindableActionButton(RerollAll, true, 200.width());
                        Space(-93);
-                       Label("Rerolls Mercenary Units for free.".green());
+                       Label("Rerolls Mercenary Units for free.".localize().green());
                    },
                    () => {
-                       BindableActionButton(ApplyRecruitGrowth, 200.width());
+                       BindableActionButton(ApplyRecruitGrowth, true, 200.width());
                        Space(-93);
-                       Label("Applies the regular recruits growth directly.".green());
+                       Label("Applies the regular recruits growth directly.".localize().green());
                    },
                    () => {
-                       ValueAdjustorEditable("Mercenary Slots",
+                       ValueAdjustorEditable("Mercenary Slots".localize(),
                                              () => mercenaryManager.MaxAllowedSlots,
                                              v => mercenaryManager.AddSlotsCount(v - mercenaryManager.MaxAllowedSlots),
                                              1,
@@ -186,13 +186,13 @@ namespace ToyBox.classes.MainUI {
                    },
                    () => {
                        using (VerticalScope()) {
-                           Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth());
+                           Toggle("Add new units in friendly armies to Mercenary Pool if not Recruitable.".localize().cyan(), ref settings.toggleAddNewUnitsAsMercenaries, AutoWidth());
                            10.space();
                            Div();
                            15.space();
                        }
                    },
-                   () => DisclosureToggle("Show Recruitment Pools".Orange(), ref discloseMercenaryUnits),
+                   () => DisclosureToggle("Show Recruitment Pools".localize().Orange(), ref discloseMercenaryUnits),
                    () => {
                        if (discloseMercenaryUnits) {
                            using (VerticalScope()) {
@@ -210,13 +210,13 @@ namespace ToyBox.classes.MainUI {
                                    () => {
                                        var bluh = ummWidth - 50;
                                        var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
-                                       TitleLabel("Unit", Width((int)titleWidth));
+                                       TitleLabel("Unit".localize(), Width((int)titleWidth));
                                        125.space();
-                                       TitleLabel("Action", Width(210));
+                                       TitleLabel("Action".localize(), Width(210));
                                        20.space();
-                                       TitleLabel("Pool", Width(200));
+                                       TitleLabel("Pool".localize(), Width(200));
                                        20.space();
-                                       TitleLabel("Recruitment Weight (Mercenary only)", AutoWidth());
+                                       TitleLabel("Recruitment Weight (Mercenary only)".localize(), AutoWidth());
                                    },
                                    (unit, _) => {
                                        var bluh = ummWidth - 50;
@@ -229,7 +229,7 @@ namespace ToyBox.classes.MainUI {
                                        else if (isInMercPool)
                                            title = title.cyan().bold();
                                        Label(title, Width((int)titleWidth));
-                                       ActionButton(isInMercPool ? "Rem Merc" : "Add Merc",
+                                       ActionButton(isInMercPool ? "Rem Merc".localize() : "Add Merc".localize(),
                                                     () => {
                                                         mercenaryBrowser.needsReloadData = true;
                                                         if (isInMercPool) {
@@ -244,7 +244,7 @@ namespace ToyBox.classes.MainUI {
                                                     },
                                                     150.width());
                                        10.space();
-                                       ActionButton(isInKingdomPool ? "Rem Recruit" : "Add Recruit",
+                                       ActionButton(isInKingdomPool ? "Rem Recruit".localize() : "Add Recruit".localize(),
                                                     () => {
                                                         mercenaryBrowser.needsReloadData = true;
                                                         if (isInKingdomPool) {
@@ -261,7 +261,7 @@ namespace ToyBox.classes.MainUI {
                                                         IsInRecruitPool[unit.GetHashCode()] = isInKingdomPool;
                                                     },
                                                     150.width());
-                                       var poolText = $"{(isInMercPool ? $"Merc".cyan() : "")} {(isInKingdomPool ? $"Recruit ({recruitsManager.GetCountInPool(unit)})".orange() : "")}".Trim();
+                                       var poolText = $"{(isInMercPool ? "Merc".localize().cyan() : "")} {(isInKingdomPool ? ("Recruit".localize() + $" ({recruitsManager.GetCountInPool(unit)})").orange() : "")}".Trim();
                                        50.space();
                                        Label(poolText, Width(200));
                                        25.space();
@@ -269,7 +269,7 @@ namespace ToyBox.classes.MainUI {
                                            var poolInfo = mercenaryManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
                                            if (poolInfo != null) {
                                                var weight = poolInfo.Weight;
-                                               if (LogSliderCustomLabelWidth("Weight", ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
+                                               if (LogSliderCustomLabelWidth("Weight".localize(), ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
                                                    poolInfo.UpdateWeight(weight);
                                                }
                                            }
@@ -287,11 +287,11 @@ namespace ToyBox.classes.MainUI {
             if (armies == null)
                 UpdateArmies();
             if (playerArmies != null)
-                ArmiesGUI("Player Armies", playerArmies);
+                ArmiesGUI("Player Armies".localize(), playerArmies);
             if (playerArmies != null && demonArmies != null)
                 Div(0, 25, 0);
             if (demonArmies != null)
-                ArmiesGUI("Demon Armies", demonArmies);
+                ArmiesGUI("Demon Armies".localize(), demonArmies);
         }
         public static void ArmiesGUI(string title, IEnumerable<(GlobalMapArmyState, float)> armies) {
             if (armies.Count() == 0) return;
@@ -299,14 +299,14 @@ namespace ToyBox.classes.MainUI {
             using (VerticalScope()) {
                 HStack(title, 1,
                     () => {
-                        Label("Name", MinWidth(100), MaxWidth(250));
-                        Label("Type", MinWidth(100), MaxWidth(250));
-                        Label("Leader", Width(350));
-                        Label("Squad Count", Width(150));
+                        Label("Name".localize(), MinWidth(100), MaxWidth(250));
+                        Label("Type".localize(), MinWidth(100), MaxWidth(250));
+                        Label("Leader".localize(), Width(350));
+                        Label("Squad Count".localize(), Width(150));
                         Space(55);
-                        Label("Location", Width(400));
+                        Label("Location".localize(), Width(400));
                         Space(25);
-                        Label("Dist");
+                        Label("Dist".localize());
                     },
                     () => {
                         using (VerticalScope()) {
@@ -336,32 +336,32 @@ namespace ToyBox.classes.MainUI {
                                     var squads = army.Data.Squads;
                                     Label(squads.Count.ToString().cyan(), Width(35));
                                     showSquads = toggleStates.GetValueOrDefault(squads, false);
-                                    if (DisclosureToggle("Squads", ref showSquads, 125)) {
+                                    if (DisclosureToggle("Squads".localize(), ref showSquads, 125)) {
                                         selectedArmy = army == selectedArmy ? null : army;
                                         toggleStates[squads] = showSquads;
 
                                     }
                                     Space(50);
-                                    var displayName = army.Location?.GetDisplayName() ?? "traveling on a path";
+                                    var displayName = army.Location?.GetDisplayName() ?? "traveling on a path".localize();
                                     Label(displayName.yellow(), Width(400));
                                     Space(25);
                                     var distStr = distance >= 0 ? $"{distance:0.#}" : "-";
                                     Label(distStr, Width(50));
                                     Space(50);
-                                    ActionButton("Teleport", () => TeleportToArmy(army), Width(150));
+                                    ActionButton("Teleport".localize(), () => TeleportToArmy(army), Width(150));
                                     Space(25);
                                     if (GlobalMapView.Instance != null) {
-                                        ActionButton("Summon", () => SummonArmy(army), Width(150));
+                                        ActionButton("Summon".localize(), () => SummonArmy(army), Width(150));
                                     }
                                     Space(25);
                                     if (army.Data.Faction == ArmyFaction.Crusaders) {
-                                        ActionButton("Full MP", () => {
+                                        ActionButton("Full MP".localize(), () => {
                                             var additionalMP = army.Data.GetArmyBonusSkills().Select(a => a.DailyMovementPoints);
                                             army.RestoreMovementPoints(40 + additionalMP.Sum());
                                         }, Width(150));
                                     }
                                     Space(25);
-                                    ActionButton("Destroy", () => {
+                                    ActionButton("Destroy".localize(), () => {
                                         // army.Data.RemoveAllSquads();
                                         Game.Instance.Player.GlobalMap.LastActivated.DestroyArmy(army);
                                         UpdateArmies();
@@ -375,46 +375,46 @@ namespace ToyBox.classes.MainUI {
                                         using (HorizontalScope()) {
                                             Space(100);
                                             using (VerticalScope()) {
-                                                Label("Stats".yellow());
-                                                ValueAdjuster("Level".cyan(), () => leader.Level, (l) => leader.m_Level = l, 1, 0, 20, 375.width());
-                                                ValueAdjustorEditable("Experience".cyan(), () => leader.Experience, (e) => leader.m_Experience = e, 100, 0, int.MaxValue, 375.width());
+                                                Label("Stats".localize().yellow());
+                                                ValueAdjuster("Level".localize().cyan(), () => leader.Level, (l) => leader.m_Level = l, 1, 0, 20, 375.width());
+                                                ValueAdjustorEditable("Experience".localize().cyan(), () => leader.Experience, (e) => leader.m_Experience = e, 100, 0, int.MaxValue, 375.width());
                                                 var stats = leader.Stats;
-                                                ValueAdjuster("Attack Bonus".cyan(),
+                                                ValueAdjuster("Attack Bonus".localize().cyan(),
                                                     () => stats.AttackBonus.BaseValue,
                                                     (v) => stats.AttackBonus.BaseValue = v, 1,
                                                     stats.AttackBonus.MinValue,
                                                     stats.AttackBonus.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Defense Bonus".cyan(),
+                                                ValueAdjuster("Defense Bonus".localize().cyan(),
                                                     () => stats.DefenseBonus.BaseValue,
                                                     (v) => stats.DefenseBonus.BaseValue = v, 1,
                                                     stats.DefenseBonus.MinValue,
                                                     stats.DefenseBonus.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Infirmary Size".cyan(),
+                                                ValueAdjuster("Infirmary Size".localize().cyan(),
                                                     () => stats.InfirmarySize.BaseValue,
                                                     (v) => stats.InfirmarySize.BaseValue = v, 25,
                                                     stats.InfirmarySize.MinValue,
                                                     stats.InfirmarySize.MaxValue, Width(375));
-                                                ValueAdjuster("Mana".cyan(),
+                                                ValueAdjuster("Mana".localize().cyan(),
                                                     () => stats.CurrentMana,
                                                     (v) => stats.CurrentMana = v, 5,
                                                     stats.MaxMana.MinValue,
                                                     stats.MaxMana.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Max Mana".cyan(),
+                                                ValueAdjuster("Max Mana".localize().cyan(),
                                                     () => stats.MaxMana.BaseValue,
                                                     (v) => stats.MaxMana.BaseValue = v, 5,
                                                     stats.MaxMana.MinValue,
                                                     stats.MaxMana.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Mana Regen".cyan(),
+                                                ValueAdjuster("Mana Regen".localize().cyan(),
                                                     () => stats.ManaRegeneration.BaseValue,
                                                     (v) => stats.ManaRegeneration.BaseValue = v, 1,
                                                     stats.ManaRegeneration.MinValue,
                                                     stats.ManaRegeneration.MaxValue,
                                                     Width(375));
-                                                ValueAdjuster("Spell Strength".cyan(),
+                                                ValueAdjuster("Spell Strength".localize().cyan(),
                                                     () => stats.SpellStrength.BaseValue,
                                                     (v) => stats.SpellStrength.BaseValue = v, 1,
                                                     stats.SpellStrength.MinValue,
@@ -423,8 +423,8 @@ namespace ToyBox.classes.MainUI {
                                         }
                                         using (HorizontalScope()) {
                                             Space(100);
-                                            Label("Skills".yellow(), Width(85));
-                                            if (DisclosureToggle("Show All".orange().bold(), ref showAllLeaderSkills, 125)) {
+                                            Label("Skills".localize().yellow(), Width(85));
+                                            if (DisclosureToggle("Show All".localize().orange().bold(), ref showAllLeaderSkills, 125)) {
                                                 toggleStates[leader.Skills] = showAllLeaderSkills;
                                             }
                                             //UI.Space(285);
@@ -432,7 +432,7 @@ namespace ToyBox.classes.MainUI {
                                         }
                                         using (HorizontalScope()) {
                                             Space(100);
-                                            ActionTextField(ref skillsSearchText, "Search", (s) => { }, () => { }, 235.width());
+                                            ActionTextField(ref skillsSearchText, "Search".localize(), (s) => { }, () => { }, 235.width());
                                         }
                                         var skills = showAllLeaderSkills ? GetAllLeaderSkills() : leader.Skills;
                                         if (skillsSearchText.Length > 0) {
@@ -453,9 +453,9 @@ namespace ToyBox.classes.MainUI {
                                                     Label(skillName, Width(375));
                                                     Space(25);
                                                     if (leaderHasSkill)
-                                                        ActionButton("Remove", () => { skillToRemove = skill; }, Width(150));
+                                                        ActionButton("Remove".localize(), () => { skillToRemove = skill; }, Width(150));
                                                     else
-                                                        ActionButton("Add", () => { skillToAdd = skill; }, Width(150));
+                                                        ActionButton("Add".localize(), () => { skillToAdd = skill; }, Width(150));
                                                     Space(100);
                                                     var description = (string)skill.LocalizedDescription;
                                                     Label(description.StripHTML().green());
@@ -506,9 +506,9 @@ namespace ToyBox.classes.MainUI {
                                     Div(0, 10);
                                     using (VerticalScope()) {
                                         using (HorizontalScope()) {
-                                            Label("Squad Name".yellow(), Width(475));
+                                            Label("Squad Name".localize().yellow(), Width(475));
                                             Space(25);
-                                            Label("Unit Count".yellow(), Width(250));
+                                            Label("Unit Count".localize().yellow(), Width(250));
                                         }
                                     }
                                     using (VerticalScope()) {
@@ -526,13 +526,13 @@ namespace ToyBox.classes.MainUI {
                                                     }, Width(225)
                                                 );
                                                 Space(25);
-                                                ActionButton("Remove", () => {
+                                                ActionButton("Remove".localize(), () => {
                                                     squadToRemove = squad;
                                                 }, Width(150));
                                             }
                                         }
-                                        if (title == "Player Armies") {
-                                            if (DisclosureToggle("Add Squads".Yellow(), ref showAddSquad, 125)) {
+                                        if (title == "Player Armies".localize()) {
+                                            if (DisclosureToggle("Add Squads".localize().Yellow(), ref showAddSquad, 125)) {
                                                 toggleShowSquadStates[squads] = showAddSquad;
                                             }
                                         }
@@ -546,7 +546,7 @@ namespace ToyBox.classes.MainUI {
                                             var growthPool = recruitManager.Growth;
                                             using (VerticalScope()) {
                                                 using (HorizontalScope()) {
-                                                    Label("Unit Count".cyan(), AutoWidth());
+                                                    Label("Unit Count".localize().cyan(), AutoWidth());
                                                     count = IntTextField(ref settings.unitCount, null, Width(150));
                                                 }
 
@@ -554,7 +554,7 @@ namespace ToyBox.classes.MainUI {
                                                     var unit = poolInfo.Unit;
                                                     using (HorizontalScope()) {
                                                         Label(unit.NameSafe(), Width(520));
-                                                        ActionButton("Add",
+                                                        ActionButton("Add".localize(),
                                                             () => {
                                                                 squadToAdd = unit;
                                                             }, Width(150));
@@ -564,7 +564,7 @@ namespace ToyBox.classes.MainUI {
                                                     var unit = poolInfo.Unit;
                                                     using (HorizontalScope()) {
                                                         Label(unit.NameSafe(), Width(520));
-                                                        ActionButton("Add",
+                                                        ActionButton("Add".localize(),
                                                             () => {
                                                                 squadToAdd = unit;
                                                             }, Width(150));
@@ -647,7 +647,7 @@ namespace ToyBox.classes.MainUI {
             var position = mainMapState.PlayerPosition;
             var results = from army in armies select (army, mainMapState.ArmyDistance(army, position));
             results = from item in results where item.Item2 >= 0 || item.army.IsRevealed select item;
-            results = results.OrderBy(r => r.Item2).ThenBy(r => r.army.Location?.GetDisplayName() ?? "traveling on a path");
+            results = results.OrderBy(r => r.Item2).ThenBy(r => r.army.Location?.GetDisplayName() ?? "traveling on a path".localize());
             return results;
         }
     }

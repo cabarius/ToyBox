@@ -208,6 +208,7 @@ namespace ToyBox {
         }
 
         private static void TriggerReload() {
+            // TODO: Very expensive; we should probably port all of this to Browser
             _buffExceptions = null;
         }
 
