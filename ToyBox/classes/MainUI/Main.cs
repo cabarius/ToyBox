@@ -272,6 +272,7 @@ namespace ToyBox {
                             }
                         }
                     },
+                    s => s.localize(),
                     tabs
                     );
             }
