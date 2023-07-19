@@ -97,6 +97,15 @@ namespace ModKit {
                     Language lang;
                     lang = Language.Deserialize(FilePath + _fileEnding);
                     return lang;
+                } // If default is missing recreate empty default
+                else if (FilePath.ToLower().EndsWith("en")) {
+                    Language lang = new();
+                    lang.Strings = new();
+                    lang.LanguageCode = "en";
+                    lang.Version = Mod.modEntry.Version.ToString();
+                    lang.Contributors = "The ToyBox Team";
+                    lang.HomePage = "https://github.com/cabarius/ToyBox/";
+                    Language.Serialize(lang, FilePath + _fileEnding);
                 }
             }
             catch (Exception e) {
@@ -155,7 +164,7 @@ namespace ModKit {
                         }
                     }
                 }
-                toSerialize.LanguageCode = toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
+                toSerialize.LanguageCode = Mod.ModKitSettings.uiCultureCode;
                 toSerialize.Version = Mod.modEntry.Version.ToString();
                 if (string.IsNullOrEmpty(toSerialize.Contributors)) toSerialize.Contributors = "The ToyBox Team";
                 toSerialize.HomePage = "https://github.com/cabarius/ToyBox/";
