@@ -55,7 +55,7 @@ namespace ToyBox {
 #endif
                     new NamedAction("Search 'n Pick", SearchAndPick.OnGUI),
 #if Wrath
-                    new NamedAction("Crusade"., CrusadeEditor.OnGUI),
+                    new NamedAction("Crusade", CrusadeEditor.OnGUI),
                     new NamedAction("Armies", ArmiesEditor.OnGUI),
                     new NamedAction("Events/Decrees", EventEditor.OnGUI),
 #if DEBUG
