@@ -1,17 +1,17 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-using Kingmaker;
+﻿using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
-using ModKit;
-using static ModKit.UI;
-using Kingmaker.View.MapObjects;
-using Kingmaker.View.MapObjects.InteractionRestrictions;
-using ModKit.Utility;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
+using Kingmaker.View.MapObjects;
+using Kingmaker.View.MapObjects.InteractionRestrictions;
+using ModKit;
+using ModKit.Utility;
+using System;
+using System.Linq;
+using UnityEngine;
 using UnityModManagerNet;
+using static ModKit.UI;
 #if Wrath
 using ToyBox.Multiclass;
 #endif
@@ -149,6 +149,8 @@ namespace ToyBox {
             Div(0, 25);
             EnhancedCamera.OnGUI();
             Div(0, 25);
+            // TODO: Update EnumHelper.ValidFilterCategories for RT
+#if Wrath
             HStack("Enhanced Inventory".localize(),
                    1,
                    () => {
@@ -291,6 +293,7 @@ namespace ToyBox {
                        }
                    },
                    () => { });
+#endif
         }
     }
 
