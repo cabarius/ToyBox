@@ -71,20 +71,20 @@ namespace ToyBox {
                 _parent = rootEtudeId;
                 _selected = _parent;
             }
-            Label("Note".orange().bold() + " this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of ".green() + "Etudes".cyan().bold() + " and other ".green() + "Elements".cyan().bold() + " that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of ".green() + "Elements".cyan().bold() + " that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have ".green() + "Elements".cyan().bold() + " will offer a second disclosure triangle next to the status that will show them to you.".green());
-            Label("WARNING".yellow().bold() + " this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using.".orange());
+            Label(("Note".orange().bold() + " this is a new and exciting feature that allows you to see for the first time the structure and some basic relationships of ".green() + "Etudes".cyan().bold() + " and other ".green() + "Elements".cyan().bold() + " that control the progression of your game story. Etudes are hierarchical in structure and additionally contain a set of ".green() + "Elements".cyan().bold() + " that can both conditions to check and actions to execute when the etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the children of the Etude.  Etudes that have ".green() + "Elements".cyan().bold() + " will offer a second disclosure triangle next to the status that will show them to you.".green()).localize());
+            Label(("WARNING".yellow().bold() + " this tool can both miraculously fix your broken progression or it can break it even further. Save and back up your save before using.".orange()).localize());
             using (HorizontalScope(AutoWidth())) {
                 if (_parent == BlueprintGuid.Empty)
                     return;
-                Label("Search");
+                Label("Search".localize());
                 Space(25);
                 ActionTextField(ref searchTextInput, "Search", (s) => { }, () => { searchText = searchTextInput; UpdateSearchResults(); }, 400.width());
                 Space(25);
-                if (Toggle("Flags Only", ref _showOnlyFlagLikes)) ApplyFilter();
+                if (Toggle("Flags Only".localize(), ref _showOnlyFlagLikes)) ApplyFilter();
                 25.space();
-                Toggle("Show GUIDs", ref Main.Settings.showAssetIDs);
+                Toggle("Show GUIDs".localize(), ref Main.Settings.showAssetIDs);
                 25.space();
-                Toggle("Show Comments (some in Russian)", ref Main.Settings.showEtudeComments);
+                Toggle("Show Comments (some in Russian)".localize(), ref Main.Settings.showEtudeComments);
                 //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
                 //UI.Label($"H : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[selected].Name)}");
 
@@ -132,7 +132,7 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 Label(""); firstRect = GUILayoutUtility.GetLastRect();
                 using (VerticalScope(GUI.skin.box)) {
-                    if (VPicker<BlueprintArea>("Areas".orange().bold(), ref _selectedArea, _areas, "All", bp => {
+                    if (VPicker<BlueprintArea>("Areas".localize().orange().bold(), ref _selectedArea, _areas, "All".localize(), bp => {
                         var name = bp.name; // bp.AreaDisplayName;
                         if (name?.Length == 0) name = bp.AreaName;
                         if (name?.Length == 0) name = bp.NameSafe();
@@ -150,7 +150,7 @@ namespace ToyBox {
                     //UI.Label($"Hierarchy tree : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.MinHeight(50));
 
                     if (_filteredEtudes.Count == 0) {
-                        Label("No Etudes", AutoWidth());
+                        Label("No Etudes".localize(), AutoWidth());
                         //UI.ActionButton("Refresh", () => ReloadEtudes(), UI.AutoWidth());
                         return;
                     }
@@ -177,7 +177,7 @@ namespace ToyBox {
                 //}
             }
 #if DEBUG
-            ActionButton("Generate Comment Translation Table", () => { });
+            ActionButton("Generate Comment Translation Table".localize(), () => { });
 #endif
             foreach (var item in toValues) {
                 var mutator = actionLookup[item.Key];
@@ -234,12 +234,12 @@ namespace ToyBox {
                             Space(25);
                             var eltCount = etude.Blueprint.m_AllElements.Count;
                             if (eltCount > 0)
-                                ToggleButton(ref etude.ShowElements, $"{eltCount} elements", Width(175));
+                                ToggleButton(ref etude.ShowElements, eltCount.ToString() + " " + "elements".localize(), Width(175));
                             else
                                 Space(178);
                             //UI.Space(126);
                             if (conflictCount > 0)
-                                ToggleButton(ref etude.ShowConflicts, $"{conflictCount} conflicts", Width(175));
+                                ToggleButton(ref etude.ShowConflicts, conflictCount.ToString() + " " + "conflicts".localize(), Width(175));
                             else
                                 Space(178);
 
@@ -274,9 +274,9 @@ namespace ToyBox {
                             Label("⎌", AutoWidth());
                         if (etude.AllowActionStart) {
                             Space(25);
-                            Label("Can Start", 100.width());
+                            Label("Can Start".localize(), 100.width());
                         }
-                        ReflectionTreeView.DetailToggle("Ins", etude, etude, 100);
+                        ReflectionTreeView.DetailToggle("Inspect".localize(), etude, etude, 100);
                         if (Main.Settings.showAssetIDs) {
                             var guid = etudeID.ToString();
                             TextField(ref guid);
@@ -318,7 +318,7 @@ namespace ToyBox {
                                             else
                                                 Label(element.GetCaption().yellow() ?? "?");
                                             Space(25);
-                                            ReflectionTreeView.DetailToggle("Ins", element, element, 100);
+                                            ReflectionTreeView.DetailToggle("Inspect".localize(), element, element, 100);
                                             Space(0);
                                         }
                                         Space(25);
@@ -538,6 +538,7 @@ namespace ToyBox {
             }
         }
 
+        // Not localizing this beacuse I doubt doing that is meaningful in any way.
         private static string EtudeValidationProblem(BlueprintGuid etudeID, EtudeInfo etude) {
             if (etude.ChainedTo == BlueprintGuid.Empty && etude.LinkedTo == BlueprintGuid.Empty)
                 return "Chained/Linked to Nothing";
@@ -545,13 +546,13 @@ namespace ToyBox {
             foreach (var chained in etude.ChainedId) {
                 var chainedEtude = loadedEtudes[chained];
                 if (chainedEtude.ParentId != etude.ParentId)
-                    return $"Chained etude {chainedEtude.Name} ({chainedEtude.Blueprint.AssetGuid} has different parent: {chainedEtude.ParentId} than {etude.Name} parent: {etude.ParentId}";
+                    return $"Chained etude {chainedEtude.Name} ({chainedEtude.Blueprint.AssetGuid}) has different parent: {chainedEtude.ParentId} than {etude.Name} parent: {etude.ParentId}";
             }
 
             foreach (var linked in etude.LinkedId) {
                 var linkedEtude = loadedEtudes[linked];
                 if (linkedEtude.ParentId != etude.ParentId && loadedEtudes[linked].ParentId != etudeID)
-                    return $"Linked to child {linkedEtude.Name} ({linkedEtude.Blueprint.AssetGuid} with different parent: {linkedEtude.ParentId} than {etude.Name} parent {etude.ParentId}";
+                    return $"Linked to child {linkedEtude.Name} ({linkedEtude.Blueprint.AssetGuid}) with different parent: {linkedEtude.ParentId} than {etude.Name} parent {etude.ParentId}";
             }
 
             return null;

@@ -49,21 +49,21 @@ namespace ToyBox {
             var flags = Game.Instance.Player.UnlockableFlags;
 
             // Features
-            BlueprintAction.Register<BlueprintFeature>("Add",
+            BlueprintAction.Register<BlueprintFeature>("Add".localize(),
                                                        (bp, ch, n, index) => ch.Progression.Features.AddFeature(bp),
                                                        (bp, ch, index) => !ch.Progression.Features.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintFeature>("Remove",
+            BlueprintAction.Register<BlueprintFeature>("Remove".localize(),
                                                        (bp, ch, n, index) => ch.Progression.Features.RemoveFact(bp),
                                                        (bp, ch, index) => ch.Progression.Features.HasFact(bp));
-            BlueprintAction.Register<BlueprintFeature>("<",
+            BlueprintAction.Register<BlueprintFeature>("<".localize(),
                                            (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.RemoveRank(),
                                            (bp, ch, index) => {
                                                var feature = ch.Progression.Features.GetFact(bp);
                                                return feature?.GetRank() > 1;
                                            });
 
-            BlueprintAction.Register<BlueprintFeature>(">",
+            BlueprintAction.Register<BlueprintFeature>(">".localize(),
                                                        (bp, ch, n, index) => ch.Progression.Features.GetFact(bp)?.AddRank(),
                                                        (bp, ch, index) => {
                                                            var feature = ch.Progression.Features.GetFact(bp);
@@ -71,7 +71,7 @@ namespace ToyBox {
                                                        });
 #if Wrath
             // Paramaterized Feature
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Add",
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Add".localize(),
                  (bp, ch, n, index) => {
                      int itemIndex;
                      if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
@@ -95,7 +95,7 @@ namespace ToyBox {
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing == null;
                 });
-            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove",
+            BlueprintAction.Register<BlueprintParametrizedFeature>("Remove".localize(),
                 (bp, ch, n, index) => {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
@@ -123,7 +123,7 @@ namespace ToyBox {
                 });
 #endif
             // Feature Selection
-            BlueprintAction.Register<BlueprintFeatureSelection>("Add",
+            BlueprintAction.Register<BlueprintFeatureSelection>("Add".localize(),
                  (bp, ch, n, index) => {
                      int itemIndex;
                      if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
@@ -153,7 +153,7 @@ namespace ToyBox {
                     }
                     return true;
                 });
-            BlueprintAction.Register<BlueprintFeatureSelection>("Rem. All",
+            BlueprintAction.Register<BlueprintFeatureSelection>("Rem. All".localize(),
                 (bp, ch, n, index) => {
                     var progression = ch?.Descriptor?.Progression;
                     int itemIndex;
@@ -198,11 +198,11 @@ namespace ToyBox {
                 });
 
             // Facts
-            BlueprintAction.Register<BlueprintUnitFact>("Add",
+            BlueprintAction.Register<BlueprintUnitFact>("Add".localize(),
                                                        (bp, ch, n, index) => ch.AddFact(bp),
                                                        (bp, ch, index) => !ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
-            BlueprintAction.Register<BlueprintUnitFact>("Remove",
+            BlueprintAction.Register<BlueprintUnitFact>("Remove".localize(),
                                                        (bp, ch, n, index) => ch.RemoveFact(bp),
                                                        (bp, ch, index) => ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
@@ -217,15 +217,15 @@ namespace ToyBox {
             //    );
 
             // Spellbooks
-            BlueprintAction.Register<BlueprintSpellbook>("Add",
+            BlueprintAction.Register<BlueprintSpellbook>("Add".localize(),
                                                          (bp, ch, n, index) => ch.Descriptor().DemandSpellbook(bp),
                                                          (bp, ch, index) => ch.Descriptor().Spellbooks.All(sb => sb.Blueprint != bp));
 
-            BlueprintAction.Register<BlueprintSpellbook>("Remove",
+            BlueprintAction.Register<BlueprintSpellbook>("Remove".localize(),
                                                          (bp, ch, n, index) => ch.Descriptor().DeleteSpellbook(bp),
                                                          (bp, ch, index) => ch.Descriptor().Spellbooks.Any(sb => sb.Blueprint == bp));
 
-            BlueprintAction.Register<BlueprintSpellbook>(">",
+            BlueprintAction.Register<BlueprintSpellbook>(">".localize(),
                                                          (bp, ch, n, index) => {
                                                              try {
                                                                  var spellbook = ch.Descriptor().Spellbooks.FirstOrDefault(sb => sb.Blueprint == bp);
@@ -241,64 +241,64 @@ namespace ToyBox {
                                                          },
                                                          (bp, ch, index) => ch.Descriptor().Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
             // Abilities
-            BlueprintAction.Register<BlueprintAbility>("Add",
+            BlueprintAction.Register<BlueprintAbility>("Add".localize(),
                                                        (bp, ch, n, index) => ch.AddAbility(bp),
                                                        (bp, ch, index) => ch.CanAddAbility(bp));
 
-            BlueprintAction.Register<BlueprintAbility>("At Will",
+            BlueprintAction.Register<BlueprintAbility>("At Will".localize(),
                                                        (bp, ch, n, index) => ch.AddSpellAsAbility(bp),
                                                        (bp, ch, index) => ch.CanAddSpellAsAbility(bp));
 
-            BlueprintAction.Register<BlueprintAbility>("Remove",
+            BlueprintAction.Register<BlueprintAbility>("Remove".localize(),
                                                        (bp, ch, n, index) => ch.RemoveAbility(bp),
                                                        (bp, ch, index) => ch.HasAbility(bp));
 
             // Buffs
-            BlueprintAction.Register<BlueprintBuff>("Add",
+            BlueprintAction.Register<BlueprintBuff>("Add".localize(),
                                                     (bp, ch, n, index) => GameHelper.ApplyBuff(ch, bp),
                                                     (bp, ch, index) => !ch.Descriptor().Buffs.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintBuff>("Remove",
+            BlueprintAction.Register<BlueprintBuff>("Remove".localize(),
                                                     (bp, ch, n, index) => ch.Descriptor().RemoveFact(bp),
                                                     (bp, ch, index) => ch.Descriptor().Buffs.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintBuff>("<",
+            BlueprintAction.Register<BlueprintBuff>("<".localize(),
                                                     (bp, ch, n, index) => ch.Descriptor().Buffs.GetFact(bp)?.RemoveRank(),
                                                     (bp, ch, index) => {
                                                         var buff = ch.Descriptor().Buffs.GetFact(bp);
                                                         return buff?.GetRank() > 1;
                                                     });
 
-            BlueprintAction.Register<BlueprintBuff>(">",
+            BlueprintAction.Register<BlueprintBuff>(">".localize(),
                                                     (bp, ch, n, index) => ch.Descriptor().Buffs.GetFact(bp)?.AddRank(),
                                                     (bp, ch, index) => {
                                                         var buff = ch.Descriptor().Buffs.GetFact(bp);
                                                         return buff != null && buff?.GetRank() < buff.Blueprint.Ranks - 1;
                                                     });
             // Kingdom Bufs
-            BlueprintAction.Register<BlueprintKingdomBuff>("Add",
+            BlueprintAction.Register<BlueprintKingdomBuff>("Add".localize(),
                                                        (bp, ch, n, index) => KingdomState.Instance?.AddBuff(bp, null, null, 0),
                                                        (bp, ch, index) => (KingdomState.Instance != null) && !KingdomState.Instance.ActiveBuffs.HasFact(bp));
 
-            BlueprintAction.Register<BlueprintKingdomBuff>("Remove",
+            BlueprintAction.Register<BlueprintKingdomBuff>("Remove".localize(),
                                                        (bp, ch, n, index) => KingdomState.Instance?.ActiveBuffs.RemoveFact(bp),
                                                        (bp, ch, index) => (KingdomState.Instance != null) && KingdomState.Instance.ActiveBuffs.HasFact(bp));
 
             // GlobalSpells
-            BlueprintAction.Register<BlueprintGlobalMagicSpell>("Add",
+            BlueprintAction.Register<BlueprintGlobalMagicSpell>("Add".localize(),
                                                        (bp, ch, n, index) => Game.Instance.Player.GlobalMapSpellsManager.AddSpell(bp),
                                                        (bp, ch, index) => !Game.Instance.Player.GlobalMapSpellsManager.m_SpellBook.HasItem(x => x.BlueprintGuid == bp.AssetGuid));
 
-            BlueprintAction.Register<BlueprintGlobalMagicSpell>("Remove",
+            BlueprintAction.Register<BlueprintGlobalMagicSpell>("Remove".localize(),
                                                                 (bp, ch, n, index) => Game.Instance.Player.GlobalMapSpellsManager.RemoveSpell(bp),
                                                                 (bp, ch, index) => Game.Instance.Player.GlobalMapSpellsManager.m_SpellBook.HasItem(x => x.BlueprintGuid == bp.AssetGuid));
             // Ability Resources
 
-            BlueprintAction.Register<BlueprintAbilityResource>("Add",
+            BlueprintAction.Register<BlueprintAbilityResource>("Add".localize(),
                 (bp, ch, n, index) => ch.Resources.Add(bp, true),
                 (bp, ch, index) => !ch.Resources.ContainsResource(bp));
 
-            BlueprintAction.Register<BlueprintAbilityResource>("Remove",
+            BlueprintAction.Register<BlueprintAbilityResource>("Remove".localize(),
                 (bp, ch, n, index) => ch.Resources.Remove(bp),
                 (bp, ch, index) => ch.Resources.ContainsResource(bp));
 
@@ -306,32 +306,32 @@ namespace ToyBox {
 
 
             // BlueprintActivatableAbility
-            BlueprintAction.Register<BlueprintActivatableAbility>("Add",
+            BlueprintAction.Register<BlueprintActivatableAbility>("Add".localize(),
                                                                   (bp, ch, n, index) => ch.Descriptor().AddFact(bp),
                                                                   (bp, ch, index) => !ch.Descriptor().HasFact(bp));
 
-            BlueprintAction.Register<BlueprintActivatableAbility>("Remove",
+            BlueprintAction.Register<BlueprintActivatableAbility>("Remove".localize(),
                                                                   (bp, ch, n, index) => ch.Descriptor().RemoveFact(bp),
                                                                   (bp, ch, index) => ch.Descriptor().HasFact(bp));
             // Teleport
-            BlueprintAction.Register<BlueprintGlobalMap>("Teleport", (map, ch, n, index) => Teleport.To(map));
-            BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport", (globalMapPoint, ch, n, index) => Teleport.To(globalMapPoint));
+            BlueprintAction.Register<BlueprintGlobalMap>("Teleport".localize(), (map, ch, n, index) => Teleport.To(map));
+            BlueprintAction.Register<BlueprintGlobalMapPoint>("Teleport".localize(), (globalMapPoint, ch, n, index) => Teleport.To(globalMapPoint));
 
             // Army
-            BlueprintAction.Register<BlueprintArmyPreset>("Add Friendly", (bp, ch, n, l) => {
+            BlueprintAction.Register<BlueprintArmyPreset>("Add Friendly".localize(), (bp, ch, n, l) => {
                 Actions.CreateArmy(bp, true);
             });
-            BlueprintAction.Register<BlueprintArmyPreset>("Add Hostile", (bp, ch, n, l) => {
+            BlueprintAction.Register<BlueprintArmyPreset>("Add Hostile".localize(), (bp, ch, n, l) => {
                 Actions.CreateArmy(bp, false);
             });
 
             // ArmyGeneral
-            BlueprintAction.Register<BlueprintLeaderSkill>("Add",
+            BlueprintAction.Register<BlueprintLeaderSkill>("Add".localize(),
                 (bp, ch, n, l) => Actions.AddSkillToLeader(bp),
                 (bp, ch, index) => Actions.LeaderSelected(bp) && !Actions.LeaderHasSkill(bp));
 
             // ArmyGeneral
-            BlueprintAction.Register<BlueprintLeaderSkill>("Remove",
+            BlueprintAction.Register<BlueprintLeaderSkill>("Remove".localize(),
                 (bp, ch, n, l) => Actions.RemoveSkillFromLeader(bp),
                 (bp, ch, index) => Actions.LeaderSelected(bp) && Actions.LeaderHasSkill(bp));
         }

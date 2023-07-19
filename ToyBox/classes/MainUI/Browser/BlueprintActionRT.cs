@@ -32,44 +32,44 @@ namespace ToyBox {
     public static partial class BlueprintActions {
         public static void InitializeActionsRT() {
             // Features
-            BlueprintAction.Register<BlueprintFeature>("Add",
+            BlueprintAction.Register<BlueprintFeature>("Add".localize(),
                                                        (bp, ch, n, index) => ch.Progression.Features.Add(bp),
                                                        (bp, ch, index) => !ch.Progression.Features.Contains(bp));
 
-            BlueprintAction.Register<BlueprintFeature>("Remove",
+            BlueprintAction.Register<BlueprintFeature>("Remove".localize(),
                                                        (bp, ch, n, index) => ch.Progression.Features.Remove(bp),
                                                        (bp, ch, index) => ch.Progression.Features.Contains(bp));
 
             // Buffs
-            BlueprintAction.Register<BlueprintBuff>("Add",
+            BlueprintAction.Register<BlueprintBuff>("Add".localize(),
                                                     (bp, ch, n, index) => GameHelper.ApplyBuff(ch, bp),
                                                     (bp, ch, index) => !ch.Descriptor().Buffs.Contains(bp));
 
-            BlueprintAction.Register<BlueprintBuff>("Remove",
+            BlueprintAction.Register<BlueprintBuff>("Remove".localize(),
                                                     (bp, ch, n, index) => ch.Descriptor().Facts.Remove(bp),
                                                     (bp, ch, index) => ch.Descriptor().Buffs.Contains(bp));
             // Abilities
-            BlueprintAction.Register<BlueprintAbility>("Add",
+            BlueprintAction.Register<BlueprintAbility>("Add".localize(),
                                                        (bp, ch, n, index) => ch.Abilities.Add(bp),
                                                        (bp, ch, index) => !ch.Abilities.Contains(bp));
 
-            BlueprintAction.Register<BlueprintAbility>("Remove",
+            BlueprintAction.Register<BlueprintAbility>("Remove".localize(),
                                                        (bp, ch, n, index) => ch.Abilities.Remove(bp),
                                                        (bp, ch, index) => ch.Abilities.Contains(bp));
 
 
             // BlueprintActivatableAbility
-            BlueprintAction.Register<BlueprintActivatableAbility>("Add",
+            BlueprintAction.Register<BlueprintActivatableAbility>("Add".localize(),
                                                                   (bp, ch, n, index) => ch.Descriptor().AddFact(bp),
                                                                   (bp, ch, index) => !ch.Descriptor().Facts.Contains(bp));
 
-            BlueprintAction.Register<BlueprintActivatableAbility>("Remove",
+            BlueprintAction.Register<BlueprintActivatableAbility>("Remove".localize(),
                                                                   (bp, ch, n, index) => ch.Descriptor().Facts.Remove(bp),
                                                                   (bp, ch, index) => ch.Descriptor().Facts.Contains(bp));
 
             // Teleport
-            BlueprintAction.Register<BlueprintStarSystemMap>("Teleport", (map, ch, n, index) => Teleport.To(map));
-            BlueprintAction.Register<BlueprintSectorMapPoint>("Teleport",
+            BlueprintAction.Register<BlueprintStarSystemMap>("Teleport".localize(), (map, ch, n, index) => Teleport.To(map));
+            BlueprintAction.Register<BlueprintSectorMapPoint>("Teleport".localize(),
                                                               (globalMapPoint, ch, n, index) => { } //Teleport.To(globalMapPoint)
                                                                                                             );
 
