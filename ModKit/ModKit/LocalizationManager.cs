@@ -35,9 +35,11 @@ namespace ModKit {
         private static Language _localDefault;
         private static Language _local;
         private static bool IsDefault;
+        private static bool isEnabled = false;
         public static string FilePath { get; private set; }
 
         public static void Enable() {
+            isEnabled = true;
             IsDefault = true;
             _local = null;
             _localDefault = null;
@@ -73,7 +75,7 @@ namespace ModKit {
         }
 
         public static string localize(this string key) {
-            if (string.IsNullOrEmpty(key)) return key;
+            if (string.IsNullOrEmpty(key) || !isEnabled) return key;
             else {
                 string localizedString = null;
                 if (!IsDefault) {
