@@ -1,4 +1,4 @@
-﻿using Kingmaker;
+using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
@@ -28,6 +28,7 @@ namespace ToyBox {
         public static IAlignmentShiftProvider ToyboxAlignmentProvider => new ToyBoxAlignmentProvider();
 
         public static Dictionary<string, float> lastScaleSize = new();
+        public static Dictionary<string, int> lastnewSize = new();
         private static readonly Dictionary<string, PortraitData> _portraitsByID = new();
         private static bool _portraitsLoaded = false;
         private static int _increase = 1;
@@ -337,7 +338,17 @@ namespace ToyBox {
                 Space(528);
                 EnumGrid(
                     () => ch.Descriptor().State.Size,
-                    (s) => ch.Descriptor().State.Size = s,
+                    (s) => {
+                        if ((int)s is int newSize) {
+                            var lastSize = lastnewSize.GetValueOrDefault(ch.HashKey(), 1);
+                            if (lastSize != newSize) {
+                                ch.Descriptor().State.Size = (Kingmaker.Enums.Size)newSize;
+                                Main.Settings.perSave.characterSizeModifier[ch.HashKey()] = newSize;
+                                lastnewSize[ch.HashKey()] = newSize; // Update to the new size, not the last size
+                                Settings.SavePerSaveSettings();
+                            }
+                        }
+                    },
                     3, Width(600));
             }
             using (HorizontalScope()) {
