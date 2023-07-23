@@ -18,6 +18,7 @@
     "[Repeat]": "",
     "<": "<",
     "<b><color=magenta>Note </color></b><b><color=orange>ToyBox was designed to offer the best user experience at widths of 1920 or higher. Please consider increasing your resolution up of at least 1920x1080 (ideally 4k) and go to Unity Mod Manager 'Settings' tab to change the mod window width to at least 1920.  Increasing the UI scale is nice too when running at 4k</color></b>": "<b><color=magenta>注意</color></b><b><color=orange>ToyBox被设计在1920或更高的宽度下提供最佳的用户体验。请考虑将分辨率提高到至少1920x1080（理想情况下是4k），然后转到Unity Mod Manager“设置”选项卡将Mod窗口宽度更改为至少1920。当以4k运行时，增加UI比例也很好</color></b>",
+    "<b><color=orange>Bag of Tricks</color></b>": "",
     "<b><color=orange>Blueprints</color></b> loading: ": "<b><color=orange>蓝图</color></b> 加载：",
     "<b><color=orange>character(s) can be </color></b><color=cyan>Respecced</color><color=#00ff00ff>. Pressing Respec will close the mod window and take you to character level up</color>": "<b><color=orange>角色可被</color></b><color=cyan>重置</color><color=#00ff00ff> 按下重置将关闭mod窗口并前往角色升级界面</color>",
     "<b><color=orange>None</color></b><color=#00ff00ff> - please progress further into the game</color>": "",
