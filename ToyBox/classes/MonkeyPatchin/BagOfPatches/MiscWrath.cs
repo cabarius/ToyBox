@@ -649,9 +649,10 @@ namespace ToyBox.BagOfPatches {
                 }
                 foreach (var ID in Main.Settings.perSave.characterSizeModifier.Keys) {
                     foreach (UnitEntityData cha in Game.Instance.State.Units.Where((u) => u.CharacterName.Equals(ID))) {
-                        int size = Main.Settings.perSave.characterSizeModifier.GetValueOrDefault(ID, 1);
-                        cha.Descriptor().State.Size = (Kingmaker.Enums.Size)size;
-                        PartyEditor.lastnewSize[cha.HashKey()] = size;
+                        Kingmaker.Enums.Size size;
+                        if (Main.Settings.perSave.characterSizeModifier.TryGetValue(ID, out size)) {
+                            cha.Descriptor().State.Size = size;
+                        }
                     }
                 }
             }
