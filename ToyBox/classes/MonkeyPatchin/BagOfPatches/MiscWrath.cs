@@ -1,4 +1,4 @@
-﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -39,6 +39,7 @@ using Kingmaker.View;
 using ModKit;
 using Owlcat.Runtime.UniRx;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
@@ -644,6 +645,14 @@ namespace ToyBox.BagOfPatches {
                         float scale = Main.Settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
                         cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
                         PartyEditor.lastScaleSize[cha.HashKey()] = scale;
+                    }
+                }
+                foreach (var ID in Main.Settings.perSave.characterSizeModifier.Keys) {
+                    foreach (UnitEntityData cha in Game.Instance.State.Units.Where((u) => u.CharacterName.Equals(ID))) {
+                        Kingmaker.Enums.Size size;
+                        if (Main.Settings.perSave.characterSizeModifier.TryGetValue(ID, out size)) {
+                            cha.Descriptor().State.Size = size;
+                        }
                     }
                 }
             }
