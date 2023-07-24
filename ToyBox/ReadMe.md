@@ -77,11 +77,10 @@
 **ToyBox Rogue - Ver 1.5.7 -** ***Sh0dan*** **Preview Version 1.5.6a** built for 0.2.1ah
 * (***ADDB***) Added all localization keys to allow full localization.
 ### ToyBox Wrath - Ver 1.5.7 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.7 - Preview Version 1.5.6a** built for 2.1.4w
+**ToyBox Wrath - Ver 1.5.7 - Preview Version 1.5.6a** built for 2.1.5m
 * (***ADDB***) Added all localization keys to allow full localization.
 * (***Hinkiii***) Made descriptor size change save by adding per-save-setting for it.
-### ToyBox Rogue - Ver 1.5.6 
-**ToyBox Rogue - Ver 1.5.6 -** ***Sh0dan*** **Preview Version 1.5.5i** built for 0.2.1ah
+### ToyBox Rogue - Ver 1.5.6  (built for 0.2.1ah)
 * (***ADDB***) Added Kill Button to Party Editor.
 * (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
 * (***ADDB***) Portrait Picker is now implemented as a Browser to save RAM; portraits are now unloaded when changing away from the Stats tab.
@@ -90,7 +89,7 @@
 * (***ADDB***) Fixed changing stats not persisting through save+load.
 * (***ADDB***) Collation Category Search now works.
 * (***ADDB***) Added a toggle to either sort collation categories by name or by amount of entries.
-### ToyBox Wrath - Ver 1.5.6
+### ToyBox Wrath - Ver 1.5.6 (built for 2.1.4w)
 * (***ADDB***) Search 'n Pick changes related to Parameterized Features and Feature Selections (ported Party Editor GUI to Search 'n Pick).
 * (***ADDB***) Override Ability Points can now finally correctly decide between Mercenary and Player character.
 * (***ADDB***) Added Kill Button to Party Editor.
