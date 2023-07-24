@@ -155,9 +155,12 @@ namespace ModKit {
             if (selected >= actions.Count())
                 selected = 0;
             var sel = selected;
-            var titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
+            IEnumerable<string> titles;
             if (titleFormatter != null) {
-                titles = titles.Select(s => titleFormatter(s));
+                titles = actions.Select((a, i) => i == sel ? titleFormatter(a.name).orange().bold() : titleFormatter(a.name));
+            }
+            else {
+                titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             }
             if (SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60))) onChangeTab(sel, selected);
             GL.BeginVertical("box");
