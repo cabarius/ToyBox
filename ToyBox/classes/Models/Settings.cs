@@ -33,6 +33,10 @@ namespace ToyBox {
         [JsonProperty]
         public Dictionary<string, float> characterModelSizeMultiplier = new();
 
+        // This is the overrite setting for the character Descriptor size modifier
+        [JsonProperty]
+        public Dictionary<string, Kingmaker.Enums.Size> characterSizeModifier = new();
+
         // Dictionary of Name/IsLegendaryHero for configuration per party member
         [JsonProperty]
         public Dictionary<string, bool> charIsLegendaryHero = new();
