@@ -79,7 +79,7 @@
 ### ToyBox Wrath - Ver 1.5.7 (Coming Soon)
 **ToyBox Wrath - Ver 1.5.7 - Preview Version 1.5.6a** built for 2.1.5m
 * (***ADDB***) Added all localization keys to allow full localization.
-* (***Hinkiii***) Made descriptor size change save by adding per-save-setting for it.
+* (***Hinkiii***) Made descriptor size change persist by adding per-save-setting for it.
 ### ToyBox Rogue - Ver 1.5.6  (built for 0.2.1ah)
 * (***ADDB***) Added Kill Button to Party Editor.
 * (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.
