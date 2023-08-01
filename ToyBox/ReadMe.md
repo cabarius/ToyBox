@@ -74,10 +74,10 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.7 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.7 -** ***Sh0dan*** **Preview Version 1.5.6a** built for 0.2.1ah
+**ToyBox Rogue - Ver 1.5.7 -** ***Sh0dan*** **Preview Version 1.5.6b** built for 0.2.1ah
 * (***ADDB***) Added all localization keys to allow full localization.
 ### ToyBox Wrath - Ver 1.5.7 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.7 - Preview Version 1.5.6a** built for 2.1.5m
+**ToyBox Wrath - Ver 1.5.7 - Preview Version 1.5.6b** built for 2.1.5r
 * (***ADDB***) Added all localization keys to allow full localization.
 * (***Hinkiii***) Made descriptor size change persist by adding per-save-setting for it.
 ### ToyBox Rogue - Ver 1.5.6  (built for 0.2.1ah)
