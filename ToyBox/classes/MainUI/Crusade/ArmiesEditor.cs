@@ -210,17 +210,17 @@ namespace ToyBox.classes.MainUI {
                                    () => {
                                        var bluh = ummWidth - 50;
                                        var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
-                                       TitleLabel("Unit".localize(), Width((int)titleWidth));
+                                       Label("Unit".localize(), Width((int)titleWidth));
                                        125.space();
-                                       TitleLabel("Action".localize(), Width(210));
+                                       Label("Action".localize(), Width(210));
                                        20.space();
-                                       TitleLabel("Pool".localize(), Width(200));
+                                       Label("Pool".localize(), Width(200));
                                        20.space();
-                                       TitleLabel("Recruitment Weight (Mercenary only)".localize(), AutoWidth());
+                                       Label("Weight (Mercenary) or Growth (Recruit)".localize(), AutoWidth());
                                    },
                                    (unit, _) => {
                                        var bluh = ummWidth - 50;
-                                       var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f)) - 100;
+                                       var titleWidth = (bluh / (IsWide ? 3.0f : 4.0f) - 20);
                                        bool isInMercPool = IsInMercenaryPool.GetValueOrDefault(unit.GetHashCode(), false);
                                        bool isInKingdomPool = IsInRecruitPool.GetValueOrDefault(unit.GetHashCode(), recruitPool.Contains(unit));
                                        var title = unit.GetDisplayName();
@@ -229,55 +229,78 @@ namespace ToyBox.classes.MainUI {
                                        else if (isInMercPool)
                                            title = title.cyan().bold();
                                        Label(title, Width((int)titleWidth));
-                                       ActionButton(isInMercPool ? "Rem Merc".localize() : "Add Merc".localize(),
-                                                    () => {
-                                                        mercenaryBrowser.needsReloadData = true;
-                                                        if (isInMercPool) {
-                                                            mercenaryManager.RemoveMercenary(unit);
-                                                            isInMercPool = false;
-                                                        }
-                                                        else {
-                                                            mercenaryManager.AddMercenary(unit, 1);
-                                                            isInMercPool = true;
-                                                        }
-                                                        IsInMercenaryPool[unit.GetHashCode()] = isInMercPool;
-                                                    },
-                                                    150.width());
-                                       10.space();
-                                       ActionButton(isInKingdomPool ? "Rem Recruit".localize() : "Add Recruit".localize(),
-                                                    () => {
-                                                        mercenaryBrowser.needsReloadData = true;
-                                                        if (isInKingdomPool) {
-                                                            var count = recruitsManager.GetCountInPool(unit);
-                                                            recruitsManager.DecreasePool(unit, count);
-                                                            isInKingdomPool = false;
-                                                        }
-                                                        else {
-                                                            var pool = recruitsManager.Pool;
-                                                            var count = pool.Sum(r => r.Count) / pool.Count;
-                                                            recruitsManager.IncreasePool(unit, count);
-                                                            isInKingdomPool = true;
-                                                        }
-                                                        IsInRecruitPool[unit.GetHashCode()] = isInKingdomPool;
-                                                    },
-                                                    150.width());
-                                       var poolText = $"{(isInMercPool ? "Merc".localize().cyan() : "")} {(isInKingdomPool ? ("Recruit".localize() + $" ({recruitsManager.GetCountInPool(unit)})").orange() : "")}".Trim();
-                                       50.space();
-                                       Label(poolText, Width(200));
-                                       25.space();
-                                       if (isInMercPool) {
-                                           var poolInfo = mercenaryManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
-                                           if (poolInfo != null) {
-                                               var weight = poolInfo.Weight;
-                                               if (LogSliderCustomLabelWidth("Weight".localize(), ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
-                                                   poolInfo.UpdateWeight(weight);
+                                       using (VerticalScope()) {
+                                           using (HorizontalScope()) {
+                                               ActionButton(isInMercPool ? "Rem Merc".localize() : "Add Merc".localize(),
+                                                            () => {
+                                                                mercenaryBrowser.needsReloadData = true;
+                                                                if (isInMercPool) {
+                                                                    mercenaryManager.RemoveMercenary(unit);
+                                                                    isInMercPool = false;
+                                                                }
+                                                                else {
+                                                                    mercenaryManager.AddMercenary(unit, 1);
+                                                                    isInMercPool = true;
+                                                                }
+                                                                IsInMercenaryPool[unit.GetHashCode()] = isInMercPool;
+                                                            },
+                                                            150.width());
+                                               var poolText = $"{(isInMercPool ? "Merc".localize().cyan() : "")}".Trim();
+                                               50.space();
+                                               Label(poolText, Width(200));
+                                               25.space();
+                                               if (isInMercPool) {
+                                                   var poolInfo = mercenaryManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
+                                                   if (poolInfo != null) {
+                                                       var weight = poolInfo.Weight;
+                                                       if (LogSliderCustomLabelWidth("Weight".localize(), ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
+                                                           poolInfo.UpdateWeight(weight);
+                                                       }
+                                                   }
+                                                   else {
+                                                       Label("Weird".localize(), AutoWidth());
+                                                   }
                                                }
                                            }
-                                           else {
-                                               Label("Weird", AutoWidth());
+                                           using (HorizontalScope()) {
+                                               ActionButton(isInKingdomPool ? "Rem Recruit".localize() : "Add Recruit".localize(),
+                                                            () => {
+                                                                mercenaryBrowser.needsReloadData = true;
+                                                                if (isInKingdomPool) {
+                                                                    var count = recruitsManager.GetCountInGrowth(unit);
+                                                                    recruitsManager.DecreaseGrowth(unit, count);
+                                                                    recruitsManager.DecreasePool(unit, recruitsManager.GetCountInPool(unit));
+                                                                    isInKingdomPool = false;
+                                                                }
+                                                                else {
+                                                                    recruitsManager.IncreaseGrowth(unit, 10);
+                                                                    recruitsManager.IncreasePool(unit, 10);
+                                                                    isInKingdomPool = true;
+                                                                }
+                                                                IsInRecruitPool[unit.GetHashCode()] = isInKingdomPool;
+                                                            },
+                                                            150.width());
+                                               var poolText = $"{(isInKingdomPool ? ("Recruit".localize() + $" ({recruitsManager.GetCountInPool(unit)})").orange() : "")}".Trim();
+                                               50.space();
+                                               Label(poolText, Width(200));
+                                               25.space();
+                                               if (isInKingdomPool) {
+                                                   var poolInfo = recruitsManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
+                                                   if (poolInfo != null) {
+                                                       var growth = poolInfo.Growth;
+                                                       float growthTMP = growth;
+                                                       if (LogSliderCustomLabelWidth("Growth".localize(), ref growthTMP, 1f, 1000, 10, 0, "", 70, AutoWidth())) {
+                                                           recruitsManager.DecreaseGrowth(unit, recruitsManager.GetCountInGrowth(unit));
+                                                           recruitsManager.IncreaseGrowth(unit, (int)growthTMP);
+                                                       }
+                                                   }
+                                                   else {
+                                                       Label("Weird".localize(), AutoWidth());
+                                                   }
+                                               }
                                            }
                                        }
-                                   });
+                                   }, null, 50, true, true, 100, 300, "", true, null, null);
                            }
                        }
                    });
