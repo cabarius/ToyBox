@@ -14,17 +14,17 @@ namespace ToyBox {
         public static List<CultureInfo> cultures = new();
         public static void OnGUI() {
             HStack("Settings".localize(), 1,
-                   () => Label("Mono Version".localize() + $": {Type.GetType("Mono.Runtime")?.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static)?.Invoke(null, null)?.ToString()}"),
+                () => Label("Mono Version".localize() + $": {Type.GetType("Mono.Runtime")?.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static)?.Invoke(null, null)?.ToString()}"),
                 () => {
                     ActionButton("Reset UI".localize(), Main.SetNeedsResetGameUI);
                     25.space();
                     Label(("Tells the game to reset the in game UI.".green() + " Warning".yellow() + " Using this in dialog or the book will dismiss that dialog which may break progress so use with care".orange()).localize());
                 },
-                   () => {
-                       Toggle("Enable Game Development Mode".localize(), ref Main.Settings.toggleDevopmentMode);
-                       Space(25);
-                       HelpLabel($"This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc.\n{"Warning: ".yellow().bold()}{"You may need to restart the game for this to fully take effect".orange()}".localize());
-                   },
+                () => {
+                    Toggle("Enable Game Development Mode".localize(), ref Main.Settings.toggleDevopmentMode);
+                    Space(25);
+                    HelpLabel($"This turns on the developer console which lets you access cheat commands, shows a FPS window (hide with F11), etc.\n{"Warning: ".yellow().bold()}{"You may need to restart the game for this to fully take effect".orange()}".localize());
+                },
                 () => Label(""),
                 () => EnumGrid("Log Level".localize(), ref Main.Settings.loggingLevel, AutoWidth()),
                 () => Label(""),
