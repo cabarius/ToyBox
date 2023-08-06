@@ -14,6 +14,7 @@ using ModKit.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityModManagerNet;
+using static Kingmaker.Dungeon.DungeonStageState;
 using static ModKit.UI;
 
 namespace ToyBox.classes.MainUI {
@@ -263,35 +264,47 @@ namespace ToyBox.classes.MainUI {
                                                }
                                            }
                                            using (HorizontalScope()) {
+                                               var poolInfo = recruitsManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
                                                ActionButton(isInKingdomPool ? "Rem Recruit".localize() : "Add Recruit".localize(),
                                                             () => {
                                                                 mercenaryBrowser.needsReloadData = true;
                                                                 if (isInKingdomPool) {
+                                                                    settings.perSave.armyRecruitGrowthAdjustment.Remove(unit.GetHashCode());
                                                                     var count = recruitsManager.GetCountInGrowth(unit);
                                                                     recruitsManager.DecreaseGrowth(unit, count);
-                                                                    recruitsManager.DecreasePool(unit, recruitsManager.GetCountInPool(unit));
+                                                                    recruitsManager.DecreasePool(unit, poolInfo?.Growth ?? 0);
                                                                     isInKingdomPool = false;
                                                                 }
                                                                 else {
+                                                                    settings.perSave.armyRecruitGrowthAdjustment[unit.GetHashCode()] = 10;
                                                                     recruitsManager.IncreaseGrowth(unit, 10);
                                                                     recruitsManager.IncreasePool(unit, 10);
                                                                     isInKingdomPool = true;
                                                                 }
+                                                                Settings.SavePerSaveSettings();
                                                                 IsInRecruitPool[unit.GetHashCode()] = isInKingdomPool;
                                                             },
                                                             150.width());
-                                               var poolText = $"{(isInKingdomPool ? ("Recruit".localize() + $" ({recruitsManager.GetCountInPool(unit)})").orange() : "")}".Trim();
+                                               var poolText = $"{(isInKingdomPool ? ("Recruit".localize() + $" ({poolInfo?.Growth})").orange() : "")}".Trim();
                                                50.space();
                                                Label(poolText, Width(200));
                                                25.space();
                                                if (isInKingdomPool) {
-                                                   var poolInfo = recruitsManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
+                                                   poolInfo = recruitsManager.Pool.FirstOrDefault(pi => pi.Unit == unit);
                                                    if (poolInfo != null) {
-                                                       var growth = poolInfo.Growth;
-                                                       float growthTMP = growth;
-                                                       if (LogSliderCustomLabelWidth("Growth".localize(), ref growthTMP, 1f, 1000, 10, 0, "", 70, AutoWidth())) {
-                                                           recruitsManager.DecreaseGrowth(unit, recruitsManager.GetCountInGrowth(unit));
-                                                           recruitsManager.IncreaseGrowth(unit, (int)growthTMP);
+                                                       var count = poolInfo.Growth;
+                                                       float growthTMP = count;
+                                                       if (LogSliderCustomLabelWidth("Growth".localize(), ref growthTMP, 0f, 1000, 10, 0, "", 70, AutoWidth())) {
+                                                           var change = (int)growthTMP - count;
+                                                           if (change > 0) {
+                                                               recruitsManager.IncreaseGrowth(unit, change);
+                                                           }
+                                                           else {
+                                                               recruitsManager.DecreaseGrowth(unit, change);
+                                                           }
+                                                           if (!settings.perSave.armyRecruitGrowthAdjustment.ContainsKey(unit.GetHashCode())) settings.perSave.armyRecruitGrowthAdjustment[unit.GetHashCode()] = 0;
+                                                           settings.perSave.armyRecruitGrowthAdjustment[unit.GetHashCode()] += change;
+                                                           Settings.SavePerSaveSettings();
                                                        }
                                                    }
                                                    else {

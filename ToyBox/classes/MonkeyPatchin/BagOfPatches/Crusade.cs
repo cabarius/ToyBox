@@ -16,6 +16,7 @@ using Kingmaker.Kingdom.Flags;
 using Kingmaker.Kingdom.Rules;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.PubSubSystem;
+using Kingmaker.RuleSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,6 +137,13 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 // Couldn't recruit units
                 if (unitsBefore < __instance.GetCountInPool(unit)) {
                     __instance.DecreasePool(unit, count - originalCount);
+                }
+            }
+            [HarmonyPatch(nameof(ArmyRecruitsManager.CountGrowth))]
+            [HarmonyPostfix]
+            private static void CountGrowth(Recruits recruits, ref int __result) {
+                if (Settings.perSave.armyRecruitGrowthAdjustment.ContainsKey(recruits.Unit.GetHashCode())) {
+                    __result += Settings.perSave.armyRecruitGrowthAdjustment[recruits.Unit.GetHashCode()];
                 }
             }
         }
