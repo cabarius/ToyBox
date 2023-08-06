@@ -1,5 +1,6 @@
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
+using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.RuleSystem;
@@ -33,9 +34,13 @@ namespace ToyBox {
         [JsonProperty]
         public Dictionary<string, float> characterModelSizeMultiplier = new();
 
-        // This is the overrite setting for the character Descriptor size modifier
+        // This is the override setting for the character Descriptor size modifier
         [JsonProperty]
         public Dictionary<string, Kingmaker.Enums.Size> characterSizeModifier = new();
+
+        // This is the override setting for the Army Recruitment Growth Modifier
+        [JsonProperty]
+        public Dictionary<int, int> armyRecruitGrowthAdjustment = new();
 
         // Dictionary of Name/IsLegendaryHero for configuration per party member
         [JsonProperty]
