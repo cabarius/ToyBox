@@ -593,7 +593,7 @@ namespace ToyBox {
                    () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
 #if Wrath
                 () => Toggle("Instant Cooldown".localize(), ref Settings.toggleInstantCooldown),
-
+                () => Toggle("Instant Global Crusade Spells Cooldown".localize(), ref Settings.toggleInstantCrusadeSpellsCooldown),
                 () => Toggle("Spontaneous Caster Scroll Copy".localize(), ref Settings.toggleSpontaneousCopyScrolls),
 #endif
                    () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),

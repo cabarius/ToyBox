@@ -81,6 +81,7 @@
 * (***ADDB***) Added all localization keys to allow full localization.
 * (***Hinkiii***) Made descriptor size change persist by adding per-save-setting for it.
 * (***ADDB***) Armies -> Recruitment Editor now changes Growth instead of available units.
+* (***ifarmpandas***) Add toggle for instant cooldown on global crusade spells.
 ### ToyBox Rogue - Ver 1.5.6  (built for 0.2.1ah)
 * (***ADDB***) Added Kill Button to Party Editor.
 * (***ADDB***) It is now possible to choose Build-In Portraits with the Portrait Picker.

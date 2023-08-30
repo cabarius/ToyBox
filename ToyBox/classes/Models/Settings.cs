@@ -159,6 +159,7 @@ namespace ToyBox {
         public bool toggleInfiniteSpellCasts = false;
         public bool toggleInfiniteSkillpoints = false;
         public bool toggleInstantCooldown = false;
+        public bool toggleInstantCrusadeSpellsCooldown = false;
         public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleEquipmentRestrictions = false;
         public bool toggleIgnoreMaxDexterity = false;
