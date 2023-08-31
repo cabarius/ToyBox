@@ -6,6 +6,7 @@ using Kingmaker.Armies.TacticalCombat;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.Crusade.GlobalMagic.SpellsManager;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Kingdom;
@@ -229,6 +230,15 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
         public static class ArmyMercenariesManager_RemoveMercenary_Patch {
             public static void Postfix() {
                 ArmiesEditor.poolChanged = true;
+            }
+        }
+
+        [HarmonyPatch(typeof(SpellState), nameof(SpellState.WasUsed))]
+        public static class SpellState_WasUsed_Patch {
+            public static void Postfix(SpellState __instance) {
+                if (Settings.toggleInstantCrusadeSpellsCooldown) {
+                    __instance.RestoreImmediately();
+                }
             }
         }
     }
