@@ -42,7 +42,7 @@ namespace ModKit {
                 using var reader = File.OpenText(userPath);
                 try {
                     var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-                    if (userSettings is IUpdatableSettings updatableSettings) updatableSettings.AddMissingKeys((IUpdatableSettings)settings);
+                    if (userSettings is IUpdatableSettings updatableSettings) updatableSettings?.AddMissingKeys((IUpdatableSettings)settings);
                     settings = userSettings ?? new();
                 }
                 catch {
