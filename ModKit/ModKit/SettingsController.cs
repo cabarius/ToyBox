@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Reflection;
-using static UnityModManagerNet.UnityModManager;
-using System;
 using System.Xml.Serialization;
+using static UnityModManagerNet.UnityModManager;
 
 namespace ModKit {
     public interface IUpdatableSettings {
@@ -43,7 +43,7 @@ namespace ModKit {
                 try {
                     var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
                     if (userSettings is IUpdatableSettings updatableSettings) updatableSettings.AddMissingKeys((IUpdatableSettings)settings);
-                    settings = userSettings;
+                    settings = userSettings ?? new();
                 }
                 catch {
                     Mod.Error("Failed to load user settings. Settings will be rebuilt.");
