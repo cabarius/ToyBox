@@ -73,11 +73,15 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Rogue - Ver 1.5.7 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.7 -** ***Sh0dan*** **Preview Version 1.5.6b** built for 0.2.1ah
+### ToyBox Rogue - Ver 1.5.8 (Coming Soon)
+**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7a** built for 0.2.1ah
+### ToyBox Wrath - Ver 1.5.8 (Coming Soon)
+**ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7a** built for 2.1.5r
+* (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
+
+### ToyBox Rogue - Ver 1.5.7 (built for 0.2.1ah)
 * (***ADDB***) Added all localization keys to allow full localization.
-### ToyBox Wrath - Ver 1.5.7 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.7 - Preview Version 1.5.6b** built for 2.1.5r
+### ToyBox Wrath - Ver 1.5.7 (built for 2.1.5r)
 * (***ADDB***) Added all localization keys to allow full localization.
 * (***Hinkiii***) Made descriptor size change persist by adding per-save-setting for it.
 * (***ADDB***) Armies -> Recruitment Editor now changes Growth instead of available units.
