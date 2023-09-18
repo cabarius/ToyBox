@@ -1,14 +1,9 @@
 ﻿using HarmonyLib;
-using JetBrains.Annotations;
 using Kingmaker;
-using Kingmaker.Blueprints.Root;
-using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.Enums;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
-using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
 using System;
