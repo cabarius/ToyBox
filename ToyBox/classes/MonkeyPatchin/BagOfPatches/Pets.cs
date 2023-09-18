@@ -1,17 +1,31 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.Enums;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility;
 using System;
 
 namespace ToyBox.BagOfPatches {
     internal static class Pets {
         public static Settings settings = Main.Settings;
 
+
+        [HarmonyPatch(typeof(AbilityTargetHasFact))]
+        public static class AbilityTargetHasFact_Patch {
+            [HarmonyPatch(nameof(AbilityTargetHasFact.IsTargetRestrictionPassed))]
+            [HarmonyPrefix]
+            public static bool IsTargetRestrictionPassed(AbilityTargetHasFact __instance, UnitEntityData caster, TargetWrapper target, ref bool __result) {
+                if (!settings.toggleMakePetsRidable) return true;
+                if (__instance.OwnerBlueprint.ToString() == "MountTargetAbility") {
+                    __result = true;
+                    return false;
+                }
+                return true;
+            }
+        }
 
         [HarmonyPatch(typeof(AbilityTargetIsSuitableMountSize), nameof(AbilityTargetIsSuitableMountSize.CanMount))]
         private static class AbilityTargetIsSuitableMountSize_CanMount_Patch {
