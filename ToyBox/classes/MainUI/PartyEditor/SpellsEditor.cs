@@ -71,7 +71,7 @@ namespace ToyBox {
                 else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
-                        spellBrowser = new Browser<BlueprintAbility, AbilityData>();
+                        spellBrowser = new Browser<BlueprintAbility, AbilityData>(Mod.ModKitSettings.searchAsYouType);
                         SpellBrowserDict[ch] = spellBrowser;
                     }
                     var maxLevel = spellbook.Blueprint.MaxSpellLevel;
@@ -212,7 +212,7 @@ namespace ToyBox {
         private static void SpellBookBrowserOnGUI(UnitEntityData ch, IEnumerable<Spellbook> spellbooks, List<Action> todo, bool forceShowAll = false) {
             var spellbookBrowser = SpellbookBrowserDict.GetValueOrDefault(ch, null);
             if (spellbookBrowser == null) {
-                spellbookBrowser = new Browser<BlueprintSpellbook, Spellbook>();
+                spellbookBrowser = new Browser<BlueprintSpellbook, Spellbook>(Mod.ModKitSettings.searchAsYouType);
                 SpellbookBrowserDict[ch] = spellbookBrowser;
             }
             if (forceShowAll) {

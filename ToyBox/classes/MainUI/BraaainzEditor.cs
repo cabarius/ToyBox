@@ -3,10 +3,10 @@ using Kingmaker.AI.Blueprints;
 using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
+using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ModKit.DataViewer;
 using static ModKit.UI;
 #if Wrath
 namespace ToyBox.classes.MainUI {
@@ -76,7 +76,7 @@ namespace ToyBox.classes.MainUI {
                 BlueprintExtensions.GetBlueprints<BlueprintAiAction>,
                 a => (BlueprintAiAction)a.Blueprint,
                 bp => bp.GetDisplayName(),
-                bp => new string[] {$"{bp.GetDisplayName()} {bp.GetDescription()}"},
+                bp => new string[] { $"{bp.GetDisplayName()} {bp.GetDescription()}" },
                 null,
                 (bp, action) => {
                     Browser.DetailToggle(bp.GetDisplayName(), bp, bp);
@@ -92,13 +92,13 @@ namespace ToyBox.classes.MainUI {
                             using (HorizontalScope()) {
                                 150.space();
                                 Label($"{"Actor Considerations".orange().bold()} - {ch.CharacterName.cyan()}");
-                            }    
+                            }
                             ConsiderationBrowser.OnGUI(
                                action.ActorConsiderations,
                                BlueprintExtensions.GetBlueprints<Consideration>,
                                c => c,
                                c => c.GetDisplayName(),
-                               c =>  new[] { c.GetDisplayName() },
+                               c => new[] { c.GetDisplayName() },
                                null,
                                (bp, c) => {
                                    Label(c.GetDisplayName());
@@ -118,7 +118,7 @@ namespace ToyBox.classes.MainUI {
                         }
                         var targetConsiderationsBrowser = TargetConsiderationBrowser.GetValueOrDefault(bp, null);
                         if (targetConsiderationsBrowser == null) {
-                            targetConsiderationsBrowser = new Browser<Consideration, Consideration>();
+                            targetConsiderationsBrowser = new Browser<Consideration, Consideration>(Mod.ModKitSettings.searchAsYouType);
                             TargetConsiderationBrowser[bp] = targetConsiderationsBrowser;
                         }
                         targetConsiderationsBrowser.OnGUI(
@@ -126,7 +126,7 @@ namespace ToyBox.classes.MainUI {
                             BlueprintExtensions.GetBlueprints<Consideration>,
                             c => c,
                             c => c.GetDisplayName(),
-                            c =>  new[] { c.GetDisplayName() },
+                            c => new[] { c.GetDisplayName() },
                             null,
                             (bp, c) => {
                                 Label(c.GetDisplayName());

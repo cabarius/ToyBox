@@ -9,6 +9,7 @@
 
         public int browserSearchLimit = 20;
         public int browserDetailSearchLimit = 10;
+        public bool searchAsYouType = true;
         public bool toggleKeyBindingsOutputToTranscript = true;
         public bool toggleDataViewerShowNullAndEmpties = false;
 

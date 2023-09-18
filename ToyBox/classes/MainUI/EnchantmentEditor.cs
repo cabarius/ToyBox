@@ -27,7 +27,7 @@ namespace ToyBox.classes.MainUI {
 
         #region GUI
         public static BlueprintItemWeapon basicSpikeShield = ResourcesLibrary.TryGetBlueprint<BlueprintItemWeapon>("62c90581f9892e9468f0d8229c7321c4"); //StandardWeaponLightShield
-        public static Browser<BlueprintItemEnchantment, BlueprintItemEnchantment> EnchantmentBrowser = new();
+        public static Browser<BlueprintItemEnchantment, BlueprintItemEnchantment> EnchantmentBrowser = new(Mod.ModKitSettings.searchAsYouType);
 
         public static int selectedItemType;
         public static int selectedItemIndex;
