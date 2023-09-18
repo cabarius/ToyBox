@@ -81,7 +81,6 @@
 **ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7a** built for 2.1.5r
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-
 ### ToyBox Rogue - Ver 1.5.7 (built for 0.2.1ah)
 * (***ADDB***) Added all localization keys to allow full localization.
 ### ToyBox Wrath - Ver 1.5.7 (built for 2.1.5r)

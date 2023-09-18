@@ -112,7 +112,7 @@ namespace ModKit {
             public bool useCustomNotRowGUI;
             private List<Definition> _availableCache;
             public void OnShowGUI() => RedoCollation();
-            public Browser(bool searchAsYouType = true, bool availableIsStatic = false, bool isDetailBrowser = false, bool useCustomNotRowGUI = false) {
+            public Browser(bool searchAsYouType, bool availableIsStatic = false, bool isDetailBrowser = false, bool useCustomNotRowGUI = false) {
                 SearchAsYouType = searchAsYouType;
                 this.availableIsStatic = availableIsStatic;
                 IsDetailBrowser = isDetailBrowser;

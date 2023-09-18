@@ -66,7 +66,7 @@ namespace ToyBox {
         public static int bpCount = 0;
         public static List<string> collationKeys;
         public static UnitReference selectedUnit;
-        public static Browser<SimpleBlueprint, SimpleBlueprint> SearchAndPickBrowser = new();
+        public static Browser<SimpleBlueprint, SimpleBlueprint> SearchAndPickBrowser = new(Mod.ModKitSettings.searchAsYouType);
         public static int[] ParamSelected = new int[1000];
 #if Wrath
         public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };

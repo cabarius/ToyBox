@@ -57,8 +57,8 @@ namespace ToyBox {
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintAbility, Ability>> AbilityBrowserDict = new();
 #if Wrath
-        private static readonly Browser<BlueprintFeature, FeatureSelectionEntry> FeatureSelectionBrowser = new() { IsDetailBrowser = true };
-        private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new() { IsDetailBrowser = true };
+        private static readonly Browser<BlueprintFeature, FeatureSelectionEntry> FeatureSelectionBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
+        private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
 #endif
         public static void BlueprintRowGUI<Item, Definition>(Browser<Definition, Item> browser,
                                                              Item feature,
@@ -356,7 +356,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
             var featureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
             if (featureBrowser == null) {
-                featureBrowser = new Browser<BlueprintFeature, Feature>(true, true) { };
+                featureBrowser = new Browser<BlueprintFeature, Feature>(Mod.ModKitSettings.searchAsYouType, true) { };
                 FeatureBrowserDict[ch] = featureBrowser;
             }
             return OnGUI(ch, featureBrowser, feature, "Features");
@@ -364,7 +364,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
             var buffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
             if (buffBrowser == null) {
-                buffBrowser = new Browser<BlueprintBuff, Buff>(true, true);
+                buffBrowser = new Browser<BlueprintBuff, Buff>(Mod.ModKitSettings.searchAsYouType, true);
                 BuffBrowserDict[ch] = buffBrowser;
             }
             return OnGUI(ch, buffBrowser, buff, "Buffs");
@@ -372,7 +372,7 @@ namespace ToyBox {
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
             var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
             if (abilityBrowser == null) {
-                abilityBrowser = new Browser<BlueprintAbility, Ability>(true, true);
+                abilityBrowser = new Browser<BlueprintAbility, Ability>(Mod.ModKitSettings.searchAsYouType, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
             return OnGUI(ch, abilityBrowser, ability, "Abilities");
