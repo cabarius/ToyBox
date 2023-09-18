@@ -30,7 +30,7 @@ namespace ToyBox {
         public static Settings Settings => Main.Settings;
         public static bool ShowInactive => Settings.toggleIntrestingNPCsShowFalseConditions;
         public static Player player => Game.Instance.Player;
-        private static readonly Browser<UnitEntityData, UnitEntityData> ConditionsBrowser = new();
+        private static readonly Browser<UnitEntityData, UnitEntityData> ConditionsBrowser = new(Mod.ModKitSettings.searchAsYouType);
 
         public static void ResetGUI() { }
 

@@ -100,7 +100,7 @@ namespace ToyBox.classes.MainUI {
                             }
                         }
                         if (!colonyTraitBrowser.ContainsKey(colony)) {
-                            colonyTraitBrowser[colony] = new();
+                            colonyTraitBrowser[colony] = new(Mod.ModKitSettings.searchAsYouType);
                         }
                         if (ColonyTraits == null && colonyTraitBrowser[colony].ShowAll) {
                             ColonyTraits = BlueprintLoader.Shared.GetBlueprints<BlueprintColonyTrait>();

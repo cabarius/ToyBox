@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using static ModKit.UI;
 
 namespace ToyBox {
     public partial class SettingsUI {
@@ -29,6 +28,7 @@ namespace ToyBox {
                 () => EnumGrid("Log Level".localize(), ref Main.Settings.loggingLevel, AutoWidth()),
                 () => Label(""),
                 () => Toggle("Strip HTML (colors) from Native Console".localize(), ref Main.Settings.stripHtmlTagsFromNativeConsole),
+                () => Toggle("Enable Search as you type for Browsers (needs restart)".localize(), ref Mod.ModKitSettings.searchAsYouType),
 #if DEBUG
                 () => Toggle("Strip HTML (colors) from Logs Tab in Unity Mod Manager".localize(), ref Main.Settings.stripHtmlTagsFromUMMLogsTab),
 #endif
