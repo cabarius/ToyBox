@@ -10,24 +10,25 @@ using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Class;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Name;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
+using Kingmaker.UI.MVVM._VM.Other.NestedSelectionGroup;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
+using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
-using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
-using Kingmaker.UI.ServiceWindow;
-using UnityEngine;
-using ModKit;
 using System.Reflection;
 using System.Reflection.Emit;
-using Kingmaker.UI.MVVM._VM.CharGen.Phases.Name;
 using ToyBox;
 using ToyBox.Multiclass;
-using Kingmaker.UI.MVVM._VM.Other.NestedSelectionGroup;
+using UniRx;
+using UnityEngine;
 
 namespace ToyBox.BagOfPatches {
     internal static class LevelUp {
@@ -199,11 +200,13 @@ namespace ToyBox.BagOfPatches {
         private static class CharGenSkillAllocatorVM_UpdateSkillAllocator_Patch {
             public static bool Prefix(CharGenSkillAllocatorVM __instance) {
                 if (settings.toggleIgnoreSkillCap) {
-                    __instance.IsClassSkill.Value = (bool)__instance.Skill?.ClassSkill;
-                    var stat1 = __instance.m_LevelUpController.Unit.Stats.GetStat(__instance.StatType);
-                    var stat2 = __instance.m_LevelUpController.Preview.Stats.GetStat(__instance.StatType);
+                    ReactiveProperty<bool> isClassSkill = __instance.IsClassSkill;
+                    ModifiableValueSkill skill = __instance.Skill;
+                    isClassSkill.Value = skill != null && skill.ClassSkill;
+                    ModifiableValue stat = __instance.m_LevelUpController.Unit.Stats.GetStat(__instance.StatType);
+                    ModifiableValue stat2 = __instance.m_LevelUpController.Preview.Stats.GetStat(__instance.StatType);
                     __instance.CanAdd.Value = !__instance.m_LevelUpController.State.IsSkillPointsComplete() && __instance.m_LevelUpController.State.SkillPointsRemaining > 0;
-                    __instance.CanRemove.Value = stat2.BaseValue > stat1.BaseValue;
+                    __instance.CanRemove.Value = stat2.BaseValue > stat.BaseValue;
                     return false;
                 }
                 return true;
@@ -557,7 +560,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        #if false
+#if false
         [HarmonyPatch(typeof(CharGenNamePhaseVM))]
         private static class CharGenNamePhaseVMPatch {
             [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
@@ -581,7 +584,7 @@ namespace ToyBox.BagOfPatches {
                 __result = true;
             }
         }
-        #endif
+#endif
 
 #if false
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]
