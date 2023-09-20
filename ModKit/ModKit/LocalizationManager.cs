@@ -39,23 +39,30 @@ namespace ModKit {
         public static string FilePath { get; private set; }
 
         public static void Enable() {
-            isEnabled = true;
-            IsDefault = true;
-            _local = null;
-            _localDefault = null;
-            var separator = Path.DirectorySeparatorChar;
-            _localFolderPath = Mod.modEntry.Path + "Localization" + separator;
-            FilePath = _localFolderPath + "en";
-            _localDefault = Import();
-            if (_localDefault == null) {
-                _localDefault = new();
-                _localDefault.Strings = new();
+            try {
+                isEnabled = true;
+                IsDefault = true;
+                _local = null;
+                _localDefault = null;
+                var separator = Path.DirectorySeparatorChar;
+                _localFolderPath = Mod.modEntry.Path + "Localization" + separator;
+                FilePath = _localFolderPath + "en";
+                _localDefault = Import();
+                if (_localDefault == null) {
+                    _localDefault = new();
+                    _localDefault.Strings = new();
+                }
+                var chosenLangauge = Mod.ModKitSettings.uiCultureCode;
+                FilePath = _localFolderPath + chosenLangauge;
+                if (chosenLangauge != "en") {
+                    _local = Import();
+                    IsDefault = _local == null;
+                }
+
             }
-            var chosenLangauge = Mod.ModKitSettings.uiCultureCode;
-            FilePath = _localFolderPath + chosenLangauge;
-            if (chosenLangauge != "en") {
-                _local = Import();
-                IsDefault = _local == null;
+            catch (Exception ex) {
+                Mod.Error("Could not load localization files!");
+                Mod.Warn(ex.ToString());
             }
         }
         public static void Update() {

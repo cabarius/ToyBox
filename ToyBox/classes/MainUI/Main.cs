@@ -104,13 +104,7 @@ namespace ToyBox {
                 HarmonyInstance = new Harmony(modEntry.Info.Id);
                 HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
-                try {
-                    LocalizationManager.Enable();
-                }
-                catch (Exception ex) {
-                    Mod.Error("Could not load localization files!");
-                    Mod.Warn(ex.ToString());
-                }
+                LocalizationManager.Enable();
 
                 modEntry.OnToggle = OnToggle;
                 modEntry.OnShowGUI = OnShowGUI;
