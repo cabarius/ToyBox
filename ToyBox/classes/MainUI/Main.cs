@@ -184,8 +184,7 @@ namespace ToyBox {
                 }
                 else {
                     if (!File.Exists(thisSettingsPath)) {
-                        Mod.Log("Settings file not found".yellow());
-                        Mod.Log("Other ToyBox not found... creating default settings".yellow());
+                        Mod.Log("No old ToyBox version found... creating default settings".yellow());
                     }
                 }
             }
@@ -209,14 +208,13 @@ namespace ToyBox {
                                     if (UnityModManager.ParseVersion(modInfo.Version) > modEntry.Version) {
                                         // The current Assembly is the old version?
                                         return null;
-                                    }
+                                    } // The current Assembly is the new version!
                                     else {
-                                        // The current Assembly is the new version!
                                         return modDir;
                                     }
 
                                 }
-                            }
+                            } // Couldn't find/read info.json
                             catch (Exception e) {
                                 Mod.Error(e);
                             }
