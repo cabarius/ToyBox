@@ -74,12 +74,12 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Rogue - Ver 1.5.8 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7b** built for 0.2.1ah
+**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7c** built for 0.2.1ah
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Improved detection and added auto-deletion of concurrently installed outdated ToyBox version.
 
 ### ToyBox Wrath - Ver 1.5.8 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7b** built for 2.1.5r
+**ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7c** built for 2.1.5r
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Prevent mod from being unable to load when localization files are missing.
