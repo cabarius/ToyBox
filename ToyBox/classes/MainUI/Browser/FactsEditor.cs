@@ -22,6 +22,7 @@ using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 using ToyBox.BagOfPatches;
+using Kingmaker.UnitLogic.ActivatableAbilities;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -55,7 +56,7 @@ namespace ToyBox {
 
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
-        private static readonly Dictionary<UnitEntityData, Browser<BlueprintAbility, Ability>> AbilityBrowserDict = new();
+        private static readonly Dictionary<UnitEntityData, Browser<BlueprintUnitFact, UnitFact>> AbilityBrowserDict = new();
 #if Wrath
         private static readonly Browser<BlueprintFeature, FeatureSelectionEntry> FeatureSelectionBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
@@ -90,7 +91,9 @@ namespace ToyBox {
 
             var lastRect = GUILayoutUtility.GetLastRect();
 
-            var mutatorLookup = BlueprintAction.ActionsForType(typeof(Definition)).Distinct().ToDictionary(a => a.name, a => a);
+            var mutatorLookup = BlueprintAction.ActionsForType(blueprint.GetType())
+                .GroupBy(a => a.name).Select(g => g.FirstOrDefault())
+                .ToDictionary(a => a.name, a => a);
             var add = mutatorLookup.GetValueOrDefault("Add", null);
             var remove = mutatorLookup.GetValueOrDefault("Remove", null);
             var decrease = mutatorLookup.GetValueOrDefault("<", null);
@@ -320,7 +323,10 @@ namespace ToyBox {
             else {
                 browser.OnGUI(
                     fact,
-                    GetBlueprints<Definition>,
+                    () => {
+                        var types = fact.GroupBy(f => f.Blueprint.GetType()).Select(g => g.FirstOrDefault().Blueprint.GetType());
+                        return GetBlueprints<Definition>()?.Where(bp => types.Contains(bp.GetType()));
+                    },
                     (feature) => (Definition)feature.Blueprint,
                     (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                     blueprint => new[] { GetSortKey(blueprint) },
@@ -369,13 +375,16 @@ namespace ToyBox {
             }
             return OnGUI(ch, buffBrowser, buff, "Buffs");
         }
-        public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability) {
+        public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability, List<ActivatableAbility> activatable) {
             var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
+            var combined = new List<UnitFact>();
             if (abilityBrowser == null) {
-                abilityBrowser = new Browser<BlueprintAbility, Ability>(Mod.ModKitSettings.searchAsYouType, true);
+                abilityBrowser = new Browser<BlueprintUnitFact, UnitFact>(Mod.ModKitSettings.searchAsYouType, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
-            return OnGUI(ch, abilityBrowser, ability, "Abilities");
+            combined.AddRange(ability);
+            combined.AddRange(activatable);
+            return OnGUI(ch, abilityBrowser, combined, "Abilities");
         }
     }
 }
