@@ -323,7 +323,7 @@ namespace ToyBox {
                     todo = FactsEditor.OnGUI(ch, ch.Descriptor().Buffs.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable.ToList());
+                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor.ActivatableAbilities.Enumerable);
                 }
 #if Wrath
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
