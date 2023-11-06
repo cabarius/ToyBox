@@ -22,6 +22,7 @@ using UnityModManagerNet;
 using static ModKit.UI;
 using LocalizationManager = ModKit.LocalizationManager;
 using Kingmaker.UI.Common;
+using Newtonsoft.Json;
 #if RT
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.LifeEvents;
 #endif
@@ -156,20 +157,15 @@ namespace ToyBox {
         private static void LoadSettings(UnityModManager.ModEntry modEntry) {
             var thisToyBoxPath = modEntry.Path;
             var thisSettingsPath = Path.Combine(thisToyBoxPath, "Settings.xml");
-            if (!File.Exists(thisSettingsPath)) {
-                try {
-                    Mod.Log("Settings file not found attempting to migrate from older ToyBox".yellow());
-#if Wrath
-                    var otherToyBoxPath = Path.Combine(UnityModManager.modsPath, "ToyBox");
-#elif RT
-                    var otherToyBoxPath = Path.Combine(UnityModManager.ModsPath, "ToyBox");
-#endif
-                    Mod.Log($"Checking {otherToyBoxPath}");
-                    if (Directory.Exists(otherToyBoxPath)) {
-                        Mod.Log($"    Found older ToyBox at {otherToyBoxPath} migrating all settings");
-                        File.Copy(Path.Combine(otherToyBoxPath, "Settings.xml"), thisSettingsPath);
+            var oldToyBoxPath = CheckForOldToyBox(modEntry);
+            try {
+                if (!oldToyBoxPath.IsNullOrEmpty()) {
+                    if (!File.Exists(thisSettingsPath)) {
+                        Mod.Log("Settings file not found attempting to migrate from older ToyBox".yellow());
+                        Mod.Log($"Checking {oldToyBoxPath}");
+                        File.Copy(Path.Combine(oldToyBoxPath, "Settings.xml"), thisSettingsPath);
                         var thisUserSettingsPath = Path.Combine(thisToyBoxPath, "UserSettings");
-                        var otherUserSettingsPath = Path.Combine(otherToyBoxPath, "UserSettings");
+                        var otherUserSettingsPath = Path.Combine(oldToyBoxPath, "UserSettings");
                         Directory.CreateDirectory(thisUserSettingsPath);
                         var allFiles = Directory.GetFiles(otherUserSettingsPath, "*.*", SearchOption.AllDirectories);
                         foreach (string otherPath in allFiles) {
@@ -179,16 +175,58 @@ namespace ToyBox {
                         }
                         Mod.Log("ToyBox settings migration => SUCCESS".green());
                     }
-                    else {
-                        Mod.Log("Other ToyBox not found... creating default settings".yellow());
+                    Mod.Warn("Removing old detected ToyBox version!");
+                    File.Delete(oldToyBoxPath + UnityModManager.Config.ModInfo);
+                    File.Delete(oldToyBoxPath + "Repository.json");
+                    File.Delete(oldToyBoxPath + "ToyBox.dll");
+                    File.Delete(oldToyBoxPath + "ToyBox.pdb");
+                    // Directory.Delete(oldToyBoxPath, true);
+                }
+                else {
+                    if (!File.Exists(thisSettingsPath)) {
+                        Mod.Log("No old ToyBox version found... creating default settings".yellow());
                     }
                 }
-                catch (Exception e) {
-                    Mod.Error(e);
-                }
+            }
+            catch (Exception e) {
+                Mod.Error(e);
             }
             Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
 
+        }
+        private static string CheckForOldToyBox(UnityModManager.ModEntry modEntry) {
+            try {
+                var x = Directory.GetCurrentDirectory();
+                var mods = Directory.GetDirectories(x + "/Mods");
+                foreach (var mod in mods) {
+                    foreach (var file in Directory.GetFiles(mod)) {
+                        if (new FileInfo(file).Name == "ToyBox.dll" && (new DirectoryInfo(mod).FullName + @"\") != new DirectoryInfo(modEntry.Path).FullName) {
+                            var modDir = mod + @"\";
+                            try {
+                                using (StreamReader modInfoFile = File.OpenText(modDir + UnityModManager.Config.ModInfo)) {
+                                    var modInfo = JsonConvert.DeserializeObject<UnityModManager.ModInfo>(modInfoFile.ReadToEnd());
+                                    if (UnityModManager.ParseVersion(modInfo.Version) > modEntry.Version) {
+                                        // The current Assembly is the old version?
+                                        return null;
+                                    } // The current Assembly is the new version!
+                                    else {
+                                        return modDir;
+                                    }
+
+                                }
+                            } // Couldn't find/read info.json
+                            catch (Exception e) {
+                                Mod.Error(e);
+                            }
+                            return modDir;
+                        }
+                    }
+                }
+            }
+            catch (Exception e) {
+                Mod.Error(e);
+            }
+            return null;
         }
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value) {
             Enabled = value;
