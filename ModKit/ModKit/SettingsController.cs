@@ -43,7 +43,7 @@ namespace ModKit {
                 try {
                     var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
                     if (userSettings is IUpdatableSettings updatableSettings) updatableSettings?.AddMissingKeys((IUpdatableSettings)settings);
-                    settings = userSettings ?? new();
+                    settings = userSettings;
                 }
                 catch {
                     Mod.Error("Failed to load user settings. Settings will be rebuilt.");
@@ -55,6 +55,7 @@ namespace ModKit {
                     }
                 }
             }
+            settings ??= new();
             File.WriteAllText(userPath, JsonConvert.SerializeObject(settings, Formatting.Indented));
         }
     }

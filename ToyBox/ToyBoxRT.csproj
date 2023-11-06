@@ -537,7 +537,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
-    <Content Include="Localization\*">
+      <Content Include="Localization\RogueTrader\*.*">
+      <Link>Localization\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="zmisc\api.txt" />
