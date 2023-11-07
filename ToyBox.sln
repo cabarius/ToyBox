@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyBox", "ToyBox\ToyBox.csproj", "{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModKitSrc", "ModKit\ModKitSrc.shproj", "{7D3F9428-C134-47FE-9D04-305B4D330401}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AA27760-A0FF-4EFA-B330-CCE957361EDD}"
@@ -20,10 +18,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22DCB4E1-D979-4EA9-913A-4EE1634B4DED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D9CDA59-3942-46EF-9EBE-FF0498DF5ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,7 +30,6 @@ Global
 		SolutionGuid = {BA000E91-0748-40FC-8104-184CCB5CEA32}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ModKit\ModKitSrc.projitems*{22dcb4e1-d979-4ea9-913a-4ee1634b4ded}*SharedItemsImports = 4
 		ModKit\ModKitSrc.projitems*{4d9cda59-3942-46ef-9ebe-ff0498df5abb}*SharedItemsImports = 4
 		ModKit\ModKitSrc.projitems*{7d3f9428-c134-47fe-9d04-305b4d330401}*SharedItemsImports = 13
 	EndGlobalSection
