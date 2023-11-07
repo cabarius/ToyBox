@@ -241,6 +241,10 @@ namespace ToyBox {
         private static void OnHideGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = false;
             PartyEditor.UnloadPortraits();
+            BlueprintExtensions.descriptionCache.Clear();
+            BlueprintExtensions.titleCache.Clear();
+            BlueprintExtensions.sortKeyCache.Clear();
+            BlueprintExtensions.searchKeyCache.Clear();
         }
         private static IEnumerator ResetGUI() {
             _needsResetGameUI = false;

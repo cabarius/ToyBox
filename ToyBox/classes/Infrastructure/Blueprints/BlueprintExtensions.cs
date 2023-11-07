@@ -1,5 +1,6 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using HarmonyLib;
+using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
@@ -7,18 +8,24 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Code.Blueprints.Quests;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Localization;
 using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics.Blueprints;
 using Kingmaker.Utility;
 using ModKit;
+using Pathfinding.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
+
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
@@ -26,6 +33,10 @@ namespace ToyBox {
 
         private static ConditionalWeakTable<object, List<string>> _cachedCollationNames = new() { };
         private static readonly HashSet<BlueprintGuid> BadList = new();
+        public static Dictionary<string, string> descriptionCache = new();
+        public static Dictionary<string, string> titleCache = new();
+        public static Dictionary<string, string> searchKeyCache = new();
+        public static Dictionary<string, string> sortKeyCache = new();
         public static void ResetCollationCache() => _cachedCollationNames = new ConditionalWeakTable<object, List<string>> { };
         private static void AddOrUpdateCachedNames(SimpleBlueprint bp, List<string> names) {
             names = names.Distinct().ToList();
@@ -53,6 +64,9 @@ namespace ToyBox {
             return name;
         }
         public static string GetTitle(SimpleBlueprint blueprint, Func<string, string> formatter = null) {
+            if (titleCache.TryGetValue(blueprint.AssetGuid, out var ret)) {
+                return ret;
+            }
             if (formatter == null) formatter = s => s;
             if (blueprint is IUIDataProvider uiDataProvider) {
                 string name;
@@ -67,8 +81,10 @@ namespace ToyBox {
                     name = blueprint.name;
                 }
                 else {
-                    if (blueprint is BlueprintSpellbook spellbook)
+                    if (blueprint is BlueprintSpellbook spellbook) {
+                        titleCache[blueprint.AssetGuid] = $"{spellbook.Name} - {spellbook.name}";
                         return $"{spellbook.Name} - {spellbook.name}";
+                    }
                     name = formatter(uiDataProvider.Name);
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = formatter(blueprint.name);
@@ -77,6 +93,7 @@ namespace ToyBox {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
+                titleCache[blueprint.AssetGuid] = name;
                 return name;
             }
             else if (blueprint is BlueprintItemEnchantment enchantment) {
@@ -94,11 +111,16 @@ namespace ToyBox {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
+                titleCache[blueprint.AssetGuid] = name;
                 return name;
             }
+            titleCache[blueprint.AssetGuid] = formatter(blueprint.name);
             return formatter(blueprint.name);
         }
         public static string GetSearchKey(SimpleBlueprint blueprint, bool forceDisplayInternalName = false) {
+            if (searchKeyCache.TryGetValue(blueprint.AssetGuid, out var ret)) {
+                return ret;
+            }
             try {
                 if (blueprint is IUIDataProvider uiDataProvider) {
                     string name;
@@ -113,8 +135,10 @@ namespace ToyBox {
                         name = blueprint.name;
                     }
                     else {
-                        if (uiDataProvider is BlueprintSpellbook spellbook)
+                        if (uiDataProvider is BlueprintSpellbook spellbook) {
+                            searchKeyCache[blueprint.AssetGuid] = $"{spellbook.Name} {spellbook.name}";
                             return $"{spellbook.Name} {spellbook.name}";
+                        }
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
@@ -123,6 +147,7 @@ namespace ToyBox {
                             name += $" : {blueprint.name}";
                         }
                     }
+                    searchKeyCache[blueprint.AssetGuid] = name.StripHTML();
                     return name.StripHTML();
                 }
                 else if (blueprint is BlueprintItemEnchantment enchantment) {
@@ -140,8 +165,10 @@ namespace ToyBox {
                             name += $" : {blueprint.name}";
                         }
                     }
+                    searchKeyCache[blueprint.AssetGuid] = name.StripHTML();
                     return name.StripHTML();
                 }
+                searchKeyCache[blueprint.AssetGuid] = blueprint.name.StripHTML();
                 return blueprint.name.StripHTML(); // can we get rid of this?
             }
             catch (Exception ex) {
@@ -151,6 +178,9 @@ namespace ToyBox {
             }
         }
         public static string GetSortKey(SimpleBlueprint blueprint) {
+            if (sortKeyCache.TryGetValue(blueprint.AssetGuid, out var ret)) {
+                return ret;
+            }
             try {
                 if (blueprint is IUIDataProvider uiDataProvider) {
                     string name;
@@ -165,8 +195,10 @@ namespace ToyBox {
                         name = blueprint.name;
                     }
                     else {
-                        if (blueprint is BlueprintSpellbook spellbook)
+                        if (blueprint is BlueprintSpellbook spellbook) {
+                            sortKeyCache[blueprint.AssetGuid] = $"{spellbook.Name} - {spellbook.name}";
                             return $"{spellbook.Name} - {spellbook.name}";
+                        }
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
@@ -175,6 +207,7 @@ namespace ToyBox {
                             name += blueprint.name;
                         }
                     }
+                    sortKeyCache[blueprint.AssetGuid] = name;
                     return name;
                 }
                 else if (blueprint is BlueprintItemEnchantment enchantment) {
@@ -192,8 +225,10 @@ namespace ToyBox {
                             name += blueprint.name;
                         }
                     }
+                    sortKeyCache[blueprint.AssetGuid] = name;
                     return name;
                 }
+                sortKeyCache[blueprint.AssetGuid] = blueprint.name;
                 return blueprint.name;
             }
             catch (Exception ex) {
@@ -206,7 +241,7 @@ namespace ToyBox {
             List<string> modifiers = new();
             if (BadList.Contains(bp.AssetGuid)) return modifiers;
             var traverse = Traverse.Create(bp);
-            foreach (var property in Traverse.Create(bp).Properties().Where(property => property.StartsWith("Is"))) {
+            foreach (var property in Traverse.Create(bp).Properties().Where(property => property.StartsWith("Is") && !property.StartsWith("IsContinuous"))) {
                 try {
                     var value = traverse?.Property<bool>(property)?.Value;
                     if (value.HasValue && value.GetValueOrDefault()) {
@@ -313,5 +348,39 @@ namespace ToyBox {
         }
 
         public static IEnumerable<T> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
+        public static readonly HashSet<string> badBP = new() { "b60252a8ae028ba498340199f48ead67", "fb379e61500421143b52c739823b4082" };
+        public static string GetDescription(this SimpleBlueprint bp)
+            // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+            {
+            try {
+                // avoid exceptions on known broken items
+                var guid = bp.AssetGuid;
+                if (descriptionCache.TryGetValue(guid, out var desc)) {
+                    return desc;
+                }
+                if (badBP.Contains(guid)) return null;
+                var associatedBlueprint = bp as IUIDataProvider;
+                desc = associatedBlueprint?.Description?.StripHTML();
+                descriptionCache[guid] = desc;
+                return desc;
+
+            }
+            catch (Exception e) {
+#if DEBUG
+                return "ERROR".red().bold() + $": caught exception {e}";
+#else
+                return "";
+#endif
+            }
+        }
+        [HarmonyPatch(typeof(BlueprintQuestContract))]
+        public static class BlueprintQuestContract_Patch {
+            [HarmonyPatch(nameof(BlueprintQuestContract.Description), MethodType.Getter)]
+            [HarmonyPrefix]
+            public static bool get_Description(BlueprintQuestContract __instance, ref string __result) {
+                __result = __instance.GetDescription();
+                return false;
+            }
+        }
     }
 }
