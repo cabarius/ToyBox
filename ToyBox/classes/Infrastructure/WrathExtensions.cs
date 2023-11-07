@@ -1,6 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
-using UnityEngine;
+using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Entities;
@@ -8,18 +7,19 @@ using Kingmaker.UI;
 using Kingmaker.UI.Common;
 //using Kingmaker.UI.LevelUp.Phase;
 using Kingmaker.UnitLogic;
-using Alignment = Kingmaker.Enums.Alignment;
-using ModKit;
 using Kingmaker.UnitLogic.Alignments;
-using System.Linq;
-using Kingmaker;
-using Kingmaker.Utility;
 using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.Utility;
+using ModKit;
+using System;
+using System.Linq;
+using UnityEngine;
+using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public static class WrathExtensions {
         public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
-        public static string HashKey(this MechanicEntity entity) => 
+        public static string HashKey(this MechanicEntity entity) =>
             entity is UnitEntityData ch ? ch.CharacterName : entity.Name;
         public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
         public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();
@@ -53,7 +53,7 @@ namespace ToyBox {
         }
         public static UnitEntityData GetCurrentCharacter() {
             var firstSelectedUnit = Game.Instance.SelectionCharacter.FirstSelectedUnit;
-            return (object)firstSelectedUnit != null ? firstSelectedUnit : (UnitEntityData)Game.Instance.Player.MainCharacter;
+            return (object)firstSelectedUnit != null ? firstSelectedUnit : (UnitEntityData)Game.Instance.Player.MainCharacterEntity;
         }
     }
 }

@@ -52,7 +52,7 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     50.space();
                     using (VerticalScope(GUI.skin.box)) {
-                        if (Shodan.AllUnits is { } unitsPool) {
+                        if (Shodan.AllBaseUnits is { } unitsPool) {
                             var units = Settings.toggleInterestingNPCsShowHidden ? unitsPool.All : unitsPool.ToList();
                             ConditionsBrowser.OnGUI(
                                 units.Where(u => u.InterestingnessCoefficent() >= 1),
@@ -83,7 +83,7 @@ namespace ToyBox {
                                     175.space();
                                     Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(coefficient.ToString()));
                                     50.space();
-                                    ReflectionTreeView.DetailToggle("Unit", u.Parts.m_Parts, u.Parts.m_Parts,100);
+                                    ReflectionTreeView.DetailToggle("Unit", u.Parts.m_Parts, u.Parts.m_Parts, 100);
                                     25.space();
                                     var dialogs = u.GetDialog();
                                     if (dialogs.Any())

@@ -1,18 +1,18 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
+using Kingmaker.Blueprints;
+using Kingmaker.Cheats;
+using Kingmaker.Code.UnitLogic;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Levelup.Components;
 using Kingmaker.UnitLogic.Parts;
 using ModKit;
 using ModKit.DataViewer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.Cheats;
-using Kingmaker.Blueprints;
-using Kingmaker.UnitLogic.Levelup.Components;
-using Kingmaker.Code.UnitLogic;
 using static ModKit.UI;
 
 namespace ToyBox {
@@ -97,6 +97,13 @@ namespace ToyBox {
                              Width(150));
                 Space(25);
                 buttonCount++;
+            }
+            if (ch.CanRespec()) {
+                respecableCount++;
+                ActionButton("Respec".localize().cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
+            }
+            else {
+                Space(153);
             }
             if (buttonCount >= 0)
                 Space(178 * (2 - buttonCount));
@@ -270,7 +277,7 @@ namespace ToyBox {
                     todo = FactsEditor.OnGUI(ch, ch.Descriptor().Buffs.Enumerable.ToList());
                 }
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor.ActivatableAbilities.Enumerable);
+                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor().ActivatableAbilities.Enumerable);
                 }
                 if (selectedCharacter != GetEditCharacter()) {
                     editingCharacterIndex = characterList.IndexOf(selectedCharacter);

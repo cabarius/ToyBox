@@ -152,8 +152,8 @@ namespace ToyBox {
                 ItemEntity a,
                 ItemEntity b,
                 bool invert,
-                ItemsFilter.FilterType filterType,
-                Func<ItemEntity, ItemEntity, ItemsFilter.FilterType, int> otherCompare
+                ItemsFilterType filterType,
+                Func<ItemEntity, ItemEntity, ItemsFilterType, int> otherCompare
             ) {
             var result = a.RaritySortScore().CompareTo(b.RaritySortScore());
             if (invert) result *= -1;

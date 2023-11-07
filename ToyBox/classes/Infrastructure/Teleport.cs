@@ -1,28 +1,30 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // based on code by hambeard (thank you ^_^)
-using Kingmaker;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.GameModes;
-using Kingmaker.PubSubSystem;
-using Kingmaker.View;
-using System;
-using UnityEngine;
 using JetBrains.Annotations;
-using Kingmaker.Globalmap.Blueprints;
-using Kingmaker.Globalmap.View;
-using Kingmaker.Globalmap;
-using Kingmaker.Utility;
-using Kingmaker.EntitySystem.Persistence;
-using ModKit;
-using UnityModManagerNet;
-using Kingmaker.Visual.LocalMap;
+using Kingmaker;
 using Kingmaker.Blueprints.Area;
-using Kingmaker.Designers;
-using System.Linq;
 using Kingmaker.Cheats;
 using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
 using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
+using Kingmaker.Designers;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.GameModes;
+using Kingmaker.Globalmap;
+using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.View;
+using Kingmaker.Mechanics.Entities;
+using Kingmaker.PubSubSystem;
 using Kingmaker.PubSubSystem.Core;
+using Kingmaker.Utility;
+using Kingmaker.View;
+using Kingmaker.View.Mechanics.Entities;
+using Kingmaker.Visual.LocalMap;
+using ModKit;
+using System;
+using System.Linq;
+using UnityEngine;
+using UnityModManagerNet;
 
 namespace ToyBox {
     public static partial class Teleport {
@@ -30,7 +32,7 @@ namespace ToyBox {
         //private static readonly HoverHandler _hover = new();
 
         public static void TeleportSelected() {
-            foreach (var unit in  Shodan.SelectedUnits) {
+            foreach (var unit in Shodan.SelectedUnits) {
                 TeleportUnit(unit, Utils.PointerPosition());
             }
         }
@@ -71,20 +73,20 @@ namespace ToyBox {
             var areaEnterPoints = BlueprintExtensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
             var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
             if (blueprint is BlueprintAreaEnterPoint enterPoint) {
-                ;Shodan.EnterToArea(enterPoint);
+                ; Shodan.EnterToArea(enterPoint);
             }
         }
 
-      internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {
-            public UnitEntityData Unit { get; private set; }
-            private UnitEntityData _currentUnit;
+        internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {
+            public AbstractUnitEntity Unit { get; private set; }
+            private AbstractUnitEntity _currentUnit;
 
             public HoverHandler() {
                 EventBus.Subscribe(this);
             }
             public void Dispose() => throw new NotImplementedException();
 
-            public void HandleHoverChange([NotNull] UnitEntityView unitEntityView, bool isHover) {
+            public void HandleHoverChange([NotNull] AbstractUnitEntityView unitEntityView, bool isHover) {
                 if (isHover) _currentUnit = unitEntityView.Data;
             }
 

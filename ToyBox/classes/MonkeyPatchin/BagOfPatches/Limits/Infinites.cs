@@ -42,7 +42,7 @@ namespace ToyBox.BagOfPatches {
                 var unit = ability.Caster
                     ;
                 if (unit?.IsPartyOrPet() == true && settings.toggleInfiniteAbilities) {
-                        
+
                     return false;
                 }
 
@@ -55,7 +55,7 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix() => !settings.toggleInfiniteAbilities;
         }
 
-        [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.ResourceCost), MethodType.Getter)]
+        [HarmonyPatch(typeof(AbilityResourceLogic), nameof(AbilityResourceLogic.CalculateCost))]
 
         public static class AbilityData_SpellSlotCost_Patch {
             public static bool Prefix() => !settings.toggleInfiniteSpellCasts;

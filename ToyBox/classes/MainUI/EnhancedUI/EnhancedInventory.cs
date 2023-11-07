@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic.Abilities;
 using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ToyBox {
     public enum InventoryType {
@@ -20,17 +20,13 @@ namespace ToyBox {
         private static Harmony m_harmony;
 
         public static readonly Dictionary<ItemSortCategories, (int index, string title)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
-            [ItemSortCategories.NotSorted] = ((int)ItemsFilter.SorterType.NotSorted, null),
-            [ItemSortCategories.TypeUp] = ((int)ItemsFilter.SorterType.TypeUp, null),
-            [ItemSortCategories.TypeDown] = ((int)ItemsFilter.SorterType.TypeDown, null),
-            [ItemSortCategories.PriceUp] = ((int)ItemsFilter.SorterType.PriceUp, null),
-            [ItemSortCategories.PriceDown] = ((int)ItemsFilter.SorterType.PriceDown, null),
-            [ItemSortCategories.NameUp] = ((int)ItemsFilter.SorterType.NameUp, null),
-            [ItemSortCategories.NameDown] = ((int)ItemsFilter.SorterType.NameDown, null),
-            [ItemSortCategories.DateUp] = ((int)ItemsFilter.SorterType.DateUp, null),
-            [ItemSortCategories.DateDown] = ((int)ItemsFilter.SorterType.DateDown, null),
-            [ItemSortCategories.WeightUp] = ((int)ItemsFilter.SorterType.WeightUp, null),
-            [ItemSortCategories.WeightDown] = ((int)ItemsFilter.SorterType.WeightDown, null),
+            [ItemSortCategories.NotSorted] = ((int)ItemsSorterType.NotSorted, null),
+            [ItemSortCategories.TypeUp] = ((int)ItemsSorterType.TypeUp, null),
+            [ItemSortCategories.TypeDown] = ((int)ItemsSorterType.TypeDown, null),
+            [ItemSortCategories.NameUp] = ((int)ItemsSorterType.NameUp, null),
+            [ItemSortCategories.NameDown] = ((int)ItemsSorterType.NameDown, null),
+            [ItemSortCategories.DateUp] = ((int)ItemsSorterType.DateUp, null),
+            [ItemSortCategories.DateDown] = ((int)ItemsSorterType.DateDown, null),
             [ItemSortCategories.WeightValueUp] = ((int)ExpandedSorterType.WeightValueUp, "Price / Weight (in ascending order)"),
             [ItemSortCategories.WeightValueDown] = ((int)ExpandedSorterType.WeightValueDown, "Price / Weight (in descending order)"),
             [ItemSortCategories.RarityUp] = ((int)ExpandedSorterType.RarityUp, "Rarity (ascending order)"),
@@ -38,19 +34,19 @@ namespace ToyBox {
         };
 
         public static readonly Dictionary<FilterCategories, (int index, string title)> FilterCategoryMap = new Dictionary<FilterCategories, (int index, string title)> {
-            [FilterCategories.NoFilter] = ((int)ItemsFilter.FilterType.NoFilter, null),
-            [FilterCategories.Weapon] = ((int)ItemsFilter.FilterType.Weapon, null),
-            [FilterCategories.Armor] = ((int)ItemsFilter.FilterType.Armor, null),
-            [FilterCategories.Accessories] = ((int)ItemsFilter.FilterType.Accessories, null),
-            [FilterCategories.Usable] = ((int)ItemsFilter.FilterType.Usable, null),
-            [FilterCategories.Notable] = ((int)ItemsFilter.FilterType.Notable, null),
-            [FilterCategories.NonUsable] = ((int)ItemsFilter.FilterType.NonUsable, null),
-            [FilterCategories.Scroll] = ((int)ItemsFilter.FilterType.Scroll, null),
-            [FilterCategories.Wand] = ((int)ItemsFilter.FilterType.Wand, null),
-            [FilterCategories.Utility] = ((int)ItemsFilter.FilterType.Utility, null),
-            [FilterCategories.Potion] = ((int)ItemsFilter.FilterType.Potion, null),
-            [FilterCategories.Recipe] = ((int)ItemsFilter.FilterType.Recipe, null),
-            [FilterCategories.Unlearned] = ((int)ItemsFilter.FilterType.Unlearned, null),
+            [FilterCategories.NoFilter] = ((int)ItemsFilterType.NoFilter, null),
+            [FilterCategories.Weapon] = ((int)ItemsFilterType.Weapon, null),
+            [FilterCategories.Armor] = ((int)ItemsFilterType.Armor, null),
+            [FilterCategories.Accessories] = ((int)ItemsFilterType.Accessories, null),
+            [FilterCategories.Usable] = ((int)ItemsFilterType.Usable, null),
+            [FilterCategories.Notable] = ((int)ItemsFilterType.Notable, null),
+            [FilterCategories.NonUsable] = ((int)ItemsFilterType.NonUsable, null),
+            [FilterCategories.Scroll] = ((int)ItemsFilterType.Scroll, null),
+            [FilterCategories.Wand] = ((int)ItemsFilterType.Wand, null),
+            [FilterCategories.Utility] = ((int)ItemsFilterType.Utility, null),
+            [FilterCategories.Potion] = ((int)ItemsFilterType.Potion, null),
+            [FilterCategories.Recipe] = ((int)ItemsFilterType.Recipe, null),
+            [FilterCategories.Unlearned] = ((int)ItemsFilterType.Unlearned, null),
             [FilterCategories.QuickslotUtils] = ((int)ExpandedFilterType.QuickslotUtilities, "Quickslot Usable"),
             [FilterCategories.UnlearnedRecipes] = ((int)ExpandedFilterType.UnlearnedRecipes, "Unlearned Recipes"),
             [FilterCategories.UnreadDocuments] = ((int)ExpandedFilterType.UnreadDocuments, "Unread Documents"),
@@ -145,7 +141,7 @@ namespace ToyBox {
             Notable |
             NonUsable |
             Scroll |
-            Wand | 
+            Wand |
             Potion |
             Recipe |
             Unlearned |
@@ -154,7 +150,7 @@ namespace ToyBox {
             UnreadDocuments |
             UsableWithoutUMD |
             CurrentEquipped |
-            NonZeroPW | 
+            NonZeroPW |
             UnlearnedScrolls,
     }
 
@@ -183,8 +179,7 @@ namespace ToyBox {
             WeightValueUp |
             RarityDown
     }
-    public enum ExpandedFilterType
-    {
+    public enum ExpandedFilterType {
         QuickslotUtilities = 14,
         UnlearnedRecipes = 15,
         UnreadDocuments = 16,
@@ -194,16 +189,14 @@ namespace ToyBox {
         UnlearnedScrolls = 20,
     }
 
-    public enum ExpandedSorterType
-    {
+    public enum ExpandedSorterType {
         WeightValueUp = 11,
         WeightValueDown = 12,
         RarityUp = 13,
         RarityDown = 14
     }
 
-    public enum SpellbookFilter
-    {
+    public enum SpellbookFilter {
         NoFilter,
         AOE,
         Touch,
@@ -213,8 +206,7 @@ namespace ToyBox {
         SupportsMetamagic
     }
 
-    public static class EnumHelper
-    {
+    public static class EnumHelper {
         public static IEnumerable<InventorySearchCriteria> ValidInventorySearchCriteria
             = Enum.GetValues(typeof(InventorySearchCriteria)).Cast<InventorySearchCriteria>().Where(i => i != InventorySearchCriteria.Default);
 
@@ -229,7 +221,7 @@ namespace ToyBox {
         public static bool IsRarityCategory(this ItemSortCategories category) => category == ItemSortCategories.RarityUp || category == ItemSortCategories.RarityDown;
         public static bool IsValid(this ItemSortCategories category) => category != ItemSortCategories.Default && (Main.Settings.UsingLootRarity || !category.IsRarityCategory());
 
-        public static IEnumerable<ItemSortCategories> ValidSorterCategories 
+        public static IEnumerable<ItemSortCategories> ValidSorterCategories
             = Enum.GetValues(typeof(ItemSortCategories)).Cast<ItemSortCategories>().Where(category => category.IsValid());
     }
 }

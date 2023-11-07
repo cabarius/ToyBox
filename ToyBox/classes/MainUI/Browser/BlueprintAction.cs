@@ -16,10 +16,12 @@ using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Mechanics.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Mechanics.Blueprints;
 using Kingmaker.Utility;
 using ModKit;
 using System;
@@ -122,11 +124,11 @@ namespace ToyBox {
                                                     (bp, ch, n, index) => Actions.SpawnUnit(bp, n), isRepeatable: true);
 
             // Facts
-            BlueprintAction.Register<BlueprintUnitFact>("Add".localize(),
+            BlueprintAction.Register<BlueprintMechanicEntityFact>("Add".localize(),
                                                        (bp, ch, n, index) => ch.AddFact(bp),
                                                        (bp, ch, index) => !ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
-            BlueprintAction.Register<BlueprintUnitFact>("Remove".localize(),
+            BlueprintAction.Register<BlueprintMechanicEntityFact>("Remove".localize(),
                                                         (bp, ch, n, index) => ch.Facts.Remove(bp),
                                                         (bp, ch, index) => ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 

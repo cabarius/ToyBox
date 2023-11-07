@@ -1,4 +1,5 @@
 ﻿using Kingmaker;
+using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.PubSubSystem;
@@ -83,7 +84,7 @@ namespace ToyBox {
                                           if (probablyPlayer is { Count: 1 }) {
                                               var newMainCharacter = probablyPlayer.First();
                                               Mod.Warn($"Promoting {newMainCharacter.CharacterName} to main character!");
-                                              if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
+                                              if (Game.Instance != null) Game.Instance.Player.MainCharacter = new UnitReference(newMainCharacter);
                                           }
                                       },
                                       AutoWidth()),

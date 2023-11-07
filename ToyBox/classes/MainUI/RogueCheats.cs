@@ -96,7 +96,7 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     Label("Current Profit Factor".localize().bold() + ": ", Width(startingWidth));
                     using (VerticalScope()) {
-                        Label(Game.Instance.Player.ProfitFactor.Current.ToString());
+                        Label(Game.Instance.Player.ProfitFactor.Total.ToString());
                         using (HorizontalScope()) {
                             Label("Adjust Profit Factor by the following amount:".localize());
                             IntTextField(ref profitFactorAdjustment, null, MinWidth(200), AutoWidth());

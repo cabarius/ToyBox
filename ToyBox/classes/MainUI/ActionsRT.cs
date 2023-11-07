@@ -2,13 +2,18 @@
 using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Area;
+using Kingmaker.Cheats;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap.View;
 using Kingmaker.PubSubSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules.Damage;
+using Kingmaker.UI;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Selection;
 using Kingmaker.UnitLogic;
@@ -21,14 +26,9 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToyBox.BagOfPatches;
 using UnityEngine;
 using UnityModManagerNet;
-using Kingmaker.Designers;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Cheats;
-using Kingmaker.EntitySystem;
-using Kingmaker.UI;
-using ToyBox.BagOfPatches;
 namespace ToyBox {
     public static partial class Actions {
         public static Settings settings => Main.Settings;
@@ -42,12 +42,11 @@ namespace ToyBox {
         public static void SpawnEnemyUnderCursor(
             BlueprintUnit bp = null,
             BlueprintFaction factionBp = null,
-            Vector3 position = default (Vector3))
-        {
+            Vector3 position = default(Vector3)) {
             Vector3 position1 = position != new Vector3() ? position : Game.Instance.ClickEventsController.WorldPosition;
             if (bp == null)
                 bp = Game.Instance.BlueprintRoot.Cheats.Enemy;
-            Mod.Log("Summoning: " + Kingmaker.Cheats.Utilities.GetBlueprintPath((BlueprintScriptableObject) bp));
+            Mod.Log("Summoning: " + Kingmaker.Cheats.Utilities.GetBlueprintPath((BlueprintScriptableObject)bp));
             BaseUnitEntity baseUnitEntity = Game.Instance.EntitySpawner.SpawnUnit(bp, position1, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
             if (factionBp == null)
                 return;
@@ -70,7 +69,7 @@ namespace ToyBox {
         }
         public static void HandleChangeParty() {
             if (Game.Instance.CurrentMode == GameModeType.GlobalMap) {
-                var partyCharacters = Game.Instance.Player.Party.Select(u => (UnitReference)u).ToList(); ;
+                var partyCharacters = Game.Instance.Player.Party.Select(u => new UnitReference(u)).ToList(); ;
                 if ((partyCharacters != null ? (partyCharacters.Select(r => r.Entity).SequenceEqual(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
                     return;
             }

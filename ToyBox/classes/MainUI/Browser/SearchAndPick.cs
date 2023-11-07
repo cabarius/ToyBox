@@ -1,37 +1,39 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using Kingmaker;
+using Kingmaker.AI.Blueprints;
+using Kingmaker.AreaLogic.Cutscenes;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Quests;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.DialogSystem.Blueprints;
+using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.Blueprints.SectorMap;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Mechanics.Blueprints;
+using Kingmaker.UnitLogic.Mechanics.Facts;
 using Kingmaker.Utility;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
-using static ModKit.UI;
-using ModKit.Utility;
-using Kingmaker.DialogSystem.Blueprints;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.ElementsSystem;
-using Kingmaker.AI.Blueprints;
 using ModKit.DataViewer;
-using Kingmaker;
+using ModKit.Utility;
 using ModKit.Utility.Extensions;
-using Kingmaker.UnitLogic;
-using Kingmaker.Globalmap.Blueprints.SectorMap;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
@@ -55,7 +57,7 @@ namespace ToyBox {
         public static bool needsRedoKeys = true;
         public static int bpCount = 0;
         public static List<string> collationKeys;
-        public static UnitReference selectedUnit;
+        public static BaseUnitEntity selectedUnit;
         public static Browser<SimpleBlueprint, SimpleBlueprint> SearchAndPickBrowser = new(Mod.ModKitSettings.searchAsYouType);
         public static int[] ParamSelected = new int[1000];
         public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
@@ -71,7 +73,7 @@ namespace ToyBox {
             //new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(bp.m_AllElements?.Select(e => e.ToString().TrimEnd(digits)).ToArray() ?? new string[] {})),
             //new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(bp.m_AllElements?.Select(e => e.name.Split('$')[1].TrimEnd(digits)).ToArray() ?? new string[] {})),
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationNames()),
-            new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames( 
+            new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames(
                                                       )),
             new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => bp.Classes.Select(cl => cl.Name).ToList()),
@@ -452,8 +454,8 @@ namespace ToyBox {
                         },
                         (bp, maybeBP) => {
                             ReflectionTreeView.OnDetailGUI(bp);
-                            if (bp is BlueprintUnitFact buf) {
-                                FactsEditor.BlueprintDetailGUI<UnitFact, BlueprintUnitFact, SimpleBlueprint, SimpleBlueprint>(buf, null, selectedUnit, SearchAndPickBrowser);
+                            if (bp is BlueprintMechanicEntityFact buf) {
+                                FactsEditor.BlueprintDetailGUI<MechanicEntityFact, BlueprintMechanicEntityFact, SimpleBlueprint, SimpleBlueprint>(buf, null, selectedUnit, SearchAndPickBrowser);
                             }
                         }, 50, true, true, 100, 300, "", false, selectedTypeFilter?.collator);
                     foreach (var action in todo) {

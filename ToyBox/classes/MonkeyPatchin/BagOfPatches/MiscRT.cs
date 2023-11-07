@@ -139,7 +139,7 @@ namespace ToyBox.BagOfPatches {
                 if (Game.Instance.CurrentMode == GameModeType.Default && Settings.togglAutoEquipConsumables) {
                     if (__state != null) {
                         var blueprint = __state.Blueprint;
-                        var item = Game.Instance.Player.Inventory.Items.FirstOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);
+                        var item = Game.Instance.Player.Inventory.Items.FirstOrDefault(i => i.Blueprint.ItemType == ItemsItemType.Usable && i.Blueprint == blueprint);
                         if (item != null) {
 
                             MainThreadDispatcher.StartCoroutine(FillItem(__instance, item));
@@ -193,7 +193,8 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-
+        // Those classes/methods are now generic. 
+#if false
         [HarmonyPatch(typeof(ItemSlotPCView), nameof(ItemSlotPCView.OnClick))]
         public static class ItemSlotPCView_OnClick_Patch {
             public static bool Prefix(ItemSlotPCView __instance) {
@@ -216,7 +217,7 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-
+#endif
         [HarmonyPatch(typeof(Polymorph), nameof(Polymorph.TryReplaceView))]
         private static class Polymorph_TryReplaceView_Patch {
             private static void Postfix(Polymorph __instance) {

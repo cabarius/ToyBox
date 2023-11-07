@@ -12,6 +12,7 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Mechanics.Blueprints;
 using Kingmaker.Utility;
 using ModKit;
 using System;
@@ -42,7 +43,7 @@ namespace ToyBox {
             BlueprintCharacterClass charClass => charClass.Name,
             BlueprintItem item => item.Name,
             BlueprintItemEnchantment enchant => enchant.Name,
-            BlueprintUnitFact fact => fact.NameSafe(),
+            BlueprintMechanicEntityFact fact => fact.NameSafe(),
             SimpleBlueprint blueprint => blueprint.name,
             _ => "n/a"
         };
@@ -263,7 +264,7 @@ namespace ToyBox {
         public static List<string> CollationNames(this BlueprintArea bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
-            if (typeName == "Area") names.Add($"Area CR{bp.CR}");
+            if (typeName == "Area") names.Add($"Area CR{bp.m_CR}");
             AddOrUpdateCachedNames(bp, names);
             return names;
         }

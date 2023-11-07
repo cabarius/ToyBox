@@ -134,7 +134,7 @@ namespace ToyBox {
                                         AutoWidth());
                        },
                        () => {
-                           var exp = mainChar.Progression.Experience;
+                           var exp = ((UnitEntityData)mainChar).Progression.Experience;
                            Label("Experience".localize().cyan(), Width(150));
                            Label(exp.ToString().orange().bold(), Width(200));
                            ActionButton("Gain ".localize() + $"{increment}", () => { Game.Instance.Player.GainPartyExperience(increment); }, AutoWidth());
@@ -324,7 +324,7 @@ namespace ToyBox {
                                           if (probablyPlayer is { Count: 1 }) {
                                               var newMainCharacter = probablyPlayer.First();
                                               Mod.Warn($"Promoting {newMainCharacter.CharacterName} to main character!");
-                                              if (Game.Instance != null) Game.Instance.Player.MainCharacter = newMainCharacter;
+                                              if (Game.Instance != null) Game.Instance.Player.MainCharacter = new UnitReference(newMainCharacter);
                                           }
                                       },
                                       AutoWidth()),

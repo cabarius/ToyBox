@@ -1,43 +1,43 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Items;
-
-using static ToyBox.BlueprintExtensions;
-using UniRx;
-using Owlcat.Runtime.UI.MVVM;
-using UnityEngine;
-using UnityEngine.UI;
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using Kingmaker.UI.Common;
-using System.Collections.Generic;
-using ModKit;
 using Kingmaker.Blueprints.Root;
-using Kingmaker.EntitySystem.Entities;
-using ModKit.Utility;
 using Kingmaker.Blueprints.Root.Strings;
-using Kingmaker.UnitLogic;
-using System.Text;
-using Kingmaker.Utility;
-using Kingmaker.View.MapObjects;
-using Kingmaker.Blueprints.Items;
 using Kingmaker.BundlesLoading;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
-using Kingmaker.EntitySystem.Persistence.Scenes;
 using Kingmaker.EntitySystem;
+using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Persistence.Scenes;
+using Kingmaker.Items;
+using Kingmaker.Mechanics.Entities;
 using Kingmaker.Modding;
 using Kingmaker.PubSubSystem;
-using ToyBox.classes.MainUI.Inventory;
-using ItemSlot = Kingmaker.Items.Slots.ItemSlot;
+using Kingmaker.UI.Common;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility;
+using Kingmaker.View.MapObjects;
+using ModKit;
+using ModKit.Utility;
+using Owlcat.Runtime.UI.MVVM;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text;
+using ToyBox.classes.MainUI.Inventory;
+using UniRx;
+using UnityEngine;
+using UnityEngine.UI;
+using static ToyBox.BlueprintExtensions;
+using ItemSlot = Kingmaker.Items.Slots.ItemSlot;
 
 namespace ToyBox.Inventory {
     internal static class Loot {
@@ -367,7 +367,7 @@ namespace ToyBox.Inventory {
         public static class PatchLootEverythingOnLeave_Patch {
             public static bool Prefix(ref IEnumerable<LootWrapper> __result) {
                 if (!Settings.toggleMassLootEverything) return true;
-                IEnumerable<UnitEntityData> all_units = Shodan.AllUnits.All;
+                IEnumerable<UnitEntityData> all_units = Shodan.AllBaseUnits.All;
                 if (Settings.toggleLootAliveUnits) {
                     all_units = all_units.Where(unit => unit.IsInGame && (unit.IsDeadAndHasLoot || unit.Inventory.HasLoot));
                 }

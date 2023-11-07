@@ -45,6 +45,7 @@
   </Target>
   <ItemGroup>
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
+    <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\RogueTrader.GameCore.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Owlcat.Runtime.UI.dll" />
     <PubliciseInputAssemblies Include="$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\UnityModManager.dll" />
   </ItemGroup>
@@ -118,10 +119,6 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\DOTweenPro.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="EntitySystem.Persistence.JsonUtility">
-      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\EntitySystem.Persistence.JsonUtility.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Kingmaker.AreaLogic.TimeOfDay">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.AreaLogic.TimeOfDay.dll</HintPath>
       <Private>False</Private>
@@ -166,10 +163,6 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.ElementsSystem.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Kingmaker.EntitySystem.Interfaces">
-      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.EntitySystem.Interfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Kingmaker.EntitySystem.Stats.Base">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.EntitySystem.Stats.Base.dll</HintPath>
       <Private>False</Private>
@@ -186,12 +179,28 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.GameInfo.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Kingmaker.Localization.Enums">
-      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.Localization.Enums.dll</HintPath>
+    <Reference Include="Kingmaker.Utility.Random">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.Utility.Random.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Kingmaker.PubSubSystem.Core">
-      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.PubSubSystem.Core.dll</HintPath>
+    <Reference Include="Kingmaker.Controllers.Interfaces">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.Controllers.Interfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Kingmaker.UnitLogic.Enums">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.UnitLogic.Enums.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="StateHasher">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\StateHasher.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MemoryPack">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\MemoryPack.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Kingmaker.Localization.Enums">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.Localization.Enums.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Kingmaker.PubSubSystem.Core.Interfaces">
@@ -220,10 +229,6 @@
     </Reference>
     <Reference Include="Kingmaker.Settings.ConstructionHelpers.KeyPrefix">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.Settings.ConstructionHelpers.KeyPrefix.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Kingmaker.Settings.Entities">
-      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.Settings.Entities.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Kingmaker.Settings.Interfaces">
@@ -260,10 +265,6 @@
     </Reference>
     <Reference Include="Kingmaker.UI.Models.Log.Enums">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.UI.Models.Log.Enums.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Kingmaker.UI.Models.Log.GameLogCntxt">
-      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Kingmaker.UI.Models.Log.GameLogCntxt.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Kingmaker.UI.Models.Tooltip.Base">
@@ -416,8 +417,12 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityModManager_public">
+    <Reference Include="UnityModManager">
       <HintPath>..\lib\RT\UnityModManager_public.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RogueTrader.GameCore">
+      <HintPath>..\lib\RT\RogueTrader.GameCore_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Utility.DotNetExtensions">
@@ -559,7 +564,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

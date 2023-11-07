@@ -9,8 +9,11 @@ using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Mechanics.Blueprints;
+using Kingmaker.UnitLogic.Mechanics.Facts;
 using Kingmaker.Utility;
 using ModKit;
 using ModKit.DataViewer;
@@ -18,12 +21,10 @@ using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToyBox.BagOfPatches;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
-using ToyBox.BagOfPatches;
-using Kingmaker.UnitLogic.ActivatableAbilities;
-using Kingmaker.UnitLogic.Mechanics.Facts;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -51,7 +52,7 @@ namespace ToyBox {
 
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
-        private static readonly Dictionary<UnitEntityData, Browser<BlueprintUnitFact, UnitFact>> AbilityBrowserDict = new();
+        private static readonly Dictionary<UnitEntityData, Browser<BlueprintMechanicEntityFact, MechanicEntityFact>> AbilityBrowserDict = new();
         public static void BlueprintRowGUI<Item, Definition>(Browser<Definition, Item> browser,
                                                              Item feature,
                                                              Definition blueprint,
@@ -94,7 +95,7 @@ namespace ToyBox {
             if (feature != null) {
                 bool canDecrease = decrease?.canPerform(blueprint, ch) ?? false;
                 bool canIncrease = increase?.canPerform(blueprint, ch) ?? false;
-                if ((canDecrease || canIncrease) && feature is UnitFact rankFeature) {
+                if ((canDecrease || canIncrease) && feature is MechanicEntityFact rankFeature) {
                     var v = rankFeature.GetRank();
                     decrease.BlueprintActionButton(ch, blueprint, () => todo.Add(() => decrease!.action(blueprint, ch, repeatCount)), 60);
                     Space(10f);
@@ -138,12 +139,12 @@ namespace ToyBox {
         }
         public static void BlueprintDetailGUI<Item, Definition, k, v>(Definition blueprint, Item feature, UnitEntityData ch, Browser<k, v> browser)
             where Item : MechanicEntityFact
-            where Definition : BlueprintUnitFact {
+            where Definition : BlueprintMechanicEntityFact {
             // TODO: RT
         }
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Definition, Item> browser, List<Item> fact, string name)
             where Item : MechanicEntityFact
-            where Definition : BlueprintUnitFact {
+            where Definition : BlueprintMechanicEntityFact {
             bool updateTree = false;
             List<Action> todo = new();
             if (_showTree) {
@@ -206,9 +207,9 @@ namespace ToyBox {
         }
         public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability, List<ActivatableAbility> activatable) {
             var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
-            var combined = new List<UnitFact>();
+            var combined = new List<MechanicEntityFact>();
             if (abilityBrowser == null) {
-                abilityBrowser = new Browser<BlueprintUnitFact, UnitFact>(Mod.ModKitSettings.searchAsYouType, true);
+                abilityBrowser = new Browser<BlueprintMechanicEntityFact, MechanicEntityFact>(Mod.ModKitSettings.searchAsYouType, true);
                 AbilityBrowserDict[ch] = abilityBrowser;
             }
             combined.AddRange(ability);

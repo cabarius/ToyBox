@@ -32,9 +32,9 @@ namespace ToyBox {
                                    ? new List<UnitEntityData> ()
                                    : GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, (int)nearbyRange , false, false).ToList();
                     }),
-                    new NamedFunc<List<UnitEntityData>>("Friendly".localize(), () => Shodan.AllUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies".localize(), () => Shodan.AllUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("All Units".localize(), () => Shodan.AllUnits.ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Friendly".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("Enemies".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<UnitEntityData>>("All Units".localize(), () => Shodan.AllBaseUnits.ToList()),
                };
             }
             return PartyFilterChoices;
@@ -48,7 +48,7 @@ namespace ToyBox {
         public static UnitEntityData GetSelectedCharacter() {
             var characters = GetCharacterList();
             if (characters == null || characters.Count == 0) {
-                return Game.Instance.Player.MainCharacter;
+                return Game.Instance.Player.MainCharacterEntity;
             }
             if (_selectedIndex >= characters.Count) _selectedIndex = 0;
             return characters[_selectedIndex];

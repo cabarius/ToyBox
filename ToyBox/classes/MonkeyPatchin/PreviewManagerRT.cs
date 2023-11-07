@@ -86,56 +86,56 @@ namespace ToyBox {
                 }
                 else
                     if (cueBase is BlueprintBookPage page) {
-                        cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
-                                               page,
-                                               currentDepth,
-                                               page.OnShow.Actions,
-                                               null,
-                                               null
-                                           ));
-                        if (page.Answers.Count > 0) {
-                            var subAnswer = page.Answers[0].Get();
+                    cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
+                                           page,
+                                           currentDepth,
+                                           page.OnShow.Actions,
+                                           null,
+                                           null
+                                       ));
+                    if (page.Answers.Count > 0) {
+                        var subAnswer = page.Answers[0].Get();
+                        if (visited.Contains(subAnswer)) {
+                            isRecursive = true;
+                            break;
+                        }
+                        visited.Add(subAnswer);
+                        if (page.Answers[0].Get() is BlueprintAnswersList) break;
+                    }
+                    if (page.Cues.Count > 0) {
+                        foreach (var c in page.Cues)
+                            if (c.Get().CanShow())
+                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
+                    }
+                }
+                else
+                        if (cueBase is BlueprintCheck check) {
+                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Success, currentDepth + 1));
+                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
+                }
+                else
+                            if (cueBase is BlueprintCueSequence sequence) {
+                    foreach (var c in sequence.Cues)
+                        if (c.Get().CanShow())
+                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
+                    if (sequence.Exit != null) {
+                        var exit = sequence.Exit;
+                        if (exit.Answers.Count > 0) {
+                            var subAnswer = exit.Answers[0];
                             if (visited.Contains(subAnswer)) {
                                 isRecursive = true;
                                 break;
                             }
                             visited.Add(subAnswer);
-                            if (page.Answers[0].Get() is BlueprintAnswersList) break;
-                        }
-                        if (page.Cues.Count > 0) {
-                            foreach (var c in page.Cues)
-                                if (c.Get().CanShow())
-                                    toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
+                            if (exit.Continue.Cues.Count > 0) {
+                                toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
+                            }
                         }
                     }
-                    else
-                        if (cueBase is BlueprintCheck check) {
-                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Success, currentDepth + 1));
-                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
-                        }
-                        else
-                            if (cueBase is BlueprintCueSequence sequence) {
-                                foreach (var c in sequence.Cues)
-                                    if (c.Get().CanShow())
-                                        toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
-                                if (sequence.Exit != null) {
-                                    var exit = sequence.Exit;
-                                    if (exit.Answers.Count > 0) {
-                                        var subAnswer = exit.Answers[0];
-                                        if (visited.Contains(subAnswer)) {
-                                            isRecursive = true;
-                                            break;
-                                        }
-                                        visited.Add(subAnswer);
-                                        if (exit.Continue.Cues.Count > 0) {
-                                            toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(exit.Continue.Cues[0], currentDepth + 1));
-                                        }
-                                    }
-                                }
-                            }
-                            else {
-                                break;
-                            }
+                }
+                else {
+                    break;
+                }
             }
             return cueResults;
         }
@@ -299,7 +299,7 @@ namespace ToyBox {
                 if (answer.NextCue.Cues.Count == 1) {
                     var cue = answer.NextCue.Cues.Dereference<BlueprintCueBase>().FirstOrDefault();
                     var conditionText = PreviewUtilities.FormatConditions(cue.Conditions);
-//                    var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
+                    //                    var conditionText = $"{string.Join(", ", cue.Conditions.Conditions.Select(c => c.GetCaption()))}";
                     // the following is a kludge for toggleShowAnswersForEachConditionalResponse  to work around cases where there may be a next cue that doesn't get shown due it being already seen and the dialog being intended to fall through.  We assume that any singleton conditional nextCue (CueSelection) was generated by this feature.  We should look for edge cases to be sure.
                     isAvail = isAvail && (cue.CanShow()
                                           || !Settings.toggleShowAnswersForEachConditionalResponse
@@ -311,20 +311,21 @@ namespace ToyBox {
                     if (conditionText.Length > 0)
                         text += $"<size=75%><color={color}[{conditionText.MergeSpaces(true)}]</color></size>";
                 }
-                __instance.SetAnswerText(type == DialogType.Interchapter
-                                  ? answer.DisplayText
-                                  : UIConstsExtensions.GetAnswerString(answer, str, __instance.ViewModel.Index));
+                __instance.SetAnswerText(//type == DialogType.Interchapter
+                                         //? answer.DisplayText
+                                         //: 
+                                UIConstsExtensions.GetAnswerString(answer, str, __instance.ViewModel.Index));
                 __instance.ViewModel.Enable.Value = answer.CanSelect() && isAvail;
 
                 // TODO: this is new in RT so figure out whether we should do more preview stuff here
-                var color32 = isAvail ? __instance.DialogColors.NormalAnswer : __instance.DialogColors.DisabledAnswer;
+                var color32 = isAvail ? __instance.m_DialogColors.NormalAnswer : __instance.m_DialogColors.DisabledAnswer;
 
                 if (type == DialogType.Common || type == DialogType.StarSystemEvent) {
                     color32 = answer.CanSelect()
                                   ? !__instance.ViewModel.IsAlreadySelected() || __instance.ViewModel.IsSystem
-                                        ? __instance.DialogColors.NormalAnswer
-                                        : __instance.DialogColors.SelectedAnswer
-                                  : __instance.DialogColors.DisabledAnswer;
+                                        ? __instance.m_DialogColors.NormalAnswer
+                                        : __instance.m_DialogColors.SelectedAnswer
+                                  : __instance.m_DialogColors.DisabledAnswer;
                     if (answer.SelectConditions.HasConditions) {
                         foreach (var condition in answer.SelectConditions.Conditions)
                             switch (condition) {

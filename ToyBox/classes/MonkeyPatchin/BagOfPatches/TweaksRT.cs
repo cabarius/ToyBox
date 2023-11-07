@@ -329,7 +329,8 @@ namespace ToyBox.BagOfPatches {
                               typeof(TargetWrapper),
                               typeof(int),
                               typeof(LosCalculations.CoverType),
-                              typeof(UnavailabilityReasonType?)
+                              typeof(UnavailabilityReasonType?),
+                              typeof(int?)
                           },
                           new ArgumentType[] {
                               ArgumentType.Normal,
@@ -337,7 +338,8 @@ namespace ToyBox.BagOfPatches {
                               ArgumentType.Normal,
                               ArgumentType.Out,
                               ArgumentType.Out,
-                              ArgumentType.Out
+                              ArgumentType.Out,
+                              ArgumentType.Normal
                           })]
             [HarmonyPostfix]
             public static void CanTargetFromNode(
@@ -497,7 +499,7 @@ toggleIgnoreAbilityTargetTooClose
 
         [HarmonyPatch(typeof(LoadingScreenBaseView))]
         public static class LoadingScreenBaseViewPatch {
-            [HarmonyPatch(nameof(LoadingScreenBaseView.ShowUserInputLayer))]
+            [HarmonyPatch(nameof(LoadingScreenBaseView.ShowUserInputWaiting))]
             [HarmonyPrefix]
             private static bool ShowUserInputLayer(LoadingScreenBaseView __instance, bool state) {
                 if (!Settings.toggleSkipAnyKeyToContinueWhenLoadingSaves) return true;
@@ -543,57 +545,30 @@ toggleIgnoreAbilityTargetTooClose
                 return false;
             }
 
-            [HarmonyPatch(nameof(InventoryHelper.TryEquip))]
-            [HarmonyPrefix]
-            public static bool TryEquip(ItemSlotVM slot, BaseUnitEntity unit) {
-                if (!Settings.toggleEquipItemsDuringCombat) return true;
-                if (unit == null || slot == null || !slot.HasItem || !unit.IsMyNetRole())
-                    return false;
-                ItemEntity itemEntity = slot.ItemEntity;
-                Game.Instance.GameCommandQueue.EquipItem(itemEntity, (MechanicEntity)unit, (ItemSlotRef)null);
-                Game.Instance.GameCommandQueue.OrderCollection(slot, slot.Group);
-                bool isNotable = itemEntity.Blueprint.IsNotable;
-                if (UIUtilityItem.GetEquipPosibility(itemEntity)[0] | isNotable || itemEntity is ItemEntitySimple)
-                    UISounds.Instance.PlayItemSound(SlotAction.Put, itemEntity, true);
-                else
-                    UISounds.Instance.Sounds.Combat.CombatGridCantPerformActionClick.Play();
-                return false;
-            }
-
-            [HarmonyPatch(nameof(InventoryHelper.TryUnequip))]
-            [HarmonyPrefix]
-            public static bool TryUnequip(EquipSlotVM slot) {
-                if (!Settings.toggleEquipItemsDuringCombat) return true;
-                ItemSlot itemSlot = slot.ItemSlot;
-                if (itemSlot == null
-                    || !itemSlot.HasItem
-                    || itemSlot.HasItem && !itemSlot.CanRemoveItem()
-                    || !(itemSlot.Owner is BaseUnitEntity owner)
-                    || !owner.IsMyNetRole())
-                    return false;
-                Game.Instance.GameCommandQueue.UnequipItem((MechanicEntity)owner, slot.ToSlotRef(), (ItemSlotRef)null);
-                UISounds.Instance.PlayItemSound(SlotAction.Take, slot.ItemEntity, true);
-                InventoryStashVM stashVm = Game.Instance.RootUiContext?.SurfaceVM?.StaticPartVM?.ServiceWindowsVM?.InventoryVM?.Value?.StashVM;
-                if (stashVm == null)
-                    return false;
-                Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)slot, stashVm);
-                return false;
-            }
-
             [HarmonyPatch(nameof(InventoryHelper.TryDrop), new Type[] { typeof(ItemEntity) })]
             [HarmonyPrefix]
             public static bool TryDrop(ItemEntity item) {
                 if (!Settings.toggleEquipItemsDuringCombat) return true;
                 if (UIUtility.IsGlobalMap()) {
                     InventoryHelper.s_Item = item;
-                    InventoryHelper.s_ItemCallback = (Action)(() => EventBus.RaiseEvent<IDropItemHandler>((Action<IDropItemHandler>)(h => h.HandleDropItem(item, false))));
-                    UIUtility.ShowMessageBox((string)UIStrings.Instance.CommonTexts.DropItemFromGlobalMap, DialogMessageBoxBase.BoxType.Dialog, (button => {
-                        if (button != DialogMessageBoxBase.BoxButton.Yes || InventoryHelper.s_ItemSlot == null) return;
-                        InventoryHelper.DropItemMechanicGlobalMap(InventoryHelper.s_ItemSlot);
-                    }));
+                    Action<IDropItemHandler> someAction = null;
+                    InventoryHelper.s_ItemCallback = delegate {
+                        Action<IDropItemHandler> action;
+                        if ((action = someAction) == null) {
+                            action = (someAction = delegate (IDropItemHandler h) {
+                                h.HandleDropItem(item, false);
+                            });
+                        }
+                        EventBus.RaiseEvent<IDropItemHandler>(action, true);
+                    };
+                    UIUtility.ShowMessageBox(UIStrings.Instance.CommonTexts.DropItemFromGlobalMap, DialogMessageBoxBase.BoxType.Dialog, delegate (DialogMessageBoxBase.BoxButton button) {
+                        if (button == DialogMessageBoxBase.BoxButton.Yes) {
+                            ItemSlot itemSlot = InventoryHelper.s_ItemSlot;
+                        }
+                    }, null, 0);
+                    return false;
                 }
-                else
-                    InventoryHelper.DropItemMechanic(item);
+                InventoryHelper.DropItemMechanic(item, false);
                 return false;
             }
 
@@ -602,58 +577,101 @@ toggleIgnoreAbilityTargetTooClose
             public static bool TryMoveSlotInInventory(ItemSlotVM from, ItemSlotVM to) {
                 if (!Settings.toggleEquipItemsDuringCombat) return true;
 
-                CargoEntity owner1 = from.Group?.MechanicCollection.Owner as CargoEntity;
-                CargoEntity owner2 = to.Group?.MechanicCollection.Owner as CargoEntity;
-                if (from.Group != to.Group && owner1 != null || owner2 != null) {
-                    if (owner1 != null && !owner1.CanTransferFrom()) {
-                        if (owner1.Blueprint.Integral) {
+                ISlotsGroupVM group = from.Group;
+                CargoEntity cargoEntity = ((group != null) ? group.MechanicCollection.Owner : null) as CargoEntity;
+                ISlotsGroupVM group2 = to.Group;
+                CargoEntity cargoEntity2 = ((group2 != null) ? group2.MechanicCollection.Owner : null) as CargoEntity;
+                if ((from.Group != to.Group && cargoEntity != null) || cargoEntity2 != null) {
+                    int num;
+                    if (cargoEntity != null && !cargoEntity.CanTransferFrom(from.ItemEntity)) {
+                        if (cargoEntity.Blueprint.Integral) {
                             PFLog.Default.Log("Cannot transfer items from this cargo cause Integral true");
+                            return false;
+                        }
+                        if (CargoHelper.IsTrashItem(from.ItemEntity)) {
+                            EventBus.RaiseEvent<IWarningNotificationUIHandler>(delegate (IWarningNotificationUIHandler h) {
+                                h.HandleWarning(UIStrings.Instance.CargoTexts.TrashItemCargo.Text, false, WarningNotificationFormat.Short);
+                            }, true);
+                            PFLog.Default.Log(string.Format("Cannot transfer items from this cargo cause {0} is trash item", from.ItemEntity));
                             return false;
                         }
                         PFLog.Default.Log("Cannot transfer items from this cargo cause CanRemoveItems false");
                         return false;
                     }
-                    if (owner2 != null && !owner2.CanAdd(from.ItemEntity, out int _)) {
-                        if (owner2.Blueprint.Integral) {
+                    else if (cargoEntity2 != null && !cargoEntity2.CanAdd(from.ItemEntity, out num)) {
+                        if (cargoEntity2.Blueprint.Integral) {
                             PFLog.Default.Log("Cannot add to cargo cause Integral true");
-                            return false;
                         }
-                        if (!owner2.CorrectOrigin(from.ItemEntity.Blueprint.Origin)) {
+                        else if (!cargoEntity2.CorrectOrigin(from.ItemEntity.Blueprint.Origin)) {
                             PFLog.Default.Log("Cannot add to cargo cause item origin not correct");
-                            return false;
                         }
-                        PFLog.Default.Log("Cannot add to cargo cause is is full");
+                        else {
+                            PFLog.Default.Log("Cannot add to cargo cause is is full");
+                        }
+                        UISounds.Instance.Sounds.Combat.CombatGridCantPerformActionClick.Play(null);
                         return false;
                     }
                 }
-                if (from.Group != to.Group && to is EquipSlotVM slotVM2) {
-                    if (!(slotVM2.ItemSlot.Owner is BaseUnitEntity owner3) || !owner3.IsMyNetRole())
+                if (from.Group != to.Group) {
+                    EquipSlotVM equipSlotVM = to as EquipSlotVM;
+                    if (equipSlotVM != null) {
+                        BaseUnitEntity baseUnitEntity = equipSlotVM.ItemSlot.Owner as BaseUnitEntity;
+                        if (baseUnitEntity != null && baseUnitEntity.CanBeControlled()) {
+                            Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, equipSlotVM.ItemSlot.Owner, equipSlotVM.ToSlotRef());
+                            Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
+                        }
                         return false;
-                    Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, slotVM2.ItemSlot.Owner, slotVM2.ToSlotRef());
-                    Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
+                    }
                 }
-                else if (from.Group != to.Group && to is ShipComponentSlotVM slotVM1) {
-                    Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, slotVM1.ItemSlot.Owner, slotVM1.ToSlotRef());
-                    Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
-                }
-                else if (from.Group != to.Group && (bool)(SimpleBlueprint)(to.Item?.Value?.Blueprint as BlueprintStarshipItem)) {
-                    Game.Instance.GameCommandQueue.EquipItem(to.Item?.Value, from.ItemEntity?.Owner, from.ToSlotRef());
-                    Game.Instance.GameCommandQueue.OrderCollection(to, to.Group);
-                }
-                else if (from.Group != to.Group && from is EquipSlotVM equipSlotVm) {
-                    if (!(equipSlotVm.ItemSlot.Owner is BaseUnitEntity owner4) || !owner4.IsMyNetRole())
+                if (from.Group != to.Group) {
+                    ShipComponentSlotVM shipComponentSlotVM = to as ShipComponentSlotVM;
+                    if (shipComponentSlotVM != null) {
+                        Game.Instance.GameCommandQueue.EquipItem(from.Item.Value, shipComponentSlotVM.ItemSlot.Owner, shipComponentSlotVM.ToSlotRef());
+                        Game.Instance.GameCommandQueue.OrderCollection(from, from.Group);
                         return false;
-                    Game.Instance.GameCommandQueue.UnequipItem((MechanicEntity)owner4, equipSlotVm.ToSlotRef(), to.ToSlotRef());
-                    Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)equipSlotVm, to.Group);
+                    }
                 }
-                else if (from.Group != to.Group && from is ShipComponentSlotVM shipComponentSlotVm) {
-                    Game.Instance.GameCommandQueue.UnequipItem(shipComponentSlotVm.ItemSlot.Owner, shipComponentSlotVm.ToSlotRef(), to.ToSlotRef());
-                    Game.Instance.GameCommandQueue.OrderCollection((ItemSlotVM)shipComponentSlotVm, to.Group);
+                if (from.Group != to.Group) {
+                    ReactiveProperty<ItemEntity> item = to.Item;
+                    object obj;
+                    if (item == null) {
+                        obj = null;
+                    }
+                    else {
+                        ItemEntity value = item.Value;
+                        obj = ((value != null) ? value.Blueprint : null);
+                    }
+                    if (obj as BlueprintStarshipItem) {
+                        GameCommandQueue gameCommandQueue = Game.Instance.GameCommandQueue;
+                        ReactiveProperty<ItemEntity> item2 = to.Item;
+                        ItemEntity itemEntity = ((item2 != null) ? item2.Value : null);
+                        ItemEntity itemEntity2 = from.ItemEntity;
+                        gameCommandQueue.EquipItem(itemEntity, (itemEntity2 != null) ? itemEntity2.Owner : null, from.ToSlotRef());
+                        Game.Instance.GameCommandQueue.OrderCollection(to, to.Group);
+                        return false;
+                    }
                 }
-                else {
-                    bool isLootOrCargo = owner1 != null || owner2 != null;
-                    InventoryHelper.ProcessDragEnd(from, to, isLootOrCargo);
+                if (from.Group != to.Group) {
+                    EquipSlotVM equipSlotVM2 = from as EquipSlotVM;
+                    if (equipSlotVM2 != null) {
+                        BaseUnitEntity baseUnitEntity2 = equipSlotVM2.ItemSlot.Owner as BaseUnitEntity;
+                        if (baseUnitEntity2 != null && baseUnitEntity2.CanBeControlled()) {
+                            Game.Instance.GameCommandQueue.UnequipItem(baseUnitEntity2, equipSlotVM2.ToSlotRef(), to.ToSlotRef());
+                            Game.Instance.GameCommandQueue.OrderCollection(equipSlotVM2, to.Group);
+                        }
+                        return false;
+                    }
                 }
+                if (from.Group != to.Group) {
+                    ShipComponentSlotVM shipComponentSlotVM2 = from as ShipComponentSlotVM;
+                    if (shipComponentSlotVM2 != null) {
+                        Game.Instance.GameCommandQueue.UnequipItem(shipComponentSlotVM2.ItemSlot.Owner, shipComponentSlotVM2.ToSlotRef(), to.ToSlotRef());
+                        Game.Instance.GameCommandQueue.OrderCollection(shipComponentSlotVM2, to.Group);
+                        return false;
+                    }
+                }
+                bool flag = cargoEntity != null || cargoEntity2 != null;
+                InventoryHelper.ProcessDragEnd(from, to, flag);
                 return false;
             }
         }

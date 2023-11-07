@@ -51,7 +51,7 @@ namespace ToyBox.classes.MainUI {
         public static void OnGUI() {
             if (!Main.IsInGame) return;
             if (ItemTypeNames == null) {
-                ItemTypeNames = Enum.GetNames(typeof(ItemsFilter.ItemType)).ToList().Prepend("All").Select(item => item.localize()).ToArray();
+                ItemTypeNames = Enum.GetNames(typeof(ItemsItemType)).ToList().Prepend("All").Select(item => item.localize()).ToArray();
                 EnchantmentBrowser.DisplayShowAllGUI = false;
                 EnchantmentBrowser.doCollation = true;
                 EnchantmentBrowser.SortDirection = Browser.sortDirection.Descending;

@@ -63,12 +63,10 @@ namespace ToyBox {
             return null;
         }
         // TODO: implement ToyBox improvements
-        public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea()
-        {
+        public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea() {
             var lootFromCurrentArea = new List<LootWrapper>();
-            foreach (var baseUnitEntity in Shodan.AllUnits.Where(u => u.IsRevealed && u.IsDeadAndHasLoot))
-                lootFromCurrentArea.Add(new LootWrapper
-                {
+            foreach (var baseUnitEntity in Shodan.AllBaseUnits.Where(u => u.IsRevealed && u.IsDeadAndHasLoot))
+                lootFromCurrentArea.Add(new LootWrapper {
                     Unit = baseUnitEntity
                 });
             var interactionLootParts = Game.Instance.State.MapObjects.Select(i => i.GetOptional<InteractionLootPart>())
@@ -81,8 +79,7 @@ namespace ToyBox {
                                                                                                        .GetOptional<DroppedLoot.EntityPartBreathOfMoney>()) ||
                      (bool)(UnityEngine.Object)interactionLootPart.View.GetComponent<SkinnedMeshRenderer>()))
                     source.Add(interactionLootPart);
-            var collection = source.Distinct(new LootDuplicateCheck()).Select(i => new LootWrapper
-            {
+            var collection = source.Distinct(new LootDuplicateCheck()).Select(i => new LootWrapper {
                 InteractionLoot = i
             });
             lootFromCurrentArea.AddRange(collection);
@@ -116,13 +113,12 @@ namespace ToyBox {
                                          .StaticPartVM?.LootContextVM;
             if (contextVM == null) return;
             // Add new loot...
-            var objects = new EntityViewBase[] { }; 
-            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, objects , () => contextVM.DisposeAndRemove(contextVM.LootVM));
+            var objects = new EntityViewBase[] { };
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, objects, () => contextVM.DisposeAndRemove(contextVM.LootVM));
             var sharedStash = Game.Instance.Player.SharedStash;
             var lootObjectVM = new LootObjectVM(LootObjectType.Normal,
-                                                "Player Chest".localize(), 
+                                                "Player Chest".localize(),
                                                 "",
-                                                null,
                                                 null,
                                                 sharedStash,
                                                 null,

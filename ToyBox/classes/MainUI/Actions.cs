@@ -3,12 +3,13 @@ using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
 using Kingmaker.Globalmap.View;
 using Kingmaker.PubSubSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Selection;
 using Kingmaker.UnitLogic;
@@ -24,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
-using Kingmaker.Designers;
 namespace ToyBox {
     public static partial class Actions {
         public static Settings Settings => Main.Settings;
@@ -62,16 +62,16 @@ namespace ToyBox {
             }
         }
         public static void LobotomizeAllEnemies() {
-            foreach (var unit in Shodan.AllUnits) {
+            foreach (var unit in Shodan.AllBaseUnits) {
                 if (unit.CombatState.IsInCombat && Shodan.IsEnemy(unit)) {
                     // removing the brain works better in RTWP, but gets stuck in turn based
                     //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
                     // add a bunch of conditions and hope for the best
                     //var currentCharacter = WrathExtensions.GetCurrentCharacter();
                     var fact = new EntityFact();
-                    unit.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity, fact);
-                    unit.State.AddCondition(UnitCondition.CantAct, fact);
-                    unit.State.AddCondition(UnitCondition.CantMove, fact);
+                    unit.State.AddCondition(Kingmaker.UnitLogic.Enums.UnitCondition.DisableAttacksOfOpportunity, fact);
+                    unit.State.AddCondition(Kingmaker.UnitLogic.Enums.UnitCondition.CantAct, fact);
+                    unit.State.AddCondition(Kingmaker.UnitLogic.Enums.UnitCondition.CantMove, fact);
                 }
             }
         }
