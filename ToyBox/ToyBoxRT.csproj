@@ -544,10 +544,6 @@
     <Content Include="zmisc\api.txt" />
     <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Art\" />
-    <Folder Include="Localization\" />
-  </ItemGroup>
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
