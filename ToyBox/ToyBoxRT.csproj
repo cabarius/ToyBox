@@ -537,7 +537,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
-      <Content Include="Localization\RogueTrader\*.*">
+    <Content Include="Localization\RogueTrader\*.*">
       <Link>Localization\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -545,9 +545,23 @@
     <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Art\**\*.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_cian_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_cian_dark_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_cian_m.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_cian_n.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_green_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_green_dark_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_purple_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_purple_dark_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_red_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_red_dark_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_yellow_d.png" />
+    <EmbeddedResource Include="Art\Texture2D\areshkagal_puzzle_yellow_dark_d.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Art\" />
+    <Folder Include="Localization\" />
+  </ItemGroup>
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -563,7 +577,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
