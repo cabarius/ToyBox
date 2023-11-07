@@ -25,10 +25,17 @@ using UnityEngine;
 
 namespace ToyBox {
     public static class LootHelper {
-        public static string NameAndOwner(this ItemEntity u, bool showRating, bool darkmode = false) =>
-            (showRating ? $"{u.Rating()} ".orange().bold() : "")
-            + (u.Owner != null ? $"({u.Owner.Name}) ".orange() : "")
-            + (darkmode ? u.Name.StripHTML().DarkModeRarity(u.Rarity()) : u.Name);
+        public static string NameAndOwner(this ItemEntity u, bool showRating, bool darkmode = false) {
+            var ret = (showRating ? $"{u.Rating()} ".orange().bold() : "");
+            try {
+                ret += (u.Owner != null ? $"({u.Owner.Name}) ".orange() : "");
+            }
+            catch (Exception e) {
+                Mod.Error(e.ToString());
+            }
+            ret += (darkmode ? u.Name.StripHTML().DarkModeRarity(u.Rarity()) : u.Name);
+            return ret;
+        }
         public static string NameAndOwner(this ItemEntity u, bool darkmode = false) => u.NameAndOwner(Main.Settings.showRatingForEnchantmentInventoryItems, darkmode);
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
             var rarity = item.Rarity();
