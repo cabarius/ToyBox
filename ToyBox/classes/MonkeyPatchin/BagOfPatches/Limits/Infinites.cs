@@ -14,10 +14,6 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.ActivatableAbilities;
-#if Wrath
-using Kingmaker.UnitLogic.Class.LevelUp;
-using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-#endif
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
@@ -44,14 +40,9 @@ namespace ToyBox.BagOfPatches {
         public static class AbilityResourceLogic_Spend_Patch {
             public static bool Prefix(AbilityData ability) {
                 var unit = ability.Caster
-#if Wrath
-                                  .Unit;
-                if (unit?.Descriptor.IsPartyOrPet() == true && settings.toggleInfiniteAbilities) {
-#elif RT
                     ;
                 if (unit?.IsPartyOrPet() == true && settings.toggleInfiniteAbilities) {
                         
-#endif
                     return false;
                 }
 
@@ -64,30 +55,11 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix() => !settings.toggleInfiniteAbilities;
         }
 
-#if Wrath
-        [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.SpellSlotCost), MethodType.Getter)]
-#elif RT
         [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.ResourceCost), MethodType.Getter)]
 
-#endif
         public static class AbilityData_SpellSlotCost_Patch {
             public static bool Prefix() => !settings.toggleInfiniteSpellCasts;
         }
 
-#if Wrath
-        [HarmonyPatch(typeof(SpendSkillPoint), nameof(SpendSkillPoint.Apply))]
-        public static class SpendSkillPoint_Apply_Patch {
-            public static bool Prefix(ref bool __state) {
-                __state = settings.toggleInfiniteSkillpoints;
-                return !__state;
-            }
-
-            public static void Postfix(ref bool __state, LevelUpState state, UnitDescriptor unit, StatType ___Skill) {
-                if (__state) {
-                    unit.Stats.GetStat(___Skill).BaseValue++;
-                }
-            }
-        }
-#endif
     }
 }

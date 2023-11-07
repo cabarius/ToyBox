@@ -15,9 +15,6 @@ using Kingmaker.Blueprints.Items;
 using ModKit.DataViewer;
 using ModKit.Utility;
 using static ToyBox.BlueprintExtensions;
-#if Wrath
-using Kingmaker.Blueprints.Classes.Selection;
-#endif
 namespace ToyBox {
     public class BlueprintListUI {
         public delegate void NavigateTo(params string[] argv);
@@ -28,9 +25,6 @@ namespace ToyBox {
         public static int maxActions = 0;
         public static bool needsLayout = true;
         public static int[] ParamSelected = new int[1000];
-#if Wrath
-        public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
-#endif
         public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
         public static List<Action> OnGUI(UnitEntityData unit,
@@ -222,38 +216,6 @@ namespace ToyBox {
                         if (description.Length > 0) Label(description.green(), Width(remWidth));
                     }
                 }
-#if Wrath
-                if (blueprint is BlueprintParametrizedFeature paramBP) {
-                    using (HorizontalScope()) {
-                        Space(titleWidth);
-                        using (VerticalScope()) {
-                            using (HorizontalScope(GUI.skin.button)) {
-                                var content = new GUIContent($"{paramBP.Name.yellow()}");
-                                var labelWidth = GUI.skin.label.CalcSize(content).x;
-                                Space(indent);
-                                //UI.Space(indent + titleWidth - labelWidth - 25);
-                                Label(content, Width(labelWidth));
-                                Space(25);
-                                var nameStrings = paramBPValueNames.GetValueOrDefault(paramBP, null);
-                                if (nameStrings == null) {
-                                    nameStrings = paramBP.Items.Select(x => x.Name).OrderBy(x => x).ToArray().TrimCommonPrefix();
-                                    paramBPValueNames[paramBP] = nameStrings;
-                                }
-                                ActionSelectionGrid(
-                                    ref ParamSelected[currentCount],
-                                    nameStrings,
-                                    6,
-                                    (selected) => { },
-                                    GUI.skin.toggle,
-                                    Width(remWidth)
-                                );
-                                //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
-                            }
-                            Space(15);
-                        }
-                    }
-                }
-#endif
                 if (blueprint is BlueprintFeatureSelection selectionBP) {
                     using (HorizontalScope()) {
                         Space(titleWidth);
@@ -283,27 +245,6 @@ namespace ToyBox {
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                             }
-#if Wrath
-                            if (unit.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
-                                foreach (var entry in selectionData.SelectionsByLevel) {
-                                    foreach (var selection in entry.Value) {
-                                        if (needsSelection) {
-                                            ParamSelected[currentCount] = selectionBP.AllFeatures.IndexOf(selection);
-                                            needsSelection = false;
-                                        }
-                                        using (HorizontalScope()) {
-                                            ActionButton("Remove", () => {
-
-                                            }, Width(160));
-                                            Space(25);
-                                            Label($"{entry.Key} ".yellow() + selection.Name.orange(), Width(250));
-                                            Space(25);
-                                            Label(selection.Description.StripHTML().green());
-                                        }
-                                    }
-                                }
-                            }
-#endif
                             Space(15);
                         }
                     }

@@ -10,9 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-#if Wrath
-using Kingmaker.Blueprints.Classes.Selection;
-#endif
 
 namespace ToyBox {
     public class FeaturesTreeEditor {
@@ -51,9 +48,6 @@ namespace ToyBox {
                             using (UI.HorizontalScope()) {
                                 UI.ActionButton("Refresh".localize(), () => _featuresTree =
                                                                      new FeaturesTree(_selectedCharacter
-#if Wrath
-                                                                                      .Descriptor
-#endif
                                                                                       .Progression), UI.Width(200));
                                 UI.Button("Expand All".localize(), ref expandAll, UI.Width(200));
                                 UI.Button("Collapse All".localize(), ref collapseAll, UI.Width(200));
@@ -118,14 +112,6 @@ namespace ToyBox {
                     if (name == null || name.Length == 0)
                         name = feature.Blueprint.name;
                     //Main.Log($"feature: {name}");
-#if Wrath
-                    var source = feature.m_Source;
-                    //Main.Log($"source: {source}");
-                    if (feature.Blueprint is BlueprintParametrizedFeature)
-                        parametrizedNodes.Add(new FeatureNode(name, feature.SourceLevel, feature.Blueprint, source));
-                    else
-                        normalNodes.Add(feature.Blueprint, new FeatureNode(name, feature.SourceLevel, feature.Blueprint, source));
-#endif
                 }
 
                 // get nodes (classes)
@@ -133,32 +119,6 @@ namespace ToyBox {
                     normalNodes.Add(characterClass, new FeatureNode(characterClass.Name, 0, characterClass, null));
                 }
 
-#if Wrath
-                // set source selection
-                var selectionNodes = normalNodes.Values
-                    .Where(item => item.Blueprint is BlueprintFeatureSelection).ToList();
-                for (var level = 0; level <= 100; level++) {
-                    foreach (var selection in selectionNodes) {
-                        foreach (var feature in progression.GetSelections(selection.Blueprint as BlueprintFeatureSelection, level)) {
-                            FeatureNode node = default;
-                            if (feature is BlueprintParametrizedFeature) {
-                                node = parametrizedNodes
-                                    .FirstOrDefault(item => item.Source != null && item.Source == selection.Source);
-                            }
-
-                            if (node != null || normalNodes.TryGetValue(feature, out node)) {
-                                node.Source = selection.Blueprint;
-                                node.Level = level;
-                            }
-                            else {
-                                // missing child
-                                normalNodes.Add(feature,
-                                    new FeatureNode(string.Empty, level, feature, selection.Blueprint) { IsMissing = true });
-                            }
-                        }
-                    }
-                }
-#endif
 
                 // build tree
                 foreach (var node in normalNodes.Values.Concat(parametrizedNodes).ToList()) {

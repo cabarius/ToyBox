@@ -23,14 +23,8 @@ using static ModKit.UI;
 using LocalizationManager = ModKit.LocalizationManager;
 using Kingmaker.UI.Common;
 using Newtonsoft.Json;
-#if RT
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem.LogThreads.LifeEvents;
-#endif
-#if Wrath
-using ToyBox.Multiclass;
-#elif RT
 using Kingmaker.UI.Models.Log.Enums;
-#endif
 
 namespace ToyBox {
 #if DEBUG
@@ -41,9 +35,6 @@ namespace ToyBox {
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         private static string _modId;
         public static Settings Settings;
-#if Wrath
-        public static MulticlassMod multiclassMod;
-#endif
         public static NamedAction[] tabs = {
                     new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
                     new NamedAction("Enhanced UI", EnhancedUI.OnGUI),
@@ -55,16 +46,7 @@ namespace ToyBox {
                     new NamedAction("Playground", () => Playground.OnGUI()),
 #endif
                     new NamedAction("Search 'n Pick", SearchAndPick.OnGUI),
-#if Wrath
-                    new NamedAction("Crusade", CrusadeEditor.OnGUI),
-                    new NamedAction("Armies", ArmiesEditor.OnGUI),
-                    new NamedAction("Events/Decrees", EventEditor.OnGUI),
-#if DEBUG
-                    new NamedAction("Gambits (AI)", BraaainzEditor.OnGUI),
-#endif
-#elif RT
                     new NamedAction("Colonies", ColonyEditor.OnGUI),
-#endif
                     new NamedAction("Etudes", EtudesEditor.OnGUI),
                     new NamedAction("Quests", QuestEditor.OnGUI),
                     new NamedAction("Dialog & NPCs", DialogAndNPCs.OnGUI),
@@ -115,25 +97,14 @@ namespace ToyBox {
                 modEntry.OnSaveGUI = OnSaveGUI;
                 Objects = new List<GameObject>();
                 KeyBindings.OnLoad(modEntry);
-#if Wrath
-                multiclassMod = new Multiclass.MulticlassMod();
-#endif
                 HumanFriendlyStats.EnsureFriendlyTypesContainAll();
                 Mod.logLevel = Settings.loggingLevel;
                 Mod.InGameTranscriptLogger = text => {
                     Mod.Log("CombatLog - " + text);
-#if Wrath
-                    var message = new CombatLogMessage("ToyBox".blue() + " - " + text, Color.black, PrefixIcon.RightArrow);
-                    var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Common].FirstOrDefault(x => x is MessageLogThread);
-                    var tacticalCombatLog = LogThreadService.Instance.m_Logs[LogChannelType.TacticalCombat].FirstOrDefault(x => x is MessageLogThread);
-                    messageLog?.AddMessage(message);
-                    tacticalCombatLog?.AddMessage(message);
-#elif RT
                     var messageText = "ToyBox".blue() + " - " + text;
                     var message = new CombatLogMessage(messageText, Color.black, PrefixIcon.RightArrow);
                     var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Dialog].FirstOrDefault(x => x is DialogLogThread);
                     messageLog?.AddMessage(message);
-#endif
                 };
             }
             catch (Exception e) {
@@ -243,9 +214,6 @@ namespace ToyBox {
             EnhancedCamera.ResetGUI();
             LevelUp.ResetGUI();
             PartyEditor.ResetGUI();
-#if Wrath
-            CrusadeEditor.ResetGUI();
-#endif
             CharacterPicker.ResetGUI();
             SearchAndPick.ResetGUI();
             QuestEditor.ResetGUI();
@@ -256,11 +224,9 @@ namespace ToyBox {
         private static void OnGUI(UnityModManager.ModEntry modEntry) {
             if (!Enabled) return;
             IsModGUIShown = true;
-#if RT
             if (!IsInGame) {
                 Label(("Warning: ".magenta().bold() + $"This is an experimental preview of ToyBox ({"Sh0dan".cyan()}) for Rogue Trader Beta.".orange() + " Save early and often.\r\n".yellow().bold() + "Note:".magenta().bold() + " Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible".orange()).localize());
             }
-#endif
             if (!IsInGame) {
                 Label("ToyBox has limited functionality from the main menu".localize().yellow().bold());
             }
@@ -328,9 +294,6 @@ namespace ToyBox {
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
-#if Wrath
-            ArmiesEditor.OnShowGUI();
-#endif
             EtudesEditor.OnShowGUI();
             Mod.OnShowGUI();
         }
@@ -343,40 +306,16 @@ namespace ToyBox {
             _needsResetGameUI = false;
             Game.ResetUI();
             Mod.InGameTranscriptLogger?.Invoke("ResetUI");
-#if Wrath
-            // TODO - Find out why the intiative tracker comes up when I do Game.ResetUI.  The following kludge makes it go away
-
-            var canvas = Game.Instance?.UI?.Canvas?.transform;
-            //Main.Log($"canvas: {canvas}");
-            var hudLayout = canvas?.transform.Find("HUDLayout");
-            //Main.Log($"hudLayout: {hudLayout}");
-            var initiaveTracker = hudLayout.transform.Find("Console_InitiativeTrackerHorizontalPC");
-            //Main.Log($"    initiaveTracker: {initiaveTracker}");
-            initiaveTracker?.gameObject?.SetActive(false);
-#endif
             yield return null;
         }
         private static void OnUpdate(UnityModManager.ModEntry modEntry, float z) {
             if (Game.Instance?.Player != null) {
-#if Wrath
-                var corruption = Game.Instance.Player.Corruption;
-                var corruptionDisabled = (bool)corruption.Disabled;
-                if (corruptionDisabled != Settings.toggleDisableCorruption) {
-                    if (Settings.toggleDisableCorruption)
-                        corruption.Disabled.Retain();
-                    else
-                        corruption.Disabled.ReleaseAll();
-                }
-#endif
             }
             Mod.logLevel = Settings.loggingLevel;
             if (NeedsActionInit) {
                 EnhancedCamera.OnLoad();
                 BagOfTricks.OnLoad();
                 PhatLoot.OnLoad();
-#if Wrath
-                ArmiesEditor.OnLoad();
-#endif
                 EnhancedInventory.OnLoad();
                 NeedsActionInit = false;
             }
@@ -407,12 +346,6 @@ namespace ToyBox {
                     || currentMode == GameModeType.GlobalMap
                     )
                 ) {
-#if Wrath
-                if (UIUtility.IsGlobalMap()) {
-                    if (KeyBindings.IsActive("TeleportParty"))
-                        Teleport.TeleportPartyOnGlobalMap();
-                }
-#endif
                 if (KeyBindings.IsActive("TeleportMain"))
                     Teleport.TeleportUnit(Shodan.MainCharacter, Utils.PointerPosition());
                 if (KeyBindings.IsActive("TeleportSelected"))

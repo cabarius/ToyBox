@@ -18,11 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-#if Wrath
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Craft;
-#endif
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
@@ -265,15 +260,6 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
-#if Wrath
-        public static List<string> CollationNames(this BlueprintIngredient bp, params string[] extras) {
-            var names = DefaultCollationNames(bp, extras);
-            if (bp.Destructible) names.Add("Destructible");
-            if (bp.FlavorText != null) names.Add(bp.FlavorText);
-            AddOrUpdateCachedNames(bp, names);
-            return names;
-        }
-#endif
         public static List<string> CollationNames(this BlueprintArea bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
@@ -300,10 +286,6 @@ namespace ToyBox {
         public static string[] CaptionNames(this SimpleBlueprint bp) => bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] { };
         public static List<String> CaptionCollationNames(this SimpleBlueprint bp) => bp.CollationNames(bp.CaptionNames());
         // Custom Attributes that Owlcat uses 
-#if Wrath
-        public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
-        public static string GetInfoBoxDescription(this SimpleBlueprint bp) => string.Join("\n", bp.GetInfoBoxes().Select(attr => attr.Text));
-#endif
 
         private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
         public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {
@@ -330,84 +312,5 @@ namespace ToyBox {
         }
 
         public static IEnumerable<T> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
-#if Wrath        
-        public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
-            var count = 0;
-            var component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();
-            if (component == null)
-                return count;
-            if (component.AnyFeatureFromSelection) {
-                count += selection.AllFeatures.Count(allFeature => !unit.Progression.Features.HasFact((BlueprintFact)allFeature));
-            }
-            count += component.Features.Count(feature => !unit.Progression.Features.HasFact((BlueprintFact)feature));
-            return count;
-        }
-
-        // BlueprintFeatureSelection Helpers
-        public class FeatureSelectionEntry {
-            public BlueprintFeature feature = null;
-            public int level = 0;
-            public FeatureSelectionData data;
-        }
-        public static bool HasFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature) {
-            var progression = ch?.Descriptor?.Progression;
-            if (progression == null) return false;
-            if (!progression.Features.HasFact(bp)) return false;
-            return progression.Selections.TryGetValue(bp, out var selection)
-                   && selection.SelectionsByLevel.Values.Any(l => l.Any(f => f == feature));
-        }
-        public static List<BlueprintFeature> FeatureSelectionValues(this UnitEntityData ch, BlueprintFeatureSelection bp) => bp.AllFeatures.Where(f => ch.HasFeatureSelection(bp, f)).ToList();
-        public static List<FeatureSelectionEntry> FeatureSelectionEntries(this UnitEntityData ch, BlueprintFeatureSelection bp)
-            => (from pair in ch.Descriptor().Progression.Selections
-                where pair.Key == bp
-                from byLevelPair in pair.Value.SelectionsByLevel
-                from feature in byLevelPair.Value
-                select new FeatureSelectionEntry { feature = feature, level = byLevelPair.Key, data = pair.Value }).ToList();
-        public static void AddFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, BlueprintFeature feature, int level = 1) {
-            var source = new FeatureSource();
-            ch?.Progression?.AddSelection(bp, source, level, feature);
-            var featureCollection = ch?.Progression?.Features;
-            if (featureCollection == null) return;
-            var fact = new Feature(feature, featureCollection.Owner, null);
-            fact = featureCollection.Manager.Add<Feature>(fact);
-            fact?.SetSource(source, level);
-            // ch?.Progression?.Features.AddFeature(bp).SetSource(source, 1);
-        }
-        public static void RemoveFeatureSelection(this UnitEntityData ch, BlueprintFeatureSelection bp, FeatureSelectionData data, BlueprintFeature feature) {
-            var progression = ch?.Descriptor?.Progression;
-            if (progression == null) return;
-            var fact = progression.Features.GetFact(feature);
-            BlueprintFeatureSelection featureSelection = null;
-            FeatureSelectionData featureSelectionData = null;
-            var level = -1;
-            foreach (var selection in progression.Selections) {
-                foreach (var keyValuePair in selection.Value.SelectionsByLevel.Where(keyValuePair => keyValuePair.Value.HasItem<BlueprintFeature>(feature))) {
-                    featureSelection = selection.Key;
-                    featureSelectionData = selection.Value;
-                    level = keyValuePair.Key;
-                    break;
-                }
-                if (level >= 0)
-                    break;
-            }
-            if (featureSelection != null) {
-                featureSelectionData.RemoveSelection(level, feature);
-            }
-            if (fact == null) return;
-            progression.Features.RemoveFact(fact);
-        }
-        // BlueprintParametrizedFeature Helpers
-        public static bool HasParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
-            if (!bp.Items.Any()) return false;
-            var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
-            return existing != null;
-        }
-        public static List<IFeatureSelectionItem> ParameterizedFeatureItems(this UnitEntityData ch, BlueprintParametrizedFeature bp) => bp.Items.Where(f => ch.HasParameterizedFeatureItem(bp, f)).ToList();
-        public static void AddParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) => ch?.Descriptor?.AddFact<UnitFact>(bp, null, item.Param);
-        public static void RemoveParameterizedFeatureItem(this UnitEntityData ch, BlueprintParametrizedFeature bp, IFeatureSelectionItem item) {
-            var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
-            ch?.Progression?.Features?.RemoveFact(fact);
-        }
-#endif
     }
 }

@@ -19,59 +19,15 @@ using UnityEngine;
 using static Kingmaker.Utility.UnitDescription.UnitDescription;
 using static ModKit.UI;
 using Alignment = Kingmaker.Enums.Alignment;
-#if Wrath
-using Kingmaker.Blueprints.Classes.Spells;
-using ToyBox.Multiclass;
-#endif
 
 namespace ToyBox {
     public partial class PartyEditor {
         public static void OnClassesGUI(UnitEntityData ch, List<(BlueprintCareerPath path, int level)> careerPaths, UnitEntityData selectedCharacter) {
-#if Wrath
-            Div(100, 20);
             using (HorizontalScope()) {
-                Space(100);
-                Toggle("Multiple Classes On Level-Up", ref Settings.toggleMulticlass);
-                if (Settings.toggleMulticlass) {
-                    Space(40);
-                    if (DisclosureToggle("Config".orange().bold(), ref editMultiClass)) {
-                        multiclassEditCharacter = selectedCharacter;
-                    }
-                    Space(53);
-                    Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
-                }
-            }
-#endif
-            using (HorizontalScope()) {
-#if Wrath
-                Space(100);
-                ActionToggle("Allow Levels Past 20",
-                    () => {
-                        var hasValue = Settings.perSave.charIsLegendaryHero.TryGetValue(ch.HashKey(), out var isLegendaryHero);
-                        return hasValue && isLegendaryHero;
-                    },
-                    (val) => {
-                        if (Settings.perSave.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
-                            Settings.perSave.charIsLegendaryHero[ch.HashKey()] = val;
-                            Settings.SavePerSaveSettings();
-                        }
-                        else {
-                            Settings.perSave.charIsLegendaryHero.Add(ch.HashKey(), val);
-                            Settings.SavePerSaveSettings();
-                        }
-                    },
-                    0f,
-                    AutoWidth());
-                Space(380);
-                Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".green());
-#endif
             }
             Div(100, 20);
 
             if (editMultiClass) {
-#if Wrath
-                MulticlassPicker.OnGUI(ch);
-#endif
             }
             else {
                 var prog = ch.Descriptor().Progression;
@@ -83,11 +39,7 @@ namespace ToyBox {
                         Space(25);
                         Label("level".localize().green() + $": {prog.CharacterLevel}", Width(100f));
                         ActionButton(">", () => prog.CharacterLevel = Math.Min(
-#if Wrath
-                                                    prog.MaxCharacterLevel, 
-#elif RT
                                                     int.MaxValue, // TODO: is this right?
-#endif
                                                     prog.CharacterLevel + 1),
                                      AutoWidth());
                     }
@@ -160,11 +112,6 @@ namespace ToyBox {
                 }
 #endif
                 var classCount = careerPaths.Count();
-#if Wrath
-                var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
-                var mythicCount = classData.Count(x => x.CharacterClass.IsMythic);
-                var mythicGestaltCount = classData.Count(cd => cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
-#endif
                 foreach (var cd in careerPaths) {
                     var showedGestalt = false;
                     Div(100, 20);
@@ -180,34 +127,6 @@ namespace ToyBox {
                         var maxLevel = 20;
                         //ActionButton(">", () => cd.level = Math.Min(maxLevel, cd.level + 1), AutoWidth());
                         Space(23);
-#if Wrath
-                        if (ch.IsClassGestalt(cd.CharacterClass)
-                            || !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1
-                            || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1
-                            ) {
-                            ActionToggle(
-                                "gestalt".grey(),
-                                () => ch.IsClassGestalt(cd.CharacterClass),
-                                (v) => {
-                                    ch.SetClassIsGestalt(cd.CharacterClass, v);
-                                    ch.Progression.UpdateLevelsForGestalt();
-                                },
-                                125
-                                );
-                            showedGestalt = true;
-                        }
-                        else Space(125);
-                        Space(27);
-                        using (VerticalScope()) {
-                            if (showedGestalt) {
-                                if (showedGestalt) {
-                                    Label("this flag lets you not count this class in computing character level".green());
-                                    DivLast();
-                                }
-                            }
-                            Label(cd.CharacterClass.Description.StripHTML().green(), AutoWidth());
-                        }
-#endif
                     }
                 }
             }

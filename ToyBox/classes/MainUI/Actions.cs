@@ -25,13 +25,6 @@ using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.Designers;
-#if Wrath
-using Kingmaker.Armies;
-using Kingmaker.Armies.Blueprints;
-using Kingmaker.Kingdom;
-using Kingmaker.Armies.TacticalCombat.Parts;
-using ToyBox.BagOfPatches;
-#endif
 namespace ToyBox {
     public static partial class Actions {
         public static Settings Settings => Main.Settings;
@@ -41,17 +34,12 @@ namespace ToyBox {
                     Shodan.KillUnit(unit);
                 }
             }
-#if Wrath
-            KillAllTacticalUnits();
-#endif
             if (Game.Instance.IsPaused) {
                 Game.Instance.StopMode(GameModeType.Pause);
             }
-#if RT
             if (!Game.Instance.IsPaused)
                 return;
             Game.Instance.StopMode(GameModeType.Pause);
-#endif
         }
         public static void RemoveAllBuffs() {
             foreach (var target in Game.Instance.Player.PartyAndPets) {
@@ -80,25 +68,10 @@ namespace ToyBox {
                     //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
                     // add a bunch of conditions and hope for the best
                     //var currentCharacter = WrathExtensions.GetCurrentCharacter();
-#if Wrath
-                    var descriptor = unit.Descriptor;
-                    if (descriptor != null) {
-                        // removing the brain works better in RTWP, but gets stuck in turn based
-                        //AccessTools.DeclaredProperty(descriptor.GetType(), "Brain")?.SetValue(descriptor, null);
-
-                        // add a bunch of conditions and hope for the best
-                        descriptor.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity);
-                        descriptor.State.AddCondition(UnitCondition.CantAct);
-                        descriptor.State.AddCondition(UnitCondition.CanNotAttack);
-                        descriptor.State.AddCondition(UnitCondition.CantMove);
-                        descriptor.State.AddCondition(UnitCondition.MovementBan);
-                    }
-#elif RT
                     var fact = new EntityFact();
                     unit.State.AddCondition(UnitCondition.DisableAttacksOfOpportunity, fact);
                     unit.State.AddCondition(UnitCondition.CantAct, fact);
                     unit.State.AddCondition(UnitCondition.CantMove, fact);
-#endif
                 }
             }
         }

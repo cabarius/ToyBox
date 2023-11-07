@@ -6,9 +6,6 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic.Abilities;
 using ModKit;
-#if Wrath
-using ToyBox.Inventory;
-#endif
 
 namespace ToyBox {
     public enum InventoryType {
@@ -21,9 +18,6 @@ namespace ToyBox {
     public static class EnhancedInventory {
         public static Settings Settings => Main.Settings;
         private static Harmony m_harmony;
-#if Wrath
-        private static OnAreaLoad m_area_load_handler;
-#endif
 
         public static readonly Dictionary<ItemSortCategories, (int index, string title)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
             [ItemSortCategories.NotSorted] = ((int)ItemsFilter.SorterType.NotSorted, null),
@@ -48,9 +42,6 @@ namespace ToyBox {
             [FilterCategories.Weapon] = ((int)ItemsFilter.FilterType.Weapon, null),
             [FilterCategories.Armor] = ((int)ItemsFilter.FilterType.Armor, null),
             [FilterCategories.Accessories] = ((int)ItemsFilter.FilterType.Accessories, null),
-#if Wrath
-            [FilterCategories.Ingredients] = ((int)ItemsFilter.FilterType.Ingredients, null),
-#endif
             [FilterCategories.Usable] = ((int)ItemsFilter.FilterType.Usable, null),
             [FilterCategories.Notable] = ((int)ItemsFilter.FilterType.Notable, null),
             [FilterCategories.NonUsable] = ((int)ItemsFilter.FilterType.NonUsable, null),
@@ -72,16 +63,9 @@ namespace ToyBox {
         public static readonly RemappableInt FilterMapper = new RemappableInt();
         public static readonly RemappableInt SorterMapper = new RemappableInt();
         public static void OnLoad() {
-#if Wrath
-            m_area_load_handler = new OnAreaLoad();
-            EventBus.Subscribe(m_area_load_handler);
-#endif
             RefreshRemappers();
         }
         public static void OnUnload() {
-#if Wrath
-            EventBus.Unsubscribe(m_area_load_handler);
-#endif
         }
         public static void RefreshRemappers() {
             FilterMapper.Clear();
@@ -100,10 +84,6 @@ namespace ToyBox {
                 }
             }
             // TODO: bring this back once we implement this for RT
-#if Wrath
-            ItemsFilterPCViewPatch.ReloadFilterViews();
-            ItemsFilterSearchPCViewPatch.ReloadFilterViews();
-#endif
         }
     }
 

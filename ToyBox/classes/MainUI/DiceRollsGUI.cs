@@ -12,21 +12,6 @@ namespace ToyBox {
                 () => EnumGrid("All Hits Critical".localize(), ref Settings.allHitsCritical, AutoWidth()),
                 () => EnumGrid("Roll With Avantage".localize(), ref Settings.rollWithAdvantage, AutoWidth()),
                 () => EnumGrid("Roll With Disavantage".localize(), ref Settings.rollWithDisadvantage, AutoWidth()),
-#if Wrath
-                () => EnumGrid("Always Roll 20".localize(), ref Settings.alwaysRoll20, AutoWidth()),
-                () => EnumGrid("Always Roll 10".localize(), ref Settings.alwaysRoll10, AutoWidth()),
-                () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll1, AutoWidth()),
-                () => EnumGrid("Never Roll 20".localize(), ref Settings.neverRoll20, AutoWidth()),
-                () => EnumGrid("Never Roll 1".localize(), ref Settings.neverRoll1, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 20".localize(), ref Settings.roll20Initiative, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 10".localize(), ref Settings.roll20Initiative, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 1".localize(), ref Settings.roll1Initiative, AutoWidth()),
-                () => EnumGrid("Non Combat: Take 20".localize(), ref Settings.alwaysRoll20OutOfCombat, AutoWidth()),
-                () => EnumGrid("Non Combat: Roll at least 10".localize(), ref Settings.rollAtLeast10OutOfCombat, AutoWidth()),
-                () => { 330.space(); Label("The following skill check adjustments apply only out of combat".localize().green()); },
-                () => EnumGrid("Skill Checks: Take 20".localize(), ref Settings.skillsTake20, AutoWidth()),
-                () => EnumGrid("Skill Checks: Take 10".localize(), ref Settings.skillsTake10, AutoWidth()),
-#elif RT
                 () => EnumGrid("Always Roll 100".localize(), ref Settings.alwaysRoll100, AutoWidth()),
                 () => EnumGrid("Always Roll 50".localize(), ref Settings.alwaysRoll50, AutoWidth()),
                 () => EnumGrid("Always Roll 1".localize(), ref Settings.alwaysRoll1, AutoWidth()),
@@ -40,7 +25,6 @@ namespace ToyBox {
                 () => EnumGrid("Skill Checks: Take 50".localize(), ref Settings.skillsTake50, AutoWidth()),
                 () => EnumGrid("Skill Checks: Take 25".localize(), ref Settings.skillsTake25, AutoWidth()),
                 () => EnumGrid("Skill Checks: Take 1".localize(), ref Settings.skillsTake1, AutoWidth()),
-#endif
                 () => { }
                 );
         }

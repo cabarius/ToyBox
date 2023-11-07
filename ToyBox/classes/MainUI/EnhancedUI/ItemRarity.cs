@@ -17,11 +17,6 @@ using System;
 using System.Linq;
 using ToyBox;
 using UnityEngine;
-#if Wrath
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-#endif
 
 namespace ToyBox {
     public enum RarityType {
@@ -80,23 +75,7 @@ namespace ToyBox {
             return rarity;
         }
         public static int Rating(this BlueprintItemEnchantment bp) {
-#if Wrath
-            int rating;
-
-            var modifierRating = RarityScaling * bp.Components?.Sum(
-                c => c is AddStatBonusEquipment sbe ? sbe.Value
-                    : c is AllSavesBonusEquipment asbe ? asbe.Value
-                    : 0
-                    ) ?? 0;
-            if (bp is BlueprintWeaponEnchantment || bp is BlueprintArmorEnchantment)
-                rating = Math.Max(5, bp.EnchantmentCost * RarityScaling);
-            else {
-                rating = (bp.IdentifyDC * 5) / 2;
-            }
-            return Math.Max(modifierRating, rating);
-#elif RT
             return 0;
-#endif
         }
         public static int Rating(this ItemEntity item) => item.Blueprint.Rating(item);
         public static int Rating(this BlueprintItem bp) {
@@ -107,11 +86,7 @@ namespace ToyBox {
         public static int Rating(this BlueprintItem bp, ItemEntity? item = null) {
             var rating = 0;
             var itemRating = 0;
-#if Wrath
-            var cost = bp.Cost;
-#elif RT
             var cost = 0;
-#endif
             var logCost = cost > 1 ? Math.Log(cost) / Math.Log(5) : 0;
             var costRating = (int)(2.5f * Math.Floor(logCost));
             try {
@@ -119,14 +94,6 @@ namespace ToyBox {
                     itemRating = item.Enchantments.Sum(e => e.Blueprint.Rating());
                     var itemEnchantmentRating = item.Enchantments.Sum(e => e.Blueprint.Rating());
                     //Mod.Log($"item itemRating: {itemRating} - {itemEnchRating}");
-#if Wrath
-                    if (Game.Instance?.SelectionCharacter?.CurrentSelectedCharacter is var currentCharacter) {
-                        var component = bp.GetComponent<CopyItem>();
-                        if (component != null && component.CanCopy(item, currentCharacter)) {
-                            itemRating = Math.Max(itemRating, RarityScaling);
-                        }
-                    }
-#endif
                     itemRating = Math.Max(itemRating, itemEnchantmentRating);
                 }
                 var bpRating = bp.Rating();
@@ -147,25 +114,12 @@ namespace ToyBox {
 #if false
             Mod.Log($"{bp.Name} : {bp.GetType().Name.grey().bold()} -  itemRating: {itemRating} bpRating: {bpRating} logCost: {logCost} - rating: {rating}");
 #endif
-#if Wrath            
-            rating = bp switch {
-                BlueprintItemWeapon bpWeap when !bpWeap.IsMagic => Math.Min(rating, RarityScaling - 1),
-                BlueprintItemArmor bpArmor when !bpArmor.IsMagic => Math.Min(rating, RarityScaling - 1),
-                _ => rating
-            };
-#endif
             return rating;
         }
         public static RarityType Rarity(this BlueprintItem bp) {
             if (bp == null) return RarityType.None;
             if (bp.IsNotable) return RarityType.Notable;
             if (bp is not BlueprintItemNote noteBP) return Rarity(bp.Rating());
-#if Wrath
-            var component = noteBP.GetComponent<AddItemShowInfoCallback>();
-            if (component != null) {
-                return RarityType.Notable;
-            }
-#endif
             return Rarity(bp.Rating());
         }
         public static RarityType Rarity(this ItemEntity item) {
@@ -173,12 +127,7 @@ namespace ToyBox {
             if (bp == null) return RarityType.None;
             if (bp.IsNotable) return RarityType.Notable;
             if (bp is not BlueprintItemNote noteBP) return Rarity(bp.Rating(item));
-#if Wrath 
-            var component = noteBP.GetComponent<AddItemShowInfoCallback>();
-            return component != null ? RarityType.Notable : Rarity(bp.Rating(item));
-#elif RT
             return Rarity(bp.Rating());
-#endif
         }
         public static RarityType Rarity(this BlueprintItemEnchantment bp) => bp.Rating().Rarity();
         public static Color Color(this RarityType rarity, float adjust = 0) => RarityColors[(int)rarity].color(adjust);
@@ -194,40 +143,6 @@ namespace ToyBox {
                 return name + " " + $"[{rarity}]".Rarity(rarity).bold(); //.SizePercent(75);
         }
         public static string? GetString(this RarityType rarity, float adjust = 0) => rarity.ToString().Rarity(rarity, adjust);
-#if Wrath
-        public static void Hide(this LocalMapLootMarkerPCView localMapLootMarkerPCView) {
-            LocalMapCommonMarkerVM markerVm = localMapLootMarkerPCView.ViewModel as LocalMapCommonMarkerVM;
-            LocalMapMarkerPart mapPart = markerVm.m_Marker as LocalMapMarkerPart;
-            if (mapPart?.GetMarkerType() == LocalMapMarkType.Loot) {
-                MapObjectView MOV = mapPart.Owner.View as MapObjectView;
-                InteractionLootPart lootPart = (MOV.Data.Interactions[0] as InteractionLootPart);
-                DoHide(lootPart.Loot, localMapLootMarkerPCView);
-            }
-            else if (mapPart == null) {
-                if (markerVm.m_Marker is not UnitLocalMapMarker unitMarker) return;
-                UnitEntityView unit = unitMarker.m_Unit;
-                UnitEntityData data = unit.Data;
-                DoHide(data.Inventory, localMapLootMarkerPCView);
-            }
-        }
-        public static void DoHide(ItemsCollection loot, LocalMapLootMarkerPCView localMapLootMarkerPCView) {
-            if (loot == Game.Instance.Player.SharedStash) return;
-            RarityType highest = RarityType.None;
-            foreach (ItemEntity item in loot) {
-                if (!item.IsLootable) continue;
-                RarityType itemRarity = item.Rarity();
-                if (itemRarity > highest) {
-                    highest = itemRarity;
-                }
-            }
-            if (highest <= Settings.maxRarityToHide) {
-                localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
-            }
-            else {
-                localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
-            }
-        }
-#endif
         // Compare function for item rarity
         public static float RaritySortScore(this ItemEntity item) {
             var rarity = item.Rarity();

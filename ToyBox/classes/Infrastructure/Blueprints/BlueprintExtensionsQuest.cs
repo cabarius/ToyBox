@@ -4,11 +4,6 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
-#if Wrath
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Craft;
-#endif
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
@@ -77,10 +72,8 @@ namespace ToyBox {
                                                                    || element is ItemsEnough
                                                                    || element is Conditional
                                                                    ;
-#if RT
         public static int InterestingnessCoefficent(this MechanicEntity entity)
             => entity is UnitEntityData unit ? unit.InterestingnessCoefficent() : 0;
-#endif        
         public static int InterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
         public static List<BlueprintDialog> GetDialog(this UnitEntityData unit) {
             var dialogs = unit.Parts.m_Parts
@@ -166,9 +159,6 @@ namespace ToyBox {
                 var inerestingUnits = unitsPool.Where(u => u.InterestingnessCoefficent() > 0);
                 foreach (var unit in inerestingUnits) {
                     Mod.Debug($"Revealing {unit.CharacterName}");
-#if Wrath
-                    unit.SetIsRevealedSilent(true);
-#endif
                 }
             }
         }

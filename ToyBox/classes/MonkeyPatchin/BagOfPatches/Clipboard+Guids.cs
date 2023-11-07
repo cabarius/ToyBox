@@ -9,37 +9,21 @@ using System.Threading.Tasks;
 using ModKit;
 using UnityEngine;
 using ModKit.Utility;
-#if Wrath
-using Kingmaker.UI.MVVM._PCView.Slots;
-using Kingmaker.UI.MVVM._VM.ActionBar;
-using Kingmaker.UI.MVVM._VM.Tooltip.Bricks;
-using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
-using Kingmaker.UI.UnitSettings;
-#elif RT
 using Kingmaker.Code.UI.MVVM.VM.Tooltip.Templates;
 using Kingmaker.Code.UI.MVVM.View.Slots;
 using Kingmaker.Code.UI.MVVM.VM.Tooltip.Bricks;
 using Kingmaker.UI.Models.UnitSettings;
 using Kingmaker.Code.UI.MVVM.VM.ActionBar;
-#endif
 
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
     public static class GUIDTooltipStyes {
-#if Wrath
-        public static string GUIDTooltipStyle(this string guid) => $"<color=grey>guid: {guid}</color>";
-#elif RT
         public static string GUIDTooltipStyle(this string guid) => $"<color=grey>guid: {guid}</color>".sizePercent(85);
-#endif
     }
 
     [HarmonyPatch]
     public class Clipboard_Guids {
         public static Settings settings = Main.Settings;
-#if Wrath
-        private const TooltipTextType GUIDTooltipTextTypes = TooltipTextType.Small | TooltipTextType.Italic;
-#elif RT
         const TooltipTextType GUIDTooltipTextTypes = TooltipTextType.Simple | TooltipTextType.Italic;
-#endif
 
         public static void CopyToClipboard(string guid) {
             GUIUtility.systemCopyBuffer = guid;

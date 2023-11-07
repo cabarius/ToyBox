@@ -1,6 +1,5 @@
 ﻿// global statics
 global using static ModKit.UI;
-#if RT
 // common alternate using
 global using Kingmaker.Blueprints.Base;
 global using Kingmaker.EntitySystem;
@@ -21,13 +20,8 @@ global using Kingmaker.Code.UI.MVVM.VM.Loot;
 global using Owlcat.Runtime.Core;
 global using Owlcat.Runtime.Core.Utility;
 global using static Kingmaker.Utility.MassLootHelper;
-#elif Wrath
-global using Epic.OnlineServices.Lobby;
-global using Owlcat.Runtime.Core.Utils;
-#endif
 
 // Type Aliases
-#if RT
 global using BlueprintGuid = System.String;
 global using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
 global using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
@@ -38,9 +32,7 @@ global using EntityOvertipVM = Kingmaker.Code.UI.MVVM.VM.Overtips.Unit.OvertipEn
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.Localization;
 using UniRx;
-#endif
 
-#if RT
 // Local using
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints.Items;
@@ -49,11 +41,6 @@ using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.Levelup.Components;
 using Kingmaker.GameCommands;
-#elif Wrath
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.EntitySystem;
-#endif
 
 using System;
 using System.Collections.Generic;
@@ -79,7 +66,6 @@ namespace ToyBox {
     public static partial class Shodan {
 
         // General Stuff
-#if RT
         public static string StringValue(this LocalizedString locStr) => locStr.Text;
         public static bool IsNullOrEmpty(this string str) => str == null || str.Length == 0;
         public static UnitEntityData Descriptor(this UnitEntityData entity) => entity;
@@ -106,18 +92,8 @@ namespace ToyBox {
             return true;
         }
         public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.State?.InGameSettings?.List;
-#elif Wrath
-        public static string StringValue(this LocalizedString locStr) => locStr.ToString();
-        public static bool IsNullOrEmpty(this string str) => str == null || str.Length == 0;
-        public static UnitDescriptor Descriptor(this UnitEntityData entity) => entity.Descriptor;
-        public static float GetCost(this BlueprintItem item) => item.Cost;
-        public static Gender? GetCustomGender(this UnitDescriptor descriptor) => descriptor.CustomGender;
-        public static void SetCustomGender(this UnitDescriptor descriptor, Gender gender) => descriptor.CustomGender = gender;
-        public static Dictionary<string, object>? GetInGameSettingsList() => Game.Instance?.Player?.SettingsList;
-#endif
 
         // Unit Entity Utils
-#if RT
         public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Entity;
         public static EntityPool<UnitEntityData>? AllUnits => Game.Instance?.State?.AllUnits;
         public static List<UnitEntityData> SelectedUnits => UIAccess.SelectionManager.SelectedUnits.ToList();
@@ -135,34 +111,8 @@ namespace ToyBox {
         public static bool HasBonusForLevel(this BlueprintStatProgression xpTable, int level) => level >= 0 && level < xpTable.Bonuses.Length;
         public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.OwnerEntity.Movable.ModifiedSpeedMps).Max();
 
-#elif Wrath
-        public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacter.Value;
-        public static EntityPool<UnitEntityData>? AllUnits => Game.Instance?.State?.Units;
-        public static List<UnitEntityData> SelectedUnits => Game.Instance.UI.SelectionManager.SelectedUnits;
-        public static bool IsEnemy(this UnitEntityData unit) {
-            UnitAttackFactions uaf = unit.Descriptor.AttackFactions;
-            return uaf.m_Owner.Faction.EnemyForEveryone || uaf.m_Factions.Contains(BlueprintRoot.Instance.PlayerFaction);
-        }
-        public static bool IsPlayerFaction(this UnitEntityData unit) {
-            UnitDescriptor ud = unit.Descriptor;
-            if (ud.m_IsPlayerFactionCached == null) {
-                ud.m_IsPlayerFactionCached = new bool?(ud.Faction == BlueprintRoot.Instance.PlayerFaction);
-            }
-            return ud.m_IsPlayerFactionCached.Value && !ud.AttackFactions.IsPlayerEnemy;
-        }
-        public static void KillUnit(UnitEntityData unit) => GameHelper.KillUnit(unit);
-        public static bool IsPartyOrPet(this UnitEntityData entity) => entity.Descriptor.IsPartyOrPet();
-        public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.ModifiedSpeedMps).Max();
-
-        // Teleport and Travel
-#endif
-#if RT
         public static void EnterToArea(BlueprintAreaEnterPoint enterPoint) => Game.Instance.GameCommandQueue.AreaTransition(enterPoint, AutoSaveMode.None, false);
-#elif Wrath
-        public static void EnterToArea(BlueprintAreaEnterPoint enterPoint) => GameHelper.EnterToArea(enterPoint, AutoSaveMode.None);
-#endif
 
-#if RT
         // disabled for now in beta
         public static bool CanRespec(this BaseUnitEntity ch) {
             return false;
@@ -175,13 +125,5 @@ namespace ToyBox {
         public static void DoRespec(this BaseUnitEntity ch) {
             Game.Instance.Player.RespecCompanion(ch);
         }
-#elif Wrath
-        public static bool CanRespec(this UnitEntityData ch) {
-            return RespecHelper.GetRespecableUnits().Contains(ch);
-        }
-        public static void DoRespec(this UnitEntityData ch) {
-            RespecHelper.Respec(ch);
-        }
-#endif
     }
 }

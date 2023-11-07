@@ -17,8 +17,6 @@ using Newtonsoft.Json;
 using UnityEngine;
 using Attribute = System.Attribute;
 using LocalizationManager = Kingmaker.Localization.LocalizationManager;
-#if Wrath
-#endif
 
 namespace ToyBox {
 
@@ -209,55 +207,6 @@ namespace ToyBox {
         public static Dictionary<string, string> GetCustomAttributes<T>(this T model) where T : class {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
-#if Wrath
-            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
-            foreach (var prop in props) {
-                var text = prop.GetCustomAttributes(true).OfType<InfoBoxAttribute>().Select(info => info.Text);
-                if (text != null) {
-                    result[prop.Name] = String.Join(", ", text);
-                }
-            }
-            FieldInfo[] fields = typeof(T).GetFields(BindingFlags.NonPublic);
-            foreach (var field in fields) {
-                var text = field.GetCustomAttributes(true).OfType<InfoBoxAttribute>().Select(info => info.Text);
-                if (text != null) {
-                    result[field.Name] = String.Join(", ", text);
-                }
-            }
-
-#else
-            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
-            foreach (PropertyInfo prop in props) {
-                var attributes = prop.GetCustomAttributes(true);
-                if (attributes.Count() > 0) {
-                    foreach (var attribute in attributes) {
-                        var strings = attribute.ToStringDictionary();
-                        foreach (var pair in strings) {
-                            try {
-                                result.Add($"{prop.Name}.{pair.Key}", pair.Value);
-                            }
-                            catch { }
-                        }
-
-                    }
-                }
-            }
-            FieldInfo[] fields = typeof(T).GetFields(BindingFlags.NonPublic);
-            foreach (FieldInfo field in fields) {
-                var attributes = field.GetCustomAttributes(true);
-                if (attributes.Count() > 0) {
-                    foreach (var attribute in attributes) {
-                        var strings = attribute.ToStringDictionary();
-                        foreach (var pair in strings) {
-                            try {
-                                result.Add($"{field.Name}.{pair.Key}", pair.Value);
-                            }
-                            catch { }
-                        }
-                    }
-                }
-            }
-#endif
             return result;
         }
         public static T GetAttributeFrom<T>(this object instance, string propertyName) where T : Attribute {
@@ -389,11 +338,7 @@ namespace ToyBox {
     }
 
     public static class LocalizationUtils {
-#if Wrath
-        public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
-#elif RT
         public static void AddLocalizedString(this string value) => Kingmaker.Localization.LocalizationManager.Instance.CurrentPack.PutString(value, value);
-#endif
         public static LocalizedString LocalizedStringInGame(this string key) => new LocalizedString() { Key = key };
 
     }

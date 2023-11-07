@@ -1,7 +1,4 @@
 ﻿using Kingmaker.Blueprints.Classes;
-#if Wrath
-using Kingmaker.UnitLogic.Class.LevelUp;
-#endif
 
 namespace ToyBox {
     // https://github.com/paxchristos/pk_multiple_classes_per_level_fork

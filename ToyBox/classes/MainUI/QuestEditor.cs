@@ -33,20 +33,16 @@ namespace ToyBox {
             RGBA.cyan,
             RGBA.darkgrey,
             
-#if RT
             RGBA.yellow,
             RGBA.lime,
-#endif
             RGBA.red
         };
         private static readonly string[] questColors = new string[] {
             "gray",
             "cyan",
             "white",
-#if RT
             "yellow",
             "lime",
-#endif
             "red"
         };
 
@@ -220,34 +216,6 @@ namespace ToyBox {
             Space(25);
         }
         public static void DrawTeleports(QuestObjective objective) {
-#if Wrath
-            using (HorizontalScope(MaxWidth(850))) {
-                var areas = objective.Blueprint.Areas;
-                var locations = objective.Blueprint.Locations;
-                if (areas.Count > 0 || locations.Count > 0) {
-                    if (locations.Count > 0) {
-                        Label("Teleport".localize() + ":");
-                        25.space();
-                        using (VerticalScope(MaxWidth(600))) {
-                            foreach (var location in locations) {
-                                var bp = location.GetBlueprint();
-                                if (bp != null)
-                                    ActionButton(bp.name.yellow(), () => Teleport.To(location));
-                            }
-                        }
-                    }
-#if false
-                if (areas.Count > 0) {
-                    Label(" Area");
-                    Space(25);
-                    foreach (var area in areas) {
-                        ActionButton(area.name.yellow(), () => Teleport.To(area));
-                    }
-                }
-#endif
-                }
-            }
-#endif
         }
     }
 }

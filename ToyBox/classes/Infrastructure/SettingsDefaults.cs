@@ -110,18 +110,6 @@ namespace ToyBox {
         };
 
         public static void InitializeDefaultDamageTypes() {
-#if Wrath
-            if (Main.Settings.bulkSellSettings.damageReality.Count == 0) {
-                foreach (DamageRealityType type in Enum.GetValues(typeof(DamageRealityType)))
-                    Main.Settings.bulkSellSettings.damageReality.Add(type, true);
-                foreach (DamageAlignment type in Enum.GetValues(typeof(DamageAlignment)))
-                    Main.Settings.bulkSellSettings.damageAlignment.Add(type, true);
-                foreach (PhysicalDamageMaterial type in Enum.GetValues(typeof(PhysicalDamageMaterial)))
-                    Main.Settings.bulkSellSettings.damageMaterial.Add(type, true);
-                foreach (DamageEnergyType type in Enum.GetValues(typeof(DamageEnergyType)))
-                    Main.Settings.bulkSellSettings.damageEnergy.Add(type, true);
-            }
-#endif
         }
     }
 }

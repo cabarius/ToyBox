@@ -29,13 +29,6 @@ using Kingmaker.Cheats;
 using Kingmaker.EntitySystem;
 using Kingmaker.UI;
 using ToyBox.BagOfPatches;
-#if Wrath
-using Kingmaker.Armies;
-using Kingmaker.Armies.Blueprints;
-using Kingmaker.Kingdom;
-using Kingmaker.Armies.TacticalCombat.Parts;
-using ToyBox.BagOfPatches;
-#endif
 namespace ToyBox {
     public static partial class Actions {
         public static Settings settings => Main.Settings;
