@@ -34,8 +34,11 @@ namespace ToyBox {
         private static ConditionalWeakTable<object, List<string>> _cachedCollationNames = new() { };
         private static readonly HashSet<BlueprintGuid> BadList = new();
         public static Dictionary<string, string> descriptionCache = new();
+        internal static bool wasIncludeInternalNameForTitle = false;
         public static Dictionary<string, string> titleCache = new();
+        internal static bool wasIncludeInternalNameForSearchKey = false;
         public static Dictionary<string, string> searchKeyCache = new();
+        internal static bool wasIncludeInternalNameForSortKey = false;
         public static Dictionary<string, string> sortKeyCache = new();
         public static void ResetCollationCache() => _cachedCollationNames = new ConditionalWeakTable<object, List<string>> { };
         private static void AddOrUpdateCachedNames(SimpleBlueprint bp, List<string> names) {
@@ -64,8 +67,11 @@ namespace ToyBox {
             return name;
         }
         public static string GetTitle(SimpleBlueprint blueprint, Func<string, string> formatter = null) {
-            if (titleCache.TryGetValue(blueprint.AssetGuid, out var ret)) {
+            if (titleCache.TryGetValue(blueprint.AssetGuid, out var ret) && (wasIncludeInternalNameForTitle == Settings.showDisplayAndInternalNames)) {
                 return ret;
+            }
+            else {
+                wasIncludeInternalNameForTitle = Settings.showDisplayAndInternalNames;
             }
             if (formatter == null) formatter = s => s;
             if (blueprint is IUIDataProvider uiDataProvider) {
@@ -118,8 +124,11 @@ namespace ToyBox {
             return formatter(blueprint.name);
         }
         public static string GetSearchKey(SimpleBlueprint blueprint, bool forceDisplayInternalName = false) {
-            if (searchKeyCache.TryGetValue(blueprint.AssetGuid, out var ret)) {
+            if (searchKeyCache.TryGetValue(blueprint.AssetGuid, out var ret) && (wasIncludeInternalNameForSearchKey == (Settings.showDisplayAndInternalNames || forceDisplayInternalName))) {
                 return ret;
+            }
+            else {
+                wasIncludeInternalNameForSearchKey = Settings.showDisplayAndInternalNames || forceDisplayInternalName;
             }
             try {
                 if (blueprint is IUIDataProvider uiDataProvider) {
@@ -178,8 +187,11 @@ namespace ToyBox {
             }
         }
         public static string GetSortKey(SimpleBlueprint blueprint) {
-            if (sortKeyCache.TryGetValue(blueprint.AssetGuid, out var ret)) {
+            if (sortKeyCache.TryGetValue(blueprint.AssetGuid, out var ret) && (wasIncludeInternalNameForSortKey == Settings.showDisplayAndInternalNames)) {
                 return ret;
+            }
+            else {
+                wasIncludeInternalNameForSortKey = Settings.showDisplayAndInternalNames;
             }
             try {
                 if (blueprint is IUIDataProvider uiDataProvider) {
