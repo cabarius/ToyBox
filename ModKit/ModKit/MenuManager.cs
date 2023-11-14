@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModKit.Utility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityModManagerNet;
-using ModKit.Utility;
 
 namespace ModKit {
     public interface IMenuPage {
@@ -31,7 +31,7 @@ namespace ModKit {
         // parameter causes the property name of the caller to be substituted as an argument.  
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-    #region Fields
+        #region Fields
 
         private int _tabIndex;
 
@@ -48,9 +48,9 @@ namespace ModKit {
         private readonly List<IMenuBottomPage> _bottomPages = new();
         private static Exception caughtException = null;
 
-    #endregion
+        #endregion
 
-    #region Toggle
+        #region Toggle
 
         public void Enable(UnityModManager.ModEntry modEntry, Assembly _assembly) {
             foreach (var type in _assembly.GetTypes()
@@ -81,7 +81,7 @@ namespace ModKit {
             _bottomPages.Clear();
         }
 
-    #endregion
+        #endregion
 
         private void OnGUI(UnityModManager.ModEntry modEntry) {
             var hasPriorPage = false;
@@ -92,8 +92,8 @@ namespace ModKit {
                     return;
                 }
                 var e = Event.current;
-                userHasHitReturn = e.keyCode == KeyCode.Return;
-                focusedControlName = GUI.GetNameOfFocusedControl();
+                bool userHasHitReturn = e.keyCode == KeyCode.Return;
+                string focusedControlName = GUI.GetNameOfFocusedControl();
 
 
                 if (_topPages.Count > 0)

@@ -1,12 +1,12 @@
 ﻿{
   "Id": "0ToyBox0",
-  "DisplayName": "{ToyBox} is preparing to conquer the Imperium",
+  "DisplayName": "ToyBox for RogueTrader Content Creator Beta",
   "Author": "Narria",
   "Version": "1.5.7c",
   "ManagerVersion": "0.23.0",
   "Requirements": [],
   "AssemblyName": "ToyBox.dll",
   "EntryMethod": "ToyBox.Main.Load",
-  "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8?tab=posts&BH=0",
-  "Repository": "https://raw.githubusercontent.com/cabarius/ToyBox/main/ToyBox/Repository.json"
+  "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8",
+  "Repository": "https://github.com/cabarius/ToyBox"
 }
