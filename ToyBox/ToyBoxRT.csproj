@@ -47,7 +47,7 @@
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\RogueTrader.GameCore.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Owlcat.Runtime.UI.dll" />
-      <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\LocalizationShared.dll" />
+    <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\LocalizationShared.dll" />
     <PubliciseInputAssemblies Include="$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\UnityModManager.dll" />
   </ItemGroup>
   <Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\RT\%(PubliciseInputAssemblies.FileName)_public.hash">
@@ -485,6 +485,7 @@
     <Compile Include="classes\MainUI\EnhancedUI\PhatLoot.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintAction.cs" />
+    <Compile Include="classes\MainUI\Playground.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
     <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />
@@ -527,31 +528,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Config\bindings.json" />
-    <None Include="OwlcatModificationManifest.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Repository.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Info.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="classes\MainUI\Playground.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ReadMe.md" />
     <Content Include="Localization\RogueTrader\*.*">
       <Link>Localization\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ModPublishInfo\*.*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="zmisc\api.txt" />
     <None Include="zip-hash-sign.ps1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Localization\" />
   </ItemGroup>
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
