@@ -73,16 +73,22 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Rogue - Ver 1.5.8 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7c** built for 0.2.1ah
+
+
+### ToyBox Rogue - Ver 1.5.9 (Coming Soon)
+**ToyBox Rogue - Ver 1.5.9 -** ***Sh0dan*** **Preview Version 1.5.8a** built for 0.2.1ah
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-### ToyBox Wrath - Ver 1.5.8 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7c** built for 2.1.5r
+### ToyBox Wrath - Ver 1.5.9 (Coming Soon)
+**ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8a** built for 2.2.0ak
+
+### ToyBox Wrath - Ver 1.5.1 (built for 2.2.0ak)
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Prevent mod from being unable to load when localization files are missing.
 * (***ADDB***) Improved detection and added auto-deletion of concurrently installed outdated ToyBox version.
 * (***ifarmpandas***) Added ActivatableAbilities to "Abilities" button in party editor. 
+* (***ADDB***) Recompile for new version.
+* (***ADDB***) Fixed some whoopsies (missing Localization files in Release; Wrong Repository Branch in Info file etc.).
 ### ToyBox Rogue - Ver 1.5.7 (built for 0.2.1ah)
 * (***ADDB***) Added all localization keys to allow full localization.
 ### ToyBox Wrath - Ver 1.5.7 (built for 2.1.5r)
