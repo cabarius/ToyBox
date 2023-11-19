@@ -81,7 +81,7 @@
 ### ToyBox Wrath - Ver 1.5.9 (Coming Soon)
 **ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8a** built for 2.2.0ak
 
-### ToyBox Wrath - Ver 1.5.1 (built for 2.2.0ak)
+### ToyBox Wrath - Ver 1.5.8 (built for 2.2.0ak)
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Prevent mod from being unable to load when localization files are missing.
