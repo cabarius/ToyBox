@@ -80,8 +80,9 @@
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast
 ### ToyBox Wrath - Ver 1.5.9 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8a** built for 2.2.0as
-* (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast
+**ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8b** built for 2.2.0as
+* (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
+* (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
 
 ### ToyBox Wrath - Ver 1.5.8 (built for 2.2.0as)
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
