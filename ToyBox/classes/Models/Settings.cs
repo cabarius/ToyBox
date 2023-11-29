@@ -169,11 +169,13 @@ namespace ToyBox {
         public float experienceMultiplierCombat = 1;
         public float experienceMultiplierQuests = 1;
         public float experienceMultiplierSkillChecks = 1;
-        public float experienceMultiplierTraps = 1;
+        public float experienceMultiplierChallenges = 1;
+        public float experienceMultiplierSpace = 1;
         public bool useCombatExpSlider = false;
         public bool useQuestsExpSlider = false;
         public bool useSkillChecksExpSlider = false;
-        public bool useTrapsExpSlider = false;
+        public bool useChallengesExpSlider = false;
+        public bool useSpaceExpSlider = false;
         public float fowMultiplier = 1;
         public float partyMovementSpeedMultiplier = 1;
         public float buffDurationMultiplierValue = 1;

@@ -74,6 +74,8 @@
 
 ### ToyBox Rogue - Ver 0.1.0
 * (***ADDB***) Remove unimplemented stuff; clean some up; do stuff
+* (***ADDB***) Maybe fix experience multiplier
+* (***ADDB***) Maybe fix BuffDuration multiplier
 
 ### ToyBox Rogue < Ver 0.1.0
 * See [here](https://raw.githubusercontent.com/cabarius/ToyBox/main/ToyBox/ReadMe.md)

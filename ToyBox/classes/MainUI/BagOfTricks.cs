@@ -355,7 +355,7 @@ namespace ToyBox {
                 () => { }
                 );
             Div(0, 25);
-            HStack("Experience Multipliers".localize() + " (Currently not implemented! If you're reading this it was probably forgotten)".red().bold(), 1,
+            HStack("Experience Multipliers".localize(), 1,
                 () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
                 () => {
                     using (HorizontalScope()) {
@@ -386,10 +386,19 @@ namespace ToyBox {
                 },
                 () => {
                     using (HorizontalScope()) {
-                        Toggle("Override for Traps".localize(), ref Settings.useTrapsExpSlider, Width(275));
-                        if (Settings.useTrapsExpSlider) {
+                        Toggle("Override for Challenges".localize(), ref Settings.useChallengesExpSlider, Width(275));
+                        if (Settings.useChallengesExpSlider) {
                             Space(10);
-                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierTraps, 0f, 100f, 1, 1, "", 12, AutoWidth());
+                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierChallenges, 0f, 100f, 1, 1, "", 12, AutoWidth());
+                        }
+                    }
+                },
+                () => {
+                    using (HorizontalScope()) {
+                        Toggle("Override for Space Combat".localize(), ref Settings.useSpaceExpSlider, Width(275));
+                        if (Settings.useChallengesExpSlider) {
+                            Space(10);
+                            LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierSpace, 0f, 100f, 1, 1, "", 12, AutoWidth());
                         }
                     }
                 }
@@ -423,7 +432,7 @@ namespace ToyBox {
                     Space(25);
                     Label("Adjusts the movement speed of your party in area maps".localize().green());
                 },
-                () => LogSlider("Buff Duration".localize() + " (Currently not implemented! If you're reading this it was probably forgotten)".red().bold(), ref Settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
+                () => LogSlider("Buff Duration".localize(), ref Settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
                 () => DisclosureToggle("Exceptions to Buff Duration Multiplier (Advanced; will cause blueprints to load)".localize(), ref showBuffDurationExceptions),
                 () => {
                     if (!showBuffDurationExceptions) return;
