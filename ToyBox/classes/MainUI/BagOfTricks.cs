@@ -396,7 +396,7 @@ namespace ToyBox {
                 () => {
                     using (HorizontalScope()) {
                         Toggle("Override for Space Combat".localize(), ref Settings.useSpaceExpSlider, Width(275));
-                        if (Settings.useChallengesExpSlider) {
+                        if (Settings.useSpaceExpSlider) {
                             Space(10);
                             LogSliderCustomLabelWidth("", ref Settings.experienceMultiplierSpace, 0f, 100f, 1, 1, "", 12, AutoWidth());
                         }
